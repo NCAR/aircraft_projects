@@ -71,3 +71,10 @@ private:
 };	/* END CLOCK.H */
 
 #endif
+/* Meaningless comment for testing svn
+line one
+line two
+line three
+line four
+line five
+*/
