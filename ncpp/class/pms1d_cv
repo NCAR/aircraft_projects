@@ -1,0 +1,82 @@
+/*
+-------------------------------------------------------------------------
+OBJECT NAME:	pms1d_cv
+
+FULL NAME:	PMS1D Compute Variables
+
+ENTRY POINTS:	none
+
+STATIC FNS:	none
+
+DESCRIPTION:	This is the compute engine used by all PMS1D probes.
+		It is included into each pms probe .c file in the
+		apropriate place.  Certain variables are already expected
+		to exist.
+
+INCLUDED BY:	sfssp(), sasas(), s200x(), s200y(), s260x(), f300.c
+
+NOTES:		Calculations taken from Bulletin 24 dated 1/89.
+-------------------------------------------------------------------------
+*/
+
+  {
+  double	dbar2, conc, z;
+
+  disp = dbar = dbar2 = z = totalConcen = 0.0;
+
+#ifdef PLWC
+  plwc = 0.0;
+#endif
+#ifdef P_VOLUME
+  pvol = 0.0;
+#endif
+
+  for (bin = 0; bin < FirstBin(); ++bin)
+    concentration[bin] = 0.0;
+
+  for (bin = LastBin(); bin < VectorLength(); ++bin)
+    concentration[bin] = 0.0;
+
+
+  for (bin = FirstBin(); bin <= LastBin(); ++bin)
+    if (sampleVolume[bin] == 0.0)
+      concentration[bin] = 0.0;
+    else
+      {
+      concentration[bin] = conc = counts[bin] / sampleVolume[bin];
+      dbar	+= dia[bin] * conc;
+      dbar2	+= dia[bin] * dia[bin] * conc;
+#ifdef PLWC
+      plwc	+= dia[bin] * dia[bin] * dia[bin] * conc;
+#endif
+#ifdef P_VOLUME
+      pvol	+= dia[bin] * dia[bin] * dia[bin] * conc;
+#endif
+#ifdef DBZ
+      z += conc * pow((double)dia[bin] / 1000.0, 6.0);
+#endif
+      totalConcen += conc;
+      }
+
+#ifdef PLWC
+  plwc *= M_PI / 6.0 * DENS * PLWfac;
+#endif
+#ifdef P_VOLUME
+  pvol *= M_PI / 6.0;
+#endif
+#ifdef DBZ
+  if (z > 0.0)
+    dbz = 10.0 * log10((double)(z * DBZfac));
+  else
+    dbz = -100.0;
+#endif
+
+  if (totalConcen > 0.0001)
+    {
+    dbar /= totalConcen;
+
+    disp = sqrt(fabs((dbar2 / totalConcen - dbar * dbar))) / dbar;
+    }
+  }
+
+/* END PMS1D_CV */

@@ -1,0 +1,450 @@
+<html>
+<head>
+<title>NCPP User's Guide</title>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+
+<style type="text/css">
+<!--
+body { background: white; color: black; margin: 2em; margin-left: 3em; }
+h1,h2 { font-size: 1.5em }
+h3 { font-size: 1.3em }
+h4 { font-size: 1.2em }
+h1, h2, h3, h4 { font-style: normal; font-weight: normal; color: #3860B0; }
+span.runin { font-size: 1.1em; font-weight: bold; color: #3860B0; }
+a:link { color:navy; }
+a:visited { color:#386090; }
+li.toc { list-style: none; padding: .1em; }
+kbd.att { font-weight: normal; color: blue; }
+div.example { margin-left: 3em; margin-right: 3em; }
+div.definition { margin-left: 1em; }
+pre.CDL { color: brown; }
+table { padding: .25em; }
+span.new { background-color: #FF6666; }
+span.old { background-color: #FFFF88; text-decoration: line-through; }
+span.comment { background-color: #88FF88; font-style: italic; }
+-->
+</style>
+
+</head>
+
+<!-- body background="/pics/speckled.jpg" -->
+<body bgcolor="ffffff">
+
+<h1 align=CENTER>NCPP User's Guide</h1>
+<h1 align=CENTER>Version 1.9.1</h1>
+<hr>
+<h1 align=CENTER>Table Of Contents</h1>
+<ol type=A>
+ <li><a href="#oview">Overview</a>
+ <li><a href="#gs">Getting Started</a>
+ <ol>
+  <li>Acquiring
+  <li>Installing
+  <li>Environment
+  <li>Fonts
+  <li>Command line options
+ </ol>
+
+ <li><a href="#vsw">Probe Selection Window</a>
+ <ol>
+  <li>Selecting and Deselecting Probes
+  <li>Selecting data type
+  <li>Options
+ </ol>
+
+ <li><a href="#mcw">Movie Control Window</a>
+ <ol>
+  <li>Moving around in Time
+  <li>Controlling frame updates
+ </ol>
+
+
+ <li><a href="#pc">Plot Canvas</a>
+ <ol>
+  <li><a href="#pc1">Canvas features</a>
+  <ol type=a>
+   <li>Annotations
+   <li>Resizing canvas windows
+   <li>Zooming
+   <li>Menu accelerators
+  </ol>
+  <li><a href="#pc2">Guide to menus</a>
+  <ol type=a>
+   <li>File menu
+   <ol>
+    <li>Data files
+    <li>Printing
+    <li>Save PNG
+   </ol>
+   <li>Edit Menu
+   <ol>
+    <li>Editing plot parameters
+   </ol>
+   <li>View Menu
+   <ol>
+    <li>ASCII cell data
+    <li>Probe Variables
+    <li>Variable Titles
+    <li>netCDF header
+   </ol>
+  </ol>
+ </ol>
+ <li><a href="#cf">Configuration File</a>
+ <li><a href="#kp">Known problems</a>
+ <li><a href="#todo">Incomplete features</a>
+</ol>
+
+<a name="oview"></a>
+<hr>
+<h1 align=CENTER>Overview</h1>
+<b>ncpp</b> is an interactive plotting tool for workstations running X11/R5,
+Motif 1.2.  <b>ncpp</b> allows the user to view histograms of PMS-1D probe
+data stored in
+<a href="http://www.unidata.ucar.edu/packages/netcdf/index.html">netCDF</a>
+files that conform to the <a href="http://raf.atd.ucar.edu/Software/netCDF.html">NCAR-RAF/nimbus</a>
+conventions.  Both Low-rate and Mixed-rate files are supported, and
+files where the data have been reduced below 1 sps (sample per second), e.g.,
+files run through <b>ncav</b>.
+<p>
+A few of its features are:
+<p>
+<ul>
+<li>View raw counts, concentrations, surface area, and volume.
+<li>Multiple frames (upto 7 x 9).
+<li>Can draw from up to 3 netCDF files on the same plot.
+<li>ASCII window.
+<li>ASCII window, with housekeeping and derived variables.
+<li>Ability to edit cell diameters.
+<li>Allows user-defined titles, labels, scaling, and major & minor tic marks.
+<li>Ability to add Annotations.
+<li>Publication quality [Encapsulated] [color] PostScript printouts.
+</ul>
+<p>
+<b>ncpp</b> was written at the <a href="http://raf.atd.ucar.edu/">Research
+Aviation Facility</a> of <a href="http://www.ncar.ucar.edu/">The National Center for Atmospheric Research</a> to view and analyze our
+aircraft data (and NOAA's GIV).  The
+<a href="ftp://ftp.unidata.ucar.edu/pub/netcdf/Conventions/NCAR-RAF/nimbus/">NCAR-RAF/nimbus</a>
+conventions were designed to store multi-rate data, i.e., variable A may be
+stored at 5sps and variable B at 25sps.  Every effort has been made to make
+it "what you see is what you get" between the screen and printouts.
+
+<a name="gs"></a>
+<hr>
+<h1 align=CENTER>Getting Started</h1>
+
+<dl>
+<dt><h2>Acquiring</h2>
+<dd><b>ncpp</b> is available via anonymous ftp from <b>raf.atd.ucar.edu</b>.
+For Solaris binaries, <b>cd pub/archive/RAF-src/bin.Solaris2.?</b> (or <b>bin.RedHat6.?</b>
+for linux), and retrieve <b>ncpp</b>, and <b>ncpp.html</b>.
+
+<dt><h3>Installing</h3>
+<dd>For system use, the binary may be placed in something like
+<b>/usr/local/bin</b>.
+<p>
+For single user, place the binary in ~/bin (Make sure ~/bin is in your
+<b>PATH</b>).
+
+<dt><h3>Environment</h3>
+<dd><b>ncpp</b> is written in C++, requiring X11/R5 and Motif 1.2 (or later),
+and the <b>netCDF</b> library 3.0 or later.  Specifically it was developed
+on Sun Microsystems, under Solaris 2.5.1, using the gcc compiler (ver 2.95.2).
+<p>
+<b>ncpp</b> uses, though it is not required, a shell environment variable
+called <b>DATA_DIR</b> as the default directory to locate data files.
+<p>
+
+<dt><h3>Fonts</h3>
+<dd>Fonts (on screen) have been a source of irritation from the start.  What
+looks great on Solaris looks like crap on Linux or an HP.  You can modify
+the fonts for the screen in the <b>XmNCpp</b> file.  All font references
+are at the top.  The <b>X</b> programs <b>xfontsel</b> and <b>xlsfonts</b>
+can help you locate a font that looks good on your machine (you'll need
+10, 12, 14, 18, and 24 point sizes for the font you do locate, with 12 &
+14 being the most heavely used).
+
+<dt><h2>Command Line Options</h2>
+<dd><b>data_file</b>, a netCDF data file that conforms to the
+<b>NCAR-RAF/nimbus</b> conventions.
+
+<dt><h3>Examples</h3>
+ <dl>
+ <dt>Run with no command line parameters:
+ <dd><pre class="CDL">1024% ncpp</pre>
+ <p>
+ <dt>Load a single data file:
+ <dd><pre class="CDL">1025% ncpp /home/data/162rf08.cdf</pre>
+ </dl>
+</dl>
+
+<a name="vsw"></a>
+<hr>
+<h1 align=CENTER>Probe Selection Window</h1>
+
+<table>
+ <tr>
+  <td align=left>
+
+<dl>
+<dt><h3>Selecting and Deselecting Probes</h3>
+<dd>After you have selected which data file, turn on the probes you wish to
+view.  Multiple probes may selected.
+<p>
+To <b>de-select</b> a variable, click on it again.  The file, axis,
+location and panel must all match from when the variable was selected.  This
+can get confusing if you are drawing data from multiple files.
+
+<dt><h3>Data Types</h3>
+<dd>Turn on which data types you wish to view (you may select more than one).
+<b>Turning off all data types will cause a core dump at this time.</b>
+
+<dt><h3>Concentrations</h3>
+<dd>You may choose to have <b>ncpp</b> read concentrations from the netCDF
+file (the default), or compute them on the fly.  Computing is useful if you
+want to modify certain probe parameters (see <b>Edit Cell Diameters</b>).
+
+<dt><h3>Options</h3>
+ <dl>
+ <dt><b>Panels</b>
+ <dd>This allows you to select how many <b>Postage stamps</b> to display per
+data type.
+<p>
+ <dt><b>Normalization</b>
+ <dd>This allows you to select a normalization method for dividing down
+concentrations.  Options are <b>None</b>, <b>Linear</b>, and <b>Log</b>.
+<p>
+ <dt><b>Black & White (on/off)</b>
+ <dd>Converts all color traces to black and white.  Dashed lines are used
+to differentiate variables in black and white.  This option is provided
+to let the user preview black-and-white print-outs.
+<p>
+ <dt><b>Grid (on/off)</b>
+ <dd>Turns grid on or off.
+ </dl>
+</dl>
+
+  <td align=right>
+   <img src="http://raf.atd.ucar.edu/Software/ncpp_ctrl.png" align=right>
+  </td>
+ </tr>
+</table>
+
+
+<a name="mcw"></a>
+<hr>
+<h1 align=CENTER>Movie Control Window</h1>
+
+<table>
+ <tr>
+  <td alighn=left>
+
+<dl>
+<dt><h3>Moving around in Time</h3>
+<dd><b>ncpp</b> defaults to the start time of the flight, and a 10 second
+averaging period per frame.  New start times and averaging periods may be
+entered at the top of the Movie Control window.  There is also a slider
+called <b>Time warp</b> that let's you quickly move to a new start time.
+<p>
+<dt><h3>Controlling frame updates</h3>
+<dd>To start movie style updates, press the <b>Start</b> button.  Frame update
+rate will depend on how fast your computer is, number of seconds in averaging
+period, and number of probes selected.  Increase the frame delay via the
+<b>Frame delay</b> slider.  When the movie is not running, <b>Step Fwd</b>
+and <b>Step Bkd</b> buttons are provided.
+<p>
+If the flight wraps around midnight, times past midnight should be greater
+than 24:00:00 (e.g. 1:00am start time should be entered as 25:00).
+</dl>
+
+  </td>
+  <td align=right>
+   <img src="http://raf.atd.ucar.edu/Software/ncpp_mov.png" align=right>
+  </td>
+ </tr>
+</table>
+
+<a name="pc"></a>
+<a name="pc1"></a>
+<hr>
+<h1 align=CENTER>Canvas Features</h1>
+<dl>
+<dt><b>Annotate</b>
+<dd><b>ncpp</b> has the ability to <b>annotate</b> graphs.  In the upper
+right corner of the main <b>plot canvas</b> there are a couple of buttons,
+one with the letter "<b>A</b>".  Press the "<b>A</b>", and your pointer
+will turn into a text insertion style cursor.  Move the cursor to where
+you would like to start the annotation, and press the left mouse button.
+Start typing, and finish the annotation by pressing <b>return</b>.  Doing
+just about anything will clear all annotations (due to the difficulty of
+tracking their location as the user moves around in time, and rescales axes).
+They should be added as the final option before printing.
+<p>
+<dt><b>Resize</b>
+<dd>All plot canvas windows are fully <b>resizable</b>.  Resizing the screen
+will have <b>no</b> affect on sizing or proportion of your printout, this is
+controlled via the <b>Printer Setup</b> option.
+<p>
+<dt><b>Zoom</b>
+<dd>A <b>zoom</b> feature exists; place the mouse in the upper left corner
+of what you want to zoom in on, hold the left mouse button down, and drag the
+box over the segment you want to see.  Moving left or above the initial
+point will cancel the zoom when you let go.  Your mileage may vary if
+autoscaling is turned on.  There is one level of un-zoom located in the
+Options menu.
+<p>
+<dt><b>Menu accelerators</b>
+<dd>When looking through the various menus, one will notice <b>CTRL</b>
+sequences to the right of the menu option label.  These are called
+<b>menu accelerators</b>, in <b>ncpp</b> they only work while the
+cursor is located in the <b>plot canvas</b>.
+</dl>
+
+<a name="pc2"></a>
+<hr>
+<h1 align=CENTER>Guide to Menus</h1>
+<dl>
+<dt><h2>File Menu</h2>
+<dd>The items in the File menu allow opening of data files from disk,
+printer setup, and printing.  In the case of an operation that will
+overwrite an existing file, you will be prompted by an alert that allows
+you to abort the write if you don't want the file to be overwritten.
+<p>
+ <dl>
+ <dt><b>New Data File</b>.
+ <dd>This displays a File Selection Box to select a file to read.  There
+is no error checking to see if the input file is valid.  Invalid files
+tend to cause a segmentation fault.  New Data File will close out all
+previously-opened files.
+<p>
+ <dt><b>Add Data File</b>.
+ <dd>This displays a File Selection Box to select an additional file to open.
+<p>
+ <dt><b>Save PostScript</b>.
+ <dd>This displays a File Selection Box prompting for the name of the file
+where you want to write the PostScript output.
+<p>
+ <dt><b>Printer Setup</b>.
+ <dd>This pops up a window with options to change the 'lp' command, the size of
+plot to be printed, whether to print landscape or portrait, and color vs.
+black and white.
+<p>
+ <dt><b>Print</b>.
+ <dd>This opens a pipe and sends PostScript commands to <b>lp(1)</b>.  
+<p>
+<p>
+ <dt><b>Save <a href="http://www.libpng.org/pub/png/">PNG</a></b>.
+ <dd>This option allows you to save the plot image as a graphics file, which
+can then be used in web pages, etc.  You can adjust the size of the image
+saved by first sizing the plot canvas.
+<p>
+<b>Why not GIF or JPEG?</b><br>
+<b>JPEG</b> was rejected because it is a lossy algorithm.  I would have chosen
+<b>GIF</b> except <b>Unisys</b> owns the patent on the LZW compression
+algorithm required to produce a <b>GIF</b> image.  A new freeware image
+compression standard has emerged; <b>PNG</b>.  Both <b>netscape</b> and
+<b>Internet Explorer</b> support <b>PNG</b>.  Visit <a href="http://www.burnallgifs.org">http://www.burnallgifs.org</a> for more on the controversy.
+ </dl>
+
+<dt><h2>Edit Menu</h2>
+<p>
+ <dl>
+ <dt><b>XY Parameter</b>
+ <dd>window allows the user to edit titles, labels, autoscaling, number of
+tic marks, and log vs. linear axis scales.  This will convert the Y axis units from "N/cM3" to "N/cM3/um" to "N/cM3/ln(um)".
+<p>
+ <dt><b>Cell Diameters</b>.
+ <dd>This pops up a window for editing cell diameters, start and end bins,
+and other probe parameters used in computing concentrations.
+<p>
+ </dl>
+
+<dt><h2>View Menu</h2>
+ <dl>
+ <dt><b>ASCII cell data</b>.
+ <dd>This opens a window for viewing the cell data in ASCII format.  Cell
+diameters are displayed, along with the values for all the data types (counts,
+concentrations, surface and/or volume).  The save button pops up a file
+selection window allowing you to specify a file.
+<p>
+ <dt><b>Probe Variables</b>.
+ <dd>This opens a window showing all the housekeeping and derived parameters for
+each probe, and the averaged values for each frame.
+<p>
+ <dt><b>Variable Titles</b>.
+ <dd>This opens a window listing variables names and their titles.  The
+"Category" menu may be used to reduce the list to just variables that belong
+in a given category.  The category system is not perfect, our system allows a
+variable to exist in 1 category, even though some variables should belong in
+more than one category.
+<p>
+ <dt><b>netCDF Header</b>.
+ <dd>This opens a window with output from the <b>ncdump</b>(1) program.
+ </dl>
+</dl>
+<p>
+
+<a name="cf"></a>
+<hr>
+<h1>Configuration File</h1>
+<b>ncpp</b> will read a file titled <b>.ncplotrc</b> in your home directory,
+if it exists.  Currently the 3 options that may be overridden are:<p>
+<kbd class="att">Colors = </kbd>a list of seven colors space and/or comma seperated.<br>
+<kbd class="att">PrintCommand = </kbd>new print command (eg: lp -d color -o nobanner).<br>
+<kbd class="att">PrintColor = </kbd>Color (default is B&W).<br>
+<kbd class="att">LineWidth = </kbd># (default is 1).<br>
+<p>
+<div class="example">
+<pre class="CDL">
+Colors = red,blue,green,yellow,maroon,orange,
+PrintCommand = lp -d color -o nobanner
+PrintColor = Color
+LineWidth = 2
+</pre>
+</div>
+
+The Unix command <b>showrgb(1)</b> can be used to view a list of all available
+color names (showrgb | more).  The <b>Colors</B> option allows you to override
+the plot trace colors.
+
+<a name="kp"></a>
+<hr>
+<h1>Known Problems</h1>
+<ul>
+<li>Invalid data files may cause a core dump.
+<li><b>ncpp</b> is expecting OAP probe concentration data to be in N/L and
+all others in N/cm3.
+<li>When viewing FSSP, the RANGE used for all panels is that for the first
+panel (i.e. if the RANGE changes in the panels you have displayed, the program
+will not pick this up, and you will be viewing wrong cell diameters for those
+remaing panels).
+<li>When viewing high-rate data, you must have more panels displayed than there
+are samples in a given second (e.g. For 10hz data, you must have 3x4 or more
+panels), otherwise "PgFwd" and "PgBkd" will do nothing.
+<li>Performing "File/New datafile" a second time will cause a core dump on
+Redhat 7.*.  Bug in the gcc 2.96 compilers.
+</ul>
+<p>
+
+<a name="todo"></a>
+<hr>
+<h1>Incomplete Features</h1>
+<ul>
+<li>Annotations
+</ul>
+<p>
+
+<hr>
+<h1>Author</h1>
+Christopher J. Webster<br>
+National Center for Atmospheric Research<br>
+Research Aviation Facility.<br>
+(303) 497-1044
+<p>
+  <address><a href="/cgi-bin/mail_me1.pl/cjw+from_RAF_Web_Software_Page_ncpp">email</a></address>
+
+<hr>
+<font size=2>
+Last update:
+Sun Nov 18 15:41:04 MST 2001
+</body>
+</html>

@@ -1,0 +1,371 @@
+<html>
+<head>
+<title>XPMS2D User's Guide</title>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+
+<style type="text/css">
+<!--
+body { background: white; color: black; margin: 2em; margin-left: 3em; }
+h1,h2 { font-size: 1.5em }
+h3 { font-size: 1.3em }
+h4 { font-size: 1.2em }
+h1, h2, h3, h4 { font-style: normal; font-weight: normal; color: #3860B0; }
+span.runin { font-size: 1.1em; font-weight: bold; color: #3860B0; }
+a:link { color:navy; }
+a:visited { color:#386090; }
+li.toc { list-style: none; padding: .1em; }
+kbd.att { font-weight: normal; color: blue; }
+div.example { margin-left: 3em; margin-right: 3em; }
+div.definition { margin-left: 1em; }
+pre.CDL { color: brown; }
+table { padding: .25em; }
+span.new { background-color: #FF6666; }
+span.old { background-color: #FFFF88; text-decoration: line-through; }
+span.comment { background-color: #88FF88; font-style: italic; }
+-->
+</style>
+
+</head>
+
+<!-- body background="/pics/speckled.jpg" -->
+<body bgcolor="#ffffff">
+
+
+<h1 align=CENTER>XPMS2D User's Guide</h1>
+<h1 align=CENTER>Version 2.2.0</h1>
+<hr>
+<h1 align=CENTER>Table Of Contents</h1>
+<ol type=A>
+ <li><a href="#oview">Overview</a>
+ <li><a href="#gs">Getting Started</a>
+ <ol>
+  <li>Acquiring
+  <li>Installing
+  <li>Environment
+  <li>Fonts
+  <li>Command line options
+ </ol>
+
+ <li><a href="#vsw">Probe Selection Window</a>
+ <ol>
+  <li>Entering start time
+  <li>Selecting and Deselecting Probes
+  <li>Paging through data
+ </ol>
+
+ <li><a href="#pc">Plot Canvas</a>
+ <ol>
+  <li><a href="#pc2">Guide to menus</a>
+  <ol type=a>
+   <li>File menu
+   <ol>
+    <li>Data files
+    <li>Printing
+   </ol>
+   <li>Edit Menu
+   <ol>
+   </ol>
+   <li>View Menu
+   <ol>
+   </ol>
+  </ol>
+ </ol>
+ <li><a href="#kp">Known problems</a>
+<!--
+ <li><a href="#todo">Incomplete features</a>
+  -->
+</ol>
+
+<!--------------------------------------------------------------------------- ABS -->
+
+<a name="oview"></a>
+<hr>
+<h1 align=CENTER>Overview</h1>
+<b>xpms2d</b> is an interactive diagnostic and analysis plotting tool for
+workstations running X11/R5 and Motif 1.2.  <b>xpms2d</b> allows the user
+to view PMS-2D and HVPS images and computed quantitative information on a
+"per record" basis.
+<p>
+<p>
+<b>xpms2d</b> was written at the <a href="http://raf.atd.ucar.edu/">Research
+Aviation Facility</a> of <a href="http://www.ncar.ucar.edu/">The National Center for Atmospheric Research</a> to view and analyze our
+PMS-2D data.  
+Every effort has been made to make it "what you see is what you get" between
+the screen and printouts.
+
+<!--------------------------------------------------------------------------- ABS -->
+
+<a name="gs"></a>
+<hr>
+<h1 align=CENTER>Getting Started</h1>
+
+<dl>
+<dt><h3>Acquiring</h3>
+<dd><b>xpms2d</b> is available via anonymous ftp from <b>raf.atd.ucar.edu</b>.
+For Solaris binaries, <b>cd pub/archive/RAF-src/bin.Solaris2.7</b>
+(or <b>bin.RedHat7.0</b> for linux), and retrieve <b>xpms2d</b>.
+
+
+<dt><h3>Installing</h3>
+<dd>For system use, the binary may be placed in something like
+<b>/usr/local/bin</b>.
+<p>
+For single user, place the binary in ~/bin (Make sure ~/bin is in your
+<b>PATH</b>).
+
+<dt><h3>Environment</h3>
+<dd><b>xpms2d</b> is written in C++, requiring X11/R5 and Motif 1.2 (or later).
+Specifically it was developed on Sun Microsystems, under Solaris 2.5.1, using
+the gcc compiler (ver 2.95.2).
+<p>
+<b>xpms2d</b> uses, though it is not required, a shell environment variable
+called <b>DATA_DIR</b> as the default directory to locate data files.
+<p>
+
+<dt><h3>Command Line Options</h3>
+<dd><kbd class="att">data_file</kbd>, a raw PMS-2D data file.
+
+<dt><h3>Examples</h3>
+ <dl>
+ <dt>Run with no command line parameters:
+ <dd><pre class="CDL">1024% xpms2d</pre>
+ <p>
+ <dt>Load a single data file:
+ <dd><pre class="CDL">1025% xpms2d /home/data/162rf08.2d</pre>
+ </dl>
+</dl>
+
+<!--------------------------------------------------------------------------- ABS -->
+
+<a name="vsw"></a>
+<hr>
+<h2 align=CENTER>Probe Selection Window</h2>
+<p>
+<img src="http://raf.atd.ucar.edu/Software/x2dpsw.png" align=center>
+<p align=center>Figure 1.  xpms2d Control Window.
+
+<h3>Moving around the file</h3>
+<blockquote>
+<h3>Entering start time</h3>
+Enter the start time in the left text widget and press apply to advance to a
+specific time.  The <b>Time warp</b> scale may be dragged to correspond to
+a certain point in the file.
+
+<h3>Movie/Advancing</h3>
+The <b>Start</b> and <b>Stop</b> buttons may be used to automatically advance
+frames of data, use the <b>Frame delay</b> scale for the desired amount of
+delay between page updates.  <b>Step Bkd</b> and <b>Step Fwd</b> buttons
+may be used to advance forward and backwards when the movie is stopped.
+</blockquote>
+
+<h3>Selecting and Deselecting Probes</h3>
+<blockquote>
+Click button(s) for probes you wish to view.
+<p>
+Sync and timing word legend:
+<ul>
+        <li><font color=green>Green</font> = accepted
+        <li><font color=yellow>Yellow</font> = zero area image/rejected
+        <li><font color=red>Red</font> = rejected
+        <li><font color=black>Black</font> = not detected by software
+</ul>
+<p>
+<img src="http://raf.atd.ucar.edu/Software/x2ddata.png">
+<p align=center>Figure 2.  Sample data from xpms2d.
+
+<h4>First line of text</h4>
+<ul>
+<li>Time stamp is stamped at the moment the data sytem is interrupted to
+download the data (End of Record).
+<li><kbd class="att">TAS</kbd> = True Air Speed.
+<li><kbd class="att">overLoad</kbd> = The length of time the probe was
+shut down while downloading this record (shouldn't exceed 86 millseconds
+[red] for RAF data) in milliseconds.
+<li><kbd class="att">nParticles</kbd> = The number if particles detected
+by the software in the record.
+<p>
+<li><kbd class="att">elapsed time</kbd> = The difference between this
+time stamp and the previous one.  This delta data system time, in seconds.
+<li><kbd class="att">timeBarTotal</kbd> = The summation of all the timing
+words in the record, in seconds.
+<p>
+<li>1st % = % over- or underlap of timing words compared to data system time stamps (timeBarTotal / elapsed time).
+<li>2nd % = % over- or underlap of timing words plus the overLoad compared to data system time stamps (timeBarTotal+overLoad / elapsed time). 100.0% is a perfect value.
+</ul>
+
+<h4>Second line of text</h4>
+<ul>
+<li><kbd class="att">sv</kbd> = Sample Volume (see Figure 3).
+<li><kbd class="att">area</kbd> = Sum of all shadowed pixels.
+<li><kbd class="att">conc</kbd> = Total concentration as determined by selected method.
+<li><kbd class="att">lw</kbd> = Liquid water content.
+<li><kbd class="att">z</kbd> = Reflectivity.
+</ul>
+
+</blockquote>
+
+<h3>Method</h3>
+<blockquote>
+<dl>
+<dt><b>None</b>
+<dd>Actual sample volume which passed through the probe, with no particles
+being rejected.
+
+<dt><b>Entire-in</b>
+<dd>This emulates the 260X.  Any particle which touches an end diode as well
+as zero area images are rejected.  Particle height (<b>iy</b>) is used for
+sizing.
+
+<dt><b>Center-in</b>
+<dd>Any particle who's center is within the diode array is kept, with the
+size being the greater of <b>ix</b> or <b>iy</b>.  Zero area particles are
+rejected.
+
+<dt><b>Reconstruction</b>
+<dd>Particles where <b>iy</b> is at least 20% of <b>ix</b> are kept.
+
+<p>
+For both <b>Center-in</b> and <b>Reconstruction</b>, the following rejection
+criteria are also used:
+<ul>
+<li><b>ix</b> > 121.
+<li><b>iy</b> < 24 and <b>ix</b> > 6 x <b>iy</b>.
+<li><b>iy</b> < 6 and <b>ix</b> > 3 x <b>iy</b>.
+</ul>
+
+</dl>
+</blockquote>
+
+<img src="http://raf.atd.ucar.edu/Software/2d_sv.png" align=center>
+<p>
+        <font color=green>Green</font> = Reconstruction,
+        <font color=blue>Blue</font> = Center-in,
+        <font color=red>Red</font> = Entire-in
+
+<p align=center>Figure 3.  2D sample volumes.
+
+<p>
+Algorithms are outlined in:
+<p>
+Heymsfield, A. J., Parrish, J. L., 1978: A Computaional Technique for Increasing the Effective Sampling Volume of the PMS Two-Dimensional Particle Size Spectrometer. <i>J. Appl. Meteor.</i>, 17, 1566-1572
+<p>
+
+<h3>Density</h3>
+Different densities may be selected based on what you believe the aircraft was
+flying through.  This affects the Liquid Water Content calculation.
+
+<p>
+
+<!--------------------------------------------------------------------------- ABS -->
+
+<a name="pc"></a>
+<a name="pc1"></a>
+<hr>
+<h2 align=CENTER>Canvas Features</h2>
+
+<h3>Magnify</h3>
+By "drawing" a box with the left mouse button on the canvas, a new window will pop up
+with contents of the box magnified by a factor of two.
+<p>
+
+<!--------------------------------------------------------------------------- ABS -->
+
+<a name="pc2"></a>
+<hr>
+<h2 align=CENTER>Guide to Menus</h2>
+<dl>
+<dt><h3>File Menu</h3>
+<dd>The items in the File menu allow opening of data files from disk,
+printer setup, and printing.  In the case of an operation that will
+overwrite an existing file, you will be prompted by an alert that allows
+you to abort the write if you don't want the file to be overwritten.
+<p>
+ <dl>
+ <dt><h4>New Data File</h4>
+ <dd>This displays a File Selection Box to select a file to read.  There
+is no error checking to see if the input file is valid.  Invalid files
+tend to cause a segmentation fault.  If this is the first time you have opened
+this file, <b>xpms2d</b> will create an index file; this may take a minute or
+more.
+<p>
+ <dt><h4>Save PostScript</h4>
+ <dd>This displays a File Selection Box prompting for the name of the file
+where you want to write the PostScript output.
+<p>
+ <dt><h4>Printer Setup</h4>
+ <dd>This pops up a window with options to change the 'lp' command, the size of
+plot to be printed, whether to print landscape or portrait, and color vs.
+black and white.
+<p>
+ <dt><h4>Print</h4>
+ <dd>This opens a pipe and sends PostScript commands to <b>lp(1)</b>.  
+<p>
+ <dt><h4>Save <a href="http://www.libpng.org/pub/png/">PNG</a></h4>
+ <dd>This option allows you to save the plot image as a graphics file, which
+can then be used in web pages, etc.  You can adjust the size of the image
+saved by first sizing the plot canvas.
+<p>
+<b>Why not GIF or JPEG?</b><br>
+<b>JPEG</b> was rejected because it is a lossy algorithm.  I would have chosen
+<b>GIF</b> except <b>Unisys</b> owns the patent on the LZW compression
+algorithm required to produce a <b>GIF</b> image.  A new freeware image
+compression standard has emerged:
+<a href="http://www.libpng.org/pub/png/">PNG</a>.  Both <b>Netscape</b> and
+<b>Internet Explorer</b> support <b>PNG</b>.
+Visit <a href="http://www.burnallgifs.org">http://www.burnallgifs.org</a> for more on the controversy.
+<p>
+ </dl>
+
+<dt><h3>View Menu</h3>
+ <dl>
+ <dt><h4>View Hex</h4>
+ <dd>Pops up a seperate window with an ASCII hex dump of each PMS2D record.
+ <dt><h4>View Particle Data</h4>
+ <dd>Pops up a seperate window with particle by particle blow of the records being displayed.  Printing, Saving, and Searching are available options.
+<p>
+ <dt><h4>Normal</h4>
+ <dd>This is the default set of options being displayed.
+<p>
+ <dt><h4>Diagnostic</h4>
+ <dd>Changes the ASCII output below each record to display information about timing words and
+probe frequency.
+<p>
+ </dl>
+
+<dt><h3>Options Menu</h3>
+ <dl>
+ <dt><h4>Wrap Display</h4>
+ <dd>The HVPS has more than a 1024 "slices" per buffer.  By default <b>xpms2d</b> will just run the display off the edge.  By toggling this option, records will "wrap" on the display so all particles are visible.
+ <dt><h4>Toggle Synthetic Data</h4>
+ <dd>This will have <b>xpms2d</b> toggle to a uniform record of data for double checking calculation accuracy.
+<p>
+ </dl>
+
+
+</dl>
+<p>
+
+<a name="kp"></a>
+<hr>
+<h1>Known Problems</h1>
+<ul>
+<li>Invalid data files may cause a core dump.
+<li>Performing "File/New datafile" a second time will cause a core dump on
+Redhat 7.*.  Bug in the gcc 2.96 compilers.
+</ul>
+
+<hr>
+<h1>Author</h1>
+Christopher J. Webster<br>
+National Center for Atmospheric Research<br>
+Research Aviation Facility.<br>
+(303) 497-1044
+<p>
+  <address><a href="/cgi-bin/mail_me1.pl/cjw+from_RAF_Web_Software_Page_xpms2d">email</a></address>
+
+<hr>
+<font size=2>
+Last update:
+Fri Nov 16 10:52:24 MST 2001
+</body>
+</html>

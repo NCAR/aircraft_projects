@@ -1,0 +1,91 @@
+.\" @(#)tapeIO.3 1.33 90/02/15 SMI;
+.TH TAPEIO 3  "27 April 1992"
+.SH NAME
+TapeOpen, TapeAssign, TapeSeek, TapeRead, TapeStat, TapeClose, TapeTell \- tape IO operations
+.SH SYNOPSIS
+.ft
+.fi
+.LP
+.nf
+.ft B
+int TapeOpen(devicename)
+char \(**devicename;
+.ft
+.fi
+.LP
+.nf
+.ft B
+int TapeAssign(fd)
+int fd;
+.ft
+.fi
+.LP
+.nf
+.ft B
+int TapeSeek(blk_no)
+long blk_no;
+.ft
+.fi
+.LP
+.nf
+.ft B
+int TapeRead(buffer)
+char \(**buffer;
+.ft
+.fi
+.LP
+.nf
+.ft B
+int TapeTell()
+.ft
+.fi
+.LP
+.nf
+.ft B
+int TapeStat(stat)
+struct mtget *stat;
+.ft
+.fi
+.LP
+.fn
+.ft B
+int TapeClose()
+.ft
+.fi
+.IX  "TapeOpen()"  ""  "\fLTapeOpen()\fP \(em open tape device"
+.IX  "TapeAssign()"  ""  "\fLTapeAssign()\fP \(em assign opened tape device"
+.IX  "TapeSeek()"  ""  "\fLTapeSeek()\fP \(em seek to block number"
+.IX  "TapeRead()"  ""  "\fLTapeRead()\fP \(em read physical record"
+.IX  "TapeStat()"  ""  "\fLTapeStat()\fP \(em stat registers"
+.IX  "TapeClose()"  ""  "\fLTapeClose()\fP \(em close tape device"
+.SH DESCRIPTION
+.LP
+These functions were designed for quick easy Read Only access to
+exabytes.
+.LP
+.B TapeOpen(\|)
+opens
+.I devicename
+for Read Only Access.  It does not return the fd, it is
+maintained internally in a static variable.
+.B TapeAssign(\|)
+Assigns an already open fd to the internal fd.  This is useful if you
+already have the device open and do not want to wait for it to rewind.
+.LP
+.B TapeSeek(\|)
+seeks to
+.I recnum.
+.B TapeTell(\|) returns the current physical record number.  This may
+differ from what ioctl says.
+.LP
+.B TapeRead(\|)
+reads the next physical record from the tape and places it into
+.I buffer.
+.B TapeRead(\|)
+returns the number of bytes read.
+Upon reaching EOF
+.B TapeRead(\|)
+returns 0, it will NOT skip to the next file.
+.LP
+.B TapeClose(\|)
+closes the file.

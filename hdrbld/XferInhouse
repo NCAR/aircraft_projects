@@ -1,0 +1,20 @@
+#!/usr/bin/csh -x
+
+cd ${PROJ_DIR}/$argv[0]
+
+rsh $argv[1] mkdir ${PROJ_DIR}/$argv[0]/onboard
+
+ftp -i -n << endftp
+	open mistral.atd.ucar.edu
+	user nimbus !GENPRO
+	cd /home/local/proj/$argv[0]/onboard
+	bin
+	mput *
+	quit
+endftp
+
+echo "Onboard files have been copied to ${PROJ_DIR}/$argv[0]/onboard."
+echo "Please copy the individual files manually to ${PROJ_DIR}/$argv[0]."
+echo ""
+echo "Type 'exit' when finished."
+sleep 10

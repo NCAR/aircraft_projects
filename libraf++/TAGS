@@ -1,0 +1,676 @@
+
+Application.cc,192
+Application::Application(const char APP_CLASS[], int *argc, char *argv[],Application23,421
+void Application::FlushEvents()FlushEvents32,753
+Application::~Application()~Application40,961
+
+Application.h,272
+#define APPLICATION_HAPPLICATION_H18,339
+class Application {Application25,494
+  Widget	Shell() const	{ return(shell); }Shell32,638
+  XtAppContext	Context() const	{ return(context); }Context33,680
+  Widget	shell;shell39,767
+  XtAppContext	context;context40,783
+
+Canvas.cc,468
+Canvas::Canvas(Widget drawA) : w(drawA), dpy(XtDisplay(drawA)), win(XtWindow(drawA)), defaultGC(XDefaultGC(dpy, 0))Canvas25,465
+void Canvas::Clear() constClear43,908
+void Canvas::ClearArea(int x, int y, int w, int h) constClearArea52,1187
+void Canvas::ExposeAll() constExposeAll61,1491
+void Canvas::ExposeArea(XmDrawingAreaCallbackStruct *call) constExposeArea68,1699
+void Canvas::Resize()Resize78,2036
+void Canvas::SetSize(int ht, int wd)SetSize97,2467
+
+Canvas.h,845
+#define CANVAS_HCANVAS_H18,331
+class Canvas {Canvas23,444
+  int		Height() const	{ return(height); }Height35,740
+  int		Width()	 const	{ return(width); }Width36,782
+  int		Depth()	 const	{ return(depth); }Depth37,823
+  const Widget	Wdgt() const	{ return(w); }Wdgt39,865
+  Drawable	Surface() const	{ return(pixMap); }Surface40,908
+  int		PutImage(XImage *im, int x, int y, int w, int h)PutImage42,956
+  XImage	*GetImage(int x, int y, int w, int h)GetImage45,1091
+  Widget	w;w51,1244
+  Display	*dpy;dpy52,1256
+  Window	win;win53,1272
+  Pixmap	pixMap;pixMap54,1286
+  GC		defaultGC;defaultGC55,1303
+  short		width, height;width57,1321
+  short		width, height;height57,1321
+  int		depth;depth58,1345
+  unsigned long	foreground, background;foreground60,1360
+  unsigned long	foreground, background;background60,1360
+
+Cursor.cc,256
+XCursor::XCursor()XCursor28,576
+void XCursor::WaitCursor(Widget w)WaitCursor35,722
+void XCursor::TextCursor(Widget w)TextCursor57,1127
+void XCursor::GrabCursor(Widget w)GrabCursor80,1557
+void XCursor::PointerCursor(Widget w)PointerCursor103,1983
+
+Cursor.h,565
+#define CURSOR_HCURSOR_H18,315
+class XCursor {XCursor26,493
+  enum mode { POINTER, WAIT, ANNOTATE, GRAB };mode29,518
+  enum mode { POINTER, WAIT, ANNOTATE, GRAB };POINTER29,518
+  enum mode { POINTER, WAIT, ANNOTATE, GRAB };WAIT29,518
+  enum mode { POINTER, WAIT, ANNOTATE, GRAB };ANNOTATE29,518
+  enum mode { POINTER, WAIT, ANNOTATE, GRAB };GRAB29,518
+  mode	cursorMode;cursorMode38,699
+  Cursor waitCursor;waitCursor42,729
+  Cursor textCursor;textCursor43,750
+  Cursor grabCursor;grabCursor44,771
+  Cursor pointerCursor;pointerCursor45,792
+
+Makefile,378
+RELEASE=${JLOCAL}/libRELEASE4,24
+I2D=	${JLOCAL}/includeI2D5,46
+LIBNAME=	raf++LIBNAME8,71
+INCLUDES=	-I${I2D} -I/usr/X11R6/includeINCLUDES10,87
+CXXFLAGS=	-g -O2 ${INCLUDES} ${DEFINES}CXXFLAGS12,144
+OBJS=	adsIO.o adsIOrt.o Application.o Canvas.o Cursor.o hdrAPI.o gettext.o\OBJS14,185
+SRCS=	adsIO.cc adsIOrt.cc Application.cc Canvas.cc Cursor.cc hdrAPI.cc\SRCS19,428
+
+PMSspex.cc,284
+PMSspex::PMSspex(char fileName[])PMSspex40,670
+char *PMSspex::GetParameter(char serialNumber[],  char parameter[])GetParameter101,1951
+PMSspex::~PMSspex()~PMSspex142,2853
+int PMSspex::GetSerialNumList(char *list[]) /* returns list of serial numbers */GetSerialNumList157,3100
+
+PMSspex.h,155
+#define PMSSPEX_HPMSSPEX_H12,309
+#define NULL	NULL15,341
+#define COMMENT	COMMENT18,367
+class PMSspexPMSspex22,465
+  char	**PMSfile;PMSfile33,640
+
+PixMap.cc,175
+PixMap::PixMap(const Widget w, int wd, int ht)PixMap25,465
+PixMap::~PixMap()~PixMap51,1033
+void PixMap::Clear() constClear59,1197
+void PixMap::Copy() constCopy68,1476
+
+PixMap.h,571
+#define PIXMAP_HPIXMAP_H18,331
+class PixMap {PixMap25,481
+  Drawable	Surface() const	{ return(pixMap); }Surface34,599
+	*GetImage(int w, int h)GetImage37,656
+  int	PutImage(XImage *im, int x, int y, int w, int h)PutImage40,753
+  Display	*dpy;dpy45,889
+  Window	win;win46,905
+  GC		defaultGC;defaultGC47,919
+  Pixmap	pixMap;pixMap48,936
+  short		width, height;width50,954
+  short		width, height;height50,954
+  int		depth;depth51,978
+  unsigned long	foreground, background;foreground53,993
+  unsigned long	foreground, background;background53,993
+
+Printer.cc,435
+Printer::Printer(Widget parent) : WinForm(parent, "print", RowColumn)Printer45,1082
+void Printer::setParms()setParms168,4440
+void Printer::PopUp()PopUp199,5220
+void Printer::SetPrinter(char *newPrinter)SetPrinter207,5373
+void Printer::SetShape(layout newShape)SetShape236,5839
+float Printer::FontRatio()FontRatio253,6145
+void Printer::ApplyParms()ApplyParms259,6322
+void Printer::GetPrinterList()GetPrinterList282,6795
+
+Printer.h,1655
+#define PRINTER_HPRINTER_H18,328
+#define TOTAL_PARMS	TOTAL_PARMS29,507
+#define MAX_PRINTERS MAX_PRINTERS30,529
+class Printer : public WinForm {Printer34,633
+  enum layout { LANDSCAPE, PORTRAIT };layout37,675
+  enum layout { LANDSCAPE, PORTRAIT };LANDSCAPE37,675
+  enum layout { LANDSCAPE, PORTRAIT };PORTRAIT37,675
+  layout Shape()	{ return(shape); }Shape43,778
+  char	*lpCommand()	{ return(lp_command); }lpCommand44,814
+  bool	Color()		{ return(color); }Color45,858
+  int	LineWidth()	{ return(lineWidth); }LineWidth46,893
+  int	Width()		{ return((int)(dpi * width)); }Width47,934
+  int	Height()	{ return((int)(dpi * height)); }Height48,981
+  float	WidthRatio()	{ return(width / (shape == LANDSCAPE ? 11.0 : 8.5)); }WidthRatio50,1030
+  float	HeightRatio()	{ return(height / (shape == LANDSCAPE ? 8.5 : 11.0)); }HeightRatio51,1106
+  void	SetColor(bool c)	{ color = c; }SetColor56,1278
+  void	SetCommand(char s[])	{ strcpy(lp_command, s); }SetCommand57,1317
+  void	SetLineWidth(int w)	{ if (w > 0 && w < 10) lineWidth = w; }SetLineWidth58,1372
+  static const int     dpi = 288;dpi61,1449
+  Widget	parmsText[TOTAL_PARMS], shapeB[2], colorB[2];parmsText63,1484
+  Widget	parmsText[TOTAL_PARMS], shapeB[2], colorB[2];shapeB63,1484
+  Widget	parmsText[TOTAL_PARMS], shapeB[2], colorB[2];colorB63,1484
+  char		lp_command[64], *printer_list[MAX_PRINTERS];lp_command65,1540
+  char		lp_command[64], *printer_list[MAX_PRINTERS];printer_list65,1540
+  float		width, height;width66,1593
+  float		width, height;height66,1593
+  layout	shape;shape67,1617
+  bool		color;color68,1633
+  int		lineWidth;lineWidth69,1648
+
+Queue.cc,144
+Queue::Queue()Queue29,470
+Queue::~Queue()~Queue36,623
+bool Queue::EnQueue(void *data)EnQueue50,870
+void *Queue::DeQueue()DeQueue75,1255
+
+Queue.h,339
+#define QUEUE_HQUEUE_H10,226
+#define NULL	NULL13,256
+class QueueQueue17,290
+  void	*Front()	{ return(head ? head->data : NULL); }Front25,377
+	typedef struct qnodeqnode29,442
+		struct qnode	*next;next31,468
+		void		*data;data32,490
+		} QueueNode;QueueNode33,505
+  QueueNode	*head;head36,522
+  QueueNode	*tail;tail37,541
+
+TextWindow.cc,193
+TextWindow::TextWindow(const Widget parent, char name[]) : WinForm(parent, name, Form)TextWindow29,536
+void TextWindow::Search()Search80,2243
+TextWindow::~TextWindow()~TextWindow118,3082
+
+TextWindow.h,352
+#define TEXTWIN_HTEXTWIN_H18,356
+class TextWindow : public WinForm {TextWindow31,693
+  void	Clear()	{ XmTextSetString(text, ""); }Clear37,802
+  void	Append(const char txt[])Append38,848
+  void MoveTo(int pos)	{ XmTextSetTopCharacter(text, pos); }MoveTo43,966
+  Widget	text, searchTxt;text46,1037
+  Widget	text, searchTxt;searchTxt46,1037
+
+Time.cc,800
+FlightClock::FlightClock(const int h, const int m, const int s)FlightClock24,453
+void FlightClock::SetTime(const int h, const int m, const int s)SetTime31,651
+FlightClock& FlightClock::operator=(const int s)operator =38,846
+FlightClock& FlightClock::operator=(const FlightClock& rhs)operator =47,1017
+FlightClock& FlightClock::operator=(const char rhs[])operator =59,1239
+FlightClock& FlightClock::operator++() // prefixoperator ++71,1490
+FlightClock& FlightClock::operator+=(const int rhs)operator +=80,1660
+FlightClock& FlightClock::operator-=(const int rhs)operator -=89,1838
+FlightClock& FlightClock::operator+=(const FlightClock& rhs)operator +=98,2016
+FlightClock& FlightClock::operator-=(const FlightClock& rhs)operator -=108,2226
+char *FlightClock::c_str()c_str117,2417
+
+Time.h,1655
+#define CLOCK_HCLOCK_H18,322
+class FlightClock {FlightClock21,414
+	FlightClock()		{ ssm = 0; label[0] = '\0'; }FlightClock24,443
+  int		Seconds() const	 { return(ssm); }   // Seconds since midnightSeconds28,561
+  bool		operator!=(const FlightClock& rhs) { return(ssm != rhs.ssm); }operator !=32,688
+  bool		operator==(const FlightClock& rhs) { return(ssm == rhs.ssm); }operator ==33,759
+  bool		operator<=(const FlightClock& rhs) { return(ssm <= rhs.ssm); }operator <=34,830
+  bool		operator>=(const FlightClock& rhs) { return(ssm >= rhs.ssm); }operator >=35,901
+  bool		operator<(const FlightClock& rhs)  { return(ssm < rhs.ssm); }operator <36,972
+  bool		operator>(const FlightClock& rhs)  { return(ssm > rhs.ssm); }operator >37,1042
+  bool		operator!=(const int rhs) { return(ssm != rhs); }operator !=39,1113
+  bool		operator==(const int rhs) { return(ssm == rhs); }operator ==40,1171
+  bool		operator<=(const int rhs) { return(ssm <= rhs); }operator <=41,1229
+  bool		operator>=(const int rhs) { return(ssm >= rhs); }operator >=42,1287
+  bool		operator<(const int rhs)  { return(ssm < rhs); }operator <43,1345
+  bool		operator>(const int rhs)  { return(ssm > rhs); }operator >44,1402
+  int		operator-(const FlightClock& rhs) { return(ssm - rhs.ssm); }operator -56,1824
+  int		operator-(const int rhs)	  { return(ssm - rhs); }operator -57,1892
+  int		operator+(const FlightClock& rhs) { return(ssm + rhs.ssm); }operator +58,1949
+  int		operator+(const int rhs)	  { return(ssm + rhs); }operator +59,2017
+  long	ssm;		// Seconds since midnight, this will not roll-over.ssm68,2272
+  char	label[10];label69,2337
+
+Window.cc,262
+WinForm::WinForm(Widget parent, char name[], winType wt)WinForm23,425
+WinForm::~WinForm()~WinForm46,960
+void WinForm::PopUp() constPopUp54,1121
+void WinForm::PopDown() constPopDown62,1312
+void WinForm::SetPosition(int x, int y) constSetPosition70,1499
+
+Window.h,405
+#define WINDOW_HWINDOW_H18,349
+class WinForm {WinForm26,492
+  enum winType { Form, RowColumn };winType29,517
+  enum winType { Form, RowColumn };Form29,517
+  enum winType { Form, RowColumn };RowColumn29,517
+  Widget	Shell()	 const	{ return(shell); }Shell39,739
+  Widget	Window() const	{ return(window); }Window40,782
+  Widget	shell, window;shell43,836
+  Widget	shell, window;window43,836
+
+XFonts.cc,730
+#define XtNfont24 XtNfont2423,377
+#define XtCFont24 XtCFont2424,410
+#define XtNfont18 XtNfont1825,443
+#define XtCFont18 XtCFont1826,476
+#define XtNfont14 XtNfont1427,509
+#define XtCFont14 XtCFont1428,542
+#define XtNfont12 XtNfont1229,575
+#define XtCFont12 XtCFont1230,608
+#define XtNfont10 XtNfont1031,641
+#define XtCFont10 XtCFont1032,674
+typedef struct _insRec_insRec34,709
+        char    *font24;font2436,742
+        char    *font18;font1837,767
+        char    *font14;font1438,792
+        char    *font12;font1239,817
+        char    *font10;font1040,842
+        } instanceRec;instanceRec41,867
+static XtResource resources[] = {resources43,891
+XFonts::XFonts(Widget shell)XFonts61,1529
+
+XFonts.h,849
+#define XFONTS_HXFONTS_H18,319
+#define	MAX_FONTS	MAX_FONTS26,432
+class XFonts {XFonts29,528
+  enum	size { Point24, Point18, Point14, Point12, Point10 };size34,576
+  enum	size { Point24, Point18, Point14, Point12, Point10 };Point2434,576
+  enum	size { Point24, Point18, Point14, Point12, Point10 };Point1834,576
+  enum	size { Point24, Point18, Point14, Point12, Point10 };Point1434,576
+  enum	size { Point24, Point18, Point14, Point12, Point10 };Point1234,576
+  enum	size { Point24, Point18, Point14, Point12, Point10 };Point1034,576
+  const XFontStruct	*Font(int idx) const { return(fontInfo[idx]); }Font36,638
+  int	StringWidth(int idx, const std::string& s) constStringWidth38,707
+  int	StringWidth(const XFontStruct *font, const std::string& s) constStringWidth41,826
+  XFontStruct   *fontInfo[MAX_FONTS];fontInfo45,976
+
+XPen.cc,297
+XPen::XPen(Widget w)XPen25,442
+void XPen::SetClipping(int x, int y, int h, int w)SetClipping47,985
+void XPen::SetDash(int n)SetDash62,1398
+XImage *XPen::GetImage(Drawable canvas, int x, int y, int width, int height)GetImage75,1719
+unsigned long XPen::GetBackground()GetBackground82,1954
+
+XPen.h,1419
+#define XPEN_HXPEN_H18,344
+class XPen {XPen27,528
+  void	SetFont(const XFontStruct *font) { XSetFont(dpy, gc, font->fid); }SetFont32,568
+  void	SetColor(unsigned long color)	{ XSetForeground(dpy, gc, color); }SetColor33,642
+  void	SetLineWidth(int w)	{ if (w > 0 && w < 10)SetLineWidth34,715
+  void	SetFunction(int mask)	{ XSetFunction(dpy, gc, mask); }SetFunction39,902
+  void	DrawText(Drawable canvas, int x, int y, char str[])DrawText42,968
+  void	DrawText(Drawable canvas, int x, int y, const std::string& str)DrawText45,1087
+  void	DrawPoint(Drawable canvas, int x, int y)DrawPoint48,1227
+  void	DrawPoints(Drawable canvas, XPoint pts[], int nPts)DrawPoints51,1316
+  void	DrawLine(Drawable canvas, int x, int y, int x1, int y1)DrawLine54,1439
+  void	DrawLines(Drawable canvas, XPoint pts[], int nPts)DrawLines57,1550
+  void	DrawRectangle(Drawable canvas, int x, int y, int w, int h)DrawRectangle60,1671
+  void	DrawRectangles(Drawable canvas, XRectangle rex[], int nRex)DrawRectangles63,1788
+  void	DrawRectangleFilled(Drawable canvas, int x, int y, int w, int h)DrawRectangleFilled66,1906
+  void	ClearClipping()		{ XSetClipMask(dpy, gc, None); }ClearClipping70,2077
+  void	ClearDash()ClearDash73,2159
+  void	PutImage(Drawable dest, XImage *src, int src_x, int src_y, int dst_x,PutImage79,2331
+  Display	*dpy;dpy88,2550
+  GC		gc;gc89,2566
+  int		lineWidth;lineWidth91,2577
+
+XmError.cc,59
+XmError::XmError(Widget parent, char str[])XmError22,587
+
+XmError.h,101
+#define XMERROR_HXMERROR_H18,328
+class XmError {XmError25,468
+  Widget	errorBox;errorBox31,541
+
+XmFile.cc,310
+static void DismissFile(Widget w, XtPointer client, XtPointer call)DismissFile22,636
+XmFile::XmFile(Widget parent)XmFile29,851
+void XmFile::QueryFile(char prompt[], char directory[], XtCallbackProc callBack)QueryFile39,1219
+void XmFile::ExtractFileName(XmString str, char **text)ExtractFileName73,2164
+
+XmFile.h,95
+#define XMFILE_HXMFILE_H18,331
+class XmFile {XmFile25,468
+  Widget	fileBox;fileBox33,647
+
+XmQuery.cc,281
+static void DismissQuery(Widget w, XtPointer client, XtPointer call)DismissQuery25,727
+void XmQuery::QueryUser(char str[], int maxlen, void (*callBack)())QueryUser32,944
+XmQuery::XmQuery(Widget parent)XmQuery64,1848
+void XmQuery::ExtractAnswer(char *s)ExtractAnswer73,2208
+
+XmQuery.h,101
+#define XMQUERY_HXMQUERY_H18,327
+class XmQuery {XmQuery27,514
+  Widget	queryBox;queryBox35,667
+
+XmWarn.cc,106
+XmWarn::XmWarn(Widget parent, char warning[], XtCallbackProc okCB, XtCallbackProc cancelCB)XmWarn22,589
+
+XmWarn.h,95
+#define XMWARN_HXMWARN_H18,325
+class XmWarn {XmWarn24,463
+  Widget	warnBox;warnBox30,584
+
+adsIO.cc,678
+ADS_DataFile::ADS_DataFile(char fName[])ADS_DataFile23,447
+bool ADS_DataFile::FirstSyncRecord(char buff[])FirstSyncRecord52,1065
+bool ADS_DataFile::NextSyncRecord(char buff[])NextSyncRecord60,1267
+bool ADS_DataFile::FirstMCRRecord(Mcr_rec *buff)FirstMCRRecord88,1961
+bool ADS_DataFile::NextMCRRecord(Mcr_rec *buff)NextMCRRecord96,2162
+bool ADS_DataFile::FirstPMS2dRecord(P2d_rec *buff)FirstPMS2dRecord114,2548
+bool ADS_DataFile::NextPMS2dRecord(P2d_rec *buff)NextPMS2dRecord122,2755
+int ADS_DataFile::NextPhysicalRecord(char buff[])NextPhysicalRecord160,3595
+ADS_DataFile::~ADS_DataFile()~ADS_DataFile219,4791
+void ADS_DataFile::resetFile()resetFile238,5116
+
+adsIO.h,1448
+#define ADSIO_HADSIO_H16,383
+#define ADS_WORD	ADS_WORD25,517
+#define HDR_WORD	HDR_WORD26,541
+#define SDI_WORD	SDI_WORD27,565
+#define AVAPS_WORD	AVAPS_WORD28,589
+#define MCR_WORD	MCR_WORD29,615
+#define MASP_WORD	MASP_WORD30,639
+#define PMS2DC1	PMS2DC132,665
+#define PMS2DC2	PMS2DC233,689
+#define PMS2DG1	PMS2DG134,713
+#define PMS2DG2	PMS2DG235,737
+#define PMS2DH1	PMS2DH136,761
+#define PMS2DH2	PMS2DH237,785
+#define PMS2DP1	PMS2DP138,809
+#define PMS2DP2	PMS2DP239,833
+#define PMS2_SIZE	PMS2_SIZE41,859
+#define PMS2_LRPPR	PMS2_LRPPR42,893
+#define PMS2_RECSIZE	PMS2_RECSIZE43,933
+class ADS_DataFile {ADS_DataFile47,1066
+  Header	*hdr;hdr53,1144
+  int	HdrBlkToSeconds(Hdr_blk *r)HdrBlkToSeconds67,1431
+  int	HdrBlkToSeconds(P2d_rec r)HdrBlkToSeconds70,1547
+  int	HdrBlkToSeconds(P2d_rec *r)HdrBlkToSeconds73,1660
+  int	HdrBlkToSeconds(Mcr_rec r)HdrBlkToSeconds76,1776
+  int	HdrBlkToSeconds(Mcr_rec *r)HdrBlkToSeconds79,1889
+  long	filePos()	{ return(ftell(fp)); }filePos84,2070
+  void	setPos(long x)	{ fseek(fp, x, SEEK_SET); }setPos85,2110
+  FILE	*fp;fp89,2171
+  bool		diskData;diskData91,2184
+  TapeDrive	*tape;tape92,2202
+  int	curr2dLR, currSyncLR;curr2dLR95,2242
+  int	curr2dLR, currSyncLR;currSyncLR95,2242
+  char	physRecord[MX_PHYS];physRecord97,2271
+  char	*syncPhysRecord, *twoDPhysRecord;syncPhysRecord98,2299
+  char	*syncPhysRecord, *twoDPhysRecord;twoDPhysRecord98,2299
+
+adsIOrt.cc,1527
+ADS_rtFile::ADS_rtFile()ADS_rtFile22,441
+bool ADS_rtFile::FirstSyncRecord(char buff[])FirstSyncRecord46,1051
+bool ADS_rtFile::NextSyncRecord(char buff[])NextSyncRecord58,1291
+bool ADS_rtFile::LastSyncRecord(char buff[], int minusN)LastSyncRecord78,1747
+bool ADS_rtFile::FirstMCRRecord(Mcr_rec *buff)FirstMCRRecord97,2183
+bool ADS_rtFile::NextMCRRecord(Mcr_rec *buff)NextMCRRecord109,2420
+bool ADS_rtFile::LastMCRRecord(Mcr_rec *buff)LastMCRRecord144,3140
+bool ADS_rtFile::FirstPMS2dRecord(P2d_rec *buff)FirstPMS2dRecord159,3514
+bool ADS_rtFile::NextPMS2dRecord(P2d_rec *buff)NextPMS2dRecord171,3755
+bool ADS_rtFile::LastPMS2dRecord(P2d_rec *buff, int minusN)LastPMS2dRecord203,4373
+bool ADS_rtFile::FirstGreyRecord(char buff[])FirstGreyRecord222,4866
+bool ADS_rtFile::NextGreyRecord(char buff[])NextGreyRecord234,5106
+bool ADS_rtFile::LastGreyRecord(char buff[])LastGreyRecord266,5736
+bool ADS_rtFile::FirstAvapsRecord(char *buff)FirstAvapsRecord286,6183
+bool ADS_rtFile::NextAvapsRecord(char *buff)NextAvapsRecord298,6400
+bool ADS_rtFile::LastAvapsRecord(char *buff)LastAvapsRecord319,6733
+int ADS_rtFile::NextPhysicalRecord(char buff[], FILE *fp, int lrLen)NextPhysicalRecord331,6961
+ADS_rtFile::~ADS_rtFile()~ADS_rtFile411,8767
+void ADS_rtFile::readFileName()readFileName418,8911
+void ADS_rtFile::checkFileName()checkFileName438,9485
+void ADS_rtFile::openFiles()openFiles456,9891
+void ADS_rtFile::closeFiles()closeFiles489,10608
+void ADS_rtFile::resetFiles()resetFiles511,10962
+
+adsIOrt.h,2187
+#define ADSIORT_HADSIORT_H16,397
+#define ADS_WORD	ADS_WORD25,532
+#define HDR_WORD	HDR_WORD26,556
+#define SDI_WORD	SDI_WORD27,580
+#define AVAPS_WORD	AVAPS_WORD28,604
+#define MCR_WORD	MCR_WORD29,630
+#define MASP_WORD	MASP_WORD30,654
+#define PMS2DC1	PMS2DC132,680
+#define PMS2DC2	PMS2DC233,704
+#define PMS2DG1	PMS2DG134,728
+#define PMS2DG2	PMS2DG235,752
+#define PMS2DH1	PMS2DH136,776
+#define PMS2DH2	PMS2DH237,800
+#define PMS2DP1	PMS2DP138,824
+#define PMS2DP2	PMS2DP239,848
+#define PMS2_SIZE	PMS2_SIZE41,874
+#define PMS2_LRPPR	PMS2_LRPPR42,908
+#define PMS2_RECSIZE	PMS2_RECSIZE43,948
+class ADS_rtFile {ADS_rtFile47,1081
+  Header	*hdr;hdr53,1141
+  bool	LastSyncRecord(char buff[])	{ return(LastSyncRecord(buff, 0)); }LastSyncRecord59,1279
+  bool	LastPMS2dRecord(P2d_rec *buff)	{ return(LastPMS2dRecord(buff, 1)); }LastPMS2dRecord68,1595
+  int	HdrBlkToSeconds(Hdr_blk *r)HdrBlkToSeconds78,1895
+  int	HdrBlkToSeconds(P2d_rec r)HdrBlkToSeconds81,2011
+  int	HdrBlkToSeconds(P2d_rec *r)HdrBlkToSeconds84,2124
+  int	HdrBlkToSeconds(GreyParticle r)HdrBlkToSeconds87,2240
+  int	HdrBlkToSeconds(GreyParticle *r)HdrBlkToSeconds90,2358
+  int	HdrBlkToSeconds(Mcr_rec r)HdrBlkToSeconds93,2479
+  int	HdrBlkToSeconds(Mcr_rec *r)HdrBlkToSeconds96,2592
+  int fileLengthSync()fileLengthSync99,2708
+  int fileLength2D()fileLength2D102,2804
+  int fileLengthGrey()fileLengthGrey105,2896
+  int fileLengthMCR()fileLengthMCR108,2992
+  int fileLengthAVAPS()fileLengthAVAPS111,3086
+  FILE	*fpSync, *fp2D, *fpGrey, *fpMCR, *fpAVAPS;fpSync116,3194
+  FILE	*fpSync, *fp2D, *fpGrey, *fpMCR, *fpAVAPS;fp2D116,3194
+  FILE	*fpSync, *fp2D, *fpGrey, *fpMCR, *fpAVAPS;fpGrey116,3194
+  FILE	*fpSync, *fp2D, *fpGrey, *fpMCR, *fpAVAPS;fpMCR116,3194
+  FILE	*fpSync, *fp2D, *fpGrey, *fpMCR, *fpAVAPS;fpAVAPS116,3194
+  struct stat   fileInfo;fileInfo118,3245
+  time_t	lastMod;lastMod119,3271
+  int	headOffset;headOffset125,3439
+  char	*projDir;projDir127,3458
+  char	fileBaseName[256], rtFileFileName[256];fileBaseName128,3475
+  char	fileBaseName[256], rtFileFileName[256];rtFileFileName128,3475
+  char	physRecord[MX_PHYS];physRecord129,3522
+
+gettext.cc,171
+int GetTextInt(const Widget w)GetTextInt31,567
+float GetTextFloat(const Widget w)GetTextFloat45,776
+void GetTextString(const Widget w, string& s)GetTextString59,989
+
+hdrAPI.cc,549
+Header::Header(const string fileName)Header35,651
+Header::Header(const char fileName[])Header41,801
+void Header::readHeader(const char fileName[])readHeader47,943
+Header::Header(TapeDrive &drv)Header123,2445
+void *Header::GetFirst()GetFirst163,3262
+void *Header::GetFirst(char blkName[])GetFirst173,3473
+void *Header::GetSDI(char varName[])GetSDI191,3948
+void *Header::GetNext()GetNext210,4479
+void *Header::GetNext(char blkName[])GetNext222,4745
+char *Header::ProjectName()ProjectName242,5239
+Header::~Header()~Header272,5830
+
+hdrAPI.h,6472
+#define HDRAPI_HHDRAPI_H12,303
+#define NULL	NULL15,334
+class HeaderHeader28,562
+  void 	*HeaderPointer()	{ return((void *)header); }HeaderPointer39,792
+  char	*Version()		{ return(header->version); }Version44,925
+  char	*ProjectNumber()	{ return(header->prnum); }ProjectNumber45,973
+  char	*FlightNumber()		{ return(header->fltnum); }FlightNumber46,1024
+  char	*TapeNumber()		{ return(header->tpnum); }TapeNumber47,1076
+  char	*FlightDate()		{ return(header->date); }FlightDate48,1125
+  char	*FlightTime()		{ return(header->time); }FlightTime49,1173
+  char	*TimeZone()		{ return(header->tzone); }TimeZone50,1221
+  char	*Aircraft()		{ return(header->acraft); }Aircraft51,1268
+  long	NumberItems()		{ return(ntohl(header->n_items)); }NumberItems53,1317
+  long	lrLength()		{ return(ntohl(header->lrlen)); }lrLength54,1375
+  long	lrPpr()			{ return(ntohl(header->lrppr)); }lrPpr55,1428
+  long	HeaderLength()		{ return(ntohl(header->thdrlen)); }HeaderLength56,1479
+  char	*ADStype()		{ return(header->ads_type); }ADStype58,1539
+  char	*ItemType(void *vp)	{ return(((Blk *)vp)->item_type); }ItemType65,1709
+  long	ItemLength(void *vp)	{ return(ntohl(((Blk *)vp)->item_len)); }ItemLength66,1772
+  long	Start(void *vp)		{ return(ntohl(((Blk *)vp)->start)); }Start67,1842
+  long	SizeOf(void *vp)	{ return(ntohl(((Blk *)vp)->length)); }SizeOf68,1905
+  long	SampleRate(Dme *vp)	{ return(ntohl(vp->rate)); }SampleRate70,1970
+  long	SampleRate(Ins *vp)	{ return(ntohl(vp->rate)); }SampleRate71,2026
+  long	SampleRate(Masp *vp)	{ return(ntohl(vp->rate)); }SampleRate72,2082
+  long	SampleRate(Pms1 *vp)	{ return(ntohl(vp->rate)); }SampleRate73,2139
+  long	SampleRate(Pms1v2 *vp)	{ return(ntohl(vp->rate)); }SampleRate74,2196
+  long	SampleRate(Serial *vp)	{ return(ntohl(vp->rate)); }SampleRate75,2255
+  long	SampleRate(Sh *vp)	{ return(ntohl(vp->rate)); }SampleRate76,2314
+  char	*DSM(Asy *vp)		{ return(vp->dsm_locn); }DSM79,2414
+  char	*DSM(Blk *vp)		{ return(vp->dsm_locn); }DSM80,2462
+  char	*DSM(Dme *vp)		{ return(vp->dsm_locn); }DSM81,2510
+  char	*DSM(Evt *vp)		{ return(vp->dsm_locn); }DSM82,2558
+  char	*DSM(Ins *vp)		{ return(vp->dsm_locn); }DSM83,2606
+  char	*DSM(Irs *vp)		{ return(vp->dsm_locn); }DSM84,2654
+  char	*DSM(Masp *vp)		{ return(vp->dsm_locn); }DSM85,2702
+  char	*DSM(Pms1 *vp)		{ return(vp->dsm_locn); }DSM86,2751
+  char	*DSM(Pms1v2 *vp)	{ return(vp->dsm_locn); }DSM87,2800
+  char	*DSM(Pms2 *vp)		{ return(vp->dsm_locn); }DSM88,2850
+  char	*DSM(Pms2h *vp)		{ return(vp->dsm_locn); }DSM89,2899
+  char	*DSM(Serial *vp)	{ return(vp->dsm_locn); }DSM90,2949
+  char	*DSM(Sh *vp)		{ return(vp->dsm_locn); }DSM91,2999
+  char	*DSM(Uvhyg *vp)		{ return(vp->dsm_locn); }DSM92,3046
+  char	*AircraftLocation(Blk *vp)	{ return(vp->locn); }AircraftLocation95,3134
+  char	*AircraftLocation(Evt *vp)	{ return(vp->locn); }AircraftLocation96,3190
+  char	*AircraftLocation(Irs *vp)	{ return(vp->locn); }AircraftLocation97,3246
+  char	*AircraftLocation(Masp *vp)	{ return(vp->locn); }AircraftLocation98,3302
+  char	*AircraftLocation(Pms1 *vp)	{ return(vp->locn); }AircraftLocation99,3359
+  char	*AircraftLocation(Pms1v2 *vp)	{ return(vp->locn); }AircraftLocation100,3416
+  char	*AircraftLocation(Pms2 *vp)	{ return(vp->locn); }AircraftLocation101,3475
+  char	*AircraftLocation(Pms2h *vp)	{ return(vp->locn); }AircraftLocation102,3532
+  char	*AircraftLocation(Uvhyg *vp)	{ return(vp->locn); }AircraftLocation103,3590
+  long	DSMaddress(Sh *vp)		{ return(ntohl(vp->adsaddr)); }DSMaddress107,3696
+  char	*SDItype(Sh *vp)		{ return(vp->type); }SDItype108,3755
+  long	InterleaveOffset(Sh *vp)	{ return(ntohl(vp->offset)); }InterleaveOffset109,3802
+  float	AtoDconversionFactor(Sh *vp)	{ return(ntohf(vp->convert)); }AtoDconversionFactor111,3866
+  long  AtoDconversionOffset(Sh *vp)	{ return(ntohl(vp->convert_offset)); }AtoDconversionOffset112,3935
+  long  ChannelGain(Sh *vp)	{ return(ntohl(vp->ch_gain)); }ChannelGain114,4012
+  long  ChannelOffset(Sh *vp)	{ return(ntohl(vp->ch_offset)); }ChannelOffset115,4072
+  char	*VariableName(Asy *vp)		{ return(vp->name); }VariableName118,4138
+  char	*VariableName(Masp *vp)		{ return(vp->item_type); }VariableName119,4191
+  char	*VariableName(Pms1 *vp)		{ return(vp->name); }VariableName120,4250
+  char	*VariableName(Pms1v2 *vp)	{ return(vp->name); }VariableName121,4304
+  char	*VariableName(Pms2 *vp)		{ return(vp->name); }VariableName122,4359
+  char	*VariableName(Pms2h *vp)	{ return(vp->name); }VariableName123,4413
+  char	*VariableName(Serial *vp)	{ return(vp->name); }VariableName124,4467
+  char	*VariableName(Sh *vp)		{ return(vp->name); }VariableName125,4522
+  long	CalibrationOrder(Sh *vp)	{ return(ntohl(vp->order)); }CalibrationOrder127,4575
+  float	CalibrationCoefficient(Sh *vp, int i)	{ return(ntohf(vp->cof[i])); }CalibrationCoefficient128,4637
+  char	*SerialNumber(Masp *vp)		{ return(vp->serial_num); }SerialNumber130,4715
+  char	*SerialNumber(Pms1v2 *vp)	{ return(vp->serial_num); }SerialNumber131,4775
+  char	*SerialNumber(Pms2 *vp)		{ return(vp->serial_num); }SerialNumber132,4836
+  char	*SerialNumber(Pms2h *vp)	{ return(vp->serial_num); }SerialNumber133,4896
+  char	*SerialNumber(Uvhyg *vp)	{ return(vp->serial_num); }SerialNumber134,4956
+  long	InterfaceNumber(Pms1v2 *vp)	{ return(ntohl(vp->intf_num)); }InterfaceNumber136,5017
+  long	InterfaceChannel(Pms1v2 *vp)	{ return(ntohl(vp->intf_chan)); }InterfaceChannel137,5085
+  long	InterfaceChannel(Pms2 *vp)	{ return(ntohl(vp->intf_chan)); }InterfaceChannel138,5155
+  long	ParticleSpacingStart(Pms1v2 *vp)  { return(ntohl(vp->ps_start)); }ParticleSpacingStart140,5224
+  long	ParticleSpacingLength(Pms1v2 *vp) { return(ntohl(vp->ps_length)); }ParticleSpacingLength141,5298
+  float	ParticleSpacingGate(Pms1v2 *vp)   { return(ntohf(vp->ps_gate)); }ParticleSpacingGate142,5373
+  long	lrLength(Pms2 *vp)	{ return(ntohl(vp->lrlen)); }lrLength144,5448
+  long	lrLength(Asy *vp)	{ return(ntohl(vp->lrlen)); }lrLength145,5504
+  short	lrPpr(Pms2 *vp)		{ return(ntohs(vp->lrppr)); }lrPpr146,5559
+  long	lrPpr(Asy *vp)		{ return(ntohl(vp->lrppr)); }lrPpr147,5614
+  short	Resolution(Pms2 *vp)	{ return(ntohs(vp->resolution)); }Resolution149,5668
+  Fl	*header;header153,5743
+  char	*hdr;hdr154,5757
+  int	currentIndx;currentIndx155,5770
+  char	*currentPtr;currentPtr156,5789
+  char	projName[32];projName158,5810
+
+ntohf.cc,35
+float ntohf(float inF)ntohf5,103
+
+ntohf.h,83
+#define htonf(htonf6,130
+#define ntohf(ntohf10,171
+#define htonf(htonf11,199
+
+rt.cc,73
+char buffer[65000];buffer3,20
+P2d_rec	pBuf;pBuf4,40
+main()main6,55
+
+tapeIO.cc,349
+TapeDrive::TapeDrive(const char fileName[])TapeDrive39,646
+TapeDrive::TapeDrive(int fd)TapeDrive76,1352
+TapeDrive::~TapeDrive()~TapeDrive87,1561
+int TapeDrive::Read(char record[])Read94,1698
+long TapeDrive::Seek(long start_rec)Seek132,2373
+void TapeDrive::Close()Close184,3500
+int TapeDrive::Stat(struct mtget *their_stat)Stat195,3694
+
+tapeIO.h,221
+#define TAPEDRIVE_HTAPEDRIVE_H16,320
+#define RECORDSIZE	RECORDSIZE23,432
+#define ERR	ERR26,470
+#define OK	OK30,507
+class TapeDriveTapeDrive34,604
+  int	tape_fd;tape_fd47,839
+  long	CurrentPR;CurrentPR48,854
+
+validate.cc,256
+void ValidateTime(Widget w, XtPointer client, XtPointer call)ValidateTime29,568
+void ValidateInteger(Widget w, XtPointer client, XtPointer call)ValidateInteger55,1194
+void ValidateFloat(Widget w, XtPointer client, XtPointer call)ValidateFloat69,1506
+
+driver/drv_PMS.cc,17
+main()main3,22
+
+driver/drv_adsIO.cc,49
+char	buffer[32000];buffer3,20
+main()main5,41
+
+driver/drv_avaps.cc,49
+char	buffer[32000];buffer3,22
+main()main5,43
+
+driver/drv_hdr.cc,49
+char	buffer[32000];buffer3,21
+main()main5,42
+
+driver/drv_tpIO.cc,49
+char	buffer[65000];buffer4,61
+main()main6,82
+
+PostScript.h,1208
+#define POSTSCRIPT_HPOSTSCRIPT_H18,398
+class PostScript {PostScript28,574
+  void	MoveTo(int x, int y)	{ fprintf(fp,"%d %d m\n", x, y); }MoveTo34,703
+  void	LineTo(int x, int y)	{ fprintf(fp,"%d %d l\n", x, y); }LineTo35,766
+  void	rMoveTo(int x, int y)	{ fprintf(fp,"%d %d rm\n", x, y); }rMoveTo36,829
+  void	rLineTo(int x, int y)	{ fprintf(fp,"%d %d rl\n", x, y); }rLineTo37,894
+  void	ShowStr(char str[])	{ fprintf(fp,"(%s) s\n", str); }ShowStr38,959
+  void	ShowStr(std::string str)	{ fprintf(fp,"(%s) s\n", str.c_str()); }ShowStr39,1019
+  void	SetLineWidth(int width)	{ fprintf(fp,"%d setlinewidth\n", width); }SetLineWidth40,1092
+  void	Rotate(int degrees)	{ fprintf(fp,"%d rotate\n", degrees); }Rotate42,1168
+  void	MoveOrigin(int x, int y){ fprintf(fp,"%d %d translate\n", x, y); }MoveOrigin43,1235
+  void	Stroke()		{ fprintf(fp,"stroke\n"); }Stroke44,1309
+  void	SetColor(float *rgb)SetColor45,1354
+  void	SetDash(int idx)	{ fprintf(fp,"stroke [%d] 0 setdash\n", (idx+1)<<3); }SetDash54,1592
+  void	ClearDash()		{ fprintf(fp,"[] 0 setdash\n"); }ClearDash55,1671
+  void	Issue(char str[])	{ fprintf(fp,str); }Issue58,1754
+  FILE	*fp;fp61,1810
+  bool	file;file62,1822
+
+PostScript.cc,496
+PostScript::PostScript(char *outFile, char progName[], const string& title, float scale)PostScript31,574
+void PostScript::PSheader(char progName[], const string& title, float scale)PSheader62,1224
+void PostScript::SetFont(int size)SetFont135,3776
+void PostScript::SetClipping(int vd, int hd)SetClipping143,4026
+void PostScript::ClearClipping()ClearClipping157,4431
+void PostScript::DrawBox(int lv, int th, int rv, int bh)DrawBox166,4655
+PostScript::~PostScript()~PostScript182,5034
+
+pgsql.h,297
+#define SQLRT_HSQLRT_H17,396
+class SQLrt {SQLrt26,568
+  bool	GetVariableLatest(char buff[])	{ return(GetVariableLatest(buff, 0)); }GetVariableLatest34,728
+  PGconn        *conn;conn38,817
+  PGresult      *res;res39,840
+  PGnotify      *rc;rc40,862
+  char	sqlBuff[8192];sqlBuff42,884
+
+SQLrt.h,140
+#define SQLRT_HSQLRT_H16,344
+class SQLrt {SQLrt25,498
+  PGconn	*conn;conn36,678
+  PGresult	*res;res37,694
+  PGnotify	*rc;rc38,711
+
+SQLrt.cc,209
+SQLrt::SQLrt()SQLrt23,439
+int SQLrt::GetVariable(const char vn[], char start[], char end[], float buff[])GetVariable49,1204
+int SQLrt::GetSince(const char vn[], char last[], float buff[])GetSince61,1421
