@@ -71,4 +71,3 @@ private:
 };	/* END CLOCK.H */
 
 #endif
-/* A silly change */
