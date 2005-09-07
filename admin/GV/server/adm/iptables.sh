@@ -15,7 +15,7 @@ modprobe ip_conntrack_ftp
 forward=1
 
 # Interfaces connected to the big-bad internet
-EXT_IFS=(eth2 eth3)
+EXT_IFS=(eth2 eth3 ppp+)
 
 # Internal trusted interfaces
 INT_IFS=(lo eth0 eth1)
