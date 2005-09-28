@@ -1,0 +1,11 @@
+#!/bin/sh
+
+PGHOST=orion.atd.ucar.edu ; export PGHOST
+PGUSER=ads ; export PGUSER
+PGDATABASE=real-time ; export PGDATABASE
+
+# static_psql is just a statically linked version of the psql(1) command
+# distributed with PostGreSQL.  The exposed host does not have PostGreS
+# installed.
+
+gunzip - | /h/9/cjw/bin/static_psql
