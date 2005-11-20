@@ -264,7 +264,7 @@
 	-->
         <sample id="1" scanfFormat="%*1d%f"/>
         <message separator="\n" position="end" length="0"/>
-        <prompt string="#1?\r" rate="25"/>
+        <prompt string="#1?\r" rate="50"/>
     </serialSensor>
 
     <serialSensor ID="Paro_DigiQuartz_1000" class="DSMSerialSensor"
@@ -590,6 +590,14 @@
                 devicename="/dev/dsmser3" id="120">
         </serialSensor>
 
+	<socketSensor class="PSI9116_Sensor" devicename="inet:psi9116:9000"
+	    id="150">
+	    <sample id="1" rate="1">
+		<variable name="PRAKE12" units="mb" length="12"/>
+	    </sample>
+	    <message separator="\x01" position="beg" length="52"/>
+	</socketSensor>
+
         <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="PDUMPPR" units="V">
@@ -609,6 +617,7 @@
                     <parameter name="bipolar" value="0" type="bool"/>
                     <parameter name="corSlope" value="1.07726" type="float"/>
                     <parameter name="corIntercept" value="-0.465903" type="float"/>
+		    <poly coefs="-2.92 -109.068 -0.0588" units="mb"/>
                 </variable>
                 <variable name="TRAKET" units="V">
                     <parameter name="gain" value="20" type="float"/>
