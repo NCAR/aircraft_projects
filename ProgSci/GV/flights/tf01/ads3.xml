@@ -208,7 +208,7 @@
         <sample id="0174" rate="1"                ><variable name="VEW_G"              units="m/s"      longname="GPS Ground Speed Vector, East Component"/></sample>
         <sample id="0247" rate="1"     process="false"><variable name="g_H_FOM"            units="nm"       longname="Horz Figure of Merit"/></sample>       <!-- not used    -->
         <sample id="0260" rate="1"     process="false"><variable name="g_UTCdate"          units="dy:mn:yr" longname="UTC Date"/></sample>                   <!-- not used    -->
-        <sample id="0273" rate="1"                ><variable name="GSTAT_G"            units=""         longname="GPS Sensor Status"/></sample>
+        <sample id="0273" rate="1"                ><variable name="GSTAT_G"            units="none"         longname="GPS Sensor Status"/></sample>
         <sample id="0343" rate="2"     process="false"><variable name="g_Dest_Wpt_HIL"     units="nm"       longname="Dest Wpt HIL"/></sample>               <!-- not used    -->
         <sample id="0347" rate="2"     process="false"><variable name="g_Altr_Wpt_HIL"     units="nm"       longname="Altr Wpt HIL"/></sample>               <!-- not used    -->
         <sample id="0352" rate="1"     process="false"><variable name="g_Maintenance_3"    units=""         longname="Maintenance 3"/></sample>              <!-- not used    -->
@@ -225,25 +225,24 @@
 	    <variable name="GGSECSDAY" units="sec" longname="seconds of day"/>
 	    <variable name="GGLAT" units="deg" longname="GPS East longitude"/>
 	    <variable name="GGLON" units="deg" longname="GPS North latitude"/>
-	    <variable name="GGQUAL" units="" longname="GPS Qual, 0=inval,1=GPS,2=DGPS"/>
-	    <variable name="GGNSAT" units="" longname="Number of GPS satellites tracked"/>
-	    <variable name="GGHORDIL" units="" longname="Horizontal dilution of position"/>
+	    <variable name="GGQUAL" units="none" longname="GPS Qual, 0=inval,1=GPS,2=DGPS"/>
+	    <variable name="GGNSAT" units="count" longname="Number of GPS satellites tracked"/>
+	    <variable name="GGHORDIL" units="none" longname="Horizontal dilution of position"/>
 	    <variable name="GGALT" units="m" longname="Meters above mean sea level"/>
 	    <variable name="GGEOIDHT" units="m" longname="Height of geoid (mean sea level) above WGS84 ellipsoid"/>
 	    <variable name="GGDAGE" units="s" longname="time in seconds since last DGPS update"/>
-	    <variable name="GGREFID" units="" longname="DGPS station ID number"/>
+	    <variable name="GGREFID" units="none" longname="DGPS station ID number"/>
         </sample>
         <!-- RMC record -->
         <sample id="2" rate="1">
-	    <variable name="GGSTATUS" units=""
-	    	longname="GPS rcvr status: 1=OK(A), 0=warning(V)"/>
+	    <variable name="GGSTATUS" units="none" longname="GPS rcvr status: 1=OK(A), 0=warning(V)"/>
 	    <variable name="GGSPD" units="m/s" longname="Speed over ground"/>
 	    <variable name="GGTRK" units="deg" longname="Course made good"/>
 	    <variable name="GGVEW" units="m/s" longname="East/West velocity"/>
 	    <variable name="GGVNS" units="m/s" longname="North/South velocity"/>
-	    <variable name="GGDAY" units="" longname="Day of month (1-31)"/>
-	    <variable name="GGMONTH" units="" longname="Month of year (1-12)"/>
-	    <variable name="GGYEAR" units="" longname="2 digit year"/>
+	    <variable name="GGDAY" units="day" longname="Day of month (1-31)"/>
+	    <variable name="GGMONTH" units="month" longname="Month of year (1-12)"/>
+	    <variable name="GGYEAR" units="year" longname="2 digit year"/>
         </sample>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
@@ -287,14 +286,14 @@
         baud="115200" parity="none" databits="8" stopbits="1"
         init_string="SM,4,1\r">
         <sample id="1" rate="10" scanfFormat="D,%f,%f,%f,%f,%f,%f,%f,%f">
-	    <variable name="MCN_WCN" units="" longname="WCN Current Operating Mode"/>
-	    <variable name="SFLCN_WCN" units="" longname="WCN Status Flags"/>
+	    <variable name="MCN_WCN" units="none" longname="WCN Current Operating Mode"/>
+	    <variable name="SFLCN_WCN" units="none" longname="WCN Status Flags"/>
 	    <variable name="CONCN_WCN" units="#/cm3" longname="WCN Aggregated Concentration"/>
 	    <variable name="ETCN_WCN" units="second" longname="WCN Sample Time (Elapsed Time)"/>
 	    <variable name="LTCN_WCN" units="second" longname="WCN Live Time"/>
 	    <variable name="CNTS_WCN" units="count" longname="WCN Accumulated Particle Counts"/>
 	    <variable name="PCN_WCN" units="mbar" longname="WCN Absolute Pressure"/>
-	    <variable name="RPCN_WCN" units="" longname="WCN Raw Photometric Value"/>
+	    <variable name="RPCN_WCN" units="none" longname="WCN Raw Photometric Value"/>
         </sample>
         <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
 	    <variable name="FCN_WCN" units="cm3/min" longname="WCN Sample Flow Rate"/>
@@ -311,18 +310,18 @@
     <serialSensor ID="TDLH2O" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1">
         <sample id="1" rate="20" scanfFormat="%f %f %f %f %*f %*f %f %f %f %f %f %f %f %f">
-	    <variable name="MR_LHS" units="" longname="TDLH2O MR Short Wave"/>
-	    <variable name="MR_LHL" units="" longname="TDLH2O MR Long Wave"/>
-	    <variable name="PCELL_LHS" units="" longname=""/>
-	    <variable name="TCELL_LHS" units="" longname=""/>
-	    <variable name="PP2F_LHS" units="" longname=""/>
-	    <variable name="PWR_LHS" units="" longname=""/>
-	    <variable name="IDX_LHS" units="" longname=""/>
-	    <variable name="DK_LHS" units="" longname=""/>
-	    <variable name="PP2F_LHL" units="" longname=""/>
-	    <variable name="PWR_LHL" units="" longname=""/>
-	    <variable name="IDX_LHL" units="" longname=""/>
-	    <variable name="DK_LHL" units="" longname=""/>
+	    <variable name="MR_LHS" units="ppmv" longname="TDL Mixing Ratio"/>
+	    <variable name="MR_LHL" units="ppmv" longname="TDL Mixing Ratio"/>
+	    <variable name="PCELL_LHS" units="mbar" longname="Sample Cell Pressure"/>
+	    <variable name="TCELL_LHS" units="degC" longname="Sample Cell Temperature"/>
+	    <variable name="PP2F_LHS" units="A/D cnts" longname="2f Signal Amplitude"/>
+	    <variable name="PWR_LHS" units="A/D cnts" longname="Laser Power"/>
+	    <variable name="IDX_LHS" units="A/D cnts" longname="Spectral Line Position"/>
+	    <variable name="DK_LHS" units="A/D cnts" longname="Zero Level"/>
+	    <variable name="PP2F_LHL" units="A/D cnts" longname="2f Signal Amplitude"/>
+	    <variable name="PWR_LHL" units="A/D cnts" longname="Laser Power"/>
+	    <variable name="IDX_LHL" units="A/D cnts" longname="Spectral Line Position"/>
+	    <variable name="DK_LHL" units="A/D cnts" longname="Zero Level"/>
         </sample>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
@@ -395,21 +394,21 @@
         <serialSensor IDREF="Paro_DigiQuartz_1000"
                 devicename="/dev/dsmser0" id="110">
 	    <sample id="1">
-                <variable name="PSF" units="mb"/>
+                <variable name="PSF" units="mb" longname="Raw Static Pressure, Fuselage"/>
 	    </sample>
         </serialSensor>
 
         <serialSensor IDREF="DewPointer"
                 devicename="/dev/dsmser1" id="130">
 	    <sample id="1">
-                <variable name="DPLS" units="C" longname="Dew/Frost Point Temperature, Fuselage Left"/>
+                <variable name="DPLS" units="degC" longname="Dew/Frost Point Temperature, Fuselage Left"/>
 	    </sample>
         </serialSensor>
 
         <serialSensor IDREF="DewPointer"
                 devicename="/dev/dsmser2" id="140">
 	    <sample id="1">
-                <variable name="DPRS" units="C" longname="Dew/Frost Point Temperature, Fuselage Right"/>
+                <variable name="DPRS" units="degC" longname="Dew/Frost Point Temperature, Fuselage Right"/>
 	    </sample>
         </serialSensor>
 
@@ -568,14 +567,14 @@
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser0" id="110">
             <sample id="1">
-                <variable name="QCRAKE" units="mb"/>
+                <variable name="QCRAKE" units="mb" longname="Pressure Rake dynamic pressure, pitot static tube"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000"
                 devicename="/dev/dsmser1" id="112">
 	    <sample id="1">
-                <variable name="PSRAKE" units="mb"/>
+                <variable name="PSRAKE" units="mb" longname="Pressure Rake static pressure, pitot static tube"/>
 	    </sample>
         </serialSensor>
 
@@ -593,39 +592,41 @@
 	<socketSensor class="PSI9116_Sensor" devicename="inet:psi9116:9000"
 	    id="150">
 	    <sample id="1" rate="50">
-		<variable name="PRAKE12" units="mb" length="12"/>
+		<variable name="PRAKE12" units="mb" longname="Pressure Rake dynamic pressure array" length="12"/>
 	    </sample>
 	    <message separator="\x01" position="beg" length="52"/>
 	</socketSensor>
 
         <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
-                <variable name="PDUMPPR" units="V">
+                <variable name="PDUMPPR" units="V" longname="Pressure of instrument exhaust duct, right">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09034" type="float"/>
                     <parameter name="corIntercept" value="-0.191574" type="float"/>
+		    <linear slope="103.42" intercept="0" units="mb"/>
                 </variable>
-                <variable name="PDUMPPL" units="V">
+                <variable name="PDUMPPL" units="V" longname="Pressure of instrument exhaust duct, left">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.11755" type="float"/>
                     <parameter name="corIntercept" value="-0.414038" type="float"/>
+		    <linear slope="103.42" intercept="0" units="mb"/>
                 </variable>
-                <variable name="PCAB" units="V">
+                <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.11064" type="float"/>
                     <parameter name="corIntercept" value="-0.374802" type="float"/>
 		    <!--poly coefs="-2.92 -109.068 -0.0588" units="mb"/-->
                 </variable>
-                <variable name="TRAKET" units="V">
+                <variable name="TRAKET" units="V" longname="Pressure Rake temperature of strut middle">
                     <parameter name="gain" value="20" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.10457" type="float"/>
                     <parameter name="corIntercept" value="-0.0338569" type="float"/>
                 </variable>
-                <variable name="TRAKES" units="V">
+                <variable name="TRAKES" units="V" longname="Pressure Rake temperature of strut base">
                     <parameter name="gain" value="20" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.10796" type="float"/>
@@ -662,13 +663,13 @@
 
         <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
-                <variable name="XCOMR" units="V">
+                <variable name="XCOMR" units="V" longname="CO Mixing Ratio">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0839" type="float"/>
                     <parameter name="corIntercept" value="-0.0519657" type="float"/>
                 </variable>
-                <variable name="XCOCNTS" units="V">
+                <variable name="XCOCNTS" units="V" longname="Raw CO Signal">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.10528" type="float"/>
@@ -686,13 +687,13 @@
                     <parameter name="corSlope" value="1.0966" type="float"/>
                     <parameter name="corIntercept" value="-0.0239365" type="float"/>
                 </variable>
-                <variable name="PHIM1" units="V">
+                <variable name="PHIM1" units="V" longname="HIMIL Pressure of aerosol from inside of fixed">
                     <parameter name="gain" value="25" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09583" type="float"/>
                     <parameter name="corIntercept" value="-0.0253579" type="float"/>
                 </variable>
-                <variable name="PHIM2" units="V">
+                <variable name="PHIM2" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
                     <parameter name="gain" value="25" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09428" type="float"/>
