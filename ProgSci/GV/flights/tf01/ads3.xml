@@ -329,7 +329,7 @@
 	    <variable name="MR_LHS" units="ppmv" longname="TDL Mixing Ratio"/>
 	    <variable name="MR_LHL" units="ppmv" longname="TDL Mixing Ratio"/>
 	    <variable name="PCELL_LHS" units="mbar" longname="Sample Cell Pressure"/>
-	    <variable name="TCELL_LHS" units="degC" longname="Sample Cell Temperature"/>
+	    <variable name="TCELL_LHS" units="deg_C" longname="Sample Cell Temperature"/>
 	    <variable name="PP2F_LHS" units="A/D cnts" longname="2f Signal Amplitude"/>
 	    <variable name="PWR_LHS" units="A/D cnts" longname="Laser Power"/>
 	    <variable name="IDX_LHS" units="A/D cnts" longname="Spectral Line Position"/>
@@ -417,14 +417,14 @@
         <serialSensor IDREF="DewPointer"
                 devicename="/dev/dsmser1" id="130">
 	    <sample id="1">
-                <variable name="DPLS" units="degC" longname="Dew/Frost Point Temperature, Fuselage Left"/>
+                <variable name="DPLS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left"/>
 	    </sample>
         </serialSensor>
 
         <serialSensor IDREF="DewPointer"
                 devicename="/dev/dsmser2" id="140">
 	    <sample id="1">
-                <variable name="DPRS" units="degC" longname="Dew/Frost Point Temperature, Fuselage Right"/>
+                <variable name="DPRS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right"/>
 	    </sample>
         </serialSensor>
 
@@ -446,21 +446,21 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.10142" type="float"/>
                     <parameter name="corIntercept" value="-0.287319" type="float"/>
-		    <linear slope="12.5" intercept="-75.0" units="degC"/>
+		    <linear slope="12.5" intercept="-75.0" units="deg_C"/>
                 </variable>
                 <variable name="DPR" units="V" longname="Dew/Frost Point Temperature, Fuselage Right">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.08332" type="float"/>
                     <parameter name="corIntercept" value="-0.146067" type="float"/>
-		    <linear slope="12.5" intercept="-75.0" units="degC"/>
+		    <linear slope="12.5" intercept="-75.0" units="deg_C"/>
                 </variable>
             </sample>
         </sensor>
 
         <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
             <sample id="1" rate="1">
-                <variable name="A2DTEMP_MPDS" units="degC">
+                <variable name="A2DTEMP_MPDS" units="deg_C">
                 </variable>
             </sample>
         </sensor>
@@ -508,31 +508,31 @@
         <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
 	    <!-- corSlope/Intercepts from a cal done on 9/29/2005, for gain=2,bipolar=false -->
             <sample id="1" rate="500">
-                <variable name="TTLH2" units="V" longname="Total Temperature, Deiced Left">
+                <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.10343" type="float"/>
                     <parameter name="corIntercept" value="-0.171038" type="float"/>
 		    <!-- Al Schanot: Oct 04, 2005 -->
-		    <poly coefs="-76.94 22.964 0.4274" units="degC"/>
+		    <poly coefs="-76.94 22.964 0.4274" units="deg_C"/>
                 </variable>
-                <variable name="TTLH1" units="V" longname="Total Temperature, Deiced Left">
+                <variable name="TTHL1" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.10561" type="float"/>
                     <parameter name="corIntercept" value="-0.149961" type="float"/>
 		    <!-- Al Schanot: Oct 04, 2005 -->
-		    <poly coefs="-79.19 24.022 0.2613" units="degC"/>
+		    <poly coefs="-79.19 24.022 0.2613" units="deg_C"/>
                 </variable>
-                <variable name="TTRH2" units="V" longname="Total Temperature, Deiced Right">
+                <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09656" type="float"/>
                     <parameter name="corIntercept" value="-0.121401" type="float"/>
 		    <!-- Al Schanot: Oct 04, 2005 -->
-		    <poly coefs="-77.78 23.781 0.2942" units="degC"/>
+		    <poly coefs="-77.78 23.781 0.2942" units="deg_C"/>
                 </variable>
-                <variable name="TTRH1" units="V" longname="Total Temperature, Deiced Right">
+                <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
 		    <!-- The amplifier on this sensor is a Rosemount 510BF48
 		     which has half the gain of the others
 		     (output of around 0:2.5V) so we're using a gain of 4
@@ -544,7 +544,7 @@
                     <parameter name="corSlope" value="1.08244" type="float"/>
                     <parameter name="corIntercept" value="-0.0587811" type="float"/>
 		    <!-- Al Schanot: Oct 04, 2005 -->
-		    <poly coefs="-82.21 24.938 0.0008" units="degC"/>
+		    <poly coefs="-82.21 24.938 0.0008" units="deg_C"/>
 		    <!-- values computed for gain=2
                     <parameter name="corSlope" value="0.916395" type="float"/>
                     <parameter name="corIntercept" value="-0.167106" type="float"/>
@@ -556,16 +556,16 @@
                     <parameter name="corSlope" value="1.05313" type="float"/>
                     <parameter name="corIntercept" value="-0.0734454" type="float"/>
 		    <!-- lab cal of Sept 21, 2005 confirmed that these coefs
-		        give a temp within 0.18 degC for -50 to 40 degC
+		        give a temp within 0.18 deg_C for -50 to 40 deg_C
 		    -->
-		    <linear slope="10.0" intercept="-50.0" units="degC"/>
+		    <linear slope="10.0" intercept="-50.0" units="deg_C"/>
                 </variable>
             </sample>
         </sensor>
 
         <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
             <sample id="1" rate="1">
-                <variable name="A2DTEMP_RAD" units="degC">
+                <variable name="A2DTEMP_RAD" units="deg_C">
                 </variable>
             </sample>
         </sensor>
@@ -653,12 +653,14 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09455" type="float"/>
                     <parameter name="corIntercept" value="-0.0324231" type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
                 <variable name="TCAB4" units="V">
                     <parameter name="gain" value="20" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09081" type="float"/>
                     <parameter name="corIntercept" value="-0.0229128" type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
             </sample>
         </sensor>
@@ -696,12 +698,14 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0893" type="float"/>
                     <parameter name="corIntercept" value="-0.018902" type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
                 <variable name="TCAB3" units="V">
                     <parameter name="gain" value="20" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0966" type="float"/>
                     <parameter name="corIntercept" value="-0.0239365" type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
                 <variable name="PHIM1" units="V" longname="HIMIL Pressure of aerosol from inside of fixed">
                     <parameter name="gain" value="25" type="float"/>
