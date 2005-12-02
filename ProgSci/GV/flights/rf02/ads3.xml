@@ -513,7 +513,7 @@
                     <parameter name="corSlope" value="1.10343" type="float"/>
                     <parameter name="corIntercept" value="-0.171038" type="float"/>
 		    <!-- Al Schanot: Nov 30, 2005 -->
-		    <poly coefs="-72.0 25.917 0.0" units="deg_C"/>
+		    <poly coefs="-79.84 24.944 0.0" units="deg_C"/>
                 </variable>
                 <variable name="TTHL1" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="gain" value="4" type="float"/>
@@ -521,7 +521,7 @@
                     <parameter name="corSlope" value="1.10561" type="float"/>
                     <parameter name="corIntercept" value="-0.149961" type="float"/>
 		    <!-- Al Schanot: Nov 30, 2005 -->
-		    <poly coefs="-80.44 24.944 0.0" units="deg_C"/>
+		    <poly coefs="-81.70 22.857 0.0" units="deg_C"/>
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
@@ -529,7 +529,7 @@
                     <parameter name="corSlope" value="1.09656" type="float"/>
                     <parameter name="corIntercept" value="-0.121401" type="float"/>
 		    <!-- Al Schanot: Nov 30, 2005 -->
-		    <poly coefs="-79.84 24.944 0.0" units="deg_C"/>
+		    <poly coefs="-72.0 25.917 0.0" units="deg_C"/>
                 </variable>
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
@@ -537,7 +537,7 @@
                     <parameter name="corSlope" value="1.08244" type="float"/>
                     <parameter name="corIntercept" value="-0.0587811" type="float"/>
 		    <!-- Al Schanot: Nov 30, 2005 -->
-		    <poly coefs="-81.70 22.857 0.0" units="deg_C"/>
+		    <poly coefs="-80.44 24.944 0.0" units="deg_C"/>
                 </variable>
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain" value="2" type="float"/>
@@ -654,6 +654,13 @@
             </sample>
         </sensor>
 
+        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_CHAPS" units="deg_C">
+                </variable>
+            </sample>
+        </sensor>
+
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
@@ -707,6 +714,13 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09428" type="float"/>
                     <parameter name="corIntercept" value="-0.0252738" type="float"/>
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_AEROSOL" units="deg_C">
                 </variable>
             </sample>
         </sensor>
