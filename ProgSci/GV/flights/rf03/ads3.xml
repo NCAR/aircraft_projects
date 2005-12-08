@@ -402,8 +402,8 @@
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"
 		suffix="_I1"/>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000"
-		suffix="_I2"/>
+        <!-- arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000"
+		suffix="_I2"/ -->
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000"/>
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000"/>
 
@@ -431,39 +431,6 @@
         <serialSensor IDREF="Garmin_GPS"
                 devicename="/dev/dsmser5" id="120">
         </serialSensor>
-
-        <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
-            <sample id="1" rate="500">
-		<!-- A2D cals done 9/9/2005 -->
-		<!-- second set of cals done a day or two later after
-		     fixing a spike problem on the A2D.
-		     The first set of coefficients was still in this file,
-		     so the combined cals are  m=m1*m2  b=m2*b1 + b2,
-		     where m1,b1 are the slope/intercept from the first cal,
-		     m2,b2 are from the second. -->
-                <variable name="DPL" units="V" longname="Dew/Frost Point Temperature, Fuselage Left">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.10142" type="float"/>
-                    <parameter name="corIntercept" value="-0.287319" type="float"/>
-		    <linear slope="12.5" intercept="-75.0" units="deg_C"/>
-                </variable>
-                <variable name="DPR" units="V" longname="Dew/Frost Point Temperature, Fuselage Right">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.08332" type="float"/>
-                    <parameter name="corIntercept" value="-0.146067" type="float"/>
-		    <linear slope="12.5" intercept="-75.0" units="deg_C"/>
-                </variable>
-            </sample>
-        </sensor>
-
-        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_MPDS" units="deg_C">
-                </variable>
-            </sample>
-        </sensor>
 
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -512,32 +479,28 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.10343" type="float"/>
                     <parameter name="corIntercept" value="-0.171038" type="float"/>
-		    <!-- Al Schanot: Nov 30, 2005 -->
-		    <poly coefs="-72.0 25.917 0.0" units="deg_C"/>
+		    <poly coefs="-91.5105 28.1459 -0.0783478" units="deg_C"/>
                 </variable>
                 <variable name="TTHL1" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.10561" type="float"/>
                     <parameter name="corIntercept" value="-0.149961" type="float"/>
-		    <!-- Al Schanot: Nov 30, 2005 -->
-		    <poly coefs="-80.44 24.944 0.0" units="deg_C"/>
+		    <poly coefs="-94.7523 28.1459 -0.0617025" units="deg_C"/>
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09656" type="float"/>
                     <parameter name="corIntercept" value="-0.121401" type="float"/>
-		    <!-- Al Schanot: Nov 30, 2005 -->
-		    <poly coefs="-79.84 24.944 0.0" units="deg_C"/>
+		    <poly coefs="-90.1502 27.9773 -0.0459489" units="deg_C"/>
                 </variable>
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.08244" type="float"/>
                     <parameter name="corIntercept" value="-0.0587811" type="float"/>
-		    <!-- Al Schanot: Nov 30, 2005 -->
-		    <poly coefs="-81.70 22.857 0.0" units="deg_C"/>
+		    <poly coefs="-89.8241 25.8363 -0.04316" units="deg_C"/>
                 </variable>
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain" value="2" type="float"/>
@@ -623,7 +586,7 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.11064" type="float"/>
                     <parameter name="corIntercept" value="-0.374802" type="float"/>
-		    <!--poly coefs="-2.92 -109.068 -0.0588" units="mb"/-->
+		    <linear slope="108.09" intercept="-1.3596" units="mb"/>
                 </variable>
                 <variable name="TRAKET" units="V" longname="Pressure Rake temperature of strut middle">
                     <parameter name="gain" value="20" type="float"/>
@@ -637,7 +600,7 @@
                     <parameter name="corSlope" value="1.10796" type="float"/>
                     <parameter name="corIntercept" value="-0.042219" type="float"/>
                 </variable>
-                <!-- variable name="TCAB1" units="V">
+                <variable name="TCAB1" units="V">
                     <parameter name="gain" value="20" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09455" type="float"/>
@@ -650,7 +613,14 @@
                     <parameter name="corSlope" value="1.09081" type="float"/>
                     <parameter name="corIntercept" value="-0.0229128" type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
-                </variable-->
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_CHAPS" units="deg_C">
+                </variable>
             </sample>
         </sensor>
 
@@ -682,7 +652,7 @@
                     <parameter name="corSlope" value="1.10528" type="float"/>
                     <parameter name="corIntercept" value="-0.15495" type="float"/>
                 </variable>
-                <!--variable name="TCAB2" units="V">
+                <variable name="TCAB2" units="V">
                     <parameter name="gain" value="20" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0893" type="float"/>
@@ -695,7 +665,7 @@
                     <parameter name="corSlope" value="1.0966" type="float"/>
                     <parameter name="corIntercept" value="-0.0239365" type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
-                </variable-->
+                </variable>
                 <variable name="PHIM1" units="V" longname="HIMIL Pressure of aerosol from inside of fixed">
                     <parameter name="gain" value="25" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
@@ -707,6 +677,13 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09428" type="float"/>
                     <parameter name="corIntercept" value="-0.0252738" type="float"/>
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_AEROSOL" units="deg_C">
                 </variable>
             </sample>
         </sensor>
