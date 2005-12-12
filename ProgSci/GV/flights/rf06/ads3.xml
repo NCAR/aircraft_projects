@@ -263,8 +263,38 @@
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="DewPointer" class="DSMSerialSensor"
+    <serialSensor ID="Buck_1011C_DP" class="DSMSerialSensor"
         baud="9600" parity="none" databits="8" stopbits="1">
+
+        <!--  From Buck 1011C manual:
+	    9600 baud, 8-N-1 parity. Use included null modem cable to
+	    connect to computer running Hyperterminal or similar serial
+	    port emulator software.
+	    14354,-14.23,0,0,-56,0, 33.00,05/08/2003, 17:47:08
+	    14060,-13.95,0,0,-54,0, 33.00,05/08/2003, 17:47:09
+	    13721,-13.69,0,0,-52,0, 33.00,05/08/2003, 17:47:10
+	    13342,-13.40,0,0,-50,0, 33.00,05/08/2003, 17:47:11
+	    Balance, mirror temperature, flag, pressure, PWM, mirror,
+	    	board temp, date, time.
+	    Balance - number that indicates how close the servo is to
+	    	being balanced and a dew/frost point being measured
+		on the mirror.
+	    Mirror temperature - temperature on the mirror surface.
+	    Flag - Indicates the following:
+		    0 - normal operation
+		    1 - dew or frost point achieved on mirror
+		    2 - balance mode
+	    Pressure - pressure in mb if sensor installed
+	    PWM - - 255 to + 255. Indicates how much heating (+) or
+	    	cooling (-) being applied to the mirror
+	    Mirror - Indicates the following:
+		    0 - mirror normal
+		    1 - mirror contaminated and will need cleaning soon
+	    Board temp - temperature on main circuit board
+	    Date - Date in month/day/year
+	    Time - 24 hr time
+	-->
+
         <sample id="1" scanfFormat="%*d,%f" rate="1"/>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
@@ -414,14 +444,14 @@
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer"
+        <serialSensor IDREF="Buck_1011C_DP"
                 devicename="/dev/dsmser1" id="130">
 	    <sample id="1">
                 <variable name="DPLS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left"/>
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer"
+        <serialSensor IDREF="Buck_1011C_DP"
                 devicename="/dev/dsmser2" id="140">
 	    <sample id="1">
                 <variable name="DPRS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right"/>
