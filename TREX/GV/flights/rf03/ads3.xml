@@ -603,11 +603,13 @@
                     <parameter name="corIntercept" value="-0.355" type="float"/>
 		    <linear slope="108.09" intercept="-1.3596" units="mb"/>
                 </variable>
-                <variable name="PLWC" units="V" longname="Interior Cabin Static Pressure">
+                <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
                     <parameter name="gain" value="1" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.0683" type="float"/>
-                    <parameter name="corIntercept" value="-0.025796" type="float"/>
+<!-- PLWC                 | 2006-03-01 21:28:01 | {-0.156457,1.04368} -9..9 -->
+<!-- PLWC                 | 2006-03-01 21:53:24 | {-0.143878,1.02921} -5..5 -->
+                    <parameter name="corSlope" value="1.02921" type="float"/>
+                    <parameter name="corIntercept" value="-0.143878" type="float"/>
                 </variable>
                 <variable name="TCAB1" units="V">
                     <parameter name="gain" value="20" type="float"/>
@@ -628,6 +630,20 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0346" type="float"/>
                     <parameter name="corIntercept" value="-0.2276" type="float"/>
+                    <linear slope="200.0" intercept="0.0" units="ppb"/>
+                </variable>
+                <variable name="PLWC1" units="V" longname="Raw PMS-King Liquid Water Content Output">
+                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+<!-- PLWC1                | 2006-03-06 19:12:54 | {-0.263008,1.02504}    -5   0   +5 -->
+<!-- PLWC1                | 2006-03-07 16:10:12 | {-0.238956,1.02821}    -5   0   +5 -->
+<!-- PLWC1                | 2006-03-07 18:02:46 | {-0.0173227,0.998265}  -5   0   +4 -->
+<!-- PLWC1                | 2006-03-07 18:23:28 | {-0.0490987,1.01072}   -9   0   +5 -->
+<!-- PLWC1                | 2006-03-07 19:05:50 | {-0.111921,1.03884}   -10   0  +10 -->
+<!-- PLWC1                | 2006-03-07 22:20:29 | {-0.250531,1.02876}    +3  +5   +7 -->
+<!-- PLWC1                | 2006-03-07 22:28:54 | {0.066144,1.02874}     -3  -5   -7 -->
+                    <parameter name="corSlope" value="1.02874" type="float"/>
+                    <parameter name="corIntercept" value="0.066144" type="float"/>
                 </variable>
             </sample>
         </sensor>
@@ -646,6 +662,13 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <linear slope="125.0" intercept="0.0" units="deg_C"/>
                 </variable>
+<!--
+                <variable name="PLWC1DIA" units="V" longname="Raw PMS-King Liquid Water Content Output">
+                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                    <linear slope="125.0" intercept="0.0" units="deg_C"/>
+                </variable>
+-->
             </sample>
         </sensor>
 
