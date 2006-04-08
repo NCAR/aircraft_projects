@@ -1,0 +1,115 @@
+%!PS-Adobe-1.0
+%
+% define some basics
+%
+/inch {72 mul} def
+/pagewidth 8.5 inch def
+/pageheight 11 inch def
+%
+% how much margin desired around image, total: divide by 2 to determine minimum
+% around each horizontal or vertical edge
+%
+/margin 0.5 inch def
+%
+% starting row for positioning of images sequentially from top of page down
+%
+/nextrow pageheight def
+%
+/FitWidthToPage {
+%
+% Caller must place image width and height on stack, in that order. If width is 
+% too big for pagewidth and margin parameters, adjust width to fit and then 
+% scale height to maintain aspect ratio. Place adjusted width and height on 
+% stack for caller to grab for re-definitions.
+%
+ /oldheight exch def
+ /oldwidth exch def
+ oldwidth pagewidth margin sub gt {
+  /newwidth pagewidth margin sub def
+  /newheight oldheight newwidth oldwidth div mul def
+  newwidth newheight
+ } 
+ { 
+  oldwidth oldheight 
+ } ifelse
+} bind def
+%
+/FitHeightToPage {
+%
+% Caller must place image width and height on stack, in that order. If height 
+% is too big for pageheight and margin parameters, adjust height to fit and then
+% scale width to maintain aspect ratio. Place adjusted width and height on stack
+% for caller to grab for re-definitions.
+%
+ /oldheight exch def
+ /oldwidth exch def
+ oldheight pageheight margin sub gt {
+  /newheight pageheight margin sub def
+  /newwidth oldwidth newheight oldheight div mul def
+  newwidth newheight
+ } 
+ { 
+  oldwidth oldheight 
+ } ifelse
+} bind def
+%
+/DrawImage  {
+%
+% adjust width or height if too large
+%
+/width totalcolumns def
+/height totalrows def
+width height FitWidthToPage  /height exch def /width exch def
+width height FitHeightToPage  /height exch def /width exch def
+%
+% Define lower left corner of device position
+%
+/xpos pagewidth width sub 2 div def
+CenterPosition 1 eq {
+%
+% center the image on the page
+%
+ preamble 1 eq {
+%
+% A "preamble" is an image that precedes the main image and is to be placed
+% directly above it. It is typically informational, describing the image in
+% terms of dataset, date, project, etc., though this is not mandatory; any
+% image described as a preamble will simply be laid directly above the image
+% that follows it. Note that, however, in the WINDS software, when the psprint
+% process is told that the current image is a preamble, its control flow is
+% altered to wait for a non-preamble image to follow.
+%
+% To determine the positioning of the preamble, we must first know the 
+% width and height of the image that follows it. These parameters may need
+% adjusting to fit on the page, and if either is needed, this will affect the 
+% height of the image, from which the y-position of the preamble is determined.
+% Make a pre-determination here to get the right preamble y-position:
+%
+  imagewidth imageheight FitWidthToPage 
+  /imageheight exch def /imagewidth exch def
+  imagewidth imageheight FitHeightToPage 
+  /imageheight exch def /imagewidth exch def
+  /ypos pageheight imageheight sub 2 div imageheight add def
+ }
+ { 
+  /ypos pageheight height sub 2 div def
+ } ifelse
+} 
+%
+% position the image at the next available row on the page
+%
+{
+ /ypos nextrow height sub def
+ /nextrow ypos def
+} ifelse
+%
+% translation and scaling
+%
+xpos ypos translate
+width height scale
+%
+% draw using 4 bits of depth
+%
+/temp 16 string def
+totalcolumns totalrows 4 [totalcolumns 0 0 totalrows neg 0 totalrows]
+{currentfile temp readhexstring pop}

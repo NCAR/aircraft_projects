@@ -1,0 +1,960 @@
+#
+# PMS parameter file.  Defaults at end of file.
+#
+# For WINDS display to work with 1D probes you must either have the CELL_SIZE
+# field or the MIN_RANGE/MAX_RANGE/RANGE_STEP combo.
+#
+# FIRST_BIN is inclusive, LAST_BIN is exclusive.
+#
+# TYPE for DMT modified probes is; FSSP -> S100, PCAS -> S200, F300 -> S300
+#
+# START	SerialNumber
+# ------------------------------------------------------------------------
+#
+START   CLIMET1
+TYPE    CLIMET
+#
+FIRST_BIN       1
+LAST_BIN        7
+#
+CELL_SIZE       0.15 0.25 0.4 0.75 2.0 4.0 6.0
+#
+END
+#
+# ------------------------------------------------------------------------
+START	CLMCA1
+TYPE	CLMCA
+#
+FIRST_BIN       1
+LAST_BIN        31
+#
+CELL_SIZE	0.19 0.21 0.24 0.27 0.30 0.34 0.38 0.43 0.48 0.54 0.60 0.67
+	0.76 0.85 0.95 1.07 1.20 1.34 1.51 1.69 1.90 2.13 2.39 2.68 3.01
+	3.37 3.79 4.25 4.77 5.35 6.00
+#
+END
+#
+# ------------------------------------------------------------------------
+#
+START	RDMA1
+TYPE	RDMA
+#
+FIRST_BIN       1
+LAST_BIN        64
+#
+CELL_SIZE       7.00 7.38 7.79 8.21 8.66 9.13 9.63 10.16 10.71 11.30 11.92
+	12.57 13.26 13.98 14.74 15.55 16.40 17.30 18.24 19.24 20.29 21.40
+	22.57 23.80 25.10 26.48 27.92 29.45 31.06 32.76 34.55 36.43 38.43
+	40.53 42.74 45.08 47.54 50.14 52.88 55.77 58.82 62.03 65.42 69.00
+	72.77 76.74 80.94 85.36 90.03 94.95 100.14 105.61 111.38 117.47
+	123.89 130.66 137.80 145.33 153.28 161.66 170.49 179.81 189.64 200.00
+#
+END
+#
+# ------------------------------------------------------------------------
+#
+START	FSSP109
+TYPE	S100
+NAME	RAF FSSP-100 with DMT electronics.
+#
+# Setup stuff.
+#
+NCHANNELS	30
+RANGE		0
+#
+THRESHOLD	20
+TRANSIT_REJ	1
+DOF_REJ		1
+AVG_TRANSIT_WGT	5
+ATT_ACCEPT	95
+DIVISOR_FLAG	0
+CT_METHOD	0
+MAX_WIDTH	10000
+#
+# Processing stuff.
+#
+HSKP0   DUMMY   0.0     1.0     0.0
+HSKP1   DUMMY   0.0     1.0     0.0
+HSKP2   DUMMY   0.0     1.0     0.0
+HSKP3   DUMMY   0.0     1.0     0.0
+HSKP4   FREF    0.0     1.0     0.0
+HSKP5   DUMMY   0.0     1.0     0.0
+HSKP6   DUMMY   0.0     1.0     0.0
+HSKP7   FTMP    0.0     1.0     0.0
+#
+#include "../defaults/s100.default"
+#
+FIRST_BIN	1
+LAST_BIN	31
+#
+DOF		2.60
+BEAM_DIAM	0.175
+DENS		1.0
+PLWFAC		1.0e-6
+DBZFAC		1.0e6
+END
+#
+# ------------------------------------------------------------------------
+#
+START	FSSP105
+TYPE	FSSP
+HSKP0	FSTB	0.0	1.0	0.0
+HSKP1	FRST	0.0	1.0	0.0
+HSKP2	FACT	0.0	9.25e-7	0.0
+HSKP3	FSTT	0.0	1.0	0.0
+HSKP4	FTMP	0.0     1.0     0.0
+HSKP5	FANV	0.0     1.0     0.0
+HSKP6	FSIG	0.0     1.0     0.0
+HSKP7	FREF	0.0     1.0     0.0
+HSKP8	DUMMY	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+HSKP10	DUMMY	0.0	1.0	0.0
+HSKP11	DUMMY	0.0	1.0	0.0
+CELL_SIZE	2.0, 5.0, 8.0, 11.0, 14.0, 17.0, 20.0, 23.0, 26.0,
+		 29.0, 32.0, 35.0, 38.0, 41.0, 44.0, 47.0,	# range 0
+		2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0,
+		 20.0, 22.0, 24.0, 26.0, 28.0, 30.0, 32.0,	# range 1
+		1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,
+		 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0,	# range 2
+		0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5,
+		 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0		# range 3
+#
+FIRST_BIN	1
+LAST_BIN	16
+#
+DOF		2.81
+BEAM_DIAM	0.19
+DENS		1.0
+PLWFAC		1.0e-6
+DBZFAC		1.0e6
+#
+TAU1		5.8e-6
+TAU2		2.5e-6
+END
+#
+# ------------------------------------------------------------------------
+#
+START	FSSP106
+TYPE	FSSP
+HSKP0	FSTB	0.0	1.0	0.0
+HSKP1	FRST	0.0	1.0	0.0
+HSKP2	FACT	0.0	9.25e-7	0.0
+HSKP3	FSTT	0.0	1.0	0.0
+HSKP4	FTMP	0.0	1.0	0.0
+HSKP5	FANV	0.0	1.0	0.0
+HSKP6	FSIG	0.0	1.0	0.0
+HSKP7	FREF	0.0	1.0	0.0
+HSKP8	DUMMY	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+HSKP10	DUMMY	0.0	1.0	0.0
+HSKP11	DUMMY	0.0	1.0	0.0
+CELL_SIZE	2.0, 5.0, 8.0, 11.0, 14.0, 17.0, 20.0, 23.0, 26.0,
+		 29.0, 32.0, 35.0, 38.0, 41.0, 44.0, 47.0,	# range 0
+		2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0,
+		 20.0, 22.0, 24.0, 26.0, 28.0, 30.0, 32.0,	# range 1
+		1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,
+		 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0,	# range 2
+		0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5,
+		 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0		# range 3
+#
+FIRST_BIN	1
+LAST_BIN	16
+#
+DOF		2.81
+BEAM_DIAM	0.19
+DENS		1.0
+PLWFAC		1.0e-6
+DBZFAC		1.0e6
+#
+TAU1		5.8e-6
+TAU2		2.5e-6
+END
+#
+# ------------------------------------------------------------------------
+#
+# The "Telford" probe.
+#
+START   FSSP076
+TYPE    FSSP
+HSKP0   FSTB    0.0     1.0     0.0
+HSKP1   FRST    0.0     1.0     0.0
+HSKP2   FACT    0.0     9.25e-7 0.0
+HSKP3   FSTT    0.0     1.0     0.0
+HSKP4   FTMP    28.18   -2.7e-4         -3.6e-7
+HSKP5   FANV    0.0016  8.014e-5        0.0
+HSKP6   FSIG    0.0017  7.96e-5         0.0
+HSKP7   FREF    0.020828        8.07e-4 0.0
+HSKP8   DUMMY   0.0     1.0     0.0
+HSKP9   DUMMY   0.0     1.0     0.0
+HSKP10  DUMMY   0.0     1.0     0.0
+HSKP11  DUMMY   0.0     1.0     0.0
+CELL_SIZE       2.0, 5.0, 8.0, 11.0, 14.0, 17.0, 20.0, 23.0, 26.0,
+                 29.0, 32.0, 35.0, 38.0, 41.0, 44.0, 47.0,      # range 0
+                2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0,
+                 20.0, 22.0, 24.0, 26.0, 28.0, 30.0, 32.0,      # range 1
+                1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,
+                 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0,      # range 2
+                0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5,
+                 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0              # range 3
+#
+FIRST_BIN       1
+LAST_BIN        16
+#
+DOF             2.75
+BEAM_DIAM       0.18
+DENS            1.0
+PLWFAC          1.0e-6
+DBZFAC          1.0e6
+#
+TAU1            5.8e-6
+TAU2            2.5e-6
+END
+#
+# ------------------------------------------------------------------------
+#
+START   FSSP122
+TYPE    S100
+NAME	RAF FSSP-100 with DMT electronics.
+#
+# Setup stuff.
+#
+NCHANNELS       30
+RANGE		0
+#
+THRESHOLD       20
+TRANSIT_REJ     1
+DOF_REJ         1
+AVG_TRANSIT_WGT 5
+ATT_ACCEPT      95
+DIVISOR_FLAG    0
+CT_METHOD       0
+MAX_WIDTH       10000
+#
+# Processing stuff.
+#
+HSKP0   DUMMY   0.0     1.0     0.0
+HSKP1   DUMMY   0.0     1.0     0.0
+HSKP2   DUMMY   0.0     1.0     0.0
+HSKP3   DUMMY   0.0     1.0     0.0
+HSKP4   FREF    0.0     1.0     0.0
+HSKP5   DUMMY   0.0     1.0     0.0
+HSKP6   DUMMY   0.0     1.0     0.0
+HSKP7   FTMP    0.0     1.0     0.0
+#
+#include "../defaults/s100.default"
+#
+FIRST_BIN       1
+LAST_BIN        31
+#
+DOF             2.55
+BEAM_DIAM       0.19
+DENS            1.0
+PLWFAC          1.0e-6
+DBZFAC          1.0e6
+END
+#
+# ------------------------------------------------------------------------
+#
+# German Fast-FSSP
+#
+START   FSSP128
+TYPE    S100
+NAME	DLR FSSP-100 with DMT electronics.
+#
+# Setup stuff.
+#
+NCHANNELS       30
+RANGE           0
+#
+THRESHOLD       20
+TRANSIT_REJ     1
+DOF_REJ         1
+AVG_TRANSIT_WGT 5
+ATT_ACCEPT      95
+DIVISOR_FLAG    0
+CT_METHOD       0
+MAX_WIDTH       10000
+#
+# Processing stuff.
+#
+HSKP0   DUMMY   0.0     1.0     0.0
+HSKP1   DUMMY   0.0     1.0     0.0
+HSKP2   DUMMY   0.0     1.0     0.0
+HSKP3   DUMMY   0.0     1.0     0.0
+HSKP4   FREF    0.0     1.0     0.0
+HSKP5   DUMMY   0.0     1.0     0.0
+HSKP6   DUMMY   0.0     1.0     0.0
+HSKP7   FTMP    0.0     1.0     0.0
+#
+#include "../defaults/s100.default"
+#
+FIRST_BIN       1
+LAST_BIN        31
+#
+DOF             2.28
+BEAM_DIAM       0.21
+DENS            1.0
+PLWFAC          1.0e-6
+DBZFAC          1.0e6
+END
+#
+# ------------------------------------------------------------------------
+#
+START	FSSP305
+TYPE	S300
+NAME	RAF FSSP-300 with DMT electronics.
+#
+# Setup stuff.
+#
+NCHANNELS	30
+RANGE		1
+#
+THRESHOLD       20
+TRANSIT_REJ     1
+DOF_REJ         1
+AVG_TRANSIT_WGT 5
+ATT_ACCEPT      95
+DIVISOR_FLAG    0
+CT_METHOD       0
+MAX_WIDTH       10000
+#
+HSKP0	DUMMY	0.0	1.0	0.0
+HSKP1	DUMMY	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	FREF3	0.0	1.0	0.0
+HSKP5	DUMMY	0.0	1.0	0.0
+HSKP6	DUMMY	0.0	1.0	0.0
+HSKP7	FTMP3	0.0	1.0	0.0
+#
+#include "../defaults/s300.default"
+#
+FIRST_BIN	1
+LAST_BIN	31
+SAMPLE_AREA	0.060
+END
+#
+# ------------------------------------------------------------------------
+# NASA F300
+#
+START   FSSP304
+TYPE    F300
+HSKP0   DUMMY   0.0     1.0     0.0
+HSKP1   FRST    0.0     1.0     0.0
+HSKP2   FACT    0.0     1.0     0.0
+HSKP3   DUMMY   0.0     1.0     0.0
+HSKP4   DUMMY   0.0     1.0     0.0
+HSKP5   DUMMY   0.0     1.0     0.0
+HSKP6   DUMMY   0.0     1.0     0.0
+HSKP7   DUMMY   0.0     1.0     0.0
+HSKP8   DUMMY   0.0     1.0     0.0
+HSKP9   DUMMY   0.0     1.0     0.0
+HSKP10  DUMMY   0.0     1.0     0.0
+HSKP11  DUMMY   0.0     1.0     0.0
+CELL_SIZE       0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7,
+                0.8, 0.9, 1.0,                          # Step 0.1
+                1.2, 1.4,                               # Step 0.2
+                1.7, 2.0,                               # Step 0.3
+                2.5, 3.0, 3.5, 4.0, 4.5, 5.0,           # Step 0.5
+                6.0, 7.0, 8.0, 9.0, 10.0,               # Step 1.0
+                12.0, 14.0, 16.0, 18.0, 20.0            # Step 2.0
+#
+FIRST_BIN       1
+LAST_BIN        32
+SAMPLE_AREA     0.065
+END
+#
+# ------------------------------------------------------------------------
+# Tony Clarks DMT F300
+#
+START   FSSP310
+TYPE    S300
+NAME	Tony Clarks FSSP-300 with DMT electronics.
+#
+NCHANNELS	30
+RANGE		1
+#
+THRESHOLD       20
+TRANSIT_REJ     1
+DOF_REJ         1
+AVG_TRANSIT_WGT 5
+ATT_ACCEPT      95
+DIVISOR_FLAG    0
+CT_METHOD       0
+MAX_WIDTH       10000
+#
+CELL_SIZE  0.27, 0.30, 0.34, 0.37, 0.42, 0.47, 0.52, 0.58, 0.64, 0.72, 0.80,
+		 0.90, 1.00, 1.11, 1.23, 1.37, 1.53, 1.71, 1.90, 2.12, 2.36,
+		 2.63, 2.93, 3.27, 3.64, 4.06, 4.52, 5.04, 5.61, 6.25, 6.97,
+		 7.76, 8.65, 9.64, 10.74, 11.97, 13.34, 14.86, 16.56, 18.45,
+		20.56
+#
+FIRST_BIN       1
+LAST_BIN        31
+SAMPLE_AREA     0.039
+END
+#
+# ------------------------------------------------------------------------
+#
+START	PCAS108
+TYPE    S200
+NAME	RAF PCASP with DMT electronics.
+#
+NCHANNELS       30
+RANGE		0
+#
+THRESHOLD       20
+TRANSIT_REJ     1
+DOF_REJ         1
+AVG_TRANSIT_WGT 5
+ATT_ACCEPT      95
+DIVISOR_FLAG    0
+CT_METHOD       0
+MAX_WIDTH       10000
+#
+HSKP0	PHGB	0.0	1.0	0.0
+HSKP1	PMGB	0.0	1.0	0.0
+HSKP2	PLGB	0.0	1.0	0.0
+HSKP3	PFLW	9.00095 -0.00973	2.56232e-6
+HSKP4	PREF	0.0	1.0	0.0
+HSKP5	DUMMY	0.0	1.0	0.0
+HSKP6	PFLWS	-729.57 0.87564 -3.5197e-4 4.750368e-8
+HSKP7	PTMP	0.0	1.0	0.0
+#
+#include "../defaults/s200.default"
+#
+FIRST_BIN       1
+LAST_BIN        31
+END
+#
+# ------------------------------------------------------------------------
+#
+START	PCANASA
+TYPE	PCAS
+HSKP0	PACT	0.0	5.078e-4	0.0
+HSKP1	PSTT	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	PTMP	27.721601	-7.553395e-5	-3.7898721e-07
+HSKP5	PREF	-0.021776487	-0.00079476316	8.9631718e-12
+HSKP6	PFLW	-0.484	0.000272	0.0
+HSKP7	PBRS	-0.0029809522	-8.0229240e-5	-9.2616201e-07
+HSKP8	DUMMY	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+HSKP10	DUMMY	0.0	1.0	0.0
+HSKP11	DUMMY	0.0	1.0	0.0
+CELL_SIZE	0.1, 0.12, 0.14, 0.17, 0.2, 0.25, 0.3, 0.4,
+		0.5, 0.7, 0.9, 1.2, 1.5, 2.0, 2.5, 3.0
+#
+FIRST_BIN	1
+LAST_BIN	16
+END
+#
+# ------------------------------------------------------------------------
+#
+START	260X06
+TYPE	260X
+NAME	RAF 260X.
+#
+HSKP0	P6RST	0.0	1.0	0.0
+HSKP1	DUMMY	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	P6TMP	27.721601	-7.553395e-5	-3.7898721e-07
+HSKP5	P6E01	-0.021776487	-0.00079476316	8.9631718e-12
+HSKP6	P6E64	-0.021776487	-0.00079476316	8.9631718e-12
+HSKP7	DUMMY	0.0	1.0	0.0
+HSKP8	DUMMY	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+HSKP10	DUMMY	0.0	1.0	0.0
+HSKP11	DUMMY	0.0	1.0	0.0
+#
+MIN_RANGE	15.0
+MAX_RANGE	635.0
+RANGE_STEP	10.0
+#
+FIRST_BIN       2
+LAST_BIN        63
+#
+NDIODES         64
+RESPONSE_TIME   0.35
+ARM_DISTANCE    61.0
+DENS            1.0
+PLWFAC          1.0e-9
+DBZFAC          1.0e3
+END
+#
+# ------------------------------------------------------------------------
+#
+START	200X01
+TYPE	200X
+HSKP0	2XED01	0.0	1.0	0.0
+HSKP1	2XED16	0.0	1.0	0.0
+HSKP2	2XMIRT	0.0	1.0	0.0
+HSKP3	2XSPR1	0.0	1.0	0.0
+HSKP4	2XSPR2	0.0	1.0	0.0
+HSKP5	2XEDRJ	0.0	1.0	0.0
+HSKP6	2XSPR3	0.0	1.0	0.0
+HSKP7	2XSPR4	0.0	1.0	0.0
+HSKP8	DUMMY	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+HSKP10	DUMMY	0.0	1.0	0.0
+HSKP11	DUMMY	0.0	1.0	0.0
+#
+MIN_RANGE	10.0
+MAX_RANGE	310.0
+RANGE_STEP	20.0
+#
+FIRST_BIN	1
+LAST_BIN	14
+#
+NDIODES		15
+RESPONSE_TIME	0.35
+ARM_DISTANCE	61.0
+DENS		1.0
+PLWFAC		1.0e-9
+END
+#
+# ------------------------------------------------------------------------
+#
+START	200Y01
+TYPE	200Y
+HSKP0	2YED01	0.0	1.0	0.0
+HSKP1	2YED16	0.0	1.0	0.0
+HSKP2	2YMIRT	0.0	1.0	0.0
+HSKP3	2YSPR1	0.0	1.0	0.0
+HSKP4	2YSPR2	0.0	1.0	0.0
+HSKP5	2YEDRJ	0.0	1.0	0.0
+HSKP6	2YSPR3	0.0	1.0	0.0
+HSKP7	2YSPR4	0.0	1.0	0.0
+HSKP8	DUMMY	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+HSKP10	DUMMY	0.0	1.0	0.0
+HSKP11	DUMMY	0.0	1.0	0.0
+#
+MIN_RANGE	150.0
+MAX_RANGE	4650.0
+RANGE_STEP	300.0
+#
+FIRST_BIN       1
+LAST_BIN        16
+#
+NDIODES         24
+MAG             0.667
+RESPONSE_TIME   0.35
+ARM_DISTANCE    263.0
+DENS            1.0
+PLWFAC          1.0e-9
+END
+#
+# ------------------------------------------------------------------------
+START	2DC18
+TYPE	2D-C
+EAW	0.8
+HSKP0	2DV15	0.0	1.0	0.0
+HSKP1	2DMTMP	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	2DEE1	0.0	0.001	0.0
+HSKP5	2DEE32	0.0	0.001	0.0
+HSKP6	2DVN15	0.0	1.0	0.0
+HSKP7	2DV5	0.0	1.0	0.0
+HSKP8	SHDORC	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+#
+MIN_RANGE       17.0
+MAX_RANGE       812.0
+RANGE_STEP      25.0
+#
+FIRST_BIN       1
+LAST_BIN        32
+#
+NDIODES         32
+RESPONSE_TIME   0.4
+ARM_DISTANCE    61.0
+DENS            1.0
+PLWFAC          1.0e-9
+DBZFAC          1.0e3
+END
+#
+# ------------------------------------------------------------------------
+START	2DC11
+TYPE	2D-C
+EAW	0.8
+HSKP0	2DV15	0.0	1.0	0.0
+HSKP1	2DMTMP	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	2DEE1	0.0	0.001	0.0
+HSKP5	2DEE32	0.0	0.001	0.0
+HSKP6	2DVN15	0.0	1.0	0.0
+HSKP7	2DV5	0.0	1.0	0.0
+HSKP8	SHDORC	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+#
+MIN_RANGE       17.0
+MAX_RANGE       812.0
+RANGE_STEP      25.0
+#
+FIRST_BIN       1
+LAST_BIN        32
+#
+NDIODES         32
+RESPONSE_TIME   0.4
+ARM_DISTANCE    61.0
+DENS            1.0
+PLWFAC          1.0e-9
+DBZFAC          1.0e3
+END
+#
+# ------------------------------------------------------------------------
+START	2DCCSU
+TYPE	2D-C
+EAW	0.8
+HSKP0	2DV15	0.0	1.0	0.0
+HSKP1	2DMTMP	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	2DEE1	0.0	1.0	0.0
+HSKP5	2DEE32	0.0	1.0	0.0
+HSKP6	2DVN15	0.0	1.0	0.0
+HSKP7	2DV5	0.0	1.0	0.0
+HSKP8	SHDORC	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+END
+#
+# ------------------------------------------------------------------------
+START	2DP10
+TYPE	2D-P
+EAW	3.2
+HSKP0	2DV15	0.0	1.0	0.0
+HSKP1	2DMTMP	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	2DEE1	0.0	0.001	0.0
+HSKP5	2DEE32	0.0	0.001	0.0
+HSKP6	2DVN15	0.0	1.0	0.0
+HSKP7	2DV5	0.0	1.0	0.0
+HSKP8	SHDORP	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+#
+MIN_RANGE       145.0
+MAX_RANGE       6300.0
+RANGE_STEP      200.0
+#
+FIRST_BIN       1
+LAST_BIN        32
+#
+NDIODES         32
+RESPONSE_TIME   0.4
+ARM_DISTANCE    261.0
+DENS            1.0
+PLWFAC          1.0e-9
+DBZFAC          1.0e3
+END
+#
+# ------------------------------------------------------------------------
+START	2DG09
+TYPE	2D-G
+HSKP0	2DV15	0.0	1.0	0.0
+HSKP1	2DMTMP	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	2DEE1	0.0	1.0	0.0
+HSKP5	2DEE32	0.0	1.0	0.0
+HSKP6	2DVN15	0.0	1.0	0.0
+HSKP7	2DV5	0.0	1.0	0.0
+HSKP8	SHDORG	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+END
+#
+# ------------------------------------------------------------------------
+START	2DH01
+TYPE	2D-H
+HSKP0   HVWTMP  -23.1   0.001   0.0
+HSKP1   HVSATMP -23.1   0.001   0.0
+HSKP2   HVDATMP -23.1   0.001   0.0
+HSKP3   HVCBTMP -23.1   0.001   0.0
+HSKP4   HVCMTMP -23.1   0.001   0.0
+HSKP5   HVUVV1  0.0     0.0001  0.0
+HSKP6   HVUVV2  0.0     0.0001  0.0
+HSKP7   HVLASER 0.0     0.0006  0.0
+HSKP8   DUMMY   0.0     1.0     0.0
+HSKP9   DUMMY   0.0     1.0     0.0
+#
+FIRST_BIN       40
+LAST_BIN        216
+#
+RANGE_STEP      200
+MIN_RANGE       145.0
+MAX_RANGE       51200.0
+#
+DENS            1.0
+PLWFAC          1.0e-9
+DBZFAC          1.0e3
+#
+END
+#
+# ------------------------------------------------------------------------
+START	2DH02
+TYPE	2D-H
+HSKP0	2DV15	0.0	1.0	0.0
+HSKP1	2DMTMP	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	2DEE1	0.0	1.0	0.0
+HSKP5	2DEE32	0.0	1.0	0.0
+HSKP6	2DVN15	0.0	1.0	0.0
+HSKP7	2DV5	0.0	1.0	0.0
+HSKP8	SHDORH	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+END
+# ------------------------------------------------------------------------
+START	2DGA109
+TYPE	2D-G
+EAW	1.0
+HSKP0	2DV15	0.0	1.0	0.0
+HSKP1	2DMTMP	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	2DEE1	0.0	1.0	0.0
+HSKP5	2DEE32	0.0	1.0	0.0
+HSKP6	2DVN15	0.0	1.0	0.0
+HSKP7	2DV5	0.0	1.0	0.0
+HSKP8	SHDORC	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+END
+#
+#
+# ------------------------------------------------------------------------
+START	2DGA209
+TYPE	2D-G
+EAW	1.0
+HSKP0	2DV15	0.0	1.0	0.0
+HSKP1	2DMTMP	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	2DEE1	0.0	1.0	0.0
+HSKP5	2DEE32	0.0	1.0	0.0
+HSKP6	2DVN15	0.0	1.0	0.0
+HSKP7	2DV5	0.0	1.0	0.0
+HSKP8	SHDORC	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+END
+#
+#
+# ------------------------------------------------------------------------
+START	2DGA218
+TYPE	2D-G
+EAW	1.0
+HSKP0	2DV15	0.0	1.0	0.0
+HSKP1	2DMTMP	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	2DEE1	0.0	1.0	0.0
+HSKP5	2DEE32	0.0	1.0	0.0
+HSKP6	2DVN15	0.0	1.0	0.0
+HSKP7	2DV5	0.0	1.0	0.0
+HSKP8	SHDORC	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
+END
+#
+#
+# ------------------------------------------------------------------------
+#
+#	Default PMS1D information
+#
+# ------------------------------------------------------------------------
+# Default FSSP
+#
+START	FSSP_DEF
+TYPE	FSSP
+CELL_SIZE	2.0, 5.0, 8.0, 11.0, 14.0, 17.0, 20.0, 23.0, 26.0,
+		 29.0, 32.0, 35.0, 38.0, 41.0, 44.0, 47.0,	# range 0
+		2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0,
+		 20.0, 22.0, 24.0, 26.0, 28.0, 30.0, 32.0,	# range 1
+		1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0,
+		 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0,	# range 2
+		0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5,
+		 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0		# range 3
+#
+FIRST_BIN	1
+LAST_BIN	16
+#
+DOF		2.81
+BEAM_DIAM	0.19
+DENS		1.0
+PLWFAC		1.0e-6
+DBZFAC		1.0e6
+#
+TAU1		5.8e-6
+TAU2		2.5e-6
+END
+# ------------------------------------------------------------------------
+# Default PCASP
+#
+START	PCAS_DEF
+TYPE	PCAS
+CELL_SIZE	0.1, 0.12, 0.14, 0.17, 0.2, 0.25, 0.3, 0.4,
+		0.5, 0.7, 0.9, 1.2, 1.5, 2.0, 2.5, 3.0
+#
+FIRST_BIN	1
+LAST_BIN	16
+END
+# ------------------------------------------------------------------------
+# Default FSSP-300
+#
+START	F300_DEF
+TYPE	F300
+CELL_SIZE	0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7,
+		0.8, 0.9, 1.0,				# Step 0.1
+		1.2, 1.4,				# Step 0.2
+		1.7, 2.0,				# Step 0.3
+		2.5, 3.0, 3.5, 4.0, 4.5, 5.0,		# Step 0.5
+		6.0, 7.0, 8.0, 9.0, 10.0,		# Step 1.0
+		12.0, 14.0, 16.0, 18.0, 20.0		# Step 2.0
+#
+FIRST_BIN	1
+LAST_BIN	32
+SAMPLE_AREA	0.065
+END
+# ------------------------------------------------------------------------
+# Default 260X
+#
+START	260X_DEF
+TYPE	260X
+#
+MIN_RANGE	15.0
+MAX_RANGE	635.0
+RANGE_STEP	10.0
+#
+FIRST_BIN       1
+LAST_BIN        63
+#
+NDIODES         64
+RESPONSE_TIME   0.35
+ARM_DISTANCE    61.0
+DENS            1.0
+PLWFAC          1.0e-9
+DBZFAC		1.0e3
+END
+# ------------------------------------------------------------------------
+# Default 200X
+#
+START	200X_DEF
+TYPE	200X
+#
+MIN_RANGE	10.0
+MAX_RANGE	310.0
+RANGE_STEP	20.0
+#
+FIRST_BIN       1       
+LAST_BIN        14
+#
+NDIODES         15
+RESPONSE_TIME	0.35
+ARM_DISTANCE    61.0
+DENS            1.0
+PLWFAC          1.0e-9
+END
+# ------------------------------------------------------------------------
+# Default 200Y
+#
+START	200Y_DEF
+TYPE	200Y
+#
+MIN_RANGE	150.0
+MAX_RANGE	4650.0
+RANGE_STEP	300.0
+#
+FIRST_BIN       1
+LAST_BIN        16
+#
+NDIODES         24
+MAG             0.667
+RESPONSE_TIME   0.35
+ARM_DISTANCE    263.0
+DENS            1.0
+PLWFAC          1.0e-9
+END
+# ------------------------------------------------------------------------
+# Default MASP
+#
+START	MASP_DEF
+TYPE	MASP
+#
+CELL_SIZE	0.30, 0.31, 0.34, 0.36, 0.37, 0.40, 0.43, 0.46, 0.49, 0.52,
+		0.55, 0.58, 0.62, 0.66, 0.69, 0.74, 1.0, 1.25, 1.58, 2.0,
+		2.5, 3.2, 4.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0,
+		50.0
+#
+FIRST_BIN       1
+LAST_BIN        32
+#
+END
+# ------------------------------------------------------------------------
+#
+# Default 2D-P
+#
+START   2DP_DEF
+TYPE    2D-P
+EAW     3.2
+HSKP0   2DV15   0.0     1.0     0.0
+HSKP1   2DMTMP  0.0     1.0     0.0
+HSKP2   DUMMY   0.0     1.0     0.0
+HSKP3   DUMMY   0.0     1.0     0.0
+HSKP4   2DEE1   0.0     0.001   0.0
+HSKP5   2DEE32  0.0     0.001   0.0
+HSKP6   2DVN15  0.0     1.0     0.0
+HSKP7   2DV5    0.0     1.0     0.0
+HSKP8   SHDORP  0.0     1.0     0.0
+HSKP9   DUMMY   0.0     1.0     0.0
+#
+MIN_RANGE       140.0
+MAX_RANGE       6300.0
+RANGE_STEP      200.0
+#
+FIRST_BIN       1
+LAST_BIN        33
+#
+NDIODES         32
+RESPONSE_TIME   0.5
+ARM_DISTANCE    261.0
+DENS            1.0
+PLWFAC          1.0e-9
+DBZFAC          1.0e3
+END
+
+# ------------------------------------------------------------------------
+#
+# Default 2D-C
+#
+START   2DC_DEF
+TYPE    2D-C
+EAW     0.8
+HSKP0   2DV15   0.0     1.0     0.0
+HSKP1   2DMTMP  0.0     1.0     0.0
+HSKP2   DUMMY   0.0     1.0     0.0
+HSKP3   DUMMY   0.0     1.0     0.0
+HSKP4   2DEE1   0.0     0.001   0.0
+HSKP5   2DEE32  0.0     0.001   0.0
+HSKP6   2DVN15  0.0     1.0     0.0
+HSKP7   2DV5    0.0     1.0     0.0
+HSKP8   SHDORC  0.0     1.0     0.0
+HSKP9   DUMMY   0.0     1.0     0.0
+#
+MIN_RANGE       17.0
+MAX_RANGE       787.0
+RANGE_STEP      25.0
+#
+FIRST_BIN       1
+LAST_BIN        33
+#
+NDIODES         32
+RESPONSE_TIME   0.5
+ARM_DISTANCE    61.0
+DENS            1.0
+PLWFAC          1.0e-9
+DBZFAC          1.0e3
+END
+

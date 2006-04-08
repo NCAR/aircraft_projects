@@ -1,0 +1,254 @@
+#  FILE: netconfig
+#
+# This file configures WINDS sessions for both onboard in real-time and inhouse
+# for post-processing modes. It is essential for correct operation of the former 
+# and optional for the latter, though it is useful in post-processing environment
+# as a means of saving command line startup combinations and thus useful in not 
+# only providing multiple startup possibilities but also in invoking WINDS with 
+# minimal arguments.
+#
+# Fields are position (mode), display-host, port server host, x-resolution, 
+# y-resolution, serial port output for ttya, and then for ttyb, and finally 
+# project number.
+#
+# Additional entries to indicate NFS server and Parallax/NetVUE video servers
+# are also exemplified and discussed in what follows.
+#
+# Edit this file as needed for given project setup.  The part you will
+# modify is in the EXAMPLE section that follow this introduction.
+# 
+# Edit ALL lines that are not commented out (# in the first 
+# column)...EXCEPT, however, for these next 2 lines (do NOT modify):
+#
+mode    dhost    phost    x-res    y-res    ttya    ttyb    pnum
+----    ----     -----    -----    -----    ----    ----    ----
+#
+# See the WINDS User Manual for details on all of this (especially since there 
+# is no guarantee that what's here is up to date!). Here's the EXAMPLE template
+# entries, modify as needed. Detailed explanations on each field follow below
+# (search for MODE, DHOST, PHOST, X-RES/Y-RES, TTYA/TTYB, and PNUM respectively):
+#
+######################################################################################
+# TEMPLATE AND EXAMPLES (comment out or modify/duplicate as needed):
+#
+netcdf     dhost    phost    1136    880    none    none     pnum-netcdfname
+#
+setup    dhost    phost    1136    880    none    none    pnum
+#
+devctl    dhost    phost    1136    880    none    none    pnum
+#
+ctl    dhost    phost    1136    880    none    none    pnum
+#
+ckp    dhost    phost    1136    880    none    none    pnum
+#
+fwd    dhost    phost    1136    880    none    none    pnum
+#
+obl    dhost    phost    1136    880    none    none    pnum
+#
+obr    dhost    phost    1136    880    none    none    pnum
+#
+ibl    dhost    phost    1136    880    none    none    pnum
+#
+ibr    dhost    phost    1136    880    none    none    pnum
+#
+dev    dhost    phost    1136    880    none    none    pnum
+#
+# Retain dev entry for calcart (at RAF, tonopah), modifying pnum as needed. We
+# assume here that an HP PaintJet is attached to tonopah's serial port A.
+#
+dev     tonopah tonopah 1136    880     pjet    none    pnum
+#
+# Change the dhost field (nfsserver) to the NFS Server, which MUST also be the
+# WINDS Server (i.e. host from which WINDS processes are executed) but may be 
+# distinct from the ControlHost (ctl entry). Also change the phost field 
+# (core-file-save-directory) to a location for saving corefiles; this is to be any
+# directory pathname in a partition with enough room to contain multiple core files.
+# A good candidate onboard is some pathname under /home, e.g. /home/corefiles. This
+# directory need not exist, it will be created at proj_setup time; and definitely 
+# change the pnum field to current project number:
+# 
+nfs     nfsserver core-file-save-directory 0    0     none    none    pnum
+#
+# Indicate hosts on local net that contain the Parallax Video card and thus
+# can serve network video within the NetVUE scheme. Change serverhostname
+# to name of host; serverdisplay, for now, is ALWAYS ":0.1"; location of 
+# half-sized video windows are indicated by next two fields, the xpos and
+# ypos -- to align three along bottom, starting from right side, use following
+# combinations: (822,650), (492,650), (162,650)...stack 4, 2x2, in lower right:
+# (492,370), (492,650), (822,650), (492,650); title is what appears in frame
+# border of video window; framespeed is requested frames per second (which
+# currently does not seem to have an effect, default rate of 8 fps results 
+# regardless of this entry); and dummy is a necessary placeholder for now.
+#
+# NetVUE serverhostname serverdisplay xpos ypos title framespeed dummy
+#
+# example (uncomment to enable):
+#
+#NetVUE scraff :0.1 822 650 ForwardCamera 6 dummy
+#
+######################################################################################
+# MODE
+#
+# Possible names for mode include:
+#
+# netcdf
+#
+# Post-processing mode -- input is to be from a netcdf file whose filename is 
+# derived from the pnum field (pnum-netcdfname). See comments below on PNUM for
+# details on this.
+#
+# setup 
+#
+# In-house, you may optionally use setup mode for preliminary sessions IF a
+# header is ready and a dataset is not; after a dataset is ready you should
+# start using devctl or netcdf mode (see below). 
+#
+# devctl 
+#
+# In-house simulated real-time mode, getting data from ADS data file.
+#
+# ctl
+#
+# Position ctl is the onboard winds host, i.e. the main controlling station 
+# providing communication with ads. Be sure to set the project number for ctl. 
+# Setting it for the calcart (see below) is also an excellent idea. 
+#
+# IMPORTANT: make sure the FIRST entry in this file with the ctl (or devctl) 
+# position is the one designating the project number and ControlHost for the project or 
+# the print server, e.g, won't find its display-host's associated ControlHost and will 
+# terminate! 
+#
+# dev
+#
+# use the dev mode for general purpose slave display. These hosts will not
+# be auto-started or auto-killed in the onboard turnkey mechanisms, but are
+# useful for concurrent sessions off-board, e.g. on the cal-cart or in-house
+# debugging.  You don't want the calcart auto-killed since it may be on the
+# network in session with some other airplane when your airplane shuts down.
+#
+# nfs
+#
+# nfs entry is used to determine the host that is the NFS Server AND the "WindsServer", 
+# i.e. it sets the value of environment variable WindsServer, used by each real-time host 
+# and the ControlHost for various things. This entry for the onboard "mode" of this same 
+# host MUST PRECEDE THIS ENTRY! NOTE: NFS Server and WINDS Server MUST be the same host!
+#
+# 2nd column is name of NFS server; 3rd is the filesystem location for 
+# saving core files found during the Monitor's examinations of file system.
+# Make sure to also change pnum here to current project number so proj_setup
+# knows who the WindsServer is for given project.
+#
+# Onboard, other modes are slaves in some other airplane position:
+#
+# ckp - airplane position: cockpit
+# fwd - airplane position: forward cabin
+# obl - airplane position: outboard left
+# obr - airplane position: outboard right
+# ibl - airplane position: inboard left
+# ibr - airplane position: inboard right
+#
+######################################################################################
+# DHOST
+#
+# Replace dhost with display hostname. This is the host on whom the winds
+# process is to be displayed. It need not be the same host as the one on which
+# winds is executed, but in this case x-protocol display permission must be
+# granted for the compute host (do a "man xhost"). You may have as many 
+# entries, each with a different dhost value, as needed in this file, to
+# provide for all the display hosts in your network.  The longest string 
+# allowed for dhost is 64 characters.
+#
+######################################################################################
+# PHOST
+#
+# Replace phost with port server hostname if any -- use value "none" if no 
+# port services. The port server host is the host supplying serial ports for
+# printing, etc., and often is the same as the dhost (but need not be...). 
+# If a host is named "none", this mechanism fails. Contact WINDS expert for help.  
+# The longest string allowed for phost is 64 characters.
+#
+######################################################################################
+# X-RES/Y-RES
+#
+# Insert desired pixel resolution for width and height, respectively, of WINDS window. 
+# Window size won't be adjusted any smaller than about 640 x 480. Nominal sizing is
+# already set in examples.
+#
+######################################################################################
+# TTYA/TTYB
+#
+# Columns ttya and ttyb correspond to the serial line output ports of same name
+# (on Sun backplanes); the values for each should indicate what printer (or, in 
+# real-time mode, other serial output) is connected on the port server host.
+# The only printers WINDS *explicitly* supports are the HP 1200/1600/PaintJet 
+# and Epson wide-carriage printer. To use one of these (or, really, *any* other
+# printer configured to the correct protocol...) over ttya or ttyb, set the 
+# tty[a|b] column(s) to the correct value(s) for the type of printer(s) in use. 
+# You need do nothing here for PostScript printing. 
+#
+# Possible names for tty[a|b] include (NOTE: no guarantee that these are
+# up to date! Consult WINDS User Manual to be certain):
+# 
+# none - no output device
+# 1200c - HP 1200C printer, serial Sun to Parallel printer (with S/P converter)
+# p1200c - HP 1200C printer, parallel port both ends
+# ppjet - HP PaintJet printer, parallel port both ends
+# spjet - HP PaintJet printer, serial port both ends
+# pjet - HP PaintJet printer, serial Sun to Parallel printer (with S/P converter)
+# epson - Epson printer
+# ascii - Serial Line Ascii Feed (values only)
+# lcd - Serial Line Ascii Feed (LCD display)
+# flip - Serial Line Ascii Feed (FLIP display)
+# hptp - HP Thermal printer (unsupported, actually)
+#
+# Serial Line Ascii Feed goes out indicated ttya IFF the associated configuration 
+# file is setup properly.
+#
+######################################################################################
+# PNUM
+#
+# Replace pnum with project number.  A project number can be any value you want 
+# to give as an identifier for the given dataset(s) to be processed; it can be 
+# a name or a number or any ASCII string. Often, datasets have a project number 
+# already associated with them on distribution, and sometimes it makes sense 
+# to retain that value (consulting, etc.). The only important connection the 
+# pnum value must have is its relation to dataset files' location if the 
+# WINDS default directory $WINDS/data/<pnum> is used and, regardless of 
+# dataset location, its relation to the project config files in the 
+# $WINDS/project/<pnum> subdirectory. 
+#
+# In post-processing mode, the dataset name field (netcdfname)
+# must be filled in as well; its value is used to construct the filename of 
+# the dataset to be used for the WINDS session. Filename entries ARE case-sensitive.  
+# In this mode, the search for a netcdf file named <netcdfname>[.cdf] is conducted
+# sequentially until (not) found under the following directories: $DATA_DIR, 
+# $DATA_DIR/<pnum>, and $WINDS/data/<pnum>. If the '.cdf' extension is not supplied
+# as part of netcdfname, it will be appended before the search commences.
+#
+# The value for either <pnum> or <netcdfname> are recommended to be no 
+# more than 5 characters in length. Longer values than this will work ok, but 
+# may have some of their text truncated in the WINDS Control Panel area. However, 
+# the longest value for pnum is 16 characters, and for either dataset name is
+# 64 characters.
+#
+######################################################################################
+# ETCETERA
+#
+# WINDS is invoked with optional command line arguments that are used to find 
+# an entry here with matching parameters. If there is more than one entry with 
+# parameters that match all given arguments, the first such match seen is the winner.
+# This includes the invocation without any arguments: the very first entry
+# found, in this case, with display host equal to the executing host, will be 
+# the one used to configure the session. It's possibly useful for those who 
+# invoke WINDS without arguments, e.g. from a menu, to take advantage of this: 
+# create as many entries as you need to represent ALL of your datasets, knowing 
+# that WINDS (invoked without any arguments) will use the first entry with matching 
+# host seen in this file, and simply edit that first entry as needed to change 
+# the display. 
+#
+# Add your own comments to this file by starting a line with # character.
+# Please note that no newline-terminated entry in this file is to exceed 128 
+# characters. The lines in the original version of this file are obviously OK, 
+# so just use them as a template and your comments won't blow up the software.
+# 
+######################################################################################
