@@ -1,0 +1,102 @@
+#! /bin/csh -f
+#
+#  Archive preliminary NIMBUS netCDF output files for project:
+#    2005-502 Progressive Science (Jorgen Jensen, et al.)
+#   using the new ATD directory path
+#
+#  File created by '/jnet/local/proj/archives/scripts/ngenar' Revision 14 on Tue Apr 4 10:55:38 MDT 2006
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo ${0}:  Only the "dmg" login is allowed to run this script.  Quitting.
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+# set msrcpMachine = "vivaldi"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s), if needed
+set RPWD = ""
+#
+set SDIR = /jnet/data
+#
+set SFILES = ( \
+502rf01.nc \
+502rf02.nc \
+502rf03.nc \
+502rf04.nc \
+502rf05.nc \
+502rf06.nc \
+502rf07.nc \
+502rf08.nc \
+502rf09.nc \
+502rf10.nc \
+502rf11.nc \
+502rf12.nc \
+502rf13.nc \
+502rf14.nc \
+502rf15.nc \
+)
+#
+set DFILES = ( \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF01.20051201.142941_010943.INI.nc \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF02.20051202.212015_055642.INI.nc \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF03.20051207.151740_001156.INI.nc \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF04.20051208.163420_030850.INI.nc \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF05.20051209.172151_005837.INI.nc \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF06.20051212.092821_182451.INI.nc \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF07.20051213.185336_000229.INI.nc \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF08.20051214.140336_215523.INI.nc \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF09.20051216.143026_200624.INI.nc \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF10.20051219.122839_203847.INI.nc \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF11.20051220.154532_223014.INI.nc \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF12.20051221.140611_190914.INI.nc \
+mss:/ATD/DATA/2005/Progressive_Science/GulfstreamV_N677F/LRT/RF13.20051222.150835_011722.INI.nc \
+mss:/ATD/DATA/2006/Progressive_Science/GulfstreamV_N677F/LRT/RF14.20060110.160338_222809.INI.nc \
+mss:/ATD/DATA/2006/Progressive_Science/GulfstreamV_N677F/LRT/RF15.20060113.182351_232337.INI.nc \
+)
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  Files archived to MSS directory:  /ATD/DATA/2006/Progressive_Science/GulfstreamV_N677F/"
+echo "#  (Check year in path, if project occurred in more than one.)"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DFILE
+    if ($status == 0) then
+      set d2 = $DFILE:h
+      set d1 = $d2:t
+      set d2 = $DFILE:t
+      echo "#   $d1/$d2 -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+     echo " Cannot access file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#  Job(s) submitted on 
+#
