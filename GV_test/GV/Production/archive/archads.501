@@ -1,0 +1,167 @@
+#! /bin/csh -f
+#
+#  Archive raw ADS data files for 2005-501 GV Tests
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2002                                                         *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Note:  This script runs only in a project's "Production/archive"
+#          subdirectory under the "dmg" login.
+#
+#  File adapted from file $LOCAL/proj/102/Production/arch_ads.102
+#   by Ron Ruth  28 January 2K
+#  Revised by RLR 19 April 2002 to use DCS "msrcp" instead of MIGS
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script.  Quitting."
+  exit 1
+endif
+#
+#  Get setup information for this project
+set PROJ = `pwd | sed -e "s/\(.*\)\([0-9][0-9][0-9]\)\(.*\)/\2/g"`
+set result = $status
+if ($result != 0) then
+  echo " Cannot find project number in this directory path"
+  echo "  Quitting."
+  exit 1
+endif
+set YEAR = `grep FY $JLOCAL/proj/$PROJ/Production/proj.info | sed -e "s/FY=//"`
+set TYPE = ADS
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+#  set msrcpMachine = "vivaldi"
+#  set msrcpMachine = "mahler"
+#  set msrcpMachine = "mistral"
+endif
+#
+#  Set MSS Read PassWorD if restricted access
+set RPWD = ""
+#set RPWD = "-rpwd ReadPassword"
+#
+#  Choose a source directory
+#set SDIR = $TEMP
+#set SDIR = $PROD_DATA
+set SDIR = $DATA_DIR/GV_test
+#
+#  1st wave
+#set SFILES = ( \
+#dsm_20050920_155055.ads \
+#dsm_20050923_134041.ads \
+#)
+#set DFILES = ( \
+#TF01_20050920_155055 \
+#TF02_20050923_134041 \
+#)
+#
+#  2nd wave
+#set SFILES = ( \
+#dsm_20050927_153442.ads \
+#)
+#set DFILES = ( \
+#TF03_20050927_153442 \
+#)
+#
+#  3rd wave
+#set SFILES = ( \
+#dsm_20050929_164355.ads \
+#)
+#set DFILES = ( \
+#TF04_20050929_164355 \
+#)
+#
+#  4th wave
+#set SFILES = ( \
+#dsm_20050930_151939.ads \
+#)
+#set DFILES = ( \
+#TF05_20050930_151939 \
+#)
+#
+#  5th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#   th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#
+#  Get started:
+echo "#  $#SFILES Job(s) submitted on `date`"
+if ($#SFILES != $#DFILES) then
+  echo " Number of source and destination file names don't match.  Quitting"
+  exit 1
+endif
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh $msrcpMachine msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG $RPWD \
+     $SDIR/$SFILE mss:/RAF/$YEAR/$PROJ/$TYPE/$DFILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TYPE/$DFILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+      echo "#                $TYPE/$DFILE: error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+    echo "#   Cannot access source file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done.
+echo "#   Completed on `date`"
+exit
+#
+#
+#  MSS path for all bitfiles listed below:  /RAF/2005/501/
+#
+#  1st wave
+#  2 Job(s) submitted on Fri Sep 23 16:31:44 MDT 2005
+#  msrcp job for ADS/TF01_20050920_155055 -- OK -- Fri Sep 23 16:34:21 MDT 2005
+#  msrcp job for ADS/TF02_20050923_134041 -- OK -- Fri Sep 23 16:39:58 MDT 2005
+#   Completed on Fri Sep 23 16:39:58 MDT 2005
+#
+#  2nd wave
+#  1 Job(s) submitted on Tue Sep 27 16:38:51 MDT 2005
+#  msrcp job for ADS/TF03_20050927_153442 -- OK -- Tue Sep 27 16:42:37 MDT 2005
+#   Completed on Tue Sep 27 16:42:37 MDT 2005
+#
+#  3rd wave
+#  1 Job(s) submitted on Fri Sep 30 09:53:04 MDT 2005
+#  msrcp job for ADS/TF04_20050929_164355 -- OK -- Fri Sep 30 09:58:17 MDT 2005
+#   Completed on Fri Sep 30 09:58:17 MDT 2005
+#
+#  4th wave
+#  1 Job(s) submitted on Wed Oct  5 10:36:44 MDT 2005
+#  msrcp job for ADS/TF05_20050930_151939 -- OK -- Wed Oct  5 10:40:41 MDT 2005
+#   Completed on Wed Oct  5 10:40:41 MDT 2005
+#
+#  5th wave
+#  Job(s) submitted on 
+#
+#   th wave
+#  Job(s) submitted on 
+#
