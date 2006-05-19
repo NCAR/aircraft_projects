@@ -1,0 +1,136 @@
+#! /bin/csh -f
+#
+#  Archive production Mpeg-4 movie files for the project:
+#    2006-503 T-REX (Terrain-induced Rotor EXperiment)
+#   using the new ATD directory path
+#   (files digested from the left-side-looking digital camera and production
+#    LRT netCDF files assembled by Stuart Beaton)
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2006                                                         *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Note:  This script runs only in a project's "Production/archive"
+#          subdirectory under the "dmg" login.
+#
+#  File adapted from file $JLOCAL/proj/135/archmovie.135
+#   by Ron Ruth  12 March 2006
+#  Revised by RLR
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script.  Quitting."
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+# set msrcpMachine = "vivaldi"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s), if needed
+set RPWD = ""
+#
+#   Source file directory
+#set SDIR = ""
+#
+#   Destination file directory
+#set DDIR = "mss:/ATD/DATA/2006/TREX/Gulfstream5_N677F/CAMERA"
+#
+#  1st wave
+set SFILES = ( \
+#)
+#set DFILES = ( \
+# \
+#)
+##:'a,'bs#\(....\).\(..\).\(..\).\(....\)...\(.....\)......\(.*\)#\1.\4\2\3.\5_\6.mp4 \\
+#
+#  2nd wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#  3rd wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#  4th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#   th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directory:  /ATD/DATA/yyyy/RICO/C130_N130AR/"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DFILE
+    if ($status == 0) then
+      set d2 = $DFILE:h
+      set d1 = $d2:t
+      set d2 = $DFILE:t
+      echo "#   $d1/$d2 -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+    echo " Cannot access file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#
+#  1st wave
+#  Job(s) submitted on
+#  File(s) archived to MSS directory:  
+#
+#  2nd wave
+#  Job(s) submitted on
+#  File(s) archived to MSS directory:  
+#
+#  3rd wave
+#  Job(s) submitted on
+#  File(s) archived to MSS directory:  
+#
+#  4th wave
+#  Job(s) submitted on
+#  File(s) archived to MSS directory:  
+#
+#   th wave
+#  Job(s) submitted on
+#  File(s) archived to MSS directory:  
+#
