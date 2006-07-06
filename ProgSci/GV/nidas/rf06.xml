@@ -3,23 +3,24 @@
 <!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
 
 <project
-    xmlns="http://www.eol.ucar.edu/ads3"
+    xmlns="http://www.eol.ucar.edu/nidas"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.eol.ucar.edu/ads3 ads3.xsd"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
     name="ProgSci"
+    system="GV_N677F"
+    config="rf06.xml"
     version="$LastChangedRevision: 2514 $"
-    xmlname="$HeadURL: http://localhost:8080/svn/hiaper/ads3/xml/ads3.xml $">
-
+    >
 <sensorcatalog>
 
-    <irigSensor ID="IRIG" class="IRIGSensor">
+    <irigSensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="Clock" units="msec"
                     longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
     </irigSensor>
 
-    <arincSensor ID="IRS-C130" class="IRS_HW_YG1854">
+    <arincSensor ID="IRS-C130" class="raf.IRS_HW_YG1854">
         <!-- Taken from the Honeywell installation manual for the -->
         <!-- YG1854 LASERREF SM IRS/GPIRS        (pages 648-650). -->
     <!--<sample id="0007" rate="2"     process="false"><variable name="Time to Nav"        units="min"      longname="Time to Nav"/></sample>                     not used    -->
@@ -80,7 +81,7 @@
     <!--<sample id="0371" rate="2"     process="false"><variable name="equipment_id"       units=""         longname="equipment_id"/></sample>                    not used    -->
     </arincSensor>
 
-    <arincSensor ID="IRS-GV" class="IRS_HW_HG2001GD">
+    <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
         <!-- Taken from the Honeywell installation manual for the         -->
         <!-- Inertial Reference Unit / Part No. HG2001GD (pages 649-651). -->
         <sample id="0007" rate="3.125" process="false"><variable name="time_to_nav"      units="min"      longname="time to nav"/></sample>                <!-- not used    -->
@@ -151,7 +152,7 @@
     </arincSensor>
 
 
-    <arincSensor ID="ADC-GV" class="ADC_HW_EB7022597" speed="low">
+    <arincSensor ID="ADC-GV" class="raf.ADC_HW_EB7022597" speed="low">
         <!-- Taken from the Honeywell Engineering Specification A.4.1 spec. no. -->
         <!-- EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). -->
         <sample id="0203" rate="16"               ><variable name="PALT_A"             units="m"        longname="ADC Pressure Altitude"/></sample>
@@ -182,7 +183,7 @@
         <sample id="0371" rate="2"     process="false"><variable name="a_equipment_id"     units=""         longname="ADC equipment id"/></sample>           <!-- not used    -->
     </arincSensor>
 
-    <arincSensor ID="GPS-GV" class="GPS_HW_HG2021GB02" speed="low">
+    <arincSensor ID="GPS-GV" class="raf.GPS_HW_HG2021GB02" speed="low">
         <!-- Taken from the Honeywell Installation Manual PN HG2021GB02/GD02 -->
         <!-- Table 207 "GNSSU ARINC 429 Output Data" (GPS)  (pages 217-219). -->
         <sample id="0060" rate="1"     process="false"><variable name="g_measurement_Stat" units=""         longname="Measurement Status"/></sample>         <!-- not used    -->
@@ -263,8 +264,38 @@
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="DewPointer" class="DSMSerialSensor"
+    <serialSensor ID="Buck_1011C_DP" class="DSMSerialSensor"
         baud="9600" parity="none" databits="8" stopbits="1">
+
+        <!--  From Buck 1011C manual:
+	    9600 baud, 8-N-1 parity. Use included null modem cable to
+	    connect to computer running Hyperterminal or similar serial
+	    port emulator software.
+	    14354,-14.23,0,0,-56,0, 33.00,05/08/2003, 17:47:08
+	    14060,-13.95,0,0,-54,0, 33.00,05/08/2003, 17:47:09
+	    13721,-13.69,0,0,-52,0, 33.00,05/08/2003, 17:47:10
+	    13342,-13.40,0,0,-50,0, 33.00,05/08/2003, 17:47:11
+	    Balance, mirror temperature, flag, pressure, PWM, mirror,
+	    	board temp, date, time.
+	    Balance - number that indicates how close the servo is to
+	    	being balanced and a dew/frost point being measured
+		on the mirror.
+	    Mirror temperature - temperature on the mirror surface.
+	    Flag - Indicates the following:
+		    0 - normal operation
+		    1 - dew or frost point achieved on mirror
+		    2 - balance mode
+	    Pressure - pressure in mb if sensor installed
+	    PWM - - 255 to + 255. Indicates how much heating (+) or
+	    	cooling (-) being applied to the mirror
+	    Mirror - Indicates the following:
+		    0 - mirror normal
+		    1 - mirror contaminated and will need cleaning soon
+	    Board temp - temperature on main circuit board
+	    Date - Date in month/day/year
+	    Time - 24 hr time
+	-->
+
         <sample id="1" scanfFormat="%*d,%f" rate="1"/>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
@@ -341,7 +372,7 @@
     </serialSensor>
 
 </sensorcatalog>
-<site name="GV" class="Aircraft">
+<site name="GV_N677F" class="raf.Aircraft">
     <parameter name="tailNumber" value="N677F" type="string"/>
 
     <server>
@@ -373,7 +404,7 @@
                     <socket type="server" port="30000"/>
                 </output>
             </processor>
-            <processor class="SyncRecordGenerator">
+            <processor class="raf.SyncRecordGenerator">
                 <output class="SampleOutputStream">
                     <socket type="server" port="30001"/>
                 </output>
@@ -382,7 +413,6 @@
     </server>
 <!--
     <dsm name="dsm302" location="lab" id="2" rserialPort="30002">
-
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
 
         <serialSensor IDREF="Water_CN_Counter"
@@ -395,7 +425,6 @@
     </dsm>
 -->
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
@@ -411,14 +440,14 @@
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer"
+        <serialSensor IDREF="Buck_1011C_DP"
                 devicename="/dev/dsmser1" id="130">
 	    <sample id="1">
                 <variable name="DPLS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left"/>
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer"
+        <serialSensor IDREF="Buck_1011C_DP"
                 devicename="/dev/dsmser2" id="140">
 	    <sample id="1">
                 <variable name="DPRS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right"/>
@@ -429,7 +458,7 @@
                 devicename="/dev/dsmser5" id="120">
         </serialSensor>
 
-        <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
 		<!-- A2D cals done 9/9/2005 -->
 		<!-- second set of cals done a day or two later after
@@ -441,21 +470,21 @@
                 <variable name="DPL" units="V" longname="Dew/Frost Point Temperature, Fuselage Left">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.10142" type="float"/>
-                    <parameter name="corIntercept" value="-0.287319" type="float"/>
+                    <parameter name="corSlope" value="1.11294" type="float"/>
+                    <parameter name="corIntercept" value="-0.362717" type="float"/>
 		    <linear slope="12.5" intercept="-75.0" units="deg_C"/>
                 </variable>
                 <variable name="DPR" units="V" longname="Dew/Frost Point Temperature, Fuselage Right">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.08332" type="float"/>
-                    <parameter name="corIntercept" value="-0.146067" type="float"/>
+                    <parameter name="corSlope" value="1.11522" type="float"/>
+                    <parameter name="corIntercept" value="-0.323875" type="float"/>
 		    <linear slope="12.5" intercept="-75.0" units="deg_C"/>
                 </variable>
             </sample>
         </sensor>
 
-        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
             <sample id="1" rate="1">
                 <variable name="A2DTEMP_MPDS" units="deg_C">
                 </variable>
@@ -468,10 +497,6 @@
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
-        <config class="XMLConfig">
-            <socket type="mcrequest"/>
-        </config>
-
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
 
         <serialSensor IDREF="Mensor_6100"
@@ -502,41 +527,41 @@
             </sample>
         </serialSensor>
 
-        <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.10343" type="float"/>
-                    <parameter name="corIntercept" value="-0.171038" type="float"/>
-		    <poly coefs="-91.5105 28.1459 -0.0783478" units="deg_C"/>
+                    <parameter name="corSlope" value="1.09521" type="float"/>
+                    <parameter name="corIntercept" value="-0.13294" type="float"/>
+		    <poly coefs="-92.151 28.7867 -0.101962" units="deg_C"/>
                 </variable>
                 <variable name="TTHL1" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.10561" type="float"/>
-                    <parameter name="corIntercept" value="-0.149961" type="float"/>
-		    <poly coefs="-94.7523 28.1459 -0.0617025" units="deg_C"/>
+                    <parameter name="corSlope" value="1.077" type="float"/>
+                    <parameter name="corIntercept" value="-0.058946" type="float"/>
+		    <poly coefs="-95.5022 28.6278 -0.0910175" units="deg_C"/>
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.09656" type="float"/>
-                    <parameter name="corIntercept" value="-0.121401" type="float"/>
-		    <poly coefs="-90.1502 27.9773 -0.0459489" units="deg_C"/>
+                    <parameter name="corSlope" value="1.0751" type="float"/>
+                    <parameter name="corIntercept" value="-0.0659378" type="float"/>
+		    <poly coefs="-90.3843 27.5098 -0.0416804" units="deg_C"/>
                 </variable>
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.08244" type="float"/>
-                    <parameter name="corIntercept" value="-0.0587811" type="float"/>
-		    <poly coefs="-89.8241 25.8363 -0.04316" units="deg_C"/>
+                    <parameter name="corSlope" value="1.0933" type="float"/>
+                    <parameter name="corIntercept" value="-0.152943" type="float"/>
+		    <poly coefs="-90.0452 25.8516 -0.0436402" units="deg_C"/>
                 </variable>
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.05313" type="float"/>
-                    <parameter name="corIntercept" value="-0.0734454" type="float"/>
+                    <parameter name="corSlope" value="1.09859" type="float"/>
+                    <parameter name="corIntercept" value="-0.19733" type="float"/>
 		    <!-- lab cal of Sept 21, 2005 confirmed that these coefs
 		        give a temp within 0.18 deg_C for -50 to 40 deg_C
 		    -->
@@ -545,7 +570,7 @@
             </sample>
         </sensor>
 
-        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
             <sample id="1" rate="1">
                 <variable name="A2DTEMP_RAD" units="deg_C">
                 </variable>
@@ -559,7 +584,6 @@
     </dsm>
 
     <dsm name="dsm306" location="chaps_rack" id="6" rserialPort="30002">
-
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="306"/>
 
         <serialSensor IDREF="Mensor_6100"
@@ -587,7 +611,7 @@
                 devicename="/dev/dsmser3" id="120">
         </serialSensor>
 
-	<socketSensor class="PSI9116_Sensor" devicename="inet:psi9116:9000"
+	<socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000"
 	    id="150">
 	    <sample id="1" rate="50">
 		<variable name="PRAKE12" units="mb" longname="Pressure Rake dynamic pressure array" length="12"/>
@@ -595,7 +619,7 @@
 	    <message separator="\x01" position="beg" length="52"/>
 	</socketSensor>
 
-        <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="PDUMPPR" units="V" longname="Pressure of instrument exhaust duct, right">
                     <parameter name="gain" value="2" type="float"/>
@@ -647,7 +671,7 @@
             </sample>
         </sensor>
 
-        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
             <sample id="1" rate="1">
                 <variable name="A2DTEMP_CHAPS" units="deg_C">
                 </variable>
@@ -661,14 +685,13 @@
     </dsm>
 
     <dsm name="dsm308" location="AEROSOL_rack" id="8" rserialPort="30002">
-
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
 
         <serialSensor IDREF="Water_CN_Counter"
                 devicename="/dev/dsmser1" id="110">
         </serialSensor>
 
-        <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="XCOMR" units="V" longname="CO Mixing Ratio">
                     <parameter name="gain" value="4" type="float"/>
@@ -711,7 +734,7 @@
             </sample>
         </sensor>
 
-        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
             <sample id="1" rate="1">
                 <variable name="A2DTEMP_AEROSOL" units="deg_C">
                 </variable>
