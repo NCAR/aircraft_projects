@@ -3,23 +3,24 @@
 <!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
 
 <project
-    xmlns="http://www.eol.ucar.edu/ads3"
+    xmlns="http://www.eol.ucar.edu/nidas"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.eol.ucar.edu/ads3 ads3.xsd"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
     name="RAF_Lab"
+    system="C130_N130AR"
+    config="default.xml"
     version="$LastChangedRevision: 2514 $"
-    xmlname="$HeadURL: http://localhost:8080/svn/hiaper/ads3/xml/ads3.xml $">
-
+    >
 <sensorcatalog>
 
-    <irigSensor ID="IRIG" class="IRIGSensor">
+    <irigSensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="Clock" units="msec"
                     longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
     </irigSensor>
 
-    <arincSensor ID="IRS-C130" class="IRS_HW_YG1854">
+    <arincSensor ID="IRS-C130" class="raf.IRS_HW_YG1854">
         <!-- Taken from the Honeywell installation manual for the -->
         <!-- YG1854 LASERREF SM IRS/GPIRS        (pages 648-650). -->
     <!--<sample id="0007" rate="2"     process="false"><variable name="Time to Nav"        units="min"      longname="Time to Nav"/></sample>                     not used    -->
@@ -80,7 +81,7 @@
     <!--<sample id="0371" rate="2"     process="false"><variable name="equipment_id"       units=""         longname="equipment_id"/></sample>                    not used    -->
     </arincSensor>
 
-    <arincSensor ID="IRS-GV" class="IRS_HW_HG2001GD">
+    <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
         <!-- Taken from the Honeywell installation manual for the         -->
         <!-- Inertial Reference Unit / Part No. HG2001GD (pages 649-651). -->
         <sample id="0007" rate="3.125" process="false"><variable name="time_to_nav" units="min" longname="time to nav"/></sample>
@@ -151,7 +152,7 @@
     </arincSensor>
 
 
-    <arincSensor ID="ADC-GV" class="ADC_HW_EB7022597" speed="low">
+    <arincSensor ID="ADC-GV" class="raf.ADC_HW_EB7022597" speed="low">
         <!-- Taken from the Honeywell Engineering Specification A.4.1 spec. no. -->
         <!-- EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). -->
         <sample id="0203" rate="16"><variable name="PALT" units="m" longname="ADC Pressure Altitude"/></sample>
@@ -182,7 +183,7 @@
         <sample id="0371" rate="2" process="false"><variable name="equipment_id" units="" longname="ADC equipment id"/></sample>
     </arincSensor>
 
-    <arincSensor ID="GPS-GV" class="GPS_HW_HG2021GB02" speed="low">
+    <arincSensor ID="GPS-GV" class="raf.GPS_HW_HG2021GB02" speed="low">
         <!-- Taken from the Honeywell Installation Manual PN HG2021GB02/GD02 -->
         <!-- Table 207 "GNSSU ARINC 429 Output Data" (GPS)  (pages 217-219). -->
         <sample id="0060" rate="1" process="false"><variable name="measurement_Stat" units="" longname="Measurement Status"/></sample>
@@ -350,7 +351,7 @@
     </serialSensor>
 
 </sensorcatalog>
-<site name="C130" class="Aircraft">
+<site name="C130_N130AR" class="raf.Aircraft">
     <parameter name="tailNumber" value="N130AR" type="string"/>
 
     <server>
@@ -367,14 +368,14 @@
             </input>
             <processor class="SampleArchiver">
                 <output class="SampleOutputStream">
-                    <fileset dir="/var/r1/${PROJECT}/${FLIGHT}"
-                        file="dsm_%Y%m%d_%H%M%S.ads"
+                    <fileset dir="/var/r1/${PROJECT}"
+                        file="dsm_%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
 
                 </output>
                 <output class="SampleOutputStream">
-                    <fileset dir="/var/r2/${PROJECT}/${FLIGHT}"
-                        file="dsm_%Y%m%d_%H%M%S.ads"
+                    <fileset dir="/var/r2/${PROJECT}"
+                        file="dsm_%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
 
                 </output>
@@ -382,7 +383,7 @@
                     <socket type="server" port="30000"/>
                 </output>
             </processor>
-            <processor class="SyncRecordGenerator">
+            <processor class="raf.SyncRecordGenerator">
                 <output class="SampleOutputStream">
                     <socket type="server" port="30001"/>
                 </output>
@@ -391,7 +392,6 @@
     </server>
 <!--
     <dsm name="dsm302" location="lab" id="2" rserialPort="30002">
-
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
 
         <serialSensor IDREF="Water_CN_Counter"
@@ -404,12 +404,11 @@
     </dsm>
 -->
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
         <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000"/>
 
-        <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="DPL" units="V" longname="Dew/Frost Point Temperature, Fuselage Left">
                     <parameter name="gain" value="2" type="float"/>
@@ -428,7 +427,7 @@
             </sample>
         </sensor>
 
-        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
             <sample id="1" rate="1">
                 <variable name="A2DTEMP_MPDS" units="deg_C">
                 </variable>
@@ -441,17 +440,13 @@
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
-        <config class="XMLConfig">
-            <socket type="mcrequest"/>
-        </config>
-
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
 
         <serialSensor IDREF="Garmin18_GPS"
                 devicename="/dev/dsmser0" id="120">
         </serialSensor>
 
-        <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <!-- NOTE: all these channels were re-calibrated with the 9/10 gain code ratio -->
                 <variable name="DUMMY" units="V" longname="Place Holder">
@@ -463,7 +458,7 @@
             </sample>
         </sensor>
 
-        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
             <sample id="1" rate="1">
                 <variable name="A2DTEMP_RAD" units="deg_C">
                 </variable>
@@ -477,14 +472,13 @@
     </dsm>
 
     <dsm name="dsm306" location="chaps_rack" id="6" rserialPort="30002">
-
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="306"/>
 
         <serialSensor IDREF="TDLH2O"
                 devicename="/dev/dsmser3" id="120">
         </serialSensor>
 
-        <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="PDUMPPR" units="V" longname="Pressure of instrument exhaust duct, right">
                     <parameter name="gain" value="2" type="float"/>
@@ -555,7 +549,7 @@
             </sample>
         </sensor>
 
-        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
             <sample id="1" rate="1">
                 <variable name="A2DTEMP_CHAPS" units="deg_C">
                 </variable>
@@ -586,14 +580,13 @@
     </dsm>
 
     <dsm name="dsm308" location="AEROSOL_rack" id="8" rserialPort="30002">
-
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
 
         <serialSensor IDREF="Water_CN_Counter"
                 devicename="/dev/dsmser1" id="110">
         </serialSensor>
 
-        <sensor class="DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="XCOMR" units="V" longname="CO Mixing Ratio">
                     <parameter name="gain" value="4" type="float"/>
@@ -631,7 +624,7 @@
             </sample>
         </sensor>
 
-        <sensor class="A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
             <sample id="1" rate="1">
                 <variable name="A2DTEMP_AEROSOL" units="deg_C">
                 </variable>
