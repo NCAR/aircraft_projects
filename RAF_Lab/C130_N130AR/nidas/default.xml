@@ -234,6 +234,95 @@
         <sample id="0377" rate="2" process="false"><variable name="equipment_id" units="" longname="equipment id"/></sample>
     </arincSensor>
 
+
+    <serialSensor ID="S100" class="SPP100_Serial"
+        baud="38400" parity="none" databits="8" stopbits="1">
+
+	<parameter name="NCHANNELS" type="int" value="30"/>
+	<parameter name="RANGE" type="int" value="0"/>
+	<parameter name="THRESHOLD" type="int" value="20"/>
+	<parameter name="TRANSIT_REJ" type="int" value="1"/>
+	<parameter name="DOF_REJ" type="int" value="1"/>
+	<parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+	<parameter name="ATT_ACCEPT" type="int" value="95"/>
+	<parameter name="DIVISOR_FLAG" type="int" value="0"/>
+	<parameter name="CT_METHOD" type="int" value="0"/>
+	<parameter name="MAX_WIDTH" type="int" value="10000"/>
+	<parameter name="CHAN_THRESH" type="int" value="0 23 77 121 170 205 265 342 427 520 627 731 842 950 1084 1225 1374 1531 1695 1866 2032 2220 2416 2620 2830 3048 3258 3461 3668 4096 "/>
+
+        <sample id="1">
+	    <variable name="DUMMY" units="" longname="Housekeeping 0"/>
+	    <variable name="DUMMY" units="" longname="Housekeeping 1"/>
+	    <variable name="DUMMY" units="" longname="Housekeeping 2"/>
+	    <variable name="DUMMY" units="" longname="Housekeeping 3"/>
+	    <variable name="FREF" units="V" longname="FSSP-100 Laser Reference Voltage"/>
+	    <variable name="DUMMY" units="" longname="Housekeeping 5"/>
+	    <variable name="DUMMY" units="" longname="Housekeeping 6"/>
+	    <variable name="FTMP" units="deg_C" longname="FSSP-100 Housekeeping Data"/>
+
+	    <variable name="FRNG" units="" longname="FSSP-100 Size Range Category"/>
+	    <variable name="REJDOF" units="count" longname="Particles Rejected (Outside Depth-of-Field))"/>
+	    <variable name="REJAT" units="" longname="SPP-100 Average Transit Rejected Particles"/>
+	    <variable name="OVFLW" units="" longname="GPS Latitude"/>
+	    <variable name="AS100" units="count" longname="FSSP-100 Raw Accumulation (per cell) - DMT"/>
+        </sample>
+        <prompt string="\x1b\x02\x1d\x00" rate="10"/>
+    </serialSensor>
+
+
+    <serialSensor ID="S200" class="SPP200_Serial"
+        baud="38400" parity="none" databits="8" stopbits="1">
+
+	<parameter name="NCHANNELS" type="int" value="30"/>
+	<parameter name="RANGE" type="int" value="0"/>
+	<parameter name="THRESHOLD" type="int" value="20"/>
+	<parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+	<parameter name="DIVISOR_FLAG" type="int" value="0"/>
+	<parameter name="MAX_WIDTH" type="int" value="10000"/>
+	<parameter name="CHAN_THRESH" type="int" value="692 1040 1517 2157 4096 4231 4348 4537 4825 5251 5859 6703 8192 8345 8502 8682 8872 9070 9252 9432 9544 9737 9937 10166 10471 10797 11162 11499 11852 12288"/> 
+
+        <sample id="1">
+	    <variable name="PHGB" units="V" longname="SPP-200 High-Gain Baseline"/>
+	    <variable name="PMGB" units="V" longname="SPP-200 Mid-Gain Baseline"/>
+	    <variable name="PLGB" units="V" longname="SPP-200 Low-Gain Baseline"/>
+	    <variable name="PFLW" units="std cm3/s" longname="PCAS Flow"/>
+	    <variable name="PREF" units="V" longname="PCAS Laser Reference Voltage"/>
+	    <variable name="DUMMY" units="" longname="Housekeeping 5"/>
+	    <variable name="PFLWS" units="std cm3/s" longname="SPP-200 Sheath Flow"/>
+	    <variable name="PTMP" units="deg_C" longname="PCAS Detector Temperature"/>
+	    <variable name="AS200" length="30" units="count" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT"/>
+        </sample>
+        <prompt string="\x1b\x02\x1d\x00" rate="10"/>
+    </serialSensor>
+
+
+    <serialSensor ID="S300" class="SPP300_Serial"
+        baud="38400" parity="none" databits="8" stopbits="1">
+
+	<parameter name="NCHANNELS" type="int" value="30"/>
+	<parameter name="RANGE" type="int" value="1"/>
+	<parameter name="THRESHOLD" type="int" value="20"/>
+	<parameter name="DOF_REJ" type="int" value="1"/>
+	<parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+	<parameter name="DIVISOR_FLAG" type="int" value="0"/>
+	<parameter name="MAX_WIDTH" type="int" value="10000"/>
+	<parameter name="CHAN_THRESH" type="int" value="38 92 194 376 678 1155 1880 2942 4096 4140 4238 4384 4590 4699 4807 4928 5027 5124 5255 5446 5673 5912 6164 6429 6754 7027 7310 7601 7901 8192"/>
+
+        <sample id="1">
+	    <variable name="DUMMY" units="" longname="Housekeeping 0"/>
+	    <variable name="DUMMY" units="" longname="Housekeeping 1"/>
+	    <variable name="DUMMY" units="" longname="Housekeeping 2"/>
+	    <variable name="DUMMY" units="" longname="Housekeeping 3"/>
+	    <variable name="FREF3" units="V" longname="FSSP-300 Laser Reference Voltage"/>
+	    <variable name="DUMMY" units="" longname="Housekeeping 5"/>
+	    <variable name="DUMMY" units="" longname="Housekeeping 6"/>
+	    <variable name="FTMP3" units="deg_C" longname="FSSP-300 Housekeeping Data"/>
+	    <variable name="AS300" units="count" longname="SPP-300 (FSSP-300) Raw Accumulation (per cell) - DMT"/>
+        </sample>
+        <prompt string="\x1b\x02\x1d\x00" rate="10"/>
+    </serialSensor>
+
+
     <serialSensor ID="Garmin_GPS" class="GPS_NMEA_Serial"
         baud="4800" parity="none" databits="8" stopbits="1">
 
@@ -474,78 +563,55 @@
     <dsm name="dsm306" location="chaps_rack" id="6" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="306"/>
 
+        <serialSensor IDREF="S200"
+                devicename="/dev/dsmser1" id="110">
+        </serialSensor>
+
         <serialSensor IDREF="TDLH2O"
                 devicename="/dev/dsmser3" id="120">
         </serialSensor>
 
+
+        <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa_program_board" id="150">
+            <sample id="1" rate="50">
+                <variable name="MYCNTR" units="count" longname="Lab Test Counter">
+                </variable>
+                <variable name="CNTS" units="count" longname="TSI CN Counter Output">
+                </variable>
+            </sample>
+
+            <sample id="2" rate="50">
+                <variable name="PSFD" units="mbar" longname="Raw Static Pressure, Fuselage Digital">
+                </variable>
+            </sample>
+
+            <sample id="3" rate="1">
+                <variable name="DIG_OUT" units="binary" longname="Power to Gerber Probe">
+                </variable>
+            </sample>
+
+            <sample id="4" rate="10">
+                <variable name="P6RST" units="count" longname="260X Resets"/>
+                <variable name="DUMMY" units="" longname="Housekeeping 1"/>
+                <variable name="DUMMY" units="" longname="Housekeeping 2"/>
+                <variable name="DUMMY" units="" longname="Housekeeping 3"/>
+                <variable name="P6TMP" units="count" longname="260X Temperature">
+                    <poly coefs="27.721601 -7.553395e-5 -3.7898721e-07" units="deg_C"/>
+                </variable>
+                <variable name="P6E01" units="count" longname="260X End Diode Voltage"/>
+                    <poly coefs="-0.021776487 -0.00079476316 8.9631718e-12" units="V"/>
+                </variable>
+                <variable name="P6E64" units="count" longname="260X End Diode Voltage"/>
+                    <poly coefs="-0.021776487 -0.00079476316 8.9631718e-12" units="V"/>
+                </variable>
+                <variable name="DUMMY" units="" longname="Housekeeping 7"/>
+                <variable name="A260X" units="count" longname="260X Raw Accumulation (per cell)"/>
+            </sample>
+        </sensor>
+
+
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
-                <variable name="PDUMPPR" units="V" longname="Pressure of instrument exhaust duct, right">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-<!-- PDUMPPR              | 2006-03-31 21:14:30 | {-0.172594,1.04743}   +0   +5 +10 -->
-                    <parameter name="corSlope"     value="1.04743"    type="float"/>
-                    <parameter name="corIntercept" value="-0.172594"  type="float"/>
-                    <linear slope="103.42" intercept="0" units="mb"/>
-                </variable>
-                <variable name="PDUMPPL" units="V" longname="Pressure of instrument exhaust duct, left">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-<!-- PDUMPPL              | 2006-03-31 21:17:22 | {-0.416897,1.07263}   +0   +5 +10 -->
-                    <parameter name="corSlope"     value="1.07263"    type="float"/>
-                    <parameter name="corIntercept" value="-0.416897"  type="float"/>
-                    <linear slope="103.42" intercept="0" units="mb"/>
-                </variable>
-                <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-<!-- PCAB                 | 2006-03-31 21:20:31 | {-0.21372,1.05393}    +0   +5 +10 -->
-                    <parameter name="corSlope"     value="1.05393"   type="float"/>
-                    <parameter name="corIntercept" value="-0.21372"  type="float"/>
-                    <linear slope="108.09" intercept="-1.3596" units="mb"/>
-                </variable>
-                <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
-<!-- PLWC                 | 2006-03-31 21:25:45 | {0.008986,1.03486}    -8   -5  -2 -->
-<!-- PLWC                 | 2006-03-31 21:27:57 | {0.00890147,1.03505}  +8   +5  +2 -->
-<!-- PLWC                 | 2006-03-31 21:32:08 | {0.0088094,1.03504}   -8   +0  +8 -->
-                    <parameter name="corSlope"     value="1.03504"    type="float"/>
-                    <parameter name="corIntercept" value="0.0088094"  type="float"/>
-                </variable>
-                <variable name="TCAB1" units="V">
-                    <parameter name="gain" value="20" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-<!-- TCAB1                | 2006-03-31 21:35:04 | {-0.0352207,1.0386}   +0 +0.5  +1 -->
-                    <parameter name="corSlope"     value="1.0386"      type="float"/>
-                    <parameter name="corIntercept" value="-0.0352207"  type="float"/>
-                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
-                </variable>
-                <variable name="TCAB4" units="V">
-                    <parameter name="gain" value="20" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-<!-- TCAB4                | 2006-03-31 21:37:12 | {-0.0177743,1.0251}   +0 +0.5  +1 -->
-                    <parameter name="corSlope"     value="1.0251"      type="float"/>
-                    <parameter name="corIntercept" value="-0.0177743"  type="float"/>
-                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
-                </variable>
-                <variable name="XO3" units="V">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-<!-- XO3                  | 2006-03-31 21:40:23 | {-0.162664,1.02144}   +0   +5 +10 -->
-                    <parameter name="corSlope"     value="1.02144"    type="float"/>
-                    <parameter name="corIntercept" value="-0.162664"  type="float"/>
-                    <linear slope="200.0" intercept="0.0" units="ppb"/>
-                </variable>
-                <variable name="PLWC1" units="V" longname="Raw PMS-King Liquid Water Content Output">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
-<!-- PLWC1                | 2006-03-31 21:46:30 | {-0.137439,1.02604}   -8   -5  -2 -->
-<!-- PLWC1                | 2006-03-31 21:48:16 | {-0.137609,1.02617}   +8   +5  +2 -->
-<!-- PLWC1                | 2006-03-31 21:51:22 | {-0.137111,1.0261}    -8   +0  +8 -->
-                    <parameter name="corSlope"     value="1.0261"     type="float"/>
-                    <parameter name="corIntercept" value="-0.137111"  type="float"/>
-                </variable>
             </sample>
         </sensor>
 
