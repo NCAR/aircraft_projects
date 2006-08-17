@@ -1,6 +1,7 @@
 #! /bin/csh -f
 #
 #  Archive raw ADS data files for 2006-503 T-REX
+#goto movem
 #
 #  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #  *  Copyright 2002                                                         *
@@ -25,6 +26,7 @@ if ($user != "dmg") then
   exit 1
 endif
 #
+#######  Original procedure
 #  Get setup information for this project
 #set PROJ = `pwd | sed -e "s/\(.*\)\([0-9][0-9][0-9]\)\(.*\)/\2/g"`
 #set result = $status
@@ -33,9 +35,27 @@ endif
 #  echo "  Quitting."
 #  exit 1
 #endif
-set PROJ = "503"
-#set YEAR = `grep FY $JLOCAL/proj/$PROJ/Production/proj.info | sed -e "s/FY=//"`
-set YEAR = `grep FY $JLOCAL/projects/TREX/GV/Production/proj.info | sed -e "s/FY=//"`
+#set PROJ = "503"
+##set YEAR = `grep FY $JLOCAL/proj/$PROJ/Production/proj.info | sed -e "s/FY=//"`
+#set YEAR = `grep FY $JLOCAL/projects/TREX/GV/Production/proj.info | sed -e "s/FY=//"`
+#
+#######  New procedure
+#  Get setup information for this project
+#  Make sure I'm in the "archive" subdirectory
+set cdir = `pwd | awk -F/ '{print $NF}'`
+if ($cdir != "archive") then
+  echo '  This script is not being run from the "archive" subdirectory.'
+  exit 1
+endif
+pushd ../.. >& /dev/null
+set PROJDIR =  `pwd`
+set YEAR = `grep FY $PROJDIR/Production/proj.info | sed -e "s/FY=//"`
+cd ..
+set proj = `pwd | awk -F/ '{print $NF}'`
+set proj = (`grep $proj $PROJ_DIR/archives/msfiles/directory_map`)
+set PROJ = $proj[1]
+popd >& /dev/null
+#
 set TYPE = ADS
 #
 #  Set machine on which "msrcp" is to run
@@ -55,8 +75,8 @@ set RPWD = ""
 #set SDIR = "$PROD_DATA"
 #set SDIR = "$DATA_DIR"
 #set SDIR = "$DATA_DIR/TREX"             #  RF06 and before
+#set SDIR = "/jnet/data/GV/TREX"         #  TF04 only
 set SDIR = "/scr/raf2/Raw_Data/TREX"     #  RF07 and beyond
-#set SDIR = "/jnet/data/GV/TREX"          #  TF04 only
 #
 #  1st wave
 #set SFILES = ( \
@@ -196,6 +216,117 @@ set SDIR = "/scr/raf2/Raw_Data/TREX"     #  RF07 and beyond
 #tf05/dsm_20060428_182154.ads \
 #)
 #set DFILES = ( \
+#RF12_20060426_115952 \
+#TF05_20060428_182154 \
+#)
+#
+# 17th wave (move original files to MSS subdirectory ORIGINAL)
+#movem:
+#set SFILES = ( \
+#/RAF/2006/503/ADS/RF01_20060302_142140 \
+#/RAF/2006/503/ADS/RF02_20060305_183106 \
+#/RAF/2006/503/ADS/RF03_20060309_181508 \
+#/RAF/2006/503/ADS/RF04_20060314_162654 \
+#/RAF/2006/503/ADS/RF05_20060325_143150 \
+#/RAF/2006/503/ADS/RF06_20060402_140024 \
+#/RAF/2006/503/ADS/RF07_20060406_155230 \
+#/RAF/2006/503/ADS/RF07_20060407_011242 \
+#/RAF/2006/503/ADS/RF07_20060407_020716 \
+#/RAF/2006/503/ADS/RF08_20060408_110708 \
+#/RAF/2006/503/ADS/RF09_20060415_174010 \
+#/RAF/2006/503/ADS/RF10_20060416_183609 \
+#/RAF/2006/503/ADS/RF10_20060416_183609.original \
+#/RAF/2006/503/ADS/RF11_20060421_121622 \
+#/RAF/2006/503/ADS/RF12_20060426_115952 \
+#/RAF/2006/503/ADS/TF01_20060217_000304 \
+#/RAF/2006/503/ADS/TF02_20060222_185028 \
+#/RAF/2006/503/ADS/TF03_20060228_192104 \
+#/RAF/2006/503/ADS/TF04_20060413_131827 \
+#/RAF/2006/503/ADS/TF05_20060428_182154 \
+#)
+#set DFILES = ( \
+#/RAF/2006/503/ADS/ORIGINAL/RF01_20060302_142140 \
+#/RAF/2006/503/ADS/ORIGINAL/RF02_20060305_183106 \
+#/RAF/2006/503/ADS/ORIGINAL/RF03_20060309_181508 \
+#/RAF/2006/503/ADS/ORIGINAL/RF04_20060314_162654 \
+#/RAF/2006/503/ADS/ORIGINAL/RF05_20060325_143150 \
+#/RAF/2006/503/ADS/ORIGINAL/RF06_20060402_140024 \
+#/RAF/2006/503/ADS/ORIGINAL/RF07_20060406_155230 \
+#/RAF/2006/503/ADS/ORIGINAL/RF07_20060407_011242 \
+#/RAF/2006/503/ADS/ORIGINAL/RF07_20060407_020716 \
+#/RAF/2006/503/ADS/ORIGINAL/RF08_20060408_110708 \
+#/RAF/2006/503/ADS/ORIGINAL/RF09_20060415_174010 \
+#/RAF/2006/503/ADS/ORIGINAL/RF10_20060416_183609 \
+#/RAF/2006/503/ADS/ORIGINAL/RF10_20060416_183609.original \
+#/RAF/2006/503/ADS/ORIGINAL/RF11_20060421_121622 \
+#/RAF/2006/503/ADS/ORIGINAL/RF12_20060426_115952 \
+#/RAF/2006/503/ADS/ORIGINAL/TF01_20060217_000304 \
+#/RAF/2006/503/ADS/ORIGINAL/TF02_20060222_185028 \
+#/RAF/2006/503/ADS/ORIGINAL/TF03_20060228_192104 \
+#/RAF/2006/503/ADS/ORIGINAL/TF04_20060413_131827 \
+#/RAF/2006/503/ADS/ORIGINAL/TF05_20060428_182154 \
+#)
+#echo "#  $#SFILES Job(s) submitted on `date`"
+#set todo = $#SFILES
+#set num = 1
+#while ($num <= $todo)
+#  set SFILE = $SFILES[$num]
+#  set DFILE = $DFILES[$num]
+#  echo \
+#  msmv -wpwd RAFDMG $SFILE $DFILE
+#  set result = $status
+#  if ($result == 0) then
+#  if ($result == 0) then
+#    echo "#  msmv job for $DFILE -- OK -- `date`"
+#  else
+#    echo "#  msmv job for $DFILE -- Failed -- `date`"
+#    echo "#                $DFILE: error code $result"
+#  endif
+#  @ num ++
+#end
+#echo "#   Completed on `date`"
+#exit
+#
+# 18th wave (archive revised versions of raw ADS files)
+#set SFILES = ( \
+#20060217_000304_tf01.ads \
+#20060222_185028_tf02.ads \
+#20060228_192104_tf03.ads \
+#20060302_142140_rf01.ads \
+#20060305_183106_rf02.ads \
+#20060309_181508_rf03.ads \
+#20060314_162654_rf04.ads \
+#20060325_143150_rf05.ads \
+#20060402_140024_rf06.ads \
+#20060406_155230_rf07.ads \
+#20060407_011242_rf07.ads \
+#20060407_020716_rf07.ads \
+#20060408_110708_rf08.ads \
+#20060413_131827_tf04.ads \
+#20060415_174010_rf09.ads \
+#20060416_183609_rf10.ads \
+#20060421_121622_rf11.ads \
+#20060426_115952_rf12.ads \
+#20060428_182154_tf05.ads \
+#)
+#set DFILES = ( \
+#TF01_20060217_000304 \
+#TF02_20060222_185028 \
+#TF03_20060228_192104 \
+#RF01_20060302_142140 \
+#RF02_20060305_183106 \
+#RF03_20060309_181508 \
+#RF04_20060314_162654 \
+#RF05_20060325_143150 \
+#RF06_20060402_140024 \
+#RF07_20060406_155230 \
+#RF07_20060407_011242 \
+#RF07_20060407_020716 \
+#RF08_20060408_110708 \
+#TF04_20060413_131827 \
+#RF09_20060415_174010 \
+#RF10_20060416_183609 \
+#RF11_20060421_121622 \
 #RF12_20060426_115952 \
 #TF05_20060428_182154 \
 #)
@@ -343,6 +474,52 @@ exit
 #  msrcp job for ADS/RF12_20060426_115952 -- OK -- Mon May  1 14:51:08 MDT 2006
 #  msrcp job for ADS/TF05_20060428_182154 -- OK -- Mon May  1 15:08:06 MDT 2006
 #   Completed on Mon May  1 15:08:06 MDT 2006
+#
+# 17th wave (move original files to MSS subdirectory ORIGINAL)
+#  20 Job(s) submitted on Fri Jul  7 16:05:01 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF01_20060302_142140 -- OK -- Fri Jul  7 16:05:03 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF02_20060305_183106 -- OK -- Fri Jul  7 16:05:05 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF03_20060309_181508 -- OK -- Fri Jul  7 16:05:07 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF04_20060314_162654 -- OK -- Fri Jul  7 16:05:09 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF05_20060325_143150 -- OK -- Fri Jul  7 16:05:11 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF06_20060402_140024 -- OK -- Fri Jul  7 16:05:13 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF07_20060406_155230 -- OK -- Fri Jul  7 16:05:14 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF07_20060407_011242 -- OK -- Fri Jul  7 16:05:16 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF07_20060407_020716 -- OK -- Fri Jul  7 16:05:18 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF08_20060408_110708 -- OK -- Fri Jul  7 16:05:20 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF09_20060415_174010 -- OK -- Fri Jul  7 16:05:22 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF10_20060416_183609 -- OK -- Fri Jul  7 16:05:24 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF10_20060416_183609.original -- OK -- Fri Jul  7 16:05:25 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF11_20060421_121622 -- OK -- Fri Jul  7 16:05:27 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/RF12_20060426_115952 -- OK -- Fri Jul  7 16:05:29 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/TF01_20060217_000304 -- OK -- Fri Jul  7 16:05:31 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/TF02_20060222_185028 -- OK -- Fri Jul  7 16:05:33 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/TF03_20060228_192104 -- OK -- Fri Jul  7 16:05:35 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/TF04_20060413_131827 -- OK -- Fri Jul  7 16:05:36 MDT 2006
+#  msmv job for /RAF/2006/503/ADS/ORIGINAL/TF05_20060428_182154 -- OK -- Fri Jul  7 16:05:38 MDT 2006
+#   Completed on Fri Jul  7 16:05:38 MDT 2006
+#
+# 18th wave (archive revised versions of raw ADS files)
+#  msrcp job for ADS/TF01_20060217_000304 -- OK -- Fri Jul  7 16:16:08 MDT 2006
+#  msrcp job for ADS/TF02_20060222_185028 -- OK -- Fri Jul  7 16:18:03 MDT 2006
+#  msrcp job for ADS/TF03_20060228_192104 -- OK -- Fri Jul  7 16:18:59 MDT 2006
+#  msrcp job for ADS/RF01_20060302_142140 -- OK -- Fri Jul  7 16:28:35 MDT 2006
+#  msrcp job for ADS/RF02_20060305_183106 -- OK -- Fri Jul  7 16:34:43 MDT 2006
+#  msrcp job for ADS/RF03_20060309_181508 -- OK -- Fri Jul  7 16:43:58 MDT 2006
+#  msrcp job for ADS/RF04_20060314_162654 -- OK -- Fri Jul  7 16:50:03 MDT 2006
+#  msrcp job for ADS/RF05_20060325_143150 -- OK -- Fri Jul  7 16:55:05 MDT 2006
+#  msrcp job for ADS/RF06_20060402_140024 -- OK -- Fri Jul  7 17:01:54 MDT 2006
+#  msrcp job for ADS/RF07_20060406_155230 -- OK -- Fri Jul  7 17:26:40 MDT 2006
+#  msrcp job for ADS/RF07_20060407_011242 -- OK -- Fri Jul  7 17:27:09 MDT 2006
+#  msrcp job for ADS/RF07_20060407_020716 -- OK -- Fri Jul  7 17:28:32 MDT 2006
+#  msrcp job for ADS/RF08_20060408_110708 -- OK -- Fri Jul  7 17:34:04 MDT 2006
+#  msrcp job for ADS/TF04_20060413_131827 -- OK -- Fri Jul  7 17:39:50 MDT 2006
+#  msrcp job for ADS/RF09_20060415_174010 -- OK -- Fri Jul  7 17:44:46 MDT 2006
+#  msrcp job for ADS/RF10_20060416_183609 -- OK -- Fri Jul  7 17:49:50 MDT 2006
+#  msrcp job for ADS/RF11_20060421_121622 -- OK -- Fri Jul  7 17:54:04 MDT 2006
+#  msrcp job for ADS/RF12_20060426_115952 -- OK -- Fri Jul  7 17:59:17 MDT 2006
+#  msrcp job for ADS/TF05_20060428_182154 -- OK -- Fri Jul  7 18:03:30 MDT 2006
+#   Completed on Fri Jul  7 18:03:30 MDT 2006
 #
 #   th wave
 #  Job(s) submitted on 
