@@ -572,40 +572,39 @@
         </serialSensor>
 
 
-        <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa_program_board" id="150">
+        <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
             <sample id="1" rate="50">
-                <variable name="MYCNTR" units="count" longname="Lab Test Counter">
-                </variable>
-                <variable name="CNTS" units="count" longname="TSI CN Counter Output">
-                </variable>
+                <variable name="MYCNTR" units="count" longname="Lab Test Counter" count="true"/>
+                <variable name="CNTS" units="count" longname="TSI CN Counter Output" count="true"/>
             </sample>
 
             <sample id="2" rate="50">
-                <variable name="PSFD" units="mbar" longname="Raw Static Pressure, Fuselage Digital">
-                </variable>
+                <variable name="PSFD" units="mbar" longname="Raw Static Pressure, Fuselage Digital"/>
             </sample>
 
             <sample id="3" rate="1">
-                <variable name="DIG_OUT" units="binary" longname="Power to Gerber Probe">
-                </variable>
+                <variable name="DIG_OUT" units="binary" longname="Power to Gerber Probe"/>
             </sample>
 
             <sample id="4" rate="10">
-                <variable name="P6RST" units="count" longname="260X Resets"/>
-                <variable name="DUMMY" units="" longname="Housekeeping 1"/>
-                <variable name="DUMMY" units="" longname="Housekeeping 2"/>
-                <variable name="DUMMY" units="" longname="Housekeeping 3"/>
+                <parameter name="SerialNumber" type="string" value="260X06"/>
+
+                <variable name="PSTRB" units="count" longname="260X Total Strobes" count="true"/>
+                <variable name="P6RST" units="count" longname="260X Resets" count="true"/>
+                <variable name="DUMMY1" units="" longname="Housekeeping 1"/>
+                <variable name="DUMMY2" units="" longname="Housekeeping 2"/>
+                <variable name="DUMMY3" units="" longname="Housekeeping 3"/>
                 <variable name="P6TMP" units="count" longname="260X Temperature">
-                    <poly coefs="27.721601 -7.553395e-5 -3.7898721e-07" units="deg_C"/>
+                    <!-- <poly coefs="27.721601 -7.553395e-5 -3.7898721e-07" units="deg_C"/> -->
                 </variable>
-                <variable name="P6E01" units="count" longname="260X End Diode Voltage"/>
-                    <poly coefs="-0.021776487 -0.00079476316 8.9631718e-12" units="V"/>
+                <variable name="P6E01" units="count" longname="260X End Diode Voltage">
+                    <!-- <poly coefs="-0.021776487 -0.00079476316 8.9631718e-12" units="V"/> -->
                 </variable>
-                <variable name="P6E64" units="count" longname="260X End Diode Voltage"/>
-                    <poly coefs="-0.021776487 -0.00079476316 8.9631718e-12" units="V"/>
+                <variable name="P6E64" units="count" longname="260X End Diode Voltage">
+                    <!-- <poly coefs="-0.021776487 -0.00079476316 8.9631718e-12" units="V"/> -->
                 </variable>
-                <variable name="DUMMY" units="" longname="Housekeeping 7"/>
-                <variable name="A260X" units="count" longname="260X Raw Accumulation (per cell)"/>
+                <variable name="DUMMY7" units="" longname="Housekeeping 7"/>
+                <variable name="A260X" units="count" longname="260X Raw Accumulation (per cell)" count="true"/>
             </sample>
         </sensor>
 
