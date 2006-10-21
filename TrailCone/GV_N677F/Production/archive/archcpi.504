@@ -1,0 +1,132 @@
+#! /bin/csh -f
+#
+  Archive raw CPI data files for yyyy-ppp ProjName
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2002                                                         *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Note:  This script runs only in a project's "Production/archive"
+#          subdirectory under the "dmg" login.
+#
+#  This file copied and modified from file
+#    $JLOCAL/proj/112/Production/archive/archcpi.112
+#   by Ron Ruth   1 November 2002
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script.  Quitting."
+  exit
+endif
+#
+#
+#  Get setup information for this project
+set PROJ = `pwd | sed -e "s/\(.*\)\([0-9][0-9][0-9]\)\(.*\)/\2/g"`
+set result = $status
+if ($result != 0) then
+  echo " Cannot find project number in this directory path"
+  echo "  Quitting."
+  exit 1
+endif
+set YEAR = `grep FY $JLOCAL/proj/$PROJ/Production/proj.info | sed -e "s/FY=//"`
+set TYPE = RAW_CPI
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+#  set msrcpMachine = "vivaldi"
+endif
+#
+#  Set MSS Read PassWorD if restricted access
+set RPWD = ""
+#set RPWD = "-rpwd readonly"
+#
+#  Choose a source directory (or set individually for each flight)
+#set SDIR = $TEMP
+#set SDIR = $DATA_DIR
+#set SDIR = "/jnet/win_jef2/cpi/?"
+#set SDIR = "/net/ftp/pub/archive/RAF-projects/$project/CPI
+#
+#  1st wave
+#set SDIR = ""
+#set DDIR = "RF01"
+#set FILES = ( \
+#10021705.roi \
+#)
+#
+#  2nd wave
+#set SDIR = ""
+#set DDIR = "RF01"
+#set FILES = ( \
+#)
+#
+#  3rd wave
+#set SDIR = ""
+#set DDIR = "RF01"
+#set FILES = ( \
+#)
+#
+#  4th wave
+#set SDIR = ""
+#set DDIR = "RF01"
+#set FILES = ( \
+#)
+#
+#   th wave
+#set SDIR = ""
+#set DDIR = "RF01"
+#set FILES = ( \
+#)
+#
+#
+#  Get started:
+set todo = $#FILES
+echo "#  $todo Job(s) submitted on `date`"
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+  if (-r $SDIR/$FILE) then
+    echo \
+    ssh $msrcpMachine msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG $RPWD \
+     $SDIR/$FILE mss:/RAF/$YEAR/$PROJ/$TYPE/$DDIR/$FILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $DDIR/$FILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $DDIR/$FILE -- Failed -- `date`"
+      echo "#                $DDIR/$FILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+    echo "#   Cannot access source file $SDIR/$FILE"
+  endif
+  @ num ++
+end
+#
+echo "#   Completed on `date`"
+exit
+#
+#  MSS path for all bitfiles listed below:  /RAF/yyyy/ppp/RAW_CPI/
+#
+#  1st wave
+#  Job(s) submitted on 
+#
+#  2nd wave
+#  Job(s) submitted on 
+#
+#  3rd wave
+#  Job(s) submitted on 
+#
+#  4th wave
+#  Job(s) submitted on 
+#
+#   th wave
+#  Job(s) submitted on 
+#
