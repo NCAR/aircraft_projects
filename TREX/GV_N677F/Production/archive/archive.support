@@ -1,6 +1,6 @@
 #! /bin/csh -f
 #
-  Archive support files for project yyyy-ppp ProjName (PI)
+#  Archive support files for project 2006-503 T-REX (Grubisic, et al.)
 #   (Customizing this script for each project is rather labor intensive.
 #   It may make more sense to just save everything in the project's
 #   directory rather than filter out stuff that apparently isn't needed.
@@ -8,7 +8,7 @@
 #   much simpler.)
 #
 #  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-#  *  Copyright 2002, 2004                                                   *
+#  *  Copyright 2002, 2004, 2006                                             *
 #  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
 #  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #
@@ -29,14 +29,17 @@
 #  Revised by RLR (changed "OK" and "Failed" messages and logic)    28 Jan 2004
 #  No revision    (added $ to all SCD_PROJ --> $SCD_PROJ)           15 Apr 2004
 #  No revision    (changed all "rsh" to "ssh")                      28 Oct 2005
+#  Revised by RLR (updated to current directory structure)          30 Jun 2006
+#
+#  Note:  This script must be run from a project's "Production/archive"
+#          subdirectory.
 #
 #  Assumptions:
-#   1.  Directory structure for projects is $LOCAL/proj/<3-digit project #>
+#   1.  Directory structure for projects is $JLOCAL/proj/<3-digit project #>
 #         having a "Production" subdirectory
 #   2.  Project's name (and only its name) is in the file
-#         $LOCAL/proj/<3-digit project #>/ProjectName
+#         $JLOCAL/proj/<3-digit project #>/ProjectName
 #   3.  A "proj.info" file exists in the project's "Production" subdirectory
-#   4.  Script is run from affected project's "Production/archive" subdirectory
 #
 #   To find executable lines (from within `vi'), type:
 #       /^[^#]
@@ -55,17 +58,22 @@ if ($user != "dmg") then
   exit
 endif
 #
-#  Get setup information for this project
-set PROJ = `pwd | sed -e "s/\(.*\)\([0-9][0-9][0-9]\)\(.*\)/\2/g"`
-set result = $status
-if ($result != 0) then
-  echo " Cannot find project number in this directory path"
-  echo "  Quitting."
+#   Check current directory
+set cdir = `pwd | awk -F/ '{print $NF}'`
+if ($cdir != "archive") then
+  echo '  This script is not being run from the "archive" subdirectory.'
+  echo '   Quitting.'
   exit 1
 endif
-set YEAR = `grep FY $LOCAL/proj/$PROJ/Production/proj.info | sed -e "s/FY=//"`
-set PDIR = $PROJ_DIR/$PROJ
+#
+#  Get setup information for this project
+pushd ../.. >& /dev/null
+set PDIR = `pwd`
+cd ..
+set PROJ = `pwd | awk -F/ '{print $NF}'`
+popd >& /dev/null
 set PRDIR = $PDIR/Production
+set YEAR = `grep FY $PRDIR/proj.info | sed -e "s/FY=//"`
 set PROJNAME = `cat $PDIR/ProjectName`
 set SDIR = $PROD_DATA
 #
@@ -89,7 +97,6 @@ if ($?MSRCP_MACH) then
   set msrcpMachine = $MSRCP_MACH
 else
   set msrcpMachine = "bora"
-#  set msrcpMachine = "vivaldi"
 endif
 #
 #
@@ -110,9 +117,9 @@ exit
 #  Archiving segments that have been completed
 #  -------------------------------------------
 #
-#  -------------------------------------------------------------
-#   T E M P L A T E S   ( e d i t ,   a s   n e c e s s a r y )
-#  -------------------------------------------------------------
+#  -------------------------------------------------------------------------
+#   T E M P L A T E S   (c o p y   &   e d i t ,   a s   n e c e s s a r y )
+#  -------------------------------------------------------------------------
 #
 #  Files to go to main MSS directory (not renamed)
 #
@@ -131,7 +138,7 @@ while ($num <= $todo)
   set FILE = $FILES[$num]
   if (-r $DIR/$FILE) then
     echo \
-    ssh $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
      $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$FILE
     set result = $status
     if ($result == 0) then
@@ -163,7 +170,7 @@ while ($num <= $todo)
   set FILE = $FILES[$num]
   if (-r $DIR/$FILE) then
     echo \
-    ssh $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
      $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$FILE
     set result = $status
     if ($result == 0) then
@@ -190,6 +197,11 @@ set OFILES = ( \
 #
 #  Get started:
 set todo = $#FILES
+if ($todo != $#OFILES) then
+  echo "Source and destination files don't match."
+  echo "  Quitting."
+  exit 1
+endif
 set num = 1
 while ($num <= $todo)
   set FILE = $FILES[$num]
@@ -197,7 +209,7 @@ while ($num <= $todo)
   set OFILE = $OFILES[$num]
   if (-r $DIR/$FILE) then
     echo \
-    ssh $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
      $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$OFILE
     set result = $status
     if ($result == 0) then
@@ -225,6 +237,11 @@ set OFILES = ( \
 #
 #  Get started:
 set todo = $#FILES
+if ($todo != $#OFILES) then
+  echo "Source and destination files don't match."
+  echo "  Quitting."
+  exit 1
+endif
 set num = 1
 while ($num <= $todo)
   set FILE = $FILES[$num]
@@ -232,7 +249,7 @@ while ($num <= $todo)
   set OFILE = $OFILES[$num]
   if (-r $DIR/$FILE) then
     echo \
-    ssh $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
      $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$OFILE
     set result = $status
     if ($result == 0) then
@@ -259,13 +276,13 @@ end
 #   Source file in project's directory
 set FILE = 
 echo \
- ssh $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+ ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
   $PDIR/$FILE mss:/RAF/$YEAR/$PROJ/$FILE
 #
 #  MSS file name same as source and to be put in project's directory
 #   Source file in project's `Production' directory
 echo \
- ssh $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+ ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
   $PRDIR/$FILE mss:/RAF/$YEAR/$PROJ/$FILE
 #
 #  MSS file name different from source and to be put in project's directory
@@ -273,7 +290,7 @@ echo \
 set FILE = 
 set OFILE = 
 echo \
- ssh $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+ ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
   $PDIR/$FILE mss:/RAF/$YEAR/$PROJ/$OFILE
 #
 #  MSS file name different from source and to be put in project's directory
@@ -281,7 +298,7 @@ echo \
 set FILE = 
 set OFILE = 
 echo \
- ssh $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+ ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
   $PRDIR/$FILE mss:/RAF/$YEAR/$PROJ/$OFILE
 #
 #
@@ -292,7 +309,7 @@ set TURBRT =
 #   Source file in project's directory
 set FILE = 
 echo \
- ssh $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+ ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
   $PDIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$FILE
 #
 #
@@ -300,7 +317,7 @@ echo \
 #   Source file in project's `Production' directory
 set FILE = 
 echo \
- ssh $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+ ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
   $PRDIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$FILE
 #
 #
@@ -310,7 +327,7 @@ echo \
 set FILE = 
 set OFILE = 
 echo \
- ssh $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+ ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
   $PDIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$OFILE
 #
 #  MSS file name different from source and to be put in project's turbulence
@@ -319,7 +336,7 @@ echo \
 set FILE = 
 set OFILE = 
 echo \
- ssh $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+ ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
   $PRDIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$OFILE
 #
 # -----------------------------------------------------------------------------

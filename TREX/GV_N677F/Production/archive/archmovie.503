@@ -33,7 +33,6 @@ if ($?MSRCP_MACH) then
   set msrcpMachine = $MSRCP_MACH
 else
   set msrcpMachine = "bora"
-# set msrcpMachine = "vivaldi"
 endif
 #
 #   MSS retention period (days)
@@ -46,18 +45,27 @@ set WPWD = "RAFDMG"
 set RPWD = ""
 #
 #   Source file directory
-#set SDIR = ""
+set SDIR = "/h/9/beaton/trex"
 #
-#   Destination file directory
-#set DDIR = "mss:/ATD/DATA/2006/TREX/Gulfstream5_N677F/CAMERA"
+#   Destination MSS bitfile directory/subdirectory
+set DDIR = "mss:/ATD/DATA/2006/TREX/GV_N677F"
+set DSDIR = "CAMERA"
 #
 #  1st wave
-set SFILES = ( \
+#set SFILES = ( \
+#    Note:  Put source file list here
+#145ff01.mp4 \
 #)
 #set DFILES = ( \
-# \
+#    Note:  Put destination MSS bitfile list here (Start with taplog file
+#           modified by camera file start/end times)
+FF01.FWD.20060228.154000_195620.mp4 \
+#
+#   Edit commands to convert taplog.movie* file entries to bitfile names (current naming format)
+#             1          2      3       4            5              6        7 (not used)
+##:'a,'bs#.\(....\)....\(..\).\(..\).\(....\)...\(........\)...\(........\)\(.*\)#\1.LEFT.\4\2\3.\5_\6.mp4 \\
+##:'a,'bs/\([0-9]\):/\1/g
 #)
-##:'a,'bs#\(....\).\(..\).\(..\).\(....\)...\(.....\)......\(.*\)#\1.\4\2\3.\5_\6.mp4 \\
 #
 #  2nd wave
 #set SFILES = ( \
@@ -85,7 +93,8 @@ set SFILES = ( \
 #
 #
 echo "#  $#SFILES job(s) submitted on `date`"
-echo "#  File(s) archived to MSS directory:  /ATD/DATA/yyyy/RICO/C130_N130AR/"
+echo "#  File(s) archived to MSS directory:  $DDIR/$DSDIR/"
+#echo "#  File(s) moved within MSS directory:  $DDIR/$DSDIR/"
 #
 set todo = $#SFILES
 set num = 1
@@ -94,7 +103,7 @@ while ($num <= $todo)
   set DFILE = $DFILES[$num]
   if (-r $SDIR/$SFILE) then
     echo \
-    ssh $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DFILE
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DDIR/$DSDIR/$DFILE
     if ($status == 0) then
       set d2 = $DFILE:h
       set d1 = $d2:t
@@ -106,6 +115,13 @@ while ($num <= $todo)
   else
     echo " Cannot access file $SDIR/$SFILE"
   endif
+#   Code to rename extant MSS bitfiles if their names need fixing
+#    msmv -wpwd $WPWD $DDIR/$DSDIR/$SFILE $DDIR/$DSDIR/$DFILE
+#    if ($status == 0) then
+#      echo "#   $DFILE -- OK -- `date`"
+#    else
+#      echo "  msmv job FAILED."
+#    endif
   @ num ++
 end
 #
@@ -116,21 +132,16 @@ exit
 #
 #  1st wave
 #  Job(s) submitted on
-#  File(s) archived to MSS directory:  
 #
 #  2nd wave
 #  Job(s) submitted on
-#  File(s) archived to MSS directory:  
 #
 #  3rd wave
 #  Job(s) submitted on
-#  File(s) archived to MSS directory:  
 #
 #  4th wave
 #  Job(s) submitted on
-#  File(s) archived to MSS directory:  
 #
 #   th wave
 #  Job(s) submitted on
-#  File(s) archived to MSS directory:  
 #
