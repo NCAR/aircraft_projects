@@ -1,0 +1,104 @@
+#! /bin/csh -f
+#
+#  Archive production NIMBUS netCDF output files for project:
+#    2006-503 TREX (Terrain-induced Rotor EXperiment) (Vanda Grubisic, et al.)
+#   using the new ATD directory path
+#
+#  File created by '/jnet/local/scripts/genar' Revision 15 on Wed Oct 18 15:14:02 MDT 2006
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo ${0}:  Only the "dmg" login is allowed to run this script.  Quitting.
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+# set msrcpMachine = "vivaldi"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s), if needed
+set RPWD = ""
+#
+set SDIR = /scr/productiondata
+#
+set SFILES = ( \
+TREXrf01.nc \
+TREXrf02.nc \
+TREXrf03.nc \
+TREXrf04.nc \
+TREXrf05.nc \
+TREXrf06.nc \
+TREXrf07.nc \
+TREXrf08.nc \
+TREXrf09.nc \
+TREXrf10.nc \
+TREXrf11.nc \
+TREXrf12.nc \
+TREXtf04.nc \
+TREXrf03h.nc \
+TREXrf06h.nc \
+TREXrf10h.nc \
+)
+#
+set DFILES = ( \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF01.20060302.150906_004401.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF02.20060305.185206_042401.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF03.20060309.190506_040701.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF04.20060314.180406_031301.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF05.20060325.151006_002601.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF06.20060402.143906_233500.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF07.20060406.164106_230600.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF08.20060408.120506_210000.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF09.20060415.175806_024901.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF10.20060416.191206_035801.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF11.20060421.130206_195200.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF12.20060426.125506_214600.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/TF04.20060413.135506_224800.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/HRT/RF03.20060309.190510_040659.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/HRT/RF06.20060402.140050_184700.PNI.nc \
+mss:/ATD/DATA/2006/TREX/GV_N677F/HRT/RF10.20060416.191710_035759.PNI.nc \
+)
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directory(ies):  /ATD/DATA/yyyy/TREX/GV_N677F/"
+echo "#  (directories, if flights occurred in more than one year.)"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DFILE
+    if ($status == 0) then
+      set d2 = $DFILE:h
+      set d1 = $d2:t
+      set d2 = $DFILE:t
+      echo "#   $d1/$d2 -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+     echo " Cannot access file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#  Job(s) submitted on 
+#
