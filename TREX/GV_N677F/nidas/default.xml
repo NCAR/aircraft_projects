@@ -199,18 +199,18 @@
         <sample id="0073" rate="1" process="false"><variable name="SV_Pos_Z_Fine" units="m" longname="SV Position Z Fine"/></sample>
         <sample id="0101" rate="1" process="false"><variable name="H_DOP" units="" longname="Horz Dilution of Precision"/></sample>
         <sample id="0102" rate="1" process="false"><variable name="V_DOP" units="" longname="Vert Dilution of Precision"/></sample>
-        <sample id="0074" rate="1"><variable name="GTIME" units="s" longname="UTC Measure Time"/></sample>
-        <sample id="0076" rate="1"><variable name="ALT" units="m" longname="GPS Altitude (MSL)"/></sample>
-        <sample id="0103" rate="1"><variable name="TKAT" units="degree_T" longname="GPS Track Angle"/></sample>
-        <sample id="0110" rate="1"><variable name="LAT" units="degree_N" longname="GPS Latitude"/></sample>
-        <sample id="0111" rate="1"><variable name="LON" units="degree_E" longname="GPS Longitude"/></sample>
-        <sample id="0112" rate="1"><variable name="GSF" units="m/s" longname="GPS Ground Speed"/></sample>
-        <sample id="0120" rate="1"><variable name="LATF" units="degree_N" longname="GPS Latitude Fine"/></sample>
-        <sample id="0121" rate="1"><variable name="LONF" units="degree_E" longname="GPS Longitude Fine"/></sample>
-        <sample id="0165" rate="1"><variable name="VSPD" units="m/s" longname="GPS Vertical Velocity"/></sample>
-        <sample id="0166" rate="1"><variable name="VNS" units="m/s" longname="GPS Ground Speed Vector, North Component"/></sample>
-        <sample id="0174" rate="1"><variable name="VEW" units="m/s" longname="GPS Ground Speed Vector, East Component"/></sample>
-        <sample id="0273" rate="1"><variable name="GSTAT" units="none" longname="GPS Sensor Status"/></sample>
+        <sample id="0074" rate="1"><variable name="GTIME" units="s" longname="Avionics GPS UTC Measure Time"/></sample>
+        <sample id="0076" rate="1"><variable name="ALT" units="m" longname="Avionics GPS Altitude (MSL)"/></sample>
+        <sample id="0103" rate="1"><variable name="TKAT" units="degree_T" longname="Avionics GPS Track Angle"/></sample>
+        <sample id="0110" rate="1"><variable name="LAT" units="degree_N" longname="Avionics GPS Latitude"/></sample>
+        <sample id="0111" rate="1"><variable name="LON" units="degree_E" longname="Avionics GPS Longitude"/></sample>
+        <sample id="0112" rate="1"><variable name="GSF" units="m/s" longname="Avionics GPS Ground Speed"/></sample>
+        <sample id="0120" rate="1"><variable name="LATF" units="degree_N" longname="Avionics GPS Latitude Fine"/></sample>
+        <sample id="0121" rate="1"><variable name="LONF" units="degree_E" longname="Avionics GPS Longitude Fine"/></sample>
+        <sample id="0165" rate="1"><variable name="VSPD" units="m/s" longname="Avionics GPS Vertical Velocity"/></sample>
+        <sample id="0166" rate="1"><variable name="VNS" units="m/s" longname="Avionics GPS Ground Speed Vector, North Component"/></sample>
+        <sample id="0174" rate="1"><variable name="VEW" units="m/s" longname="Avionics GPS Ground Speed Vector, East Component"/></sample>
+        <sample id="0273" rate="1"><variable name="GSTAT" units="none" longname="Avionics GPS Sensor Status"/></sample>
         <sample id="0125" rate="1" process="false"><variable name="UTCHM" units="hr:mn" longname="Universal Time Code"/></sample>
         <sample id="0130" rate="1" process="false"><variable name="A_HIL" units="nm" longname="Aut Horz Integrity Limit"/></sample>
         <sample id="0133" rate="1" process="false"><variable name="A_VIL" units="m" longname="Aut Vert Integrity Limit"/></sample>
@@ -239,29 +239,29 @@
 
         <!-- GGA record -->
         <sample id="1" rate="1">
-	    <variable name="GGSECSDAY" units="sec" longname="seconds of day"/>
-	    <variable name="GGLAT" units="degree_N" longname="GPS Latitude"/>
-	    <variable name="GGLON" units="degree_E" longname="GPS Longitude"/>
-	    <variable name="GGQUAL" units="none" longname="GPS Qual, 0=inval,1=GPS,2=DGPS"/>
-	    <variable name="GGNSAT" units="count" longname="Number of GPS satellites tracked"/>
-	    <variable name="GGHORDIL" units="none" longname="Horizontal dilution of position"/>
-	    <variable name="GGALT" units="m" longname="GPS Altitude (MSL)"/>
-	    <variable name="GGEOIDHT" units="m" longname="Height of geoid (MSL) above WGS84 ellipsoid"/>
-	    <variable name="GGDAGE" units="s" longname="time in seconds since last DGPS update"/>
-	    <variable name="GGREFID" units="none" longname="DGPS station ID number"/>
+            <variable name="GGSECSDAY" units="sec" longname="Reference GPS seconds of day"/>
+            <variable name="GGLAT" units="degree_N" longname="Reference GPS Latitude"/>
+            <variable name="GGLON" units="degree_E" longname="Reference GPS Longitude"/>
+            <variable name="GGQUAL" units="none" longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS"/>
+            <variable name="GGNSAT" units="count" longname="Reference GPS number of satellites tracked"/>
+            <variable name="GGHORDIL" units="none" longname="Reference GPS Horizontal dilution of position"/>
+            <variable name="GGALT" units="m" longname="Reference GPS Altitude (MSL)"/>
+            <variable name="GGEOIDHT" units="m" longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid"/>
+            <variable name="GGDAGE" units="s" longname="Time in seconds since last DGPS update"/>
+            <variable name="GGREFID" units="none" longname="DGPS station ID number"/>
         </sample>
         <!-- RMC record -->
         <sample id="2" rate="1">
-	    <variable name="GGSTATUS" units="none" longname="GPS rcvr status: 1=OK(A), 0=warning(V)"/>
-	    <variable name="GGSPD" units="m/s" longname="Speed over ground"/>
-	    <variable name="GGTRK" units="degree_T" longname="Course made good"/>
-	    <variable name="GGVEW" units="m/s" longname="East/West velocity"/>
-	    <variable name="GGVNS" units="m/s" longname="North/South velocity"/>
-	    <variable name="GGDAY" units="day" longname="Day of month (1-31)"/>
-	    <variable name="GGMONTH" units="month" longname="Month of year (1-12)"/>
-	    <variable name="GGYEAR" units="year" longname="2 digit year"/>
+            <variable name="GGSTATUS" units="none" longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)"/>
+            <variable name="GGSPD" units="m/s" longname="Reference GPS Speed over ground"/>
+            <variable name="GGTRK" units="degree_T" longname="Reference GPS Course made good"/>
+            <variable name="GGVEW" units="m/s" longname="Reference GPS East/West velocity"/>
+            <variable name="GGVNS" units="m/s" longname="Reference GPS North/South velocity"/>
+            <variable name="GGDAY" units="day" longname="Reference GPS Day of month (1-31)"/>
+            <variable name="GGMONTH" units="month" longname="Reference GPS Month of year (1-12)"/>
+            <variable name="GGYEAR" units="year" longname="Reference GPS 2 digit year"/>
         </sample>
-        <message separator="\n" position="end" length="0"/>
+        <message separator="\n" position="end" length="0"/> 
     </serialSensor>
 
     <serialSensor ID="DewPointer" class="DSMSerialSensor"
@@ -327,16 +327,16 @@
     <serialSensor ID="TDLH2O" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1">
         <sample id="1" rate="20" scanfFormat="%*f %*f %f %f %*f %*f %f %f %f %f %f %f %f %f">
-	    <variable name="PCELL_LHS" units="mbar" longname="Sample Cell Pressure"/>
-	    <variable name="TCELL_LHS" units="deg_C" longname="Sample Cell Temperature"/>
-	    <variable name="PP2F_LHS" units="A/D cnts" longname="2f Signal Amplitude"/>
-	    <variable name="PWR_LHS" units="A/D cnts" longname="Laser Power"/>
-	    <variable name="IDX_LHS" units="A/D cnts" longname="Spectral Line Position"/>
-	    <variable name="DK_LHS" units="A/D cnts" longname="Zero Level"/>
-	    <variable name="PP2F_LHL" units="A/D cnts" longname="2f Signal Amplitude"/>
-	    <variable name="PWR_LHL" units="A/D cnts" longname="Laser Power"/>
-	    <variable name="IDX_LHL" units="A/D cnts" longname="Spectral Line Position"/>
-	    <variable name="DK_LHL" units="A/D cnts" longname="Zero Level"/>
+	    <variable name="PCELL_LHS" units="mbar" longname="Sample Cell Pressure, TDL Strong Absorption Line"/>
+	    <variable name="TCELL_LHS" units="deg_C" longname="Sample Cell Temperature, TDL Strong Absorption Line"/>
+	    <variable name="PP2F_LHS" units="A/D cnts" longname="2f Signal Amplitude, TDL Strong Absorption Line"/>
+	    <variable name="PWR_LHS" units="A/D cnts" longname="Laser Power, TDL Strong Absorption Line"/>
+	    <variable name="IDX_LHS" units="A/D cnts" longname="Spectral Line Position, TDL Strong Absorption Line"/>
+	    <variable name="DK_LHS" units="A/D cnts" longname="Zero Level, TDL Strong Absorption Line"/>
+	    <variable name="PP2F_LHL" units="A/D cnts" longname="2f Signal Amplitude, TDL Weak Absorption Line"/>
+	    <variable name="PWR_LHL" units="A/D cnts" longname="Laser Power, TDL Weak Absorption Line"/>
+	    <variable name="IDX_LHL" units="A/D cnts" longname="Spectral Line Position, TDL Weak Absorption Line"/>
+	    <variable name="DK_LHL" units="A/D cnts" longname="Zero Level, TDL Weak Absorption Line"/>
         </sample>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
@@ -398,7 +398,7 @@
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_I2"/>
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2"/>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G"/>
 
@@ -616,7 +616,7 @@
                     <parameter name="corSlope"     value="1.03504"    type="float"/>
                     <parameter name="corIntercept" value="0.0088094"  type="float"/>
                 </variable>
-                <variable name="TCAB1" units="V">
+                <variable name="TCAB1" units="V" longname="Cabin Temperature at CHAPS Rack Location">
                     <parameter name="gain" value="20" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
 <!-- TCAB1                | 2006-03-31 21:35:04 | {-0.0352207,1.0386}   +0 +0.5  +1 -->
@@ -624,7 +624,7 @@
                     <parameter name="corIntercept" value="-0.0352207"  type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
-                <variable name="TCAB4" units="V">
+                <variable name="TCAB4" units="V" longname="Cabin Temperature at TDL Hygrometer Rack Location">
                     <parameter name="gain" value="20" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
 <!-- TCAB4                | 2006-03-31 21:37:12 | {-0.0177743,1.0251}   +0 +0.5  +1 -->
@@ -632,7 +632,7 @@
                     <parameter name="corIntercept" value="-0.0177743"  type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
-                <variable name="XO3" units="V">
+                <variable name="XO3" units="V" longname="Ozone Concentration">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
 <!-- XO3                  | 2006-03-31 21:40:23 | {-0.162664,1.02144}   +0   +5 +10 -->
@@ -704,14 +704,14 @@
                     <parameter name="corSlope" value="1.04357" type="float"/>
                     <parameter name="corIntercept" value="-0.14343" type="float"/>
                 </variable>
-                <variable name="TCAB2" units="V">
+                <variable name="TCAB2" units="V" longname="Cabin Temperature at Chemistry Rack Location">
                     <parameter name="gain" value="20" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.02836" type="float"/>
                     <parameter name="corIntercept" value="-0.0172062" type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
-                <variable name="TCAB3" units="V">
+                <variable name="TCAB3" units="V" longname="Cabin Temperature at Aerosol Rack Location">
                     <parameter name="gain" value="20" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.03528" type="float"/>
