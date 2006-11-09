@@ -157,7 +157,7 @@
         <!-- EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). -->
         <sample id="0203" rate="16"><variable name="PALT" units="m" longname="ADC Pressure Altitude"/></sample>
         <sample id="0204" rate="16"><variable name="BALT1" units="m" longname="ADC Baro Altitude"/></sample>
-        <sample id="0205" rate="8"><variable name="MACH" units="mach" longname="ADC Mach Number"/></sample>
+        <sample id="0205" rate="8"><variable name="MACH" units="none" longname="ADC Mach Number"/></sample>
         <sample id="0206" rate="8"><variable name="CAS" units="m/s" longname="ADC Computed Air Speed"/></sample>
         <sample id="0210" rate="16"><variable name="TAS" units="m/s" longname="ADC True Air Speed"/></sample>
         <sample id="0211" rate="2"><variable name="TT" units="deg_C" longname="ADC Total Air Temperature"/></sample>
@@ -199,18 +199,18 @@
         <sample id="0073" rate="1" process="false"><variable name="SV_Pos_Z_Fine" units="m" longname="SV Position Z Fine"/></sample>
         <sample id="0101" rate="1" process="false"><variable name="H_DOP" units="" longname="Horz Dilution of Precision"/></sample>
         <sample id="0102" rate="1" process="false"><variable name="V_DOP" units="" longname="Vert Dilution of Precision"/></sample>
-        <sample id="0074" rate="1"><variable name="GTIME" units="s" longname="UTC Measure Time"/></sample>
-        <sample id="0076" rate="1"><variable name="ALT" units="m" longname="GPS Altitude (MSL)"/></sample>
-        <sample id="0103" rate="1"><variable name="TKAT" units="degree_T" longname="GPS Track Angle"/></sample>
-        <sample id="0110" rate="1"><variable name="LAT" units="degree_N" longname="GPS Latitude"/></sample>
-        <sample id="0111" rate="1"><variable name="LON" units="degree_E" longname="GPS Longitude"/></sample>
-        <sample id="0112" rate="1"><variable name="GSF" units="m/s" longname="GPS Ground Speed"/></sample>
-        <sample id="0120" rate="1"><variable name="LATF" units="degree_N" longname="GPS Latitude Fine"/></sample>
-        <sample id="0121" rate="1"><variable name="LONF" units="degree_E" longname="GPS Longitude Fine"/></sample>
-        <sample id="0165" rate="1"><variable name="VSPD" units="m/s" longname="GPS Vertical Velocity"/></sample>
-        <sample id="0166" rate="1"><variable name="VNS" units="m/s" longname="GPS Ground Speed Vector, North Component"/></sample>
-        <sample id="0174" rate="1"><variable name="VEW" units="m/s" longname="GPS Ground Speed Vector, East Component"/></sample>
-        <sample id="0273" rate="1"><variable name="GSTAT" units="none" longname="GPS Sensor Status"/></sample>
+        <sample id="0074" rate="1"><variable name="GTIME" units="s" longname="Avionics GPS UTC Measure Time"/></sample>
+        <sample id="0076" rate="1"><variable name="ALT" units="m" longname="Avionics GPS Altitude (MSL)"/></sample>
+        <sample id="0103" rate="1"><variable name="TKAT" units="degree_T" longname="Avionics GPS Track Angle"/></sample>
+        <sample id="0110" rate="1"><variable name="LAT" units="degree_N" longname="Avionics GPS Latitude"/></sample>
+        <sample id="0111" rate="1"><variable name="LON" units="degree_E" longname="Avionics GPS Longitude"/></sample>
+        <sample id="0112" rate="1"><variable name="GSF" units="m/s" longname="Avionics GPS Ground Speed"/></sample>
+        <sample id="0120" rate="1"><variable name="LATF" units="degree_N" longname="Avionics GPS Latitude Fine"/></sample>
+        <sample id="0121" rate="1"><variable name="LONF" units="degree_E" longname="Avionics GPS Longitude Fine"/></sample>
+        <sample id="0165" rate="1"><variable name="VSPD" units="m/s" longname="Avionics GPS Vertical Velocity"/></sample>
+        <sample id="0166" rate="1"><variable name="VNS" units="m/s" longname="Avionics GPS Ground Speed Vector, North Component"/></sample>
+        <sample id="0174" rate="1"><variable name="VEW" units="m/s" longname="Avionics GPS Ground Speed Vector, East Component"/></sample>
+        <sample id="0273" rate="1"><variable name="GSTAT" units="none" longname="Avionics GPS Sensor Status"/></sample>
         <sample id="0125" rate="1" process="false"><variable name="UTCHM" units="hr:mn" longname="Universal Time Code"/></sample>
         <sample id="0130" rate="1" process="false"><variable name="A_HIL" units="nm" longname="Aut Horz Integrity Limit"/></sample>
         <sample id="0133" rate="1" process="false"><variable name="A_VIL" units="m" longname="Aut Vert Integrity Limit"/></sample>
@@ -239,29 +239,29 @@
 
         <!-- GGA record -->
         <sample id="1" rate="1">
-	    <variable name="GGSECSDAY" units="sec" longname="seconds of day"/>
-	    <variable name="GGLAT" units="degree_N" longname="GPS Latitude"/>
-	    <variable name="GGLON" units="degree_E" longname="GPS Longitude"/>
-	    <variable name="GGQUAL" units="none" longname="GPS Qual, 0=inval,1=GPS,2=DGPS"/>
-	    <variable name="GGNSAT" units="count" longname="Number of GPS satellites tracked"/>
-	    <variable name="GGHORDIL" units="none" longname="Horizontal dilution of position"/>
-	    <variable name="GGALT" units="m" longname="GPS Altitude (MSL)"/>
-	    <variable name="GGEOIDHT" units="m" longname="Height of geoid (MSL) above WGS84 ellipsoid"/>
-	    <variable name="GGDAGE" units="s" longname="time in seconds since last DGPS update"/>
-	    <variable name="GGREFID" units="none" longname="DGPS station ID number"/>
+            <variable name="GGSECSDAY" units="sec" longname="Reference GPS seconds of day"/>
+            <variable name="GGLAT" units="degree_N" longname="Reference GPS Latitude"/>
+            <variable name="GGLON" units="degree_E" longname="Reference GPS Longitude"/>
+            <variable name="GGQUAL" units="none" longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS"/>
+            <variable name="GGNSAT" units="count" longname="Reference GPS number of satellites tracked"/>
+            <variable name="GGHORDIL" units="none" longname="Reference GPS Horizontal dilution of position"/>
+            <variable name="GGALT" units="m" longname="Reference GPS Altitude (MSL)"/>
+            <variable name="GGEOIDHT" units="m" longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid"/>
+            <variable name="GGDAGE" units="s" longname="Time in seconds since last DGPS update"/>
+            <variable name="GGREFID" units="none" longname="DGPS station ID number"/>
         </sample>
         <!-- RMC record -->
         <sample id="2" rate="1">
-	    <variable name="GGSTATUS" units="none" longname="GPS rcvr status: 1=OK(A), 0=warning(V)"/>
-	    <variable name="GGSPD" units="m/s" longname="Speed over ground"/>
-	    <variable name="GGTRK" units="degree_T" longname="Course made good"/>
-	    <variable name="GGVEW" units="m/s" longname="East/West velocity"/>
-	    <variable name="GGVNS" units="m/s" longname="North/South velocity"/>
-	    <variable name="GGDAY" units="day" longname="Day of month (1-31)"/>
-	    <variable name="GGMONTH" units="month" longname="Month of year (1-12)"/>
-	    <variable name="GGYEAR" units="year" longname="2 digit year"/>
+            <variable name="GGSTATUS" units="none" longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)"/>
+            <variable name="GGSPD" units="m/s" longname="Reference GPS Speed over ground"/>
+            <variable name="GGTRK" units="degree_T" longname="Reference GPS Course made good"/>
+            <variable name="GGVEW" units="m/s" longname="Reference GPS East/West velocity"/>
+            <variable name="GGVNS" units="m/s" longname="Reference GPS North/South velocity"/>
+            <variable name="GGDAY" units="day" longname="Reference GPS Day of month (1-31)"/>
+            <variable name="GGMONTH" units="month" longname="Reference GPS Month of year (1-12)"/>
+            <variable name="GGYEAR" units="year" longname="Reference GPS 2 digit year"/>
         </sample>
-        <message separator="\n" position="end" length="0"/>
+        <message separator="\n" position="end" length="0"/> 
     </serialSensor>
 
     <serialSensor ID="DewPointer" class="DSMSerialSensor"
