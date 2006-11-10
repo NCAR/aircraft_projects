@@ -37,7 +37,7 @@
         <sample id="0310" rate="5"                ><variable name="LAT"                units="degree_N" longname="IRS Latitude"/></sample>
         <sample id="0311" rate="5"                ><variable name="LON"                units="degree_E" longname="IRS Longitude"/></sample>
         <sample id="0312" rate="10"               ><variable name="GSF"                units="m/s"      longname="IRS Aircraft Ground Speed"/></sample>
-        <sample id="0313" rate="25"               ><variable name="TKAT"               units="degree_T" longname="IRS Aircraft Track Angle, True"/></sample>
+        <sample id="0313" rate="25"               ><variable name="TKAT"               units="degree_T" longname="IRS Aircraft Track Angle"/></sample>
         <sample id="0314" rate="25">
           <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
             <linear slope="1.0" intercept="-0.4" units="degree_T"/>
@@ -105,7 +105,7 @@
         <sample id="0310" rate="12.5"><variable name="LAT" units="degree_N" longname="IRS Latitude"/></sample>
         <sample id="0311" rate="12.5"><variable name="LON" units="degree_E" longname="IRS Longitude"/></sample>
         <sample id="0312" rate="25"><variable name="GSF" units="m/s" longname="IRS Aircraft Ground Speed"/></sample>
-        <sample id="0313" rate="25"><variable name="TKAT" units="degree_T" longname="IRS Aircraft Track Angle, True"/></sample>
+        <sample id="0313" rate="25"><variable name="TKAT" units="degree_T" longname="IRS Aircraft Track Angle"/></sample>
         <sample id="0314" rate="25">
           <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
             <linear slope="1.0" intercept="-0.4" units="degree_T"/>
@@ -157,19 +157,19 @@
         <!-- EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). -->
         <sample id="0203" rate="16"><variable name="PALT" units="m" longname="ADC Pressure Altitude"/></sample>
         <sample id="0204" rate="16"><variable name="BALT1" units="m" longname="ADC Baro Altitude"/></sample>
-        <sample id="0205" rate="8"><variable name="MACH" units="mach" longname="ADC Mach Number"/></sample>
+        <sample id="0205" rate="8"><variable name="MACH" units="none" longname="ADC Mach Number"/></sample>
         <sample id="0206" rate="8"><variable name="CAS" units="m/s" longname="ADC Computed Air Speed"/></sample>
         <sample id="0210" rate="16"><variable name="TAS" units="m/s" longname="ADC True Air Speed"/></sample>
         <sample id="0211" rate="2"><variable name="TT" units="deg_C" longname="ADC Total Air Temperature"/></sample>
         <sample id="0213" rate="2"><variable name="AT" units="deg_C" longname="ADC Ambient Air Temperature"/></sample>
-        <sample id="0215" rate="8"><variable name="QC" units="mbar" longname="ADC Impact Pressure"/></sample>
-        <sample id="0217" rate="8"><variable name="PS" units="mbar" longname="ADC Static Pressure"/></sample>
+        <sample id="0215" rate="8"><variable name="QC" units="hPa" longname="ADC Impact Pressure"/></sample>
+        <sample id="0217" rate="8"><variable name="PS" units="hPa" longname="ADC Static Pressure"/></sample>
         <sample id="0220" rate="16"><variable name="BALT2" units="m" longname="ADC baro corrected alt #2"/></sample>
-        <sample id="0234" rate="16"><variable name="BAROCOR1" units="mbar" longname="ADC baro correction #1 mB"/></sample>
+        <sample id="0234" rate="16"><variable name="BAROCOR1" units="hPa" longname="ADC baro correction #1 mB"/></sample>
         <!--sample id="0235" rate="16" process="false"><variable name="BAROCOR1" units="inHg" longname="ADC baro correction #1 inHg"/></sample -->
-        <sample id="0236" rate="16"><variable name="BAROCOR2" units="mbar" longname="ADC baro correction #2 mB"/></sample>
+        <sample id="0236" rate="16"><variable name="BAROCOR2" units="hPa" longname="ADC baro correction #2 mB"/></sample>
         <!--sample id="0237" rate="16" process="false"><variable name="BAROCOR2" units="inHg" longname="ADC baro correction #2 inHg"/></sample -->
-        <sample id="0242" rate="16"><variable name="PT" units="mbar" longname="ADC Total Pressure"/></sample>
+        <sample id="0242" rate="16"><variable name="PT" units="hPa" longname="ADC Total Pressure"/></sample>
         <sample id="0244" rate="8"><variable name="ATTACK" units="ratio" longname="ADC Angle of Attack"/></sample>
         <sample id="0207" rate="8" process="false"><variable name="max_op_speed" units="m/s" longname="ADC maximum operating speed"/></sample>
         <sample id="0212" rate="16" process="false"><variable name="altrate" units="m/s" longname="ADC Altitude Rate"/></sample>
@@ -253,10 +253,10 @@
         <!-- RMC record -->
         <sample id="2" rate="1">
             <variable name="GGSTATUS" units="none" longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)"/>
-            <variable name="GGSPD" units="m/s" longname="Reference GPS Speed over ground"/>
-            <variable name="GGTRK" units="degree_T" longname="Reference GPS Course made good"/>
-            <variable name="GGVEW" units="m/s" longname="Reference GPS East/West velocity"/>
-            <variable name="GGVNS" units="m/s" longname="Reference GPS North/South velocity"/>
+            <variable name="GGSPD" units="m/s" longname="Reference GPS Ground Speed"/>
+            <variable name="GGTRK" units="degree_T" longname="Reference GPS Track Angle"/>
+            <variable name="GGVEW" units="m/s" longname="Reference GPS Ground Speed Vector, East Component"/>
+            <variable name="GGVNS" units="m/s" longname="Reference GPS Ground Speed Vector, North Component"/>
             <variable name="GGDAY" units="day" longname="Reference GPS Day of month (1-31)"/>
             <variable name="GGMONTH" units="month" longname="Reference GPS Month of year (1-12)"/>
             <variable name="GGYEAR" units="year" longname="Reference GPS 2 digit year"/>
@@ -306,20 +306,20 @@
 	    <variable name="MCN_WCN" units="none" longname="WCN Current Operating Mode"/>
 	    <variable name="SFLCN_WCN" units="none" longname="WCN Status Flags"/>
 	    <variable name="CONCN_WCN" units="#/cm3" longname="WCN Aggregated Concentration"/>
-	    <variable name="ETCN_WCN" units="second" longname="WCN Sample Time (Elapsed Time)"/>
-	    <variable name="LTCN_WCN" units="second" longname="WCN Live Time"/>
+	    <variable name="ETCN_WCN" units="s" longname="WCN Sample Time (Elapsed Time)"/>
+	    <variable name="LTCN_WCN" units="s" longname="WCN Live Time"/>
 	    <variable name="CNTS_WCN" units="count" longname="WCN Accumulated Particle Counts"/>
-	    <variable name="PCN_WCN" units="mbar" longname="WCN Absolute Pressure"/>
+	    <variable name="PCN_WCN" units="hPa" longname="WCN Absolute Pressure"/>
 	    <variable name="RPCN_WCN" units="none" longname="WCN Raw Photometric Value"/>
         </sample>
         <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
-	    <variable name="FCN_WCN" units="cm3/min" longname="WCN Sample Flow Rate"/>
-	    <variable name="TFCN_WCN" units="cm3/min" longname="WCN Total Flow Rate"/>
-	    <variable name="SFCN_WCN" units="cm3/min" longname="WCN Sheath Flow Rate"/>
-	    <variable name="APCN_WCN" units="mbar" longname="WCN Absolute Pressure"/>
-	    <variable name="STCN_WCN" units="deg_C" longname="WCN Saturator Temperature"/>
-	    <variable name="GTCN_WCN" units="deg_C" longname="WCN Growth Tube Temperature"/>
-	    <variable name="OTCN_WCN" units="deg_C" longname="WCN Optics Temperature"/>
+	    <variable name="FSACN_WCN" units="cm3/min" longname="WCN Sample Flow Rate"/>
+	    <variable name="FTCN_WCN" units="cm3/min" longname="WCN Total Flow Rate"/>
+	    <variable name="FSHCN_WCN" units="cm3/min" longname="WCN Sheath Flow Rate"/>
+	    <variable name="PACN_WCN" units="hPa" longname="WCN Absolute Pressure"/>
+	    <variable name="TSCN_WCN" units="deg_C" longname="WCN Saturator Temperature"/>
+	    <variable name="TGCN_WCN" units="deg_C" longname="WCN Growth Tube Temperature"/>
+	    <variable name="TOCN_WCN" units="deg_C" longname="WCN Optics Temperature"/>
         </sample>
         <message separator="\r" position="end" length="0"/>
     </serialSensor>
@@ -327,16 +327,16 @@
     <serialSensor ID="TDLH2O" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1">
         <sample id="1" rate="20" scanfFormat="%*f %*f %f %f %*f %*f %f %f %f %f %f %f %f %f">
-	    <variable name="PCELL_LHS" units="mbar" longname="Sample Cell Pressure, TDL Weak Absorption Line"/>
+	    <variable name="PCELL_LHS" units="hPa" longname="Sample Cell Pressure, TDL Weak Absorption Line"/>
 	    <variable name="TCELL_LHS" units="deg_C" longname="Sample Cell Temperature, TDL Weak Absorption Line"/>
-	    <variable name="PP2F_LHS" units="A/D cnts" longname="2f Signal Amplitude, TDL Weak Absorption Line"/>
-	    <variable name="PWR_LHS" units="A/D cnts" longname="Laser Power, TDL Weak Absorption Line"/>
-	    <variable name="IDX_LHS" units="A/D cnts" longname="Spectral Line Position, TDL Weak Absorption Line"/>
-	    <variable name="DK_LHS" units="A/D cnts" longname="Zero Level, TDL Weak Absorption Line"/>
-	    <variable name="PP2F_LHL" units="A/D cnts" longname="2f Signal Amplitude, TDL Strong Absorption Line"/>
-	    <variable name="PWR_LHL" units="A/D cnts" longname="Laser Power, TDL Strong Absorption Line"/>
-	    <variable name="IDX_LHL" units="A/D cnts" longname="Spectral Line Position, TDL Strong Absorption Line"/>
-	    <variable name="DK_LHL" units="A/D cnts" longname="Zero Level, TDL Strong Absorption Line"/>
+	    <variable name="PP2F_LHS" units="count" longname="2f Signal Amplitude, TDL Weak Absorption Line"/>
+	    <variable name="PWR_LHS" units="count" longname="Laser Power, TDL Weak Absorption Line"/>
+	    <variable name="IDX_LHS" units="count" longname="Spectral Line Position, TDL Weak Absorption Line"/>
+	    <variable name="DK_LHS" units="count" longname="Zero Level, TDL Weak Absorption Line"/>
+	    <variable name="PP2F_LHL" units="count" longname="2f Signal Amplitude, TDL Strong Absorption Line"/>
+	    <variable name="PWR_LHL" units="count" longname="Laser Power, TDL Strong Absorption Line"/>
+	    <variable name="IDX_LHL" units="count" longname="Spectral Line Position, TDL Strong Absorption Line"/>
+	    <variable name="DK_LHL" units="count" longname="Zero Level, TDL Strong Absorption Line"/>
         </sample>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
@@ -617,7 +617,7 @@
                     <parameter name="corIntercept" value="-0.03042" type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
-                <variable name="XO3" units="V" longname="Ozone Concentration">
+                <variable name="XO3" units="V" longname="Raw Ozone Mixing Ratio">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0346" type="float"/>
@@ -711,6 +711,7 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.03144" type="float"/>
                     <parameter name="corIntercept" value="-0.028268" type="float"/>
+                    <linear slope="16765.0" intercept="38.7" units="hPa"/>
                 </variable>
             </sample>
         </sensor>
