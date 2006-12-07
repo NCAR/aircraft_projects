@@ -162,14 +162,14 @@
         <sample id="0210" rate="16"><variable name="TAS" units="m/s" longname="ADC True Air Speed"/></sample>
         <sample id="0211" rate="2"><variable name="TT" units="deg_C" longname="ADC Total Air Temperature"/></sample>
         <sample id="0213" rate="2"><variable name="AT" units="deg_C" longname="ADC Ambient Air Temperature"/></sample>
-        <sample id="0215" rate="8"><variable name="QC" units="mbar" longname="ADC Impact Pressure"/></sample>
-        <sample id="0217" rate="8"><variable name="PS" units="mbar" longname="ADC Static Pressure"/></sample>
+        <sample id="0215" rate="8"><variable name="QC" units="hPa" longname="ADC Impact Pressure"/></sample>
+        <sample id="0217" rate="8"><variable name="PS" units="hPa" longname="ADC Static Pressure"/></sample>
         <sample id="0220" rate="16"><variable name="BALT2" units="m" longname="ADC baro corrected alt #2"/></sample>
-        <sample id="0234" rate="16"><variable name="BAROCOR1" units="mbar" longname="ADC baro correction #1 mB"/></sample>
+        <sample id="0234" rate="16"><variable name="BAROCOR1" units="hPa" longname="ADC baro correction #1 mB"/></sample>
         <!--sample id="0235" rate="16" process="false"><variable name="BAROCOR1" units="inHg" longname="ADC baro correction #1 inHg"/></sample -->
-        <sample id="0236" rate="16"><variable name="BAROCOR2" units="mbar" longname="ADC baro correction #2 mB"/></sample>
+        <sample id="0236" rate="16"><variable name="BAROCOR2" units="hPa" longname="ADC baro correction #2 mB"/></sample>
         <!--sample id="0237" rate="16" process="false"><variable name="BAROCOR2" units="inHg" longname="ADC baro correction #2 inHg"/></sample -->
-        <sample id="0242" rate="16"><variable name="PT" units="mbar" longname="ADC Total Pressure"/></sample>
+        <sample id="0242" rate="16"><variable name="PT" units="hPa" longname="ADC Total Pressure"/></sample>
         <sample id="0244" rate="8"><variable name="ATTACK" units="ratio" longname="ADC Angle of Attack"/></sample>
         <sample id="0207" rate="8" process="false"><variable name="max_op_speed" units="m/s" longname="ADC maximum operating speed"/></sample>
         <sample id="0212" rate="16" process="false"><variable name="altrate" units="m/s" longname="ADC Altitude Rate"/></sample>
@@ -309,14 +309,14 @@
 	    <variable name="ETCN_WCN" units="second" longname="WCN Sample Time (Elapsed Time)"/>
 	    <variable name="LTCN_WCN" units="second" longname="WCN Live Time"/>
 	    <variable name="CNTS_WCN" units="count" longname="WCN Accumulated Particle Counts"/>
-	    <variable name="PCN_WCN" units="mbar" longname="WCN Absolute Pressure"/>
+	    <variable name="PCN_WCN" units="hPa" longname="WCN Absolute Pressure"/>
 	    <variable name="RPCN_WCN" units="none" longname="WCN Raw Photometric Value"/>
         </sample>
         <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
 	    <variable name="FCN_WCN" units="cm3/min" longname="WCN Sample Flow Rate"/>
 	    <variable name="TFCN_WCN" units="cm3/min" longname="WCN Total Flow Rate"/>
 	    <variable name="SFCN_WCN" units="cm3/min" longname="WCN Sheath Flow Rate"/>
-	    <variable name="APCN_WCN" units="mbar" longname="WCN Absolute Pressure"/>
+	    <variable name="APCN_WCN" units="hPa" longname="WCN Absolute Pressure"/>
 	    <variable name="STCN_WCN" units="deg_C" longname="WCN Saturator Temperature"/>
 	    <variable name="GTCN_WCN" units="deg_C" longname="WCN Growth Tube Temperature"/>
 	    <variable name="OTCN_WCN" units="deg_C" longname="WCN Optics Temperature"/>
@@ -327,7 +327,7 @@
     <serialSensor ID="TDLH2O" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1">
         <sample id="1" rate="20" scanfFormat="%*f %*f %f %f %*f %*f %f %f %f %f %f %f %f %f">
-	    <variable name="PCELL_LHS" units="mbar" longname="Sample Cell Pressure"/>
+	    <variable name="PCELL_LHS" units="hPa" longname="Sample Cell Pressure"/>
 	    <variable name="TCELL_LHS" units="deg_C" longname="Sample Cell Temperature"/>
 	    <variable name="PP2F_LHS" units="A/D cnts" longname="2f Signal Amplitude"/>
 	    <variable name="PWR_LHS" units="A/D cnts" longname="Laser Power"/>
@@ -405,7 +405,7 @@
         <serialSensor IDREF="Paro_DigiQuartz_1000"
                 devicename="/dev/dsmser0" id="110">
 	    <sample id="1">
-                <variable name="PSF" units="mb" longname="Raw Static Pressure, Fuselage"/>
+                <variable name="PSF" units="hPa" longname="Raw Static Pressure, Fuselage"/>
 	    </sample>
         </serialSensor>
 
@@ -471,28 +471,28 @@
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser0" id="110">
             <sample id="1">
-                <variable name="QCF" units="mb" longname="Raw Dynamic Pressure, Fuselage"/>
+                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser1" id="112">
             <sample id="1">
-                <variable name="QCR" units="mb" longname="Raw Dynamic Pressure, Radome"/>
+                <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser2" id="114">
             <sample id="1">
-                <variable name="ADIFR" units="mb" longname="Vertical Differential Pressure, Radome"/>
+                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser3" id="116">
             <sample id="1">
-                <variable name="BDIFR" units="mb" longname="Horizontal Differential Pressure, Radome"/>
+                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome"/>
             </sample>
         </serialSensor>
 
@@ -576,21 +576,21 @@
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser0" id="110">
             <sample id="1">
-                <variable name="QCRAKE" units="mb" longname="Pressure Rake dynamic pressure, pitot static tube"/>
+                <variable name="QCRAKE" units="hPa" longname="Pressure Rake dynamic pressure, pitot static tube"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000"
                 devicename="/dev/dsmser1" id="112">
 	    <sample id="1">
-                <variable name="PSRAKE" units="mb" longname="Pressure Rake static pressure, pitot static tube"/>
+                <variable name="PSRAKE" units="hPa" longname="Pressure Rake static pressure, pitot static tube"/>
 	    </sample>
         </serialSensor>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser2" id="114">
             <sample id="1">
-                <variable name="PCONE" units="mb" longname="Trailing Cone Differential Pressure"/>
+                <variable name="PCONE" units="hPa" longname="Trailing Cone Differential Pressure"/>
             </sample>
         </serialSensor>
 
@@ -601,7 +601,7 @@
 	<socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000"
 	    id="150">
 	    <sample id="1" rate="50">
-		<variable name="PRAKE12" units="mb" longname="Pressure Rake dynamic pressure array" length="12"/>
+		<variable name="PRAKE12" units="hPa" longname="Pressure Rake dynamic pressure array" length="12"/>
 	    </sample>
 	    <message separator="\x01" position="beg" length="52"/>
 	</socketSensor>
@@ -613,21 +613,21 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09034" type="float"/>
                     <parameter name="corIntercept" value="-0.191574" type="float"/>
-		    <linear slope="103.42" intercept="0" units="mb"/>
+		    <linear slope="103.42" intercept="0" units="hPa"/>
                 </variable>
                 <variable name="PDUMPPL" units="V" longname="Pressure of instrument exhaust duct, left">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.11755" type="float"/>
                     <parameter name="corIntercept" value="-0.414038" type="float"/>
-		    <linear slope="103.42" intercept="0" units="mb"/>
+		    <linear slope="103.42" intercept="0" units="hPa"/>
                 </variable>
                 <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.11064" type="float"/>
                     <parameter name="corIntercept" value="-0.374802" type="float"/>
-		    <linear slope="108.09" intercept="-1.3596" units="mb"/>
+		    <linear slope="108.09" intercept="-1.3596" units="hPa"/>
                 </variable>
                 <variable name="TRAKET" units="V" longname="Pressure Rake temperature of strut middle">
                     <parameter name="gain" value="20" type="float"/>
