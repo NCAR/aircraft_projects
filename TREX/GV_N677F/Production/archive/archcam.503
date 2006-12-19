@@ -9,6 +9,7 @@
 #goto rename3
 #goto rename4  #  move all bitfiles to /ATD/DATA path
 #goto rename5  #  Change path from CAMERA/fltno/LEFT... to CAMERA/fltno.LEFT...
+#goto restrict #  add READ password to all camera and movie bitfiles
 #
 #  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #  *  Copyright 2004, 2005, 2006                                             *
@@ -208,6 +209,14 @@ set RPWD = ""
 # 17th wave (26867 files in 8 tar files archived from 04/28/2006 19:30:00 to 04/29/2006 02:59:59)
 #set SSdir = "503tf05"
 #set DSdir = "TF05"
+#
+# 18th wave (restrict access by adding READ password to all MSS bitfiles)
+#restrict:
+#echo "#  Job to set READ password on all camera and movie bitfiles began on `date`"
+#echo \
+#mspasswd -R -wpwd RAFDMG -newr "hidden from view -- see CDS support personnel for password" /ATD/DATA/2006/TREX/GV_N677F/CAMERA
+#echo "#  Job completed on `date`"
+#exit
 #
 #   th wave (# files in # tar files archived from   to  )
 #set SSdir = ""
@@ -1087,7 +1096,7 @@ exit $xit
 #   Total number of files archived: 22555
 #   7 tar files archived to MSS
 #
-#  4th wave --  (archcam.503 -r -p -t)
+#  4th wave --  RF03 (archcam.503 -r -p -t)
 #   Wave began Tue Mar 14 09:50:16 MST 2006
 #  Job submitted on Tue Mar 14 10:01:38 MST 2006
 #  msrcp job for RF03/LEFT.20060309.190500_195959.jpg.tar -- OK -- Tue Mar 14 10:03:24 MST 2006
@@ -1127,7 +1136,7 @@ exit $xit
 #   Total number of files archived: 26575
 #   8 tar files archived to MSS
 #
-#  5th wave --  (archcam.503 -r -p -t)
+#  5th wave --  RF04 (archcam.503 -r -p -t)
 #   Wave began for RF04 on Mon Mar 20 10:01:26 MST 2006
 #  Job submitted on Mon Mar 20 10:12:35 MST 2006
 #  msrcp job for RF04/LEFT.20060314.180610_185959.jpg.tar -- OK -- Mon Mar 20 10:14:42 MST 2006
@@ -1211,7 +1220,7 @@ exit $xit
 #   Total number of files: 29496
 #   9 tar files archived to MSS
 #
-#  7th wave --  (archcam.503 -r -p -t)
+#  7th wave --  RF05 (archcam.503 -r -p -t)
 #   Wave began for RF05 on Tue Mar 28 09:46:09 MST 2006
 #  Job submitted on Tue Mar 28 09:49:07 MST 2006
 #  msrcp job for RF05/LEFT.20060325.151000_152317.jpg.tar -- OK -- Tue Mar 28 09:49:47 MST 2006
@@ -1221,7 +1230,7 @@ exit $xit
 #   Total number of files: 792
 #   1 tar file archived to MSS
 #
-#  8th wave --  (archcam.503 -r -p -t)
+#  8th wave --  RF06 (archcam.503 -r -p -t)
 #   Wave began for RF06 on Mon Apr  3 11:30:37 MDT 2006
 #  Job submitted on Mon Apr  3 11:33:49 MDT 2006
 #  msrcp job for RF06/LEFT.20060402.144000_145959.jpg.tar -- OK -- Mon Apr  3 11:34:43 MDT 2006
@@ -1259,7 +1268,7 @@ exit $xit
 #     /RAF/2006/TREX/GV/CAMERA/
 #  These must be restored to the same directory as above (/RAF/2006/503/CAMERA/).
 #
-#  9th wave --  (archcam.503 -r -p -t)
+#  9th wave --  RF07 (archcam.503 -r -p -t)
 #   Wave began for RF07 on Wed Apr 12 09:46:51 MDT 2006
 #  msrcp job for RF07/LEFT.20060406.164033_165959.jpg.tar -- OK -- Wed Apr 12 09 :51:50 MDT 2006
 #  Job submitted on Wed Apr 12 09:51:50 MDT 2006
@@ -1308,7 +1317,7 @@ exit $xit
 #   Total number of files: 30543
 #   11 tar files archived to MSS
 #
-# 10th wave --  (archcam.503 -r -p -t)
+# 10th wave --  RF08 (archcam.503 -r -p -t)
 #   Wave began for RF08 on Wed Apr 12 12:06:40 MDT 2006
 #  Job submitted on Wed Apr 12 12:11:13 MDT 2006
 #  msrcp job for RF08/LEFT.20060408.113914_115959.jpg.tar -- OK -- Wed Apr 12 12:11:44 MDT 2006
@@ -1376,7 +1385,7 @@ exit $xit
 #  Bitfile move job began on Wed Apr 12 16:53:48 MDT 2006
 #  Files moved on Wed Apr 12 16:54:14 MDT 2006
 #
-# 11th wave --  (archcam.503 -r -p -t)
+# 11th wave --  TF04 (archcam.503 -r -p -t)
 #   Wave began for TF04 on Mon Apr 17 17:17:18 MDT 2006
 #  Job submitted on Mon Apr 17 17:31:24 MDT 2006
 #  msrcp job for TF04/LEFT.20060413.140000_145959.jpg.tar -- OK -- Mon Apr 17 17 :33:53 MDT 2006
@@ -1418,7 +1427,7 @@ exit $xit
 #   Total number of files: 31496
 #   9 tar files archived to MSS
 #
-# 12th wave --  (archcam.503 -r -p -t)
+# 12th wave --  TF01 (archcam.503 -r -p -t)
 #   Wave began for TF01 on Tue Apr 18 09:21:16 MDT 2006
 #  Job submitted on Tue Apr 18 09:28:51 MDT 2006
 #  msrcp job for TF01/LEFT.20060216.170604_175958.jpg.tar -- OK -- Tue Apr 18 09:29:06 MDT 2006
@@ -1439,7 +1448,7 @@ exit $xit
 #  Bitfile move job began on Tue Apr 18 13:02:40 MDT 2006
 #  Files moved on Tue Apr 18 13:03:05 MDT 2006
 #
-# 13th wave --  (archcam.503 -r -p -t)
+# 13th wave --  RF09 (archcam.503 -r -p -t)
 #   Wave began for RF09 on Thu Apr 20 13:28:34 MDT 2006
 #  Job submitted on Thu Apr 20 13:41:50 MDT 2006
 #  msrcp job for RF09/LEFT.20060415.180000_185959.jpg.tar -- OK -- Thu Apr 20 13:42:59 MDT 2006
@@ -1481,7 +1490,7 @@ exit $xit
 #   Total number of files: 30474
 #   9 tar files archived to MSS
 #
-# 14th wave --  (archcam.503 -r -p -t)
+# 14th wave --  RF10 (archcam.503 -r -p -t)
 #   Wave began for RF10 on Thu Apr 20 15:48:53 MDT 2006
 #  Job submitted on Thu Apr 20 16:00:03 MDT 2006
 #  msrcp job for RF10/LEFT.20060416.191000_195959.jpg.tar -- OK -- Thu Apr 20 16:02:23 MDT 2006
@@ -1519,7 +1528,7 @@ exit $xit
 #   Total number of files: 28036
 #   8 tar files archived to MSS
 #
-# 15th wave --  (archcam.503 -r -p -t)
+# 15th wave --  RF11 (archcam.503 -r -p -t)
 #   Wave began for RF11 on Mon Apr 24 11:31:47 MDT 2006
 #  Job submitted on Mon Apr 24 11:44:58 MDT 2006
 #  msrcp job for RF11/LEFT.20060421.130000_135959.jpg.tar -- OK -- Mon Apr 24 11:47:06 MDT 2006
@@ -1553,7 +1562,7 @@ exit $xit
 #   Total number of files: 24465
 #   7 tar files archived to MSS
 #
-# 16th wave --  (archcam.503 -r -p -t)
+# 16th wave --  RF12 (archcam.503 -r -p -t)
 #   Wave began for RF12 on Mon May  1 15:42:30 MDT 2006
 #  Job submitted on Mon May  1 15:56:13 MDT 2006
 #  msrcp job for RF12/LEFT.20060426.130000_135959.jpg.tar -- OK -- Mon May  1 15:57:54 MDT 2006
@@ -1595,7 +1604,7 @@ exit $xit
 #   Total number of files: 31115
 #   9 tar files archived to MSS
 #
-# 17th wave --  (archcam.503 -r -p -t)
+# 17th wave --  TF05 (archcam.503 -r -p -t)
 #   Wave began for TF05 on Tue May  2 09:16:34 MDT 2006
 #  Job submitted on Tue May  2 09:23:12 MDT 2006
 #  msrcp job for TF05/LEFT.20060428.193000_195959.jpg.tar -- OK -- Tue May  2 09:24:08 MDT 2006
@@ -1897,6 +1906,11 @@ exit $xit
 #
 #  Bitfile move job began on Tue Oct  3 14:14:58 MDT 2006
 #  Files moved on Tue Oct  3 14:22:39 MDT 2006
+#
+# 18th wave (restrict access by adding READ password to all camera and movie
+#             MSS bitfiles)
+#  Job to set READ password began on Tue Nov 21 15:23:20 MST 2006
+#  Job completed on Tue Nov 21 15:23:52 MST 2006
 #
 #   th wave --  (archcam.503 -r -p -t)
 #
