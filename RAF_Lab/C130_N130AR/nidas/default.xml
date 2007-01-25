@@ -264,7 +264,7 @@
     </serialSensor>
 
 
-    <serialSensor ID="S100" class="SPP100_Serial"
+    <serialSensor ID="S100" class="raf.SPP100_Serial"
         baud="38400" parity="none" databits="8" stopbits="1">
 
 	<parameter name="NCHANNELS" type="int" value="30"/>
@@ -277,29 +277,29 @@
 	<parameter name="DIVISOR_FLAG" type="int" value="0"/>
 	<parameter name="CT_METHOD" type="int" value="0"/>
 	<parameter name="MAX_WIDTH" type="int" value="10000"/>
-	<parameter name="CHAN_THRESH" type="int" value="0 23 77 121 170 205 265 342 427 520 627 731 842 950 1084 1225 1374 1531 1695 1866 2032 2220 2416 2620 2830 3048 3258 3461 3668 4096 "/>
+	<parameter name="CHAN_THRESH" type="int" value="0 23 77 121 170 205 265 342 427 520 627 731 842 950 1084 1225 1374 1531 1695 1866 2032 2220 2416 2620 2830 3048 3258 3461 3668 4096"/>
 
         <sample id="1">
-	    <variable name="DUMMY" units="" longname="Housekeeping 0"/>
-	    <variable name="DUMMY" units="" longname="Housekeeping 1"/>
-	    <variable name="DUMMY" units="" longname="Housekeeping 2"/>
-	    <variable name="DUMMY" units="" longname="Housekeeping 3"/>
+	    <variable name="DUMMY0" units="" longname="Housekeeping 0"/>
+	    <variable name="DUMMY1" units="" longname="Housekeeping 1"/>
+	    <variable name="DUMMY2" units="" longname="Housekeeping 2"/>
+	    <variable name="DUMMY3" units="" longname="Housekeeping 3"/>
 	    <variable name="FREF" units="V" longname="FSSP-100 Laser Reference Voltage"/>
-	    <variable name="DUMMY" units="" longname="Housekeeping 5"/>
-	    <variable name="DUMMY" units="" longname="Housekeeping 6"/>
+	    <variable name="DUMMY4" units="" longname="Housekeeping 5"/>
+	    <variable name="DUMMY5" units="" longname="Housekeeping 6"/>
 	    <variable name="FTMP" units="deg_C" longname="FSSP-100 Housekeeping Data"/>
 
 	    <variable name="FRNG" units="" longname="FSSP-100 Size Range Category"/>
 	    <variable name="REJDOF" units="count" longname="Particles Rejected (Outside Depth-of-Field))"/>
 	    <variable name="REJAT" units="" longname="SPP-100 Average Transit Rejected Particles"/>
 	    <variable name="OVFLW" units="" longname="GPS Latitude"/>
-	    <variable name="AS100" units="count" longname="FSSP-100 Raw Accumulation (per cell) - DMT"/>
+	    <variable name="AS100" length="30" units="count" longname="FSSP-100 Raw Accumulation (per cell) - DMT"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
 
 
-    <serialSensor ID="S200" class="SPP200_Serial"
+    <serialSensor ID="S200" class="raf.SPP200_Serial"
         baud="38400" parity="none" databits="8" stopbits="1">
 
 	<parameter name="NCHANNELS" type="int" value="30"/>
@@ -322,10 +322,11 @@
 	    <variable name="AS200" length="30" units="count" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
+        <message length="154"/>
     </serialSensor>
 
 
-    <serialSensor ID="S300" class="SPP300_Serial"
+    <serialSensor ID="S300" class="raf.SPP300_Serial"
         baud="38400" parity="none" databits="8" stopbits="1">
 
 	<parameter name="NCHANNELS" type="int" value="30"/>
@@ -346,7 +347,7 @@
 	    <variable name="DUMMY" units="" longname="Housekeeping 5"/>
 	    <variable name="DUMMY" units="" longname="Housekeeping 6"/>
 	    <variable name="FTMP3" units="deg_C" longname="FSSP-300 Housekeeping Data"/>
-	    <variable name="AS300" units="count" longname="SPP-300 (FSSP-300) Raw Accumulation (per cell) - DMT"/>
+	    <variable name="AS300" length="30" units="count" longname="SPP-300 (FSSP-300) Raw Accumulation (per cell) - DMT"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
@@ -603,7 +604,7 @@
                     <!-- <poly coefs="-0.021776487 -0.00079476316 8.9631718e-12" units="V"/> -->
                 </variable>
                 <variable name="DUMMY7" units="" longname="Housekeeping 7"/>
-                <variable name="A260X" units="count" longname="260X Raw Accumulation (per cell)" count="true"/>
+                <variable name="A260X" units="count" longname="260X Raw Accumulation (per cell)" count="true" length="64"/>
             </sample>
         </sensor>
 
