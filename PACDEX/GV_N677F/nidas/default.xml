@@ -263,23 +263,6 @@
         <message separator="\r" position="end" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="TDLH2O" class="DSMSerialSensor"
-        baud="115200" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="20" scanfFormat="%*f %*f %f %f %*f %*f %f %f %f %f %f %f %f %f">
-	    <variable name="PCELL_LHS" units="hPa" longname="Sample Cell Pressure, TDL Weak Absorption Line"/>
-	    <variable name="TCELL_LHS" units="deg_C" longname="Sample Cell Temperature, TDL Weak Absorption Line"/>
-	    <variable name="PP2F_LHS" units="count" longname="2f Signal Amplitude, TDL Weak Absorption Line"/>
-	    <variable name="PWR_LHS" units="count" longname="Laser Power, TDL Weak Absorption Line"/>
-	    <variable name="IDX_LHS" units="count" longname="Spectral Line Position, TDL Weak Absorption Line"/>
-	    <variable name="DK_LHS" units="count" longname="Zero Level, TDL Weak Absorption Line"/>
-	    <variable name="PP2F_LHL" units="count" longname="2f Signal Amplitude, TDL Strong Absorption Line"/>
-	    <variable name="PWR_LHL" units="count" longname="Laser Power, TDL Strong Absorption Line"/>
-	    <variable name="IDX_LHL" units="count" longname="Spectral Line Position, TDL Strong Absorption Line"/>
-	    <variable name="DK_LHL" units="count" longname="Zero Level, TDL Strong Absorption Line"/>
-        </sample>
-        <message separator="\n" position="end" length="0"/>
-    </serialSensor>
-
     <serialSensor ID="CDP" class="raf.CDP_Serial"
         baud="38400" parity="none" databits="8" stopbits="1">
 
@@ -508,12 +491,8 @@
 
     </dsm>
 
-    <dsm name="dsm307" location="R2" id="7" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="307"/>
-
-        <serialSensor IDREF="Water_CN_Counter"
-                devicename="/dev/dsmser1" id="110">
-        </serialSensor>
+    <dsm name="dsm308" location="anderson" id="8" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
@@ -539,12 +518,8 @@
         </output>
     </dsm>
 
-    <dsm name="dsm308" location="R5" id="8" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
-
-        <serialSensor IDREF="TDLH2O"
-                devicename="/dev/dsmser3" id="120">
-        </serialSensor>
+    <dsm name="dsm307" location="chem" id="7" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="307"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
@@ -600,8 +575,12 @@
         </output>
     </dsm>
 
-    <dsm name="dsm310" location="L5" id="10" rserialPort="30002">
+    <dsm name="dsm310" location="aerosol" id="10" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="310"/>
+
+        <serialSensor IDREF="Water_CN_Counter"
+                devicename="/dev/dsmser1" id="110">
+        </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
@@ -611,6 +590,37 @@
                     <parameter name="corSlope" value="1.03144" type="float"/>
                     <parameter name="corIntercept" value="-0.028268" type="float"/>
                     <linear slope="1.0" intercept="0.0" units="hPa"/>
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_AEROSOL" units="deg_C">
+                </variable>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+    <dsm name="dsmLWO" location="aerosol" id="10" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="LWO"/>
+
+        <serialSensor IDREF="CDP" devicename="/dev/dsmser0" id="730" suffix="_711"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+            <sample id="1" rate="500">
+                <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
+                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+<!-- PLWC                 | 2006-03-31 21:25:45 | {0.008986,1.03486}    -8   -5  -2 -->
+<!-- PLWC                 | 2006-03-31 21:27:57 | {0.00890147,1.03505}  +8   +5  +2 -->
+<!-- PLWC                 | 2006-03-31 21:32:08 | {0.0088094,1.03504}   -8   +0  +8 -->
+                    <parameter name="corSlope"     value="1.03504"    type="float"/>
+                    <parameter name="corIntercept" value="0.0088094"  type="float"/>
                 </variable>
             </sample>
         </sensor>
