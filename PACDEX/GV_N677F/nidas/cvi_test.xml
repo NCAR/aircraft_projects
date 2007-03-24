@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="PACDEX"
+    system="GV_N677F"
+    version="$LastChangedRevision$"
+    >
+<sensorcatalog>
+
+
+</sensorcatalog>
+<site name="GV_N677F" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N677F" type="string"/>
+
+                <!--
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="10" type="int"/>
+                -->
+                <!-- gain=4,bipolar=F gives a range of 0-5V -->
+    <dsm name="cvi" location="cvi_rack" id="20" rserialPort="30002">
+        <!--
+        -->
+        <sensor class="DSC_A2DSensor"
+            devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
+            <parameter name="rate" type="int" value="10"/>
+            <sample id="1" rate="10">
+                <variable name="CVF1" units="V">
+                    <parameter name="gain" value="4.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVFX0" units="V">
+                    <parameter name="gain" value="4.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVFX1" units="V">
+                    <parameter name="gain" value="4.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVFX2" units="V">
+                    <parameter name="gain" value="4.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVFX3" units="V">
+                    <parameter name="gain" value="4.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVFX4" units="V">
+                    <parameter name="gain" value="4.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVFX5" units="V">
+                    <parameter name="gain" value="4.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVFX6" units="V">
+                    <parameter name="gain" value="4.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVFX7" units="V">
+                    <parameter name="gain" value="4.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVFX8" units="V">
+                    <parameter name="gain" value="4.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVPCN" units="V">
+                    <parameter name="gain" value="4.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+            </sample>
+        </sensor>
+        <sensor class="DSC_A2DSensor"
+            devicename="/dev/dmmat_a2d1" id="20" latency="0.25">
+            <parameter name="rate" type="int" value="10"/>
+            <sample id="1" rate="10">
+                <!--
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="10" type="int"/>
+                -->
+                <!-- gain=16,bipolar=F gives a range of 0-1.25V -->
+                <variable name="CVTT" units="V">
+                    <parameter name="gain" value="16.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVTP" units="V">
+                    <parameter name="gain" value="16.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVTS" units="V">
+                    <parameter name="gain" value="16.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVTCN" units="V">
+                    <parameter name="gain" value="16.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVTAI" units="V">
+                    <parameter name="gain" value="16.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+            </sample>
+        </sensor>
+        <sensor class="DSC_PulseCounter" devicename="/dev/dmmat_cntr0"
+            id="30">
+            <sample id="1" rate="1">
+                <variable name="CNC" units="" longname="CN Counts"/>
+            </sample>
+        </sensor>
+        <!--
+        -->
+        <output class="RawSampleOutputStream">
+            <socket type="server" port="30000"/>
+        </output>
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <fileset dir="/var/tmp"
+                file="${DSM}_%Y%m%d_%H%M%S.dat"
+                length="1800">
+            </fileset>
+        </output>
+    </dsm>
+</site>
+</project>
