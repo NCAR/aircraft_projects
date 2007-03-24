@@ -342,6 +342,8 @@
     </serialSensor>
 
 </sensorcatalog>
+
+
 <site name="GV_N677F" class="raf.Aircraft">
     <parameter name="tailNumber" value="N677F" type="string"/>
 
@@ -409,23 +411,27 @@
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer"
-                devicename="/dev/dsmser1" id="130">
+        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser1" id="130">
 	    <sample id="1">
                 <variable name="DPLS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left"/>
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer"
-                devicename="/dev/dsmser2" id="140">
+        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser2" id="140">
 	    <sample id="1">
                 <variable name="DPRS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right"/>
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="Garmin_GPS"
-                devicename="/dev/dsmser5" id="120">
+        <serialSensor IDREF="Garmin_GPS" devicename="/dev/dsmser5" id="120">
         </serialSensor>
+
+        <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_007">
+            <parameter name="SerialNumber" value="001" type="string"/>
+            <sample id="1">
+                <variable name="SHADOR" units="count" longname="High Speed 2DC Shadow-or count"/>
+            </sample>
+        </sensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
