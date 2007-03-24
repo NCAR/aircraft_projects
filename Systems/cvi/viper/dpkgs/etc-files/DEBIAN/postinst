@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# root password in /etc/shadow
+
+# syslog
+touch /var/log/adam.log
+[ -f /var/run/sylogd.pid ] && kill -HUP $(</var/run/syslogd.pid)
+
+cd /etc
+
+# add an entry in fstab for usbdisk
+if ! fgrep -q /var/tmp/usbdisk fstab; then
+    echo "/dev/sda1	/var/tmp/usbdisk	ext3	defaults	0 0" >> fstab
+fi
+
+# Boot into run-level 2
+if ! fgrep -q "id:2:initdefault:" inittab; then
+    sed "s/^id:[0-9]:initdefault:/id:2:initdefault:/" inittab > /var/tmp/inittab
+    cp /var/tmp/inittab .
+fi
+
+chmod 644 passwd
+chmod 600 shadow
+ 
+cd rc0.d
+[ -L K01adam ] || ln -s ../init.d/adam K01adam
+
+cd ../rc1.d
+[ -L K01adam ] || ln -s ../init.d/adam K01adam
+
+cd ../rc6.d
+[ -L K01adam ] || ln -s ../init.d/adam K01adam
+
+cd ../rc2.d
+[ -L S99adam ] || ln -s ../init.d/adam S99adam
+
+# Don't need nfs
+[ -L S19nfs-common ] && rm S19nfs-common
+
+# Don't need touch screen controller
+[ -L S80tsc1d ] && rm S80tsc1d
+
+# Don't need web server (yet)
+[ -L S50thttpd ] && rm S50thttpd
+
+[ "$1" == "configure" ] && ldconfig
+
+exit 0

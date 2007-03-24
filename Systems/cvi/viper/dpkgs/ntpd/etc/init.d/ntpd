@@ -1,0 +1,98 @@
+#! /bin/sh
+
+# set -x
+
+PATH=/var/tmp/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
+# FLAGS="defaults 23"
+
+test -f /usr/sbin/ntpd || exit 0
+
+# default values for GPS
+GPS_DEVICE=/dev/ttyS3
+GPS_TEE_OPTS=4800n81lncxx
+
+# GPS device that ntpd nmea ref clock uses
+NTP_GPS_DEVICE=/dev/gps0
+
+test -f /etc/gps.conf && . /etc/gps.conf
+
+get_pids() {
+	ps -ef | fgrep $1 | fgrep -v fgrep | sed 's/  / /g' | cut -d \  -f 2
+}
+
+setup_gps() {
+	# if GPS_TEE_DEVICE is set run tee_tty to split the gps input
+	if test -n "$GPS_TEE_DEVICE"; then
+		pids=(`get_pids tee_tty`)
+		if [ ${#pids[*]} -eq 0 ]; then
+			tee_tty $GPS_DEVICE $GPS_TEE_OPTS \
+			$NTP_GPS_DEVICE -w $GPS_TEE_DEVICE
+			# Wait for pseudo-terminal to be created
+			sleep 2
+		fi
+	else
+		if [ ! $NTP_GPS_DEVICE -ef $GPS_DEVICE ]; then
+			rm -f $NTP_GPS_DEVICE
+			ln -s $GPS_DEVICE $NTP_GPS_DEVICE
+		fi
+	fi
+	#
+	# Create link betwee GPS_DEVICE and NTP_PPS_DEVICE
+	if test -n "$NTP_PPS_DEVICE"; then
+		if [ ! $NTP_PPS_DEVICE -ef $GPS_DEVICE ]; then
+			rm -f $NTP_PPS_DEVICE
+			ln -s $GPS_DEVICE $NTP_PPS_DEVICE
+		fi
+	fi
+
+}
+
+kill_proc() {
+    local proc=$1
+    local sig="$2"
+    ntry=0
+    while [ $ntry -lt 10 ]; do
+	pids=(`ps -ef | fgrep $proc | fgrep -v fgrep | sed 's/  / /g' | cut -d \  -f 2`)
+        [ ${#pids[*]} -eq 0 ] && return 0
+        echo "kill $sig ${pids[*]} ... "
+        kill $sig ${pids[*]}
+        sleep 1
+        ntry=$(($ntry + 1))
+    done
+    return 1
+}
+
+
+case "$1" in
+	start)
+		echo -n "Starting NTP server: ntpd"
+		setup_gps
+		[ -f /etc/ntp.drift ] || echo "0.0" > /etc/ntp.drift
+		cp /etc/ntp.drift /var/run/ntp.drift
+
+  		start-stop-daemon --start --quiet --exec /usr/sbin/ntpd -- -g
+		echo "."
+  		;;
+	stop)
+		echo -n "Stopping NTP server: ntpd"
+  		start-stop-daemon --stop --quiet --exec /usr/sbin/ntpd
+  		kill_proc tee_tty -HUP
+		cp /var/run/ntp.drift /etc/ntp.drift
+		echo "."
+  		;;
+	restart|force-reload)
+		echo -n "Restarting NTP server: ntpd... "
+  		start-stop-daemon --stop --quiet --exec /usr/sbin/ntpd
+  		kill_proc tee_tty -HUP
+  		sleep 2
+		setup_gps
+  		start-stop-daemon --start --quiet --exec /usr/sbin/ntpd -- -g
+		echo "done."
+  		;;
+	*)
+  		echo "Usage: /etc/init.d/ntp-simple {start|stop|restart|force-reload}"
+  		exit 1
+		;;
+esac
+
+exit 0

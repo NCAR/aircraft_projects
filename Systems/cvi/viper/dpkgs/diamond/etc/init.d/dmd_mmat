@@ -1,0 +1,62 @@
+#!/bin/bash
+#
+# /etc/init.d/dmd_mmat
+#       Starts dmd_mmat driver module and creates the device files.
+#
+# chkconfig: 2345 50 75
+# description: Insert a driver module for a Diamond DMMAT analog card.
+#		Create devices.
+#
+
+# set -x
+
+RETVAL=0
+
+# PATH=/usr/local/bin:$PATH
+
+tmpdir=/var/tmp/dev
+
+clear_tmpdevs() {
+    [ -d $tmpdir ] || mkdir -p $tmpdir
+    rm -f $tmpdir/dmmat*
+}
+
+create_devs() {
+    modprobe dmd_mmat
+    emajor=`cat /proc/devices | fgrep dmd_mmat | cut -d\  -f1`
+    eminor=0
+
+    devpfxs=(dmmat_a2d dmmat_cntr dmmat_d2a dmmat_dio)
+    devnums=(0 1)
+
+    for devnum in ${devnums[*]}; do
+        for devpfx in ${devpfxs[*]}; do
+            # dmd_mmat major number may change from boot to boot
+            # so we create these device files on $tmpdir
+            # and create links to them from /dev.
+            dev=${devpfx}${devnum}
+            rm -f $tmpdir/$dev
+            [ -c $tmpdir/$dev ] || mknod $tmpdir/$dev c $emajor $eminor
+            chmod 666 $tmpdir/$dev
+            [ -h /dev/$dev ] || ln -s $tmpdir/$dev /dev
+            eminor=$(( $eminor + 1))
+        done
+    done
+}
+
+
+case "$1" in
+    start)
+	clear_tmpdevs
+        create_devs
+	;;
+    stop)
+	rmmod dmd_mmat
+	;;
+    *)
+	echo "usage: $0 start|stop"
+	RETVAL=1
+	;;
+esac
+exit $RETVAL
+
