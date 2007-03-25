@@ -5,7 +5,7 @@ pkgdest=../built/$package
 
 [ -d $pkgdest ] || mkdir $pkgdest
 
-rsync --exclude=.svn -a root DEBIAN $pkgdest
+rsync --exclude=.svn -a root etc DEBIAN $pkgdest
 
 fakeroot dpkg -b $pkgdest
 ../deb_rename.sh $pkgdest

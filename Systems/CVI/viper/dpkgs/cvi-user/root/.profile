@@ -9,5 +9,5 @@ PATH=/usr/local/bin:/usr/sbin:/sbin:$PATH
 umask 022
 
 export CVI=/root/cvi
-[ -x $CVI/cvi_env.sh ] && source $CVI/cvi_env.sh
+[ -f $CVI/cvi_env.sh ] && source $CVI/cvi_env.sh
 

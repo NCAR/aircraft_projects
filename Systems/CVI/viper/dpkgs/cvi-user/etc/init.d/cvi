@@ -14,7 +14,7 @@ kill_proc() {
     ntry=0
 
     if [ -f /var/tmp/$proc.pid ]; then
-        pid=$(</var/tmp/$prod.pid)
+        pid=$(</var/tmp/$proc.pid)
         while [ $ntry -lt 10 ]; do
             echo "kill $sig $pid"
             kill $sig $pid
@@ -52,12 +52,6 @@ case "$1" in
 		else
 			echo "failed"
 		fi
-		echo -n "Unmounting $usbmtpt ... "
-		if  umount_usb; then
-			echo "done"
-		else			
-			echo "failed"
-		fi
   		;;
 	restart)
 		echo "Stopping dsm ... "
@@ -71,7 +65,7 @@ case "$1" in
   		run_app
   		;;
 	*)
-  		echo "Usage: /etc/init.d/cvi {start|stop|restart|copy|install}"
+  		echo "Usage: /etc/init.d/cvi {start|stop|restart}"
   		exit 1
 		;;
 esac
