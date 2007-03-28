@@ -380,24 +380,22 @@
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="Garmin_GPS"
-                devicename="/dev/dsmser5" id="120">
-        </serialSensor>
+        <serialSensor IDREF="Garmin_GPS" devicename="/dev/dsmser5" id="120"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="DPL" units="V" longname="Dew/Frost Point Temperature, Fuselage Left">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.052057" type="float"/>
-                    <parameter name="corIntercept" value="-0.355214" type="float"/>
+                    <parameter name="corSlope" value="1.0" type="float"/>
+                    <parameter name="corIntercept" value="0.0" type="float"/>
 		    <linear slope="12.5" intercept="-75.0" units="deg_C"/>
                 </variable>
                 <variable name="DPR" units="V" longname="Dew/Frost Point Temperature, Fuselage Right">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.0538739" type="float"/>
-                    <parameter name="corIntercept" value="-0.3317972" type="float"/>
+                    <parameter name="corSlope" value="1.0" type="float"/>
+                    <parameter name="corIntercept" value="0.0" type="float"/>
 		    <linear slope="12.5" intercept="-75.0" units="deg_C"/>
                 </variable>
             </sample>
@@ -482,13 +480,6 @@
                     <parameter name="corIntercept" value="-0.700056" type="float"/>
 		    <linear slope="10.0" intercept="-50.0" units="deg_C"/>
                 </variable>
-                <variable name="TTHR3" units="V" longname="Total Temperature, Deiced Right">
-                    <parameter name="gain" value="4" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.16955" type="float"/>
-                    <parameter name="corIntercept" value="-0.128805" type="float"/>
-                    <poly coefs="-88.4311 25.3294 0.0316959" units="deg_C"/>
-                </variable>
             </sample>
         </sensor>
 
@@ -503,42 +494,6 @@
             <socket type="mcrequest"/>
         </output>
 
-    </dsm>
-
-    <dsm name="dsm308" location="anderson" id="8" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
-
-        <serialSensor IDREF="VCSEL" devicename="/dev/dsmser2" id="110" suffix="VXL"/>
-
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
-            <sample id="1" rate="500">
-                <variable name="THIML1" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
-                    <parameter name="gain" value="4" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.0" type="float"/>
-                    <parameter name="corIntercept" value="0.0" type="float"/>
-                    <linear slope="1.0" intercept="0.0" units="deg_C"/>
-                </variable>
-                <variable name="THIML2" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
-                    <parameter name="gain" value="4" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.0" type="float"/>
-                    <parameter name="corIntercept" value="0.0" type="float"/>
-                    <linear slope="1.0" intercept="0.0" units="deg_C"/>
-                </variable>
-            </sample>
-        </sensor>
-
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_ANDRSN" units="deg_C">
-                </variable>
-            </sample>
-        </sensor>
-
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
     </dsm>
 
     <dsm name="dsm307" location="chem" id="7" rserialPort="30002">
@@ -595,12 +550,46 @@
         </output>
     </dsm>
 
+    <dsm name="dsm308" location="anderson" id="8" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+            <sample id="1" rate="500">
+                <variable name="THIML1" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/>
+                    <parameter name="corIntercept" value="0.0" type="float"/>
+                    <linear slope="1.0" intercept="0.0" units="deg_C"/>
+                </variable>
+                <variable name="THIML2" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/>
+                    <parameter name="corIntercept" value="0.0" type="float"/>
+                    <linear slope="1.0" intercept="0.0" units="deg_C"/>
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_ANDRSN" units="deg_C">
+                </variable>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
     <dsm name="dsm310" location="aerosol" id="10" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="310"/>
 
-        <serialSensor IDREF="Water_CN_Counter"
-                devicename="/dev/dsmser1" id="110">
-        </serialSensor>
+        <serialSensor IDREF="Water_CN_Counter" devicename="/dev/dsmser1" id="110" suffix="WCN"/>
+        <serialSensor IDREF="CDFC" devicename="/dev/dsmser2" id="120" suffix="CDFC"/>
+        <serialSensor IDREF="VCSEL" devicename="/dev/dsmser3" id="130" suffix="VXL"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
@@ -612,6 +601,13 @@
                     <linear slope="1.0" intercept="0.0" units="hPa"/>
                 </variable>
                 <variable name="PHIML2" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/>
+                    <parameter name="corIntercept" value="0.0" type="float"/>
+                    <linear slope="1.0" intercept="0.0" units="hPa"/>
+                </variable>
+                <variable name="TCAB" units="V" longname="Cabin Temperature at AEROSOL Rack Location">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0" type="float"/>
