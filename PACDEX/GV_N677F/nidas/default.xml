@@ -59,7 +59,7 @@
         <sample id="0323" rate="50" process="false"><variable name="flt_pth_accel" units="G" longname="flt pth accel"/></sample>
         <sample id="0324" rate="50">
           <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-            <linear slope="1.0" intercept="-0.01" units="degree"/>
+            <linear slope="1.0" intercept="0.43" units="degree"/>
           </variable>
         </sample>
         <sample id="0325" rate="50"><variable name="ROLL" units="degree"   longname="IRS Aircraft Roll Angle"/></sample>
@@ -295,8 +295,8 @@
         <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
         <sample id="1" rate="1" scanfFormat="SWS %d %*d %f %f %d %d %d %*c %*f %*d %*d %*d %*d %*d %*f %*d">
             <variable name="VTIME" units="second" longname="VCSEL Timestamp"/>
-            <variable name="AT" units="deg_C" longname="VCSEL Ambiant Temperature"/>
-            <variable name="PS" units="torr" longname="VCSEL Ambiant Pressure"/>
+            <variable name="AT" units="deg_C" longname="VCSEL Ambient Temperature"/>
+            <variable name="PS" units="torr" longname="VCSEL Ambient Pressure"/>
             <variable name="LSRTMP" units="ohm" longname="VCSEL Laser Temperature"/>
             <variable name="SETTMP" units="ohm" longname="VCSEL Set Temperature"/>
             <variable name="TCC" units="count" longname="VCSEL Thermoelectric Cooler Current"/>
@@ -309,6 +309,42 @@
         </sample>
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
+
+    <serialSensor ID="CFDC" class="DSMSerialSensor"
+        baud="38400" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="%*d %f %f %f %f %f %f %f">
+            <variable name="AT" units="deg_C" longname="CFDC Ambiant Temperature"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="CCN" class="DSMSerialSensor"
+        baud="57600" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="%f %f %f %f %f %f %f %f %f">
+            <variable name="AT" units="deg_C" longname="CCN Sample Temperature"/>
+            <variable name="T1COLA" units="deg_C" longname="CCN Column A top of Column Temp"/>
+            <variable name="T3COLA" units="deg_C" longname="CCN Column A bottom of Column Temp"/>
+            <variable name="T1COLB" units="deg_C" longname="CCN Column B top of Column Temp"/>
+            <variable name="T3COLB" units="deg_C" longname="CCN Column B bottom of Column Temp"/>
+            <variable name="CCNA" units="#/cm3" longname="CCN Concentration Column A"/>
+            <variable name="CCNB" units="#/cm3" longname="CCN Concentration Column B"/>
+            <variable name="FLOWA" units="cm3/min" longname="CCN Sample Flow Column B"/>
+            <variable name="FLOWB" units="cm3/min" longname="CCN Sample Flow Column B"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="SP2" class="DSMSerialSensor"
+        baud="57600" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="%f %f %f">
+            <variable name="CIP" units="#/cm3" longname="SP2 Concentration Incand Particles"/>
+            <variable name="YAGP" units="V" longname="SP2 YAG Power"/>
+            <variable name="FLOW" units="cc/min" longname="SP2 Sample Flow Rate"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+
 
 </sensorcatalog>
 <site name="GV_N677F" class="raf.Aircraft">
@@ -493,7 +529,6 @@
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-
     </dsm>
 
     <dsm name="dsm307" location="chem" id="7" rserialPort="30002">
@@ -553,6 +588,9 @@
     <dsm name="dsm308" location="anderson" id="8" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
 
+        <serialSensor IDREF="CCN" devicename="/dev/dsmser1" id="110" suffix="CCN"/>
+        <serialSensor IDREF="SP2" devicename="/dev/dsmser2" id="120" suffix="SP2"/>
+
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="THIML1" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
@@ -588,7 +626,7 @@
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="310"/>
 
         <serialSensor IDREF="Water_CN_Counter" devicename="/dev/dsmser1" id="110" suffix="WCN"/>
-        <serialSensor IDREF="CDFC" devicename="/dev/dsmser2" id="120" suffix="CDFC"/>
+        <serialSensor IDREF="CFDC" devicename="/dev/dsmser2" id="120" suffix="CFDC"/>
         <serialSensor IDREF="VCSEL" devicename="/dev/dsmser3" id="130" suffix="VXL"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
