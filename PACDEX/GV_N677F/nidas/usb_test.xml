@@ -19,12 +19,7 @@
 <site name="GV_N677F" class="raf.Aircraft">
     <parameter name="tailNumber" value="N677F" type="string"/>
 
-                <!--
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="10" type="int"/>
-                -->
-                <!-- gain=4,bipolar=F gives a range of 0-5V -->
-    <dsm name="cvi" location="cjwlap" id="77" rserialPort="30002" derivedData="sock::58800">
+    <dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002" derivedData="sock::58800">
         <!--
         -->
         <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_007">
@@ -39,8 +34,8 @@
             <socket type="server" port="30000"/>
         </output>
         <output class="RawSampleOutputStream" sorterLength="0">
-            <fileset dir="/var/tmp"
-                file="${DSM}_%Y%m%d_%H%M%S.dat"
+            <fileset dir="/home/data"
+                file="usb_%Y%m%d_%H%M%S.dat"
                 length="1800">
             </fileset>
         </output>
