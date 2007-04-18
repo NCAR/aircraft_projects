@@ -8,7 +8,6 @@
     xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
     name="PACDEX"
     system="GV_N677F"
-    config="default.xml"
     version="$LastChangedRevision: 2514 $"
     >
 <sensorcatalog>
@@ -586,14 +585,12 @@
                     <parameter name="corIntercept" value="-0.383492" type="float"/>
                     <linear slope="103.42" intercept="0" units="hPa"/>
                 </variable>
-<!-- PCAB                 | 2007-04-04 23:02:56 | {-0.365203,1.17009} -->
                 <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.17009" type="float"/>
                     <parameter name="corIntercept" value="-0.365203" type="float"/>
-                    <linear slope="108.09" intercept="-1.3596" units="hPa"/>
-                    <poly coefs="-3.22 108.567 -0.016511" units="deg_C"/>
+                    <poly coefs="-3.22 108.567 -0.016511" units="hPa"/>
                 </variable>
             </sample>
         </sensor>
@@ -905,7 +902,7 @@
             baud="38400" parity="none" databits="8" stopbits="1" 
             devicename="/dev/ttyS5" id="40">
         <!-- 5.89   825.55   27.54   5299  18015    290    117\r\n -->
-            <sample id="1" scanfFormat="%f%f%f%f%f%f%f">
+            <sample id="1" scanfFormat="%f%f%f%f%f%f%f" rate="1">
                 <variable name="H2OR" units="g/m^3"/>
                 <variable name="PDLR" units="mb"/>
                 <variable name="TTDLR" units="degC"/>

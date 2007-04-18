@@ -511,21 +511,21 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.20597" type="float"/>
                     <parameter name="corIntercept" value="-0.319817" type="float"/>
-                    <poly coefs="-83.8414 23.2536 0.232697" units="deg_C"/>
+                    <poly coefs="-85.408 23.9978 0.139231" units="deg_C"/>
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.19836" type="float"/>
                     <parameter name="corIntercept" value="-0.270368" type="float"/>
-                    <poly coefs="-88.524 25.3131 0.0329609" units="deg_C"/>
+                    <poly coefs="-89.26 25.7059 -0.0243674" units="deg_C"/>
                 </variable>
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.18032" type="float"/>
                     <parameter name="corIntercept" value="-0.169412" type="float"/>
-                    <poly coefs="-88.524 25.2639 0.0229139" units="deg_C"/>
+                    <poly coefs="-88.7783 25.377 0.00319598" units="deg_C"/>
                 </variable>
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain" value="2" type="float"/>
@@ -585,13 +585,12 @@
                     <parameter name="corIntercept" value="-0.383492" type="float"/>
                     <linear slope="103.42" intercept="0" units="hPa"/>
                 </variable>
-<!-- PCAB                 | 2007-04-04 23:02:56 | {-0.365203,1.17009} -->
                 <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.17009" type="float"/>
                     <parameter name="corIntercept" value="-0.365203" type="float"/>
-                    <linear slope="108.09" intercept="-1.3596" units="hPa"/>
+                    <poly coefs="-3.22 108.567 -0.016511" units="hPa"/>
                 </variable>
             </sample>
         </sensor>
@@ -711,7 +710,7 @@
         </output>
     </dsm>
 
-    <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002">
+    <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="LWO"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS2" id="730" suffix="_LWO"/>
@@ -719,7 +718,7 @@
         <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_007">
             <parameter name="SerialNumber" value="001" type="string"/>
             <parameter name="RESOLUTION" value="25" type="int"/>
-            <sample id="1">
+            <sample id="1" rate="1">
                 <variable name="SHADOR" units="count" longname="High Speed 2DC Shadow-or count"/>
             </sample>
         </sensor>
@@ -746,18 +745,11 @@
     <dsm name="dsmRWO" location="RWO" id="47" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="RWO"/>
 
-        <serialSensor IDREF="Mensor_6101" devicename="/dev/ttyS1" id="114">
-            <sample id="1">
-                <variable name="ADNO" units="hPa" longname="Vertical Differential Pressure, Radome"/>
-            </sample>
-        </serialSensor>
-
-<!--
         <serialSensor class="raf.UHSAS_Serial" devicename="/dev/ttyS1" id="330" suffix="UHS"
             baud="115200" parity="none" databits="8" stopbits="1">
 
             <parameter name="SerialNumber" value="001" type="string"/>
-            <sample id="1">
+            <sample id="1" rate="10">
                 <variable name="AUHSAS" length="101" units="count" longname="UHSAS Raw Count Histogram" count="true"/>
                 <variable name="USCAT" units="V" longname="UHSAS Scatter"/>
                 <variable name="UCURR" units="V" longname="UHSAS Current"/>
@@ -772,9 +764,9 @@
                 <variable name="UAUX" units="V" longname="UHSAS Auxilary"/>
                 <variable name="UFLOW" units="sccm" longname="UHSAS Flow"/>
             </sample>
-            <message separator="\xff\xff" position="beg" length="0"/>
+            <message separator="\xff\xff\x00" position="beg" length="220"/>
         </serialSensor>
--->
+
 <!-- RICE                 | 2007-04-12 22:41:32 | {-0.0391416,1.46794} -->
         <!--
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
@@ -793,6 +785,157 @@
             <socket type="mcrequest"/>
         </output>
     </dsm>
+    <dsm name="cvi-dsm" location="CVI" id="20" rserialPort="30002"
+    	derivedData="sock::58800">
 
+        <sensor class="DSC_A2DSensor"
+            devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
+            <parameter name="rate" type="int" value="10"/>
+            	<!--
+            		gain=16, bipolar="false":  0 to 1.25V
+	            	gain=8, bipolar="false":  0 to 2.5V
+	            	gain=4, bipolar="false":  0 to 5V
+	            	gain=2, bipolar="false":  0 to 10V
+            		gain=16, bipolar="true":  -.625 to .625
+	            	gain=8, bipolar="true":  -1.25 to 1.25
+	            	gain=4, bipolar="true":  -2.5 to 2.5
+	            	gain=2, bipolar="true":  -5  to 5
+	            	gain=1, bipolar="true":  -10  to 10
+	        -->
+            <sample id="1" rate="10">
+                <variable name="CVF1" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                </variable>
+                <variable name="CVFX0" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                </variable>
+                <variable name="CVFX1" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                </variable>
+                <variable name="CVFX2" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                </variable>
+                <variable name="CVFX3" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                </variable>
+                <variable name="CVFX4" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                </variable>
+                <variable name="CVFX5" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                </variable>
+                <variable name="CVFX6" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                </variable>
+                <variable name="CVFX7" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                </variable>
+                <variable name="CVFX8" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                </variable>
+                <variable name="CVPCN" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                </variable>
+            </sample>
+        </sensor>
+        <sensor class="DSC_A2DSensor"
+            devicename="/dev/dmmat_a2d1" id="20" latency="0.25">
+            <parameter name="rate" type="int" value="50"/>
+            <sample id="1" rate="50">
+            	<!--
+            		gain=16, bipolar="false":  0 to 1.25V
+	            	gain=8, bipolar="false":  0 to 2.5V
+	            	gain=4, bipolar="false":  0 to 5V
+	            	gain=2, bipolar="false":  0 to 10V
+            		gain=16, bipolar="true":  -.625 to .625
+	            	gain=8, bipolar="true":  -1.25 to 1.25
+	            	gain=4, bipolar="true":  -2.5 to 2.5
+	            	gain=2, bipolar="true":  -5  to 5
+	            	gain=1, bipolar="true":  -10  to 10
+	        -->
+                <!--
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="10" type="int"/>
+                -->
+                <!-- gain=16,bipolar=F gives a range of 0-1.25V -->
+                <variable name="CVTT" units="V" minValue="0.05">
+                    <parameter name="gain" value="16" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVTP" units="V" minValue="0.05">
+                    <parameter name="gain" value="16" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVTS" units="V" minValue="0.05">
+                    <parameter name="gain" value="16" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVTCN" units="V" minValue="0.05">
+                    <parameter name="gain" value="16" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+                <variable name="CVTAI" units="V" minValue="0.05">
+                    <parameter name="gain" value="16" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+            </sample>
+        </sensor>
+        <sensor class="DSC_PulseCounter" devicename="/dev/dmmat_cntr0"
+            id="30">
+            <sample id="1" rate="1">
+                <variable name="CNT1" units="" longname="CN Counts"/>
+            </sample>
+        </sensor>
+       <!-- TDL -->
+       <serialSensor class="DSMSerialSensor"
+            baud="38400" parity="none" databits="8" stopbits="1" 
+            devicename="/dev/ttyS5" id="40">
+        <!-- 5.89   825.55   27.54   5299  18015    290    117\r\n -->
+            <sample id="1" scanfFormat="%f%f%f%f%f%f%f" rate="1">
+                <variable name="H2OR" units="g/m^3"/>
+                <variable name="PDLR" units="mb"/>
+                <variable name="TTDLR" units="degC"/>
+                <variable name="TDLsignal" units="cnts"/>
+                <variable name="TDLline" units="cnts"/>
+                <variable name="TDLlaser" units="cnts"/>
+                <variable name="TDLzero" units="cnts"/>
+            </sample>
+            <message separator="\n" position="end" length="0"/>
+        </serialSensor>
+
+       <!-- CPC -->
+       <!--
+       <serialSensor class="DSMSerialSensor"
+            baud="9600" parity="even" databits="7" stopbits="1">
+            <message separator="\n" position="end" length="0"/>
+        </serialSensor>
+        -->
+
+        <!--
+        -->
+        <output class="RawSampleOutputStream">
+            <socket type="server" port="30000"/>
+        </output>
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <fileset dir="/var/tmp"
+                file="${DSM}_%Y%m%d_%H%M%S.dat"
+                length="1800">
+            </fileset>
+        </output>
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
 </site>
 </project>
