@@ -253,18 +253,20 @@
     <serialSensor ID="Water_CN_Counter" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1"
         init_string="SM,4,1\r">
-        <sample id="1" rate="10" scanfFormat="D,%f,%f,%f,%f,%f,%f,%f,%f">
+        <sample id="1" rate="10" scanfFormat="D,%f,%f,%*f,%f,%f,%f,%f,%f">
 	    <variable name="MCN" units="none" longname="WCN Current Operating Mode"/>
 	    <variable name="SFLCN" units="none" longname="WCN Status Flags"/>
-	    <variable name="CONCN" units="#/cm3" longname="WCN Aggregated Concentration"/>
+	    <!--variable name="CONCN" units="#/cm3" longname="WCN Aggregated Concentration"/-->
 	    <variable name="ETCN" units="s" longname="WCN Sample Time (Elapsed Time)"/>
 	    <variable name="LTCN" units="s" longname="WCN Live Time"/>
-	    <variable name="CNTS" units="count" longname="WCN Accumulated Particle Counts"/>
+	    <variable name="CNTS" units="count" longname="WCN Accumulated Particle Counts" count="true"/>
 	    <variable name="PCN" units="hPa" longname="WCN Absolute Pressure"/>
 	    <variable name="RPCN" units="none" longname="WCN Raw Photometric Value"/>
         </sample>
         <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
-	    <variable name="FSACN" units="cm3/min" longname="WCN Sample Flow Rate"/>
+	    <variable name="FCNC" units="cm3/min" longname="WCN Sample Flow Rate">
+                 <linear slope="0.1" intercept="0.0" units="vlpm"/>
+            </variable>
 	    <variable name="FTCN" units="cm3/min" longname="WCN Total Flow Rate"/>
 	    <variable name="FSHCN" units="cm3/min" longname="WCN Sheath Flow Rate"/>
 	    <variable name="PACN" units="hPa" longname="WCN Absolute Pressure"/>
@@ -598,36 +600,36 @@
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
 <!-- THIML1               | 2007-04-04 19:52:21 | {-0.0492457,1.41165} -->
-                <variable name="THIML1" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
+                <variable name="THIML1" units="V" longname="HIMIL Tip Temperature">
                     <parameter name="gain" value="1" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.41165" type="float"/>
                     <parameter name="corIntercept" value="-0.0492457" type="float"/>
-                    <linear slope="10.0" intercept="0.0" units="deg_C"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
 <!-- THIML2               | 2007-04-04 19:57:56 | {-0.309013,1.42922} -->
-                <variable name="THIML2" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
+                <variable name="THIML2" units="V" longname="HIMIL Tip Temperature">
                     <parameter name="gain" value="1" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.42922" type="float"/>
                     <parameter name="corIntercept" value="-0.309013" type="float"/>
-                    <linear slope="10.0" intercept="0.0" units="deg_C"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
 <!-- THIML3               | 2007-04-04 19:40:13 | {-0.342956,1.43902} -->
-                <variable name="THIML3" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
+                <variable name="THIML3" units="V" longname="HIMIL Tip Temperature">
                     <parameter name="gain" value="1" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.43902" type="float"/>
                     <parameter name="corIntercept" value="-0.342956" type="float"/>
-                    <linear slope="10.0" intercept="0.0" units="deg_C"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
 <!-- THIML4               | 2007-04-04 19:45:45 | {-0.271193,1.43859} -->
-                <variable name="THIML4" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
+                <variable name="THIML4" units="V" longname="HIMIL Tip Temperature">
                     <parameter name="gain" value="1" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.43859" type="float"/>
                     <parameter name="corIntercept" value="-0.271193" type="float"/>
-                    <linear slope="10.0" intercept="0.0" units="deg_C"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
             </sample>
         </sensor>
@@ -654,20 +656,20 @@
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
 <!-- PHIML1               | 2007-04-04 20:09:15 | {-0.145512,1.11094} -->
-                <variable name="PHIML1" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
+                <variable name="PHIML1" units="V" longname="Static Pressure inside of HIMIL @ 434L">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.11094" type="float"/>
                     <parameter name="corIntercept" value="-0.145512" type="float"/>
-                    <linear slope="1.0" intercept="0.0" units="hPa"/>
+                    <poly coefs="103.165 221.94 -0.02299" units="hPa"/>
                 </variable>
 <!-- PHIML2               | 2007-04-04 20:15:37 | {-0.191946,1.12202} -->
-                <variable name="PHIML2" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
+                <variable name="PHIML2" units="V" longname="Differential Pressure inside of HIMIL @ 434L">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.12202" type="float"/>
                     <parameter name="corIntercept" value="-0.191946" type="float"/>
-                    <linear slope="1.0" intercept="0.0" units="hPa"/>
+                    <poly coefs="874.898 -222.354 -0.0242" units="hPa"/>
                 </variable>
 <!-- TCAB                 | 2007-04-04 20:19:45 | {-0.297405,1.1442} -->
                 <variable name="TCAB" units="V" longname="Cabin Temperature at AEROSOL Rack Location">
@@ -675,7 +677,7 @@
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.1442" type="float"/>
                     <parameter name="corIntercept" value="-0.297405" type="float"/>
-                    <linear slope="1.0" intercept="0.0" units="hPa"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
             </sample>
         </sensor>
