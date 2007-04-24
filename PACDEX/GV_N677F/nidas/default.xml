@@ -733,16 +733,24 @@
             <parameter name="SerialNumber" value="001" type="string"/>
             <sample id="1" rate="10">
                 <variable name="AUHSAS" length="100" units="count" longname="UHSAS Raw Count Histogram" count="true"/>
-                <variable name="USCAT" units="V" longname="UHSAS Scatter"/>
-                <variable name="UCURR" units="V" longname="UHSAS Current"/>
-                <variable name="USMPFLW" units="sccm" longname="UHSAS Sample Flow"/>
-                <variable name="UREF" units="V" longname="UHSAS Reference"/>
-                <variable name="UTEMP" units="V" longname="UHSAS Temperature"/>
-                <variable name="USHFLW" units="sccm" longname="UHSAS Sheath Flow"/>
-                <variable name="UDIFF" units="V" longname="UHSAS Diff"/>
-                <variable name="UBTMP" units="K" longname="UHSAS Box Temperature"/>
+                <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
+                <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
+                <variable name="USMPFLW" units="V" longname="UHSAS Sample Flow">
+                    <linear slope="21.26" intercept="-0.155" units="sccm"/>
+                </variable>
+                <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
+                <variable name="UTEMP" units="V" longname="UHSAS Temperature in Canister, signal"/>
+                <variable name="USHFLW" units="V" longname="UHSAS Air Sheath Flow">
+                    <linear slope="250.0" intercept="0.0" units="sccm"/>
+                </variable>
+                <variable name="UDIFF" units="V" longname="UHSAS Absolute Pressure in Canister, signal"/>
+                <variable name="UBTMP" units="V" longname="UHSAS Temperature in Canister">
+                    <linear slope="173.722" intercept="0.0" units="K"/>
+                </variable>
                 <variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/>
-                <variable name="UPRESS" units="kPa" longname="UHSAS Pressure"/>
+                <variable name="UPRESS" units="V" longname="UHSAS Absolute Pressure in Canister">
+                    <linear slope="22.222" intercept="10.556" units="kPa"/>
+                </variable>
                 <variable name="UAUX" units="V" longname="UHSAS Auxilary"/>
                 <variable name="UFLOW" units="sccm" longname="UHSAS Flow"/>
             </sample>
