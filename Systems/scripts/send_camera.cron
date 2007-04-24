@@ -1,0 +1,25 @@
+#!/bin/csh
+#
+# Script to transmit latest camera image to the ground.
+#
+# This is set up to run out of a cron job every 2 minutes
+# 0-59/2 * * * * /home/local/raf/nimbus/scripts/send.cron
+#
+
+set aircraft = gv_
+cd ` ls /mnt/r2/camera | tail -n 1`
+
+#
+# Get list of new files.  This pattern oughta work for the next 90+ years...
+#
+set file_list = `ls | tail -n 1`
+
+# Wait to make sure all data was transferred
+sleep 2
+
+# Compress and send.
+foreach file ($file_list)
+  gzip ${file}
+  mv ${file} ${aircraft}_${file}.gz
+  pqinsert -v ${aircraft}_${file}.gz
+end
