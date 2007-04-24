@@ -1,0 +1,31 @@
+#!/bin/csh
+#
+# Launches nimbus for real-time aircraft mode.
+
+setenv XMIT_DIR /tmp/xmit
+
+# Make sure it exists.
+/bin/mkdir -p $XMIT_DIR
+
+# Expire any existing stuff (or is this done on the ground side???)
+/usr/local/ldm/bin/pqexpire -a 0.001 -i 0 -p "nimbus_sql"
+
+# Remove any existing sql files.
+set nonomatch
+foreach file (${XMIT_DIR}/*sql*)
+  /bin/rm $file
+end
+
+# Remove AVAPS DropSonde files.
+/bin/rm -f /mnt/r2/send_to_grnd/D20*
+/bin/rm -f /tmp/avaps-rt
+
+# Start google map/earth updater onboard.
+pkill update
+/var/www/html/rt_flights/trex/update/update &
+
+# Fire up nimbus in real-time with transmit on.
+nimbus -rt3 -x
+
+# remove google updater.
+pkill update
