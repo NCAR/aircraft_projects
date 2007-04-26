@@ -304,6 +304,33 @@
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
 
+    <serialSensor ID="CDP_hack" class="DSMSerialSensor"
+        baud="38400" parity="none" databits="8" stopbits="1">
+
+        <parameter name="NCHANNELS" type="int" value="30"/>
+        <parameter name="RANGE" type="int" value="0"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
+        <parameter name="TRANSIT_REJ" type="int" value="1"/>
+        <parameter name="DOF_REJ" type="int" value="1"/>
+        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+        <parameter name="ATT_ACCEPT" type="int" value="95"/>
+        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
+        <parameter name="CT_METHOD" type="int" value="0"/>
+        <parameter name="MAX_WIDTH" type="int" value="10000"/>
+        <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
+
+        <sample id="1" scanfFormat="quack %d">
+            <variable name="FREF" units="V" longname="CDP Laser Reference Voltage"/>
+            <variable name="FTMP" units="deg_C" longname="CDP Housekeeping Data"/>
+            <variable name="FRNG" units="" longname="CDP Size Range Category"/>
+            <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
+            <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
+            <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
+            <variable name="ACDP" length="30" units="count" longname="CDP Raw Accumulation (per cell)" count="true"/>
+        </sample>
+        <message length="156"/>
+    </serialSensor>
+
     <serialSensor ID="VCSEL" class="DSMSerialSensor"
         baud="19200" parity="none" databits="8" stopbits="1">
         <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
@@ -697,7 +724,8 @@
     <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="LWO"/>
 
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS2" id="730" suffix="_LWI"/>
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS2" id="740" suffix="_LWIX"/>
+        <serialSensor IDREF="CDP_hack" devicename="/dev/ttyS1" id="730" suffix="_LWI"/>
 
         <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_LWO">
             <parameter name="SerialNumber" value="001" type="string"/>
@@ -719,15 +747,16 @@
                 </variable>
             </sample>
         </sensor>
-
-        <output class="RawSampleOutputStream">
+        <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
+        </output>
+        <output class="RawSampleOutputStream">
+            <socket type="server" port="30000"/>
         </output>
     </dsm>
 
     <dsm name="dsmRWO" location="RWO" id="47" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="RWO"/>
-
         <serialSensor class="raf.UHSAS_Serial" devicename="/dev/ttyS1" id="330" suffix="_RWI"
             baud="115200" parity="none" databits="8" stopbits="1">
 
@@ -773,7 +802,12 @@
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
+        <output class="RawSampleOutputStream">
+            <socket type="server" port="30000"/>
+        </output>
     </dsm>
+
+
     <dsm name="cvi-dsm" location="CVI" id="20" rserialPort="30002"
     	derivedData="sock::58800">
 
