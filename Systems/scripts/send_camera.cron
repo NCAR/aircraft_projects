@@ -1,25 +1,52 @@
-#!/bin/csh
+#!/bin/sh
 #
 # Script to transmit latest camera image to the ground.
 #
 # This is set up to run out of a cron job every 2 minutes
 # 0-59/2 * * * * /home/local/raf/nimbus/scripts/send.cron
 #
+key=GV_camera_
 
-set aircraft = gv_
-cd ` ls /mnt/r2/camera | tail -n 1`
+# change into the current flight's folder
+cd /mnt/r2/camera
+cd `ls --file-type -rt | grep '/$' | tail -n 1`
 
-#
-# Get list of new files.  This pattern oughta work for the next 90+ years...
-#
-set file_list = `ls | tail -n 1`
+# create a folder to hold the sent images
+[ -d .sent ] || mkdir .sent
 
-# Wait to make sure all data was transferred
-sleep 2
+# ----- start DEBUG ---------------------------------------------
+# cd /mnt/r2/camera/506tf02
+# [ -d .sent ] || mkdir .sent
+# files=`ls -rt | tail -n 10`
+# for file in ${files[*]}; do
+#   title=`echo $file | sed 's/\.jpg//'`
+# 
+#   convert $file -crop 755x715+150+0 -modulate 85,,97 \
+#           -sharpen 0.0x1.0 -scale 50% \
+#           -gravity southeast -fill white -annotate 0 $title \
+#           .sent/$key$file
+# 
+#   ls -l .sent/$key$file
+#   pqinsert -v .sent/$key$file
+#   sleep 5
+# done
+# exit
+# ----- end DEBUG -----------------------------------------------
 
-# Compress and send.
-foreach file ($file_list)
-  gzip ${file}
-  mv ${file} ${aircraft}_${file}.gz
-  pqinsert -v ${aircraft}_${file}.gz
-end
+# get the penultimate new file
+file=`ls -rt | tail -n 2 | head -n 1`
+title=`echo $file | sed 's/\.jpg//'`
+
+# exit if this file is older then 3 minutes
+let dtime=`date +%s`-`stat -c %X $file`
+#[ $dtime -gt 180 ] && echo "not sending out old image: "$PWD"/"$file
+[ $dtime -gt 180 ] && exit
+
+# alter the image
+convert $file -crop 755x715+150+0 -modulate 85,,97 \
+        -sharpen 0.0x1.0 -scale 50% \
+        -gravity southeast -fill white -annotate 0 $title \
+        .sent/$key$file
+
+# send
+/usr/local/ldm/bin/pqinsert -v .sent/$key$file
