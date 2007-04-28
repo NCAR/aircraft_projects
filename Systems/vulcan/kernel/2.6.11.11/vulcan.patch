@@ -1,0 +1,115 @@
+diff -PruN --exclude='*.o' --exclude '*.ko' --exclude '*.mod.c' --exclude=.config --exclude=stamp-kernel-configure linux-source-2.6.11.11-arcom1_orig/arch/arm/mach-ixp4xx/mercury-pc104.c linux-source-2.6.11.11-arcom1/arch/arm/mach-ixp4xx/mercury-pc104.c
+--- linux-source-2.6.11.11-arcom1_orig/arch/arm/mach-ixp4xx/mercury-pc104.c	2005-06-07 10:13:12.000000000 -0600
++++ linux-source-2.6.11.11-arcom1/arch/arm/mach-ixp4xx/mercury-pc104.c	2007-04-27 13:28:27.000000000 -0600
+@@ -56,10 +56,18 @@
+ 		0x818, 2, 0x0000,     /* memory window 1 start addr (bits 12-23), 16 bit */
+ 		0x81a, 2, 0x0fff,     /* memory window 1 end addr (bits 12-23), 0 wait states */
+ 		0x81c, 2, 0x0000,     /* memory window 1 write enable */
++/*
++ * I/O window 0 (8-bit) was  0000-0fff and is now 0000-07ff, and
++ * I/O window 1 (16-bit) was 1000-1fff and is now 0800-0fff
++ */
++//		0x808, 2, 0x0000,     /* I/O window 0 start addr */
++//		0x80a, 2, 0x0fff,     /* I/O window 0 end addr */
+ 		0x808, 2, 0x0000,     /* I/O window 0 start addr */
+-		0x80a, 2, 0x0fff,     /* I/O window 0 end addr */
+-		0x80c, 2, 0x1000,     /* I/O window 1 start addr */
+-		0x80e, 2, 0x1fff,     /* I/O window 1 end addr */
++		0x80a, 2, 0x07ff,     /* I/O window 0 end addr */
++//		0x80c, 2, 0x1000,     /* I/O window 1 start addr */
++//		0x80e, 2, 0x1fff,     /* I/O window 1 end addr */
++		0x80c, 2, 0x0800,     /* I/O window 1 start addr */
++		0x80e, 2, 0x0fff,     /* I/O window 1 end addr */
+ 		0x807, 1, 0x10,       /* I/O window control - window 0 is 8 bit, window 1 is 16 bit */
+ 		0x806, 1, 0xc3,       /* enable I/O windows 0 and 1 and memory windows 0 and 1 */
+ 	};
+diff -PruN --exclude='*.o' --exclude '*.ko' --exclude '*.mod.c' --exclude=.config --exclude=stamp-kernel-configure linux-source-2.6.11.11-arcom1_orig/drivers/serial/8250.c linux-source-2.6.11.11-arcom1/drivers/serial/8250.c
+--- linux-source-2.6.11.11-arcom1_orig/drivers/serial/8250.c	2005-06-07 10:13:09.000000000 -0600
++++ linux-source-2.6.11.11-arcom1/drivers/serial/8250.c	2007-04-27 17:32:30.000000000 -0600
+@@ -131,6 +131,9 @@
+ struct uart_8250_port {
+ 	struct uart_port	port;
+ 	struct timer_list	timer;		/* "no irq" timer */
++/* GDM */
++	struct timer_list	rcv_timer;	/* receive timeout timer */
++	__u32                   last_rx;	/* previous number of characters received */
+ 	struct list_head	list;		/* ports on this IRQ */
+ 	unsigned int		capabilities;	/* port capabilities */
+ 	unsigned int		tx_loadsz;	/* transmit fifo load size */
+@@ -260,7 +263,7 @@
+ 		.name		= "XScale",
+ 		.fifo_size	= 32,
+ 		.tx_loadsz	= 32,
+-		.fcr		= UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10,
++		.fcr		= UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_11,
+ 		.flags		= UART_CAP_FIFO,
+ 	},
+ 	[PORT_XR16550] = {
+@@ -1331,6 +1334,30 @@
+ 	mod_timer(&up->timer, jiffies + timeout);
+ }
+ 
++/* GDM */
++static void serial8250_rcv_timeout(unsigned long data)
++{
++	struct uart_8250_port *up = (struct uart_8250_port *)data;
++	unsigned int iir;
++        /*
++        printk("ttyS%d: checking rcv_timeout, rx=%ld, last_rx=%d\n",
++            up->port.line,up->port.icount.rx,up->last_rx);
++        */
++
++        if (up->port.icount.rx == up->last_rx) {
++            if (!up->port.cons || up->port.line != up->port.cons->index) {
++                iir = serial_in(up, UART_IIR);
++                printk("ttyS%d: checking rcv_timeout, iir&INT=%x\n",
++                    up->port.line,iir & UART_IIR_NO_INT);
++                spin_lock(&up->port.lock);
++                serial8250_handle_port(up, NULL);
++                spin_unlock(&up->port.lock);
++            }
++        }
++        else up->last_rx = up->port.icount.rx;
++        mod_timer(&up->rcv_timer, jiffies + HZ);
++}
++
+ static unsigned int serial8250_tx_empty(struct uart_port *port)
+ {
+ 	struct uart_8250_port *up = (struct uart_8250_port *)port;
+@@ -1487,6 +1514,12 @@
+ 		up->timer.data = (unsigned long)up;
+ 		mod_timer(&up->timer, jiffies + timeout);
+ 	} else {
++                if (!up->port.cons || up->port.line != up->port.cons->index) {
++                    up->rcv_timer.data = (unsigned long)up;
++                    up->rcv_timer.expires = jiffies + HZ;
++                    up->last_rx = 0;
++                    add_timer(&up->rcv_timer);
++                }
+ 		retval = serial_link_irq_chain(up);
+ 		if (retval)
+ 			return retval;
+@@ -1580,11 +1613,13 @@
+ 	 * the IRQ chain.
+ 	 */
+ 	(void) serial_in(up, UART_RX);
++        del_timer_sync(&up->rcv_timer);
+ 
+ 	if (!is_real_interrupt(up->port.irq))
+ 		del_timer_sync(&up->timer);
+ 	else
+ 		serial_unlink_irq_chain(up);
++
+ }
+ 
+ static unsigned int serial8250_get_divisor(struct uart_port *port, unsigned int baud)
+@@ -2004,6 +2039,9 @@
+ 		init_timer(&up->timer);
+ 		up->timer.function = serial8250_timeout;
+ 
++                init_timer(&up->rcv_timer);
++                up->rcv_timer.function = serial8250_rcv_timeout;
++
+ 		/*
+ 		 * ALPHA_KLUDGE_MCR needs to be killed.
+ 		 */
