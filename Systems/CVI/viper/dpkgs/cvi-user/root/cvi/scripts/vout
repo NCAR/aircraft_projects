@@ -4,36 +4,29 @@
 # on the CVI (/dev/dmmat_d2a0, and /dev/dmmat_d2a1).
 # Intended for bench testing.
 
-
 usage() {
     echo "usage: $0 p v p v p v ..."
-    echo "where p is an output pin number (0-4) and v is a voltage 0-5"
+    echo "where p is an output pin number (0-7) and v is a voltage 0-5"
     exit 1
 }
 
 [ $# -eq 0 ] && usage
 
-# pins 0-3 are on /dev/dmmat_d2a0
-dev0=/dev/dmmat_d2a0
-dev0args=()
+# pins 0-3 are on the first board
+# pins 4-7 are on the second board
+# One can control all pins 0-7 via /dev/dmmat_d2a0
+# (or pins 4-7 are 0-3 on /dev/dmmat_d2a1)
 
-# pin 4 is actually pin 0 on /dev/dmmat_d2a1
-dev1=/dev/dmmat_d2a1
-dev1args=()
+dev=/dev/dmmat_d2a0
+args=()
 
 while [ $# -gt 1 ]; do
     
     case $1 in
-        [0-3])
-            dev0args=(${dev0args[*]} $1)
+        [0-7])
+            args=(${args[*]} $1)
             shift
-            dev0args=(${dev0args[*]} $1)
-            shift
-            ;;
-        [4])
-            dev1args=(${dev1args[*]} $(( $1 - 1 )) )
-            shift
-            dev1args=(${dev1args[*]} $1)
+            args=(${args[*]} $1)
             shift
             ;;
         *)
@@ -43,10 +36,6 @@ while [ $# -gt 1 ]; do
     esac
 done
 
-if [ ${#dev0args[*]} -gt 0 ]; then
-    ck_aout $dev0 ${dev0args[*]}
-fi
-
-if [ ${#dev1args[*]} -gt 0 ]; then
-    ck_aout $dev1 ${dev1args[*]}
+if [ ${#args[*]} -gt 0 ]; then
+    ck_aout $dev ${args[*]}
 fi

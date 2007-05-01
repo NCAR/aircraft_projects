@@ -22,18 +22,6 @@ fi
 chmod 644 passwd
 chmod 600 shadow
  
-cd rc0.d
-[ -L K01adam ] || ln -s ../init.d/adam K01adam
-
-cd ../rc1.d
-[ -L K01adam ] || ln -s ../init.d/adam K01adam
-
-cd ../rc6.d
-[ -L K01adam ] || ln -s ../init.d/adam K01adam
-
-cd ../rc2.d
-[ -L S99adam ] || ln -s ../init.d/adam S99adam
-
 # Don't need nfs
 [ -L S19nfs-common ] && rm S19nfs-common
 

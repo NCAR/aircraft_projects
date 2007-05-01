@@ -16,4 +16,16 @@ chmod 600 /root/.ssh/id_dsa
 chmod 600 /root/.ssh/authorized_keys
 chmod 600 /root/.ssh/id_dsa.pub
 
+cd /etc/rc0.d
+[ -L K01cvi ] || ln -s ../init.d/cvi K01cvi
+
+cd ../rc1.d
+[ -L K01cvi ] || ln -s ../init.d/cvi K01cvi
+
+cd ../rc6.d
+[ -L K01cvi ] || ln -s ../init.d/cvi K01cvi
+
+cd ../rc2.d
+[ -L S99cvi ] || ln -s ../init.d/cvi S99cvi
+
 exit 0

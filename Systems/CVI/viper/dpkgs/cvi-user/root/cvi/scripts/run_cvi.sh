@@ -1,6 +1,6 @@
 #!/bin/sh
 
-source $HOME/.profile
+source /root/.profile
 
 dsm '$ADS3/projects/$PROJECT/$AIRCRAFT/nidas/cvi.xml'
 
