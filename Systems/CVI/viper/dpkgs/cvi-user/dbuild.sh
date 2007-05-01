@@ -3,6 +3,8 @@
 package=cvi-user
 pkgdest=../built/$package
 
+./rc_symlinks.sh
+
 [ -d $pkgdest ] || mkdir $pkgdest
 
 rsync --exclude=.svn -a root etc DEBIAN $pkgdest
