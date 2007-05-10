@@ -265,7 +265,7 @@
         </sample>
         <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
 	    <variable name="FCNC" units="cm3/min" longname="WCN Sample Flow Rate">
-                 <linear slope="0.1" intercept="0.0" units="vlpm"/>
+                 <linear slope="0.001" intercept="0.0" units="vlpm"/>
             </variable>
 	    <variable name="FTCN" units="cm3/min" longname="WCN Total Flow Rate"/>
 	    <variable name="FSHCN" units="cm3/min" longname="WCN Sheath Flow Rate"/>
@@ -292,14 +292,14 @@
         <parameter name="MAX_WIDTH" type="int" value="10000"/>
         <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
 
-        <sample id="1">
+        <sample id="1" rate="10">
             <variable name="FREF" units="V" longname="CDP Laser Reference Voltage"/>
             <variable name="FTMP" units="deg_C" longname="CDP Housekeeping Data"/>
             <variable name="FRNG" units="" longname="CDP Size Range Category"/>
             <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
             <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
             <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
-            <variable name="ACDP" length="30" units="count" longname="CDP Raw Accumulation (per cell)" count="true"/>
+            <variable name="ACDP" length="30" units="count" longname="CDP Raw Accumulation (per cell)"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
@@ -738,7 +738,7 @@
             <parameter name="SerialNumber" value="UHSAS001" type="string"/>
 
             <sample id="1" rate="10">
-                <variable name="AUHSAS" length="100" units="count" longname="UHSAS Raw Count Histogram" count="true"/>
+                <variable name="AUHSAS" length="100" units="count" longname="UHSAS Raw Count Histogram"/>
                 <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
                 <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
                 <variable name="USMPFLW" units="V" longname="UHSAS Sample Flow">
@@ -763,8 +763,6 @@
             <message separator="\xff\xff\x00" position="beg" length="234"/>
         </serialSensor>
 
-<!-- RICE                 | 2007-04-12 22:41:32 | {-0.0391416,1.46794} -->
-        <!--
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="RICE" units="V" longname="Raw Icing-Rate Indicator">
@@ -775,7 +773,6 @@
                 </variable>
             </sample>
         </sensor>
-        -->
 
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
