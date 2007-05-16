@@ -730,10 +730,12 @@
 
     <dsm name="dsmRWO" location="RWO" id="47" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="RWO"/>
+
         <serialSensor class="raf.UHSAS_Serial" devicename="/dev/ttyS1" id="330" suffix="_RWI"
             baud="115200" parity="none" databits="8" stopbits="1">
 
             <parameter name="SerialNumber" value="UHSAS001" type="string"/>
+            <parameter name="HSKP_SCALE" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000" type="int"/>
 
             <sample id="1" rate="10">
                 <variable name="AUHSAS" length="99" units="count" longname="UHSAS Raw Count Histogram"/>
