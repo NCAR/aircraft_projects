@@ -366,6 +366,60 @@
         <prompt string="\x1b\x02\x1d\x00" rate="1"/>
     </serialSensor>
 
+    <serialSensor ID="S200" class="raf.SPP200_Serial"
+        baud="38400" parity="none" databits="8" stopbits="1">
+
+        <parameter name="calFile" type="string" value="PMSspecs"/>
+
+        <parameter name="NCHANNELS" type="int" value="30"/>
+        <parameter name="RANGE" type="int" value="0"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
+        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
+        <parameter name="MAX_WIDTH" type="int" value="10000"/>
+        <parameter name="CHAN_THRESH" type="int" value="692 1040 1517 2157 4096 4231 4348 4537 4825 5251 5859 6703 8192 8345 8502 8682 8872 9070 9252 9432 9544 9737 9937 10166 10471 10797 11162 11499 11852 12288"/>
+
+        <sample id="1">
+            <variable name="PHGB" units="V" longname="SPP-200 High-Gain Baseline"/>
+            <variable name="PMGB" units="V" longname="SPP-200 Mid-Gain Baseline"/>
+            <variable name="PLGB" units="V" longname="SPP-200 Low-Gain Baseline"/>
+            <variable name="PFLW" units="cnts" longname="SPP-200 Flow">
+                <poly coefs="9.00095 -0.00973 2.56232e-6" units="std cm3/s"/>
+            </variable>
+            <variable name="PREF" units="V" longname="SPP-200 Laser Reference Voltage"/>
+            <variable name="PFLWS" units="cnts" longname="SPP-200 Sheath Flow">
+                <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>
+            </variable>
+            <variable name="PTMP" units="deg_C" longname="SPP-200 Detector Temperature"/>
+            <variable name="AS200" length="30" units="count" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT"/>
+        </sample>
+        <prompt string="\x1b\x02\x1d\x00" rate="1"/>
+        <message length="154"/>
+    </serialSensor>
+
+
+    <serialSensor ID="S300" class="raf.SPP300_Serial"
+        baud="38400" parity="none" databits="8" stopbits="1">
+
+        <parameter name="calFile" type="string" value="PMSspecs"/>
+
+        <parameter name="NCHANNELS" type="int" value="30"/>
+        <parameter name="RANGE" type="int" value="1"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
+        <parameter name="DOF_REJ" type="int" value="1"/>
+        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
+        <parameter name="MAX_WIDTH" type="int" value="10000"/>
+        <parameter name="CHAN_THRESH" type="int" value="38 92 194 376 678 1155 1880 2942 4096 4140 4238 4384 4590 4699 4807 4928 5027 5124 5255 5446 5673 5912 6164 6429 6754 7027 7310 7601 7901 8192"/>
+
+        <sample id="1">
+            <variable name="FREF3" units="V" longname="FSSP-300 Laser Reference Voltage"/>
+            <variable name="FTMP3" units="deg_C" longname="FSSP-300 Housekeeping Data"/>
+            <variable name="AS300" length="30" units="count" longname="SPP-300 (FSSP-300) Raw Accumulation (per cell) - DMT"/>
+        </sample>
+        <prompt string="\x1b\x02\x1d\x00" rate="1"/>
+    </serialSensor>
+
     <serialSensor ID="CDP" class="raf.CDP_Serial"
         baud="38400" parity="none" databits="8" stopbits="1">
 
@@ -710,8 +764,8 @@
     <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
-<!--        <serialSensor IDREF="S100" devicename="/dev/dsmser0" id="720" suffix="_109"/> -->
-<!--        <serialSensor IDREF="S100" devicename="/dev/dsmser1" id="730" suffix="_109"/> -->
+<!--        <serialSensor IDREF="S200" devicename="/dev/dsmser0" id="720" suffix="_109"/> -->
+<!--        <serialSensor IDREF="S300" devicename="/dev/dsmser1" id="730" suffix="_109"/> -->
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
