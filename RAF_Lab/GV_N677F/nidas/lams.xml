@@ -20,6 +20,13 @@
         </sample>
     </irigSensor>
 
+    <lamsSensor ID="LAMS" class="raf.LamsSensor">
+        <sample id="1">
+            <variable name="LAMS" units="Mhz" longname="LAMS output"/>
+        </sample>
+    </lamsSensor>
+
+</sensorcatalog>
 
 <site name="GV_N677F" class="raf.Aircraft">
     <parameter name="tailNumber" value="N677F" type="string"/>
@@ -57,15 +64,7 @@
 
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
-
-
-        <sensor class="raf.LamsSensor" devicename="/dev/lams0", id="170">
-            <sample id="1">
-                <variable name="LAMS" units="Mhz" longname="LAMS output">
-                </variable>
-            </sample>
-        </sensor>
-
+        <lamsSensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
 
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>

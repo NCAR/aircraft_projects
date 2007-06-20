@@ -310,6 +310,7 @@
 		<xsd:field    xpath="@id"/>
 	    </xsd:unique>
 	</xsd:element>
+        <xsd:element name="lamsSensor"  type="sensorT"/>
 	<xsd:element name="irigSensor"  type="sensorT"/>
 	<xsd:element name="socketSensor"  type="socketSensorT"/>
     </xsd:choice>
@@ -347,7 +348,7 @@
 	<xsd:attribute name="rserialPort" type="xsd:nonNegativeInteger"/>
     </xsd:complexType>
     <xsd:unique name="uniqueSensorId">
-	<xsd:selector xpath="sensor | serialSensor | arincSensor | irigSensor | socketSensor"/>
+        <xsd:selector xpath="sensor | serialSensor | arincSensor | irigSensor | lamsSensor | socketSensor"/>
 	<xsd:field    xpath="@id"/>
     </xsd:unique>
 </xsd:element>
