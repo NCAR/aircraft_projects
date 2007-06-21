@@ -411,8 +411,30 @@
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2"/>
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
+          <sample id="0314" rate="25">
+            <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
+              <linear slope="1.0" intercept="0.0" units="degree_T"/>
+            </variable>
+          </sample>
+          <sample id="0324" rate="50">
+            <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
+              <linear slope="1.0" intercept="0.38" units="degree"/>
+            </variable>
+          </sample>
+        </arincSensor>
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2">
+          <sample id="0314" rate="25">
+            <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
+              <linear slope="1.0" intercept="0.24" units="degree_T"/>
+            </variable>
+          </sample>
+          <sample id="0324" rate="50">
+            <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
+              <linear slope="1.0" intercept="0.04" units="degree"/>
+            </variable>
+          </sample>
+        </arincSensor>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G"/>
 
@@ -650,7 +672,13 @@
     <dsm name="dsm310" location="aerosol" id="10" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="310"/>
 
-        <serialSensor IDREF="Water_CN_Counter" devicename="/dev/dsmser0" id="110" suffix="_WCN"/>
+        <serialSensor IDREF="Water_CN_Counter" devicename="/dev/dsmser0" id="110" suffix="_WCN">
+          <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
+	      <variable name="FCNC" units="cm3/min" longname="WCN Sample Flow Rate">
+                   <linear slope="1.0" intercept="0.0" units="vlpm"/>
+              </variable>
+          </sample>
+        </serialSensor>
         <serialSensor IDREF="CFDC" devicename="/dev/dsmser1" id="120" suffix="_CFDC"/>
         <serialSensor IDREF="VCSEL" devicename="/dev/dsmser2" id="130" suffix="_VXL"/>
 
