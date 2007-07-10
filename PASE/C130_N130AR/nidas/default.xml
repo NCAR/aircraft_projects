@@ -782,8 +782,8 @@
     <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
-<!--        <serialSensor IDREF="S200" devicename="/dev/dsmser0" id="720" suffix="_109"/> -->
-<!--        <serialSensor IDREF="S300" devicename="/dev/dsmser1" id="730" suffix="_109"/> -->
+        <serialSensor IDREF="S200" devicename="/dev/dsmser0" id="720" suffix="_109"/>
+<!--        <serialSensor IDREF="S300" devicename="/dev/dsmser1" id="730" suffix="_305"/> -->
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
@@ -897,11 +897,33 @@
                 <variable name="XCNCold" units="V" longname="Condensation Nuclei un-heated">
                     <parameter name="gain"         value="2"            type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
                     <parameter name="corSlope"     value="1.04552"      type="float"/> <parameter name="corIntercept" value="-0.229177" type="float"/>
+                    <linear slope="1000.0" intercept="0.0" units="count"/>
                 </variable>
 <!-- XCNHot               | 2007-06-07 18:50:10 | {-0.464867,1.07459} -->
                 <variable name="XCNHot" units="V" longname="Condensation Nuclei heated">
                     <parameter name="gain"         value="2"            type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
                     <parameter name="corSlope"     value="1.07459"      type="float"/> <parameter name="corIntercept" value="-0.464867" type="float"/>
+                    <linear slope="1000.0" intercept="0.0" units="count"/>
+                </variable>
+
+                <variable name="XNEPH" units="V" longname="U of H Nephelometer">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="XUCN" units="V" longname="Ultra-fine Condensation Nuclei">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                    <linear slope="100000.0" intercept="0.0" units="count"/>
+                </variable>
+                <variable name="TEO3" units="V" longname="Teco Ozone Concentration">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                    <linear slope="10.0" intercept="0.0" units="count"/>
+                </variable>
+                <variable name="TEO3P" units="V" longname="Teco Ozone Pressure">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                    <linear slope="133.0" intercept="0.0" units="count"/>
                 </variable>
             </sample>
         </sensor>
@@ -922,14 +944,16 @@
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
 
 <!-- insert_serial (232): CO, GVTDL -->
-<!--
+
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
             <sample id="1" rate="100">
                 <variable name="CNTS" units="count" longname="TSI CN Counter Output" count="true"/>
-                <variable name="XUFCT" units="count" longname="Ultra Fine CN Counter Output" count="true"/>
+                <variable name="XUFCT" units="count" longname="Ultra Fine CN Counter Output" count="true">
+                    <linear slope="2.0" intercept="0.0" units="count"/>
+                </variable>
             </sample>
         </sensor>
--->
+
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
 <!-- CNTEMP               | 2007-06-09 16:23:02 | {-0.204473,1.05798} -->
@@ -985,7 +1009,8 @@
     <dsm name="dsm325" location="Wing_POD_R" id="25" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="325"/>
 
-<!--        <serialSensor IDREF="S100" devicename="/dev/dsmser0" id="710" suffix="_109"/>
+        <serialSensor IDREF="S100" devicename="/dev/dsmser0" id="710" suffix="_122"/>
+<!--
 
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
             <sample id="4" rate="1">
