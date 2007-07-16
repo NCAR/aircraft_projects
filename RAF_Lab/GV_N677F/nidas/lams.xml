@@ -21,8 +21,9 @@
     </irigSensor>
 
     <lamsSensor ID="LAMS" class="raf.LamsSensor">
-        <sample id="1">
-            <variable name="LAMS" units="Mhz" longname="LAMS output"/>
+        <sample id="1" rate="1">
+            <variable name="LAMS_AVG"  length="256" units="Mhz" longname="LAMS histogram averages"/>
+            <variable name="LAMS_MAX"  length="256" units="Mhz" longname="LAMS histogram maximums"/>
         </sample>
     </lamsSensor>
 
@@ -62,8 +63,8 @@
         </service>
     </server>
 
-    <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
+    <dsm name="dsm311" location="cabin_mpdb" id="4" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
         <lamsSensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
 
         <output class="RawSampleOutputStream">
