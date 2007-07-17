@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="PACDEX"
+    system="GV_N677F"
+    version="$LastChangedRevision: 428 $"
+    >
+
+<sensorcatalog>
+
+</sensorcatalog>
+
+
+<site name="GV_N677F" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N677F" type="string"/>
+
+    <dsm name="dsmrwo" location="lab" id="47" rserialPort="30002">
+
+        <serialSensor class="raf.UHSAS_Serial" devicename="/dev/ttyS1" id="330" suffix="_RWI"
+            baud="115200" parity="none" databits="8" stopbits="1">
+
+            <parameter name="SerialNumber" value="001" type="string"/>
+            <sample id="1" rate="10">
+                <variable name="AUHSAS" length="100" units="count" longname="UHSAS Raw Count Histogram" count="true"/>
+                <variable name="USCAT" units="V" longname="UHSAS Scatter"/>
+                <variable name="UCURR" units="V" longname="UHSAS Current"/>
+                <variable name="USMPFLW" units="sccm" longname="UHSAS Sample Flow"/>
+                <variable name="UREF" units="V" longname="UHSAS Reference"/>
+                <variable name="UTEMP" units="V" longname="UHSAS Temperature"/>
+                <variable name="USHFLW" units="sccm" longname="UHSAS Sheath Flow"/>
+                <variable name="UDIFF" units="V" longname="UHSAS Diff"/>
+                <variable name="UBTMP" units="K" longname="UHSAS Box Temperature"/>
+                <variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/>
+                <variable name="UPRESS" units="kPa" longname="UHSAS Pressure"/>
+                <variable name="UAUX" units="V" longname="UHSAS Auxilary"/>
+                <variable name="UFLOW" units="sccm" longname="UHSAS Flow"/>
+            </sample>
+            <message separator="\xff\xff\x00" position="beg" length="234"/>
+        </serialSensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="server" port="30000"/>
+        </output>
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <fileset dir="/var/r1"
+                file="uhsas_%Y%m%d_%H%M%S.dat"
+                length="1800">
+            </fileset>
+        </output>
+    </dsm>
+
+</site>
+</project>
