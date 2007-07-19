@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="RAF_Lab"
+    system="GV_N677F"
+    config="${PROJ_DIR}/RAF_Lab/GV_N677F/nidas/default.xml"
+    version="$LastChangedRevision: 2514 $"
+    >
+<sensorcatalog>
+
+    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+        <sample id="1">
+            <variable name="Clock" units="msec"
+                    longname="milliseconds since 1970 Jan 01 00:00 +0"/>
+        </sample>
+    </irigSensor>
+
+    <lamsSensor ID="LAMS" class="raf.LamsSensor">
+        <sample id="1" rate="1">
+            <variable name="LAMS_AVG"  length="256" units="Mhz" longname="LAMS histogram averages"/>
+            <variable name="LAMS_MAX"  length="256" units="Mhz" longname="LAMS histogram maximums"/>
+        </sample>
+    </lamsSensor>
+
+</sensorcatalog>
+
+<site name="GV_N677F" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N677F" type="string"/>
+
+    <server>
+        <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="RawSampleService">
+            <!-- input from every DSM on this aircraft that has
+                 a socket output of type RawSampleOutputStream -->
+            <input class="RawSampleInputStream">
+                <socket type="mcaccept"/>
+            </input>
+            <processor class="SampleArchiver">
+                <output class="SampleOutputStream">
+                    <fileset dir="/var/r1/${PROJECT}"
+                        file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
+                        length="0"/>
+
+                </output>
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30000"/>
+                </output>
+            </processor>
+            <processor class="raf.SyncRecordGenerator">
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30001"/>
+                </output>
+            </processor>
+        </service>
+    </server>
+
+    <dsm name="dsm311" location="cabin_mpdb" id="4" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
+        <lamsSensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+</site>
+</project>
