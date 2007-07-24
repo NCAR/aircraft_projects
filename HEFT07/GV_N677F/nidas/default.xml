@@ -19,13 +19,6 @@
         </sample>
     </irigSensor>
 
-    <lamsSensor ID="LAMS" class="raf.LamsSensor">
-        <sample id="1" rate="8">
-            <variable name="LAMS_AVG"  length="256" units="Mhz" longname="LAMS histogram averages"/>
-            <variable name="LAMS_MAX"  length="256" units="Mhz" longname="LAMS histogram maximums"/>
-        </sample>
-    </lamsSensor>
-
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
         <!-- Taken from the Honeywell installation manual for the         -->
         <!-- Inertial Reference Unit / Part No. HG2001GD (pages 649-651). -->
@@ -543,25 +536,13 @@
     <dsm name="dsm311" location="lams" id="7" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
 
-        <lamsSensor IDREF="LAMS" devicename="/dev/lams0" id="140"/>
-
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
-            <sample id="1" rate="500">
-                <variable name="ANLG_LAMS" units="V" longname="DUMMY VAR">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.0" type="float"/>
-                    <parameter name="corIntercept" value="-0.0" type="float"/>
-                </variable>
+        <sensor class="raf.LamsSensor" devicename="/dev/lams0" id="140">
+            <sample id="1" rate="8">
+                <variable name="LAMS_MAX"  length="256" units="Mhz" longname="LAMS histogram maximums"/>
+                <variable name="LAMS_AVG"  length="256" units="Mhz" longname="LAMS histogram averages"/>
             </sample>
         </sensor>
 
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_LAMS" units="deg_C">
-                </variable>
-            </sample>
-        </sensor>
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -672,22 +653,32 @@
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LWI"/>
 
-        <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_LWO">
-            <parameter name="SerialNumber" value="DMT2DC_001" type="string"/>
-            <parameter name="RESOLUTION" value="25" type="int"/>
-            <sample id="1" rate="1">
-                <variable name="TCNT2DC" units="count" longname="High Speed 2DC Total Counts (computed)"/>
-            </sample>
-        </sensor>
-
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <sample id="1" rate="500">
+            <sample id="1" rate="1000">
                 <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
                     <parameter name="gain" value="1" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.47706" type="float"/>
                     <parameter name="corIntercept" value="-0.344603" type="float"/>
                     <linear slope="-10.0" intercept="0.0" units="W"/>
+                </variable>
+                <variable name="ACCX_LW" units="V" longname="Accelerometer X">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.47706" type="float"/>
+                    <parameter name="corIntercept" value="-0.344603" type="float"/>
+                </variable>
+                <variable name="ACCY_LW" units="V" longname="Accelerometer Y">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.47706" type="float"/>
+                    <parameter name="corIntercept" value="-0.344603" type="float"/>
+                </variable>
+                <variable name="ACCZ_LW" units="V" longname="Accelerometer Z">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.47706" type="float"/>
+                    <parameter name="corIntercept" value="-0.344603" type="float"/>
                 </variable>
             </sample>
         </sensor>
