@@ -308,19 +308,25 @@
     <serialSensor ID="VCSEL" class="DSMSerialSensor"
         baud="19200" parity="none" databits="8" stopbits="1">
         <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
-        <sample id="1" rate="1" scanfFormat="SWS %f %*f %f %f %f %f %f %*c %*f %*f %*f %*f %*f %*f %*f %*f">
-            <variable name="VTIME" units="second" longname="VCSEL Timestamp"/>
+        <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %*c %*f %f %*f %*f %f %f %f %f">
+<!--            <variable name="VTIME" units="second" longname="VCSEL Timestamp"/> -->
+            <variable name="STATUS" units="none" longname="VCSEL Status Code"/>
             <variable name="AT" units="deg_K" longname="VCSEL Ambient Temperature"/>
             <variable name="PS" units="torr" longname="VCSEL Ambient Pressure"/>
             <variable name="LSRTMP" units="ohm" longname="VCSEL Laser Temperature"/>
             <variable name="SETTMP" units="ohm" longname="VCSEL Set Temperature"/>
             <variable name="TCC" units="count" longname="VCSEL Thermoelectric Cooler Current"/>
+            <variable name="CNTRCUR" units="count" longname="VCSEL Center Current"/>
+            <variable name="PKPOS" units="count" longname="VCSEL Peak Position"/>
+            <variable name="PREGAIN" units="count" longname="VCSEL Pre Gain"/>
+            <variable name="ACGAIN" units="count" longname="VCSEL AC Gain"/>
+            <variable name="LSRINT" units="count" longname="VCSEL Laser Intensity"/>
         </sample>
-        <sample id="2" rate="25" scanfFormat="%f %f %f %f">
+        <sample id="2" rate="25" scanfFormat="%f %*f %f %*f">
             <variable name="CONC_H2O" units="#/cm3" longname="VCSEL Moisture Number Density"/>     <!-- molecules/cm^3 -->
-            <variable name="STDV_H20" units="#/cm3" longname="VCSEL Std Dev H2O"/>                 <!-- molecules/cm^3 -->
+<!--            <variable name="STDV_H20" units="#/cm3" longname="VCSEL Std Dev H2O"/>                 <!-- molecules/cm^3 --> -->
             <variable name="DP" units="deg_C" longname="VCSEL Frost Dew Point"/>
-            <variable name="NGOOD" units="none" longname="VCSEL Number of Good Scans"/>
+<!--            <variable name="NGOOD" units="none" longname="VCSEL Number of Good Scans"/> -->
         </sample>
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
