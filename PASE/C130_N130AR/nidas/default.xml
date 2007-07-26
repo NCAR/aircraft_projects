@@ -766,6 +766,7 @@
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d2" id="300">
             <sample id="1" rate="500">
+
 <!-- XUVP                 | 2007-06-05 20:34:54 | {-0.215759,1.09108} -->
                 <variable name="XUVP" units="V" longname="UN Hydrometer Pressure">
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
@@ -785,6 +786,16 @@
                 <variable name="XTASF" units="V" longname="Total Air Sampler (TAS) Flow">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.09023" type="float"/> <parameter name="corIntercept" value="-0.304733" type="float"/>
+                </variable>
+<!-- A2D011_4_1T          | 2007-06-05 20:46:56 | {-0.114885,1.06247} -->
+                <variable name="A2D011_CH4_1T" units="V" longname="A2D011 channel 4 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.06247" type="float"/> <parameter name="corIntercept" value="-0.114885" type="float"/>
+                </variable>
+<!-- A2D011_5_1T          | 2007-06-05 20:49:49 | {-0.369209,1.08606} -->
+                <variable name="A2D011_CH5_1T" units="V" longname="A2D011 channel 5 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.08606" type="float"/> <parameter name="corIntercept" value="-0.369209" type="float"/>
                 </variable>
             </sample>
         </sensor>
@@ -809,23 +820,25 @@
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
-                <variable name="DUMMY" units="V" longname="Nothing">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+
+<!-- A2D014_CH0_1T        | 2007-06-06 21:20:39 | {-0.208211,1.05207} -->
+                <variable name="A2D014_CH0_1T" units="V" longname="A2D014 channel 0 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                     <parameter name="corSlope" value="1.05207" type="float"/> <parameter name="corIntercept" value="-0.208211" type="float"/>
                 </variable>
-<!-- XGLWC                | 2007-06-06 21:20:39 | {-0.208211,1.05207} -->
+<!-- XGLWC                | 2007-06-06 21:23:04 | {-0.217584,1.05337} -->
                 <variable name="XGLWC" units="V" longname="Gerber PV-100 Probe Liquid Water Content">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                     <parameter name="corSlope" value="1.05337" type="float"/> <parameter name="corIntercept" value="-0.217584" type="float"/>
                 </variable>
-<!-- XGREFF               | 2007-06-06 21:23:04 | {-0.217584,1.05337} -->
+<!-- XGREFF               | 2007-06-06 21:26:11 | {0.0281794,1.03133} -->
                 <variable name="XGREFF" units="V" longname="Gerber PV-100 Effective Droplet Radius">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                     <parameter name="corSlope" value="1.03133" type="float"/> <parameter name="corIntercept" value="0.0281794" type="float"/>
                 </variable>
-<!-- XGSFC                | 2007-06-06 21:26:11 | {0.0281794,1.03133} -->
+<!-- XGSFC                | 2007-06-06 21:30:07 | {-0.16487,1.04806}  -->
                 <variable name="XGSFC" units="V" longname="Gerber PV-100 Particle Surface Area (Raw)">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"     value="true"      type="bool"/>
                     <parameter name="corSlope" value="1.04806" type="float"/> <parameter name="corIntercept" value="-0.16487" type="float"/>
                 </variable>
             </sample>
