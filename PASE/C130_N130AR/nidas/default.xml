@@ -683,7 +683,7 @@
                 <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.1319" type="float"/> <parameter name="corIntercept" value="-0.423651" type="float"/>
-                    <poly coefs="-0.926598 108.882 -0.0430805" units="hPa"/>
+                    <poly coefs="-6.5 108.882 -0.0430805" units="hPa"/>
                 </variable>
             </sample>
         </sensor>
@@ -768,12 +768,12 @@
             <sample id="1" rate="500">
 <!-- XUVP                 | 2007-06-05 20:34:54 | {-0.215759,1.09108} -->
                 <variable name="XUVP" units="V" longname="UN Hydrometer Pressure">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.09108" type="float"/> <parameter name="corIntercept" value="-0.215759" type="float"/>
                 </variable>
 <!-- XUVT                 | 2007-06-05 20:37:17 | {-0.283856,1.10375} -->
                 <variable name="XUVT" units="V" longname="UN Hydrometer Temperature">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.10375" type="float"/> <parameter name="corIntercept" value="-0.283856" type="float"/>
                 </variable>
 <!-- XUVI                 | 2007-06-05 20:39:42 | {-0.233815,1.10462} -->
@@ -999,7 +999,7 @@
                 <variable name="PCN" units="V" longname="CN Counter Inlet Pressure">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.07211" type="float"/> <parameter name="corIntercept" value="-0.390289" type="float"/>
-                    <poly coefs="423.3 54.156 -0.0065" units="hPa"/>
+                    <poly coefs="414.07 54.156 -0.0065" units="hPa"/>
                 </variable>
 <!-- XICN                 | 2007-06-09 16:31:07 | {-0.211025,1.08429} -->
                 <variable name="XICN" units="V" longname="CN Isokinetic Side Flow Rate">
@@ -1039,6 +1039,7 @@
 
     <dsm name="dsm325" location="Wing_POD_R" id="25" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="325"/>
+
 
         <serialSensor IDREF="S100" devicename="/dev/dsmser0" id="710" suffix="_122"/>
         <serialSensor IDREF="TDLH2O" devicename="/dev/dsmser1" id="120"/>
