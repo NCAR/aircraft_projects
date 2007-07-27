@@ -1,0 +1,13 @@
+To use:
+PROJECT=TRAM (as root)
+set_project TRAM (others)
+adamserver (as anybody)
+-or- rtrun -r 10 adamserver (only as root?)
+serial_ingest -z (only as root!)
+ [this automagically runs tram.up, which starts archive, covar, cockpit]
+ [seems to run better if:]
+rtrun -r 5 serial_ingest -z (as root)
+CheckAster to view status.
+[I wish I had these instructions written a lot earlier!]
+
+kill -HUP [tram process] [to restart after problem]
