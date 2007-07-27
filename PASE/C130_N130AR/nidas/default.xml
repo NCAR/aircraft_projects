@@ -580,7 +580,7 @@
         <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="7000"/>
 
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
-            <sample id="5" rate="10">
+            <sample id="5" rate="20">
                 <variable name="HGM232" units="feet" longname="Altitude above ground (radar altimeter">
                 </variable>
             </sample>
@@ -683,7 +683,7 @@
                 <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.1319" type="float"/> <parameter name="corIntercept" value="-0.423651" type="float"/>
-                    <poly coefs="-6.5 108.882 -0.0430805" units="hPa"/>
+                    <poly coefs="-3.0 108.882 -0.0430805" units="hPa"/>
                 </variable>
             </sample>
         </sensor>
@@ -708,7 +708,7 @@
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
 <!-- TRSTB                | 2007-06-05 20:02:09 | {-0.25468,1.07882} -->
-                <variable name="TRSTB" units="V" longname="TRSTB Sensor Head Temperature">
+                <variable name="DUMMY3" units="V" longname="TRSTB Sensor Head Temperature">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.07882" type="float"/> <parameter name="corIntercept" value="-0.25468"  type="float"/>
                 </variable>
@@ -822,7 +822,7 @@
             <sample id="1" rate="500">
 
 <!-- A2D014_CH0_1T        | 2007-06-06 21:20:39 | {-0.208211,1.05207} -->
-                <variable name="A2D014_CH0_1T" units="V" longname="A2D014 channel 0 [-10 to +10] volts">
+                <variable name="DUMMY4" units="V" longname="A2D014 channel 0 [-10 to +10] volts">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                     <parameter name="corSlope" value="1.05207" type="float"/> <parameter name="corIntercept" value="-0.208211" type="float"/>
                 </variable>
@@ -1025,13 +1025,13 @@
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.06766" type="float"/> <parameter name="corIntercept" value="-0.260437" type="float"/>
                 </variable>
-<!-- FO3_MR               | 2007-06-09 16:49:08 | {-0.423953,1.07613} -->
-                <variable name="FO3_MR" units="V" longname="Ozone Mixing Ratio">
+<!-- FO3_CL               | 2007-06-09 16:49:08 | {-0.423953,1.07613} -->
+                <variable name="FO3_CL" units="V" longname="Ozone Mixing Ratio">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.07613" type="float"/> <parameter name="corIntercept" value="-0.423953" type="float"/>
                 </variable>
-<!-- CO_MR                | 2007-06-09 16:51:54 | {-0.170109,1.0542} -->
-                <variable name="CO_MR" units="V" longname="Carbon Monoxide Mixing Ratio">
+<!-- COMR_AL               | 2007-06-09 16:51:54 | {-0.170109,1.0542} -->
+                <variable name="COMR_AL" units="V" longname="Carbon Monoxide Mixing Ratio">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.0542" type="float"/> <parameter name="corIntercept" value="-0.170109" type="float"/>
                 </variable>
