@@ -1,0 +1,54 @@
+#!/bin/sh
+#
+# Satcom logging.  An RS232 cable must be running from the HPA MAINT
+# port to ttyS0.
+#
+
+# Put the date in the log file name
+logfile=/var/log/satcom/hpa_`date +%Y%m%d`.log
+
+# Roll over the logs, since minicom cannot append
+if [ -f $logfile ]; then
+    for (( i = 0; ; i++ )); do
+        if [ ! -f $logfile.$i ]; then
+            mv $logfile $logfile.$i
+            break
+        fi
+    done
+fi
+#
+
+# /etc/minirc.satcom should look like so:
+# # Machine-generated file - use "minicom -s" to change parameters.
+# pr port             /dev/ttyS0
+# pu baudrate         19200
+# pu minit            
+# pu mreset           
+# pu mhangup          
+# pu mdropdtr         0
+# pu hasdcd           No 
+# pu rtscts           No 
+########################################################3
+
+echo "Connecting to HPA maintenance port ...
+(requires a serial cable between the HPA and /dev/ttyS0 on the server).
+Starting minicom in 5 seconds
+Minicom commands (control-A followed by a character):
+    ctrl-a q    exit minicom
+    ctrl-a z    help
+    ctrl-a e	turn on echo of commands"
+
+sleep 5
+
+if ! minicom satcom -C $logfile; then
+    echo "minicom is not starting, is another $0 script running?"
+    echo "Do  ctrl-a q to exit minicom,  ctrl-a z for help"
+    sleep 5
+else
+    # convert log file to dos format
+    unix2dos $logfile
+fi
+
+# stty 19200 -parenb -cstopb 19200 < /dev/ttyS0
+# cat /dev/ttyS0 | tee -a $logfile
+#zenity --info --text="MPDS log being written to /var/log/satcom/mpds.log.  Click the button below to stop logging."

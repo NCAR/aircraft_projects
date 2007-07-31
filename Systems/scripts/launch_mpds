@@ -1,7 +1,14 @@
 #!/bin/sh
 
 ifdown eth2
+# sudo ifconfig eth3 down
+# sudo ifconfig eth3 up
 
-sudo /usr/sbin/adsl-start
+# sudo /usr/sbin/adsl-start
+
+# New way to start pppoe.  Uses options in
+# /etc/sysconfig/network-scripts/ifcfg-ppp0
+
+ifup ppp0
 
 tail -f /var/log/messages | grep ppp
