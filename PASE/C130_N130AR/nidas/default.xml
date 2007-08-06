@@ -771,11 +771,13 @@
                 <variable name="DUMMY1" units="V" longname="UV Hygrometer Pressure">
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.09108" type="float"/> <parameter name="corIntercept" value="-0.215759" type="float"/>
+                    <poly coefs="455.9 -109.496 0.0034" units="hPa"/>
                 </variable>
 <!-- XUVT                 | 2007-06-05 20:37:17 | {-0.283856,1.10375} -->
                 <variable name="DUMMY2" units="V" longname="UV Hygrometer Temperature">
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.10375" type="float"/> <parameter name="corIntercept" value="-0.283856" type="float"/>
+                    <poly coefs="36.96 3.777 0.00008" units="deg_C"/>
                 </variable>
 <!-- XUVI                 | 2007-06-05 20:39:42 | {-0.233815,1.10462} -->
                 <variable name="XUVI" units="V" longname="UV Hygrometer Intensity">
@@ -786,6 +788,7 @@
                 <variable name="XTASF" units="V" longname="Total Air Sampler (TAS) Flow">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.09023" type="float"/> <parameter name="corIntercept" value="-0.304733" type="float"/>
+                    <linear slope="70.8" intercept="0.0" units="slpm"/>
                 </variable>
 <!-- A2D011_4_1T          | 2007-06-05 20:46:56 | {-0.114885,1.06247} -->
                 <variable name="XUVP" units="V" longname="UV Hygrometer Pressure">
@@ -897,7 +900,7 @@
                 <variable name="TTWH" units="V" longname="Total Temperature, Deiced Wing">
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.04944" type="float"/> <parameter name="corIntercept" value="-0.128447" type="float"/>
-                    <poly coefs="-66.998 26.7721 -0.328722" units="deg_C"/>
+                    <poly coefs="-64.998 26.7721 -0.328722" units="deg_C"/>
                 </variable>
 <!-- PLWC                 | 2007-06-07 18:24:19 | {-0.372046,1.05884} -->
 <!--                <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
@@ -937,13 +940,13 @@
                 <variable name="XCNCold" units="V" longname="Condensation Nuclei un-heated">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.04552" type="float"/> <parameter name="corIntercept" value="-0.229177" type="float"/>
-<!--                    <linear slope="1000.0" intercept="0.0" units="count"/> -->
+                    <linear slope="1000.0" intercept="-511.5" units="N/cc"/>
                 </variable>
 <!-- XCNHot               | 2007-06-07 18:50:10 | {-0.464867,1.07459} -->
                 <variable name="XCNHot" units="V" longname="Condensation Nuclei heated">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.07459" type="float"/> <parameter name="corIntercept" value="-0.464867" type="float"/>
-<!--                    <linear slope="1000.0" intercept="0.0" units="count"/> -->
+                    <linear slope="1000.0" intercept="-540.5" units="N/cc"/>
                 </variable>
 <!-- XNEPH                | 2007-07-18 16:15:26 | {-0.521508,1.07} -->
                 <variable name="XNEPH" units="V" longname="U of H Nephelometer">
@@ -954,19 +957,19 @@
                 <variable name="XUCN" units="V" longname="Ultra-fine Condensation Nuclei">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.05917" type="float"/> <parameter name="corIntercept" value="-0.432391" type="float"/>
-<!--                    <linear slope="100000.0" intercept="0.0" units="count"/> -->
+                    <linear slope="100000.0" intercept="0.0" units="N/cc"/>
                 </variable>
 <!-- TEO3                 | 2007-07-18 16:26:07 | {-0.44941,1.0593} -->
                 <variable name="TEO3" units="V" longname="Teco Ozone Concentration">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0593" type="float"/> <parameter name="corIntercept" value="-0.44941" type="float"/>
-<!--                    <linear slope="10.0" intercept="0.0" units="count"/> -->
+                    <linear slope="20.0" intercept="0.0" units="ppbv"/>
                 </variable>
 <!-- TEO3P                | 2007-07-18 16:44:58 | {-0.421797,1.05948} -->
                 <variable name="TEO3P" units="V" longname="Teco Ozone Pressure">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.05948" type="float"/> <parameter name="corIntercept" value="-0.421797" type="float"/>
-<!--                    <linear slope="133.0" intercept="0.0" units="count"/> -->
+                    <linear slope="66.8624" intercept="414.6" units="hPa"/>
                 </variable>
             </sample>
         </sensor>
@@ -1030,6 +1033,7 @@
                 <variable name="FO3_CL" units="V" longname="Ozone Mixing Ratio">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.07613" type="float"/> <parameter name="corIntercept" value="-0.423953" type="float"/>
+                    <linear slope="20.0" intercept="0.0" units="ppbv"/>
                 </variable>
 <!-- COMR_AL               | 2007-06-09 16:51:54 | {-0.170109,1.0542} -->
                 <variable name="COMR_AL" units="V" longname="Carbon Monoxide Mixing Ratio">
