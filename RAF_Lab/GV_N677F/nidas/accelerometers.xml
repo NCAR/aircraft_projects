@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="RAF_Lab"
+    system="GV_N677F"
+    version="$LastChangedRevision$"
+    >
+<sensorcatalog>
+
+    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+        <sample id="1">
+            <variable name="Clock" units="msec"
+                    longname="milliseconds since 1970 Jan 01 00:00 +0"/>
+        </sample>
+    </irigSensor>
+
+</sensorcatalog>
+
+<site name="GV_N677F" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N130AR" type="string"/>
+
+    <server>
+        <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="RawSampleService">
+            <!-- input from every DSM on this aircraft that has
+                 a socket output of type RawSampleOutputStream -->
+            <input class="RawSampleInputStream">
+                <socket type="mcaccept"/>
+            </input>
+            <processor class="SampleArchiver">
+<!--
+-->
+                <output class="SampleOutputStream">
+                    <fileset dir="/var/r1/${PROJECT}"
+                        file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
+                        length="0"/>
+                </output>
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30000"/>
+                </output>
+            </processor>
+            <processor class="raf.SyncRecordGenerator">
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30001"/>
+                </output>
+            </processor>
+        </service>
+    </server>
+
+<!-- ########################################################################################################### -->
+<!-- ########################################################################################################### -->
+
+    <dsm name="dsm303" location="big_blue" id="1" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/>
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
+            <sample id="0" rate="1000">
+<!--
+                <variable name="ACCEL_2_X" units="V" longname="Accelerometer 2 X-axis">
+                <variable name="ACCEL_2_Y" units="V" longname="Accelerometer 2 Y-axis">
+                <variable name="ACCEL_2_Z" units="V" longname="Accelerometer 2 Z-axis">
+-->
+<!--  A2D008_CH0_4F        | 2007-08-16 20:31:11 | {0.000754573,1.01489} -->
+                <variable name="ACCEL_0_X" units="V" longname="Accelerometer 0 X-axis">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"       type="bool"/>
+                    <parameter name="corSlope" value="1.01489" type="float"/> <parameter name="corIntercept" value="0.000754573" type="float"/>
+                </variable>
+<!--  A2D008_CH1_4F        | 2007-08-16 20:32:53 | {-0.0790317,1.0281} -->
+                <variable name="ACCEL_0_Y" units="V" longname="Accelerometer 0 Y-axis">
+                    <parameter name="gain"     value="4"      type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.0281" type="float"/> <parameter name="corIntercept" value="-0.0790317" type="float"/>
+                </variable>
+<!--  A2D008_CH2_4F        | 2007-08-16 20:34:20 | {-0.0980288,1.03507} -->
+                <variable name="ACCEL_0_Z" units="V" longname="Accelerometer 0 Z-axis">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.03507" type="float"/> <parameter name="corIntercept" value="-0.0980288" type="float"/>
+                </variable>
+<!--  A2D008_CH3_4F        | 2007-08-16 20:36:17 | {-0.0821353,1.03488} -->
+                <variable name="ACCEL_1_X" units="V" longname="Accelerometer 1 X-axis">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.03488" type="float"/> <parameter name="corIntercept" value="-0.0821353" type="float"/>
+                </variable>
+<!--  A2D008_CH4_4F        | 2007-08-16 20:37:55 | {-0.066927,1.02988} -->
+                <variable name="ACCEL_1_Y" units="V" longname="Accelerometer 1 Y-axis">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                    <parameter name="corSlope" value="1.02988" type="float"/> <parameter name="corIntercept" value="-0.066927" type="float"/>
+                </variable>
+<!--  A2D008_CH5_4F        | 2007-08-16 20:39:28 | {-0.14398,1.04304} -->
+                <variable name="ACCEL_1_Z" units="V" longname="Accelerometer 1 Z-axis">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"    type="bool"/>
+                    <parameter name="corSlope" value="1.04304" type="float"/> <parameter name="corIntercept" value="-0.14398" type="float"/>
+                </variable>
+<!--
+<!__  A2D008_CH6_4F        | 2007-08-16 20:41:01 | {-0.139401,1.04236} __>
+                <variable name="A2D008_CH6_4F" units="V" longname="A2D008 channel 6 [  0 to  +5] volts">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                    <parameter name="corSlope" value="1.04236" type="float"/> <parameter name="corIntercept" value="-0.139401" type="float"/>
+                </variable>
+<!__  A2D008_CH7_4F        | 2007-08-16 20:42:33 | {-0.0545407,1.02753} __>
+                <variable name="A2D008_CH7_4F" units="V" longname="A2D008 channel 7 [  0 to  +5] volts">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.02753" type="float"/> <parameter name="corIntercept" value="-0.0545407" type="float"/>
+                </variable>
+-->
+            </sample>
+        </sensor>
+
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_A2D008" units="deg_C">
+                </variable>
+            </sample>
+        </sensor>
+<!--
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d2" id="300">
+            <sample id="1" rate="1000">
+
+<!__  A2D019_CH0_4F        | 2007-08-16 21:50:43 | {0.00561361,1.0474} __>
+                <variable name="A2D019_CH0_4F" units="V" longname="A2D019 channel 0 [  0 to  +5] volts">
+                    <parameter name="gain"     value="4"      type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.0474" type="float"/> <parameter name="corIntercept" value="0.00561361" type="float"/>
+                </variable>
+<!__  A2D019_CH1_4F        | 2007-08-16 21:52:02 | {-0.0952431,1.06659} __>
+                <variable name="A2D019_CH1_4F" units="V" longname="A2D019 channel 1 [  0 to  +5] volts">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.06659" type="float"/> <parameter name="corIntercept" value="-0.0952431" type="float"/>
+                </variable>
+<!__  A1D019_CH2_4F        | 2007-08-16 21:53:40 | {-0.128242,1.07101} __>
+                <variable name="A2D019_CH2_4F" units="V" longname="A2D019 channel 2 [  0 to  +5] volts">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                    <parameter name="corSlope" value="1.07101" type="float"/> <parameter name="corIntercept" value="-0.128242" type="float"/>
+                </variable>
+<!__  A2D019_CH3_4F        | 2007-08-16 21:55:40 | {-0.25008,1.13326} __>
+                <variable name="A2D019_CH3_4F" units="V" longname="A2D019 channel 3 [  0 to  +5] volts">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"    type="bool"/>
+                    <parameter name="corSlope" value="1.13326" type="float"/> <parameter name="corIntercept" value="-0.25008" type="float"/>
+                </variable>
+<!__  A2D019_CH4_4F        | 2007-08-16 21:57:11 | {-0.0750747,1.05911} __>
+                <variable name="A2D019_CH4_4F" units="V" longname="A2D019 channel 4 [  0 to  +5] volts">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.05911" type="float"/> <parameter name="corIntercept" value="-0.0750747" type="float"/>
+                </variable>
+<!__  A2D019_CH5_4F        | 2007-08-16 21:58:36 | {-0.111332,1.06713} __>
+                <variable name="A2D019_CH5_4F" units="V" longname="A2D019 channel 5 [  0 to  +5] volts">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                    <parameter name="corSlope" value="1.06713" type="float"/> <parameter name="corIntercept" value="-0.111332" type="float"/>
+                </variable>
+<!__  A2D019_CH6_4F        | 2007-08-16 21:59:50 | {-0.136682,1.06965} __>
+                <variable name="A2D019_CH6_4F" units="V" longname="A2D019 channel 6 [  0 to  +5] volts">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                    <parameter name="corSlope" value="1.06965" type="float"/> <parameter name="corIntercept" value="-0.136682" type="float"/>
+                </variable>
+<!__  A2D019_CH7_4F        | 2007-08-16 22:01:15 | {9.80447e-05,1.04299} __>
+                <variable name="A2D019_CH7_4F" units="V" longname="A2D019 channel 7 [  0 to  +5] volts">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"       type="bool"/>
+                    <parameter name="corSlope" value="1.04299" type="float"/> <parameter name="corIntercept" value="9.80447e-05" type="float"/>
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d3" id="310">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_A2D019" units="deg_C">
+                </variable>
+            </sample>
+        </sensor>
+-->
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+</site>
+</project>
