@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="RAF_Lab"
+    system="GV_N677F"
+    config="${PROJ_DIR}/RAF_Lab/GV_N677F/nidas/default.xml"
+    version="$LastChangedRevision: 428 $" >
+    
+
+
+<site name="GV_N677F" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N677F" type="string"/>
+
+    <dsm name="eol-lingling" id="77" rserialPort="30002" derivedData="sock::58800">
+        <!--      -->
+        <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_007">
+            <parameter name="SerialNumber" value="001" type="string"/>
+            <parameter name="RESOLUTION" value="25" type="int"/>
+            <sample id="1" rate="50">
+                <variable name="PTCLS" units="count" longname="High Speed 2DC Particle count (# sync words)"/>
+            </sample>
+            <sample id="2" rate="10">
+                <variable name="SHADOR" units="count" longname="High Speed 2DC Shadow-or count"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="server" port="30000"/>
+        </output>
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <fileset dir="/home/data"
+                file="usb_%Y%m%d_%H%M%S.dat"
+                length="1800" >
+            </fileset>
+        </output>
+    </dsm>
+</site>
+</project>
