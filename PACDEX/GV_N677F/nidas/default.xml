@@ -299,7 +299,7 @@
             <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
             <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
             <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
-            <variable name="ACDP" length="30" units="count" longname="CDP Raw Accumulation (per cell)"/>
+            <variable name="ACDP" length="31" units="count" longname="CDP Raw Accumulation (per cell)"/>
         </sample>
         <message separator="\xff\xff" position="end" length="154"/>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
@@ -731,6 +731,8 @@
         <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_LWO">
             <parameter name="SerialNumber" value="DMT2DC_001" type="string"/>
             <parameter name="RESOLUTION" value="25" type="int"/>
+            <parameter name="NDIODES" value="64" type="int"/>
+
             <sample id="1" rate="1">
                 <variable name="TCNT2DC" units="count" longname="High Speed 2DC Total Counts (computed)"/>
             </sample>
