@@ -327,16 +327,16 @@
     <serialSensor ID="TDLH2O" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1">
         <sample id="1" rate="20" scanfFormat="%*f %*f %f %f %*f %*f %f %f %f %f %f %f %f %f">
-	    <variable name="PCELL_LHS" units="hPa" longname="Sample Cell Pressure"/>
-	    <variable name="TCELL_LHS" units="deg_C" longname="Sample Cell Temperature"/>
-	    <variable name="PP2F_LHS" units="A/D cnts" longname="2f Signal Amplitude"/>
-	    <variable name="PWR_LHS" units="A/D cnts" longname="Laser Power"/>
-	    <variable name="IDX_LHS" units="A/D cnts" longname="Spectral Line Position"/>
-	    <variable name="DK_LHS" units="A/D cnts" longname="Zero Level"/>
-	    <variable name="PP2F_LHL" units="A/D cnts" longname="2f Signal Amplitude"/>
-	    <variable name="PWR_LHL" units="A/D cnts" longname="Laser Power"/>
-	    <variable name="IDX_LHL" units="A/D cnts" longname="Spectral Line Position"/>
-	    <variable name="DK_LHL" units="A/D cnts" longname="Zero Level"/>
+            <variable name="PCELLS" units="hPa" longname="Sample Cell Pressure, TDL Short Path"/>
+            <variable name="TCELLS" units="deg_C" longname="Sample Cell Temperature, TDL Short Path"/>
+            <variable name="PP2FS" units="count" longname="2f Signal Amplitude, TDL Short Path"/>
+            <variable name="PWRS" units="count" longname="Laser Power, TDL Short Path"/>
+            <variable name="IDXS" units="count" longname="Spectral Line Position, TDL Short Path"/>
+            <variable name="DKS" units="count" longname="Zero Level, TDL Short Path"/>
+            <variable name="PP2FL" units="count" longname="2f Signal Amplitude, TDL Long Path"/>
+            <variable name="PWRL" units="count" longname="Laser Power, TDL Long Path"/>
+            <variable name="IDXL" units="count" longname="Spectral Line Position, TDL Long Path"/>
+            <variable name="DKL" units="count" longname="Zero Level, TDL Long Path"/>
         </sample>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
@@ -580,9 +580,7 @@
             </sample>
         </serialSensor>
 
-        <serialSensor IDREF="TDLH2O"
-                devicename="/dev/dsmser3" id="120">
-        </serialSensor>
+        <serialSensor IDREF="TDLH2O" devicename="/dev/dsmser3" id="120" suffix="_MC">
 
 	<socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000"
 	    id="150">
