@@ -8,6 +8,7 @@
     xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
     name="TREX"
     system="GV_N677F"
+    config="cal-tdl-2007"
     version="$LastChangedRevision: 2514 $"
     >
 <sensorcatalog>
@@ -325,7 +326,9 @@
 
     <serialSensor ID="TDLH2O" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="20" scanfFormat="%*f %*f %f %f %*f %*f %f %f %f %f %f %f %f %f">
+        <sample id="1" rate="20" scanfFormat="%f %f %f %f %*f %*f %f %f %f %f %f %f %f %f">
+            <variable name="MRS" units="ppmv" longname="Water Vapor Mixing Ratio, TDL Short Path"/>
+            <variable name="MRL" units="ppmv" longname="Water Vapor Mixing Ratio, TDL Long Path"/>
             <variable name="PCELLS" units="hPa" longname="Sample Cell Pressure, TDL Short Path"/>
             <variable name="TCELLS" units="deg_C" longname="Sample Cell Temperature, TDL Short Path"/>
             <variable name="PP2FS" units="count" longname="2f Signal Amplitude, TDL Short Path"/>
@@ -341,7 +344,7 @@
     </serialSensor>
 </sensorcatalog>
 
-<site name="GV_N677F" class="raf.Aircraft
+<site name="GV_N677F" class="raf.Aircraft">
     <parameter name="tailNumber" value="N677F" type="string"/>
 
     <server>
@@ -358,7 +361,7 @@
             </input>
             <processor class="SampleArchiver">
                 <output class="SampleOutputStream">
-                    <fileset dir="/tmp/${PROJECT}"
+                    <fileset dir="/media/IOMEGA_HDD/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
                 </output>
@@ -374,7 +377,7 @@
         </service>
     </server>
 
-<! -- dsm311 | viper-03125 | serial-12250 | a2d006 | irig-32688 | dcdc-A128944 -->
+<!-- dsm311 | viper-03125 | serial-12250 | a2d006 | irig-32688 | dcdc-A128944 -->
     <dsm name="dsm311" location="lab" id="1" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
 
@@ -382,42 +385,44 @@
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
-                <variable name="REFDP" units="V" longname="Reference Dew Pointer"> <!-- -1..+1 -->
-                    <parameter name="gain"         value="10"         type="float"/>
+<!-- REFDP                | 2007-09-29 00:26:34 | {-0.0506305,1.04847} -->
+                <variable name="REFDP" units="V" longname="Reference Dew Pointer"> <!-- -2.5 to 2.5 -->
+                    <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope"     value="1.0"        type="float"/>
-                    <parameter name="corIntercept" value="0.0"        type="float"/>
+                    <parameter name="corSlope"     value="1.04847"    type="float"/>
+                    <parameter name="corIntercept" value="-0.0506305" type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
-                <variable name="REFDPTMP" units="V" longname="Reference Dew Pointer Temperature"> <!-- -1..+1 -->
-                    <parameter name="gain"         value="10"         type="float"/>
+<!-- REFDPTMP             | 2007-09-29 00:34:28 | {-0.0775318,1.05815} -->
+                <variable name="REFDPTMP" units="V" longname="Reference Dew Pointer Temperature"> <!-- -2.5 to 2.5 -->
+                    <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope"     value="1.0"        type="float"/>
-                    <parameter name="corIntercept" value="0.0"        type="float"/>
+                    <parameter name="corSlope"     value="1.05815"    type="float"/>
+                    <parameter name="corIntercept" value="-0.0775318" type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
 <!-- A2D006_CH2_4F        | 2007-08-09 19:57:04 | {-0.282927,1.07705} -->
-                <variable name="CELLPRES" units="V" longname="Cell Pressure"> <!-- 0..5 -->
+                <variable name="CELLPRES" units="V" longname="Test Hygrometer Pressure"> <!-- 0..5 -->
                     <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope"     value="xxxxxxx"    type="float"/>
-                    <parameter name="corIntercept" value="xxxxxxxxx"  type="float"/>
+                    <parameter name="corSlope"     value="1.07705"    type="float"/>
+                    <parameter name="corIntercept" value="-0.282927"  type="float"/>
                     <linear slope="266.6666" intercept="0.0" units="hPa"/>
                 </variable>
 <!-- A2D006_CH3_4F        | 2007-08-09 19:58:41 | {-0.215075,1.06443} -->
-                <variable name="REFDPP" units="V" longname="Reference DPP"> <!-- 0..5 -->
+                <variable name="REFDPP" units="V" longname="Reference Hygrometer Pressure"> <!-- 0..5 -->
                     <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope"     value="xxxxxxx"    type="float"/>
-                    <parameter name="corIntercept" value="xxxxxxxxx"  type="float"/>
+                    <parameter name="corSlope"     value="1.06443"    type="float"/>
+                    <parameter name="corIntercept" value="-0.215075"  type="float"/>
                     <linear slope="266.6666" intercept="0.0" units="hPa"/>
                 </variable>
 <!-- A2D006_CH4_4F        | 2007-08-09 20:00:15 | {-0.209234,1.06365} -->
-                <variable name="REFDGP" units="V" longname="Reference DGP"> <!-- 0..5 -->
+                <variable name="REFDGP" units="V" longname="Reference Dew Point Generator Pressure"> <!-- 0..5 -->
                     <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope"     value="xxxxxxx"    type="float"/>
-                    <parameter name="corIntercept" value="xxxxxxxxx"  type="float"/>
+                    <parameter name="corSlope"     value="1.06365"    type="float"/>
+                    <parameter name="corIntercept" value="-0.209234"  type="float"/>
                     <linear slope="266.6666" intercept="0.0" units="hPa"/>
                 </variable>
             </sample>
