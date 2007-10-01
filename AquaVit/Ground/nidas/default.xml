@@ -101,7 +101,7 @@
 </sensorcatalog>
 
 <site name="Ground" class="raf.Aircraft">
-<!--    <parameter name="tailNumber" value="N677F" type="string"/> -->
+   <parameter name="tailNumber" value="N677F" type="string"/>
 
     <server>
         <service class="XMLConfigService">
@@ -138,6 +138,12 @@
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/dsmser0" id="120" suffix="_MC"/>
+
+        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser1" id="130">
+            <sample id="1">
+                <variable name="DPL" units="deg_C" longname="Dew/Frost Point Temperature, Lab"/>
+            </sample>
+        </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
