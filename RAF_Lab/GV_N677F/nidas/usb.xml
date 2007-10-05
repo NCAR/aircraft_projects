@@ -11,32 +11,90 @@
     config="${PROJ_DIR}/RAF_Lab/GV_N677F/nidas/default.xml"
     version="$LastChangedRevision: 428 $" >
     
+<sensorcatalog>
+
+    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+        <sample id="1">
+            <variable name="Clock" units="msec"
+                    longname="milliseconds since 1970 Jan 01 00:00 +0"/>
+        </sample>
+    </irigSensor>
+
+</sensorcatalog>
 
 
 <site name="GV_N677F" class="raf.Aircraft">
     <parameter name="tailNumber" value="N677F" type="string"/>
 
-    <dsm name="eol-lingling" id="77" rserialPort="30002" derivedData="sock::58800">
+    <server>
+        <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="RawSampleService">
+            <!-- input from every DSM on this aircraft that has
+                 a socket output of type RawSampleOutputStream -->
+            <input class="RawSampleInputStream">
+                <socket type="mcaccept"/>
+            </input>
+            <processor class="SampleArchiver">
+                <output class="RawSampleOutputStream" sorterLength="0">
+                   <fileset dir="/home/data"
+                      file="usb_%Y%m%d_%H%M%S.dat"
+                      length="1800">
+                   </fileset>
+                </output>
+
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30000"/>
+                </output>
+            </processor>
+            <processor class="raf.SyncRecordGenerator">
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30001"/>
+                </output>
+            </processor>
+        </service>
+    </server>
+
+    <dsm name="dsmLWO" id="77" rserialPort="30002" derivedData="sock::58800">
         <!--      -->
-        <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_007">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
+
+        <sensor class="raf.TwoD64_USB" devicename="/dev/usbtwod_64_0"
+		id="790" suffix="_64">
             <parameter name="SerialNumber" value="001" type="string"/>
             <parameter name="RESOLUTION" value="25" type="int"/>
+            <parameter name="TAS_RATE" value="10" type="int"/>
             <sample id="1" rate="50">
-                <variable name="PTCLS" units="count" longname="High Speed 2DC Particle count (# sync words)"/>
+                <variable name="PTCLS" units="count" longname="High Speed 2D_64 Particle count (# sync words)"/>
             </sample>
             <sample id="2" rate="10">
-                <variable name="SHADOR" units="count" longname="High Speed 2DC Shadow-or count"/>
+                <variable name="SHADOR" units="count" longname="High Speed 2D_64 Shadow-or count"/>
             </sample>
         </sensor>
-
-        <output class="RawSampleOutputStream">
-            <socket type="server" port="30000"/>
+        <sensor class="raf.TwoD32_USB" devicename="/dev/usbtwod_32_0"
+		id="800" suffix="_32">
+            <parameter name="SerialNumber" value="001" type="string"/>
+            <parameter name="RESOLUTION" value="25" type="int"/>
+            <parameter name="TAS_RATE" value="10" type="int"/>
+            <sample id="1" rate="50">
+                <variable name="PTCLS" units="count" longname="Low Speed 2D_32 Particle count (# sync words)"/>
+            </sample>
+        </sensor>
+	<!--
+        <sensor class="raf.TwoD32_Serial" devicename="/dev/ttyS3" id="810">
+            <sample id="1" rate="10">
+                <variable name="SHADOR" units="count" longname="High Speed 2D32 Shadow-or count"/>
+            </sample>
+        </sensor>
+	-->
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
         </output>
         <output class="RawSampleOutputStream" sorterLength="0">
-            <fileset dir="/home/data"
-                file="usb_%Y%m%d_%H%M%S.dat"
-                length="1800" >
-            </fileset>
+            <socket type="server" port="30000"/>
         </output>
     </dsm>
 </site>
