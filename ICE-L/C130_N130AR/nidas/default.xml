@@ -677,46 +677,52 @@
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
-<!-- PCAB                 | 2007-06-05 19:33:23 | {-0.423651,1.1319} -->
+
+<!--  A2D004_0_1T          | 2007-10-19 22:52:39 | {-0.433825,1.12743} -->
                 <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.1319" type="float"/> <parameter name="corIntercept" value="-0.423651" type="float"/>
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.12743" type="float"/> <parameter name="corIntercept" value="-0.433825" type="float"/>
                     <poly coefs="-3.0 108.882 -0.0430805" units="hPa"/>
                 </variable>
-<!-- A2D004_1_1T          | 2007-06-05 19:35:54 | {-0.360504,1.12899} -->
+<!--  A2D004_1_2F          | 2007-10-19 22:54:44 | {-0.456446,1.1246} -->
                 <variable name="TIMICE1" units="V" longname="Ice Stick Exposed">
-                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                    <parameter name="gain"     value="2"      type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                    <parameter name="corSlope" value="1.1246" type="float"/> <parameter name="corIntercept" value="-0.456446" type="float"/>
                 </variable>
-<!-- A2D004_2_1T          | 2007-06-05 19:38:42 | {-0.191777,1.10978} -->
+<!--  A2D004_2_2F          | 2007-10-19 22:57:11 | {-0.257718,1.10549} -->
                 <variable name="TIMICE2" units="V" longname="Ice Stick Loaded">
-                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                    <parameter name="corSlope" value="1.10549" type="float"/> <parameter name="corIntercept" value="-0.257718" type="float"/>
                 </variable>
-<!-- A2D004_3_1T          | 2007-06-05 19:41:46 | {-0.106849,1.10833} -->
-                <variable name="XAERIT" units="V" longname="XEARIT">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.10833" type="float"/> <parameter name="corIntercept" value="-0.106849" type="float"/>
+<!--  A2D004_3_2F          | 2007-10-19 22:59:07 | {-0.199516,1.10408} -->
+                <variable name="XAERIT" units="V" longname="Temperature of Wyo heated inlet">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                    <parameter name="corSlope" value="1.10408" type="float"/> <parameter name="corIntercept" value="-0.199516" type="float"/>
+                    <linear slope="10.0" intercept="-50.0" units="deg_C"/>
                 </variable>
-<!-- A2D004_4_1T          | 2007-06-05 19:44:42 | {-0.0548388,1.10845} -->
-                <variable name="INFLOW" units="V" longname="INFLOW">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.10845" type="float"/> <parameter name="corIntercept" value="-0.0548388" type="float"/>
+<!--  A2D004_4_2T          | 2007-10-19 23:02:33 | {-0.033044,1.10434} -->
+                <variable name="INFLOW" units="V" longname="Inlet excess flow rate">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.10434" type="float"/> <parameter name="corIntercept" value="-0.033044" type="float"/>
+                    <poly coefs="25.2 406.1 100.617" units="vlpm"/>
                 </variable>
-<!-- A2D004_5_1T          | 2007-06-05 19:46:42 | {-0.200886,1.12028} -->
-                <variable name="INRHUM" units="V" longname="INRHUM">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.12028" type="float"/> <parameter name="corIntercept" value="-0.200886" type="float"/>
+<!--  A2D004_5_4F          | 2007-10-19 23:05:06 | {-0.149622,1.1164} -->
+                <variable name="INRHUM" units="V" longname="Inlet humidity">
+                    <parameter name="gain"     value="4"      type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                    <parameter name="corSlope" value="1.1164" type="float"/> <parameter name="corIntercept" value="-0.149622" type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="%"/>
                 </variable>
-<!-- A2D004_6_1T          | 2007-06-05 19:48:43 | {-0.220926,1.12052} -->
-                <variable name="INTEMP" units="V" longname="INTEMP">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.12052" type="float"/> <parameter name="corIntercept" value="-0.220926" type="float"/>
+<!--  A2D004_6_4F          | 2007-10-19 23:08:46 | {-0.162245,1.11645} -->
+                <variable name="INTEMP" units="V" longname="Inlet temperature, Humitter 50Y">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                    <parameter name="corSlope" value="1.11645" type="float"/> <parameter name="corIntercept" value="-0.162245" type="float"/>
+                    <linear slope="100.0" intercept="-40.0" units="deg_C"/>
                 </variable>
-<!-- A2D004_7_1T          | 2007-06-05 19:50:52 | {-0.100768,1.10057} -->
-                <variable name="INPS2" units="V" longname="INPS2">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.10057" type="float"/> <parameter name="corIntercept" value="-0.100768" type="float"/>
+<!--  A2D004_7_2F          | 2007-10-19 23:11:05 | {-0.16131,1.09629} -->
+                <variable name="INPS2" units="V" longname="Inlet pressure, Setra sensor">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"    type="bool"/>
+                    <parameter name="corSlope" value="1.09629" type="float"/> <parameter name="corIntercept" value="-0.16131" type="float"/>
+                    <linear slope="103.42" intercept="0.0" units="mb"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
