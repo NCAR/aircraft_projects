@@ -446,7 +446,7 @@
         <parameter name="HSKP_SCALE" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000" type="int"/>
 
         <sample id="1" rate="10">
-            <variable name="AUHSAS" length="99" units="count" longname="UHSAS Raw Count Histogram"/>
+            <variable name="AUHSAS" length="100" units="count" longname="UHSAS Raw Count Histogram"/>
             <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
             <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
             <variable name="USMPFLW" units="V" longname="UHSAS Sample Flow">
@@ -470,6 +470,20 @@
         </sample>
         <message separator="\xff\xff\x00" position="beg" length="234"/>
     </serialSensor>
+
+    <sensor ID="Fast2DC" class="raf.TwoD64_USB">
+        <parameter name="SerialNumber" value="Fast2DC_001" type="string"/>
+        <parameter name="RESOLUTION" value="25" type="int"/>
+        <parameter name="TAS_RATE" value="10" type="int"/>
+
+        <sample id="1" rate="1">
+            <variable name="TCNT2DC" units="count" longname="High Speed 2DC Total Particle Count (computed)"/>
+        </sample>
+        <sample id="2" rate="10">
+            <variable name="SHADOR" units="count" longname="High Speed 2DC Shadow OR Count"/>
+        </sample>
+    </sensor>
+
 
     <serialSensor ID="VCSEL" class="DSMSerialSensor"
         baud="19200" parity="none" databits="8" stopbits="1">
@@ -832,7 +846,8 @@
     <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
-<!--    <serialSensor IDREF="CDP" devicename="/dev/dsmser0" id="110"/> -->
+        <serialSensor IDREF="CDP" devicename="/dev/dsmser0" id="500" suffix="_LPO"/>
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod0" id="550" suffix="_LPI">
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -978,9 +993,10 @@
     <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
 
-<!--    <serialSensor IDREF="RDMA"   devicename="/dev/dsmser0" id="110"/> -->
-        <serialSensor IDREF="TDLH2O" devicename="/dev/dsmser1" id="120" suffix="_MC"/>
-<!--    <serialSensor IDREF="GNI"    devicename="/dev/dsmser2" id="130"/> -->
+<!--    <serialSensor IDREF="RDMA" devicename="/dev/dsmser0" id="510"/> -->
+        <serialSensor IDREF="S100" devicename="/dev/dsmser5" id="530" suffix="_?W?"/>
+        <serialSensor IDREF="UHSAS" devicename="/dev/dsmser6" id="550" suffix="_?W?"/>
+<!--    <serialSensor IDREF="2DP" devicename="/dev/usbtwod0" id="570" suffix="_?W?"/> -->
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
@@ -1061,6 +1077,8 @@
 
     <dsm name="dsm325" location="Wing_POD_R" id="25" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="325"/>
+
+        <serialSensor IDREF="TDLH2O" devicename="/dev/dsmser1" id="120" suffix="_MC"/>
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
