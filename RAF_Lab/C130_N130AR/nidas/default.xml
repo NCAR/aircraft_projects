@@ -263,8 +263,7 @@
     </serialSensor>
 
 
-    <serialSensor ID="S100" class="raf.SPP100_Serial"
-        baud="38400" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="S100" class="raf.SPP100_Serial" baud="38400" parity="none" databits="8" stopbits="1">
 
 	<parameter name="calFile" type="string" value="PMSspecs"/>
 
@@ -277,24 +276,21 @@
 	<parameter name="ATT_ACCEPT" type="int" value="95"/>
 	<parameter name="DIVISOR_FLAG" type="int" value="0"/>
 	<parameter name="CT_METHOD" type="int" value="0"/>
-	<parameter name="MAX_WIDTH" type="int" value="10000"/>
 	<parameter name="CHAN_THRESH" type="int" value="0 23 77 121 170 205 265 342 427 520 627 731 842 950 1084 1225 1374 1531 1695 1866 2032 2220 2416 2620 2830 3048 3258 3461 3668 4096"/>
 
         <sample id="1">
 	    <variable name="FREF" units="V" longname="SPP-100 Laser Reference Voltage"/>
-	    <variable name="FTMP" units="deg_C" longname="FSSP-100 Housekeeping Data"/>
+	    <variable name="FTMP" units="deg_C" longname="SPP-100 Housekeeping Data"/>
 	    <variable name="FRNG" units="" longname="SPP-100 Size Range Category"/>
 	    <variable name="REJDOF" units="count" longname="SPP-100 Particles Rejected (Outside Depth-of-Field))"/>
 	    <variable name="REJAT" units="" longname="SPP-100 Average Transit Rejected Particles"/>
 	    <variable name="OVFLW" units="" longname="SPP-100 AtoD Converter Overflow/Overrange"/>
-	    <variable name="AS100" length="30" units="count" longname="FSSP-100 Raw Accumulation (per cell) - DMT"/>
+	    <variable name="AS100" length="30" units="count" longname="SPP-100 (FSSP-100) Raw Accumulation (per cell) - DMT"/>
         </sample>
-        <prompt string="\x1b\x02\x1d\x00" rate="1"/>
+        <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
 
-
-    <serialSensor ID="S200" class="raf.SPP200_Serial"
-        baud="38400" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="S200" class="raf.SPP200_Serial" baud="38400" parity="none" databits="8" stopbits="1">
 
 	<parameter name="calFile" type="string" value="PMSspecs"/>
 
@@ -303,7 +299,6 @@
 	<parameter name="THRESHOLD" type="int" value="20"/>
 	<parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
 	<parameter name="DIVISOR_FLAG" type="int" value="0"/>
-	<parameter name="MAX_WIDTH" type="int" value="10000"/>
 	<parameter name="CHAN_THRESH" type="int" value="692 1040 1517 2157 4096 4231 4348 4537 4825 5251 5859 6703 8192 8345 8502 8682 8872 9070 9252 9432 9544 9737 9937 10166 10471 10797 11162 11499 11852 12288"/> 
 
         <sample id="1">
@@ -320,13 +315,11 @@
 	    <variable name="PTMP" units="deg_C" longname="SPP-200 Detector Temperature"/>
 	    <variable name="AS200" length="30" units="count" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT"/>
         </sample>
-        <prompt string="\x1b\x02\x1d\x00" rate="1"/>
+        <prompt string="\x1b\x02\x1d\x00" rate="10"/>
         <message length="154"/>
     </serialSensor>
 
-
-    <serialSensor ID="S300" class="raf.SPP300_Serial"
-        baud="38400" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="S300" class="raf.SPP300_Serial" baud="38400" parity="none" databits="8" stopbits="1">
 
 	<parameter name="calFile" type="string" value="PMSspecs"/>
 
@@ -336,20 +329,19 @@
 	<parameter name="DOF_REJ" type="int" value="1"/>
 	<parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
 	<parameter name="DIVISOR_FLAG" type="int" value="0"/>
-	<parameter name="MAX_WIDTH" type="int" value="10000"/>
 	<parameter name="CHAN_THRESH" type="int" value="38 92 194 376 678 1155 1880 2942 4096 4140 4238 4384 4590 4699 4807 4928 5027 5124 5255 5446 5673 5912 6164 6429 6754 7027 7310 7601 7901 8192"/>
 
         <sample id="1">
-	    <variable name="FREF3" units="V" longname="FSSP-300 Laser Reference Voltage"/>
-	    <variable name="FTMP3" units="deg_C" longname="FSSP-300 Housekeeping Data"/>
+	    <variable name="FREF3" units="V" longname="SPP-300 Laser Reference Voltage"/>
+	    <variable name="FTMP3" units="deg_C" longname="SPP-300 Housekeeping Data"/>
 	    <variable name="AS300" length="30" units="count" longname="SPP-300 (FSSP-300) Raw Accumulation (per cell) - DMT"/>
         </sample>
-        <prompt string="\x1b\x02\x1d\x00" rate="1"/>
+        <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
 
+    <serialSensor ID="CDP" class="raf.CDP_Serial" baud="38400" parity="none" databits="8" stopbits="1">
 
-    <serialSensor ID="CDP" class="raf.CDP_Serial"
-        baud="38400" parity="none" databits="8" stopbits="1">
+	<parameter name="calFile" type="string" value="PMSspecs"/>
 
 	<parameter name="NCHANNELS" type="int" value="30"/>
 	<parameter name="RANGE" type="int" value="0"/>
@@ -372,6 +364,37 @@
 	    <variable name="ACDP" length="30" units="count" longname="CDP Raw Accumulation (per cell)"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
+    </serialSensor>
+
+    <serialSensor ID="UHSAS" class="raf.UHSAS_Serial" baud="115200" parity="none" databits="8" stopbits="1">
+
+        <parameter name="SerialNumber" value="UHSAS001" type="string"/>
+        <parameter name="HSKP_SCALE" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000" type="int"/>
+
+        <sample id="1" rate="10">
+            <variable name="AUHSAS" length="99" units="count" longname="UHSAS Raw Count Histogram"/>
+            <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
+            <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
+            <variable name="USMPFLW" units="V" longname="UHSAS Sample Flow">
+                <linear slope="0.3543" intercept="-0.155" units="sccs"/>
+            </variable>
+            <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
+            <variable name="UTEMP" units="V" longname="UHSAS Temperature in Canister, signal"/>
+            <variable name="USHFLW" units="V" longname="UHSAS Air Sheath Flow">
+                <linear slope="4.1667" intercept="0.0" units="sccs"/>
+            </variable>
+            <variable name="UDIFF" units="V" longname="UHSAS Absolute Pressure in Canister, signal"/>
+            <variable name="UBTMP" units="V" longname="UHSAS Temperature in Canister">
+                <linear slope="173.722" intercept="0.0" units="K"/>
+            </variable>
+            <!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/-->
+            <variable name="UPRESS" units="V" longname="UHSAS Absolute Pressure in Canister">
+                <linear slope="22.222" intercept="10.556" units="kPa"/>
+            </variable>
+            <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
+            <!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
+        </sample>
+        <message separator="\xff\xff\x00" position="beg" length="234"/>
     </serialSensor>
 
 
