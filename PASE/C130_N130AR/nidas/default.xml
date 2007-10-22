@@ -339,8 +339,7 @@
     </serialSensor>
 
 
-    <serialSensor ID="S100" class="raf.SPP100_Serial"
-        baud="38400" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="S100" class="raf.SPP100_Serial" baud="38400" parity="none" databits="8" stopbits="1">
 
         <parameter name="calFile" type="string" value="PMSspecs"/>
 
@@ -353,7 +352,7 @@
         <parameter name="ATT_ACCEPT" type="int" value="95"/>
         <parameter name="DIVISOR_FLAG" type="int" value="0"/>
         <parameter name="CT_METHOD" type="int" value="0"/>
-        <parameter name="MAX_WIDTH" type="int" value="10000"/>         <parameter name="CHAN_THRESH" type="int" value="0 23 77 121 170 205 265 342 427 520 627 731 842 950 1084 1225 1374 1531 1695 1866 2032 2220 2416 2620 2830 3048 3258 3461 3668 4096"/>
+        <parameter name="CHAN_THRESH" type="int" value="0 23 77 121 170 205 265 342 427 520 627 731 842 950 1084 1225 1374 1531 1695 1866 2032 2220 2416 2620 2830 3048 3258 3461 3668 4096"/>
 
         <sample id="1">
             <variable name="FREF" units="V" longname="SPP-100 Laser Reference Voltage"/>
@@ -367,8 +366,7 @@
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
 
-    <serialSensor ID="S200" class="raf.SPP200_Serial"
-        baud="38400" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="S200" class="raf.SPP200_Serial" baud="38400" parity="none" databits="8" stopbits="1">
 
         <parameter name="calFile" type="string" value="PMSspecs"/>
 
@@ -377,7 +375,6 @@
         <parameter name="THRESHOLD" type="int" value="20"/>
         <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
         <parameter name="DIVISOR_FLAG" type="int" value="0"/>
-        <parameter name="MAX_WIDTH" type="int" value="10000"/>
         <parameter name="CHAN_THRESH" type="int" value="692 1040 1517 2157 4096 4231 4348 4537 4825 5251 5859 6703 8192 8345 8502 8682 8872 9070 9252 9432 9544 9737 9937 10166 10471 10797 11162 11499 11852 12288"/>
 
         <sample id="1">
@@ -399,8 +396,7 @@
     </serialSensor>
 
 
-    <serialSensor ID="S300" class="raf.SPP300_Serial"
-        baud="38400" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="S300" class="raf.SPP300_Serial" baud="38400" parity="none" databits="8" stopbits="1">
 
         <parameter name="calFile" type="string" value="PMSspecs"/>
 
@@ -410,7 +406,6 @@
         <parameter name="DOF_REJ" type="int" value="1"/>
         <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
         <parameter name="DIVISOR_FLAG" type="int" value="0"/>
-        <parameter name="MAX_WIDTH" type="int" value="10000"/>
         <parameter name="CHAN_THRESH" type="int" value="38 92 194 376 678 1155 1880 2942 4096 4140 4238 4384 4590 4699 4807 4928 5027 5124 5255 5446 5673 5912 6164 6429 6754 7027 7310 7601 7901 8192"/>
 
         <sample id="1">
@@ -421,8 +416,9 @@
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
 
-    <serialSensor ID="CDP" class="raf.CDP_Serial"
-        baud="38400" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="CDP" class="raf.CDP_Serial" baud="38400" parity="none" databits="8" stopbits="1">
+
+        <parameter name="calFile" type="string" value="PMSspecs"/>
 
         <parameter name="NCHANNELS" type="int" value="30"/>
         <parameter name="RANGE" type="int" value="0"/>
@@ -818,8 +814,13 @@
     <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
-        <serialSensor IDREF="S200" devicename="/dev/dsmser0" id="720" suffix="_109"/>
-        <serialSensor IDREF="S300" devicename="/dev/dsmser1" id="730" suffix="_305"/>
+        <serialSensor IDREF="S200" devicename="/dev/dsmser0" id="720" suffix="_LPI">
+            <parameter name="SerialNumber" type="string" value="PCAS108"/>
+        </serialSensor>
+
+        <serialSensor IDREF="S300" devicename="/dev/dsmser1" id="730" suffix="_LPO">
+            <parameter name="SerialNumber" type="string" value="FSSP305"/>
+        </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
@@ -1030,7 +1031,7 @@
                     <parameter name="corSlope" value="1.06766" type="float"/> <parameter name="corIntercept" value="-0.260437" type="float"/>
                 </variable>
 <!-- FO3_CL               | 2007-06-09 16:49:08 | {-0.423953,1.07613} -->
-                <variable name="FO3_CL" units="V" longname="Ozone Mixing Ratio">
+                <variable name="FO3_CL" units="V" longname="Fast Response Ozone Mixing Ratio">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.07613" type="float"/> <parameter name="corIntercept" value="-0.423953" type="float"/>
                     <linear slope="20.0" intercept="0.0" units="ppbv"/>
@@ -1059,8 +1060,10 @@
     <dsm name="dsm325" location="Wing_POD_R" id="25" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="325"/>
 
+        <serialSensor IDREF="S100" devicename="/dev/dsmser0" id="710" suffix="_RPO">
+            <parameter name="SerialNumber" type="string" value="FSSP122"/>
+        </serialSensor>
 
-        <serialSensor IDREF="S100" devicename="/dev/dsmser0" id="710" suffix="_122"/>
         <serialSensor IDREF="TDLH2O" devicename="/dev/dsmser1" id="120" suffix="_MC"/>
 
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
