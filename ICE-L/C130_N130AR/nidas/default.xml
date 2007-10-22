@@ -417,6 +417,8 @@
 
     <serialSensor ID="CDP" class="raf.CDP_Serial" baud="38400" parity="none" databits="8" stopbits="1">
 
+        <parameter name="calFile" type="string" value="PMSspecs"/>
+
         <parameter name="NCHANNELS" type="int" value="30"/>
         <parameter name="RANGE" type="int" value="0"/>
         <parameter name="THRESHOLD" type="int" value="20"/>
@@ -471,6 +473,32 @@
         <message separator="\xff\xff\x00" position="beg" length="234"/>
     </serialSensor>
 
+    <sensor ID="TwoDP" class="raf.TwoD32_USB">
+
+        <parameter name="calFile" type="string" value="PMSspecs"/>
+
+        <parameter name="RESOLUTION" value="200" type="int"/>
+        <parameter name="TAS_RATE" value="10" type="int"/>
+        <sample id="1" rate="1">
+            <variable name="TCNT" units="count" longname="2D-P Particle count (# sync words)"/>
+        </sample>
+    </sensor>
+
+    <serialSensor ID="PMS2DHouse" class="DSMSerialSensor" 
+        baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="%x %x %*x %*x %x %x %x %x %x">
+            <variable name="H2DV15" units="V" longname="2D-P Probe Housekeeping"/>
+            <variable name="H2DMTMP" units="V" longname="2D-P Probe Housekeeping"/>
+            <variable name="H2DEE1" units="V" longname="2D-P End Diode Voltage"/>
+            <variable name="H2DEE32" units="V" longname="2D-P End Diode Voltage"/>
+            <variable name="H2DVN15" units="V" longname="2D-P Probe Housekeeping"/>
+            <variable name="H2DV5" units="V" longname="2D-P Probe Housekeeping"/>
+            <variable name="SHADORP" units="count" longname="2D-P Shadow OR Counts"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+
     <sensor ID="Fast2DC" class="raf.TwoD64_USB">
         <parameter name="SerialNumber" value="F2DC001" type="string"/>
         <parameter name="RESOLUTION" value="25" type="int"/>
@@ -507,14 +535,14 @@
 
     <serialSensor ID="CFDC" class="DSMSerialSensor"
         baud="38400" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f">
+        <sample id="1" rate="1" scanfFormat="%f %f %f %f %f %f %f">
             <variable name="CT1" units="%" longname="CFDC Saturation Water"/>
             <variable name="CT2" units="deg_C" longname="CFDC Aerosol Location Temperature"/>
             <variable name="CT3" units="#/cm3" longname="CFDC Concentration"/>
             <variable name="CT4" units="bool" longname="CFDC CVI (ON=1)"/>
             <variable name="CT5" units="seconds" longname="CFDC MCA Live Time"/>
             <variable name="CT6" units="hPa" longname="CFDC Pressure"/>
-            <variable name="CT7" units="none" longname="CFDC Filter"/>
+            <variable name="CT7" units="bool" longname="CFDC Filter (ON=1)"/>
         </sample>
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
@@ -1004,9 +1032,9 @@
             <parameter name="SerialNumber" type="string" value="FSSP109"/>
         </serialSensor>
 
-        <serialSensor IDREF="2DP" devicename="/dev/usbtwod0" id="570" suffix="_LWI">
+        <sensor IDREF="TwoDP" devicename="/dev/usbtwod_32_0" id="570" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="2DP10"/>
-        </serialSensor>
+        </sensor>
 
 <!-- Still need Pms2d HouseKeeping Entry -->
 
