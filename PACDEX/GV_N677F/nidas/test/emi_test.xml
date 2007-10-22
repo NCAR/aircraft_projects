@@ -287,7 +287,6 @@
         <parameter name="ATT_ACCEPT" type="int" value="95"/>
         <parameter name="DIVISOR_FLAG" type="int" value="0"/>
         <parameter name="CT_METHOD" type="int" value="0"/>
-        <parameter name="MAX_WIDTH" type="int" value="10000"/>
         <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
 
         <sample id="1">
@@ -297,7 +296,7 @@
             <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
             <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
             <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
-            <variable name="ACDP" length="30" units="count" longname="CDP Raw Accumulation (per cell)" count="true"/>
+            <variable name="ACDP" length="31" units="count" longname="CDP Raw Accumulation (per cell)" count="true"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
@@ -324,7 +323,7 @@
 
     <serialSensor ID="CFDC" class="DSMSerialSensor"
         baud="38400" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f">
+        <sample id="1" rate="1" scanfFormat="%f %f %f %f %f %f %f">
             <variable name="CT1" units="%" longname="CFDC Saturation Water"/>
             <variable name="CT2" units="deg_C" longname="CFDC Aerosol Location Temperature"/>
             <variable name="CT3" units="#/cm3" longname="CFDC Concentration"/>
@@ -716,11 +715,16 @@
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS2" id="730" suffix="_LWO"/>
 
-        <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_007">
+        <sensor class="raf.TwoD64_USB" devicename="/dev/usbtwod0" id="790" suffix="_007">
             <parameter name="SerialNumber" value="001" type="string"/>
             <parameter name="RESOLUTION" value="25" type="int"/>
-            <sample id="1">
-                <variable name="SHADOR" units="count" longname="High Speed 2DC Shadow-or count"/>
+            <parameter name="TAS_RATE" value="10" type="int"/>
+
+            <sample id="1" rate="1">
+                <variable name="TCNT2DC" units="count" longname="High Speed 2DC Particle Count"/>
+            </sample>
+            <sample id="2" rate="10">
+                <variable name="SHADOR" units="count" longname="High Speed 2DC Shadow OR Count"/>
             </sample>
         </sensor>
 

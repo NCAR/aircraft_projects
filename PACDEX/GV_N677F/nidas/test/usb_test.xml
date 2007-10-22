@@ -22,11 +22,16 @@
     <dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002" derivedData="sock::58800">
         <!--
         -->
-        <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_007">
+        <sensor class="raf.TwoD64_USB" devicename="/dev/usbtwod0" id="790" suffix="_007">
             <parameter name="SerialNumber" value="001" type="string"/>
             <parameter name="RESOLUTION" value="25" type="int"/>
-            <sample id="1">
-                <variable name="SHADOR" units="count" longname="High Speed 2DC Shadow-or count"/>
+            <parameter name="TAS_RATE" value="10" type="int"/>
+
+            <sample id="1" rate="1">
+                <variable name="TCNT2DC" units="count" longname="High Speed 2DC Total Counts (computed)"/>
+            </sample>
+            <sample id="2" rate="10">
+                <variable name="SHADOR" units="count" longname="High Speed 2D_64 Shadow-or count"/>
             </sample>
         </sensor>
 
