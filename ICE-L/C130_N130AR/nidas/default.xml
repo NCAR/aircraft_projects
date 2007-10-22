@@ -849,7 +849,7 @@
         <serialSensor IDREF="CDP" devicename="/dev/dsmser0" id="500" suffix="_LPO">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
         </serialSensor>
-        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod0" id="550" suffix="_LPI"/>
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod0" id="550" suffix="_LPC"/>
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -996,16 +996,21 @@
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
 
 <!--    <serialSensor IDREF="RDMA" devicename="/dev/dsmser0" id="510"/> -->
-        <serialSensor IDREF="S100" devicename="/dev/dsmser5" id="530" suffix="_?W?">
-            <parameter name="SerialNumber" type="string" value="FSSP109"/>
-        </serialSensor>
-        <serialSensor IDREF="UHSAS" devicename="/dev/dsmser6" id="550" suffix="_?W?">
+        <serialSensor IDREF="UHSAS" devicename="/dev/dsmser1" id="550" suffix="_RWI">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
         </serialSensor>
-<!--    <serialSensor IDREF="2DP" devicename="/dev/usbtwod0" id="570" suffix="_?W?">
+
+        <serialSensor IDREF="S100" devicename="/dev/dsmser5" id="530" suffix="_RWO">
+            <parameter name="SerialNumber" type="string" value="FSSP109"/>
+        </serialSensor>
+
+        <serialSensor IDREF="2DP" devicename="/dev/usbtwod0" id="570" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="2DP10"/>
         </serialSensor>
--->
+
+<!-- Still need Pms2d HouseKeeping Entry -->
+
+
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="10">
