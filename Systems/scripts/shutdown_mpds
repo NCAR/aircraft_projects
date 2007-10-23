@@ -4,5 +4,11 @@ echo "Shutting down mpds connection ..."
 
 ifdown ppp0
 
+sudo pkill ppp
+sudo pkill ddclient
+
+ifdown ppp0
+ifup eth2
+
 echo "done"
 sleep 5
