@@ -871,13 +871,13 @@
         </output>
     </dsm>
 
-    <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002">
+    <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
-        <serialSensor IDREF="CDP" devicename="/dev/dsmser0" id="500" suffix="_LPO">
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS5" id="500" suffix="_LPO">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
         </serialSensor>
-        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod0" id="550" suffix="_LPC"/>
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LPC"/>
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -1020,23 +1020,24 @@
         </output>
     </dsm>
 
-    <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002">
+    <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
 
 <!--    <serialSensor IDREF="RDMA" devicename="/dev/dsmser0" id="510"/> -->
-        <serialSensor IDREF="UHSAS" devicename="/dev/dsmser1" id="550" suffix="_RWI">
+        <serialSensor IDREF="UHSAS" devicename="/dev/dsmser1" id="530" suffix="_RWI">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
         </serialSensor>
-
-        <serialSensor IDREF="S100" devicename="/dev/dsmser5" id="530" suffix="_RWO">
+<!--
+        <serialSensor IDREF="S100" devicename="/dev/dsmser5" id="570" suffix="_RWO">
             <parameter name="SerialNumber" type="string" value="FSSP109"/>
         </serialSensor>
-
-        <sensor IDREF="TwoDP" devicename="/dev/usbtwod_32_0" id="570" suffix="_LWI">
+-->
+<!--
+        <sensor IDREF="TwoDP" devicename="/dev/usbtwod_32_0" id="600" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="2DP10"/>
         </sensor>
-
-<!-- Still need Pms2d HouseKeeping Entry -->
+-->
+<!-- Still need Pms2d HouseKeeping Entry devicename="/dev/dsmser2" id="550" suffix="_LWI"/>-->
 
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
