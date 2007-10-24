@@ -1,0 +1,197 @@
+#!/bin/bash
+#
+# /etc/init.d/pcmcom8
+#       Starts pcmcom8 driver module for querying/initializing/controlling
+#	a Win Systems 8 port serial card. Does a setserial on each uart
+#	to notify the serial driver about the ports on the board.
+#
+# chkconfig: 2345 50 75
+# description: Insert a driver module for Win Systems PCMCOM8 boards,
+#		query available cards, do setserial on associated tty devices.
+#
+
+# set -x
+
+RETVAL=0
+
+# PATH=/usr/local/bin:$PATH
+
+# viper irqs associated with ISA irqs
+# TODO: also probe these via an ioctl to pcmcom8 (or procfs)
+# ISA  0 1 2 3   4    5   6   7  8  9   10  11  12    14  15
+
+case `uname -m` in
+armv5tel)
+	echo "viper"
+	virqs=(0 0 0 104 105 106 107 108 0 112 109 110 111 0 113 114)
+	;;
+armv5teb)
+	echo "vulcan"
+	virqs=(0 1 2 22 23 24 25 26 8 9 27 28 29 13 14 15)
+	;;
+esac
+
+#
+baud_base=115200
+# baud_base=460800
+
+# default configuration of first 4 boards
+# Found prior to CHATS that things work better if you
+# share the same interrupt, so we'll use 3 for the first 2 cards
+defports=(0x100 0x140 0x180 0x1c0)
+defirqs=(11 11 11 11)
+
+tmpdir=/var/tmp/dev
+
+clear_tmpdir() {
+    [ -d $tmpdir ] || mkdir -p $tmpdir
+    rm -f $tmpdir/pcmcom8_*
+}
+
+setup_tmpdev() {
+    modprobe pcmcom8
+    emajor=`cat /proc/devices | fgrep pcmcom8 | cut -d\  -f1`
+
+    # pcmcom8 major number may change from boot to boot
+    # so we create these device files on $tmpdir
+    # and create links to them from /dev.
+    rm -f $tmpdir/pcmcom8_0
+    mknod $tmpdir/pcmcom8_0 c $emajor 0
+}
+
+get_nboards() {
+    setup_tmpdev
+    # number of boards with acceptable config in eeprom
+    nboards=0
+    nboards=`set_pcmcom8 -n $tmpdir/pcmcom8_0 || echo 0`
+
+    # Create /dev/pcmcom8_N for each board
+    eminor=0
+    for (( brd = 0; brd < $nboards; brd++ )); do
+	dev=pcmcom8_$brd
+	[ -c $tmpdir/$dev ] || mknod $tmpdir/$dev c $emajor $eminor
+	[ -h /dev/$dev ] || ln -s $tmpdir/$dev /dev
+	chmod 666 $tmpdir/$dev
+	# increment eminor by number of uart ports
+	while read portstr port irqstr irq stuff; do
+	    case "$irqstr" in
+	    irq)
+		let eminor++
+		;;
+	    esac
+	done < <(set_pcmcom8 /dev/$dev)
+    done
+}
+
+get_isabase() {
+    # ISA base address on system
+    set_pcmcom8 -b $tmpdir/pcmcom8_0 || echo -1
+}
+check_ports() {
+    result=0
+    ports=()
+    for (( brd = 0; brd < $nboards; brd++ )); do
+	dev=pcmcom8_$brd
+        
+	# read ioport and irq configuration
+	while read portstr port irqstr irq stuff; do
+	    case "$irqstr" in
+	    irq)
+		portval=$(( $port ))
+		# valid port addresses are 0x100 to 0x3f8 (256-1016)
+		# If not in this range then there isn't a board at this
+		# address.
+		if [ $portval -ge 256 -a $portval -le 1016 ];then
+		    # If a duplicate ioport address is found, report the error.
+		    if echo ${ports[*]} | fgrep -q $port; then
+			echo "Duplicate port=$port on /dev/$dev"
+			result=1
+			break
+		    fi
+		    ports=(${ports[*]} $port)
+		fi
+		# echo ${ports[*]}
+		;;
+	    esac
+	done < <(set_pcmcom8 /dev/$dev)
+    done
+    return $result
+}
+
+create_ports() {
+
+    baseaddr=$((`get_isabase`))	# convert to numeric
+    if [ $baseaddr -lt 0 ]; then
+        echo "ISA base address not known"
+	exit 1
+    fi
+    # Create /dev/ttySN files and do setserial on them
+    # First available ttyS port on Viper
+    ttynum=5
+    # major and minor number of ttyS5
+    tmajor=4
+    tminor=69
+    # minor number of pcmcom8 devices
+    eminor=0
+    for (( brd = 0; brd < $nboards; brd++ )); do
+	dev=pcmcom8_$brd
+
+	# read ioport and irq configuration
+	while read portstr port irqstr irq; do
+	    case "$irqstr" in
+	    irq)
+		portval=$(($port))
+		if [ $portval -ge 256 -a $portval -le 1016 ]; then
+		    tty=/dev/ttyS$ttynum
+		    [ -c $tty ] || mknod $tty c $tmajor $tminor
+
+		    # device for accessing the digital out pin
+		    # associated with a port on the pcmcom8
+		    dio=ttyD$ttynum
+		    [ -c $tmpdir/$dio ] || mknod $tmpdir/$dio c $emajor $eminor
+		    [ -h /dev/$dio ] || ln -s $tmpdir/$dio /dev
+
+		    portstr=`printf "%#x" $(( $baseaddr + $port ))`
+		    nirq=${virqs[$irq]}
+		    setserial -zvb $tty port $portstr irq $nirq baud_base $baud_base autoconfig
+		    let tminor++
+		    let ttynum++
+		fi
+		let eminor++
+		;;
+	    esac
+	done < <(set_pcmcom8 /dev/$dev)
+    done
+}
+
+# Set EEPROM configuration on Emerald board to default values
+default_eeprom_config() {
+    for (( brd = 0; brd < $nboards; brd++ )); do
+	dev=pcmcom8_$brd
+	echo "doing: set_pcmcom8 $tmpdir/$dev ${defports[$brd]} ${defirqs[$brd]}"
+	set_pcmcom8 $tmpdir/$dev ${defports[$brd]} ${defirqs[$brd]}
+    done
+}
+
+case "$1" in
+    start)
+	clear_tmpdir
+	get_nboards
+	check_ports || default_eeprom_config
+	create_ports
+	;;
+    stop)
+	rmmod pcmcom8
+	;;
+    default_eeprom)
+	clear_tmpdir
+	get_nboards
+	default_eeprom_config
+	;;
+    *)
+	echo "usage: $0 start|stop|default_eeprom"
+	RETVAL=1
+	;;
+esac
+exit $RETVAL
+
