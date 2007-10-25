@@ -5,7 +5,7 @@ pkgdest=../built/$package
 
 ./rc_symlinks.sh
 
-[ -d $pkgdest ] || mkdir $pkgdest
+[ -d $pkgdest ] || mkdir -p $pkgdest
 
 rsync --exclude=.svn -a root etc DEBIAN $pkgdest
 
