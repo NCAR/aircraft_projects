@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd etc
+cd /etc
  
 [ -d rc3.d ] || mkdir rc3.d
 [ -d rc6.d ] || mkdir rc6.d
