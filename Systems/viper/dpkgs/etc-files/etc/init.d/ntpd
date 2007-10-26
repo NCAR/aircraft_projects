@@ -46,7 +46,7 @@ readconf() {
         if [ -s "$ntpstep" ]; then
 	    tickers=`/bin/sed -e 's/\#.*$//g' $ntpstep`
         fi
-	timeservers=`/bin/awk '$1=="peer"||$1=="server"{print $2}' $ntpconf|fgrep -v 127.127.1.0`
+	timeservers=`awk '$1=="peer"||$1=="server"{print $2}' $ntpconf|fgrep -v 127.127.1.0`
 
 	# check for -x
 	OPTIND=0

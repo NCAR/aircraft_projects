@@ -13,7 +13,6 @@ DESC="dsm"
 
 ruser=ads
 server=server		# found in /etc/hosts
-adspath=/opt/local/nidas/arm
 
 dsmpath=/var/tmp/code
 fmwpath=$dsmpath/firmware
@@ -28,9 +27,25 @@ if [ ! -r $modconf ]; then
     exit 1
 fi
 
+vulcan=(`uname -a | grep vulcan`)
+
+if [ -n "$vulcan" ]; then
+    adspath=/opt/local/nidas/armbe
+else
+    adspath=/opt/local/nidas/arm
+fi
+
 # check if a module is loaded, if not insmod it
 insmod_chk() {
-	lsmod | fgrep -q $1 || insmod "$@"
+    set -x
+    module=$1
+    shift 1
+    if [ -n "$vulcan" ]; then
+	lsmod | fgrep -q $module || insmod $modpath/$module.ko $@
+    else
+	lsmod | fgrep -q $module || insmod $module $@
+    fi
+    set +x
 }
 
 # check if a module is loaded, if so rmmod it
@@ -74,7 +89,7 @@ get_devdir() {
 }
 
 #
-# After modules are loaded, create any necessary symbolic
+# After RTLinux modules are loaded, create any necessary symbolic
 # links between any character device files found on $devdir
 # and /dev.  User space code opens the FIFOs on /dev
 # since that is the conventional place for them.
@@ -94,6 +109,54 @@ create_dev_symlinks() {
     done
 }
 
+create_devices() {
+	modules=($(get_modules))
+	for m in ${modules[*]}; do
+	    case "$m" in
+	      usbtwod)
+                [ -c /dev/usbtwod_64_0 ] || mknod /dev/usbtwod_64_0 c 180 192
+                [ -c /dev/usbtwod_64_1 ] || mknod /dev/usbtwod_64_1 c 180 193
+                [ -c /dev/usbtwod_64_2 ] || mknod /dev/usbtwod_64_2 c 180 194
+                [ -c /dev/usbtwod_64_3 ] || mknod /dev/usbtwod_64_3 c 180 195
+                [ -c /dev/usbtwod_32_0 ] || mknod /dev/usbtwod_32_0 c 180 196
+                [ -c /dev/usbtwod_32_1 ] || mknod /dev/usbtwod_32_1 c 180 197
+                [ -c /dev/usbtwod_32_2 ] || mknod /dev/usbtwod_32_2 c 180 198
+                [ -c /dev/usbtwod_32_3 ] || mknod /dev/usbtwod_32_3 c 180 199
+                ;;
+	      pc104sg)
+                MAJOR=`awk "\\$2==\"irig\" {print \\$1}" /proc/devices`
+                if [ -n "$MAJOR" ] ; then
+                    rm -f /dev/irig0                  # remove stale nodes
+                    mknod /dev/irig0 c $MAJOR 0
+                    echo "mknod /dev/irig0 c $MAJOR 0"
+                fi
+                ;;
+	      ncar_a2d)
+                MAJOR=`awk "\\$2==\"ncar_a2d\" {print \\$1}" /proc/devices`
+                if [ -n "$MAJOR" ] ; then
+                    rm -f /dev/ncar_a2d[01]              # remove stale nodes
+                    mknod /dev/ncar_a2d0 c $MAJOR 0
+                    mknod /dev/ncar_a2d1 c $MAJOR 1
+                    echo "mknod /dev/ncar_a2d0 c $MAJOR 0"
+                    echo "mknod /dev/ncar_a2d1 c $MAJOR 1"
+                fi
+
+                MAJOR=`awk "\\$2==\"ncar_a2d_boardtemp\" {print \\$1}" /proc/devices`
+                if [ -n "$MAJOR" ] ; then
+                    rm -f /dev/ncar_a2d_boardtemp[01]    # remove stale nodes
+                    mknod /dev/ncar_a2d_boardtemp0 c $MAJOR 0
+                    mknod /dev/ncar_a2d_boardtemp1 c $MAJOR 1
+                    echo "mknod /dev/ncar_a2d_boardtemp0 c $MAJOR 0"
+                    echo "mknod /dev/ncar_a2d_boardtemp1 c $MAJOR 1"
+                fi
+                ;;
+	      *)
+                echo "unusable module '$m'"
+                ;;
+	    esac
+	done
+}
+
 # load the modules read from stdin. This can't use
 # get_modules because it needs the whole module line
 load_modules() {
@@ -103,7 +166,11 @@ load_modules() {
 	echo "${modline[@]}" | egrep -q "^ *#" && continue	# comment line
         insmod_chk "${modline[@]}"
     done
-    create_dev_symlinks
+    if [ -n "$vulcan" ]; then
+	create_devices < $modconf
+    else
+	create_dev_symlinks
+    fi
 }
 
 unload_modules() {
@@ -137,7 +204,11 @@ copy_modules() {
 	modules=($(get_modules))
 	for m in ${modules[*]}; do
             [ $m == rtl ] && continue	# don't fetch rtl.o
-	    rsync -rlptDzv $ruser@$server:$adspath/rtlinux/$m.o      $modpath/
+	    if [ -n "$vulcan" ]; then
+	        rsync -rlptDzv $ruser@$server:$adspath/linux/$m.ko   $modpath/
+	    else
+	        rsync -rlptDzv $ruser@$server:$adspath/rtlinux/$m.o  $modpath/
+	    fi
 	done
 }
 
@@ -147,8 +218,7 @@ copy_apps() {
 	rsync -rlptDzv $ruser@$server:$adspath/lib/libnidas.so       $libpath/
 	rsync -rlptDzv $ruser@$server:$adspath/lib/libnidas_dynld.so $libpath/
 	rsync -rlptDzv $ruser@$server:$adspath/bin/dsm               $dsmpath/
-	rsync -rlptDzv $ruser@$server:$adspath/filters/*.cfg         $ftrpath/
-	ldconfig
+	rsync -rlptDzv $ruser@$server:$adspath/filters/\*.cfg        $ftrpath/
 }
 
 start_app() {
@@ -195,7 +265,7 @@ check_ntp() {
     [ $(date +%Y) -ne 2000 ] && return
 
     # figure out timeserver from /etc/ntp.conf (taken from init.d/ntpd)
-    timeserver=(`/bin/awk '$1=="peer"||$1=="server"{print $2}' /etc/ntp.conf |fgrep -v 127.127.1.0`)
+    timeserver=(`awk '$1=="peer"||$1=="server"{print $2}' /etc/ntp.conf |fgrep -v 127.127.1.0`)
     if [ ${#timeserver[*]} -gt 0 ]; then
         timeserver=${timeserver[0]}
     else
@@ -223,23 +293,26 @@ check_ntp() {
     /etc/init.d/ntpd start
 }
 
+# mount the compact flash card
+mounted=(`mount | grep code`)
+[ -z "$mounted" ] && mount $dsmpath
+
+# get devdir and create it
+devdir=$(get_devdir < $modconf)
+[ -d $devdir ] || mkdir -p $devdir
+# echo "devdir=$devdir"
+
 case "$1" in
   start)
 	echo -n "Starting $DESC (fetch & load modules, fetch app, run app): "
         [ -d $dsmpath ] || mkdir -p $dsmpath
-	mount $dsmpath
-	
-        # get devdir and create it
-        devdir=$(get_devdir < $modconf)
-        echo "devdir=$devdir"
-        [ -d $devdir ] || mkdir -p $devdir
-
 	check_ntp
 	unload_modules < $modconf
 	copy_firmware < $modconf
 	copy_modules < $modconf
 	load_modules < $modconf
 	copy_apps
+	/etc/init.d/pcmcom8 start
 	start_app
 	echo "$NAME."
 	;;
@@ -247,7 +320,6 @@ case "$1" in
 	echo -n "Stopping $DESC: "
 	stop_app
 	unload_modules < $modconf
-	umount $dsmpath
 	echo "$NAME."
 	;;
   restart)
