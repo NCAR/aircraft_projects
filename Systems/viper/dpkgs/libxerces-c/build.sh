@@ -4,6 +4,10 @@ package=libxerces-c
 pkgdest=$PWD/../built/$package
 
 if [ ! -d xerces-c-src_2_7_0 ]; then
+    if [ ! -f xerces-c-current.tar.gz ];then
+        echo "./xerces-c-current.tar.gz not found"
+        exit 0
+    fi
     tar xzf xerces-c-current.tar.gz
 fi
 
