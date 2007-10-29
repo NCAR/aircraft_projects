@@ -2,10 +2,10 @@
 
 cd /etc
  
-[ -d rc3.d ] || mkdir rc3.d
+[ -d rc2.d ] || mkdir rc2.d
 [ -d rc6.d ] || mkdir rc6.d
 
-cd rc3.d
+cd rc2.d
 [ -L S99ads3 ] || ln -s ../init.d/ads3 S99ads3
 
 cd ../rc6.d
