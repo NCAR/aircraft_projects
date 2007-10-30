@@ -8,7 +8,7 @@
     xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
     name="ICE-L"
     system="C130_N130AR"
-    version="$LastChangedRevision$"
+    version="$LastChangedRevision: 687 $"
     >
 <sensorcatalog>
 
@@ -642,13 +642,6 @@
 
         <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="7000"/>
 
-        <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
-            <sample id="1" rate="25">
-                <variable name="HGM232" units="feet" longname="Altitude above ground (radar altimeter">
-                </variable>
-            </sample>
-        </sensor>
-
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
@@ -938,11 +931,21 @@
                     <parameter name="corSlope" value="1.04944" type="float"/> <parameter name="corIntercept" value="-0.128447" type="float"/>
                     <poly coefs="-64.998 26.7721 -0.328722" units="deg_C"/>
                 </variable>
+            </sample>
+            <sample id="2" rate="500">
+<!-- PLWC                 | 2007-06-07 18:24:19 | {-0.372046,1.05884} -->
+                <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.05884" type="float"/> <parameter name="corIntercept" value="-0.372046" type="float"/>
+                </variable>
+            </sample>
+            <sample id="3" rate="100">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="5" type="int"/>
 <!-- RICE                 | 2007-06-07 18:31:30 | {-0.3032,1.05496} -->
                 <variable name="RICE" units="V" longname="Raw Icing-Rate Indicator">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.05496" type="float"/> <parameter name="corIntercept" value="-0.3032"   type="float"/>
-                    <parameter name="channel" value="7" type="int"/>
                 </variable>
             </sample>
             <sample id="4" rate="1">
@@ -990,7 +993,23 @@
                     <parameter name="corSlope" value="1.05917" type="float"/> <parameter name="corIntercept" value="-0.432391" type="float"/>
                 </variable>
             </sample>
-            <sample id="4" rate="1">
+            <sample id="4" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+<!-- TEO3                 | 2007-07-18 16:26:07 | {-0.44941,1.0593} -->
+                <variable name="TEO3" units="V" longname="Teco Ozone Concentration">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0593" type="float"/> <parameter name="corIntercept" value="-0.44941" type="float"/>
+                    <linear slope="20.0" intercept="0.0" units="ppbv"/>
+                </variable>
+<!-- TEO3P                | 2007-07-18 16:44:58 | {-0.421797,1.05948} -->
+                <variable name="TEO3P" units="V" longname="Teco Ozone Pressure">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.05948" type="float"/> <parameter name="corIntercept" value="-0.421797" type="float"/>
+                    <linear slope="66.8624" intercept="414.6" units="hPa"/>
+                </variable>
+            </sample>
+            <sample id="5" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
                 <variable name="A2DTEMP_A2D017" units="deg_C" longname="A2D Temperature"/>
             </sample>
@@ -1003,12 +1022,6 @@
 
     <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
-
-        <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
-            <sample id="1" rate="100">
-                <variable name="CNTS" units="count" longname="TSI CN Counter Output" count="true"/>
-            </sample>
-        </sensor>
 
 <!--    <serialSensor IDREF="RDMA" devicename="/dev/ttyS5" id="510"/> -->
         <serialSensor IDREF="UHSAS" devicename="/dev/ttyS6" id="530" suffix="_RWI">
