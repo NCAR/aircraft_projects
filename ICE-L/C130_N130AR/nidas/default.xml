@@ -1023,6 +1023,12 @@
     <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
 
+        <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
+            <sample id="1" rate="100">
+                <variable name="CNTS" units="count" longname="TSI CN Counter Output" count="true"/>
+            </sample>
+        </sensor>
+
 <!--    <serialSensor IDREF="RDMA" devicename="/dev/ttyS5" id="510"/> -->
         <serialSensor IDREF="UHSAS" devicename="/dev/ttyS6" id="530" suffix="_RWI">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
