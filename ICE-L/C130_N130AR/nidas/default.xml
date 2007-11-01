@@ -486,9 +486,9 @@
         </sample>
     </sensor>
 
-    <serialSensor ID="PMS2DHouse" class="DSMSerialSensor" 
+    <serialSensor ID="TwoD_House" class="DSMSerialSensor" 
         baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%x %x %*x %*x %x %x %x %x %x">
+        <sample id="1" rate="1">
             <variable name="H2DV15" units="V" longname="2D-P Probe Housekeeping"/>
             <variable name="H2DMTMP" units="V" longname="2D-P Probe Housekeeping"/>
             <variable name="H2DEE1" units="V" longname="2D-P End Diode Voltage"/>
@@ -902,7 +902,8 @@
         <sensor IDREF="TwoDP" devicename="/dev/usbtwod_32_0" id="600" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="2DP10"/>
         </sensor>
-<!-- Still need Pms2d HouseKeeping Entry devicename="/dev/ttyS7" id="550" suffix="_LWI"/>-->
+
+        <sensor IDREF="TwoD_House" devicename="/dev/ttyS7" id="610" suffix="_LWI"/>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
