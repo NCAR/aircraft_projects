@@ -486,6 +486,12 @@
         </sample>
     </sensor>
 
+    <serialSensor ID="RDMA" class="DSMSerialSensor" 
+        baud="9600" parity="none" databits="8" stopbits="1">
+
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
     <serialSensor ID="TwoD_House" class="DSMSerialSensor" 
         baud="9600" parity="none" databits="8" stopbits="1">
         <sample id="1" rate="1">
@@ -1041,7 +1047,7 @@
             </sample>
         </sensor>
 
-	<!-- <serialSensor IDREF="RDMA" devicename="/dev/dsmser0" id="510"/> -->
+	<serialSensor IDREF="RDMA" devicename="/dev/dsmser0" id="510"/>
         <serialSensor IDREF="UHSAS" devicename="/dev/dsmser1" id="530" suffix="_RWI">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
         </serialSensor>
