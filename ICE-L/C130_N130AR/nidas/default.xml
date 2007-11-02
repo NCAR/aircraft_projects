@@ -651,8 +651,8 @@
         <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="7000"/>
 
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
-            <sample id="1" rate="25">
-                <variable name="HGM232" units="feet" longname="Altitude above ground (radar altimeter">
+            <sample id="5" rate="25">
+                <variable name="HGM232" units="feet" longname="Altitude above ground (radar altimeter)">
                 </variable>
             </sample>
         </sensor>
@@ -911,6 +911,10 @@
 
         <sensor IDREF="TwoD_House" devicename="/dev/ttyS7" id="610" suffix="_LWI"/>
 
+        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS8" id="530" suffix="_RWI">
+            <parameter name="SerialNumber" type="string" value="UHSAS001"/>
+        </serialSensor>
+
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
@@ -1048,9 +1052,10 @@
         </sensor>
 
 	<serialSensor IDREF="RDMA" devicename="/dev/dsmser0" id="510"/>
-        <serialSensor IDREF="UHSAS" devicename="/dev/dsmser1" id="530" suffix="_RWI">
+<!--        <serialSensor IDREF="UHSAS" devicename="/dev/dsmser2" id="530" suffix="_RWI">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
         </serialSensor>
+-->
         <serialSensor IDREF="S100" devicename="/dev/dsmser5" id="570" suffix="_RWO">
             <parameter name="SerialNumber" type="string" value="FSSP109"/>
         </serialSensor>
