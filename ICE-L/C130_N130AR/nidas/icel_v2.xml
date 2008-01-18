@@ -54,7 +54,10 @@
             <linear slope="1.0" intercept="-0.01" units="degree"/>
           </variable>
         </sample>
-        <sample id="0325" rate="50"               ><variable name="ROLL"               units="degree"   longname="IRS Aircraft Roll Angle"/></sample>
+        <sample id="0325" rate="50">               
+          <variable name="ROLL" units="degree" longname="IRS Aircraft Roll Angle">
+            <linear slope="1.0" intercept="0.6" units="degree"/>
+        </sample>
         <sample id="0326" rate="50"               ><variable name="BPITCHR"            units="deg/s"    longname="IRS Body Pitch Rate"/></sample>
         <sample id="0327" rate="50"               ><variable name="BROLLR"             units="deg/s"    longname="IRS Body Roll Rate"/></sample>
         <sample id="0330" rate="50"               ><variable name="BYAWR"              units="deg/s"    longname="IRS Body Yaw Rate"/></sample>
@@ -73,7 +76,10 @@
     <!--<sample id="0362" rate="50"    process="false"><variable name="Along Trk Accel"    units="G"        longname="Along Trk Accel"/></sample>                 not used    -->
     <!--<sample id="0363" rate="50"    process="false"><variable name="Cross Trk Accel"    units="G"        longname="Cross Trk Accel"/></sample>                 not used    -->
         <sample id="0364" rate="50"               ><variable name="ACINS"              units="m/s2"     longname="IRS Vertical Acceleration"/></sample>
-        <sample id="0365" rate="25"               ><variable name="VSPD"               units="m/s"      longname="IRS Vertical Speed"/></sample>
+        <sample id="0365" rate="25">               
+          <variable name="VSPD" units="m/s" longname="IRS Vertical Speed">
+            <linear slope="1.05" intercept="-0.02" units="degree"/>
+        </sample>
         <sample id="0366" rate="10"               ><variable name="VNS"                units="m/s"      longname="IRS Ground Speed Vector, North Component"/></sample>
         <sample id="0367" rate="10"               ><variable name="VEW"                units="m/s"      longname="IRS Ground Speed Vector, East Component"/></sample>
     <!--<sample id="0370" rate="5"     process="false"><variable name="norm_accel"         units="G"        longname="norm_accel"/></sample>                      not used    -->
@@ -333,7 +339,7 @@
 	    <variable name="PACN" units="hPa" longname="WCN Absolute Pressure"/>
 	    <variable name="TSCN" units="deg_C" longname="WCN Saturator Temperature"/>
 	    <variable name="TGCN" units="deg_C" longname="WCN Growth Tube Temperature"/>
-	    <variable name="TOCN" units="deg_C" longname="WCN Optics Temperature"/>
+	    <variable name="CNTEMP" units="deg_C" longname="WCN Optics Temperature"/>
         </sample>
         <message separator="\r" position="end" length="0"/>
     </serialSensor>
@@ -583,7 +589,9 @@
 
     <serialSensor ID="TDLH2O" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="20" scanfFormat="%*f %*f %*f %*f %*f %*f %f %f %f %f %f %f %f %f">
+        <sample id="1" rate="20" scanfFormat="%*f %*f %f %f %*f %*f %f %f %f %f %f %f %f %f">
+            <variable name="PCELLS" units="hPa" longname="Sample Cell Pressure, TDL Short Path"/>
+            <variable name="TCELLS" units="deg_C" longname="Sample Cell Temperature, TDL Short Path"/>
             <variable name="PP2FS" units="count" longname="2f Signal Amplitude, TDL Short Path"/>
             <variable name="PWRS" units="count" longname="Laser Power, TDL Short Path"/>
             <variable name="IDXS" units="count" longname="Spectral Line Position, TDL Short Path"/>
