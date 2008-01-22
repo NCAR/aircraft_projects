@@ -57,6 +57,7 @@
         <sample id="0325" rate="50">               
           <variable name="ROLL" units="degree" longname="IRS Aircraft Roll Angle">
             <linear slope="1.0" intercept="0.6" units="degree"/>
+          </variable>
         </sample>
         <sample id="0326" rate="50"               ><variable name="BPITCHR"            units="deg/s"    longname="IRS Body Pitch Rate"/></sample>
         <sample id="0327" rate="50"               ><variable name="BROLLR"             units="deg/s"    longname="IRS Body Roll Rate"/></sample>
@@ -79,6 +80,7 @@
         <sample id="0365" rate="25">               
           <variable name="VSPD" units="m/s" longname="IRS Vertical Speed">
             <linear slope="1.05" intercept="-0.02" units="degree"/>
+          </variable>
         </sample>
         <sample id="0366" rate="10"               ><variable name="VNS"                units="m/s"      longname="IRS Ground Speed Vector, North Component"/></sample>
         <sample id="0367" rate="10"               ><variable name="VEW"                units="m/s"      longname="IRS Ground Speed Vector, East Component"/></sample>
@@ -518,11 +520,16 @@
         <parameter name="RESOLUTION" value="25" type="int"/>
         <parameter name="TAS_RATE" value="10" type="int"/>
 
-        <sample id="1" rate="50">
-            <variable name="TCNT2DC" units="count" longname="High Speed 2DC Total Particle Count (computed)"/>
+        <sample id="1" rate="10">
+            <variable name="SHDORC" units="count" longname="Fast 2DC Shadow OR Count"/>
         </sample>
-        <sample id="2" rate="10">
-            <variable name="SHDORC" units="count" longname="High Speed 2DC Shadow OR Count"/>
+        <sample id="2" rate="1">
+            <variable name="A1DC" length="64" units="count" longname="Fast 2DC Raw Accumulation, entire-in (per cell)"/>
+            <variable name="DT1DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
+        </sample>
+        <sample id="3" rate="1">
+            <variable name="A2DC" length="128" units="count" longname="Fast 2DC Raw Accumulation, center-in (per cell)"/>
+            <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
         </sample>
     </sensor>
 
