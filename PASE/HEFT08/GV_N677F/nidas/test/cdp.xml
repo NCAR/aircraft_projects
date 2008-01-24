@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="PACDEX"
+    system="GV_N677F"
+    version="$LastChangedRevision: 428 $"
+    >
+
+<sensorcatalog>
+
+</sensorcatalog>
+
+
+<site name="GV_N677F" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N677F" type="string"/>
+
+    <dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002">
+
+        <serialSensor class="raf.CDP_Serial" devicename="/dev/ttyUSB0" id="730" suffix="_LWI"
+            baud="38400" parity="none" databits="8" stopbits="1">
+
+        <parameter name="NCHANNELS" type="int" value="30"/>
+        <parameter name="RANGE" type="int" value="0"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
+        <parameter name="TRANSIT_REJ" type="int" value="1"/>
+        <parameter name="DOF_REJ" type="int" value="1"/>
+        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+        <parameter name="ATT_ACCEPT" type="int" value="95"/>
+        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
+        <parameter name="CT_METHOD" type="int" value="0"/>
+        <parameter name="MAX_WIDTH" type="int" value="10000"/>
+        <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
+
+        <sample id="1">
+            <variable name="FREF" units="V" longname="CDP Laser Reference Voltage"/>
+            <variable name="FTMP" units="deg_C" longname="CDP Housekeeping Data"/>
+            <variable name="FRNG" units="" longname="CDP Size Range Category"/>
+            <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
+            <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
+            <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
+            <variable name="ACDP" length="30" units="count" longname="CDP Raw Accumulation (per cell)" count="true"/>
+        </sample>
+        <prompt string="\x1b\x02\x1d\x00" rate="10"/>
+    </serialSensor>
+
+
+        <output class="RawSampleOutputStream">
+            <socket type="server" port="30000"/>
+        </output>
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <fileset dir="/home/data"
+                file="cdp_%Y%m%d_%H%M%S.dat"
+                length="1800">
+            </fileset>
+        </output>
+    </dsm>
+
+</site>
+</project>
