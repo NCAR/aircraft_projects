@@ -1,7 +1,7 @@
 #!/bin/sh
 
-package=etc-files
-pkgdest=../built/$package
+pkg=etc-files
+pkgdest=../built/$pkg
 
 ./rc_symlinks.sh
 
@@ -10,6 +10,9 @@ pkgdest=../built/$package
 rsync --exclude=.svn -a etc DEBIAN $pkgdest
 
 fakeroot dpkg -b $pkgdest
-../deb_rename.sh $pkgdest
+
+dpkg-name ${pkgdest%/*}/$pkg.deb
+
+mv ${pkgdest%/*}/${pkg}_*.deb /net/www/docs/software/ael-dpkgs
 
 rm -rf $pkgdest

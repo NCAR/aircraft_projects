@@ -1,7 +1,7 @@
 #!/bin/sh
 
-package=rsync
-pkgdest=../built/$package
+pkg=rsync
+pkgdest=../built/$pkg
 
 rsync --exclude=.svn -a DEBIAN $pkgdest
 
@@ -9,6 +9,9 @@ rsync --exclude=.svn -a DEBIAN $pkgdest
 rm -rf $pkgdest/man
 
 fakeroot dpkg -b $pkgdest
-../deb_rename.sh $pkgdest
 
-# rm -rf $pkgdest
+dpkg-name ${pkgdest%/*}/${pkg}.deb
+
+mv ${pkgdest%/*}/${pkg}_*.deb /net/www/docs/software/ael-dpkgs
+
+rm -rf $pkgdest

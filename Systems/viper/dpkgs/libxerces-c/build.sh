@@ -4,11 +4,11 @@ package=libxerces-c
 pkgdest=$PWD/../built/$package
 
 if [ ! -d xerces-c-src_2_7_0 ]; then
-    if [ ! -f xerces-c-current.tar.gz ];then
+    if [ ! -f xerces-c-src_2_7_0.tar.gz ];then
         echo "./xerces-c-current.tar.gz not found"
         exit 0
     fi
-    tar xzf xerces-c-current.tar.gz
+    tar xzf xerces-c-src_2_7_0.tar.gz
 fi
 
 cd xerces-c-src_2_7_0 || exit 1
@@ -19,9 +19,9 @@ patch -p 1 < ../runConfigure.patch
 export XERCESCROOT=$PWD
 cd $XERCESCROOT/src/xercesc
 
-PATH=/opt/arcom/bin:$PATH
+PATH=/opt/arm_tools/bin:/opt/arcom/bin:$PATH
 
-# which arm-linux-g++
+which arm-linux-g++
 
 # Then build it:
 
@@ -32,6 +32,7 @@ export CFLAGS="-O2"
 ./runConfigure -p linux -c arm-linux-gcc -x arm-linux-g++ -C --host=arm-linux -C --prefix=$pkgdest/usr
 make
 make install
+exit
 
 ./runConfigure -p linux -c arm-linux-gcc -x arm-linux-g++ -C --host=arm-linux -C --prefix=/opt/nidas/arm
 make

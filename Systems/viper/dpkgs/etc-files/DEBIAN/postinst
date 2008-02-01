@@ -10,7 +10,7 @@ cd /etc
 
 # add an entry in fstab for usbdisk
 if ! fgrep -q /var/tmp/usbdisk fstab; then
-    echo "/dev/sda1	/var/tmp/usbdisk	ext3	defaults	0 0" >> fstab
+    echo "/dev/sda1	/var/tmp/usbdisk	ext3	defaults,noauto,noatime,sync	0 0" >> fstab
 fi
 
 # Boot into run-level 2

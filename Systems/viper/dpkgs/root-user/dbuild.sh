@@ -1,14 +1,17 @@
 #!/bin/sh
 
-package=root-user
-pkgdest=../built/$package
+pkg=root-user
+pkgdest=../built/$pkg
 
 [ -d $pkgdest ] || mkdir -p $pkgdest
 
 rsync --exclude=.svn -a root DEBIAN $pkgdest
 
 fakeroot dpkg -b $pkgdest
-../deb_rename.sh $pkgdest
+
+dpkg-name ${pkgdest%/*}/${pkg}.deb
+
+mv ${pkgdest%/*}/${pkg}_*.deb /net/www/docs/software/ael-dpkgs
 
 rm -rf $pkgdest
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 
-package=libxerces-c
-pkgdest=../built/$package
+pkg=libxerces-c
+pkgdest=../built/$pkg
 
 rm -rf $pkgdest/usr/include
 rm -rf $pkgdest/usr/lib/libxerces-depdom*
@@ -9,6 +9,9 @@ rm -rf $pkgdest/usr/lib/libxerces-depdom*
 rsync --exclude=.svn -a DEBIAN $pkgdest
 
 fakeroot dpkg -b $pkgdest
-../deb_rename.sh $pkgdest
 
-# rm -rf $pkgdest
+dpkg-name ${pkgdest%/*}/${pkg}.deb
+
+mv ${pkgdest%/*}/${pkg}_*.deb /net/www/docs/software/ael-dpkgs
+
+rm -rf $pkgdest

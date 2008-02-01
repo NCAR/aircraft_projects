@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd /etc
+cd etc
  
 [ -d rc2.d ] || mkdir rc2.d
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 
-package=ntpd
-pkgdest=../built/$package
+pkg=ntpd
+pkgdest=../built/$pkg
 
 ./rc_symlinks.sh
 rm -rf $pkgdest/DEBIAN
@@ -22,6 +22,9 @@ rm -f $pkgdest/usr/bin/ntp-wait
 rm -f $pkgdest/usr/bin/tickadj
 
 fakeroot dpkg -b $pkgdest
-../deb_rename.sh $pkgdest
 
-# rm -rf $pkgdest
+dpkg-name ${pkgdest%/*}/${pkg}.deb
+
+mv ${pkgdest%/*}/${pkg}_*.deb /net/www/docs/software/ael-dpkgs
+
+rm -rf $pkgdest
