@@ -37,7 +37,7 @@ mv ${pkgdest%/*}/${pkg}_*.deb /net/www/docs/software/ael-dpkgs
 
 rm -rf $pkgdest
 
-kernel=2.6.16.21-ael1-2-vulcan
+kernel=2.6.21.7-ael1-2-vulcan
 arch=armbe
 
 rm -rf lib/modules
