@@ -163,7 +163,11 @@
         <sample id="0355" rate="1" process="false"><variable name="Maintenance_4" units="" longname="Maintenance 4"/></sample>
         <sample id="0377" rate="2" process="false"><variable name="equipment_id" units="" longname="equipment id"/></sample>
     </arincSensor>
-
+<!--
+    <serialSensor ID="D_GPS" baud="115200" parity="none" databits="8" stopbits="1">
+        <message separator="\xaa\x44\x12\x1c" position="beg" length="0"/>
+    </serialsensor>
+-->
     <serialSensor ID="Garmin_GPS" class="GPS_NMEA_Serial"
         baud="4800" parity="none" databits="8" stopbits="1">
 
@@ -300,7 +304,6 @@
         <parameter name="ATT_ACCEPT" type="int" value="95"/>
         <parameter name="DIVISOR_FLAG" type="int" value="0"/>
         <parameter name="CT_METHOD" type="int" value="0"/>
-        <parameter name="MAX_WIDTH" type="int" value="10000"/>
         <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
 
         <sample id="1">
@@ -456,6 +459,33 @@
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
+          <sample id="0314" rate="25">
+            <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
+              <linear slope="1.0" intercept="0.0" units="degree_T"/>
+            </variable>
+          </sample>
+          <sample id="0324" rate="50">
+            <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
+              <linear slope="1.0" intercept="0.38" units="degree"/>
+            </variable>
+          </sample>
+        </arincSensor>
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2">
+          <sample id="0314" rate="25">
+            <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
+              <linear slope="1.0" intercept="0.24" units="degree_T"/>
+            </variable>
+          </sample>
+          <sample id="0324" rate="50">
+            <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
+              <linear slope="1.0" intercept="0.04" units="degree"/>
+            </variable>
+          </sample>
+        </arincSensor>
+        <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G"/>
+
         <serialSensor IDREF="Paro_DigiQuartz_1000"
                 devicename="/dev/dsmser0" id="110">
 	    <sample id="1">
@@ -478,20 +508,11 @@
         </serialSensor>
 
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/dsmser5" id="120"/>
-<!--
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_MPDS" units="deg_C">
-                </variable>
-            </sample>
-        </sensor>
--->
+
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
     </dsm>
-
-
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
@@ -524,50 +545,45 @@
             </sample>
         </serialSensor>
 
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
-            <sample id="1" rate="500">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="100">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="5" type="int"/>
+<!-- TTHL2                | 2008-02-04 21:51:45 | {-0.0765785,1.09262} -->
                 <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
-                    <parameter name="gain" value="4" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.0" type="float"/>
-                    <parameter name="corIntercept" value="0.0" type="float"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.09262" type="float"/> <parameter name="corIntercept" value="-0.0765785" type="float"/>
                     <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
                 </variable>
+<!-- TTHL1                | 2008-02-04 21:54:00 | {-0.301189,1.13678} -->
                 <variable name="TTHL1" units="V" longname="Total Temperature, Deiced Left">
-                    <parameter name="gain" value="4" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.20597" type="float"/>
-                    <parameter name="corIntercept" value="-0.319817" type="float"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.13678" type="float"/> <parameter name="corIntercept" value="-0.301189"  type="float"/>
                     <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
                 </variable>
+<!-- TTHR2                | 2008-02-04 21:56:08 | {-0.25473,1.1299} -->
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
-                    <parameter name="gain" value="4" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.19836" type="float"/>
-                    <parameter name="corIntercept" value="-0.270368" type="float"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.1299"  type="float"/> <parameter name="corIntercept" value="-0.25473"   type="float"/>
                     <poly coefs="-89.336 25.588 0.01" units="deg_C"/>
                 </variable>
+<!-- TTHR1                | 2008-02-04 21:58:21 | {-0.1603,1.11304} -->
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
-                    <parameter name="gain" value="4" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.18032" type="float"/>
-                    <parameter name="corIntercept" value="-0.169412" type="float"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.11304" type="float"/> <parameter name="corIntercept" value="-0.1603"    type="float"/>
                     <poly coefs="-88.838 25.305 0.0098" units="deg_C"/>
                 </variable>
+<!-- NOSETMP              | 2008-02-04 22:03:37 | {-0.654478,1.14729} -->
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.21949" type="float"/>
-                    <parameter name="corIntercept" value="-0.700056" type="float"/>
-		    <linear slope="10.0" intercept="-50.0" units="deg_C"/>
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.14729" type="float"/> <parameter name="corIntercept" value="-0.654478"  type="float"/>
+                    <linear slope="10.0" intercept="-50.0" units="deg_C"/>
                 </variable>
             </sample>
-        </sensor>
-
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_RAD" units="deg_C">
-                </variable>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_A2D005" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
@@ -581,11 +597,10 @@
 
         <sensor class="raf.LamsSensor" devicename="/dev/lams0" id="140">
             <sample id="1" rate="8">
-                <variable name="LAMS_MAX"  length="256" units="Mhz" longname="LAMS histogram maximums"/>
-                <variable name="LAMS_AVG"  length="256" units="Mhz" longname="LAMS histogram averages"/>
+                <variable name="LAMS_MAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
+                <variable name="LAMS_AVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
             </sample>
         </sensor>
-
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -597,33 +612,59 @@
 
         <serialSensor IDREF="VCSEL" devicename="/dev/dsmser0" id="130" suffix="_VXL"/>
 
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
-            <sample id="1" rate="500">
-                <variable name="PPPCAB" units="V" longname="Himil Plate R4">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.41165" type="float"/>
-                    <parameter name="corIntercept" value="-0.0492457" type="float"/>
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+<!-- PCAB                 | 2008-02-04 23:34:52 | {-0.452587,1.11221} -->
+                <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.11221" type="float"/> <parameter name="corIntercept" value="-0.452587"  type="float"/>
                 </variable>
-                <variable name="PPLTSETRA" units="V" longname="Himil Plate R4, Left">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.16845" type="float"/>
-                    <parameter name="corIntercept" value="-0.320444" type="float"/>
+<!-- PDUMPPL              | 2008-02-04 23:37:30 | {-0.325723,1.09908} -->
+                <variable name="PDUMPPL" units="V" longname="Pressure of instrument exhaust duct, left">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.09908" type="float"/> <parameter name="corIntercept" value="-0.325723"  type="float"/>
+                    <linear slope="103.42" intercept="0" units="hPa"/>
                 </variable>
-                <variable name="PPRTSETRA" units="V" longname="Himil Plate R4, Right">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.17318" type="float"/>
-                    <parameter name="corIntercept" value="-0.383492" type="float"/>
+<!-- PDUMPPR              | 2008-02-04 23:42:04 | {-0.303313,1.10257} -->
+                <variable name="PDUMPPR" units="V" longname="Pressure of instrument exhaust duct, right">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.10257" type="float"/> <parameter name="corIntercept" value="-0.303313"  type="float"/>
+                    <linear slope="103.42" intercept="0" units="hPa"/>
                 </variable>
+<!--
+<!- A2D007_2F_3          | 2008-02-05 00:03:55 | {-0.361223,1.10704} ->
+                <variable name="A2D007_2F_3" units="V" longname="spare">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.10704" type="float"/> <parameter name="corIntercept" value="-0.361223"  type="float"/>
+                </variable>
+<!- A2D007_2F_4          | 2008-02-05 00:06:12 | {-0.343871,1.10372} ->
+                <variable name="A2D007_2F_4" units="V" longname="spare">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.10372" type="float"/> <parameter name="corIntercept" value="-0.343871"  type="float"/>
+                </variable>
+<!- A2D007_2F_5          | 2008-02-05 00:08:17 | {-0.285099,1.09769} ->
+                <variable name="A2D007_2F_5" units="V" longname="spare">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.09769" type="float"/> <parameter name="corIntercept" value="-0.285099"  type="float"/>
+                </variable>
+<!- A2D007_2F_6          | 2008-02-05 00:10:26 | {-0.405119,1.10643} ->
+                <variable name="A2D007_2F_6" units="V" longname="spare">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.10643" type="float"/> <parameter name="corIntercept" value="-0.405119"  type="float"/>
+                </variable>
+<!- A2D007_2F_7          | 2008-02-05 00:12:32 | {-0.272962,1.09356} ->
+                <variable name="A2D007_2F_7" units="V" longname="spare">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
+                </variable>
+-->
             </sample>
-        </sensor>
-
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_MTP" units="deg_C">
-                </variable>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_A2D007" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
@@ -636,14 +677,7 @@
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/dsmser0" id="110" suffix="_MC"/>
-<!--
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_TDL" units="deg_C">
-                </variable>
-            </sample>
-        </sensor>
--->
+
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
@@ -655,19 +689,24 @@
         <serialSensor IDREF="CDP" devicename="/dev/ttyS2" id="730" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
         </serialSensor>
-
+<!--
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <sample id="1" rate="1000">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="100">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="5" type="int"/>
                 <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.47706" type="float"/>
-                    <parameter name="corIntercept" value="-0.344603" type="float"/>
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
                     <linear slope="-10.0" intercept="0.0" units="W"/>
                 </variable>
             </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_A2D1603" units="deg_C" longname="A2D Temperature"/>
+            </sample>
         </sensor>
-
+-->
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
@@ -682,25 +721,23 @@
         <serialSensor IDREF="UHSAS" devicename="/dev/ttyS1" id="530" suffix="_RWI">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
         </serialSensor>
-
+<!--
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <sample id="1" rate="500">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="100">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="5" type="int"/>
                 <variable name="RICE" units="V" longname="Raw Icing-Rate Indicator">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.46794" type="float"/>
-                    <parameter name="corIntercept" value="-0.0391416" type="float"/>
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
                 </variable>
             </sample>
-        </sensor>
-
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_GNI" units="deg_C">
-                </variable>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_A2D019" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
-
+-->
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
@@ -708,6 +745,19 @@
             <socket type="server" port="30000"/>
         </output>
     </dsm>
+
+ <dsm name="hyper" location="hyper_server" id="77" rserialPort="30002" derivedData="sock::58800">
+<!--
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
+        <serialSensor IDREF="D_GPS" devicename="/dev/??????" id="800" suffix="_HYPER"/>
+-->
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="server" port="30000"/>
+        </output>
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <fileset dir="/home/data" file="dgps_%Y%m%d_%H%M%S.dat" length="0"/>
+        </output>
+  </dsm>
 
 </site>
 </project>
