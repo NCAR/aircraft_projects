@@ -163,11 +163,11 @@
         <sample id="0355" rate="1" process="false"><variable name="Maintenance_4" units="" longname="Maintenance 4"/></sample>
         <sample id="0377" rate="2" process="false"><variable name="equipment_id" units="" longname="equipment id"/></sample>
     </arincSensor>
-<!--
-    <serialSensor ID="D_GPS" baud="115200" parity="none" databits="8" stopbits="1">
+
+    <serialSensor ID="D_GPS" class="DSMSerialSensor" baud="115200" parity="none" databits="8" stopbits="1">
         <message separator="\xaa\x44\x12\x1c" position="beg" length="0"/>
-    </serialsensor>
--->
+    </serialSensor>
+
     <serialSensor ID="Garmin_GPS" class="GPS_NMEA_Serial"
         baud="4800" parity="none" databits="8" stopbits="1">
 
@@ -518,28 +518,28 @@
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
 
         <serialSensor IDREF="Mensor_6100"
-                devicename="/dev/dsmser0" id="110">
+                devicename="/dev/ttyS5" id="110">
             <sample id="1">
                 <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Mensor_6100"
-                devicename="/dev/dsmser1" id="112">
+                devicename="/dev/ttyS6" id="112">
             <sample id="1">
                 <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Mensor_6100"
-                devicename="/dev/dsmser2" id="114">
+                devicename="/dev/ttyS7" id="114">
             <sample id="1">
                 <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Mensor_6100"
-                devicename="/dev/dsmser3" id="116">
+                devicename="/dev/ttyS8" id="116">
             <sample id="1">
                 <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome"/>
             </sample>
@@ -676,7 +676,7 @@
     <dsm name="dsm312" location="TDL Rack L-1" id="10" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
 
-        <serialSensor IDREF="TDLH2O" devicename="/dev/dsmser0" id="110" suffix="_MC"/>
+        <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -746,18 +746,17 @@
         </output>
     </dsm>
 
- <dsm name="hyper" location="hyper_server" id="77" rserialPort="30002" derivedData="sock::58800">
-<!--
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
-        <serialSensor IDREF="D_GPS" devicename="/dev/??????" id="800" suffix="_HYPER"/>
--->
+    <dsm name="192.168.184.1" location="DGPS" id="77" rserialPort="30002">
+
+        <serialSensor IDREF="D_GPS" devicename="/dev/ttyS0" id="800"/>
+
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="server" port="30000"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
-            <fileset dir="/home/data" file="dgps_%Y%m%d_%H%M%S.dat" length="0"/>
-        </output>
-  </dsm>
+   </dsm>
 
 </site>
 </project>
