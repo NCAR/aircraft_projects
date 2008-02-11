@@ -165,7 +165,7 @@
     </arincSensor>
 
     <serialSensor ID="D_GPS" class="DSMSerialSensor" baud="115200" parity="none" databits="8" stopbits="1">
-        <message separator="\xaa\x44\x12\x1c" position="beg" length="0"/>
+        <message separator="\xaa\x44\x12" position="beg" length="0"/>
     </serialSensor>
 
     <serialSensor ID="Garmin_GPS" class="GPS_NMEA_Serial"
@@ -592,6 +592,21 @@
         </output>
     </dsm>
 
+    <dsm name="dsm301" location="lams_bb" id="6" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
+
+        <sensor class="raf.LamsSensor" devicename="/dev/lams0" id="140" suffix="_bb">
+            <sample id="1" rate="2">
+                <variable name="LAMS_MAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
+                <variable name="LAMS_AVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+   
     <dsm name="dsm311" location="lams" id="7" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
 
@@ -618,9 +633,11 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
 <!-- PCAB                 | 2008-02-04 23:34:52 | {-0.452587,1.11221} -->
+<!-- PCAB                 | 2008-02-06 18:56:49 | {-4.34962,108.196,-0.0150027} -->
                 <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.11221" type="float"/> <parameter name="corIntercept" value="-0.452587"  type="float"/>
+                    <poly coefs="-4.34962 108.196 -0.0150027" units="hPa"/>
                 </variable>
 <!-- PDUMPPL              | 2008-02-04 23:37:30 | {-0.325723,1.09908} -->
                 <variable name="PDUMPPL" units="V" longname="Pressure of instrument exhaust duct, left">
@@ -686,7 +703,7 @@
     <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="LWO"/>
 
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS2" id="730" suffix="_LWI">
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
         </serialSensor>
 <!--
@@ -746,16 +763,25 @@
         </output>
     </dsm>
 
-    <dsm name="192.168.184.1" location="DGPS" id="77" rserialPort="30002">
+    <dsm name="hyper" location="DGPS" id="77" rserialPort="30002">
 
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS0" id="800"/>
 
+	<!--
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
+-->
+	<output class="RawSampleOutputStream" sorterLength="0">
+	    <fileset dir="/var/r1/${PROJECT}"
+                        file="dgps_%Y%m%d_%H%M%S_${FLIGHT}.ads"
+                        length="0"/>
+        </output>
+	<!--
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="server" port="30000"/>
         </output>
+	-->
    </dsm>
 
 </site>
