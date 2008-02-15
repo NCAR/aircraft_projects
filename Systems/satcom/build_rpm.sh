@@ -48,20 +48,8 @@ tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn ${pkg}
 
 rpmbuild -ba --clean ${pkg}.spec
 
-
-exit 
-
-rpm1=$topdir/RPMS/noarch/${pkg}-*.rpm
-
-# package: nidas-ael 
-pkg=nidas-ael
-version=1.0-1
-rpmbuild -ba --clean ${pkg}.spec
-
-exit
-
 if [ -d $rroot ]; then
-    rpm2=$topdir/RPMS/noarch/${pkg}-*.rpm
+    rpms="$topdir/RPMS/noarch/raf-satcom-*.noarch.rpm $topdir/RPMS/noarch/raf-ddclient-*.noarch.rpm"
     copy_ael_rpms_to_eol_repo $rpm1 $rpm2
 fi
 

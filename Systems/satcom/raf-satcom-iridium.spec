@@ -9,7 +9,8 @@ Url: http://www.eol.ucar.edu/
 Packager: Gordon Maclean <maclean@ucar.edu>
 BuildRoot: /tmp/%{name}-%{version}
 Vendor: UCAR
-# Requires: ppp >= 2.4.4
+Requires: ppp >= 2.4.4
+BuildArch: noarch
 
 # LIC: GPL
 %description
