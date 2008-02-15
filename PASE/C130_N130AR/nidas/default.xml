@@ -429,7 +429,6 @@
         <parameter name="ATT_ACCEPT" type="int" value="95"/>
         <parameter name="DIVISOR_FLAG" type="int" value="0"/>
         <parameter name="CT_METHOD" type="int" value="0"/>
-        <parameter name="MAX_WIDTH" type="int" value="10000"/>
         <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
 
         <sample id="1">
@@ -577,7 +576,7 @@
 
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
             <sample id="5" rate="25">
-                <variable name="HGM232" units="feet" longname="Altitude above ground (radar altimeter">
+                <variable name="HGM232" units="feet" longname="Altitude above ground (radar altimeter)">
                 </variable>
             </sample>
         </sensor>
@@ -790,11 +789,13 @@
                 <variable name="XUVP" units="V" longname="UV Hygrometer Pressure">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                     <parameter name="corSlope" value="1.06247" type="float"/> <parameter name="corIntercept" value="-0.114885" type="float"/>
+                    <poly coefs="143.34 -188.86 0.0034" units="hPa"/>
                 </variable>
 <!-- A2D011_5_1T          | 2007-06-05 20:49:49 | {-0.369209,1.08606} -->
                 <variable name="XUVT" units="V" longname="UV Hygrometer Temperature">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                     <parameter name="corSlope" value="1.08606" type="float"/> <parameter name="corIntercept" value="-0.369209" type="float"/>
+                    <poly coefs="70.84 3.777 18.295" units="deg_C"/>
                 </variable>
             </sample>
         </sensor>
@@ -831,7 +832,7 @@
                     <parameter name="corSlope" value="1.05207" type="float"/> <parameter name="corIntercept" value="-0.208211" type="float"/>
                 </variable>
 <!-- XGLWC                | 2007-06-06 21:23:04 | {-0.217584,1.05337} -->
-                <variable name="XGLWC" units="V" longname="Gerber PV-100 Probe Liquid Water Content">
+                <variable name="XGLWC" units="gram/m3" longname="Gerber PV-100 Probe Liquid Water Content">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                     <parameter name="corSlope" value="1.05337" type="float"/> <parameter name="corIntercept" value="-0.217584" type="float"/>
                 </variable>
