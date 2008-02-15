@@ -1,0 +1,179 @@
+plugin rp-pppoe.so
+debug
+
+# Cannot lock ethernet device
+# lock
+
+logfile /var/log/satcom/ppp_mpds.log
+
+# linkname name: Sets the logical name of the link to name.
+# Pppd will  create  a file  named  ppp-name.pid  in /var/run
+# (or /etc/ppp on some sys-tems) containing its process ID.
+# This can be useful  in  determining  which  instance of pppd
+# is responsible for the link to a given peer system.
+#  This is a privileged option.
+#  It is set to mpds by pppoe-connect if we're using ifcfg-mpds for config
+#  so we don't need to over-ride it here
+# linkname mpds
+
+# ipparam string: Provides an extra parameter to the ip-up, ip-pre-up
+# and  ip-down scripts. If this option is given, the string supplied
+# is given as the 6th parameter to those scripts.
+#  It is set to mpds by pppoe-connect if we're using ifcfg-mpds for config
+#  so we don't need to over-ride it here
+# ipparam mpds
+
+# persist: Do not exit after a connection is terminated; instead try
+# to reopen the connection. The maxfail option still has
+# an effect on persistent connections.
+# This does not work well with rp-pppoe. Perhaps the raw ethernet socket
+# needs to be re-opened each time?
+# The /usr/sbin/pppoe-connect script (started from /usr/sbin/pppoe-start)
+# does an infinite loop, starting pppd every time it fails, which gives
+# a persistent connection.
+# persist
+
+# updetach: With this option, pppd will detach from its controlling terminal
+# once  it has successfully established the ppp connection (to the
+# point where the first network control protocol, usually  the  IP
+# control protocol, has come up). Don't use with rp-pppoe.
+# updetach
+
+# passive: Enables the "passive" option in the LCP.  With this option, pppd
+# will  attempt  to initiate a connection; if no reply is received
+# from the peer, pppd will then just wait passively  for  a  valid
+# LCP  packet from the peer, instead of exiting, as it would with-
+# out this option.
+# passive
+
+# maxfail n: Terminate after n consecutive failed connection attempts.
+# A value of 0 means no limit.  The default value is 10.
+# pppoe-connect does an infinite reconnect loop anyway, unless
+# DEBUG=1 or RETRY_ON_FAILURE=no. It may be good for pppd to
+# finally fail and get restarted, so we'll use 10
+maxfail 10
+
+# lcp-echo-interval n: If this option is given, pppd will send
+# an LCP echo-request frame to the peer every n seconds.  Normally
+# the peer should respond to the echo-request by sending an
+# echo-reply.   This  option   can   be   used   with   the
+# lcp-echo-failure  option  to  detect  that the peer is no
+# longer connected.
+# This is set in ifcfg-mpds with LCP_INTERVAL
+# lcp-echo-interval 40
+
+# lcp-echo-failure n: If this option is given, pppd will presume
+# the peer to be dead if n LCP echo-requests are sent without
+# receiving  a valid  LCP echo-reply.  If this happens, pppd will
+# terminate the connection.  Use of this option requires a  non-
+# zero  value  for  the  lcp-echo-interval parameter.  This
+# option can be used to enable pppd to terminate after  the
+# physical  connection has been broken (e.g., the modem has
+# hung up) in situations where no  hardware  modem  control
+# lines are available.
+# This is set in ifcfg-mpds with LCP_FAILURE
+# lcp-echo-failure 6
+
+# lcp-max-configure n
+# Set the maximum number of LCP configure-request transmis-
+# sions to n (default 10).
+lcp-max-configure 5
+
+# lcp-max-failure n: Set  the  maximum  number  of LCP
+# configure-NAKs returned before starting to send
+# configure-Rejects  instead  to  n (default 10).
+lcp-max-failure 5
+
+# lcp-max-terminate n: Set the maximum number of LCP
+# terminate-request transmissions to n (default 3).
+lcp-max-terminate 5
+
+# lcp-restart n: Set the LCP restart interval
+# (retransmission timeout) to n seconds (default 3).
+# pppd code says: Set time in seconds between LCP retransmissions
+lcp-restart 20
+
+# holdoff n: Specifies  how  many seconds to wait before
+# re-initiating the link after it terminates.  This option only
+# has any effect if the  persist or demand option is used.  The
+# holdoff period is not applied if the link was  terminated
+# because it was idle.
+# pppoe-connect does a sleep 5 before restarting pppd
+holdoff 1
+
+# ipcp-accept-local: With this option, pppd will accept the
+# peers idea of our local IP address, even if the local IP
+# address was specified in an option.
+# ipcp-accept-local
+
+# ipcp-accept-remote: With this option, pppd will accept the
+# peers idea of its (remote) IP address, even if the remote
+# IP address was specified in an option.
+# ipcp-accept-remote
+
+# ipcp-max-configure n: Set the maximum number of IPCP 
+# configure-request  transmissions to n (default 10).
+ipcp-max-configure 5
+
+# ipcp-max-failure n: Set  the  maximum  number of IPCP
+# configure-NAKs returned before starting to send configure-Rejects
+# instead  to  n (default 10).
+ipcp-max-failure 5
+
+# ipcp-max-terminate n: Set  the  maximum number of IPCP
+# terminate-request transmissions to n (default 3).
+ipcp-max-terminate 5
+
+# ipcp-restart n: Set the IPCP restart interval (retransmission
+# timeout) to n seconds (default 3).
+ipcp-restart 20
+
+# dump set options
+dump
+
+# ktune  Enables pppd to alter  kernel  settings  as  appropriate.
+#     Under  Linux,  pppd  will  enable IP forwarding (i.e. set
+#     /proc/sys/net/ipv4/ip_forward  to  1)  if  the   proxyarp
+#     option  is  used,  and will enable the dynamic IP address
+#     option (i.e. set /proc/sys/net/ipv4/ip_dynaddr to  1)  in
+#     demand mode if the local address changes.
+# Since we don't use proxyarp or demand mode, it probably isn't useful
+# ktune
+
+# proxyarp
+# Add  an  entry  to  this system’s ARP [Address Resolution
+# Protocol] table with the IP address of the peer  and  the
+# Ethernet  address  of  this  system.   This will have the
+# effect of making the peer appear to other systems  to  be
+# on the local ethernet.
+noproxyarp
+
+#
+# record filename
+# Specifies that pppd should record all characters sent and
+# received  to  a file named filename.  This file is opened
+# in append mode, using the users user-ID and permissions.
+# This  option is implemented using a pseudo-tty and a pro-
+# cess to transfer characters between  the  pseudo-tty  and
+# the  real  serial device, so it will increase the latency
+# and CPU overhead of transferring data over the ppp inter-
+# face.   The characters are stored in a tagged format with
+# timestamps, which can be displayed in readable form using
+# the pppdump(8) program.
+# Not supported.
+# record /tmp/ppp_record
+
+# usepeerdns
+# Ask  the  peer  for  up  to  2 DNS server addresses.  The
+# addresses supplied by the peer (if any) are passed to the
+# /etc/ppp/ip-up  script  in the environment variables DNS1
+# and DNS2, and the environment variable USEPEERDNS will be
+# set   to   1.    In   addition,   pppd   will  create  an
+# /var/run/ppp/resolv.conf file containing one or two name-
+# server lines with the address(es) supplied by the peer.
+
+# chap-restart n
+#     Set the CHAP restart interval (retransmission timeout for
+#     challenges) to n seconds (default 3).
+chap-restart 20
+

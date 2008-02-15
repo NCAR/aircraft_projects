@@ -1,0 +1,22 @@
+#!/bin/sh
+
+######################################################################
+# As of version 2.4.4, pppd execs this ip-up script with the
+# following arguments:
+#   ifname devname speed local remote ipparam
+#
+# To test this script, uncomment "set -x" and run it by hand like so:
+# ./ip-up.local ppp0 /dev/ttyS0 38400 12.42.105.41 12.42.104.9 iridium
+#
+######################################################################
+
+# set -x
+
+# PATH=/usr/sbin:/sbin:$PATH
+
+[ $# -lt 6 ] && exit 1
+ipparam=$6
+
+# Look for and execute /etc/ppp/ip-up.$ipparam
+[ -x /etc/ppp/ip-up.$ipparam ] && /etc/ppp/ip-up.$ipparam "$@"
+

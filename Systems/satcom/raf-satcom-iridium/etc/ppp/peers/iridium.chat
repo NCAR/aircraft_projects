@@ -1,0 +1,62 @@
+#!/usr/sbin/chat -evf
+#
+ABORT 'NO CARRIER'
+ABORT 'BUSY'
+TIMEOUT 3
+SAY "....Resetting modem\n"
+''			AT
+'OK\r\n-+++\c-OK\r\n'	ATZE0
+#
+# explicitly enable hardware handshaking
+'OK\r\n'		AT&C1&D2&K3
+#
+# Verbose connect messages
+'OK\r\n'		ATW1X4
+#
+# query model number
+'OK\r\n'		AT+CGMM
+#
+# query revision number
+'OK\r\n'		AT+CGMR
+#
+# Select service type
+# Use V.22 or V.32 for connections to UCAR RAS
+# V.110 for iridium direct.
+#
+# 4,0,1=2400bps,V.22bis
+# 6,0,1=4800bps,V.32
+# 7,0,1=9600bps,V.32
+# 65,0,1=300bps,V.110
+# 66,0,1=1200bps,V.110
+# 68,0,1=2400bps,V.110
+# 70,0,1=4800bps,V.110
+# 71,0,1=9600bps,V.110
+#
+#'OK\r\n'	 	AT+CBST=71,0,1
+'OK\r\n'	 	AT+CBST=7,0,1
+#
+# Set V.43bis data compression
+#   0,0=none, 1,0=transmit, 2,0=receive, 3,0=both
+'OK\r\n'	 	AT+DS=3,0
+#
+# request service report (ASYNC,SYNC,REL ASYNC, REL SYNC) on connect
+'OK\r\n'	 	AT+CR=1
+#
+# request compression info on connect
+'OK\r\n'	 	AT+DR=1
+#
+# display current signal quality, 0-5
+'OK\r\n'	 	AT+CSQ
+#
+TIMEOUT 60
+#
+# Level 3 RAS numbers
+# Local:        720-259-1189
+# Toll free:    866-450-6664
+#
+SAY "....Dialing\n"
+# 'OK\r\n'		ATTD0017202591189
+'OK\r\n'		ATTD0018664506664
+CONNECT		 	''
+SAY "\n....Connected\n"
+SAY "\n....Entering ppp\n"

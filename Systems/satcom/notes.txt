@@ -1,0 +1,288 @@
+These are rambling notes about how PPP connections get established
+and removed
+    /etc/ppp/pap-secrets
+            "hiaper"    *   "None"
+            "rafgs1@local"    *   "None"
+
+######### MPDS #################################
+
+A quick review of how an MPDS connection gets started:
+
+ifup mpds
+    /sbin/ifup is a script
+    sources /etc/sysconfig/network-scripts/network-functions
+    source_config function in network-functions:
+        finds and sources CONFIG=/etc/sysconfig/network-scripts/ifcfg-mpds
+        case $TYPE
+            xDSL)
+            DEVICETYPE="ppp"
+
+    in ifcfg-mpds
+        PIDFILE="/var/run/$CF_BASE-pppoe.pid"
+        PIDFILE=/var/run/ifcfg-mpds-pppoe.pid   PID of pppoe-connect
+
+    /var/run/ifcfg-mpds-pppoe.pid.start   PID of pppoe-start
+    /var/run/ifcfg-mpds-pppoe.pid.pppoe   PID of pppoe
+    /var/run/ifcfg-mpds-pppoe.pid.pppd   PID of pppd
+
+    Also, later pppd will be passed a "linkname mpds" parameter
+    and it will also create a pid file /var/run/ppp-mpds.pid
+
+    execs /etc/sysconfig/network-scripts/ifup-$DEVICETYPE
+    ifup-ppp
+        if $TYPE = xDSL, does /sbin/adsl-start $CONFIG
+
+    In fedora RPM of rp-pppoe, adsl-start is a link to pppoe-start
+
+    pppoe-start:
+        CONNECT=/sbin/pppoe-connect
+        $CONNECT "$@" > /dev/null 2>&1 &
+        if CONNECT_TIMEOUT="" or 0, then exits
+        if DEMAND == yes, exit
+        loops, running pppoe-status $CONFIG > /dev/null
+            if status is good, exit
+            otherwise, if DEBUG, echo $PING
+            sleep $CONNECT_POLL
+            if time -gt $CONNECT_TIMEOUT break
+        end loop
+
+    pppoe-connect :
+        modprobe ppp_generic
+        modprobe ppp_async
+        modprobe ppp_synctty
+        if $LINUX_PLUGIN = yes
+        modprobe pppox
+        modprobe pppoe
+        if $SYNCHRONOUS = yes (we use this)
+            modprobe n_hdlc
+
+        CONNECT_TIMEOUT in pppoe-connect seems to only have effect when
+            DEMAND=yes, which we don't use
+
+        PLUGIN_OPTS=plugin $LINUX_PLUGIN nic-$ETH
+        # we don't use SERVICENAME, but:
+        if test -n "$SERVICENAME" ; then
+            PLUGIN_OPTS="$PLUGIN_OPTS rp_pppoe_service $SERVICENAME"
+        fi
+        PLUGIN_OPTS="$PLUGIN_OPTS $ETH"
+
+        DEVICE=eth3 in ifcfg-mpds
+        DEVNAME=$DEVICE
+        DEVNAME=`basename $CONFIG | sed 's/^ifcfg-//g'`
+        so if we use ifcfg-mpds DEVNAME will be mpds
+
+        IPPARAM=ipparam ${DEVNAME}
+        LINKNAME=linkname ${DEVNAME}
+
+PPP_STD_OPTIONS="$IPPARAM $LINKNAME $PLUGIN_OPTS noipdefault noauth default-asyncmap $DEFAULTROUTE hide-password nodetach $PEERDNS mtu $MTU mru $MRU noaccomp nodeflate nopcomp novj novjccomp user $USER lcp-echo-interval $LCP_INTERVAL lcp-echo-failure $LCP_FAILURE $PPPD_EXTRA"
+
+        if DEMAND = yes (We don't use demand)
+            DEMAND="demand persist idle $CONNECT_TIMEOUT $IPADDR:$REMIP ipcp-accept-remote ipcp-accept-local noipdefault ktune"
+
+
+        SETSID=/usr/bin/setsid (run in new session)
+        while true; do
+            $SETSID $PPPD $PPP_STD_OPTIONS $DEMAND &
+            echo "$!" > $PPPD_PIDFILE
+            wait
+            if test "$RETRY_ON_FAILURE" = "no" ; then
+                exit
+            fi
+            adsl-lost
+            sleep 5
+        done
+
+        Since we will set RETRY_ON_FAILURE=yes, the above loop
+        will re-run pppd if it exits
+
+    pppd and rp-pppoe.so plugin
+
+        A device value of eth3 will cause pppd to read
+        options from /etc/ppp/options.eth3.
+
+    rp-pppoe-3.8/doc/KERNEL-MODE-PPPOE
+        need kernel with these config options:
+        CONFIG_PPP=m          or CONFIG_PPP=y
+        CONFIG_PPP_ASYNC=m    or CONFIG_PPP_ASYNC=y
+        CONFIG_PPP_SYNC_TTY=m or CONFIG_PPP_SYNC_TTY=y
+        CONFIG_PPP_DEFLATE=m  or CONFIG_PPP_DEFLATE=y
+        CONFIG_PPP_BSDCOMP=m  or CONFIG_PPP_BSDCOMP=y
+        CONFIG_PPPOE=m        or CONFIG_PPPOE=y
+        CONFIG_N_HDLC=m       or CONFIG_N_HDLC=y
+        CONFIG_UNIX98_PTYS=y
+    
+        Default redhat kernels have all these except CONFIG_PPP_BSDCOMP
+        (don't know if that is an issue).
+
+        mknod --mode=664 /dev/ppp c 108 0
+            We'll assume that is done:
+                /dev/ppp is not owned by any package
+        Might want these in /etc/modules.conf:
+            alias char-major-108 ppp_generic
+            alias tty-ldisc-3 ppp_async
+            alias tty-ldisc-13 n_hdlc
+            alias tty-ldisc-14 ppp_synctty
+            alias net-pf-24 pppoe
+        pppoe-connect modprobes these using the second names, so
+        they might not be necessary.
+
+
+ifdown mpds
+    Is like ifup:
+    sources /etc/sysconfig/network-scripts/network-functions
+    source_config function in network-functions:
+        finds and sources CONFIG=/etc/sysconfig/network-scripts/ifcfg-mpds
+        case $TYPE
+            xDSL)
+            DEVICETYPE="ppp"
+
+    execs /etc/sysconfig/network-scripts/ifdown-$DEVICETYPE
+    /etc/sysconfig/network-scripts/ifdown-ppp:
+        adsl-stop  /etc/sysconfig/network-scripts/$CONFIG
+        link to pppoe-stop
+    pppoe-stop
+        sources $CONFIG
+        PIDFILE=/var/run/ifcfg-mpds-pppoe.pid   PID of pppoe-connect
+        PPPOE_PIDFILE="$PIDFILE.pppoe"
+        PPPD_PIDFILE="$PIDFILE.pppd"
+        STARTPID="$PIDFILE.start"
+
+        kill -TERM of pppd, pppoe-start, pppoe-connect, 
+        then kill -9 of pppd in case it hangs around
+
+        Adds old default route back
+
+####### To emulate red-hat network profiles ############
+    Example with ifcfg-eth0:  All these ifcfg-eth0 are hard links:
+    networking/devices/ifcfg-eth0
+    networking/profiles/default/ifcfg-eth0
+    network-scripts/ifcfg-eth0
+        
+    /etc/syconfig/network
+        CURRENT_PROFILE=xxxx
+
+
+######### Iridium #################################
+
+ifup iridium
+    /sbin/ifup
+    sources /etc/sysconfig/network-scripts/network-functions
+    source_config function in network-functions:
+        finds and sources CONFIG=/etc/sysconfig/network-scripts/ifcfg-mpds
+        case $TYPE
+            Modem)
+            DEVICETYPE="ppp"
+    execs /etc/sysconfig/network-scripts/ifup-$DEVICETYPE
+    first exec of ifup-ppp
+    if "${DEMAND}" != yes -a "$TYPE" != "xDSL"
+        execs /sbin/ppp-watch iridium 
+
+    /sbin/ppp-watch interface-name
+        ppp-watch is a binary in initscripts
+        from the ppp-watch source code:
+            /* Algorithm:
+             *   fork
+         *   if child:
+         *     Register with netreport.  (now exit implies deregister first)
+         *     fork/exec ifup-ppp daemon <interface>
+         *   else:
+         *     while (1):
+         *       sigsuspend()
+         *       if SIGTERM or SIGINT:
+         *         kill pppd pgrp
+         *         exit
+         *       if SIGHUP:
+         *         reload ifcfg files
+         *         kill pppd pgrp
+         *         wait for SIGCHLD to redial
+         *       if SIGIO:
+         *         if no physical device found: continue
+         *         elif physical device is down:
+         *           wait for pppd to exit to redial if appropriate
+         *         else: (physical device is up)
+         *           detach; continue
+         *       if SIGCHLD: (pppd exited)
+         *         wait()
+         *         if pppd exited:
+         *           if PERSIST: redial
+         *           else: exit
+         *         else: (pppd was killed)
+         *           exit
+         */
+    So ppp-watch execs ifup-ppp again with different args:
+    ifup-ppp daemon interface
+    if $1 is daemon shift
+
+    ifup-ppp
+        DEVNAME=iridium is extracted from ifcfg-DEVNAME
+        opts=lock
+        if HARDFLOWCTL opts=modem crtscts
+        if ESCAPECHARS != yes, opts=asyncmap 00000000
+        if DEFROUTE != no, delete existing default route, opts=defaultroute
+        PEERDNS != no, cp /etc/resolv.conf /etc/resolv.conf.save, opts=peerdns
+        MRU, MTU
+        IPADDR, REMIP (remote ip address)
+        PAPNAME, opts=user $PAPNAME remotename $DEVNAME
+        DEMAND=yes, opts=demand ktune idle ${IDLETIMEOUT} holdoff ${RETRYTIMEOUT}"
+            exec=""
+        else opts=nodetach
+            exec=exec
+        
+
+        $exec pppd $opts ${MODEMPORT} ${LINESPEED} \
+            ipparam ${DEVNAME} linkname ${DEVNAME} call ${DEVNAME} noauth \
+            ${PPPOPTIONS} || exit
+
+        if DEMAND=yes and -f /var/run/ppp-${DEVNAME}.pid,
+            REALDEVICE=`tail -1 /var/run/ppp-${DEVNAME}.pid`
+            /etc/sysconfig/network-scripts/ifup-routes ${REALDEVICE} ${DEVNAME}
+
+    So the critical options in ifcfg-iridium:
+        TYPE=Modem
+        DEVICE=iridium
+        MODEMPORT=/dev/ttyS*
+        DEFROUTE=yes
+        PEERDNS=no
+        DEMAND=no
+        ONBOOT=no
+        USERCTL=yes
+
+     DEVICE seems to only be used in info messages and in one place
+     in ifup-ppp when looking for the chat script
+     
+     NAME doesn't seem to be used anywhere
+
+     The others can be set in
+        /etc/ppp/options.$MODEMPORT and
+        /etc/ppp/peers/iridium   (from call iridium parameter)
+
+    PARENTDEVNAME is taken from a config name such as  ifcfg-bozo-iridium
+        In this case PARENTDEVNAME would be bozo
+
+    Other file PEERCONF=/etc/ppp/peers/${DEVNAME}
+    if [ ! -f ${PEERCONF} ]; then
+        CHATSCRIPT=/etc/sysconfig/network-scripts/chat-${DEVNAME}
+        [ -f ${CHATSCRIPT} ] || {
+          CHATSCRIPT=/etc/sysconfig/network-scripts/chat-${PARENTDEVNAME}
+        }
+        if [ -f /etc/ppp/peers/${DEVICE} ]; then
+            cp -f /etc/ppp/peers/${DEVICE} ${PEERCONF}
+        else
+            touch ${PEERCONF}
+        fi
+        echo "connect \"/usr/sbin/chat ${CHATDBG} -f ${CHATSCRIPT}\"" >> ${PEERCONF}
+    fi
+
+    If pppd fails (say maxfail is exceeded), ppp-watch will re-exec pppd
+    because of persist option.
+
+    It doesn't appear that if demand=no (and nodetach) that "ifup iridium"
+    gives a prompt back when the connection is up. Perhaps we want to
+    set updetach?
+
+    pid files:
+        pppd creates /var/run/ppp-iridium.pid
+
+ifdown-ppp:
+    kills pppd (/var/run/ppp-iridium.pid)
+    kills ppp-watch (/var/run/pppwatch-iridium.pid)
