@@ -39,6 +39,18 @@ if [ ! network-scripts/ifcfg-iridium -ef networking/profiles/default/ifcfg-iridi
     ln network-scripts/ifcfg-iridium networking/profiles/default
 fi
 
+%pre
+
+# try to guess if a pap-secrets has a password for our RAS account
+# without divulging entire account name or password
+raspasswd=false
+(egrep "^[\"]*raf" /etc/ppp/pap-secrets | egrep -q -v None) && raspasswd=true
+if ! $raspasswd; then
+    echo "/etc/ppp/pap-secrets file does not seem to contain an entry \
+for our Level3 RAS account. This file must be edited by \
+hand to add a password for the account."
+fi
+
 %post
 
 # disable /etc/ppp/options.
@@ -50,6 +62,8 @@ if [ -f /etc/ppp/options ]; then
     fi
 fi
 touch /etc/ppp/options
+
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -67,11 +81,12 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/sysconfig/networking/profiles/default/ifcfg-iridium
 %config /etc/ppp/options.ttyS0
 %config /etc/ppp/options.ttyACM0
-%config(noreplace) /etc/ppp/options.ttyACM1
-%config(noreplace) /etc/ppp/peers/iridium
-%config(noreplace) /etc/ppp/peers/iridium.chat
-%config(noreplace) /etc/ppp/peers/iridium-direct
-%config(noreplace) /etc/ppp/peers/iridium-direct.chat
+%config /etc/ppp/options.ttyACM1
+%config /etc/ppp/peers/iridium
+%config /etc/ppp/peers/iridium.chat
+%config /etc/ppp/peers/iridium-direct
+%config /etc/ppp/peers/iridium-direct.chat
+%config(noreplace) %attr(0600,root,root) /etc/ppp/pap-secrets
 
 %changelog
 * Sun Feb 10 2008 Gordon Maclean <maclean@ucar.edu>

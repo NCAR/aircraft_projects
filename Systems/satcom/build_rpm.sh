@@ -16,7 +16,7 @@ rroot=`get_eol_repo_root`
 pkg=raf-satcom
 version=1.0
 release=1
-tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz ${pkg}
+tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn ${pkg}
 
 rpmbuild -ba --clean ${pkg}.spec
 
@@ -29,7 +29,7 @@ ddver=3.7.3
 rm -rf /tmp/ddclient-${ddver}
 tar xjf ddclient-${ddver}.tar.bz2 -C /tmp ddclient-${ddver}/ddclient
 mv /tmp/ddclient-${ddver}/ddclient ${pkg}/usr/sbin
-tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz ${pkg}
+tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn ${pkg}
 cp ddclient-mail-on-kill.patch ${topdir}/SOURCES
 
 rpmbuild -ba --clean ${pkg}.spec
@@ -37,17 +37,19 @@ rpmbuild -ba --clean ${pkg}.spec
 pkg=raf-satcom-mpds
 version=1.0
 release=1
-tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz ${pkg}
+tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn ${pkg}
 
 rpmbuild -ba --clean ${pkg}.spec
 
 pkg=raf-satcom-iridium
 version=1.0
 release=1
-tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz ${pkg}
+tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn ${pkg}
 
 rpmbuild -ba --clean ${pkg}.spec
 
+
+exit 
 
 rpm1=$topdir/RPMS/noarch/${pkg}-*.rpm
 
