@@ -71,6 +71,18 @@ pushd ../.. >& /dev/null
 set PDIR = `pwd`
 cd ..
 set PROJ = `pwd | awk -F/ '{print $NF}'`
+#
+###################    Code Change begin
+#  Check for project name rather than number
+@ pname = `echo $PROJ | grep -c '[a-zA-Z]'`
+if ($pname > 0) then
+#   Search for project in directory_map file
+  @ pnum = `grep -c $PROJ $PROJ_DIR/archives/msfiles/directory_map`
+  if ($pnum > 0) then
+    set PROJ = `grep $PROJ $PROJ_DIR/archives/msfiles/directory_map | awk '{print $1}'`
+  endif
+endif
+###################    Code Change end
 popd >& /dev/null
 set PRDIR = $PDIR/Production
 set YEAR = `grep FY $PRDIR/proj.info | sed -e "s/FY=//"`
@@ -105,6 +117,27 @@ echo "#  Job(s) submitted on `date`"
 #  Current archive (msrcp) commands go here
 #  ----------------------------------------
 #
+# Main:
+web site (run tarit.docs again)
+Production/503.documents.tar.dir \
+Production/503.documents.tar \
+Production/503.tar.dir \
+Production/503.tar \
+Production/TREX.tar.dir \
+Production/TREX.tar \
+Production/Mail.503 \
+Production/taplog.503 \
+Production/archive/Chat_Archive/Chat.tar \
+Production/archive/Chat_Archive/Chat.tar.dir \
+# LRT:
+Production/nimbus_3501.tar.dir \
+Production/nimbus_3501.tar \
+Production/nimbus_defaults_3501.tar.dir \
+Production/nimbus_defaults_3501.tar \
+# HRT:
+Production/taplog.hrt.dgps.503
+Production/taplog.hrt.503 \
+#
 #
 # Done.
 echo "#   msrcp job  -- OK -- "
@@ -117,9 +150,257 @@ exit
 #  Archiving segments that have been completed
 #  -------------------------------------------
 #
-#  -------------------------------------------------------------------------
-#   T E M P L A T E S   (c o p y   &   e d i t ,   a s   n e c e s s a r y )
-#  -------------------------------------------------------------------------
+#
+#  Files to go to main MSS directory (not renamed)
+#
+set DIR = $PRDIR
+#   DIR can be any of the following:  $SDIR,      $PDIR,       $PRDIR
+#                                     $PROD_DATA  Project Home Production
+#        (or set to a specific directory)
+#
+set FILES = ( \
+503.tar \
+503.tar.dir \
+503.documents.tar \
+503.documents.tar.dir \
+Mail.503 \
+taplog.503 \
+taplog.camera.503 \
+taplog.movie.503 \
+)
+#
+#  Get started:
+set todo = $#FILES
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$FILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $FILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $FILE -- Failed -- `date`"
+      echo "#                $FILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $FILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#
+#  Files to go to main MSS directory (not renamed)
+#
+set DIR = $PRDIR/archive
+#   DIR can be any of the following:  $SDIR,      $PDIR,       $PRDIR
+#                                     $PROD_DATA  Project Home Production
+#        (or set to a specific directory)
+#
+set FILES = ( \
+tapes.503 \
+)
+#
+#  Get started:
+set todo = $#FILES
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$FILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $FILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $FILE -- Failed -- `date`"
+      echo "#                $FILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $FILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#
+#  Files to go to MSS subdirectory (not renamed)
+#
+set DIR = $PRDIR
+set TURBRT = HRT
+#
+set FILES = ( \
+nimbus_3528.tar \
+nimbus_3528.tar.dir \
+nimbus_defaults_3528.tar \
+nimbus_defaults_3528.tar.dir \
+nimbus_3535.tar \
+nimbus_3535.tar.dir \
+nimbus_defaults_3535.tar \
+nimbus_defaults_3535.tar.dir \
+taplog.hrt.503 \
+)
+#
+#  Get started:
+set todo = $#FILES
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$FILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TURBRT/$FILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TURBRT/$FILE -- Failed -- `date`"
+      echo "#                $TURBRT/$FILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TURBRT/$FILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#
+#  Files to go to MSS subdirectory (not renamed)
+#
+set DIR = $PRDIR
+set TURBRT = LRT
+#
+set FILES = ( \
+nimbus_3433.tar \
+nimbus_3433.tar.dir \
+nimbus_defaults_3433.tar \
+nimbus_defaults_3433.tar.dir \
+nimbus_3436.tar \
+nimbus_3436.tar.dir \
+nimbus_defaults_3436.tar \
+nimbus_defaults_3436.tar.dir \
+nimbus_3447.tar \
+nimbus_3447.tar.dir \
+nimbus_defaults_3447.tar \
+nimbus_defaults_3447.tar.dir \
+taplog.lrt.503 \
+)
+#
+#  Get started:
+set todo = $#FILES
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$FILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TURBRT/$FILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TURBRT/$FILE -- Failed -- `date`"
+      echo "#                $TURBRT/$FILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TURBRT/$FILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#
+#  Files to go to MSS subdirectory (renamed)
+#
+set DIR = $PRDIR
+set TURBRT = LRT
+set FILES = ( \
+503rf01.hdr \
+)
+set OFILES = ( \
+RF01.hdr \
+)
+#
+#  Get started:
+set todo = $#FILES
+if ($todo != $#OFILES) then
+  echo "Source and destination files don't match."
+  echo "  Quitting."
+  exit 1
+endif
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+#  set OFILE = $FILES[$num]
+  set OFILE = $OFILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$OFILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TURBRT/$OFILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TURBRT/$OFILE -- Failed -- `date`"
+      echo "#                $TURBRT/$OFILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TURBRT/$OFILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#
+#  Files to go to MSS subdirectory (renamed)
+#
+set DIR = $PRDIR
+set TURBRT = HRT
+set FILES = ( \
+503rf01h.hdr \
+)
+set OFILES = ( \
+RF01.hdr \
+)
+#
+#  Get started:
+set todo = $#FILES
+if ($todo != $#OFILES) then
+  echo "Source and destination files don't match."
+  echo "  Quitting."
+  exit 1
+endif
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+#  set OFILE = $FILES[$num]
+  set OFILE = $OFILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$OFILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TURBRT/$OFILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TURBRT/$OFILE -- Failed -- `date`"
+      echo "#                $TURBRT/$OFILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TURBRT/$OFILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#  ---------------------------------------------------------------------------
+#   T E M P L A T E S   ( c o p y   &   e d i t ,   a s   n e c e s s a r y )
+#  ---------------------------------------------------------------------------
+#
 #
 #  Files to go to main MSS directory (not renamed)
 #
@@ -341,7 +622,41 @@ echo \
 #
 # -----------------------------------------------------------------------------
 #
-#  MSS path for all bitfiles listed below:  /RAF/yyyy/ppp/
+#  MSS path for all bitfiles listed below:  /RAF/2006/503
 #
-#  Job(s) submitted on 
-#
+#  Job(s) submitted on Mon Mar 19 15:41:49 MDT 2007
+#  msrcp job for 503.tar -- OK -- Mon Mar 19 15:41:58 MDT 2007
+#  msrcp job for 503.tar.dir -- OK -- Mon Mar 19 15:42:05 MDT 2007
+#  msrcp job for 503.documents.tar -- OK -- Mon Mar 19 15:42:12 MDT 2007
+#  msrcp job for 503.documents.tar.dir -- OK -- Mon Mar 19 15:42:22 MDT 2007
+#  msrcp job for Mail.503 -- OK -- Mon Mar 19 15:42:29 MDT 2007
+#  msrcp job for taplog.503 -- OK -- Mon Mar 19 15:42:36 MDT 2007
+#  msrcp job for taplog.camera.503 -- OK -- Mon Mar 19 15:42:43 MDT 2007
+#  msrcp job for taplog.movie.503 -- OK -- Mon Mar 19 15:42:49 MDT 2007
+#  msrcp job for tapes.503 -- OK -- Mon Mar 19 15:42:57 MDT 2007
+#  msrcp job for HRT/nimbus_3528.tar -- OK -- Mon Mar 19 15:43:05 MDT 2007
+#  msrcp job for HRT/nimbus_3528.tar.dir -- OK -- Mon Mar 19 15:43:12 MDT 2007
+#  msrcp job for HRT/nimbus_defaults_3528.tar -- OK -- Mon Mar 19 15:43:24 MDT 2007
+#  msrcp job for HRT/nimbus_defaults_3528.tar.dir -- OK -- Mon Mar 19 15:43:34 MDT 2007
+#  msrcp job for HRT/nimbus_3535.tar -- OK -- Mon Mar 19 15:43:44 MDT 2007
+#  msrcp job for HRT/nimbus_3535.tar.dir -- OK -- Mon Mar 19 15:43:51 MDT 2007
+#  msrcp job for HRT/nimbus_defaults_3535.tar -- OK -- Mon Mar 19 15:44:01 MDT 2007
+#  msrcp job for HRT/nimbus_defaults_3535.tar.dir -- OK -- Mon Mar 19 15:44:09 MDT 2007
+#  msrcp job for HRT/taplog.hrt.503 -- OK -- Mon Mar 19 15:44:17 MDT 2007
+#  msrcp job for LRT/nimbus_3433.tar -- OK -- Mon Mar 19 15:44:26 MDT 2007
+#  msrcp job for LRT/nimbus_3433.tar.dir -- OK -- Mon Mar 19 15:44:33 MDT 2007
+#  msrcp job for LRT/nimbus_defaults_3433.tar -- OK -- Mon Mar 19 15:44:42 MDT 2007
+#  msrcp job for LRT/nimbus_defaults_3433.tar.dir -- OK -- Mon Mar 19 15:44:48 MDT 2007
+#  msrcp job for LRT/nimbus_3436.tar -- OK -- Mon Mar 19 15:44:57 MDT 2007
+#  msrcp job for LRT/nimbus_3436.tar.dir -- OK -- Mon Mar 19 15:45:05 MDT 2007
+#  msrcp job for LRT/nimbus_defaults_3436.tar -- OK -- Mon Mar 19 15:45:12 MDT 2007
+#  msrcp job for LRT/nimbus_defaults_3436.tar.dir -- OK -- Mon Mar 19 15:45:21 MDT 2007
+#  msrcp job for LRT/nimbus_3447.tar -- OK -- Mon Mar 19 15:45:29 MDT 2007
+#  msrcp job for LRT/nimbus_3447.tar.dir -- OK -- Mon Mar 19 15:45:36 MDT 2007
+#  msrcp job for LRT/nimbus_defaults_3447.tar -- OK -- Mon Mar 19 15:45:44 MDT 2007
+#  msrcp job for LRT/nimbus_defaults_3447.tar.dir -- OK -- Mon Mar 19 15:45:55 MDT 2007
+#  msrcp job for LRT/taplog.lrt.503 -- OK -- Mon Mar 19 15:46:02 MDT 2007
+#  msrcp job for LRT/RF01.hdr -- OK -- Mon Mar 19 15:46:10 MDT 2007
+#  msrcp job for HRT/RF01.hdr -- OK -- Mon Mar 19 15:46:16 MDT 2007
+#   msrcp job  -- OK --
+#  Completed on Mon Mar 19 15:46:16 MDT 2007
