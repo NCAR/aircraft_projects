@@ -118,9 +118,9 @@ start() {
 
 stop() {
         echo -n $"Shutting down $prog: "
-	start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/ntpd.pid
+	# start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/ntpd.pid
+        pkill -x ntpd
 	echo "."
-	# killproc ntpd
 	RETVAL=$?
         echo
         # [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/ntpd

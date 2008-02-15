@@ -278,12 +278,12 @@ crude_set_date() {
 }
 
 # Clock on Vipers is not battery-backed, and reads
-# 2000 Jan 1 at boot time. So if year is 2000
-# then pound away with ntpdate.  If still no success
-# try crude_set_date
+# 2000 Jan 1 at boot time (later versions read 1970 Jan 1)
+# So if year is less than 2008 then pound away with ntpdate.
+# If still no success try crude_set_date
 check_ntp() {
 
-    [ $(date +%Y) -ne 2000 ] && return
+    [ $(date +%Y) -ge 2008 ] && return
 
     # figure out timeserver from /etc/ntp.conf (taken from init.d/ntpd)
     timeserver=(`awk '$1=="peer"||$1=="server"{print $2}' /etc/ntp.conf |fgrep -v 127.127.1.0`)
@@ -296,7 +296,7 @@ check_ntp() {
      
     /etc/init.d/ntpd stop
     i=0
-    while [ $i -lt 60 -a $(date +%Y) -eq 2000 ]; do
+    while [ $i -lt 60 -a $(date +%Y) -lt 2008 ]; do
 	sleep 5
 	# for some reason on the dsms, logging to facility kern.info
 	# doesn't get sent to the remote syslog server, but
@@ -306,7 +306,7 @@ check_ntp() {
 	ntpdate $timeserver | /usr/bin/logger -p local5.info -t ntpdate 2>&1
 	i=$((i+1))
     done
-    [ $(date +%Y) -eq 2000 ] && crude_set_date
+    [ $(date +%Y) -lt 2008 ] && crude_set_date
 
     # since the system clock isn't battery backed, updating the
     # system clock only helps keep the time if one does a soft reboot.
