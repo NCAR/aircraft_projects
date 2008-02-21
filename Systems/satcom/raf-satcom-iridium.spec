@@ -40,18 +40,6 @@ if [ ! network-scripts/ifcfg-iridium -ef networking/profiles/default/ifcfg-iridi
     ln network-scripts/ifcfg-iridium networking/profiles/default
 fi
 
-%pre
-
-# try to guess if a pap-secrets has a password for our RAS account
-# without divulging entire account name or password
-raspasswd=false
-(egrep "^[\"]*raf" /etc/ppp/pap-secrets | egrep -q -v None) && raspasswd=true
-if ! $raspasswd; then
-    echo "/etc/ppp/pap-secrets file does not seem to contain an entry \
-for our Level3 RAS account. This file must be edited by \
-hand to add a password for the account."
-fi
-
 %post
 
 # disable /etc/ppp/options.
@@ -64,7 +52,21 @@ if [ -f /etc/ppp/options ]; then
 fi
 touch /etc/ppp/options
 
+# Report if it looks like pap-secrets is missing an entry for the RAS
+# account.
+ent="`egrep '^[:space:]*[^#]' /etc/ppp/pap-secrets | egrep '^["]*raf'`"
+if [ -z "$ent" ]; then
+    echo "###### from %{name}-%{version} ######
+raf 	iridium 	None-Yet
+###### end %{name}-%{version} ######" >> /etc/ppp/pap-secrets
+fi
 
+if [ -z "$ent" ] || echo "$ent" | fgrep -iq none; then
+    echo "Warning: /etc/ppp/pap-secrets file does not seem to contain an entry \
+for our Level3 RAS account. This file must be edited by \
+hand to add a password for the account."
+fi
+chmod 600 /etc/ppp/pap-secrets
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -87,7 +89,6 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ppp/peers/iridium.chat
 %config /etc/ppp/peers/iridium-direct
 %config /etc/ppp/peers/iridium-direct.chat
-%config(noreplace) %attr(0600,root,root) /etc/ppp/pap-secrets
 
 %changelog
 * Sun Feb 10 2008 Gordon Maclean <maclean@ucar.edu>

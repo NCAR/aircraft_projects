@@ -19,9 +19,16 @@
 #***********************************************************************
 
 # When you configure a variable, DO NOT leave spaces around the "=" sign.
+#
+TYPE=xDSL
+DEVICE=ppp0
+BOOTPROTO=dialup
+DEFROUTE=yes
+PERSIST=yes
+USERCTL=yes
 
 # Ethernet card connected to DSL modem
-ETH=eth3
+ETH=eth0
 
 # PPPoE user name.  You may have to supply "@provider.com"  Sympatico
 # users in Canada do need to include "@sympatico.ca"
@@ -45,9 +52,6 @@ DNSTYPE=NOCHANGE
 # In old config files, this used to be called USEPEERDNS.  Changed to
 # PEERDNS for better Red Hat compatibility
 PEERDNS=no
-
-DNS1=
-DNS2=
 
 # Make the PPPoE connection your default route.  Set to
 # DEFAULTROUTE=no if you don't want this.
@@ -78,7 +82,7 @@ CONNECT_POLL=2
 
 # Specific desired AC (access concentrator) Name
 # Not needed.
-ACNAME=
+# ACNAME=
 
 # Specific desired service name. Sent in a PADR packet to server.
 # Not needed.
@@ -103,13 +107,41 @@ PIDFILE="/var/run/$CF_BASE-pppoe.pid"
 # safe on Linux machines with the n_hdlc line discipline; unsafe on others.
 SYNCHRONOUS=yes
 
+# mru n  Set the MRU [Maximum Receive Unit] value to n. Pppd  will
+# ask  the  peer  to  send packets of no more than n bytes.
+# The value of n must be between 128 and 16384; the default
+# is  1500.   A  value of 296 works well on very slow links
+# (40 bytes for TCP/IP header + 256 bytes of  data).   Note
+# that  for  the  IPv6  protocol,  the MRU must be at least
+# 1280.
+# PPPOE adds 8 bytes of overhead. Max MRU for ethernet is 1500
+# so max MRU is 1500-8=1492
+MRU=1492
+
+# mtu n  Set the MTU [Maximum Transmit Unit] value to  n.   Unless
+# the  peer  requests  a smaller value via MRU negotiation,
+# pppd will request that the kernel  networking  code  send
+# data packets of no more than n bytes through the PPP net-
+# work interface.  Note that for the IPv6 protocol, the MTU
+# must be at least 1280
+# PPPOE adds 8 bytes of overhead. Max MRU for ethernet is 1500
+# so max MTU is 1500-8=1492
+MTU=1492
+
 # Do you want to clamp the MSS?  Here's how to decide:
 # - If you have only a SINGLE computer connected to the DSL modem, choose
 #   "no".
 # - If you have a computer acting as a gateway for a LAN, choose "1412".
 #   The setting of 1412 is safe for either setup, but uses slightly more
 #   CPU power.
-CLAMPMSS=1412
+#
+# This option is not used with the pppd LINUX_PLUGIN, rp-pppoe.so.
+# As a workaround, use this iptables rule (man iptables) to clamp
+# the mss to MTU-40:
+# iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN \
+#                         -j TCPMSS --clamp-mss-to-pmtu
+# 
+# CLAMPMSS=1412
 #CLAMPMSS=no
 
 #  lcp-echo-interval n: If this option is given, pppd will send
@@ -144,7 +176,7 @@ LINUX_PLUGIN=/etc/ppp/plugins/rp-pppoe.so
 
 # Any extra arguments to pass to pppoe.  Normally, use a blank string
 # like this:
-PPPOE_EXTRA=""
+# PPPOE_EXTRA=""
 
 # Rumour has it that "Citizen's Communications" with a 3Com
 # HomeConnect DSL Modem DualLink requires these extra options:
@@ -152,7 +184,7 @@ PPPOE_EXTRA=""
 
 # Any extra arguments to pass to pppd.  Normally, use a blank string
 # like this:
-PPPD_EXTRA=""
+# PPPD_EXTRA=""
 
 
 ########## DON'T CHANGE BELOW UNLESS YOU KNOW WHAT YOU ARE DOING

@@ -9,7 +9,7 @@ Url: http://www.eol.ucar.edu/
 Packager: Gordon Maclean <maclean@ucar.edu>
 BuildRoot: /tmp/%{name}-%{version}
 Vendor: UCAR
-Requires: rp-pppoe >= 3.8.0
+Requires: rp-pppoe >= 3.8-2
 Requires: ppp >= 2.4.4
 BuildArch: noarch
 
@@ -60,7 +60,9 @@ muser=`egrep  "^[:space:]*USER=" /etc/sysconfig/network-scripts/ifcfg-mpds | sed
 
 if [ -n $muser ]; then
     if ! egrep "^[:space:]*[^#]" /etc/ppp/pap-secrets | fgrep -q $muser; then
-        echo "${muser} 	* 	None" >> /etc/ppp/pap-secrets
+        echo "###### from %{name}-%{version} ######
+${muser} 	mpds 	None
+###### end %{name}-%{version} ######" >> /etc/ppp/pap-secrets
     fi
 fi
 chmod 600 /etc/ppp/pap-secrets

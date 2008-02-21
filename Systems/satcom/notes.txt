@@ -71,6 +71,24 @@ ifup mpds
         IPPARAM=ipparam ${DEVNAME}
         LINKNAME=linkname ${DEVNAME}
 
+        MTU=1492    (typical ethernet value is 1500. PPPOE adds 8 bytes of
+        MRU=1492    overhead)
+        These values are passed to pppd by pppoe-connect
+
+        # Do you want to clamp the MSS?  Here's how to decide:
+        # - If you have only a SINGLE computer connected to the DSL modem,
+        # choose "no".
+        # - If you have a computer acting as a gateway for a LAN, choose
+        # "1412".
+        # The setting of 1412 is safe for either setup, but uses slightly
+        # more CPU power.
+        # CLAMPMSS=1412
+        CLAMPMSS is not passed to the plugin.
+        Instead use an iptables rule:
+        iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN \
+                                 -j TCPMSS --clamp-mss-to-pmtu
+
+
 PPP_STD_OPTIONS="$IPPARAM $LINKNAME $PLUGIN_OPTS noipdefault noauth default-asyncmap $DEFAULTROUTE hide-password nodetach $PEERDNS mtu $MTU mru $MRU noaccomp nodeflate nopcomp novj novjccomp user $USER lcp-echo-interval $LCP_INTERVAL lcp-echo-failure $LCP_FAILURE $PPPD_EXTRA"
 
         if DEMAND = yes (We don't use demand)
@@ -243,9 +261,11 @@ ifup iridium
         DEMAND=no
         ONBOOT=no
         USERCTL=yes
+        LINESPEED=
 
      DEVICE seems to only be used in info messages and in one place
-     in ifup-ppp when looking for the chat script
+     in ifup-ppp when looking for the chat script if the peers
+     file is missing
      
      NAME doesn't seem to be used anywhere
 

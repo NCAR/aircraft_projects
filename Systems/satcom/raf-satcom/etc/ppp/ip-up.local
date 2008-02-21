@@ -16,7 +16,9 @@
 
 [ $# -lt 6 ] && exit 1
 ipparam=$6
+dev=$1
 
 # Look for and execute /etc/ppp/ip-up.$ipparam
-[ -x /etc/ppp/ip-up.$ipparam ] && /etc/ppp/ip-up.$ipparam "$@"
+[ -x /etc/ppp/ip-up.$ipparam ] && { /etc/ppp/ip-up.$ipparam "$@" || exit $?; }
 
+exit 0

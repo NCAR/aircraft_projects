@@ -1,10 +1,26 @@
-plugin rp-pppoe.so
+# This option is passed to pppd by pppoe-connect. Not needed here.
+# plugin rp-pppoe.so
+
 debug
 
 # Cannot lock ethernet device
+# Causes "unrecognized option 'lock'" error from pppoe plugin.
 # lock
 
-logfile /var/log/satcom/ppp_mpds.log
+logfile /var/log/pppd_mpds.log
+
+# user name
+# Sets the name used for authenticating the local system to
+# the peer to name.
+# Set via USER environment var in ifcfg-mpds and passed to pppd
+# via runstring by pppoe-connect
+# user hiaper
+
+# remotename name
+# Set the assumed name of the remote system for authentica-
+# tion purposes to name.
+# This is matched against the second field in pap-secrets
+remotename mpds
 
 # linkname name: Sets the logical name of the link to name.
 # Pppd will  create  a file  named  ppp-name.pid  in /var/run
@@ -26,12 +42,12 @@ logfile /var/log/satcom/ppp_mpds.log
 # persist: Do not exit after a connection is terminated; instead try
 # to reopen the connection. The maxfail option still has
 # an effect on persistent connections.
-# This does not work well with rp-pppoe. Perhaps the raw ethernet socket
-# needs to be re-opened each time?
 # The /usr/sbin/pppoe-connect script (started from /usr/sbin/pppoe-start)
 # does an infinite loop, starting pppd every time it fails, which gives
-# a persistent connection.
-# persist
+# a persistent connection.  
+# This needs testing to see if there is any advantage to setting
+# the pppd persist option.
+persist
 
 # updetach: With this option, pppd will detach from its controlling terminal
 # once  it has successfully established the ppp connection (to the
@@ -45,6 +61,29 @@ logfile /var/log/satcom/ppp_mpds.log
 # LCP  packet from the peer, instead of exiting, as it would with-
 # out this option.
 # passive
+#
+# mru n  Set the MRU [Maximum Receive Unit] value to n. Pppd  will
+# ask  the  peer  to  send packets of no more than n bytes.
+# The value of n must be between 128 and 16384; the default
+# is  1500.   A  value of 296 works well on very slow links
+# (40 bytes for TCP/IP header + 256 bytes of  data).   Note
+# that  for  the  IPv6  protocol,  the MRU must be at least
+# 1280.
+# PPPOE adds 8 bytes of overhead. Max MRU for ethernet is 1500
+# so max MRU is 1500-8=1492.
+# This is set by pppoe-connect so it is not necessary to set it here.
+# mru 1492
+
+# mtu n  Set the MTU [Maximum Transmit Unit] value to  n.   Unless
+# the  peer  requests  a smaller value via MRU negotiation,
+# pppd will request that the kernel  networking  code  send
+# data packets of no more than n bytes through the PPP net-
+# work interface.  Note that for the IPv6 protocol, the MTU
+# must be at least 1280
+# PPPOE adds 8 bytes of overhead. Max MRU for ethernet is 1500
+# so max MTU is 1500-8=1492
+# This is set by pppoe-connect so it is not necessary to set it here.
+# mtu 1492
 
 # maxfail n: Terminate after n consecutive failed connection attempts.
 # A value of 0 means no limit.  The default value is 10.
@@ -59,7 +98,8 @@ maxfail 10
 # echo-reply.   This  option   can   be   used   with   the
 # lcp-echo-failure  option  to  detect  that the peer is no
 # longer connected.
-# This is set in ifcfg-mpds with LCP_INTERVAL
+# This is set in ifcfg-mpds with LCP_INTERVAL and passed by pppoe-connect
+# in the runstring to pppd.
 # lcp-echo-interval 40
 
 # lcp-echo-failure n: If this option is given, pppd will presume
@@ -71,7 +111,8 @@ maxfail 10
 # physical  connection has been broken (e.g., the modem has
 # hung up) in situations where no  hardware  modem  control
 # lines are available.
-# This is set in ifcfg-mpds with LCP_FAILURE
+# This is set in ifcfg-mpds with LCP_FAILURE, and passed by pppoe-connect
+# in the runstring to pppd.
 # lcp-echo-failure 6
 
 # lcp-max-configure n
@@ -175,5 +216,5 @@ noproxyarp
 # chap-restart n
 #     Set the CHAP restart interval (retransmission timeout for
 #     challenges) to n seconds (default 3).
-chap-restart 20
+# chap-restart 20
 

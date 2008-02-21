@@ -35,6 +35,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %attr(0755,root,root) /etc/ppp/ip-up.local
+%attr(0755,root,root) /etc/ppp/ip-pre-up
 
 %changelog
 * Sun Feb 10 2008 Gordon Maclean <maclean@ucar.edu>

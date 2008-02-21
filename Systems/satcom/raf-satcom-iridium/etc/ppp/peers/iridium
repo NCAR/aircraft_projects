@@ -43,7 +43,7 @@ mtu 296
 # sending  the log messages to syslog).  The file is opened
 # with the privileges of the  user  who  invoked  pppd,  in
 # append mode.
-logfile /var/log/satcom/ppp_iridium.log
+logfile /var/log/pppd_iridium.log
 
 # auth   Require  the  peer to authenticate itself before allowing
 # network packets to be sent or received.  This  option  is
@@ -70,6 +70,12 @@ debug
 # Sets the name used for authenticating the local system to
 # the peer to name.
 user rafgs1@local
+
+# remotename name
+# Set the assumed name of the remote system for authentica-
+# tion purposes to name.
+# This is matched against the second field in pap-secrets
+remotename iridium
 
 # linkname name: Sets the logical name of the link to name.
 # Pppd will  create  a file  named  ppp-name.pid  in /var/run
