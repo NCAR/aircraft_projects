@@ -50,6 +50,6 @@ rpmbuild -ba --clean ${pkg}.spec
 
 if [ -d $rroot ]; then
     rpms="$topdir/RPMS/noarch/raf-satcom-*.noarch.rpm $topdir/RPMS/noarch/raf-ddclient-*.noarch.rpm"
-    copy_ael_rpms_to_eol_repo $rpm1 $rpm2
+    copy_rpms_to_eol_repo $rpms
 fi
 

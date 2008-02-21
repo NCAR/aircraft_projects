@@ -28,6 +28,8 @@ connect /etc/ppp/peers/iridium.chat
 # (40 bytes for TCP/IP header + 256 bytes of  data).   Note
 # that  for  the  IPv6  protocol,  the MRU must be at least
 # 1280.
+# Needs testing to see what is optimal for our use.
+# If MRU is set in the config file it overrides this value.
 mru 296
 
 # Set the MTU [Maximum Transmit Unit] value to  n.   Unless
@@ -36,6 +38,8 @@ mru 296
 # data packets of no more than n bytes through the PPP net-
 # work interface.  Note that for the IPv6 protocol, the MTU
 # must be at least 1280.
+# Needs testing to see what is optimal for our use.
+# If MTU is set in the config file it overrides this value.
 mtu 296
 
 # logfile filename
@@ -43,6 +47,9 @@ mtu 296
 # sending  the log messages to syslog).  The file is opened
 # with the privileges of the  user  who  invoked  pppd,  in
 # append mode.
+# Put the log file on /var/log rather than a subdirectory. pppd
+# does not create logfile directories and will fail if the
+# directory path to logfile does not exist.
 logfile /var/log/pppd_iridium.log
 
 # auth   Require  the  peer to authenticate itself before allowing
@@ -55,7 +62,9 @@ logfile /var/log/pppd_iridium.log
 # option is privileged.
 noauth
 
-defaultroute
+# ifup-ppp passes this in the runstring to pppd, based on the value
+# of DEFROUTE in the config file, so don't specify it here.
+# defaultroute
 
 # debug  Enables connection debugging facilities.  If this  option
 # is given, pppd will log the contents of all control pack-

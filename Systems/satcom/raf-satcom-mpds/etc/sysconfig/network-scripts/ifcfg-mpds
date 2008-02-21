@@ -23,12 +23,14 @@
 TYPE=xDSL
 DEVICE=ppp0
 BOOTPROTO=dialup
+# Will this be the default route?
 DEFROUTE=yes
+# PERSIST is ignored by pppoe-connect. Use the persist option in options.eth3
 PERSIST=yes
 USERCTL=yes
 
 # Ethernet card connected to DSL modem
-ETH=eth0
+ETH=eth3
 
 # PPPoE user name.  You may have to supply "@provider.com"  Sympatico
 # users in Canada do need to include "@sympatico.ca"
@@ -52,10 +54,6 @@ DNSTYPE=NOCHANGE
 # In old config files, this used to be called USEPEERDNS.  Changed to
 # PEERDNS for better Red Hat compatibility
 PEERDNS=no
-
-# Make the PPPoE connection your default route.  Set to
-# DEFAULTROUTE=no if you don't want this.
-DEFAULTROUTE=yes
 
 ### ONLY TOUCH THE FOLLOWING SETTINGS IF YOU'RE AN EXPERT
 
@@ -141,7 +139,7 @@ MTU=1492
 # iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN \
 #                         -j TCPMSS --clamp-mss-to-pmtu
 # 
-# CLAMPMSS=1412
+# CLAMPMSS=1452
 #CLAMPMSS=no
 
 #  lcp-echo-interval n: If this option is given, pppd will send

@@ -88,6 +88,16 @@ ifup mpds
         iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN \
                                  -j TCPMSS --clamp-mss-to-pmtu
 
+        DEFROUTE=no/yes:  pppoe-connect sets DEFAULTROUTE to "" or "defaultroute"
+            and passes $DEFAULTROUTE in the pppd runstring.
+        If not set, DEFROUTE defaults to yes.
+
+        asyncmap: pppoe-connect hardcodes default-asyncmap in the pppd runstring.
+        default-asyncmap
+             Disable asyncmap negotiation, forcing all control characters  to
+             be escaped for both the transmit and the receive direction.
+        That is a bit surprising.  Would be interesting to check if it helps to 
+            not set default-asyncmap and instead set asyncmap=0
 
 PPP_STD_OPTIONS="$IPPARAM $LINKNAME $PLUGIN_OPTS noipdefault noauth default-asyncmap $DEFAULTROUTE hide-password nodetach $PEERDNS mtu $MTU mru $MRU noaccomp nodeflate nopcomp novj novjccomp user $USER lcp-echo-interval $LCP_INTERVAL lcp-echo-failure $LCP_FAILURE $PPPD_EXTRA"
 
@@ -242,7 +252,13 @@ ifup iridium
             exec=""
         else opts=nodetach
             exec=exec
-        
+
+        DEFROUTE=no/yes:  If DEFROUTE != no, ifup-ppp passes "defaultroute" to pppd runstring.
+
+        ESCAPECHARS != yes
+            opts="$opts asyncmap 00000000"
+        To set to a special value:
+            PPPOPTIONS="asyncmap 12345678" or PPPOPTIONS="default-asyncmap"
 
         $exec pppd $opts ${MODEMPORT} ${LINESPEED} \
             ipparam ${DEVNAME} linkname ${DEVNAME} call ${DEVNAME} noauth \

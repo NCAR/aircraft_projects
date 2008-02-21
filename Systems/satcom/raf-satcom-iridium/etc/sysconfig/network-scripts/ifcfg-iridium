@@ -1,14 +1,18 @@
 # Please read /usr/share/doc/initscripts-*/sysconfig.txt
 # for the documentation of these parameters.
 TYPE=Modem
-MODEMPORT=/dev/ttyS1
+MODEMPORT=/dev/ttyACM0
 ONBOOT=no
 USERCTL=yes
 PEERDNS=no
-DEFROUTE=yes
+# Initial plan when running iridium and mpds simultaneously is
+# for the mpds connection to be the default route and use static
+# routing over iridium
+DEFROUTE=no
 DEMAND=no
 BOOTPROTO=dialup
 PERSIST=yes
+# We don't use wvdial so WVDIALSECT is ignored
 WVDIALSECT=iridium
 AC=on
 BSDCOMP=on
@@ -18,6 +22,9 @@ PC=on
 VJ=on
 IPV6INIT=no
 MODEMNAME=iridium
+# IDLETIMEOUT is only used when DEMAND=yes, which we don't use
 IDLETIMEOUT=600
 LINESPEED=19200
 DEVICE=ppp0
+# Anything other than ESCAPECHARS=yes results in "asyncmap 00000000"
+ESCAPECHARS=no

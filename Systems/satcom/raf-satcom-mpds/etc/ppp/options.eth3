@@ -7,7 +7,19 @@ debug
 # Causes "unrecognized option 'lock'" error from pppoe plugin.
 # lock
 
+# logfile filename
+# Append log messages to the  file  filename  (as  well  as
+# sending  the log messages to syslog).  The file is opened
+# with the privileges of the  user  who  invoked  pppd,  in
+# append mode.
+# Put the log file on /var/log rather than a subdirectory. pppd
+# does not create logfile directories and will fail if the
+# directory path to logfile does not exist.
 logfile /var/log/pppd_mpds.log
+
+# pppoe-connect passes this in the runstring to pppd, based on the value
+# of DEFROUTE in the config file, so don't specify it here.
+# defaultroute
 
 # user name
 # Sets the name used for authenticating the local system to
@@ -45,8 +57,8 @@ remotename mpds
 # The /usr/sbin/pppoe-connect script (started from /usr/sbin/pppoe-start)
 # does an infinite loop, starting pppd every time it fails, which gives
 # a persistent connection.  
-# This needs testing to see if there is any advantage to setting
-# the pppd persist option.
+# This needs testing to see if there is any advantage to having pppd persist,
+# or whether it is better to have it fail and restart it in pppoe-connect.
 persist
 
 # updetach: With this option, pppd will detach from its controlling terminal
