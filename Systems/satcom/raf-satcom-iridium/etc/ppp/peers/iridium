@@ -6,41 +6,17 @@
 # pppd will also read options from
 # /etc/ppp/options and /etc/ppp/options.ttyACM1.
 # 
-# connect script
-# Usually there is something which needs to be done to pre-
-# pare the link before the PPP protocol can be started; for
-# instance,  with a dial-up modem, commands need to be sent
-# to the modem to dial the appropriate phone number.   This
-# option specifies an command for pppd to execute (by pass-
-# ing it to a shell) before attempting to start PPP negoti-
-# ation.   The chat (8) program is often useful here, as it
-# provides a way to send arbitrary strings to a  modem  and
-# respond  to received characters.  A value for this option
-# from a privileged source cannot be overridden by  a  non-
-# privileged user.
-# See this file for the phone number that is dialed
-connect /etc/ppp/peers/iridium.chat
+# debug  Enables connection debugging facilities.  If this  option
+# is given, pppd will log the contents of all control pack-
+# ets sent or received in a readable form.  The packets are
+# logged  through  syslog  with  facility  daemon and level
+# debug.  This information can be directed  to  a  file  by
+# setting   up  /etc/syslog.conf  appropriately  (see  sys-
+# log.conf(5)).
+debug
 
-# Set the MRU [Maximum Receive Unit] value to n. Pppd  will
-# ask  the  peer  to  send packets of no more than n bytes.
-# The value of n must be between 128 and 16384; the default
-# is  1500.   A  value of 296 works well on very slow links
-# (40 bytes for TCP/IP header + 256 bytes of  data).   Note
-# that  for  the  IPv6  protocol,  the MRU must be at least
-# 1280.
-# Needs testing to see what is optimal for our use.
-# If MRU is set in the config file it overrides this value.
-mru 296
-
-# Set the MTU [Maximum Transmit Unit] value to  n.   Unless
-# the  peer  requests  a smaller value via MRU negotiation,
-# pppd will request that the kernel  networking  code  send
-# data packets of no more than n bytes through the PPP net-
-# work interface.  Note that for the IPv6 protocol, the MTU
-# must be at least 1280.
-# Needs testing to see what is optimal for our use.
-# If MTU is set in the config file it overrides this value.
-mtu 296
+# dump set options
+dump
 
 # logfile filename
 # Append log messages to the  file  filename  (as  well  as
@@ -52,28 +28,9 @@ mtu 296
 # directory path to logfile does not exist.
 logfile /var/log/pppd_iridium.log
 
-# auth   Require  the  peer to authenticate itself before allowing
-# network packets to be sent or received.  This  option  is
-# the  default  if the system has a default route.  If nei-
-# ther this option nor the noauth option is specified, pppd
-# will only allow the peer to use IP addresses to which the
-# system does not already have a route.
-# noauth Do not require the peer  to  authenticate  itself.   This
-# option is privileged.
-noauth
-
 # ifup-ppp passes this in the runstring to pppd, based on the value
 # of DEFROUTE in the config file, so don't specify it here.
 # defaultroute
-
-# debug  Enables connection debugging facilities.  If this  option
-# is given, pppd will log the contents of all control pack-
-# ets sent or received in a readable form.  The packets are
-# logged  through  syslog  with  facility  daemon and level
-# debug.  This information can be directed  to  a  file  by
-# setting   up  /etc/syslog.conf  appropriately  (see  sys-
-# log.conf(5)).
-debug
 
 # user name
 # Sets the name used for authenticating the local system to
@@ -101,6 +58,21 @@ remotename iridium
 #  This is set by ifup-ppp
 # ipparam iridium
 
+# connect script
+# Usually there is something which needs to be done to pre-
+# pare the link before the PPP protocol can be started; for
+# instance,  with a dial-up modem, commands need to be sent
+# to the modem to dial the appropriate phone number.   This
+# option specifies an command for pppd to execute (by pass-
+# ing it to a shell) before attempting to start PPP negoti-
+# ation.   The chat (8) program is often useful here, as it
+# provides a way to send arbitrary strings to a  modem  and
+# respond  to received characters.  A value for this option
+# from a privileged source cannot be overridden by  a  non-
+# privileged user.
+# See this file for the phone number that is dialed
+connect /etc/ppp/peers/iridium.chat
+
 # persist: Do  not  exit  after  a connection is terminated; instead try to
 # reopen the connection. The maxfail option still has an effect on
 # persistent connections.
@@ -124,13 +96,143 @@ nodetach
 # from the peer, pppd will then just wait passively  for  a  valid
 # LCP  packet from the peer, instead of exiting, as it would with-
 # out this option.
-# passive
+passive
+
+# auth   Require  the  peer to authenticate itself before allowing
+# network packets to be sent or received.  This  option  is
+# the  default  if the system has a default route.  If nei-
+# ther this option nor the noauth option is specified, pppd
+# will only allow the peer to use IP addresses to which the
+# system does not already have a route.
+# noauth Do not require the peer  to  authenticate  itself.   This
+# option is privileged.
+# We don't need the remote system to authenticate, so use noauth.
+noauth
+
+# Set the MRU [Maximum Receive Unit] value to n. Pppd  will
+# ask  the  peer  to  send packets of no more than n bytes.
+# The value of n must be between 128 and 16384; the default
+# is  1500.   A  value of 296 works well on very slow links
+# (40 bytes for TCP/IP header + 256 bytes of  data).   Note
+# that  for  the  IPv6  protocol,  the MRU must be at least
+# 1280.
+# Needs testing to see what is optimal for our use.
+# If MRU is set in the config file it overrides this value.
+mru 296
+
+# Set the MTU [Maximum Transmit Unit] value to  n.   Unless
+# the  peer  requests  a smaller value via MRU negotiation,
+# pppd will request that the kernel  networking  code  send
+# data packets of no more than n bytes through the PPP net-
+# work interface.  Note that for the IPv6 protocol, the MTU
+# must be at least 1280.
+# Needs testing to see what is optimal for our use.
+# If MTU is set in the config file it overrides this value.
+mtu 296
+
+# default-asyncmap
+# Disable asyncmap negotiation, forcing all control  characters  to
+# be escaped for both the transmit and the receive direction.
+
+# asyncmap map
+# This option sets the Async-Control-Character-Map (ACCM) for  this
+# end  of  the link.  The ACCM is a set of 32 bits, one for each of
+# the ASCII control characters with values from 0 to 31, where a  1
+# bit indicates that the corresponding control character should not
+# be used in PPP packets sent to this system.  The map  is  encoded
+# as  a  hexadecimal  number (without a leading 0x) where the least
+# significant bit (00000001) represents character 0  and  the  most
+# significant  bit  (80000000)  represents character 31.  Pppd will
+# ask the  peer  to  send  these  characters  as  a  2-byte  escape
+# sequence.  If multiple asyncmap options are given, the values are
+# ORed together.  If no asyncmap option is given,  the  default  is
+# zero, so pppd will ask the peer not to escape any control charac-
+# ters.  To escape transmitted characters, use the escape option.
+# In particular,  it  is often useful to escape XON (^Q) and XOFF (^S), using
+# asyncmap a0000.  If the path includes  a  telnet,  you  probably  should
+# escape  ^] as well (asyncmap 200a0000).  If the path includes an rlogin,
+# you will need to use the escape ff option on the end  which  is  running
+# the  rlogin  client, since many rlogin implementations are not transpar-
+# ent; they will remove the sequence [0xff, 0xff, 0x73, 0x73, followed  by
+# any 8 bytes] from the stream.
+asyncmap 00000000
+
+# nobsdcomp
+# bsdcomp nr,nt
+# Request  that  the peer compress packets that it sends, using the
+# BSD-Compress scheme, with a maximum code size  of  nr  bits,  and
+# agree  to  compress  packets sent to the peer with a maximum code
+# size of nt bits.  If nt is not  specified,  it  defaults  to  the
+# value  given for nr.  Values in the range 9 to 15 may be used for
+# nr and nt; larger values give better compression but consume more
+# kernel  memory  for  compression  dictionaries.  Alternatively, a
+# value of 0 for nr or nt disables compression in the corresponding
+# direction.   Use  nobsdcomp  or bsdcomp 0 to disable BSD-Compress
+# compression entirely.
+
+# novj   Disable  Van Jacobson style TCP/IP header compression in both the
+# transmit and the receive direction.
+
+# novjccomp
+# Disable the connection-ID  compression  option  in  Van  Jacobson
+# style TCP/IP header compression.  With this option, pppd will not
+# omit the connection-ID byte from Van Jacobson  compressed  TCP/IP
+# headers, nor ask the peer to do so.
+
+# vj-max-slots n
+# Sets  the number of connection slots to be used by the Van Jacob-
+# son TCP/IP header compression and decompression code to n,  which
+# must be between 2 and 16 (inclusive).
+
+# nodeflate
+# deflate nr,nt
+# Request  that  the peer compress packets that it sends, using the
+# Deflate scheme, with a maximum window size of  2**nr  bytes,  and
+# agree  to compress packets sent to the peer with a maximum window
+# size of 2**nt bytes.  If nt is not specified, it defaults to  the
+# value  given for nr.  Values in the range 9 to 15 may be used for
+# nr and nt; larger values give better compression but consume more
+# kernel  memory  for  compression  dictionaries.  Alternatively, a
+# value of 0 for nr or nt disables compression in the corresponding
+# direction.   Use  nodeflate  or deflate 0 to disable Deflate com-
+# pression entirely.  (Note: pppd requests Deflate  compression  in
+# preference to BSD-Compress if the peer can do either.)
+#
+# noccp  Disable  CCP  (Compression  Control  Protocol) negotiation.  This
+# option should only be required if the peer is buggy and gets con-
+# fused by requests from pppd for CCP negotiation.
 
 # maxfail n: Terminate after n consecutive failed connection attempts.
 # A value of 0 means no limit.  The default value is 10.
 # We'll let it fail, and then the script will start pppd again.
 # This may have an advantage in that the serial port is re-opened.
 maxfail 10
+
+# pap-restart n
+# Set  the PAP restart interval (retransmission timeout) to n sec-
+# onds (default 3).
+pap-restart 20
+
+# pap-timeout n
+# Set the maximum time that pppd will wait for the peer to authen-
+# ticate itself with PAP to n seconds (0 means no limit).
+# Not sure if this has any effect on the client.
+pap-timeout 20
+
+# chap-restart n
+#     Set the CHAP restart interval (retransmission timeout for
+#     challenges) to n seconds (default 3).
+# Not used
+# chap-restart 20
+
+# connect-delay n
+# Wait for up to n milliseconds after the connect script  finishes
+# for  a valid PPP packet from the peer.  At the end of this time,
+# or when a valid PPP packet is received from the peer, pppd  will
+# commence  negotiation  by  sending  its  first  LCP packet.  The
+# default value is 1000 (1 second).  This wait period only applies
+# if the connect or pty option is used.
+connect-delay 10000
 
 # lcp-echo-interval n: If this option is given, pppd will send
 # an LCP echo-request frame to the peer every n seconds.  Normally
@@ -203,9 +305,6 @@ ipcp-max-terminate 5
 # ipcp-restart n: Set the IPCP restart interval (retransmission
 # timeout) to n seconds (default 3).
 ipcp-restart 20
-
-# dump set options
-dump
 
 # ktune  Enables pppd to alter  kernel  settings  as  appropriate.
 #     Under  Linux,  pppd  will  enable IP forwarding (i.e. set
