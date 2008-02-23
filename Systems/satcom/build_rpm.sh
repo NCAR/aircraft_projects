@@ -1,14 +1,6 @@
 #!/bin/sh
 
-if [ ! -d eol/repo/scripts ]; then
-    svn co -N http://svn.eol.ucar.edu/svn/eol || exit 1
-fi
-
-pushd eol
-svn update repo
-popd
-
-source eol/repo/scripts/repo_funcs.sh
+source repo_scripts/repo_funcs.sh
 
 topdir=`get_rpm_topdir`
 rroot=`get_eol_repo_root`
