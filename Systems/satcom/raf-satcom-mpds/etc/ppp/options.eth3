@@ -154,6 +154,24 @@ noauth
 # any 8 bytes] from the stream.
 asyncmap 00000000
 
+# novj   Disable  Van Jacobson style TCP/IP header compression in both the
+# transmit and the receive direction.
+
+# vj-max-slots n
+# Sets  the number of connection slots to be used by the Van Jacob-
+# son TCP/IP header compression and decompression code to n,  which
+# must be between 2 and 16 (inclusive).
+vj-max-slots 16
+
+# novjccomp
+# Disable the connection-ID  compression  option  in  Van  Jacobson
+# style TCP/IP header compression.  With this option, pppd will not
+# omit the connection-ID byte from Van Jacobson  compressed  TCP/IP
+# headers, nor ask the peer to do so.
+# Doing connection-ID compression saves 1 byte per packet - probably
+# not a big savings, but I don't see that it would have much adverse effect.
+# novjccomp
+
 # nobsdcomp
 # bsdcomp nr,nt
 # Request  that  the peer compress packets that it sends, using the
@@ -166,20 +184,7 @@ asyncmap 00000000
 # value of 0 for nr or nt disables compression in the corresponding
 # direction.   Use  nobsdcomp  or bsdcomp 0 to disable BSD-Compress
 # compression entirely.
-
-# novj   Disable  Van Jacobson style TCP/IP header compression in both the
-# transmit and the receive direction.
-
-# novjccomp
-# Disable the connection-ID  compression  option  in  Van  Jacobson
-# style TCP/IP header compression.  With this option, pppd will not
-# omit the connection-ID byte from Van Jacobson  compressed  TCP/IP
-# headers, nor ask the peer to do so.
-
-# vj-max-slots n
-# Sets  the number of connection slots to be used by the Van Jacob-
-# son TCP/IP header compression and decompression code to n,  which
-# must be between 2 and 16 (inclusive).
+bsdcomp 0
 
 # nodeflate
 # deflate nr,nt
@@ -194,7 +199,9 @@ asyncmap 00000000
 # direction.   Use  nodeflate  or deflate 0 to disable Deflate com-
 # pression entirely.  (Note: pppd requests Deflate  compression  in
 # preference to BSD-Compress if the peer can do either.)
-#
+# deflate 15,15
+deflate 0
+
 # noccp  Disable  CCP  (Compression  Control  Protocol) negotiation.  This
 # option should only be required if the peer is buggy and gets con-
 # fused by requests from pppd for CCP negotiation.
