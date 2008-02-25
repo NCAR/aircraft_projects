@@ -270,7 +270,7 @@ ifup iridium
 
     So the critical options in ifcfg-iridium:
         TYPE=Modem
-        DEVICE=iridium
+        DEVICE=ppp0
         MODEMPORT=/dev/ttyS*
         DEFROUTE=yes
         PEERDNS=no
@@ -279,15 +279,35 @@ ifup iridium
         USERCTL=yes
         LINESPEED=
 
-     DEVICE seems to only be used in info messages and in one place
+     DEVICE is only used in info messages and in one place
      in ifup-ppp when looking for the chat script if the peers
-     file is missing
+     file is missing. However, it is used by system-control-network
+     to determine whether the interface is up or down.  There is a 
+     "unit N" pppd parameter where one can force the device name
+     to be pppN.
+
+     These variables are placed in ifcfg-iridium by system-config-network
+     but they don't seem to be used by ifup-ppp. Instead
+     set the corresponding option in the /etc/ppp/peers/iridium:
+     AC=
+     BSDCOMP=no
+     VJCCOMP=no
+     CCP=yes
+     PC=on
+     VJ=yes
+
      
      NAME doesn't seem to be used anywhere
 
      The others can be set in
         /etc/ppp/options.$MODEMPORT and
         /etc/ppp/peers/iridium   (from call iridium parameter)
+
+    Van Jacobson compression:
+        Tried setting "vj-max-slots 16" using a generic modem
+        connection to Level 3 RAS, and tested with http browser traffic.
+        pppstats eventually showed many non-zero VJCOMP values
+        for IN packets, but only NON-VJ values for OUT packets.
 
     PARENTDEVNAME is taken from a config name such as  ifcfg-bozo-iridium
         In this case PARENTDEVNAME would be bozo

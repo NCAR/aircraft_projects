@@ -5,6 +5,8 @@ MODEMPORT=/dev/ttyACM0
 ONBOOT=no
 USERCTL=yes
 PEERDNS=no
+# Device is fixed as ppp0 with "unit 0" pppd option.
+DEVICE=ppp0
 # Initial plan when running iridium and mpds simultaneously is
 # for the mpds connection to be the default route and use static
 # routing over iridium
@@ -14,17 +16,19 @@ BOOTPROTO=dialup
 PERSIST=yes
 # We don't use wvdial so WVDIALSECT is ignored
 WVDIALSECT=iridium
-AC=on
-BSDCOMP=on
-VJCCOMP=on
-CCP=on
-PC=on
-VJ=on
+# AC,BSDCOMP,VJCCOMP,CCP,PC and VJ are ignored by ifup-ppp.
+# The corresponding pppd options must be set in /etc/ppp/peers/iridium
+AC=no
+BSDCOMP=no
+VJCCOMP=yes
+CCP=yes
+PC=yes
+VJ=yes
 IPV6INIT=no
 MODEMNAME=iridium
 # IDLETIMEOUT is only used when DEMAND=yes, which we don't use
 IDLETIMEOUT=600
 LINESPEED=19200
-DEVICE=ppp0
 # Anything other than ESCAPECHARS=yes results in "asyncmap 00000000"
+# If ESCAPECHARS=yes, then no asyncmap option is set.
 ESCAPECHARS=no

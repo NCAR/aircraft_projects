@@ -6,6 +6,10 @@ Iridium:
         Do we get higher throughput with larger values?
     bsdcomp,deflate,vj: any benefits to compression?
         what gets negotiated currently?
+        Looks like RAS Level 3 rejects deflate compression, and
+        bsdcomp is not supported on our pppd because the bsd compression
+        kernel module is not available in the default redhat configs.
+            I think that is OK.
         Some internet documents suggest not using PPP compression over iridium
             because of the large error rate.
         My understanding of VJ header compression (rfc1144) is that it
@@ -13,10 +17,12 @@ Iridium:
             packet data compression algorithms. It simply doesn't send
             repeated parts of the 40-byte TCP header, or sends 1 byte deltas
             of fields that typically just change by one (sequence counters).
+            One can watch the performance of VJ compression with pppstats -v.
 
     passive: use it? (KU used it with multilink to Greenland)
 
     Test modem compression/error settings?
+        
 
     The CISL Level 3 doc
     https://www.cisl.ucar.edu/nets/internal/docs/ras/level_3_ras.html

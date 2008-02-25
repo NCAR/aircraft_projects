@@ -28,6 +28,12 @@ dump
 # directory path to logfile does not exist.
 logfile /var/log/pppd_iridium.log
 
+# unit num
+# Sets the ppp unit number (for a ppp0 or ppp1  etc  inter-
+# face name) for outbound connections.
+# We'll use ppp0 for iridium and ppp1 for mpds.
+unit 0
+
 # ifup-ppp passes this in the runstring to pppd, based on the value
 # of DEFROUTE in the config file, so don't specify it here.
 # defaultroute
@@ -187,6 +193,7 @@ vj-max-slots 16
 # value of 0 for nr or nt disables compression in the corresponding
 # direction.   Use  nobsdcomp  or bsdcomp 0 to disable BSD-Compress
 # compression entirely.
+# bsdcomp 15,15
 bsdcomp 0
 
 # nodeflate
@@ -202,6 +209,7 @@ bsdcomp 0
 # direction.   Use  nodeflate  or deflate 0 to disable Deflate com-
 # pression entirely.  (Note: pppd requests Deflate  compression  in
 # preference to BSD-Compress if the peer can do either.)
+# deflate 15,15
 deflate 0
 
 # noccp  Disable  CCP  (Compression  Control  Protocol) negotiation.  This
