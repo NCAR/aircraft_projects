@@ -1,14 +1,24 @@
 
 Some interesting tests:
 
+MPDS:
+    does disabling default-asyncmap work/help?
+    passive: use it?
+    bsdcomp,deflate,vj:
+        what gets negotiated currently?
+        try vj and deflate
+    
+
 Iridium:
     mtu/mru: currently using mtu,mru=296
         Do we get higher throughput with larger values?
-    bsdcomp,deflate,vj: any benefits to compression?
-        what gets negotiated currently?
+    Test modem compression/error settings
+        What gets reported currently?
+    bsdcomp,deflate:
         Looks like RAS Level 3 rejects deflate compression, and
-        bsdcomp is not supported on our pppd because the bsd compression
-        kernel module is not available in the default redhat configs.
+        bsdcomp is not supported on our pppd perhaps because the bsd
+        compression kernel module is not available in the default redhat
+        configs.
             I think that is OK.
         Some internet documents suggest not using PPP compression over iridium
             because of the large error rate.
@@ -21,8 +31,6 @@ Iridium:
 
     passive: use it? (KU used it with multilink to Greenland)
 
-    Test modem compression/error settings?
-        
 
     The CISL Level 3 doc
     https://www.cisl.ucar.edu/nets/internal/docs/ras/level_3_ras.html
@@ -39,9 +47,3 @@ Iridium:
             and Username is your Iridium telephone number, or, Password and Username
             are both "directinternet".
 
-MPDS:
-    does disabling default-asyncmap help?
-    passive: use it?
-    bsdcomp,deflate,vj: any benefits to compression?
-        what gets negotiated currently?
-    

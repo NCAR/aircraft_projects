@@ -122,9 +122,13 @@ noauth
 # (40 bytes for TCP/IP header + 256 bytes of  data).   Note
 # that  for  the  IPv6  protocol,  the MRU must be at least
 # 1280.
-# Needs testing to see what is optimal for our use.
 # If MRU is set in the config file it overrides this value.
-mru 296
+#
+# UKansas report on Greenland Iridium system reported that
+# round-trip-time/byte reached a minimum floor of 7.5 msec/byte
+# at about mtu,mru=800 bytes, and didn't improve with higher values.
+# mru 296
+mru 800
 
 # Set the MTU [Maximum Transmit Unit] value to  n.   Unless
 # the  peer  requests  a smaller value via MRU negotiation,
@@ -132,9 +136,9 @@ mru 296
 # data packets of no more than n bytes through the PPP net-
 # work interface.  Note that for the IPv6 protocol, the MTU
 # must be at least 1280.
-# Needs testing to see what is optimal for our use.
 # If MTU is set in the config file it overrides this value.
-mtu 296
+# mtu 296
+mtu 800
 
 # default-asyncmap
 # Disable asyncmap negotiation, forcing all control  characters  to
@@ -161,7 +165,25 @@ mtu 296
 # the  rlogin  client, since many rlogin implementations are not transpar-
 # ent; they will remove the sequence [0xff, 0xff, 0x73, 0x73, followed  by
 # any 8 bytes] from the stream.
-asyncmap 00000000
+# Do "asyncmap 08000000" to escape ESC=dec27, if one sets the modem
+# command escape character (default '+') to ESC with ATS2=27
+# asyncmap 08000000
+asyncmap 0
+
+# escape xx,yy,...
+# Specifies  that  certain  characters should be escaped on
+# transmission (regardless of  whether  the  peer  requests
+# them to be escaped with its async control character map).
+# The characters to be escaped are specified as a  list  of
+# hex  numbers  separated  by commas.  Note that almost any
+# character can be specified for the escape option,  unlike
+# the  asyncmap option which only allows control characters
+# to be specified.  The characters which may not be escaped
+# are those with hex values 0x20 - 0x3f or 0x5e.
+#
+# Note that '+' is 0x2B and cannot be escaped.
+# Alternative to ATS2=27, asyncmap 08000000 is "ATS2=27, escape 1B"
+escape 1B
 
 # novj   Disable  Van Jacobson style TCP/IP header compression in both the
 # transmit and the receive direction.
