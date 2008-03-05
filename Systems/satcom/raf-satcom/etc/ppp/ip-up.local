@@ -18,7 +18,8 @@
 ipparam=$6
 dev=$1
 
-# Look for and execute /etc/ppp/ip-up.$ipparam
+# Look for and execute /etc/ppp/ip-up.$ipparam,
+# where $ipparam is iridium or mpds
 [ -x /etc/ppp/ip-up.$ipparam ] && { /etc/ppp/ip-up.$ipparam "$@" || exit $?; }
 
 exit 0
