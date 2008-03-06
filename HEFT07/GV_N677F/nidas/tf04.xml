@@ -285,12 +285,15 @@
         <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
 
         <sample id="1" rate="10">
-            <variable name="FREF" units="V" longname="CDP Laser Reference Voltage"/>
-            <variable name="FTMP" units="deg_C" longname="CDP Housekeeping Data"/>
-            <variable name="FRNG" units="" longname="CDP Size Range Category"/>
+            <variable name="CDPLSRC" units="mAmp" longname="CDP Laser Current"/>
+            <variable name="CDPLSRP" units="V" longname="CDP Laser Power Monitor"/>
+            <variable name="CDPWBTMP" units="deg_C" longname="CDP Wing Board Temperature"/>
+            <variable name="CDPLBTMP" units="deg_C" longname="CDP Laser Block Temperature"/>
             <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
             <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
+            <variable name="AVGTRNS" units="" longname="CDP Average Transit Time"/>
             <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
+
             <variable name="ACDP" length="31" units="count" longname="CDP Raw Accumulation (per cell)"/>
         </sample>
         <message separator="\xff\xff" position="end" length="154"/>
@@ -725,7 +728,7 @@
             <parameter name="HSKP_SCALE" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000" type="int"/>
 
             <sample id="1" rate="10">
-                <variable name="AUHSAS" length="99" units="count" longname="UHSAS Raw Count Histogram"/>
+                <variable name="AUHSAS" length="100" units="count" longname="UHSAS Raw Count Histogram"/>
                 <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
                 <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
                 <variable name="USMPFLW" units="V" longname="UHSAS Sample Flow">
