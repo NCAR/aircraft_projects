@@ -84,6 +84,7 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/sysconfig/networking/profiles/default/ifcfg-mpds
 %config /etc/ppp/ip-up.mpds
 %config /etc/ppp/options.eth3
+%config /etc/ppp/pppoe-lost
 
 %changelog
 * Sun Mar  9 2008 Gordon Maclean <maclean@ucar.edu>
