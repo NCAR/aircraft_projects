@@ -1,7 +1,7 @@
 Summary: PPP and PPPOE configuration for Inmarsat MPDS
 Name: raf-satcom-mpds
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -86,5 +86,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ppp/options.eth3
 
 %changelog
+* Sun Mar  9 2008 Gordon Maclean <maclean@ucar.edu>
+- added pppoe-lost script, turn off persist
+
 * Sun Feb 10 2008 Gordon Maclean <maclean@ucar.edu>
 - initial version
