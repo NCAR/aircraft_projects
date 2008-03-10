@@ -1,7 +1,7 @@
 Summary: PPP and PPPOE configuration for Inmarsat MPDS
 Name: raf-satcom-mpds
 Version: 1.0
-Release: 2
+Release: 3
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -32,14 +32,15 @@ cp -r etc $RPM_BUILD_ROOT
 # they become hard links when the RPM is installed - don't have
 # to do it with a %post script
 cd $RPM_BUILD_ROOT/etc/sysconfig
-if [ ! network-scripts/ifcfg-mpds -ef networking/devices/ifcfg-mpds ]; then
-    rm -f networking/devices/ifcfg-mpds
-    ln network-scripts/ifcfg-mpds networking/devices
-fi
-if [ ! network-scripts/ifcfg-mpds -ef networking/profiles/default/ifcfg-mpds ]; then
-    rm -f networking/profiles/default/ifcfg-mpds
-    ln network-scripts/ifcfg-mpds networking/profiles/default
-fi
+# Link these files into these other directories
+for f in ifcfg-mpds ifcfg-eth3; do
+    for d in networking/devices networking/profiles/default; do
+        if [ ! network-scripts/$f -ef $d/$f ]; then
+            rm -f $d/$f
+            ln network-scripts/$f $d
+        fi
+    done
+done
 
 %post
 
@@ -82,11 +83,17 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/sysconfig/network-scripts/ifcfg-mpds
 %config /etc/sysconfig/networking/devices/ifcfg-mpds
 %config /etc/sysconfig/networking/profiles/default/ifcfg-mpds
+%config /etc/sysconfig/network-scripts/ifcfg-eth3
+%config /etc/sysconfig/networking/devices/ifcfg-eth3
+%config /etc/sysconfig/networking/profiles/default/ifcfg-eth3
 %config /etc/ppp/ip-up.mpds
 %config /etc/ppp/options.eth3
 %config /etc/ppp/pppoe-lost
 
 %changelog
+* Sun Mar 10 2008 Gordon Maclean <maclean@ucar.edu>
+- added ifcfg-eth3 config
+
 * Sun Mar  9 2008 Gordon Maclean <maclean@ucar.edu>
 - added pppoe-lost script, turn off persist
 
