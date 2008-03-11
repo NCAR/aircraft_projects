@@ -1,0 +1,78 @@
+Summary: Iptables configuration for RAF aircraft server
+Name: raf-ac-firewall
+Version: 1.0
+Release: 1
+License: GPL
+Group: System Environment/Daemons
+Url: http://www.eol.ucar.edu/
+Packager: Gordon Maclean <maclean@ucar.edu>
+BuildRoot: /tmp/%{name}-%{version}
+Vendor: UCAR
+BuildArch: noarch
+Requires: iptables sysctl
+Source: %{name}-%{version}.tar.gz
+
+%description
+Iptables configuration for RAF aircraft server.
+
+%prep
+%setup -n %{name}
+
+%build
+
+%install
+
+install -d $RPM_BUILD_ROOT/usr/src
+install -d $RPM_BUILD_ROOT/etc/sysconfig
+cp -r usr/src/iptables $RPM_BUILD_ROOT/usr/src
+cp -r etc/sysconfig/iptables $RPM_BUILD_ROOT/etc/sysconfig
+
+%triggerin -- iptables initscripts
+# %triggerin script is run when a given target package is installed or
+# upgraded, or when this package is installed or upgraded and the target
+# is already installed.
+
+# turn on forwarding
+cf=/etc/sysctl.conf
+if ! egrep -q "^[[:space:]]*net.ipv4.ip_forward=" $cf; then
+    echo "net.ipv4.ip_forward=1" >> $cf
+else
+sed -i -c '/^[[:space:]]*net.ipv4.ip_forward=/{
+s/=0/=1/
+}' $cf
+fi
+if `sysctl -n net.ipv4.ip_forward` == 0; then
+    sysctl net.ipv4.ip_forward=1
+fi
+
+# run the iptables-setup.sh script
+/usr/src/iptables/iptables-setup.sh > /tmp/iptables.$$
+cd /etc/sysconfig
+if diff -q /tmp/iptables.$$ iptables; then
+    echo "Saving `pwd`/iptables as `pwd`/iptables.rpmsave"
+    mv iptables iptables.rpmsave
+    mv /tmp/iptables.$$ iptables
+    rm -f iptables.rpmnew
+fi
+rm -f /tmp/iptables.$$
+
+# add necessary modules for iptables
+cf=/etc/sysconfig/iptables-config
+sed -i -c '/^[[:space:]]*IPTABLES_MODULES=/{
+/ip_conntrack_ftp/b
+s/IPTABLES_MODULES="[^"]*/& ip_conntrack ip_conntrack_ftp/
+}' $cf
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%config(noreplace) %attr(0600,root,root) /etc/sysconfig/iptables
+%dir /usr/src/iptables
+%config %attr(0644,root,root) /usr/src/iptables/iptables-setup.sh
+
+%changelog
+* Sun Feb 29 2008 Gordon Maclean <maclean@ucar.edu>
+- initial version
