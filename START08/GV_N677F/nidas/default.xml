@@ -685,6 +685,41 @@
                     <parameter name="corIntercept" value="-0.0492457" type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
+<!-- TCAB                   -->
+                <variable name="TCAB" units="V" longname="Cabin Temperature at AEROSOL Rack Location">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.10704" type="float"/> 
+                    <parameter name="corIntercept" value="-0.361223"  type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
+                </variable>
+
+<!-- AO2O2                 -->
+                <variable name="AO2O2" units="per meg" longname="AO2 O2">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.10372" type="float"/>
+                    <parameter name="corIntercept" value="-0.343871"  type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
+                </variable>
+
+<!-- AO2CO2                -->
+                <variable name="AO2CO2" units="ppm" longname="AO2 CO2">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.09769" type="float"/>
+                    <parameter name="corIntercept" value="-0.285099"  type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
+                </variable>
+
+<!-- AO2STAT               -->
+                <variable name="AO2STAT" units="v" longname="AO2 STAT">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.10643" type="float"/>
+                    <parameter name="corIntercept" value="-0.405119"  type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
+                </variable>
 
 <!--
 <!- A2D007_2F_3          | 2008-02-05 00:03:55 | {-0.361223,1.10704} ->
@@ -719,6 +754,48 @@
                 <variable name="A2DTEMP_MTP" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
+
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="3" rate="1">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+
+                <variable name="MEDP1" units="torr" longname="Medusa Presure 1">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
+                </variable>
+
+                <variable name="MEDP2" units="torr" longname="Medusa Presure 2">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
+                </variable>
+
+                <variable name="MEDPBYP" units="torr" longname="Medusa Pressure Bypass">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
+                </variable>
+
+                <variable name="MEDSTAT" units="V" longname="Medusa Status">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
+                </variable>
+
+                <variable name="MEDFLOW" units="V" longname="Medusa Flow">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
+                </variable>
+
+                <variable name="MEDCO2" units="ppm" longname="Medusa CO2">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
+                </variable>
+
+            </sample>
+         </sensor>
+
+
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
