@@ -667,7 +667,7 @@
 
 <!-- AO2O2                 -->
                 <variable name="AO2O2" units="per meg" longname="AO2 O2">
-                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.10372" type="float"/>
                     <parameter name="corIntercept" value="-0.343871"  type="float"/>
@@ -676,7 +676,7 @@
 
 <!-- AO2CO2                -->
                 <variable name="AO2CO2" units="ppm" longname="AO2 CO2">
-                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09769" type="float"/>
                     <parameter name="corIntercept" value="-0.285099"  type="float"/>
@@ -685,7 +685,7 @@
 
 <!-- AO2STAT               -->
                 <variable name="AO2STAT" units="v" longname="AO2 STAT">
-                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.10643" type="float"/>
                     <parameter name="corIntercept" value="-0.405119"  type="float"/>
@@ -722,50 +722,53 @@
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_MTP" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_MTP1" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300">
             <parameter name="rate" value="500" type="int"/>
-            <sample id="3" rate="1">
+            <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
 
-                <variable name="MEDP1" units="torr" longname="Medusa Presure 1">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                <variable name="MEDP1" units="V" longname="Medusa Presure 1">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
                 </variable>
 
-                <variable name="MEDP2" units="torr" longname="Medusa Presure 2">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                <variable name="MEDP2" units="V" longname="Medusa Presure 2">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
                 </variable>
 
-                <variable name="MEDPBYP" units="torr" longname="Medusa Pressure Bypass">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                <variable name="MEDPBYP" units="V" longname="Medusa Pressure Bypass">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
                 </variable>
 
                 <variable name="MEDSTAT" units="V" longname="Medusa Status">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
                 </variable>
 
                 <variable name="MEDFLOW" units="V" longname="Medusa Flow">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
                 </variable>
 
-                <variable name="MEDCO2" units="ppm" longname="Medusa CO2">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                <variable name="MEDCO2" units="V" longname="Medusa CO2">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.09356" type="float"/> <parameter name="corIntercept" value="-0.272962"  type="float"/>
                 </variable>
 
             </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_MTP2" units="deg_C" longname="A2D Temperature"/>
+            </sample>
          </sensor>
-
 
 
         <output class="RawSampleOutputStream" sorterLength="0">
@@ -778,47 +781,48 @@
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
 
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200"> <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="5">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="5" type="int"/>
+                <parameter name="numpoints" value="50" type="int"/>
 <!--    NOMR_CL  need to get cal data  -->                
-                <variable name="NOMR_CL" units="V" longname="      ">
-                  <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"  type="bool"/>
+                <variable name="NOMR_CL" units="V" longname="Nitric Oxide Mixing Ratio">
+                  <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"  type="bool"/>
                   <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
-                  <linear slope="-10.0" intercept="0.0" units="W"/>
+                  <linear slope="0.0" intercept="20.0" units="ppbv"/>
                 </variable>
 <!--    NOYMR_CL  need to get cal data  -->
-                 <variable name="NOYMR_CL" units="V" longname="        ">
-                  <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
+                 <variable name="NOYMR_CL" units="V" longname="Oxides of Nitrogen Mixing Ratio">
+                  <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
                   <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
-                  <linear slope="-10.0" intercept="0.0" units="W"/>
+                  <linear slope="0.0" intercept="20.0" units="ppbv"/>
                 </variable>
 <!--    FO3_CL  need to get cal data  -->
                 <variable name="FO3_CL" units="V" longname="           ">
-                  <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
+                  <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
                   <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
-                  <linear slope="-10.0" intercept="0.0" units="W"/>
                 </variable>
 <!--    NOY/O3  need to get cal data  -->
                 <variable name="NOY/O3" units="V" longname="             ">
-                  <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
+                  <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
                   <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
-                  <linear slope="-10.0" intercept="0.0" units="W"/>
                 </variable>
 <!--    COMR_AL  need to get cal data  -->
-                <variable name="COMR_AL" units="ppbv" longname="Nitric Oxide Mixing Ratio">
+                <variable name="COMR_AL" units="V" longname="Carbon Monoxide Mixing Ratio">
                   <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
                   <parameter name="corSlope" value="400.0"     type="float"/> <parameter name="corIntercept" value="-3.2"   type="float"/>
-                  <linear slope="-10.0" intercept="0.0" units="W"/>
+                  <linear slope="400.0" intercept="-3.2" units="ppbv"/>
                 </variable>
 <!--    CORAW_AL  need to get cal data  -->
-                <variable name="CORAW_AL" units="ppbv" longname="Oxides of Nitrogen Mixing Ratio">
+                <variable name="CORAW_AL" units="V" longname="Raw CO Signal">
                   <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
                   <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
-                  <linear slope="-10.0" intercept="0.0" units="W"/>
                 </variable>
-
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_TDL" units="deg_C" longname="A2D Temperature"/>
             </sample>
        </sensor> 
 
@@ -835,7 +839,8 @@
             <parameter name="SerialNumber" type="string" value="CDP001"/>
         </serialSensor>
 
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200"> <parameter name="rate" value="500" type="int"/>
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
@@ -847,7 +852,7 @@
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_A2D1603" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_LWO" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
@@ -884,7 +889,7 @@
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_A2D019" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_RWO" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
