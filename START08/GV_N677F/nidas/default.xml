@@ -612,35 +612,6 @@
         </output>
     </dsm>
 
-    <dsm name="dsm301" location="lams_bb" id="6" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
-
-        <sensor class="raf.LamsSensor" devicename="/dev/lams0" id="140" suffix="_bb">
-            <sample id="1" rate="2">
-                <variable name="LAMS_MAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
-                <variable name="LAMS_AVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
-            </sample>
-        </sensor>
-
-        <output class="RawSampleOutputStream" sorterLength="0">
-            <socket type="mcrequest"/>
-        </output>
-    </dsm>
-   
-    <dsm name="dsm311" location="lams" id="7" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
-
-        <sensor class="raf.LamsSensor" devicename="/dev/lams0" id="140">
-            <sample id="1" rate="2">
-                <variable name="LAMS_MAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
-                <variable name="LAMS_AVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
-            </sample>
-        </sensor>
-
-        <output class="RawSampleOutputStream" sorterLength="0">
-            <socket type="mcrequest"/>
-        </output>
-    </dsm>
    
     <dsm name="dsm313" location="MTP Rack R-4" id="8" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
@@ -807,6 +778,51 @@
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
 
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200"> <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="5">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="5" type="int"/>
+<!--    NOMR_CL  need to get cal data  -->                
+                <variable name="NOMR_CL" units="V" longname="      ">
+                  <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"  type="bool"/>
+                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
+                  <linear slope="-10.0" intercept="0.0" units="W"/>
+                </variable>
+<!--    NOYMR_CL  need to get cal data  -->
+                 <variable name="NOYMR_CL" units="V" longname="        ">
+                  <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
+                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
+                  <linear slope="-10.0" intercept="0.0" units="W"/>
+                </variable>
+<!--    FO3_CL  need to get cal data  -->
+                <variable name="FO3_CL" units="V" longname="           ">
+                  <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
+                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
+                  <linear slope="-10.0" intercept="0.0" units="W"/>
+                </variable>
+<!--    NOY/O3  need to get cal data  -->
+                <variable name="NOY/O3" units="V" longname="             ">
+                  <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
+                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
+                  <linear slope="-10.0" intercept="0.0" units="W"/>
+                </variable>
+<!--    COMR_AL  need to get cal data  -->
+                <variable name="COMR_AL" units="ppbv" longname="Nitric Oxide Mixing Ratio">
+                  <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"   type="bool"/>
+                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
+                  <linear slope="-10.0" intercept="0.0" units="W"/>
+                </variable>
+<!--    CORAW_AL  need to get cal data  -->
+                <variable name="CORAW_AL" units="ppbv" longname="Oxides of Nitrogen Mixing Ratio">
+                  <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"   type="bool"/>
+                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
+                  <linear slope="-10.0" intercept="0.0" units="W"/>
+                </variable>
+
+            </sample>
+       </sensor> 
+
+
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
@@ -880,26 +896,6 @@
         </output>
     </dsm>
 
-    <dsm name="hyper" location="DGPS" id="77" rserialPort="30002">
-
-        <serialSensor IDREF="D_GPS" devicename="/dev/ttyS0" id="800"/>
-
-	<!--
-        <output class="RawSampleOutputStream" sorterLength="0">
-            <socket type="mcrequest"/>
-        </output>
--->
-	<output class="RawSampleOutputStream" sorterLength="0">
-	    <fileset dir="/var/r1/${PROJECT}"
-                        file="dgps_%Y%m%d_%H%M%S_${FLIGHT}.ads"
-                        length="0"/>
-        </output>
-	<!--
-        <output class="RawSampleOutputStream" sorterLength="0">
-            <socket type="server" port="30000"/>
-        </output>
-	-->
-   </dsm>
 
 </site>
 </project>
