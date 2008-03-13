@@ -783,41 +783,43 @@
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="10">
+            <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="50" type="int"/>
+                <parameter name="numpoints" value="5" type="int"/>
 <!--    NOMR_CL  need to get cal data  -->                
                 <variable name="NOMR_CL" units="V" longname="Nitric Oxide Mixing Ratio">
                   <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"  type="bool"/>
-                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
-                  <linear slope="0.0" intercept="20.0" units="ppbv"/>
+                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                  <linear slope="20.0" intercept="0.0" units="ppbv"/>
                 </variable>
 <!--    NOYMR_CL  need to get cal data  -->
                  <variable name="NOYMR_CL" units="V" longname="Oxides of Nitrogen Mixing Ratio">
                   <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
-                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
-                  <linear slope="0.0" intercept="20.0" units="ppbv"/>
+                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                  <linear slope="20.0" intercept="0.0" units="ppbv"/>
                 </variable>
 <!--    FO3_CL  need to get cal data  -->
                 <variable name="FO3_CL" units="V" longname="           ">
-                  <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
-                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
+                  <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
+                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                  <linear slope="20.0" intercept="0.0" units="ppbv"/>
                 </variable>
 <!--    NOY/O3  need to get cal data  -->
-                <variable name="NOY/O3" units="V" longname="             ">
+                <variable name="NOY/O3" units="V" longname="Ratio of Oxides of Nitrogen to Ozone">
                   <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
-                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
+                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                  <linear slope="1.0" intercept="0.0" units="ppbv"/>
                 </variable>
 <!--    COMR_AL  need to get cal data  -->
                 <variable name="COMR_AL" units="V" longname="Carbon Monoxide Mixing Ratio">
                   <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
-                  <parameter name="corSlope" value="400.0"     type="float"/> <parameter name="corIntercept" value="-3.2"   type="float"/>
+                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
                   <linear slope="400.0" intercept="-3.2" units="ppbv"/>
                 </variable>
 <!--    CORAW_AL  need to get cal data  -->
                 <variable name="CORAW_AL" units="V" longname="Raw CO Signal">
                   <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"   type="bool"/>
-                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"   type="float"/>
+                  <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
