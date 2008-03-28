@@ -535,6 +535,18 @@
 
         <serialSensor IDREF="D_GPS" devicename="/dev/dsmser6" id="150"/>
 
+<!--
+        <socketSensor class="raf.PSI9116_Sensor" devicename="inet:nonoyo3-pc:5555" id="770" suffix="_NOO3">
+            <sample id="1" rate="1" scanFormat="NONOyO3,%f,%f,%f,%f">
+                <variable name="NO" units="pptv" longname="NONOyO3 Nitric Oxide"/>
+                <variable name="NOY" units="pptv" longname="NONOyO3 Reactive Nitrogen"/>
+                <variable name="O3" units="ppbv" longname="NONOyO3 Ozone"/>
+                <variable name="NOY2O3" units="pptv/ppbv" longname="NONOyO3 NOy/O3 Ratio"/>
+            </sample>
+            <message separator="NONOyO3" position="beg" length="0"/>
+        </socketSensor>
+-->
+
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
@@ -617,7 +629,7 @@
     <dsm name="dsm313" location="MTP Rack R-4" id="8" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
 
-        <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="130" suffix="_VCSEL"/>
+        <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="130" suffix="_VXL"/>
   
         <serialSensor IDREF="NOAAO3" devicename="/dev/ttyS6" id="140" suffix="_NOAAO3"/>
   
