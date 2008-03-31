@@ -168,11 +168,6 @@
         <message separator="\xaa\x44\x12" position="beg" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="NOAAO3" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
-        <message separator="CLJJJTTTTTT\PPPP\PP\OOO\OO" position="beg" length="0"/>
-    </serialSensor>
-
-
     <serialSensor ID="Garmin_GPS" class="GPS_NMEA_Serial"
         baud="4800" parity="none" databits="8" stopbits="1">
 
@@ -379,6 +374,15 @@
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
 
+    <serialSensor ID="NOAAO3" class="DSMSerialSensor"
+        baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="10" scanfFormat="%*3d%*6d,%f,%f">
+            <variable name="AMB_PRESS" units="hPa" longname="ambiant pressure"/> <!-- value read in as mB -->
+            <variable name="O3_MR" units="ppbv" longname="ozone mixing ratio"/>
+        </sample>
+        <message separator="\r\n" position="beg" length="0"/>
+    </serialSensor>
+
     <serialSensor ID="CFDC" class="DSMSerialSensor"
         baud="38400" parity="none" databits="8" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f">
@@ -436,8 +440,6 @@
             <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
         </sample>
     </sensor>
-
-
 </sensorcatalog>
 
 
@@ -535,17 +537,7 @@
 
         <serialSensor IDREF="D_GPS" devicename="/dev/dsmser6" id="150"/>
 
-<!--
-        <socketSensor class="raf.PSI9116_Sensor" devicename="inet:nonoyo3-pc:5555" id="770" suffix="_NOO3">
-            <sample id="1" rate="1" scanFormat="NONOyO3,%f,%f,%f,%f">
-                <variable name="NO" units="pptv" longname="NONOyO3 Nitric Oxide"/>
-                <variable name="NOY" units="pptv" longname="NONOyO3 Reactive Nitrogen"/>
-                <variable name="O3" units="ppbv" longname="NONOyO3 Ozone"/>
-                <variable name="NOY2O3" units="pptv/ppbv" longname="NONOyO3 NOy/O3 Ratio"/>
-            </sample>
-            <message separator="NONOyO3" position="beg" length="0"/>
-        </socketSensor>
--->
+        <serialSensor IDREF="NOAAO3" devicename="/dev/dsmser7" id="770"/>
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -631,7 +623,7 @@
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="130" suffix="_VXL"/>
   
-        <serialSensor IDREF="NOAAO3" devicename="/dev/ttyS6" id="140" suffix="_NOAAO3"/>
+        <serialSensor IDREF="NOAAO3" devicename="/dev/ttyS6" id="140" suffix="_313"/>
   
         <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS7" id="150" suffix="_WCN"/>
 
