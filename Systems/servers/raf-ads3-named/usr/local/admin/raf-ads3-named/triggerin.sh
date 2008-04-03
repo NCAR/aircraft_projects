@@ -15,7 +15,7 @@ usage() {
 }
 
 # whichpkg is ac or lab
-[ $# -ge 1 ] || usage
+[ $# -ge 2 ] || usage
 
 case $1 in
 ac | lab)
@@ -25,6 +25,7 @@ ac | lab)
     usage
     ;;
 esac
+pkg=$2
 
 SYSCONFDIR=${SYSCONFDIR:-/etc}
 DO_CHROOT=${DO_CHROOT:-false}
@@ -39,9 +40,9 @@ if ! egrep -q '^[[:space:]]*include[[:space:]]+"${SYSCONFDIR}/named.${whichpkg}.
     fi
 
     cat << EOD >> $cf
-###### start of updates from %{name}-%{version} package.
+###### start of updates from $pkg package.
 include "${SYSCONFDIR}/named.${whichpkg}.conf";
-###### end of updates from %{name}-%{version} package.
+###### end of updates from $pkg package.
 EOD
 fi
 
