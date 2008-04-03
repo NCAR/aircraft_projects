@@ -1,5 +1,5 @@
-Summary: DHCP configuration for RAF aircraft server
-Name: raf-ac-dhcp
+Summary: DHCP configuration for server on RAF aircraft
+Name: raf-ads3-dhcp
 Version: 1.0
 Release: 1
 License: GPL
@@ -18,72 +18,68 @@ DHCP configuration for RAF aircraft server
 %prep
 %setup -n %{name}
 
+# We're splitting this into two subpackages, for the GV and C130.
+# Since a dhcp config can have multiple entries with different MAC
+# addresses for the same ddns-hostname, perhaps we don't 
+# really need separate packages, but ...
+# Also need a lab package.
+%package -n raf-gv-dhcp
+Summary: DHCP configuration for server system on GV
+Group: System Environment/Daemons
+%description -n raf-gv-dhcp
+DHCP configuration for server system on GV.
+
+%package -n raf-c130-dhcp
+Summary: DHCP configuration for server system on C130
+Group: System Environment/Daemons
+%description -n raf-c130-dhcp
+DHCP configuration for server system on C130.
+
+%package -n raf-lab-dhcp
+Summary: DHCP configuration for ADS3 data server in lab 
+Group: System Environment/Daemons
+%description -n raf-lab-dhcp
+DHCP configuration for ADS3 data server in lab.
+
 %build
 
 %install
 install -d $RPM_BUILD_ROOT%{_sysconfdir}
+install -d $RPM_BUILD_ROOT/usr/local/admin
 cp -r etc/* $RPM_BUILD_ROOT%{_sysconfdir}
+cp -r usr/local/admin/raf-ads3-dhcp $RPM_BUILD_ROOT/usr/local/admin
 
-%triggerin -- dhcp
-# %triggerin script is run when a given target package is installed or
-# upgraded, or when this package is installed or upgraded and the target
-# is already installed.
+%triggerin -n raf-gv-dhcp -- dhcp
+/usr/local/admin/raf-ads3-dhcp/triggerin.sh gv raf-gv-dhcp
 
-# The dhcp package owns /etc/dhcpd.conf, so we must edit it
-# in the triggerin script.  The default file just has a comment
-# refering to /usr/share/doc/dhcp*/dhcpd.conf.sample
+%triggerin -n raf-c130-dhcp -- dhcp
+/usr/local/admin/raf-ads3-dhcp/triggerin.sh c130 raf-c130-dhcp
 
-# Append an include of dhcpd-raf-ac.conf if needed.
-cf=%{_sysconfdir}/dhcpd.conf
-if ! egrep -q '^[[:space:]]*include[[:space:]]+"%{_sysconfdir}/dhcpd-raf-ac.conf"' $cf; then
-    # use rpm -V to see if dhcpd.conf has been modified from the RPM
-    if rpm -V -f %{_sysconfdir}/dhcpd.conf | egrep -q %{_sysconfdir}/dhcpd.conf; then
-        dst=%{_sysconfdir}/dhcpd.conf.rpmsave.`/bin/date +'%Y-%m-%d_%H-%M-%S.%N'`
-        echo "Saving %{_sysconfdir}/dhcpd.conf as $dst"
-        mv %{_sysconfdir}/dhcpd.conf $dst
-    fi
-
-    cat << EOD >> $cf
-###### start of updates from %{name}-%{version} package.
-include "%{_sysconfdir}/dhcpd-raf-ac.conf";
-###### end of updates from %{name}-%{version} package.
-EOD
-fi
-
-# Create the key for dynamic updates from dhcpd to named.
-# If we called it /etc/named.raf.key, then /bin/sbin/bind-chroot-admin
-# will find it, moving files called /etc/named.* to /var/named/chroot and
-# creates the links back to /etc.
-cf=%{_sysconfdir}/raf.ucar.edu.key
-if [ ! -e $cf ]; then
-    cd /var/named
-    dnssec-keygen -a HMAC-MD5 -b 128 -n HOST raf.ucar.edu > /dev/null
-    cat << EOD > $cf
-key raf.ucar.edu {
-    algorithm hmac-md5;
-    secret "`awk '{print $7}' Kraf.ucar.edu.*.key | sed 's/==$//'`";
-};
-EOD
-fi
-# rm -f Kraf.ucar.edu.*
-
-[ -e $cf ] && chown root:named $cf
-[ -e $cf ] && chmod 0640 $cf
-
-chkconfig --level 2345 dhcpd on
-
-/etc/init.d/dhcpd restart
-
-exit 0
+%triggerin -n raf-lab-dhcp -- dhcp
+/usr/local/admin/raf-ads3-dhcp/triggerin.sh lab raf-lab-dhcp
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
+%files -n raf-gv-dhcp
 %defattr(-,root,root)
-%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-raf-ac.conf
+%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-ac.conf
+%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-gv.conf
 %config %attr(0644,root,root) %{_sysconfdir}/dhcpd-dsms.conf
+# %config(noreplace) %attr(0644,root,root) %{_sysconfdir}/dhcpd-local.conf
 %ghost %config %attr(0640,root,named) %verify(not link) %{_sysconfdir}/raf.ucar.edu.key
+%dir /usr/local/admin/raf-ads3-dhcp
+%config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
+
+%files -n raf-c130-dhcp
+%defattr(-,root,root)
+%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-ac.conf
+%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-c130.conf
+%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-dsms.conf
+# %config(noreplace) %attr(0644,root,root) %{_sysconfdir}/dhcpd-local.conf
+%ghost %config %attr(0640,root,named) %verify(not link) %{_sysconfdir}/raf.ucar.edu.key
+%dir /usr/local/admin/raf-ads3-dhcp
+%config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %changelog
 * Thu Mar  6 2008 Gordon Maclean <maclean@ucar.edu>
