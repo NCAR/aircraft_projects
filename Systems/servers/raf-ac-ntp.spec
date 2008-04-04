@@ -20,8 +20,6 @@ Configuration for NTP on RAF aircraft server systems
 
 %build
 
-%install
-
 %triggerin -- ntp
 # %triggerin script is run when a given target package is installed or
 # upgraded, or when this package is installed or upgraded and the target

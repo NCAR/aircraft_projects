@@ -19,8 +19,6 @@ Additions to syslog config for logging from NIDAS processes.
 
 %build
 
-%install
-
 %triggerin -- sysklogd rsyslog
 # %triggerin script is run when a given target package is installed or
 # upgraded, or when this package is installed or upgraded and the target
