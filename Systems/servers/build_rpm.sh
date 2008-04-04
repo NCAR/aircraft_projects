@@ -15,6 +15,13 @@ trap "{ rm -f $log; }" EXIT
 
 set -o pipefail
 
+pkg=raf-gv
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    version=1.0
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
+
+
 pkg=raf-ac-firewall
 if [ $dopkg == all -o $dopkg == $pkg ];then
     version=1.0
