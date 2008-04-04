@@ -1,4 +1,4 @@
-Summary: Config add-ons for logging from NIDAS processes.
+Summary: Additions to syslog config for logging from NIDAS processes.
 Name: raf-ads3-syslog
 Version: 1.0
 Release: 1
@@ -12,7 +12,7 @@ BuildArch: noarch
 Requires: syslog
 
 %description
-Config add-ons for logging from NIDAS processes.
+Additions to syslog config for logging from NIDAS processes.
 
 %prep
 # %setup -n %{name}
@@ -21,7 +21,7 @@ Config add-ons for logging from NIDAS processes.
 
 %install
 
-%triggerin -- syslog rsyslog
+%triggerin -- sysklogd rsyslog
 # %triggerin script is run when a given target package is installed or
 # upgraded, or when this package is installed or upgraded and the target
 # is already installed.
@@ -67,7 +67,7 @@ EOD
 fi
 
 chmod +r /var/log/messages
-/etc/init.d/syslog/restart || /etc/init.d/rsyslog restart
+/etc/init.d/syslog restart || /etc/init.d/rsyslog restart
 
 %clean
 rm -rf $RPM_BUILD_ROOT

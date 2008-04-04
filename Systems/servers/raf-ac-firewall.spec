@@ -9,7 +9,8 @@ Packager: Gordon Maclean <maclean@ucar.edu>
 BuildRoot: /tmp/%{name}-%{version}
 Vendor: UCAR
 BuildArch: noarch
-Requires: iptables sysctl
+# initscripts gives /etc/sysctl.conf, procps gives /sbin/sysctl
+Requires: iptables initscripts procps
 Source: %{name}-%{version}.tar.gz
 
 %description
@@ -22,9 +23,9 @@ Iptables configuration for RAF aircraft server.
 
 %install
 
-install -d $RPM_BUILD_ROOT/usr/src
+install -d $RPM_BUILD_ROOT/usr/local/admin
 install -d $RPM_BUILD_ROOT/etc/sysconfig
-cp -r usr/src/iptables $RPM_BUILD_ROOT/usr/src
+cp -r usr/local/admin/raf-ac-firewall $RPM_BUILD_ROOT/usr/local/admin
 cp -r etc/sysconfig/iptables $RPM_BUILD_ROOT/etc/sysconfig
 
 %triggerin -- iptables initscripts
@@ -41,14 +42,16 @@ sed -i -c '/^[[:space:]]*net.ipv4.ip_forward=/{
 s/=0/=1/
 }' $cf
 fi
-if `sysctl -n net.ipv4.ip_forward` == 0; then
+if [ `sysctl -n net.ipv4.ip_forward` == 0 ]; then
     sysctl net.ipv4.ip_forward=1
 fi
 
 # run the iptables-setup.sh script
-/usr/src/iptables/iptables-setup.sh > /tmp/iptables.$$
+# convert counters in lines like ":PREROUTING ACCEPT [20971:4859482]" to 0:0
+# otherwise they will always differ
+/usr/local/admin/raf-ac-firewall/iptables-setup.sh | sed -r "s/^(:[^[]+\[)[0-9]+:[0-9]+/\10:0/" > /tmp/iptables.$$
 cd /etc/sysconfig
-if diff -q /tmp/iptables.$$ iptables; then
+if ! diff -q --ignore-matching-lines="^#" /tmp/iptables.$$ iptables > /dev/null; then
     echo "Saving `pwd`/iptables as `pwd`/iptables.rpmsave"
     mv iptables iptables.rpmsave
     mv /tmp/iptables.$$ iptables
@@ -62,7 +65,6 @@ sed -i -c '/^[[:space:]]*IPTABLES_MODULES=/{
 /ip_conntrack_ftp/b
 s/IPTABLES_MODULES="[^"]*/& ip_conntrack ip_conntrack_ftp/
 }' $cf
-fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -70,8 +72,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %config(noreplace) %attr(0600,root,root) /etc/sysconfig/iptables
-%dir /usr/src/iptables
-%config %attr(0644,root,root) /usr/src/iptables/iptables-setup.sh
+%dir /usr/local/admin/raf-ac-firewall
+%config %attr(0755,root,root) /usr/local/admin/raf-ac-firewall/iptables-setup.sh
 
 %changelog
 * Sun Feb 29 2008 Gordon Maclean <maclean@ucar.edu>

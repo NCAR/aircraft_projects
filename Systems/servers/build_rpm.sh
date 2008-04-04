@@ -19,7 +19,8 @@ pkg=raf-ac-firewall
 if [ $dopkg == all -o $dopkg == $pkg ];then
     version=1.0
     tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    # rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    rpmbuild -ba ${pkg}.spec | tee -a $log  || exit $?
 fi
 
 pkg=raf-ac-ntp
@@ -40,14 +41,14 @@ if [ $dopkg == all -o $dopkg == $pkg ];then
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
-pkg=raf-ac-dhcp
+pkg=raf-ads3-dhcp
 if [ $dopkg == all -o $dopkg == $pkg ];then
     version=1.0
     tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
-pkg=raf-ac-named
+pkg=raf-ads3-named
 if [ $dopkg == all -o $dopkg == $pkg ];then
     version=1.0
     tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
@@ -57,11 +58,11 @@ fi
 echo "RPMS:"
 egrep "^Wrote:" $log
 
-exit
-
-
 if [ -d $rroot ]; then
-    rpms="$topdir/RPMS/noarch/raf-satcom-*.noarch.rpm $topdir/RPMS/noarch/raf-ddclient-*.noarch.rpm"
-    copy_rpms_to_eol_repo $rpms
+    rpms="$topdir/RPMS/noarch/raf-*.noarch.rpm"
+    for r in $rpms; do
+        echo $r
+    done
+    # copy_rpms_to_eol_repo $rpms
 fi
 
