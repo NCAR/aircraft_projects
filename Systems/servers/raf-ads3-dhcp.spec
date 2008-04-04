@@ -66,6 +66,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n raf-gv-dhcp
 %defattr(-,root,root)
+%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-NCAR-README.txt
 %config %attr(0644,root,root) %{_sysconfdir}/dhcpd-ac.conf
 %config %attr(0644,root,root) %{_sysconfdir}/dhcpd-gv.conf
 %config %attr(0644,root,root) %{_sysconfdir}/dhcpd-dsms.conf
@@ -76,6 +77,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n raf-c130-dhcp
 %defattr(-,root,root)
+%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-NCAR-README.txt
 %config %attr(0644,root,root) %{_sysconfdir}/dhcpd-ac.conf
 %config %attr(0644,root,root) %{_sysconfdir}/dhcpd-c130.conf
 %config %attr(0644,root,root) %{_sysconfdir}/dhcpd-dsms.conf
@@ -86,6 +88,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n raf-lab-dhcp
 %defattr(-,root,root)
+%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-NCAR-README.txt
 %config %attr(0644,root,root) %{_sysconfdir}/dhcpd-lab.conf
 %config %attr(0644,root,root) %{_sysconfdir}/dhcpd-dsms.conf
 # %config(noreplace) %attr(0644,root,root) %{_sysconfdir}/dhcpd-local.conf
