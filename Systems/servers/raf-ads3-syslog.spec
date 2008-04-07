@@ -32,7 +32,7 @@ cf=/etc/sysconfig/syslog
 if ! egrep -q "^[[:space:]]*SYSLOGD_OPTIONS=" $cf; then
     sed -i -c '${
 a###### start %{name}-%{version} ######
-aSYSLOGD_OPTIONS="-m 0 -r -s eol.ucar.edu:atd.ucar.edu"
+aSYSLOGD_OPTIONS="-m 0 -r -s eol.ucar.edu:atd.ucar.edu:raf.ucar.edu"
 a###### end %{name}-%{version} ######
 }' $cf
 else
@@ -44,7 +44,7 @@ h
 # comment out existing statement
 s/.*/# &/p
 x
-s/SYSLOGD_OPTIONS="[^"]*/& -r -s eol.ucar.edu:atd.ucar.edu/
+s/SYSLOGD_OPTIONS="[^"]*/& -r -s eol.ucar.edu:atd.ucar.edu:raf.ucar.edu/
 a###### end %{name}-%{version} ######
 }' $cf
 fi
@@ -61,6 +61,7 @@ if ! egrep -q "^local5" $cf; then
 cat >> $cf << EOD
 local5.*			/var/log/ads_debug.log
 local5.info			/var/log/ads.log
+kern.debug			/var/log/ads3_kernel.log
 EOD
 fi
 

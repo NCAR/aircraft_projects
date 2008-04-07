@@ -21,6 +21,11 @@ if [ $dopkg == all -o $dopkg == $pkg ];then
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
+pkg=raf-c130
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    version=1.0
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
 
 pkg=raf-ac-firewall
 if [ $dopkg == all -o $dopkg == $pkg ];then
@@ -70,6 +75,6 @@ if [ -d $rroot ]; then
     for r in $rpms; do
         echo $r
     done
-    # copy_rpms_to_eol_repo $rpms
+    copy_rpms_to_eol_repo $rpms
 fi
 

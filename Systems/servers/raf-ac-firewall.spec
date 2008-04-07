@@ -66,6 +66,11 @@ sed -i -c '/^[[:space:]]*IPTABLES_MODULES=/{
 s/IPTABLES_MODULES="[^"]*/& ip_conntrack ip_conntrack_ftp/
 }' $cf
 
+if ! { chkconfig --list iptables | fgrep -q "5:on"; }; then
+    chkconfig --level 2345 iptables on
+fi
+/etc/init.d/iptables restart
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 

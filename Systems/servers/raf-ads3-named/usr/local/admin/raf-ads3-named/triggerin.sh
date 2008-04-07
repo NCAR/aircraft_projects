@@ -28,7 +28,7 @@ esac
 pkg=$2
 
 SYSCONFDIR=${SYSCONFDIR:-/etc}
-DO_CHROOT=${DO_CHROOT:-false}
+DO_CHROOT=${DO_CHROOT:-0}
 
 cf=${SYSCONFDIR}/named.conf
 if ! egrep -q '^[[:space:]]*include[[:space:]]+"${SYSCONFDIR}/named.${whichpkg}.conf"' $cf; then
@@ -57,7 +57,7 @@ done
 
 # bind-chroot-admin moves all /etc/named.* and /var/named/* files to
 # /var/named/chroot and links them back.
-if $DO_CHROOT && egrep -q '^ROOTDIR=' /etc/sysconfig/named; then
+if [ $DO_CHROOT -ne 0 ] && egrep -q '^ROOTDIR=' /etc/sysconfig/named; then
     bind-chroot-admin --sync
 fi
 

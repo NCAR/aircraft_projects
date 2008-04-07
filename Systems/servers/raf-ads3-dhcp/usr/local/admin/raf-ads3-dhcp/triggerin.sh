@@ -79,10 +79,14 @@ fi
 # would find it, moving files called /etc/named.* to /var/named/chroot and
 # creates the links back to /etc.
 # We don't plan to use bind-chroot-admin, so we'll call it raf.ucar.edu.key
+#
+# Using dnssec-keygen -b 128 caused "bad base64 encoding error for named"
+# dnssec-keygen -b 512 worked.
 cf=${SYSCONFDIR}/raf.ucar.edu.key
 if [ ! -e $cf ]; then
     cd /var/named
-    dnssec-keygen -a HMAC-MD5 -b 128 -n HOST raf.ucar.edu > /dev/null
+    rm -f Kraf.ucar.edu.*
+    dnssec-keygen -a HMAC-MD5 -b 512 -n HOST raf.ucar.edu > /dev/null
     cat << EOD > $cf
 key raf.ucar.edu {
     algorithm hmac-md5;

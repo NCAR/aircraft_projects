@@ -27,10 +27,11 @@ Configuration for NTP on RAF aircraft server systems
 
 # Lab systems are broadcastclients, allow query from 192.168.0.0
 cf=/etc/ntp.conf
-if ! egrep -q "^[[:space:]]*server[[:space:]]+192.168.184.10" $cf; then
+if ! egrep -q "^[[:space:]]*server[[:space:]]+timeserver" $cf; then
     sed -i -c '${
 a###### start %{name}-%{version} ######
-aserver 192.168.184.10
+aserver timeserver
+aserver tardis.ntp.ucar.edu
 arestrict 192.168.0.0 mask 255.255.0.0 nomodify notrap
 a###### end %{name}-%{version} ######
 }' $cf

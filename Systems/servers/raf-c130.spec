@@ -8,7 +8,7 @@ Group: System Environment
 Requires: raf-ads3-syslog
 Requires: raf-ac-ntp
 Requires: raf-ac-firewall
-Requires: raf-gv-dhcp
+Requires: raf-c130-dhcp
 Requires: raf-ac-named
 Requires: raf-satcom
 
