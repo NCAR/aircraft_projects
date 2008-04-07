@@ -440,6 +440,7 @@
             <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
         </sample>
     </sensor>
+
 </sensorcatalog>
 
 
@@ -574,12 +575,9 @@
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
-                <variable name="DUMMY" units="V" longname="DON'T use 'channel' to skip the first channel">
-                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.13678" type="float"/> <parameter name="corIntercept" value="-0.301189"  type="float"/>
-                </variable>
 <!-- TTFR                | 2008-02-04 21:54:00 | {-0.301189,1.13678} -->
                 <variable name="TTFR" units="V" longname="Total Temperature, Deiced Left">
+                    <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.13678" type="float"/> <parameter name="corIntercept" value="-0.301189"  type="float"/>
                     <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
@@ -613,7 +611,6 @@
             <socket type="mcrequest"/>
         </output>
     </dsm>
-
    
     <dsm name="dsm313" location="MTP Rack R-4" id="8" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
@@ -796,7 +793,7 @@
     <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_IRIG"/>
 
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS2" id="730" suffix="_CDP">
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_CDP">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
         </serialSensor>
 
