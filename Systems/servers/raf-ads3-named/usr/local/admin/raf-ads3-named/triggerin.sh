@@ -31,7 +31,7 @@ SYSCONFDIR=${SYSCONFDIR:-/etc}
 DO_CHROOT=${DO_CHROOT:-0}
 
 cf=${SYSCONFDIR}/named.conf
-if ! egrep -q '^[[:space:]]*include[[:space:]]+"${SYSCONFDIR}/named.${whichpkg}.conf"' $cf; then
+if ! egrep -q -E '^[[:space:]]*include[[:space:]]+"'${SYSCONFDIR}/named.${whichpkg}.conf'"' $cf; then
     # use rpm -V to see if named.conf has been modified from the RPM
     if rpm -V -f ${SYSCONFDIR}/named.conf | egrep -q ${SYSCONFDIR}/named.conf; then
         dst=${SYSCONFDIR}/named.conf.rpmsave.`/bin/date +'%Y-%m-%d_%H-%M-%S.%N'`

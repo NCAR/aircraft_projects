@@ -72,6 +72,7 @@ include "${SYSCONFDIR}/dhcpd-dsms.conf";
 include "${SYSCONFDIR}/dhcpd-local.conf";
 ###### end of updates from ${pkg} package.
 EOD
+    fi
 fi
 
 # Create the key for dynamic updates from dhcpd to named.

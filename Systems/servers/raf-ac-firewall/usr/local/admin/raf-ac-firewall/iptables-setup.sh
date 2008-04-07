@@ -170,7 +170,6 @@ iptables -P FORWARD DROP
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A OUTPUT -o lo -j ACCEPT
 
-set -x
 # allow anything on trusted interfaces
 for iif in ${INT_IFS[*]} ${SAFE_EXT_IFS[*]}; do
     iptables -A INPUT -i $iif -j ACCEPT
@@ -188,7 +187,6 @@ if [ $forward -eq 1 -a ${#INT_IFS[*]} -ge 2 ]; then
         iptables -A FORWARD -i $iif -o ${INT_IFS[1]} -j ACCEPT
     done
 fi
-set +x
 
 ## SYN-FLOODING PROTECTION
 # This rule limits the rate of incoming connections. In order to do

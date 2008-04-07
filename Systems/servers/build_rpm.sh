@@ -75,6 +75,6 @@ if [ -d $rroot ]; then
     for r in $rpms; do
         echo $r
     done
-    copy_rpms_to_eol_repo $rpms
+    copy_rpms_to_eol_repo $rpms > /dev/null
 fi
 
