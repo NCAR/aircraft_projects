@@ -59,16 +59,22 @@ forward=$(</proc/sys/net/ipv4/ip_forward)
 
 # External interfaces connected to the big-bad internet
 
-# Fast external interfaces, usually local wifi or ethernet, fast and cheap/byte
-CHEAP_EXT_IFS=(eth2)
+# External interface connected through UCAR guest network.
+# This is already firewalled, we just have to do FORWARDING.
+# If VPN is up then cipsec0 is trusted.
+SAFE_EXT_IFS=(eth2 cipsec+)
+
+# Unsafe, external interfaces which are not firewalled for us. We
+# want to do firewalling, but don't need to limit traffic
+CHEAP_EXT_IFS=()
+
 # Slow and expensive external interfaces.
 SATCOM_EXT_IFS=(ppp+ eth3)
 
-ALL_EXT_IFS=(${CHEAP_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]})
+UNSAFE_EXT_IFS=(${CHEAP_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]})
 
 # Internal trusted interfaces. Forwarding is done between first two
-# If VPN is up then cipsec0 is trusted.
-INT_IFS=(eth0 eth1 cipsec+)
+INT_IFS=(eth0 eth1)
 
 # Currently all hosts can do SSH and IRC off the plane.
 #
@@ -76,8 +82,9 @@ INT_IFS=(eth0 eth1 cipsec+)
 # 192.168.84.0/27 = 192.168.84.0 thru 192.168.84.31
 # (those hosts with zeroes in the first 3 bits of the
 # fourth byte of the IP address).
-PRIV_HOSTS_DISP=192.168.84.0/27
-PRIV_HOSTS_DATA=192.168.184.0/27
+# 192.168.84.0/24 = 192.168.84.*
+PRIV_HOSTS_DISP=192.168.84.0/24
+PRIV_HOSTS_DATA=192.168.184.0/24
 
 # external hosts that we can ssh to
 SSH_OUTGOING=($ANYHOST)
@@ -88,7 +95,7 @@ SSH_OUTGOING=($ANYHOST)
 SSH_INCOMING=($ANYHOST)
 
 # Google Earth SATCOM block.
-GOOGLE_EARTH=(72.14.203.0/8 64.233.167.0/8)
+# GOOGLE_EARTH=(72.14.203.0/8 64.233.167.0/8)
 
 # external vpn servers
 VPN_SVRS=(192.43.244.230 192.143.244.231)
@@ -162,8 +169,10 @@ iptables -P FORWARD DROP
 # allow anything on loopback
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A OUTPUT -o lo -j ACCEPT
+
+set -x
 # allow anything on trusted interfaces
-for iif in ${INT_IFS[*]}; do
+for iif in ${INT_IFS[*]} ${SAFE_EXT_IFS[*]}; do
     iptables -A INPUT -i $iif -j ACCEPT
     iptables -A OUTPUT -o $iif -j ACCEPT
 done
@@ -172,7 +181,14 @@ done
 if [ $forward -eq 1 -a ${#INT_IFS[*]} -ge 2 ]; then
     iptables -A FORWARD -i ${INT_IFS[0]} -o ${INT_IFS[1]} -j ACCEPT
     iptables -A FORWARD -i ${INT_IFS[1]} -o ${INT_IFS[0]} -j ACCEPT
+    for iif in ${SAFE_EXT_IFS[*]}; do
+        iptables -A FORWARD -i ${INT_IFS[0]} -o $iif -j ACCEPT
+        iptables -A FORWARD -i $iif -o ${INT_IFS[0]} -j ACCEPT
+        iptables -A FORWARD -i ${INT_IFS[1]} -o $iif -j ACCEPT
+        iptables -A FORWARD -i $iif -o ${INT_IFS[1]} -j ACCEPT
+    done
 fi
+set +x
 
 ## SYN-FLOODING PROTECTION
 # This rule limits the rate of incoming connections. In order to do
@@ -185,7 +201,7 @@ fi
 # taken from http://www.cs.princeton.edu/~jns/security/iptables
 
 iptables -N syn-flood
-for eif in ${ALL_EXT_IFS[*]}; do
+for eif in ${UNSAFE_EXT_IFS[*]}; do
     iptables -A INPUT -i $eif -p tcp --syn -j syn-flood
 done
 
@@ -195,14 +211,14 @@ iptables -A syn-flood -j DROP
 
 # make sure NEW tcp connections are SYN packets. Otherwise log, then DROP
 iptables -N syn-log
-for eif in ${ALL_EXT_IFS[*]}; do
+for eif in ${UNSAFE_EXT_IFS[*]}; do
     iptables -A INPUT -i $eif -p tcp \! --syn -m state --state NEW -j syn-log
 done
 iptables -A syn-log -m limit --limit 1/minute --limit-burst 5 -j LOG --log-prefix "IPTABLES SYN: "
 iptables -A syn-log -j DROP
 
 iptables -N spoof-log
-for eif in ${ALL_EXT_IFS[*]}; do
+for eif in ${UNSAFE_EXT_IFS[*]}; do
     ## SPOOFING
     # Most of this anti-spoofing stuff is theoretically not really
     # necessary with the flags we have set in the kernel, but you
@@ -309,7 +325,7 @@ filter_icmp()
 iptables -N icmp-in
 iptables -N icmp-out
 
-for eif in ${ALL_EXT_IFS[*]}; do
+for eif in ${UNSAFE_EXT_IFS[*]}; do
     filter_icmp $eif
 done
 
@@ -338,7 +354,6 @@ filter_tcp()
     #	http://www.sns.ias.edu/~jns/security/iptables/iptables_conntrack.html
     # starting ftp connection
     iptables -A OUTPUT -o $eif -p tcp --dport 21 -m state --state NEW -j ACCEPT 
-
     if [ $forward -eq 1 ]; then
 	iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DISP -p tcp --dport 21 -m state --state NEW -j ACCEPT
 	iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DATA -p tcp --dport 21 -m state --state NEW -j ACCEPT
@@ -605,6 +620,13 @@ filter_tcp()
 
 for eif in ${CHEAP_EXT_IFS[*]}; do
     filter_tcp $eif true
+done
+
+for iif in ${SAFE_EXT_IFS[*]}; do
+    # MASQUERADE is a form of SNAT (source NAT)
+    if [ $forward -eq 1 ]; then
+	iptables -t nat -A POSTROUTING -o $iif -j MASQUERADE
+    fi
 done
 
 for eif in ${SATCOM_EXT_IFS[*]}; do

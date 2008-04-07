@@ -21,7 +21,11 @@ usage() {
 
 case $1 in
 gv | c130)
+    type=ac
     achost=$1
+    ;;
+lab)
+    type=$1
     ;;
 *)
     usage
@@ -43,10 +47,23 @@ if ! egrep -q '^[[:space:]]*include[[:space:]]+"${SYSCONFDIR}/dhcpd-ac.conf"' $c
         fi
     fi
 
-    cat << EOD >> $cf
+    if [ $type == ac ]; then
+        cat << EOD >> $cf
 ###### start of updates from ${pkg} package.
 include "${SYSCONFDIR}/dhcpd-ac.conf";
 include "${SYSCONFDIR}/dhcpd-${achost}.conf";
+include "${SYSCONFDIR}/dhcpd-dsms.conf";
+#
+# Put local, temporary changes in /etc/dhcpd-local.conf,
+# which is not saved under Subversion and is not part
+# of an RPM.
+include "${SYSCONFDIR}/dhcpd-local.conf";
+###### end of updates from ${pkg} package.
+EOD
+    else
+        cat << EOD >> $cf
+###### start of updates from ${pkg} package.
+include "${SYSCONFDIR}/dhcpd-lab.conf";
 include "${SYSCONFDIR}/dhcpd-dsms.conf";
 #
 # Put local, temporary changes in /etc/dhcpd-local.conf,
