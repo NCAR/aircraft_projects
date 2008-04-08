@@ -32,19 +32,19 @@ cf=/etc/sysconfig/syslog
 if ! egrep -q "^[[:space:]]*SYSLOGD_OPTIONS=" $cf; then
     sed -i -c '${
 a###### start %{name}-%{version} ######
-aSYSLOGD_OPTIONS="-m 0 -r -s eol.ucar.edu:atd.ucar.edu:raf.ucar.edu"
+aSYSLOGD_OPTIONS="-m 0 -r -s raf.ucar.edu:eol.ucar.edu:atd.ucar.edu"
 a###### end %{name}-%{version} ######
 }' $cf
 else
     sed -i -c '/^[[:space:]]*SYSLOGD_OPTIONS=/{
-# If -r option, done
-/-r/b
+# If -r and -s option, done
+/-r -s/b
 i###### start %{name}-%{version} ######
 h
 # comment out existing statement
 s/.*/# &/p
 x
-s/SYSLOGD_OPTIONS="[^"]*/& -r -s eol.ucar.edu:atd.ucar.edu:raf.ucar.edu/
+s/SYSLOGD_OPTIONS="[^"]*/& -r -s raf.ucar.edu:eol.ucar.edu:atd.ucar.edu/
 a###### end %{name}-%{version} ######
 }' $cf
 fi
