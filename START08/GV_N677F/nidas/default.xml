@@ -378,11 +378,11 @@
 
     <serialSensor ID="NOAA_CSD_O3" class="DSMSerialSensor"
         baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%*3d%*6d,%f,%f">
+        <sample id="1" rate="1" scanfFormat="NOAA-OZONE%*d,%f,%f">
             <variable name="PS" units="hPa" longname="NOAA O3 Ambiant Pressure"/>
             <variable name="O3MR" units="ppbv" longname="NOAA O3 Ozone Mixing Ratio"/>
         </sample>
-        <message separator="\r\n" position="beg" length="0"/>
+        <message separator="NOAA" position="beg" length="0"/>
     </serialSensor>
 
     <serialSensor ID="CFDC" class="DSMSerialSensor"
@@ -452,11 +452,11 @@
         </sample>
     </sensor>
 
-    <sensor ID="NOAAUCATS" class="raf.UDPSocketSensor" devicename="inet::10000">
-        <sample id="1" rate="1" scanfFormat="UWV %f">
+    <sensor ID="NOAAUCATS" class="raf.UDPSocketSensor" devicename="inet::58807">
+        <sample id="1" rate="1" scanfFormat="UWV:%f">
             <variable name="H2OMR" units="ppmv" longname="NOAA UCATS Water Vapor Mixing Ratio"/> 
         </sample>
-        <sample id="2" rate="1" scanfFormat="UOZ %f">
+        <sample id="2" rate="1" scanfFormat="UOZ:%f">
             <variable name="O3MR" units="ppbv" longname="NOAA UCATS Ozone Mixing Ratio"/>
         </sample>
     </sensor>
@@ -816,7 +816,7 @@
     <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_IRIG"/>
 
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_CDP">
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
         </serialSensor>
 
@@ -905,6 +905,20 @@
             <socket type="server" port="30000"/>
         </output>
     </dsm>
+
+    <dsm name="acserver" location="server" id="77" rserialPort="30002">
+
+	<sensor IDREF="NOAAUCATS" id="800"/>
+
+	<!--
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+-->
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="server" port="30010"/>
+        </output>
+   </dsm>
 
 
 </site>
