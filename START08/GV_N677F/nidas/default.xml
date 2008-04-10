@@ -443,6 +443,15 @@
         </sample>
     </sensor>
 
+    <sensor ID="NONOYO3" class="raf.UDPSocketSensor" devicename="inet::10000">
+        <sample id="1" rate="1" scanfFormat="NONOyO3,%f,%f,%f,%f">
+            <variable name="NO" units="ppmv" longname="Water Vapor Mixing Ratio"/> 
+            <variable name="NOY" units="ppmv" longname="Water Vapor Mixing Ratio"/> 
+            <variable name="O3MR" units="ppmv" longname="Ozone Mixing Ratio"/> 
+            <variable name="NOYO3" units="ppmv" longname="Ozone Mixing Ratio"/> 
+        </sample>
+    </sensor>
+
     <sensor ID="NOAAUCATS" class="raf.UDPSocketSensor" devicename="inet::10000">
         <sample id="1" rate="1" scanfFormat="UWV %f">
             <variable name="H2OMR" units="ppmv" longname="NOAA UCATS Water Vapor Mixing Ratio"/> 
@@ -748,6 +757,9 @@
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
+
+        <sensor IDREF="NOAAUCATS" devicename="inet:192.168.184.102:58807" id="120" suffix="_GMD"/>
+        <sensor IDREF="NONOYO3" devicename="inet:192.168.184.102:5555" id="130" suffix="_ACD"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
