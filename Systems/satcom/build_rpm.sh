@@ -56,9 +56,7 @@ fi
 if [ -d $rroot ]; then
     rpms="$topdir/RPMS/noarch/raf-satcom-*.noarch.rpm $topdir/RPMS/noarch/raf-ddclient-*.noarch.rpm"
     copy_rpms_to_eol_repo $rpms
-else
-    echo "RPMS:"
-    egrep "^Wrote:" $log
 fi
-
+echo "RPMS:"
+egrep "^Wrote:" $log
 

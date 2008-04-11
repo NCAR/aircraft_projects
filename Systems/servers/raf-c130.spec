@@ -1,5 +1,5 @@
-Summary: Metapackage for all server and satcom packages needed on GV
-Name: raf-gv
+Summary: Metapackage for all server and satcom packages needed on C130
+Name: raf-c130
 Version: 1.0
 Release: 1
 License: GPL

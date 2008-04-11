@@ -67,8 +67,6 @@ if [ $dopkg == all -o $dopkg == $pkg ];then
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
-echo "RPMS:"
-egrep "^Wrote:" $log
 
 if [ -d $rroot ]; then
     rpms="$topdir/RPMS/noarch/raf-*.noarch.rpm"
@@ -78,3 +76,5 @@ if [ -d $rroot ]; then
     copy_rpms_to_eol_repo $rpms > /dev/null
 fi
 
+echo "RPMS:"
+egrep "^Wrote:" $log
