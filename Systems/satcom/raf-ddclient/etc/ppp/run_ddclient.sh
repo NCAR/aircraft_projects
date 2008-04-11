@@ -5,7 +5,7 @@
 # To test this script, uncomment "set -x" and run it by hand like so:
 # ./run_ddclient.sh ppp0 eth3 0 12.42.105.41 12.42.104.9 iridium
 #
-set -x
+# set -x
 
 if [ $# -lt 4 ]; then
     echo "$0 if baud local_IP remote_IP if"
@@ -56,7 +56,7 @@ case `hostname` in
 hercules*)
     dname=rafc130.dyndns.org
     ;;
-hyper*)
+hyper* | acserver*)
     dname=rafgv.dyndns.org
     ;;
 esac

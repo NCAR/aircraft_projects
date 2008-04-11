@@ -95,7 +95,7 @@ SSH_OUTGOING=($ANYHOST)
 SSH_INCOMING=($ANYHOST)
 
 # Google Earth SATCOM block.
-# GOOGLE_EARTH=(72.14.203.0/8 64.233.167.0/8)
+GOOGLE_EARTH=(72.14.203.0/8 64.233.167.0/8)
 
 # external vpn servers
 VPN_SVRS=(192.43.244.230 192.143.244.231)
@@ -432,46 +432,33 @@ filter_tcp()
 	# iptables -A FORWARD -o $eif -p udp --dport domain -m state --state NEW -j ACCEPT
     # fi
 
-    # Log, then block GoogleEarth on expensive links
+    # Log, then block GoogleEarth on expensive links. This will block
+    # squid too.
     if ! $cheap; then
       for host in ${GOOGLE_EARTH[*]}; do
-	iptables -A OUTPUT -o $eif -d $host -m limit --limit 1/minute --limit-burst 5 -j LOG --log-prefix "IPTABLES OUT GoogleEarth: "
-	iptables -A OUTPUT -o $eif -d $host -j DROP
-	if [ $forward -eq 1 ]; then
-            iptables -A FORWARD -o $eif -d $host -m limit --limit 1/minute --limit-burst 5 -j LOG --log-prefix "IPTABLES FWD GoogleEarth: "
-	    iptables -A FORWARD -o $eif -d $host -j DROP
-	fi
+	iptables -A OUTPUT -o $eif -d $host -p tcp --dport http -m limit --limit 1/minute --limit-burst 5 -j LOG --log-prefix "IPTABLES OUT GoogleEarth: "
+	iptables -A OUTPUT -o $eif -d $host -p tcp --dport http -j DROP
       done
     fi
 
-    # outgoing http requests to remote servers
+    # squid's outgoing http requests to remote servers
     iptables -A OUTPUT -o $eif -p tcp --dport http -m state --state NEW -j ACCEPT
-    iptables -A OUTPUT -o $eif -p udp --dport http -m state --state NEW -j ACCEPT
     iptables -A OUTPUT -o $eif -p tcp --dport https -m state --state NEW -j ACCEPT
-    iptables -A OUTPUT -o $eif -p udp --dport https -m state --state NEW -j ACCEPT
     if [ $forward -eq 1 ]; then
 	for host in ${HTTP_REQUESTERS[*]}; do
-	    iptables -A FORWARD -o $eif -s $host -p tcp --dport http -m state --state NEW -j ACCEPT
-	    iptables -A FORWARD -o $eif -s $host -p udp --dport http -m state --state NEW -j ACCEPT
+            # Added by truss 20070511 for transparent squid proxy
+            iptables -t nat -A PREROUTING -s $host -p tcp --dport 80 -j REDIRECT --to-port 3128
+	    # iptables -A FORWARD -o $eif -s $host -p tcp --dport http -m state --state NEW -j ACCEPT
 	    iptables -A FORWARD -o $eif -s $host -p tcp --dport https -m state --state NEW -j ACCEPT
-	    iptables -A FORWARD -o $eif -s $host -p udp --dport https -m state --state NEW -j ACCEPT
-            # Added by truss 20070511 for transparent squid proxy from here
-            iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to 192.168.184.1:3128
-            iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 80 -j DNAT --to 192.168.84.1:3128
-            iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3128
-            iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 80 -j REDIRECT --to-port 3128
-# To here
 	done
     fi
 
     for host in ${HTTP_CLNTS[*]}; do
 	# incoming http requests to our server
 	iptables -A INPUT -i $eif -s $host -p tcp --dport http -m state --state NEW -j ACCEPT
-	iptables -A INPUT -i $eif -s $host -p udp --dport http -m state --state NEW -j ACCEPT
 
 	# incoming https
 	iptables -A INPUT -i $eif -s $host -p tcp --dport https -m state --state NEW -j ACCEPT
-	iptables -A INPUT -i $eif -s $host -p udp --dport https -m state --state NEW -j ACCEPT
     done
 
     # outgoing ntp (udp) is OK on cheap/fast interfaces.

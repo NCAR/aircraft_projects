@@ -1,7 +1,7 @@
 Summary: Iptables configuration for RAF aircraft server
 Name: raf-ac-firewall
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -81,5 +81,7 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ac-firewall/iptables-setup.sh
 
 %changelog
+* Fri Apr 11 2008 Gordon Maclean <maclean@ucar.edu>
+- changed googleearth filtering
 * Sun Feb 29 2008 Gordon Maclean <maclean@ucar.edu>
 - initial version

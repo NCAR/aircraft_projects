@@ -46,13 +46,28 @@ include "${SYSCONFDIR}/named.${whichpkg}.conf";
 EOD
 fi
 
+own=`ls -ld /var/named | awk '{print $3$4}'`
+if [ "$own" != rootnamed ]; then
+    chown root.named /var/named
+    chmod g+w /var/named
+fi
+if [ ! -d /var/named/log ]; then
+    mkdir /var/named/log
+    chgrp named /var/named/log
+    chmod g+w /var/named/log
+fi
+
 # Copy named.loopback, named.localhost, named.empty to /var/named
 # if they don't exist.  These were taken from caching-nameserver-9.4.2-3.fc7
 # (which is also used in fc8). Earlier distributions had other files.
 ad=/usr/local/admin/raf-ads3-named
 pushd $ad > /dev/null
 for f in named.*; do
-    [ -f /var/named/$f ] || cp $f /var/named
+    if [ ! -f /var/named/$f ]; then
+        cp $f /var/named
+        chgrp named /var/named/$f
+        chmod g+w /var/named/$f
+    fi
 done
 
 # bind-chroot-admin moves all /etc/named.* and /var/named/* files to
@@ -61,7 +76,9 @@ if [ $DO_CHROOT -ne 0 ] && egrep -q '^ROOTDIR=' /etc/sysconfig/named; then
     bind-chroot-admin --sync
 fi
 
-chkconfig --level 2345 named on
+if ! { chkconfig --list named | fgrep -q "5:on"; }; then
+    chkconfig --level 2345 named on
+fi
 
 /etc/init.d/named restart
 

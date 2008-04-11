@@ -104,7 +104,9 @@ fi
 cf=${SYSCONFDIR}/dhcpd-local.conf
 [ -e $cf ] || touch $cf
 
-chkconfig --level 2345 dhcpd on
+if ! { chkconfig --list dhcpd | fgrep -q "5:on"; }; then
+    chkconfig --level 2345 dhcpd on
+fi
 
 /etc/init.d/dhcpd restart
 
