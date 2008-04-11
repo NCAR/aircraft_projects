@@ -443,12 +443,12 @@
         </sample>
     </sensor>
 
-    <sensor ID="NONOYO3" class="raf.UDPSocketSensor" devicename="inet::10000">
+    <sensor ID="NONOYO3" class="raf.UDPSocketSensor" devicename="inet::5555">
         <sample id="1" rate="1" scanfFormat="NONOyO3,%f,%f,%f,%f">
-            <variable name="NO" units="ppmv" longname="Water Vapor Mixing Ratio"/> 
-            <variable name="NOY" units="ppmv" longname="Water Vapor Mixing Ratio"/> 
-            <variable name="O3MR" units="ppmv" longname="Ozone Mixing Ratio"/> 
-            <variable name="NOYO3" units="ppmv" longname="Ozone Mixing Ratio"/> 
+            <variable name="NO" units="pptv" longname="NO Mixing Ratio"/> 
+            <variable name="NOY" units="pptv" longname="NOY Mixing Ratio"/> 
+            <variable name="O3MR" units="ppbv" longname="O3 Mixing Ratio"/> 
+            <variable name="NOYO3" units="pptv/ppbv" longname="NOY to O3 Ratio"/> 
         </sample>
     </sensor>
 
@@ -457,7 +457,7 @@
             <variable name="H2OMR" units="ppmv" longname="NOAA UCATS Water Vapor Mixing Ratio"/> 
         </sample>
         <sample id="2" rate="1" scanfFormat="UOZ:%f">
-            <variable name="O3MR" units="ppbv" longname="NOAA UCATS Ozone Mixing Ratio"/>
+            <variable name="O3MRU" units="ppbv" longname="NOAA UCATS Ozone Mixing Ratio"/>
         </sample>
     </sensor>
 
@@ -757,11 +757,11 @@
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
+        <sensor IDREF="NOAAUCATS" id="120" suffix="_GMD"/>
+        <sensor IDREF="NONOYO3" id="130" suffix="_ACD"/>
 
-        <sensor IDREF="NOAAUCATS" devicename="inet:192.168.184.102:58807" id="120" suffix="_GMD"/>
-        <sensor IDREF="NONOYO3" devicename="inet:192.168.184.102:5555" id="130" suffix="_ACD"/>
 
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="25">
                 <parameter name="filter" value="boxcar" type="string"/>
@@ -806,8 +806,8 @@
                 <parameter name="temperature" value="true" type="bool"/>
                 <variable name="A2DTEMP_TDL" units="deg_C" longname="A2D Temperature"/>
             </sample>
-       </sensor> 
-
+       </sensor>
+ 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
@@ -906,20 +906,16 @@
         </output>
     </dsm>
 
-    <dsm name="acserver" location="server" id="77" rserialPort="30002">
-
-	<sensor IDREF="NOAAUCATS" id="800"/>
-
-	<!--
+    <dsm name="acserver" location="server" id="50" rserialPort="30002">
+        <sensor IDREF="NOAAUCATS" id="120" suffix="_TEST"/>
+        <sensor IDREF="NONOYO3" id="130" suffix="_TEST"/>
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
--->
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="server" port="30010"/>
         </output>
-   </dsm>
-
+    </dsm>
 
 </site>
 </project>
