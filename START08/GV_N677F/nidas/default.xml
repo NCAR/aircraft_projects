@@ -710,7 +710,7 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
 <!-- MEDP1                | 2008-03-27 22:06:12 | {-0.22379,1.05512} -->
-                <variable name="MEDP1" units="torr" rongname="Medusa Presure 1">
+                <variable name="MEDP1" units="torr" longname="Medusa Presure 1">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.05512" type="float"/> <parameter name="corIntercept" value="-0.22379"   type="float"/>
                 </variable>
@@ -761,35 +761,12 @@
         <sensor IDREF="NONOYO3" id="130" suffix="_ACD"/>
 
 
-         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="25">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="20" type="int"/>
 <!-- NOMR_CL              | 2008-03-27 21:11:18 | {-0.284727,1.06074} -->
-                <variable name="NOMR_CL" units="V" longname="Nitric Oxide Mixing Ratio">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.06074" type="float"/> <parameter name="corIntercept" value="-0.284727"  type="float"/>
-<!--                <linear slope="20.0" intercept="0.0" units="ppbv"/> -->
-                </variable>
-<!-- NOYMR_CL             | 2008-03-27 21:14:11 | {-0.360266,1.06578} -->
-                <variable name="NOYMR_CL" units="V" longname="Oxides of Nitrogen Mixing Ratio">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.06578" type="float"/> <parameter name="corIntercept" value="-0.360266"  type="float"/>
-<!--                <linear slope="20.0" intercept="0.0" units="ppbv"/> -->
-                </variable>
-<!-- FO3_CL               | 2008-03-27 21:26:07 | {-0.152533,1.04541} -->
-                <variable name="O3MR_CL" units="V" longname="           ">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.04541" type="float"/> <parameter name="corIntercept" value="-0.152533"  type="float"/>
-<!--                <linear slope="20.0" intercept="0.0" units="ppbv"/> -->
-                </variable>
-<!-- NOY2O3               | 2008-03-27 21:29:50 | {-0.394669,1.07389} -->
-                <variable name="NOY2O3" units="V" longname="Ratio of Oxides of Nitrogen to Ozone">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07389" type="float"/> <parameter name="corIntercept" value="-0.394669"  type="float"/>
-<!--                <linear slope="1.0" intercept="0.0" units="ppbv"/> -->
-                </variable>
 <!-- COMR_AL              | 2008-03-27 21:39:04 | {-0.36179,1.0702} -->
                 <variable name="COMR_AL" units="V" longname="Carbon Monoxide Mixing Ratio">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
@@ -806,7 +783,7 @@
                 <parameter name="temperature" value="true" type="bool"/>
                 <variable name="A2DTEMP_TDL" units="deg_C" longname="A2D Temperature"/>
             </sample>
-       </sensor>
+        </sensor>
  
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -907,8 +884,8 @@
     </dsm>
 
     <dsm name="acserver" location="server" id="50" rserialPort="30002">
-        <sensor IDREF="NOAAUCATS" id="120" suffix="_TEST"/>
-        <sensor IDREF="NONOYO3" id="130" suffix="_TEST"/>
+        <sensor IDREF="NOAAUCATS" id="120" suffix="_GMT1"/>
+        <sensor IDREF="NONOYO3" id="130" suffix="_ACD1"/>
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
