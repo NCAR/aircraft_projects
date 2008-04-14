@@ -694,7 +694,7 @@
                 <variable name="AO2STAT" units="V" longname="AO2 STAT">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.09185" type="float"/> <parameter name="corIntercept" value="-0.136041"  type="float"/>
-                    <linear slope="409.6" intercept="0.0" units="flag"/> -->
+                    <linear slope="409.6" intercept="0.0" units="flag"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -834,11 +834,6 @@
     <dsm name="dsmRWO" location="RWO" id="47" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="RWO"/>
 
-<!--        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS1" id="530" suffix="_RWI">
-            <parameter name="SerialNumber" type="string" value="UHSAS001"/>
-        </serialSensor>
--->
-
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
@@ -861,17 +856,6 @@
         </output>
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="server" port="30000"/>
-        </output>
-    </dsm>
-
-    <dsm name="acserver" location="server" id="50" rserialPort="30002">
-        <sensor IDREF="NOAAUCATS" id="120" suffix="_GMT1"/>
-        <sensor IDREF="NONOYO3" id="130" suffix="_ACD1"/>
-        <output class="RawSampleOutputStream" sorterLength="0">
-            <socket type="mcrequest"/>
-        </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
-            <socket type="server" port="30010"/>
         </output>
     </dsm>
 
