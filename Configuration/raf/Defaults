@@ -1,4 +1,16 @@
 #
+# Temperature blending time constants.
+#
+AT_TAU  300.0
+TT_TAU  300.0
+
+#
+# Recovery factory over-ride.  Remove this line to go back to default
+# in the code.
+#
+RECFRH	0.985
+
+#
 # Local Altimeter setting (mbar)
 #
 ASTG    1013.246
@@ -8,11 +20,6 @@ SFCT    288.15
 # Altitude cut-off (Meters).
 #
 PSURF_ALT_MAX   7000
-
-#
-# Sea Surface Temp Cal
-#
-TSURF_CAL	0.001933
 
 #
 # Greg Kok's cal coe's
@@ -32,11 +39,6 @@ H2T	314.65
 H2O_CAL	7.1352e-3, 3.6484e-6, -3.8355e-11
 
 #
-# Teresa's TEO3 cal's.
-#
-TEO3CAL[4]      0.3460490, 1.8829829, -0.0080433, 8.07e-5
-
-#
 # Ophir radiometer 
 #
 MAXCNT		62500
@@ -46,17 +48,14 @@ THERM_COEFF	-2700.0
 DFLT_GAIN	-4.4913167e-5
 DFLT_OFFSET	31515.0
 # Digital signal coefficients
-A1              -3.4563e-05,
-A2              -6.5242e-06,
-A3              0.0,
-A4              1.0955,
-A5              0.0;
+A1              -5.6558e-5
+A2              2.0565e-6
 
 #
 # King Probe wire temperatures - PMS version
 #
-TWIRE_PMS	155.0
-TWIRE_PMS1	155.0
+TWIRE_PMS	147.0
+TWIRE_PMS1	135.0
 
 TWIRE_TASFAC	1.0
 TWIRE_TASFAC1	1.0
@@ -70,36 +69,18 @@ TWIRE_DIAM1	0.1805
 TWIRE_RAF	155.0
 
 #
-# IRS - Primary unit pitch and heading biases
-#
-PITCH_BIAS_1	0.0
-HEADING_BIAS_1	0.0
-
-#
-# IRS - Secondary unit pitch and heading biases (IRS right on 308)
-#
-PITCH_BIAS_2	0.0
-HEADING_BIAS_2	0.0
-
-#
-# C-Migits - pitch and heading biases.
-#
-CM_PITCH_BIAS_1		0.0
-CM_HEADING_BIAS_1	0.0
-
-#
 # Lyman-Alpha constants - unit 1
 #
 XC_1	0.50
 THRSH_1	900.0
-CX_1[4]	4.2, 0.8712, -0.0045, -0.0056
+CX_1[4]	7.44, 0.85648, 0.0, 0.0
 
 #
 # Lyman-Alpha constants - unit 2
 #
 XC_2	0.50
 THRSH_2	900.0
-CX_2[4]	4.2, 0.8712, -0.0045, -0.0056
+CX_2[4]	8.1, 0.8951, 0.0, 0.0
 
 #
 # CVI
@@ -171,5 +152,7 @@ CIRCLES		40, 50, 60
 #    GPS_UPFCTR      0.999444
 #    GPS_FCTRF       0.997
 #
-GPS_ROLL_MAX   24.0
+#GPS_ROLL_MAX   24.0
+GPS_ROLL_MAX   40.0
 GPS_TAUP       600.
+GPS_TAU		120.
