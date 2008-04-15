@@ -12,7 +12,7 @@ Vendor: UCAR
 BuildArch: noarch
 Requires: raf-satcom-mpds
 Requires: raf-satcom-iridium
-Requires: raf-ddclient
+# Requires: raf-ddclient
 
 # LIC: GPL
 %description

@@ -54,7 +54,7 @@ if [ $dopkg == all -o $dopkg == $pkg ]; then
 fi
 
 if [ -d $rroot ]; then
-    rpms="$topdir/RPMS/noarch/raf-satcom-*.noarch.rpm $topdir/RPMS/noarch/raf-ddclient-*.noarch.rpm"
+    rpms="$topdir/RPMS/noarch/raf-satcom-*.noarch.rpm $topdir/RPMS/noarch/raf-*-ddclient-*.noarch.rpm"
     copy_rpms_to_eol_repo $rpms
 fi
 echo "RPMS:"
