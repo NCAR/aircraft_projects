@@ -16,6 +16,8 @@ fi
 
 PATH=/usr/sbin:/sbin:$PATH
 
+DDFILE=/etc/ddclient/gv.conf
+
 logger -t ddclient $0 $*
 
 if ! which ddclient > /dev/null; then
@@ -52,16 +54,8 @@ esac
 
 [ -d /var/cache/ddclient ] || mkdir /var/cache/ddclient
 
-case `hostname` in
-hercules*)
-    dname=rafc130.dyndns.org
-    ;;
-hyper* | acserver*)
-    dname=rafgv.dyndns.org
-    ;;
-esac
-if [ -z "$dname" ]; then
-    logger -t ddclient "Don't recognize hostname `hostname`, can't run ddclient"
+if [ -z "$DDFILE" ]; then
+    logger -t ddclient "DDFILE variable not found"
     exit 1
 fi
 
@@ -96,7 +90,7 @@ for (( ncheck=0; ncheck < 5; ncheck++ )); do
                 server=63.208.196.96 
             fi
 
-            cmd="ddclient -daemon=0 -syslog -use=if -if=$1 -server $server -host $dname -protocol=dyndns2"
+            cmd="ddclient -daemon=0 -use=if -if=$1 -server $server -file $DDFILE"
             logger -t ddclient "$cmd"
             eval $cmd && break
 
