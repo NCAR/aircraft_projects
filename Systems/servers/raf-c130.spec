@@ -10,6 +10,7 @@ Requires: raf-ac-ntp
 Requires: raf-ac-firewall
 Requires: raf-c130-dhcp
 Requires: raf-ac-named
+Requires: raf-c130-ddclient
 Requires: raf-satcom
 
 BuildArch: noarch

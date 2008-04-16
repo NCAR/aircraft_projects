@@ -1,7 +1,7 @@
 Summary: ddclient perl script and supporting scripts for running ddclient from pppd
 Name: raf-ddclient
 Version: 1.0
-Release: 3
+Release: 4
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -68,6 +68,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/run_ddclient.sh
 
 %changelog
+* Tue Apr 15 2008 Gordon Maclean <maclean@ucar.edu>
+- Bug fix in run_ddclient script
 * Tue Apr 15 2008 Gordon Maclean <maclean@ucar.edu>
 - Separate gv and c130 configs. Can't pass -host in runstring.
 * Fri Apr 11 2008 Gordon Maclean <maclean@ucar.edu>

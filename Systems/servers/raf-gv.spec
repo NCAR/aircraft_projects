@@ -10,6 +10,7 @@ Requires: raf-ac-ntp
 Requires: raf-ac-firewall
 Requires: raf-gv-dhcp
 Requires: raf-ac-named
+Requires: raf-gv-ddclient
 Requires: raf-satcom
 
 BuildArch: noarch
