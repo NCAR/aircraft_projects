@@ -44,10 +44,10 @@ cp -r etc $RPM_BUILD_ROOT
 cp -r usr $RPM_BUILD_ROOT
 
 %post -n raf-gv-ddclient
-sed -i 's,^DDFILE=.*,DDFILE=/etc/ddclient/gv.conf,' /etc/ppp/run_ddclient.sh
+sed -i 's,^SYSNAME=.*,SYSNAME=gv,' /etc/ppp/run_ddclient.sh
 
 %post -n raf-c130-ddclient
-sed -i 's,^DDFILE=.*,DDFILE=/etc/ddclient/c130.conf,' /etc/ppp/run_ddclient.sh
+sed -i 's,^SYSNAME=.*,SYSNAME=c130,' /etc/ppp/run_ddclient.sh
 %
 
 %clean

@@ -16,7 +16,9 @@ fi
 
 PATH=/usr/sbin:/sbin:$PATH
 
-DDFILE=/etc/ddclient/gv.conf
+SYSNAME=gv
+DDFILE=/etc/ddclient/${SYSNAME}.conf
+DDHOST=raf${SYSNAME}.dyndns.org
 
 logger -t ddclient $0 $*
 
@@ -63,16 +65,16 @@ good_dns=false
 for (( ncheck=0; ncheck < 5; ncheck++ )); do
 
     # use -R N option of host command to retry up to N requests
-    if ip=(`host -R 3 $dname`); then
+    if ip=(`host -R 3 $DDHOST`); then
         # 4th word of host output is IP address
         [ ${#ip[*]} -gt 3 -a "${ip[3]}" == "$IP" ] && good_dns=true
     fi
 
     if $good_dns; then
         if [ $ncheck -eq 0 ]; then
-            logger -t ddclient "Lookup of $dname returns $IP. Running ddclient not necessary"
+            logger -t ddclient "Lookup of $DDHOST returns $IP. Running ddclient not necessary"
         else
-            logger -t ddclient "Lookup of $dname returns $IP. ddclient successful"
+            logger -t ddclient "Lookup of $DDHOST returns $IP. ddclient successful"
         fi
         break
     fi
