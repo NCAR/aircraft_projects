@@ -21,5 +21,7 @@ Metapackage for all server and satcom packages needed on GV.
 %files 
 
 %changelog
+* Tues Apr 15 2008 Gordon Maclean <maclean@ucar.edu> 1.0-2
+- Added raf-gv-ddclient
 * Fri Apr 4 2008 Gordon Maclean <maclean@ucar.edu> 1.0-1
 - Initial hack
