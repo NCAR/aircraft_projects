@@ -3,19 +3,31 @@
 # Run ddclient until success.
 
 # To test this script, uncomment "set -x" and run it by hand like so:
-# ./run_ddclient.sh ppp0 eth3 0 12.42.105.41 12.42.104.9 iridium
+# ./run_ddclient.sh ppp0 /dev/ttyS1 19200 12.42.105.41 12.42.104.9 iridium
+# ./run_ddclient.sh ppp1 eth3 0 12.42.105.41 12.42.104.9 mpds
+#
+# These are the parameters that are passed by pppd to the ip-up scripts, but
+# this script only uses the interface (ppp* in above) and the local address
+# (the first address in above).
 #
 # set -x
 
+script=`basename $0`
 if [ $# -lt 4 ]; then
-    echo "$0 if baud local_IP remote_IP if"
+    echo "$0 if device baud local_IP [ remote_IP [ ipparam ]]"
     echo "example: $0 ppp0 /dev/ttyS0 38400 12.42.105.41 12.42.104.9 iridium"
+    echo "     or: $0 ppp1 eth3 0 12.42.105.41 12.42.104.9 mpds"
+    echo "note: device, baud, remote_IP and ipparam are not currently used"
     logger -t ddclient "$0 : no arguments"
     exit 1
 fi
 
+IF=$1
+IP=$4
+
 PATH=/usr/sbin:/sbin:$PATH
 
+# Which system is this for?
 SYSNAME=gv
 DDFILE=/etc/ddclient/${SYSNAME}.conf
 DDHOST=raf${SYSNAME}.dyndns.org
@@ -27,19 +39,17 @@ if ! which ddclient > /dev/null; then
         exit 1
 fi
 
-# clean up any running run_ddclient.sh scripts
-script=`basename $0`
+# clean up any running run_ddclient.sh scripts (except ourselves)
 ddpids=(`pgrep $script`)
-if [ ${#ddpids[*]} -gt 1 ]; then
+for (( i=1; i < ${#ddpids[*]}; i++ )); do
     pkill -x -o $script
-fi
+done
 
 # and ddclient processes
 pkill -x ddclient
 
 ## update the dyndys server unless the IP address is a private address
 ## that may be used as an internal LAN address (or PPtP tunnel).
-IP=$4
 
 case "$IP" in
 10.* | 172.1[6-9].* | 172.2[0-9].* | 172.3[0-1].* | 192.168.*)
@@ -92,7 +102,7 @@ for (( ncheck=0; ncheck < 5; ncheck++ )); do
                 server=63.208.196.96 
             fi
 
-            cmd="ddclient -daemon=0 -use=if -if=$1 -server $server -file $DDFILE"
+            cmd="ddclient -daemon=0 -use=if -if=$IF -server $server -file $DDFILE"
             logger -t ddclient "$cmd"
             eval $cmd && break
 
