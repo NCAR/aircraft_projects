@@ -79,9 +79,8 @@ INT_IFS=(eth0 eth1)
 # Currently all hosts can do SSH and IRC off the plane.
 #
 # Privileged hosts can do more: HTTP, IMAP, etc.
-# 192.168.84.0/27 = 192.168.84.0 thru 192.168.84.31
-# (those hosts with zeroes in the first 3 bits of the
-# fourth byte of the IP address).
+# 192.168.84.0/27 = 192.168.84.0-31
+# 192.168.84.0/26 = 192.168.84.0-63
 # 192.168.84.0/24 = 192.168.84.*
 PRIV_HOSTS_DISP=192.168.84.0/24
 PRIV_HOSTS_DATA=192.168.184.0/24
@@ -95,7 +94,10 @@ SSH_OUTGOING=($ANYHOST)
 SSH_INCOMING=($ANYHOST)
 
 # Google Earth SATCOM block.
-GOOGLE_EARTH=(72.14.203.0/8 64.233.167.0/8)
+# google earth uses kh.google.com=64.233.167.91 as of Apr 2008
+# maps.google.com is 64.233.167.{99,104,147}
+# 72.14.203.91 is ro-in-f91.google.com (not sure what that provides)
+GOOGLE_EARTH=(72.14.203.0/24 64.233.167.0/24)
 
 # external vpn servers
 VPN_SVRS=(192.43.244.230 192.143.244.231)
