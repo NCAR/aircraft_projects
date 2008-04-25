@@ -94,9 +94,12 @@ SSH_OUTGOING=($ANYHOST)
 SSH_INCOMING=($ANYHOST)
 
 # Google Earth SATCOM block.
-# google earth uses kh.google.com=64.233.167.91 as of Apr 2008
-# maps.google.com is 64.233.167.{99,104,147}
-# 72.14.203.91 is ro-in-f91.google.com (not sure what that provides)
+# April 2008:
+#   google earth uses kh.google.com which is 64.233.167.91
+#   maps.google.com is 64.233.167.{99,104,147}
+#   72.14.203.91 is ro-in-f91.google.com (not sure what that provides)
+#   google.com is 64.233.167.99, 64.233.187.99, 72.14.207.99
+#   So blocking 64.233.167.0/24 will also block normal google searches
 GOOGLE_EARTH=(72.14.203.0/24 64.233.167.0/24)
 
 # external vpn servers
@@ -450,7 +453,6 @@ filter_tcp()
 	for host in ${HTTP_REQUESTERS[*]}; do
             # Added by truss 20070511 for transparent squid proxy
             iptables -t nat -A PREROUTING -s $host -p tcp --dport 80 -j REDIRECT --to-port 3128
-	    # iptables -A FORWARD -o $eif -s $host -p tcp --dport http -m state --state NEW -j ACCEPT
 	    iptables -A FORWARD -o $eif -s $host -p tcp --dport https -m state --state NEW -j ACCEPT
 	done
     fi
