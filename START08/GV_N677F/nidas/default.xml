@@ -461,6 +461,17 @@
         </sample>
     </sensor>
 
+    <sensor ID="NOAAPANTHER"  class="raf.UDPSocketSensor" devicename="inet::58808">
+        <sample id="1" rate="1" scanfFormat="PAN:%d,%d,%f,%f">
+            <variable name="TRAP1"   units="C" longname="NOAA PANTHER Trap1 Temp"/>
+            <variable name="TRAP2"   units="C" longname="NOAA PANTHER Trap2 Temp"/>
+            <variable name="PresHN2" units="psi" longname="NOAA PANTHER Press N2 High"/>
+            <variable name="PresHHe" units="psi" longname="NOAA PANTHER Press He High"/>
+        </sample>
+    </sensor>
+
+
+
 </sensorcatalog>
 
 
@@ -764,6 +775,8 @@
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
         <sensor IDREF="NOAAUCATS" id="120" suffix="_GMD"/>
         <sensor IDREF="NONOYO3" id="130" suffix="_CL"/>
+        <sensor IDREF="NOAAPANTHER" id="140" suffix="_PAN"/>
+
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
