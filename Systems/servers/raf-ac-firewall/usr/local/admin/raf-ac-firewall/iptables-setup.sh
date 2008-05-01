@@ -79,9 +79,10 @@ INT_IFS=(eth0 eth1)
 # Currently all hosts can do SSH and IRC off the plane.
 #
 # Privileged hosts can do more: HTTP, IMAP, etc.
-# 192.168.84.0/27 = 192.168.84.0-31
+# 192.168.84.0/24 = 192.168.84.0-255
+# 192.168.84.0/25 = 192.168.84.0-127
 # 192.168.84.0/26 = 192.168.84.0-63
-# 192.168.84.0/24 = 192.168.84.*
+# 192.168.84.0/27 = 192.168.84.0-31
 PRIV_HOSTS_DISP=192.168.84.0/24
 PRIV_HOSTS_DATA=192.168.184.0/24
 
