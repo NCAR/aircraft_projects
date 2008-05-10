@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd /var/www/html
+
+pkill wget
+
+# Limit rate to 30kbps... assuming mpds link speed varies between 20-50kbps.
+wget --limit-rate=3k http://catalog.eol.ucar.edu/start08/other/google_earth/goes-12.latest_gvar_ch1_image.jpg
+wget --limit-rate=3k http://catalog.eol.ucar.edu/start08/other/google_earth/goes-12.latest_gvar_ch3_image.jpg
+wget --limit-rate=3k http://catalog.eol.ucar.edu/start08/other/google_earth/goes-12.latest_gvar_ch4_image.jpg
