@@ -37,8 +37,8 @@ cd `ls --file-type -rt | grep '/$' | tail -n 1`
 file=`ls -rt | tail -n 2 | head -n 1`
 title=`echo $file | sed 's/\.jpg//'`
 
-# exit if this image is older than 3 minutes
-let dtime=`date +%s`-`stat -c %X $file`
+# exit if this file is older than 3 minutes
+let dtime=`date +%s`-`stat -c %Z $file`
 #[ $dtime -gt 180 ] && echo "not sending out old image: "$PWD"/"$file
 [ $dtime -gt 180 ] && exit
 
