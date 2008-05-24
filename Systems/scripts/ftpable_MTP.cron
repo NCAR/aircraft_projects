@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# Script to uncompress latest MTP text file on the ground and move it to
+# a personal FTP folder.
+#
+# This is set up to run out of a cron job every minute
+# 0-59 * * * * ~/ftpable_MTP.cron
+
+# change into the folder
+cd /scr/tmp/ldm/mtp
+
+# get the penultimate new file
+file=`ls -rt MTPcurrent_*_*.txt.bz2 | tail -n 2 | head -n 1`
+
+# exit if this file is older than 3 minutes
+let dtime=`date +%s`-`stat -c %Z $file`
+[ $dtime -gt 180 ] && exit
+
+# uncompress the file in a separate folder
+cp -p $file /tmp/
+cd /tmp/
+bunzip2 $file
+
+# send to FTP folder
+uncompressed=`echo $file | sed 's/\.bz2//'`
+mv $uncompressed /net/ftp/pub/temp/users/$USER/
