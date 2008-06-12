@@ -353,7 +353,7 @@
         <message separator="\xff\xff\x00" position="beg" length="234"/>
     </serialSensor>
 
-    <serialSensor ID="VCSEL" class="DSMSerialSensor"
+    <serialSensor ID="VCSEL" class="raf.VCSEL_Serial"
         baud="19200" parity="none" databits="8" stopbits="1">
         <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
         <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %*c %*f %f %*f %*f %f %f %f %f">
@@ -643,7 +643,7 @@
         </output>
     </dsm>
    
-    <dsm name="dsm313" location="MTP Rack R-4" id="13" rserialPort="30002">
+    <dsm name="dsm313" location="MTP Rack R-4" id="13" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="130" suffix="_VXL"/>
