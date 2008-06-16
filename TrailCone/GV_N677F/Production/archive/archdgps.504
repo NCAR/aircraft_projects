@@ -1,0 +1,84 @@
+#! /bin/csh -f
+#
+#  Archive Raw and Processed Differential GPS netCDF files for project:
+#   2006-504 TrailCone (Trailing Cone test flight) (RAF Staff)
+#   using the RAF directory path
+#
+#  File created by Ronald L. Ruth using script archdgps.503 as template
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo ${0}:  Only the "dmg" login is allowed to run this script.  Quitting.
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+# set msrcpMachine = "vivaldi"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s), if needed
+#    no read password for this data set
+set RPWD = ""
+#
+#  1st wave
+#set SDIR = "/scr/raf2/Raw_Data/TrailCone/DGPS"
+#set DDIR = "/RAF/2006/504/RAW_DGPS"
+#set SFILES = ( \
+#readme.txt \
+#rawgps.tar.dir \
+#t-cone-DGPS.nc \
+#rawgps.tar \
+#)
+#
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directory:  $DDIR"
+#
+#set todo = $#SFILES
+#set num = 1
+#while ($num <= $todo)
+#  set SFILE = $SFILES[$num]
+#  set DFILE = $SFILES[$num]
+foreach SFILE ($SFILES)
+  set DFILE = $SFILE
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE mss:$DDIR/$DFILE
+    if ($status == 0) then
+      set d2 = $DFILE:h
+      set d1 = $d2:t
+      set d2 = $DFILE:t
+      echo "#   $d1/$d2 -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+     echo " Cannot access file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#  1st wave
+#  4 job(s) submitted on Wed Mar 12 15:27:13 MDT 2008
+#  File(s) archived to MSS directory:  /RAF/2006/504/RAW_DGPS
+#   readme.txt/readme.txt -- OK -- Wed Mar 12 15:27:19 MDT 2008
+#   rawgps.tar.dir/rawgps.tar.dir -- OK -- Wed Mar 12 15:27:24 MDT 2008
+#   t-cone-DGPS.nc/t-cone-DGPS.nc -- OK -- Wed Mar 12 15:27:31 MDT 2008
+#   rawgps.tar/rawgps.tar -- OK -- Wed Mar 12 15:28:08 MDT 2008
+#   Completed on Wed Mar 12 15:28:08 MDT 2008
+#
