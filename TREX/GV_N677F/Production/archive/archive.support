@@ -117,27 +117,6 @@ echo "#  Job(s) submitted on `date`"
 #  Current archive (msrcp) commands go here
 #  ----------------------------------------
 #
-# Main:
-web site (run tarit.docs again)
-Production/503.documents.tar.dir \
-Production/503.documents.tar \
-Production/503.tar.dir \
-Production/503.tar \
-Production/TREX.tar.dir \
-Production/TREX.tar \
-Production/Mail.503 \
-Production/taplog.503 \
-Production/archive/Chat_Archive/Chat.tar \
-Production/archive/Chat_Archive/Chat.tar.dir \
-# LRT:
-Production/nimbus_3501.tar.dir \
-Production/nimbus_3501.tar \
-Production/nimbus_defaults_3501.tar.dir \
-Production/nimbus_defaults_3501.tar \
-# HRT:
-Production/taplog.hrt.dgps.503
-Production/taplog.hrt.503 \
-#
 #
 # Done.
 echo "#   msrcp job  -- OK -- "
@@ -396,6 +375,345 @@ while ($num <= $todo)
   endif
   @ num ++
 end
+#
+# -------  After data restrictions lifted
+#
+#
+#  Move MSS original bitfiles that would have been overwritten
+#echo \
+msmv -wpwd $WPWD $RPWD /RAF/2006/503/503.documents.tar /RAF/2006/503/503.documents.tar.orig
+if ($status == 0) then
+  echo "#   503.documents.tar.orig -- OK -- `date`"
+else
+  echo "#  msrcp job FAILED.  See email message for details."
+endif
+#
+#echo \
+msmv -wpwd $WPWD $RPWD /RAF/2006/503/503.documents.tar.dir /RAF/2006/503/503.documents.tar.orig.dir
+if ($status == 0) then
+  echo "#   503.documents.tar.orig.dir -- OK -- `date`"
+else
+  echo "#  msrcp job FAILED.  See email message for details."
+endif
+#
+#echo \
+msmv -wpwd $WPWD $RPWD /RAF/2006/503/503.tar /RAF/2006/503/503.tar.orig
+if ($status == 0) then
+  echo "#   503.tar.orig -- OK -- `date`"
+else
+  echo "#  msrcp job FAILED.  See email message for details."
+endif
+#
+#echo \
+msmv -wpwd $WPWD $RPWD /RAF/2006/503/503.orig.tar.dir /RAF/2006/503/503.tar.orig.dir
+if ($status == 0) then
+  echo "#   503.tar.orig.dir -- OK -- `date`"
+else
+  echo "#  msrcp job FAILED.  See email message for details."
+endif
+#
+#
+#  Files to go to main MSS directory (not renamed)
+#
+set DIR = $PRDIR
+#   DIR can be any of the following:  $SDIR,      $PDIR,       $PRDIR
+#                                     $PROD_DATA  Project Home Production
+#        (or set to a specific directory)
+#
+set FILES = ( \
+503.documents.tar.dir \
+503.documents.tar \
+503.tar.dir \
+503.tar \
+TREX.tar.dir \
+TREX.tar \
+Mail.503 \
+taplog.503 \
+taplog.camera.503 \
+taplog.movie.503 \
+)
+#
+#  Get started:
+set todo = $#FILES
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$FILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $FILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $FILE -- Failed -- `date`"
+      echo "#                $FILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $FILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#
+#  Files to go to main MSS directory (not renamed)
+#
+set DIR = $PRDIR/archive/Chat_Archive
+#   DIR can be any of the following:  $SDIR,      $PDIR,       $PRDIR
+#                                     $PROD_DATA  Project Home Production
+#        (or set to a specific directory)
+#
+set FILES = ( \
+Chat.tar \
+Chat.tar.dir \
+)
+#
+#  Get started:
+set todo = $#FILES
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$FILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $FILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $FILE -- Failed -- `date`"
+      echo "#                $FILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $FILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#
+# LRT:
+#  Files to go to MSS subdirectory (not renamed)
+#
+set DIR = $PRDIR
+set TURBRT = LRT
+#
+set FILES = ( \
+nimbus_3501.tar.dir \
+nimbus_3501.tar \
+nimbus_defaults_3501.tar.dir \
+nimbus_defaults_3501.tar \
+taplog.lrt.503 \
+)
+#
+#  Get started:
+set todo = $#FILES
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$FILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TURBRT/$FILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TURBRT/$FILE -- Failed -- `date`"
+      echo "#                $TURBRT/$FILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TURBRT/$FILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#
+# LRT/UNALTERED:
+#  Files to go to MSS subdirectory (not renamed)
+#
+set DIR = $PRDIR
+set TURBRT = LRT/UNALTERED
+#
+set FILES = ( \
+taplog.unaltered.lrt.503 \
+)
+#
+#  Get started:
+set todo = $#FILES
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$FILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TURBRT/$FILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TURBRT/$FILE -- Failed -- `date`"
+      echo "#                $TURBRT/$FILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TURBRT/$FILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#
+# HRT:
+#  Files to go to MSS subdirectory (not renamed)
+#
+set DIR = $PRDIR
+set TURBRT = HRT
+#
+set FILES = ( \
+taplog.hrt.503 \
+)
+#
+#  Get started:
+set todo = $#FILES
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$FILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TURBRT/$FILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TURBRT/$FILE -- Failed -- `date`"
+      echo "#                $TURBRT/$FILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TURBRT/$FILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#
+# HRT/DGPS:
+#  Files to go to MSS subdirectory (not renamed)
+#
+set DIR = $PRDIR
+set TURBRT = HRT/DGPS
+#
+set FILES = ( \
+taplog.hrt.dgps.503 \
+)
+#
+#  Get started:
+set todo = $#FILES
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$FILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TURBRT/$FILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TURBRT/$FILE -- Failed -- `date`"
+      echo "#                $TURBRT/$FILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TURBRT/$FILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#
+# HRT/DGPS:
+#  Files to go to MSS subdirectory (renamed)
+#
+set DIR = $PRDIR
+set TURBRT = HRT/DGPS
+set FILES = ( \
+503rf01dgpsh.hdr \
+)
+set OFILES = ( \
+RF01.hdr \
+)
+#
+#  Get started:
+set todo = $#FILES
+if ($todo != $#OFILES) then
+  echo "Source and destination files don't match."
+  echo "  Quitting."
+  exit 1
+endif
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+#  set OFILE = $FILES[$num]
+  set OFILE = $OFILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$TURBRT/$OFILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TURBRT/$OFILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TURBRT/$OFILE -- Failed -- `date`"
+      echo "#                $TURBRT/$OFILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TURBRT/$OFILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+# -------  Fix yesterday's error
+#
+#   Fix "missig file" problem in yesterday's job
+#
+#  Files to go to main MSS directory (not renamed)
+#
+set DIR = $PRDIR
+#   DIR can be any of the following:  $SDIR,      $PDIR,       $PRDIR
+#                                     $PROD_DATA  Project Home Production
+#        (or set to a specific directory)
+#
+set FILES = ( \
+503.tar.orig.dir \
+)
+#
+#  Get started:
+set todo = $#FILES
+set num = 1
+while ($num <= $todo)
+  set FILE = $FILES[$num]
+  if (-r $DIR/$FILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $RTPD -pr $SCD_PROJ -wpwd RAFDMG $RPWD \
+     $DIR/$FILE mss:/RAF/$YEAR/$PROJ/$FILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $FILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $FILE -- Failed -- `date`"
+      echo "#                $FILE:  error code $result"
+    endif
+  else
+    echo "#  msrcp job for $FILE -- Failed -- `date`"
+    echo "#   Cannot access source file $DIR/$FILE"
+  endif
+  @ num ++
+end
+#
+#
 #
 #  ---------------------------------------------------------------------------
 #   T E M P L A T E S   ( c o p y   &   e d i t ,   a s   n e c e s s a r y )
@@ -660,3 +978,45 @@ echo \
 #  msrcp job for HRT/RF01.hdr -- OK -- Mon Mar 19 15:46:16 MDT 2007
 #   msrcp job  -- OK --
 #  Completed on Mon Mar 19 15:46:16 MDT 2007
+#
+# -------  After data restrictions lifted
+#
+#  Move MSS original bitfiles that would have been overwritten
+#
+#  Job(s) submitted on Tue May  6 16:44:18 MDT 2008
+#   503.documents.orig.tar -- OK -- Tue May  6 16:44:20 MDT 2008
+#   503.documents.orig.tar -- OK -- Tue May  6 16:44:22 MDT 2008
+#   503.documents.orig.tar -- OK -- Tue May  6 16:44:23 MDT 2008
+#    ERROR: /RAF/2006/503/503.tar.orig.dir: No such file or directory
+#  msrcp job FAILED.  See email message for details.
+#  msrcp job for 503.documents.tar.dir -- OK -- Tue May  6 16:44:33 MDT 2008
+#  msrcp job for 503.documents.tar -- OK -- Tue May  6 16:44:39 MDT 2008
+#  msrcp job for 503.tar.dir -- OK -- Tue May  6 16:44:44 MDT 2008
+#  msrcp job for 503.tar -- OK -- Tue May  6 16:44:52 MDT 2008
+#  msrcp job for TREX.tar.dir -- OK -- Tue May  6 16:45:02 MDT 2008
+#  msrcp job for TREX.tar -- OK -- Tue May  6 16:45:20 MDT 2008
+#  msrcp job for Mail.503 -- OK -- Tue May  6 16:45:27 MDT 2008
+#  msrcp job for taplog.503 -- OK -- Tue May  6 16:45:32 MDT 2008
+#  msrcp job for taplog.camera.503 -- OK -- Tue May  6 16:45:37 MDT 2008
+#  msrcp job for taplog.movie.503 -- OK -- Tue May  6 16:45:44 MDT 2008
+#  msrcp job for Chat.tar -- OK -- Tue May  6 16:45:51 MDT 2008
+#  msrcp job for Chat.tar.dir -- OK -- Tue May  6 16:45:57 MDT 2008
+#  msrcp job for LRT/nimbus_3501.tar.dir -- OK -- Tue May  6 16:46:03 MDT 2008
+#  msrcp job for LRT/nimbus_3501.tar -- OK -- Tue May  6 16:46:10 MDT 2008
+#  msrcp job for LRT/nimbus_defaults_3501.tar.dir -- OK -- Tue May  6 16:46:17 MDT 2008
+#  msrcp job for LRT/nimbus_defaults_3501.tar -- OK -- Tue May  6 16:46:23 MDT 2008
+#  msrcp job for LRT/taplog.lrt.503 -- OK -- Tue May  6 16:46:29 MDT 2008
+#  msrcp job for LRT/UNALTERED/taplog.unaltered.lrt.503 -- OK -- Tue May  6 16:46:34 MDT 2008
+#  msrcp job for HRT/taplog.hrt.503 -- OK -- Tue May  6 16:46:39 MDT 2008
+#  msrcp job for HRT/DGPS/taplog.hrt.dgps.503 -- OK -- Tue May  6 16:46:45 MDT 2008
+#  msrcp job for HRT/DGPS/RF01.hdr -- OK -- Tue May  6 16:46:50 MDT 2008
+#   msrcp job  -- OK -- 
+#  Completed on Tue May  6 16:46:50 MDT 2008
+#
+# -------  Fix yesterday's error
+#
+#  Job(s) submitted on Wed May  7 12:02:16 MDT 2008
+#  msrcp job for 503.tar.orig.dir -- OK -- Wed May  7 12:02:21 MDT 2008
+#   msrcp job  -- OK -- 
+#  Completed on Wed May  7 12:02:21 MDT 2008
+#

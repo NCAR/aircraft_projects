@@ -1,0 +1,54 @@
+Files on computer "gni" used for T-REX LRT merging:
+ 0) Script used for doing all the merging (except for dGPS):
+     /export/data/trex/trex_al_pavel_teresa/merge_script_teresa
+ 1) Pavel's merged dGPS (using Waypoint Software):
+   source (netCDF):  /export/data/trex/trex_al_pavel/TREXrf??.nc
+                     /export/data/trex/trex_al_pavel/TREXrf07[ab].nc
+   source files:  /export/data/trex/trex_al_pavel_teresa/source_dGPS/
+     (when Pavel can make this subdirectory available)
+ 2) Teresa's files (MRTDL_LHL and XCOMR without attribute updates):
+   source: /jnet/productiondata/TREXrf??.chem.mrg.nc
+           /jnet/productiondata/TREXrf07[ab].chem.mrg.nc
+   merged source:  /export/data/trex/trex_teresa/*
+   merged destination:  /export/data/trex/trex_al_pavel_teresa/*
+ 3) Chris Webster's program to update Teresa's attributes and calculate
+     new MRTDL (gram/kg):
+      /export/data/trex/trex_al_pavel_teresa/mrtdl
+     Program source code is in directory
+      /export/data/trex/trex_al_pavel_teresa/source_mrtdl/
+ 4) Convert ASCII ozone files from Andy Weinheimer and Ilana Pollack to netCDF 
+   source files:  /export/data/trex/ozone_data/O3_GV_2006????_rafMerge.txt
+   destination files:  /export/data/trex/ozone_data/TREXrf??.ozone.nc
+                       /export/data/trex/ozone_data/TREXrf07[ab].ozone.nc
+   program:  asc2cdf -m -d "2006-mm-dd" <source_ASCII> <destination_netCDF>
+   Note:  RF07B's date is 7 April 2006, but input date is the 6th.  (Resulting
+          output file appears to be OK.)
+ 5) Merge ozone data (XO3MR) into the extant merged files:
+   source files:  /export/data/trex/ozone_data/TREXrf??.ozone.nc
+                  /export/data/trex/ozone_data/TREXrf07[ab].ozone.nc
+   merged destination:  /export/data/trex/trex_al_pavel_teresa/*
+ 6) Add ozone global attributes:
+   /export/data/trex/trex_al_pavel_teresa/update_o3
+    (uses ncatted to do this work)
+ 7) Change header variable names for RF01 (per Ron Ruth):
+   /export/data/trex/trex_al_pavel_teresa/update_header_final_script runs:
+   /export/data/trex/trex_al_pavel_teresa/trex_update_final
+     Program source code is in directory
+      /export/data/trex/trex_al_pavel_teresa/source_trex_update_final/
+ 8) Final output files:
+      gni:/export/data/trex/trex_al_pavel_teresa/TREXrf??.nc
+      gni:/export/data/trex/trex_al_pavel_teresa/TREXrf07[ab].nc
+     I assume that these final output files transferred to:
+      bora:/jnet/productiondata/trex/final/*
+     since that is the source directory for the Mass Store LRT archive.
+     (On 20 March 2007, this directory doesn't exist.)
+
+Archive plan:
+ 1) Collect all pertinent files and categorize "new" ones in separate
+     subdirectories off of /export/data/trex/trex_al_pavel_teresa/
+ 2) Gzip all netCDF files in these directories
+ 3) Create one large tar file with the /export/data/trex directory
+     with the name "TREX_LRT_MERGE.tar."
+ 4) Copy/move the above file to:
+     bora:/jnet/local/projects/TREX/GV_N677F/Production/archive/Merge_Archive/
+ 5) Create its directory list in a file called "TREX_LRT_MERGE.tar.dir."

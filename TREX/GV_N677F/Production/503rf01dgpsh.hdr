@@ -1,0 +1,71 @@
+netcdf TREXdgpsrf01h {
+dimensions:
+	Time = UNLIMITED ; // (34501 currently)
+	sps25 = 25 ;
+variables:
+	int base_time ;
+		base_time:units = "seconds since 1970-01-01 00:00:00 +0000" ;
+		base_time:long_name = "Start time of data recording." ;
+	int Time(Time) ;
+		Time:long_name = "time of measurement" ;
+		Time:standard_name = "time" ;
+		Time:units = "seconds since 1141-01-00 00:00:00 +0000" ;
+	float time_offset(Time) ;
+		time_offset:long_name = "Seconds since base_time." ;
+		time_offset:units = "seconds since 1141-01-00 00:00:00 +0000" ;
+	float HOUR(Time) ;
+		HOUR:units = "hour" ;
+		HOUR:long_name = "Raw Tape Time Component" ;
+		HOUR:OutputRate = 1 ;
+		HOUR:_FillValue = -32767.f ;
+	float MINUTE(Time) ;
+		MINUTE:units = "minute" ;
+		MINUTE:long_name = "Raw Tape Time Component" ;
+		MINUTE:OutputRate = 1 ;
+		MINUTE:_FillValue = -32767.f ;
+	float SECOND(Time) ;
+		SECOND:units = "s" ;
+		SECOND:long_name = "Raw Tape Time Component" ;
+		SECOND:OutputRate = 1 ;
+		SECOND:_FillValue = -32767.f ;
+	float LATDG(Time, sps25) ;
+		LATDG:units = "degree_N" ;
+		LATDG:long_name = "DGPS latitude" ;
+		LATDG:OutputRate = 25 ;
+		LATDG:_FillValue = -32767.f ;
+	float LONDG(Time, sps25) ;
+		LONDG:units = "degree_E" ;
+		LONDG:long_name = "DGPS longitude" ;
+		LONDG:OutputRate = 25 ;
+		LONDG:_FillValue = -32767.f ;
+	float ALTDG(Time, sps25) ;
+		ALTDG:units = "m" ;
+		ALTDG:long_name = "DGPS antenna altitude (MSL, NAD83)" ;
+		ALTDG:OutputRate = 25 ;
+		ALTDG:_FillValue = -32767.f ;
+	float VEWDG(Time, sps25) ;
+		VEWDG:units = "m/s" ;
+		VEWDG:long_name = "DGPS Ground Speed Vector, East Component" ;
+		VEWDG:OutputRate = 25 ;
+		VEWDG:_FillValue = -32767.f ;
+	float VNSDG(Time, sps25) ;
+		VNSDG:units = "m/s" ;
+		VNSDG:long_name = "DGPS Ground Speed Vector, North Component" ;
+		VNSDG:OutputRate = 25 ;
+		VNSDG:_FillValue = -32767.f ;
+	float VSPDDG(Time, sps25) ;
+		VSPDDG:units = "m/s" ;
+		VSPDDG:long_name = "DGPS vertical velocity" ;
+		VSPDDG:OutputRate = 25 ;
+		VSPDDG:_FillValue = -32767.f ;
+	float ALTXDG(Time, sps25) ;
+		ALTXDG:units = "m" ;
+		ALTXDG:long_name = "DGPS altitude PSX reference (MSL, NAD83)" ;
+		ALTXDG:OutputRate = 25 ;
+		ALTXDG:_FillValue = -32767.f ;
+
+// global attributes:
+		:Conventions = "NCAR-RAF/nimbus" ;
+		:DateConvertedFromASCII = "2007-03-29 21:18:48 +0000" ;
+		:TimeInterval = "15:09:00-00:44:00" ;
+}
