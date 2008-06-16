@@ -1,0 +1,227 @@
+#! /bin/csh -f
+#
+#  Archive raw SID-2H data files for 2007-506 PACDEX
+#   to the CISL Mass Store System under the /RAF path
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2002                                                         *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Note:  This script runs only in a project's "Production/archive"
+#          subdirectory under the "dmg" login.
+#
+#  File adapted from file $JLOCAL/proj/102/Production/arch_ads.102
+#   by Ron Ruth  28 January 2K
+#  Revised by RLR 19 April 2002 to use DCS "msrcp" instead of MIGS
+#  Revised by RLR  7 July  2006 for new directory structure
+#  Revised by JAG 1 May 2008 to tar up and archive SID-2D data.
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script.  Quitting."
+  exit 1
+endif
+#
+#  Get setup information for this project
+#  Make sure I'm in the "archive" subdirectory
+set cdir = `pwd | awk -F/ '{print $NF}'`
+if ($cdir != "archive") then
+  echo '  This script is not being run from the "archive" subdirectory.'
+  exit 1
+endif
+pushd ../.. >& /dev/null
+set PROJDIR =  `pwd`
+set YEAR = `grep FY $PROJDIR/Production/proj.info | sed -e "s/FY=//"`
+cd ..
+set proj = `pwd | awk -F/ '{print $NF}'`
+set proj = (`grep $proj $PROJ_DIR/archives/msfiles/directory_map`)
+set PROJ = $proj[1]
+popd >& /dev/null
+set TYPE = SID2H
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+#  set msrcpMachine = "vivaldi"
+endif
+#
+#  Set MSS Read PassWorD if restricted access
+set RPWD = ""
+#set RPWD = "-rpwd ReadPassword"
+#
+#  Choose a source directory
+#set SDIR = $TEMP
+#set SDIR = $PROD_DATA
+#set SDIR = $DATA_DIR
+set SDIR = $RAW_DATA_DIR/PACDEX/sid-2h
+#
+#
+#
+#
+#  1st wave
+#set SSUBDIRS = ( \
+#rf01-Apr29 \
+#rf02-Apr30 \
+#rf03-May02 \
+#rf04-May03 \
+#rf05-May05 \
+#rf06-May06 \
+#rf07-May13 \
+#rf08-May14 \
+#rf09-May15 \
+#rf10-May17 \
+#rf11-May19 \
+#rf12-May21 \
+#rf13-May23 \
+#rf14-24May \
+#)
+#set DFILES = ( \
+#rf01_20070429 \
+#rf02_20070430 \
+#rf03_20070502 \
+#rf04_20070503 \
+#rf05_20070505 \
+#rf06_20070506 \
+#rf07_20070513 \
+#rf08_20070514 \
+#rf09_20070515 \
+#rf10_20070517 \
+#rf11_20070519 \
+#rf12_20070521 \
+#rf13_20070523 \
+#rf14_20070524 \
+#)
+#
+#  2nd wave
+#set SSUBDIRS = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#   th wave
+#set SSUBDIRS = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#
+#  Get started:
+echo "#  $#SSUBDIRS Job(s) submitted on `date`"
+if ($#SSUBDIRS != $#DFILES) then
+  echo " Number of source and destination file names don't match.  Quitting"
+  exit 1
+endif
+
+set todo = $#SSUBDIRS
+set num = 1
+pushd $SDIR
+while ($num <= $todo)
+  set SSUBDIR = $SSUBDIRS[$num]
+  set DFILE = $DFILES[$num].tar
+  #
+  #Tar up the source data
+  set OFILE = "$SSUBDIR.tar"
+  tar chf $OFILE $SSUBDIR
+  #
+  # Get tar directory list for archiving
+  set dfile = $OFILE.dir
+  echo " Directory list for file $SSUBDIR.tar" >! $dfile
+  echo "  Support files for Project $YEAR-$PROJ $proj" >> $dfile
+  set dt = `date`
+  echo "  Archive created on $dt" >> $dfile
+  echo " "  >> $dfile
+  tar tf $OFILE >> $dfile
+
+  if (-r $OFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG $RPWD \
+     $SDIR/$OFILE mss:/RAF/$YEAR/$PROJ/$TYPE/$DFILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TYPE/$DFILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+      echo "#                $TYPE/$DFILE: error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+    echo "#   Cannot access source file $OFILE"
+  endif
+
+  # Now archive tarfile listing
+  if (-r $dfile) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG $RPWD \
+     $SDIR/$dfile mss:/RAF/$YEAR/$PROJ/$TYPE/$DFILE.dir
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TYPE/$DFILE.dir -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TYPE/$DFILE.dir -- Failed -- `date`"
+      echo "#                $TYPE/$DFILE.dir: error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TYPE/$DFILE.dir -- Failed -- `date`"
+    echo "#   Cannot access source file $OFILE"
+  endif
+  @ num ++
+end
+#
+# Done.
+echo "#   Completed on `date`"
+exit
+#
+#
+#  MSS path for all bitfiles listed below:  /RAF/2007/506/
+#
+#  1st wave
+#  14 Job(s) submitted on Fri May  2 15:07:33 MDT 2008
+#  msrcp job for SID2H/rf01_20070429.tar -- OK -- Fri May  2 15:08:13 MDT 2008
+#  msrcp job for SID2H/rf01_20070429.tar.dir -- OK -- Fri May  2 15:14:26 MDT 2008
+#  msrcp job for SID2H/rf02_20070430.tar -- OK -- Fri May  2 15:14:36 MDT 2008
+#  msrcp job for SID2H/rf02_20070430.tar.dir -- OK -- Fri May  2 15:14:41 MDT 2008
+#  msrcp job for SID2H/rf03_20070502.tar -- OK -- Fri May  2 15:15:32 MDT 2008
+#  msrcp job for SID2H/rf03_20070502.tar.dir -- OK -- Fri May  2 15:15:44 MDT 2008
+#  msrcp job for SID2H/rf04_20070503.tar -- OK -- Fri May  2 15:16:12 MDT 2008
+#  msrcp job for SID2H/rf04_20070503.tar.dir -- OK -- Fri May  2 15:16:33 MDT 2008
+#  msrcp job for SID2H/rf05_20070505.tar -- OK -- Fri May  2 15:17:03 MDT 2008
+#  msrcp job for SID2H/rf05_20070505.tar.dir -- OK -- Fri May  2 15:17:11 MDT 2008
+#  msrcp job for SID2H/rf06_20070506.tar -- OK -- Fri May  2 15:21:40 MDT 2008
+#  msrcp job for SID2H/rf06_20070506.tar.dir -- OK -- Fri May  2 15:21:47 MDT 2008
+#  msrcp job for SID2H/rf07_20070513.tar -- OK -- Fri May  2 15:22:07 MDT 2008
+#  msrcp job for SID2H/rf07_20070513.tar.dir -- OK -- Fri May  2 15:22:36 MDT 2008
+#  msrcp job for SID2H/rf08_20070514.tar -- OK -- Fri May  2 15:22:59 MDT 2008
+#  msrcp job for SID2H/rf08_20070514.tar.dir -- OK -- Fri May  2 15:23:49 MDT 2008
+#  msrcp job for SID2H/rf09_20070515.tar -- OK -- Fri May  2 15:23:58 MDT 2008
+#  msrcp job for SID2H/rf09_20070515.tar.dir -- OK -- Fri May  2 15:24:10 MDT 2008
+#  msrcp job for SID2H/rf10_20070517.tar -- OK -- Fri May  2 15:24:39 MDT 2008
+#  msrcp job for SID2H/rf10_20070517.tar.dir -- OK -- Fri May  2 15:24:50 MDT 2008
+#  msrcp job for SID2H/rf11_20070519.tar -- OK -- Fri May  2 15:26:04 MDT 2008
+#  msrcp job for SID2H/rf11_20070519.tar.dir -- OK -- Fri May  2 15:26:10 MDT 2008
+#  msrcp job for SID2H/rf12_20070521.tar -- OK -- Fri May  2 15:26:25 MDT 2008
+#  msrcp job for SID2H/rf12_20070521.tar.dir -- OK -- Fri May  2 15:26:30 MDT 2008
+#  msrcp job for SID2H/rf13_20070523.tar -- OK -- Fri May  2 15:26:43 MDT 2008
+#  msrcp job for SID2H/rf13_20070523.tar.dir -- OK -- Fri May  2 15:26:48 MDT 2008
+#  msrcp job for SID2H/rf14_20070524.tar -- OK -- Fri May  2 15:27:00 MDT 2008
+#  msrcp job for SID2H/rf14_20070524.tar.dir -- OK -- Fri May  2 15:27:07 MDT 2008
+#   Completed on Fri May  2 15:27:07 MDT 2008
+#
+#  2nd wave
+#  Job(s) submitted on 
+#
+#  3rd wave
+#  Job(s) submitted on 
+#
+#  4th wave
+#  Job(s) submitted on 
+#
+#   th wave
+#  Job(s) submitted on 
+#

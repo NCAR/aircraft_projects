@@ -1,0 +1,277 @@
+#! /bin/csh -f
+#
+#  Archive production NIMBUS netCDF output files for project:
+#    2007-506 PACDEX (PACific Dust EXperiment) (Jeffrey L. Stith, et al.)
+#   using the new ATD directory path
+#
+#  File created by '/jnet/local/projects/archives/scripts/genar' Revision 16 on Thu Mar 13 14:48:54 MDT 2008
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo ${0}:  Only the "dmg" login is allowed to run this script.  Quitting.
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+# set msrcpMachine = "vivaldi"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s), if needed
+set RPWD = ""
+#
+set SDIR = /scr/raf2/Prod_Data/PACDEX
+#
+#  1st wave (LRT)
+#set SFILES = ( \
+#PACDEXrf01.nc \
+#PACDEXrf02.nc \
+#PACDEXrf03.nc \
+#PACDEXrf04.nc \
+#PACDEXrf05.nc \
+#PACDEXrf06.nc \
+#PACDEXrf07.nc \
+#PACDEXrf08.nc \
+#PACDEXrf09.nc \
+#PACDEXrf10.nc \
+#PACDEXrf11.nc \
+#PACDEXrf12.nc \
+#PACDEXrf13.nc \
+#PACDEXrf14.nc \
+#)
+#set DFILES = ( \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF01.20070429.160230_233627.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF02.20070430.175830_025405.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF03.20070502.023510_103847.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF04.20070503.035440_122923.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF05.20070505.170130_012630.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF06.20070506.165545_004530.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF07.20070513.145300_221800.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF08.20070514.190700_023634.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF09.20070515.195330_045229.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF10.20070517.012000_102312.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF11.20070519.231230_082248.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF12.20070522.002725_085123.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF13.20070523.022810_101835.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF14.20070524.191605_024727.PNI.nc \
+#)
+#  2nd wave (RF12 after "reorder")
+#set SFILES = ( \
+#PACDEXrf12.nc \
+#)
+#set DFILES = ( \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF12.20070522.002725_085123.PNI.nc \
+#)
+#  3rd wave (HRT)
+#set SFILES = ( \
+#PACDEXrf01h.nc \
+#PACDEXrf02h.nc \
+#PACDEXrf03h.nc \
+#PACDEXrf04h.nc \
+#PACDEXrf05h.nc \
+#PACDEXrf06h.nc \
+#PACDEXrf07h.nc \
+#PACDEXrf08h.nc \
+#PACDEXrf09h.nc \
+#PACDEXrf10h.nc \
+#PACDEXrf11h.nc \
+#PACDEXrf12h.nc \
+#PACDEXrf13h.nc \
+#PACDEXrf14h.nc \
+#)
+#set DFILES = ( \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF01.20070429.160230_233609.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF02.20070430.175830_025347.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF03.20070502.023510_103829.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF04.20070503.035440_122905.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF05.20070505.170130_012630.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF06.20070506.165545_004530.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF07.20070513.145300_221800.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF08.20070514.190700_023616.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF09.20070515.195330_045211.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF10.20070517.012000_102254.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF11.20070519.231230_082230.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF12.20070522.002725_085105.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF13.20070523.022810_101817.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF14.20070524.191605_024709.PNI.nc \
+#)
+#  4th wave (reprocessed RF11 HRT)
+#set SFILES = ( \
+#PACDEXrf11h.nc \
+#)
+#set DFILES = ( \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/HRT/RF11.20070519.231230_082230.PNI.nc \
+#)
+#  5th wave (rearchive all LRT - uncomment 1st wave and run)
+#
+#  6th wave (rearchive all HRT - uncomment 3rd wave and run)
+#
+#  7th wave (rearchive all LRT - uncomment 1st wave and run)
+#
+#  8th wave (selected updated LRT)
+#set SFILES = ( \
+#PACDEXrf09.nc \
+#PACDEXrf11.nc \
+#PACDEXrf12.nc \
+#)
+#set DFILES = ( \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF09.20070515.195330_045229.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF11.20070519.231230_082248.PNI.nc \
+#mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF12.20070522.002725_085123.PNI.nc \
+#)
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DFILE
+    if ($status == 0) then
+      set d2 = $DFILE:h
+      set d1 = $d2:t
+      set d2 = $DFILE:t
+      echo "#   $d1/$d2 -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+     echo " Cannot access file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#  1st wave (LRT)
+#  14 job(s) submitted on Thu Mar 13 14:58:44 MDT 2008
+#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/
+#   LRT/RF01.20070429.160230_233627.PNI.nc -- OK -- Thu Mar 13 14:58:55 MDT 2008
+#   LRT/RF02.20070430.175830_025405.PNI.nc -- OK -- Thu Mar 13 14:59:06 MDT 2008
+#   LRT/RF03.20070502.023510_103847.PNI.nc -- OK -- Thu Mar 13 14:59:17 MDT 2008
+#   LRT/RF04.20070503.035440_122923.PNI.nc -- OK -- Thu Mar 13 14:59:28 MDT 2008
+#   LRT/RF05.20070505.170130_012630.PNI.nc -- OK -- Thu Mar 13 14:59:40 MDT 2008
+#   LRT/RF06.20070506.165545_004530.PNI.nc -- OK -- Thu Mar 13 14:59:50 MDT 2008
+#   LRT/RF07.20070513.145300_221800.PNI.nc -- OK -- Thu Mar 13 15:00:06 MDT 2008
+#   LRT/RF08.20070514.190700_023634.PNI.nc -- OK -- Thu Mar 13 15:00:21 MDT 2008
+#   LRT/RF09.20070515.195330_045229.PNI.nc -- OK -- Thu Mar 13 15:00:37 MDT 2008
+#   LRT/RF10.20070517.012000_102312.PNI.nc -- OK -- Thu Mar 13 15:00:51 MDT 2008
+#   LRT/RF11.20070519.231230_082248.PNI.nc -- OK -- Thu Mar 13 15:01:07 MDT 2008
+#   LRT/RF12.20070522.002725_085123.PNI.nc -- OK -- Thu Mar 13 15:01:21 MDT 2008
+#   LRT/RF13.20070523.022810_101835.PNI.nc -- OK -- Thu Mar 13 15:01:31 MDT 2008
+#   LRT/RF14.20070524.191605_024727.PNI.nc -- OK -- Thu Mar 13 15:01:41 MDT 2008
+#   Completed on Thu Mar 13 15:01:41 MDT 2008
+#
+#  2nd wave (RF12 after "reorder")
+#  1 job(s) submitted on Mon Mar 17 15:44:42 MDT 2008
+#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/
+#   LRT/RF12.20070522.002725_085123.PNI.nc -- OK -- Mon Mar 17 15:44:56 MDT 2008
+#   Completed on Mon Mar 17 15:44:56 MDT 2008
+#
+#  3rd wave (HRT)
+#  14 job(s) submitted on Tue Apr 15 15:37:16 MDT 2008
+#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/
+#   HRT/RF01.20070429.160230_233609.PNI.nc -- OK -- Tue Apr 15 15:41:48 MDT 2008
+#   HRT/RF02.20070430.175830_025347.PNI.nc -- OK -- Tue Apr 15 15:44:26 MDT 2008
+#   HRT/RF03.20070502.023510_103829.PNI.nc -- OK -- Tue Apr 15 15:50:51 MDT 2008
+#   HRT/RF04.20070503.035440_122905.PNI.nc -- OK -- Tue Apr 15 15:54:53 MDT 2008
+#   HRT/RF05.20070505.170130_012630.PNI.nc -- OK -- Tue Apr 15 15:56:26 MDT 2008
+#   HRT/RF06.20070506.165545_004530.PNI.nc -- OK -- Tue Apr 15 15:59:12 MDT 2008
+#   HRT/RF07.20070513.145300_221800.PNI.nc -- OK -- Tue Apr 15 15:59:56 MDT 2008
+#   HRT/RF08.20070514.190700_023616.PNI.nc -- OK -- Tue Apr 15 16:00:57 MDT 2008
+#   HRT/RF09.20070515.195330_045211.PNI.nc -- OK -- Tue Apr 15 16:01:49 MDT 2008
+#   HRT/RF10.20070517.012000_102254.PNI.nc -- OK -- Tue Apr 15 16:02:57 MDT 2008
+#   HRT/RF11.20070519.231230_082230.PNI.nc -- OK -- Tue Apr 15 16:04:14 MDT 2008
+#   HRT/RF12.20070522.002725_085105.PNI.nc -- OK -- Tue Apr 15 16:04:59 MDT 2008
+#   HRT/RF13.20070523.022810_101817.PNI.nc -- OK -- Tue Apr 15 16:05:51 MDT 2008
+#   HRT/RF14.20070524.191605_024709.PNI.nc -- OK -- Tue Apr 15 16:07:52 MDT 2008
+#   Completed on Tue Apr 15 16:07:52 MDT 2008
+#
+#
+#  4th wave (reprocessed RF11 HRT)
+#  1 job(s) submitted on Wed May  7 13:02:39 MDT 2008
+#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/
+#   HRT/RF11.20070519.231230_082230.PNI.nc -- OK -- Wed May  7 13:03:32 MDT 2008
+#   Completed on Wed May  7 13:03:32 MDT 2008
+#
+#  5th wave (rearchive all LRT now that all PI data merged in)
+#  14 job(s) submitted on Fri May  9 14:05:39 MDT 2008
+#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/
+#   LRT/RF01.20070429.160230_233627.PNI.nc -- OK -- Fri May  9 14:05:51 MDT 2008
+#   LRT/RF02.20070430.175830_025405.PNI.nc -- OK -- Fri May  9 14:06:02 MDT 2008
+#   LRT/RF03.20070502.023510_103847.PNI.nc -- OK -- Fri May  9 14:06:12 MDT 2008
+#   LRT/RF04.20070503.035440_122923.PNI.nc -- OK -- Fri May  9 14:06:33 MDT 2008
+#   LRT/RF05.20070505.170130_012630.PNI.nc -- OK -- Fri May  9 14:06:42 MDT 2008
+#   LRT/RF06.20070506.165545_004530.PNI.nc -- OK -- Fri May  9 14:06:57 MDT 2008
+#   LRT/RF07.20070513.145300_221800.PNI.nc -- OK -- Fri May  9 14:07:09 MDT 2008
+#   LRT/RF08.20070514.190700_023634.PNI.nc -- OK -- Fri May  9 14:07:44 MDT 2008
+#   LRT/RF09.20070515.195330_045229.PNI.nc -- OK -- Fri May  9 14:08:24 MDT 2008
+#   LRT/RF10.20070517.012000_102312.PNI.nc -- OK -- Fri May  9 14:08:41 MDT 2008
+#   LRT/RF11.20070519.231230_082248.PNI.nc -- OK -- Fri May  9 14:08:51 MDT 2008
+#   LRT/RF12.20070522.002725_085123.PNI.nc -- OK -- Fri May  9 14:09:04 MDT 2008
+#   LRT/RF13.20070523.022810_101835.PNI.nc -- OK -- Fri May  9 14:09:17 MDT 2008
+#   LRT/RF14.20070524.191605_024727.PNI.nc -- OK -- Fri May  9 14:09:40 MDT 2008
+#   Completed on Fri May  9 14:09:40 MDT 2008
+#
+# 6th wave (rearchive all HRT data because units for 4 vars changed from "" to "none")
+#  14 job(s) submitted on Fri May  9 14:12:44 MDT 2008
+#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/
+#   HRT/RF01.20070429.160230_233609.PNI.nc -- OK -- Fri May  9 14:13:17 MDT 2008
+#   HRT/RF02.20070430.175830_025347.PNI.nc -- OK -- Fri May  9 14:15:18 MDT 2008
+#   HRT/RF03.20070502.023510_103829.PNI.nc -- OK -- Fri May  9 14:16:50 MDT 2008
+#   HRT/RF04.20070503.035440_122905.PNI.nc -- OK -- Fri May  9 14:22:22 MDT 2008
+#   HRT/RF05.20070505.170130_012630.PNI.nc -- OK -- Fri May  9 14:23:34 MDT 2008
+#   HRT/RF06.20070506.165545_004530.PNI.nc -- OK -- Fri May  9 14:25:52 MDT 2008
+#   HRT/RF07.20070513.145300_221800.PNI.nc -- OK -- Fri May  9 14:26:28 MDT 2008
+#   HRT/RF08.20070514.190700_023616.PNI.nc -- OK -- Fri May  9 14:27:39 MDT 2008
+#   HRT/RF09.20070515.195330_045211.PNI.nc -- OK -- Fri May  9 14:28:18 MDT 2008
+#   HRT/RF10.20070517.012000_102254.PNI.nc -- OK -- Fri May  9 14:29:06 MDT 2008
+#   HRT/RF11.20070519.231230_082230.PNI.nc -- OK -- Fri May  9 14:30:18 MDT 2008
+#   HRT/RF12.20070522.002725_085105.PNI.nc -- OK -- Fri May  9 14:30:55 MDT 2008
+#   HRT/RF13.20070523.022810_101817.PNI.nc -- OK -- Fri May  9 14:32:06 MDT 2008
+#   HRT/RF14.20070524.191605_024709.PNI.nc -- OK -- Fri May  9 14:32:37 MDT 2008
+#   Completed on Fri May  9 14:32:38 MDT 2008
+#
+# 7th wave (rearchive all LRT data because SP2 had error (merged 10sec SP2 with 1sec
+# flight files, so data was all mashed into first 10th of file)
+#  14 job(s) submitted on Tue May 13 13:30:25 MDT 2008
+#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/
+#   LRT/RF01.20070429.160230_233627.PNI.nc -- OK -- Tue May 13 13:30:40 MDT 2008
+#   LRT/RF02.20070430.175830_025405.PNI.nc -- OK -- Tue May 13 13:30:53 MDT 2008
+#   LRT/RF03.20070502.023510_103847.PNI.nc -- OK -- Tue May 13 13:31:04 MDT 2008
+#   LRT/RF04.20070503.035440_122923.PNI.nc -- OK -- Tue May 13 13:31:18 MDT 2008
+#   LRT/RF05.20070505.170130_012630.PNI.nc -- OK -- Tue May 13 13:31:38 MDT 2008
+#   LRT/RF06.20070506.165545_004530.PNI.nc -- OK -- Tue May 13 13:31:53 MDT 2008
+#   LRT/RF07.20070513.145300_221800.PNI.nc -- OK -- Tue May 13 13:32:04 MDT 2008
+#   LRT/RF08.20070514.190700_023634.PNI.nc -- OK -- Tue May 13 13:32:17 MDT 2008
+#   LRT/RF09.20070515.195330_045229.PNI.nc -- OK -- Tue May 13 13:32:32 MDT 2008
+#   LRT/RF10.20070517.012000_102312.PNI.nc -- OK -- Tue May 13 13:32:49 MDT 2008
+#   LRT/RF11.20070519.231230_082248.PNI.nc -- OK -- Tue May 13 13:33:06 MDT 2008
+#   LRT/RF12.20070522.002725_085123.PNI.nc -- OK -- Tue May 13 13:33:20 MDT 2008
+#   LRT/RF13.20070523.022810_101835.PNI.nc -- OK -- Tue May 13 13:33:41 MDT 2008
+#   LRT/RF14.20070524.191605_024727.PNI.nc -- OK -- Tue May 13 13:33:55 MDT 2008
+#   Completed on Tue May 13 13:33:55 MDT 2008
+#
+# 8th save (rearchive LRT for RF9,11,and 12. Error in SP2 merge caused data after 3:46 AM
+# of second day to be wrong.
+#  3 job(s) submitted on Mon Jun  2 12:46:20 MDT 2008
+#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/
+#   LRT/RF09.20070515.195330_045229.PNI.nc -- OK -- Mon Jun  2 12:46:40 MDT 2008
+#   LRT/RF11.20070519.231230_082248.PNI.nc -- OK -- Mon Jun  2 12:46:52 MDT 2008
+#   LRT/RF12.20070522.002725_085123.PNI.nc -- OK -- Mon Jun  2 12:47:00 MDT 2008
+#   Completed on Mon Jun  2 12:47:00 MDT 2008

@@ -1,0 +1,189 @@
+#! /bin/csh -f
+#
+#  Archive Quick-Time movie files for the project:  yyyy-ppp <project>
+#   using the new ATD directory path
+#   (files digested from the forward-looking digital camera and production
+#    LRT netCDF files and assembled by Stuart Beaton)
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2005, 2006                                                   *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Note:  This script runs only in a project's "Production/archive"
+#          subdirectory under the "dmg" login.
+#
+#  File adapted from file $LOCAL/proj/135/archprodnc_L.135 with help from
+#   the file $LOCAL/proj/135/archskel.135
+#   by Ron Ruth   5 July 2005
+#  Revised by RLR  (Update to current directory structure)           9 Aug 2006
+#  Revised by RLR  (Change destination extent from .mov to .mp4)     1 Sep 2006
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script.  Quitting."
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s), if needed
+set RPWD = ""
+#
+#   Source file directory
+set SDIR = "/scr/raf2/Prod_Data/PACDEX"
+#
+#   Destination MSS bitfile directory/subdirectory
+set DDIR = "mss:/ATD/DATA/2007/PACDEX/GV_N677F"
+set DSDIR = "CAMERA"
+#
+#  1st wave
+#set SFILES = ( \
+#RF01.FWD.20070429.160407_233627.mp4 \
+#RF02.FWD.20070430.175848_025058.mp4 \
+#RF03.FWD.20070502.023520_100000.mp4 \
+#RF04.FWD.20070503.035450_081000.mp4 \
+#RF05.FWD.20070505.170137_012143.mp4 \
+#RF06.FWD.20070506.165600_004526.mp4 \
+#RF07.FWD.20070513.145314_221756.mp4 \
+#RF08.FWD.20070515.190728_023314.mp4 \
+#RF09.FWD.20070515.195337_045000.mp4 \
+#RF10.FWD.20070517.012046_101000.mp4 \
+#RF11.FWD.20070519.231251_082007.mp4 \
+#RF12.FWD.20070522.002745_084853.mp4 \
+#RF13.FWD.20070523.022819_070000.mp4 \
+#RF14.FWD.20070524.191626_024000.mp4 \
+#)
+#set DFILES = ( \
+#RF01.FWD.20070429.160407_233627.mp4 \
+#RF02.FWD.20070430.175848_025058.mp4 \
+#RF03.FWD.20070502.023520_100000.mp4 \
+#RF04.FWD.20070503.035450_081000.mp4 \
+#RF05.FWD.20070505.170137_012143.mp4 \
+#RF06.FWD.20070506.165600_004526.mp4 \
+#RF07.FWD.20070513.145314_221756.mp4 \
+#RF08.FWD.20070515.190728_023314.mp4 \
+#RF09.FWD.20070515.195337_045000.mp4 \
+#RF10.FWD.20070517.012046_101000.mp4 \
+#RF11.FWD.20070519.231251_082007.mp4 \
+#RF12.FWD.20070522.002745_084853.mp4 \
+#RF13.FWD.20070523.022819_070000.mp4 \
+#RF14.FWD.20070524.191626_024000.mp4 \
+#)
+#
+#   Edit commands to convert taplog.movie* file entries to bitfile names (current naming format)
+#             1          2      3       4            5              6        7 (not used)
+##:'a,'bs#.\(....\)....\(..\).\(..\).\(....\)...\(........\)...\(........\)\(.*\)#\1.FWD.\4\2\3.\5_\6.mp4 \\
+##:'a,'bs#.\(....\)....\(..\).\(..\).\(....\)...\(........\)...\(........\)\(.*\)#\1.LEFT.\4\2\3.\5_\6.mp4 \\
+##:'a,'bs/\([0-9]\):/\1/g
+#)
+#
+#  2nd wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#  3rd wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#  4th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#   th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directory:  $DDIR/$DSDIR/"
+#echo "#  File(s) moved within MSS directory:  $DDIR/$DSDIR/"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DDIR/$DSDIR/$DFILE
+    if ($status == 0) then
+      set d2 = $DFILE:h
+      set d1 = $d2:t
+      set d2 = $DFILE:t
+      echo "#   $d1/$d2 -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+    echo " Cannot access file $SDIR/$SFILE"
+  endif
+#   Code to rename extant MSS bitfiles if their names need fixing
+#    msmv -wpwd $WPWD $DDIR/$DSDIR/$SFILE $DDIR/$DSDIR/$DFILE
+#    if ($status == 0) then
+#      echo "#   $DFILE -- OK -- `date`"
+#    else
+#      echo "  msmv job FAILED."
+#    endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#
+#  1st wave
+#  14 job(s) submitted on Wed Apr 16 13:06:31 MDT 2008
+#  File(s) archived to MSS directory:  mss:/ATD/DATA/2007/PACDEX/GV_N677F/CAMERA/
+#   RF01.FWD.20070429.160407_233627.mp4/RF01.FWD.20070429.160407_233627.mp4 -- OK -- Wed Apr 16 13:08:35 MDT 2008
+#   RF02.FWD.20070430.175848_025058.mp4/RF02.FWD.20070430.175848_025058.mp4 -- OK -- Wed Apr 16 13:10:38 MDT 2008
+#   RF03.FWD.20070502.023520_100000.mp4/RF03.FWD.20070502.023520_100000.mp4 -- OK -- Wed Apr 16 13:11:22 MDT 2008
+#   RF04.FWD.20070503.035450_081000.mp4/RF04.FWD.20070503.035450_081000.mp4 -- OK -- Wed Apr 16 13:11:56 MDT 2008
+#   RF05.FWD.20070505.170137_012143.mp4/RF05.FWD.20070505.170137_012143.mp4 -- OK -- Wed Apr 16 13:12:50 MDT 2008
+#   RF06.FWD.20070506.165600_004526.mp4/RF06.FWD.20070506.165600_004526.mp4 -- OK -- Wed Apr 16 13:13:14 MDT 2008
+#   RF07.FWD.20070513.145314_221756.mp4/RF07.FWD.20070513.145314_221756.mp4 -- OK -- Wed Apr 16 13:13:44 MDT 2008
+#   RF08.FWD.20070515.190728_023314.mp4/RF08.FWD.20070515.190728_023314.mp4 -- OK -- Wed Apr 16 13:15:14 MDT 2008
+#   RF09.FWD.20070515.195337_045000.mp4/RF09.FWD.20070515.195337_045000.mp4 -- OK -- Wed Apr 16 13:16:27 MDT 2008
+#   RF10.FWD.20070517.012046_101000.mp4/RF10.FWD.20070517.012046_101000.mp4 -- OK -- Wed Apr 16 13:17:15 MDT 2008
+#   RF11.FWD.20070519.231251_082007.mp4/RF11.FWD.20070519.231251_082007.mp4 -- OK -- Wed Apr 16 13:17:35 MDT 2008
+#   RF12.FWD.20070522.002745_084853.mp4/RF12.FWD.20070522.002745_084853.mp4 -- OK -- Wed Apr 16 13:18:09 MDT 2008
+#   RF13.FWD.20070523.022819_070000.mp4/RF13.FWD.20070523.022819_070000.mp4 -- OK -- Wed Apr 16 13:18:39 MDT 2008
+#   RF14.FWD.20070524.191626_024000.mp4/RF14.FWD.20070524.191626_024000.mp4 -- OK -- Wed Apr 16 13:19:11 MDT 2008
+#   Completed on Wed Apr 16 13:19:11 MDT 2008
+#
+#  2nd wave
+#  Job(s) submitted on 
+#
+#  3rd wave
+#  Job(s) submitted on 
+#
+#  4th wave
+#  Job(s) submitted on 
+#
+#   th wave
+#  Job(s) submitted on 
+#

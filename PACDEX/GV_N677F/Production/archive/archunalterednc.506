@@ -1,0 +1,175 @@
+#! /bin/csh -f
+#
+#  Archive unaltered production NIMBUS netCDF output files for project:
+#    2007-506 PACDEX (PACific Dust EXperiment) (Jeffrey L. Stith, et al.)
+#   using the RAF project-number path
+#  Note:  These data come directly from the nimbus processor before any merges.
+#
+#  This script copied and modified from archprodnc.506
+#
+#  File created by '/jnet/local/projects/archives/scripts/genar' Revision 16 on Mon Mar 3 14:25:21 MST 2008
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo ${0}:  Only the "dmg" login is allowed to run this script.  Quitting.
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+# set msrcpMachine = "vivaldi"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s), if needed
+#set RPWD = "-rpwd no"
+set RPWD = ""
+#
+set SDIR = /scr/productiondata
+#
+#  1st wave (LRT)
+#set SFILES = ( \
+#PACDEXrf01.nc \
+#PACDEXrf02.nc \
+#PACDEXrf03.nc \
+#PACDEXrf04.nc \
+#PACDEXrf05.nc \
+#PACDEXrf06.nc \
+#PACDEXrf07.nc \
+#PACDEXrf08.nc \
+#PACDEXrf09.nc \
+#PACDEXrf11.nc \
+#PACDEXrf13.nc \
+#PACDEXrf14.nc \
+#)
+##
+#set DFILES = ( \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF01.20070429.160230_233627.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF02.20070430.175830_025405.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF03.20070502.023510_103847.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF04.20070503.035440_122923.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF05.20070505.170130_012630.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF06.20070506.165545_004530.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF07.20070513.145300_221800.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF08.20070514.190700_023634.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF09.20070515.195330_045229.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF11.20070519.231230_082248.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF13.20070523.022810_101835.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF14.20070524.191605_024727.PNI.nc \
+#)
+#
+#  2nd wave (LRT, the rest)
+#set SFILES = ( \
+#PACDEXrf10.nc \
+#PACDEXrf12.nc \
+#)
+#set DFILES = ( \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF10.20070517.012000_102312.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/LRT/RF12.20070522.002725_085123.PNI.nc \
+#)
+#
+#  3rd wave (HRT)
+#set SFILES = ( \
+#PACDEXrf01h.nc \
+#PACDEXrf02h.nc \
+#PACDEXrf03h.nc \
+#PACDEXrf04h.nc \
+#PACDEXrf05h.nc \
+#PACDEXrf06h.nc \
+#PACDEXrf07h.nc \
+#PACDEXrf08h.nc \
+#PACDEXrf09h.nc \
+#PACDEXrf10h.nc \
+#PACDEXrf11h.nc \
+#PACDEXrf12h.nc \
+#PACDEXrf13h.nc \
+#PACDEXrf14h.nc \
+#)
+##:'a,'bs:/ATD/DATA/2007/PACDEX/GV_N677F/\(...\):/RAF/2007/506/UNALTERED/\1
+#set DFILES = ( \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF01.20070429.160230_233609.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF02.20070430.175830_025347.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF03.20070502.023510_103829.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF04.20070503.035440_122905.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF05.20070505.170130_012630.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF06.20070506.165545_004530.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF07.20070513.145300_221800.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF08.20070514.190700_023616.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF09.20070515.195330_045211.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF10.20070516.012000_102254.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF11.20070519.231230_082230.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF12.20070521.002725_085105.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF13.20070523.022810_101817.PNI.nc \
+#mss:/RAF/2007/506/UNALTERED/HRT/RF14.20070524.191605_024709.PNI.nc \
+#)
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directory:  /RAF/2007/506/UNALTERED/"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DFILE
+    if ($status == 0) then
+      set d2 = $DFILE:h
+      set d1 = $d2:t
+      set d2 = $DFILE:t
+      echo "#   $d1/$d2 -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+     echo " Cannot access file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#  1st wave (LRT)
+#  12 job(s) submitted on Wed Mar  5 16:43:12 MST 2008
+#  File(s) archived to MSS directory:  /RAF/2007/506/UNALTERED/
+#   LRT/RF01.20070429.160230_233627.PNI.nc -- OK -- Wed Mar  5 16:43:23 MST 2008
+#   LRT/RF02.20070430.175830_025405.PNI.nc -- OK -- Wed Mar  5 16:43:38 MST 2008
+#   LRT/RF03.20070502.023510_103847.PNI.nc -- OK -- Wed Mar  5 16:43:52 MST 2008
+#   LRT/RF04.20070503.035440_122923.PNI.nc -- OK -- Wed Mar  5 16:44:03 MST 2008
+#   LRT/RF05.20070505.170130_012630.PNI.nc -- OK -- Wed Mar  5 16:44:24 MST 2008
+#   LRT/RF06.20070506.165545_004530.PNI.nc -- OK -- Wed Mar  5 16:44:41 MST 2008
+#   LRT/RF07.20070513.145300_221800.PNI.nc -- OK -- Wed Mar  5 16:44:55 MST 2008
+#   LRT/RF08.20070514.190700_023634.PNI.nc -- OK -- Wed Mar  5 16:45:07 MST 2008
+#   LRT/RF09.20070515.195330_045229.PNI.nc -- OK -- Wed Mar  5 16:45:26 MST 2008
+#   LRT/RF11.20070519.231230_082248.PNI.nc -- OK -- Wed Mar  5 16:45:38 MST 2008
+#   LRT/RF13.20070523.022810_101835.PNI.nc -- OK -- Wed Mar  5 16:46:00 MST 2008
+#   LRT/RF14.20070524.191605_024727.PNI.nc -- OK -- Wed Mar  5 16:46:09 MST 2008
+#   Completed on Wed Mar  5 16:46:09 MST 2008
+#
+#  2nd wave (LRT, the rest)
+#  2 job(s) submitted on Wed Mar  5 17:12:31 MST 2008
+#  File(s) archived to MSS directory:  /RAF/2007/506/UNALTERED/
+#   LRT/RF10.20070517.012000_102312.PNI.nc -- OK -- Wed Mar  5 17:12:49 MST 2008
+#   LRT/RF12.20070522.002725_085123.PNI.nc -- OK -- Wed Mar  5 17:12:57 MST 2008
+#
+#  2 job(s) submitted on Thu Mar 13 14:35:02 MDT 2008
+#  File(s) archived to MSS directory:  /RAF/2007/506/UNALTERED/
+#   LRT/RF10.20070517.012000_102312.PNI.nc -- OK -- Thu Mar 13 14:35:23 MDT 2008
+#   LRT/RF12.20070522.002725_085123.PNI.nc -- OK -- Thu Mar 13 14:35:43 MDT 2008
+#   Completed on Thu Mar 13 14:35:43 MDT 2008
+#
+#  3rd wave (HRT)
+#  Job(s) submitted on 
+#
