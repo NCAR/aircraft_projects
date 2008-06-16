@@ -1,0 +1,30 @@
+#!/bin/csh
+
+foreach FILENAME (`ls setup_rf*`)
+nimbus -b $FILENAME << EOF
+Y
+EOF
+end
+
+cd /jnet/productiondata/
+foreach FILENAME (PACD*h.nc)
+ncReorder $FILENAME temp.nc
+mv -f temp.nc $FILENAME
+end
+
+#ncfixdate /jnet/productiondata/PACDEXrf10.nc <<EOL
+#05/17/2007
+#EOL
+
+ncfixdate /jnet/productiondata/PACDEXrf10h.nc <<EOP
+05/17/2007
+EOP
+
+#ncfixdate /jnet/productiondata/PACDEXrf12.nc <<EON
+#05/22/2007
+#EON
+
+ncfixdate /jnet/productiondata/PACDEXrf12h.nc <<EOT
+05/22/2007
+EOT
+
