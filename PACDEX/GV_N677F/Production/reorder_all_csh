@@ -1,0 +1,9 @@
+#!/bin/csh
+
+cd /jnet/productiondata/
+foreach FILENAME (PACD*h.nc)
+echo $FILENAME
+ncReorder $FILENAME temp.nc
+mv -f temp.nc $FILENAME
+end
+

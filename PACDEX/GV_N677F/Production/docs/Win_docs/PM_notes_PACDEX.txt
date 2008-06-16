@@ -1,0 +1,503 @@
+Variable list
+http://www.eol.ucar.edu/deployment/field-deployments/field-projects/pacdex/measurements
+
+Instrumentation
+
+Pressure: 
+Static pressure is available using two different systems: Research and Avionics.
+
+Research static pressure is measured with a Paroscientific (MODEL 1000) with a stated accuracy of 0.01% of full scale. This measurement is output in the netCDF files as:
+
+PSF (measured): static pressure as measured using the fuselage holes
+PSX (reference): same as PSF. Used to choose reference variable if more than one instrument provides measurement of the same parameter.
+PSFC (measured): static pressure corrected for airflow effects (pcor)
+PSXC (reference): same as PSFC. Used to choose reference variable if more than one instrument provides measurement of the same parameter.
+
+Use PSXC for the normal measure of pressure (e.g., in equation of state or hydrostatic equation).
+
+Avionics static pressure is recorded from the GV avionics. This is slower than the Paroscientific measurement, but it has been corrected for airflow effects and it is certified for 'Reduced vertical separation minimum' (RVSM) through the calculation of pressure altitude.  RAF has no documentation on how Gulfstream and Honeywell corrected this pressure measurement, but the measurement has passed very strict FAA certification requirements. 
+
+Temperature: 
+Temperature was measured using four different sensors on the GV: 
+An unheated Rosemount sensor was used for fast-response measurements.  This sensor can be affected by icing, but that did not appear to be a problem in PACDEX.  Two heated Harco sensors were used to give a slower response temperature, that would also be adequate in icing conditions.  A fourth measurement of temperature (slow and with some delay) was provided by the GV avionics instrumentation.
+The Rosemount and Harco measurements were logged using analog channels and are affected by a variable recovery factor.  As a consequence, RAF recommends using the blended temperature, ATX (See below.) for all uses of the PACDEX data set:
+TTRL
+Total air temperature from fast Rosemount sensor
+TT_A
+Total air temperature from the avionics system
+ATRL
+Ambient air temperature from the Rosemount system
+AT_A
+Ambient temperature from the avionics system
+ATC/ATX
+Ambient temperature blended by low-pass filtering the avionics temperature and high-pass filtering the Rosemount measurements.  Please note that this is the best available temperature measurement, but also that it is not perfect.  The filter cross-over point is at 30 s.  In a sense we are using the absolute accuracy of the AT_A sensor and the high-frequency response of the ATRL to generate ATX.
+
+RAF recommends using ATX for the temperature in thermodynamic equations, etc.
+
+Dewpoint temperature and vapor density: 
+Humidity was measured using three different sensors: 
+Two Buck Research 1011C cooled-mirror hygrometers are used for tropospheric humidity.  They have a sandwich of three Peltier elements to cool the mirror, and in comparison to earlier generations of cooled-mirror hygrometers, they have a much-improved capability to measure at low temperatures.  These sensors are assumed to measure dewpoint above 0°C and frostpoint below 0°C.  The instrument has a quoted accuracy of 0.1 °C over the -75 to +50 °C; however, based on examination of the measurements RAF is not comfortable with accuracies better 0.5 °C for dewpoint and 1 °C for frostpoint.  The cooled-mirror sensors are slow, in particular at lower temperatures, and this may give considerable differences between the measurements from the two units.  Their cooling rates depend in part on the airflow through the sensor, and this may depend on the angle of the external stub relative to the airflow.  The angle may differ between the two sensors, and this may contribute to response-time differences between the sensors.  At very low temperatures the sensors may jump ("rail") to even lower temperatures.  The cooled-mirror temperatures are included even when they are outside the sensor operating range; this is caused by the need to use values of water vapor in other calculations (e.g., true airspeed). However, the impact of these out of bounds conditions on derived calculations that depend on humidity correction is very small since they occur at extremely low dew points.
+Humidity was also measured using a MayComm Open-path Laser Hygrometer.  This dual-channel hygrometer detects optical absorption of water vapor at 1.37 µm.  The sensor has an estimated accuracy of 5-10% of ambient specific humidity (in ppbv).  The sensor has two spectral channels that are used to determine high and low values of humidity, and they are combined to give a single value of humidity. (See below.)
+DPLS
+Dewpoint/frostpoint for left fuselage cooled-mirror sensor
+DPLC
+Dewpoint for left cooled-mirror sensor
+DPRS
+Dewpoint/frostpoint for right cooled-mirror sensor
+DPRC
+Dewpoint for right cooled-mirror sensor
+DPXC
+Dewpoint, from either right or left cooled-mirror sensor.  The project manager has chosen the best performing of either DPLC or DPRC for a given flight.  Use this as a slow, tropospheric sensor
+MR
+Mixing ratio (g/kg) based on DPXC
+MRTDL
+Mixing ratio (g/kg) based on TDL sensor
+MRTDL_LHL
+Mixing ratio (ppmv) based on TDL sensor
+MRTDL_LHS
+Do not use
+RAF recommends using DPXC as a slow 'tropospheric' variable, and RAF recommends using MRTDL as a fast-response 'tropospheric' variable.  MRTDL is also recommended for all 'stratospheric' use.
+
+Attack and Sideslip: 
+Measurements of attack and sideslip were done using the 5-hole nose cone pressure sensors, primarily ADIFR and BDIFR.  Although sampled at 50 sps, internal filtering in the Mensor pressure sensors (model 6100) limits usefulness of high-rate analysis to about 5 Hz. 
+ADIFR
+Attack angle pressure sensor
+ATTACK
+Attack angle
+BDIFR
+Sideslip angle pressure sensor
+SSLIP
+Sideslip angle
+Both ATTACK and SSLIP were corrected using in-flight maneuvers. 
+
+True airspeed: 
+True airspeed was also measured primarily using a Mensor 6100 sensor, thus limiting the effective response to 5 Hz. 
+The radome pitot tube system uses the center hole of the 5-hole nose cone in conjunction with the research static pressure ports on the fuselage aft of the entrance door.  A standard avionics pitot tube is also mounted on the fuselage aft of the radome, and this system is also referenced to the fuselage static ports aft of the main entrance door.  It was found during empirical analysis that the fuselage pitot system gave more consistent results in reverse-heading maneuvers; it is suspected that this is due to random pressure changes at the radome center hole as has been suggested by modeling.  The fuselage system is used for the calculation of the aircraft true airspeed, as well as for attack and sideslip angles.  True airspeed is also provided from the aircraft avionics system, but this system is considered of slower response.  Measurements using the radome and fuselage pitot systems were corrected using in-flight maneuvers. 
+
+TASR
+True airspeed using the radome system
+TASF/TASX
+True airspeed from the fuselage pitot system
+TASHC
+True airspeed using the fuselage pitot system and adding humidity corrections to the calculations; this is mainly of benefit in tropical low-altitude flight
+TAS_A
+True airspeed from the avionics system
+RAF recommends using TASX as the aircraft true air speed. 
+
+Position and ground speed: 
+The measurement of aircraft position (latitude, longitude and geometric altitude) and aircraft velocities relative to the ground are done using five different sensors onboard the GV: 
+Garmin GPS (Reference):  These data are sampled at 10 sps and averaged to 1 sps.  This is a simple GPS unit with a serial output, and the measurements are available in real-time.  The values from this sensor start with a "G"; e.g.: 
+GGLAT
+Latitude
+GGLON
+Longitude
+GGALT
+Geometric altitude
+GGSPD
+Ground speed
+GGVNS
+Ground speed in north direction
+GGVEW
+Ground speed in east direction
+These are good values to use for cases where the highest accuracy is not needed.  These variables are subsequently used to constrain the INS drift for the calculations of the GV winds; more about this below. 
+GV GPS:  The GV flight deck is equipped with another simple GPS unit, and the data from this unit has subscript "_G" at the end, i.e.: 
+LAT_G
+Latitude
+LON_G
+Longitude
+ALT_G
+Geometric altitude
+GSF_G
+Ground speed
+VNS_G
+Ground speed in the north direction
+VEW_G
+Ground speed in the east direction
+VSPD_G
+Vertical speed of the aircraft
+
+Honeywell inertial reference system 1 and 2:  The GV is equipped with three inertial systems.  Data from the first two of these are logged on the main aircraft data logger, with subscripts the latter having variable names with suffix "_IRS2".  The advantage of the IRS values is that they typically have very high sample rates and very little noise from measurement to measurement.  However, since they are based on accelerometers and gyroscopes, their values may drift with time.  The drift is corrected for by filtering the INS positions towards the GPS positions with a long time-constant filter; the filtered values have a "C" added to the end. 
+
+LAT
+latitude from IRS 1, no GPS filtering
+LATC
+latitude from IRS 1, filtered towards GPS values
+LAT_IRS2
+latitude from IRS 2, no GPS filtering
+LON
+longitude from IRS 1, no GPS filtering
+LONC
+longitude from IRS 1, filtered towards GPS values
+LON_IRS2
+longitude from IRS 2, no GPS filtering
+GSF
+ground speed from IRS 1, no GPS filtering
+GSF_IRS2
+ground speed from IRS 2, no GPS filtering
+
+The choice of variables for position analysis depends on the type of analysis; in general the Garmin GPS is sufficiently accurate. The avionics GPS may only have an altitude accuracy estimated to be ±15 m.
+
+Not all INS variables are output in the final data set. If you require more detailed INS data please contact RAF.
+
+?  Attitude angles: 
+Aircraft attitude angles are measured by the two Honeywell IRS units. 
+PITCH
+
+PITCH_IRS2
+
+ROLL
+
+ROLL_IRS2
+
+THDG
+
+THDG_IRS2
+
+The values of pitch angle (PITCH) have been corrected using in-flight measurements to give approximately the same values as the aircraft attack angle (ATTACK) for long parts of each flight; this correction is done on a flight-by-flight basis to give a near-zero mean updraft over extended flight legs.  The variation from flight to flight of this offset is caused by small differences in the pre-flight alignment of the inertial navigation system.  No alignment correction has been applied to PITCH_IRS2.
+?  Wind speeds: 
+Wind speeds are derived based on the 5-hole nose cone, other pressure measurements, temperature and inertial measurements supported by GPS data. The use of the Mensor 6100 pressure sensors for ADIFR, BDIFR and QCF results in the following limitations on the wind data: these pressure measurements were sampled at 50 sps and thus resulting in power spectra to 25 Hz.  Examination of power spectra and specifications from Mensor indicate that the sensors have internal filters with a -3dB (half-power) cutoff at 12 Hz, resulting in a noticeable roll-off in the spectra beginning approximately at 6 to 7 Hz.  Users of wind data should be aware that contributions to covariances and dissipation calculations will be affected at and above these frequencies. 
+The following lists the most commonly used wind variables: 
+UI
+Wind vector, east component
+UIC
+Wind vector, east component, GPS corrected for INS drift
+VI
+Wind vector, north component
+VIC
+Wind vector, north component, GPS corrected
+ 
+UX
+Wind vector, longitudinal component
+UXC
+Wind vector, longitudinal component, GPS corrected
+VY
+Wind vector, lateral component
+VYC
+Wind vector, lateral component, GPS corrected
+ 
+WI
+Wind vector, vertical gust component
+WIC
+Wind vector, vertical gust component, GPS corrected
+ 
+WS
+Wind speed, horizontal component
+WSC
+Wind speed, horizontal component, GPS corrected
+WD
+Horizontal wind direction
+WDC
+Horizontal wind direction, GPS corrected
+RAF recommends using the GPS corrected wind components, i.e., the variables ending in "C".
+CN: 
+Condensation nuclei (CN) were measured using a Quant Technology instrument WCP-LP, modified by Aerosol Dynamics Inc.  The basic instrument, prior to modification, is similar to a TSI 3786.  This new instrument uses water-based supersaturation to grow particles to detectable sizes. The minimum detectable particle size is nominally 7 nm. The sensor would on occasion stop functioning at high altitude, and commonly these periods extended until the aircraft descended to lower altitudes.  This was primarily a problem earlier in the deployment period.
+
+CONCN_WCN
+CN concentration
+TOCN_WCN
+Temperature of sensor optics block
+PCN_WCN
+Pressure at sensor optics block
+The CN concentration is given in units of #/cm3 inside the sensor growth tube.  To calculate to ambient conditions or to standard temperature and pressure condition, users can calculate the concentrations using TOCN_WCN and PCN_WCN.  For more information users are encouraged to contact Dr. Dave Rogers, 303-497-1054.
+CO: 
+In situ carbon monoxide was measured by a commercial vacuum ultraviolet resonance fluorescence instrument, the Aero-Laser AL5002.  The AL5002 has a lower detection limit of 3 ppbv with an accuracy of ± (3ppbv + 5%).
+
+COMR_AL
+CO mixing ratio (ppbv)
+Processed data have not been corrected for inlet-induced time lag, but this is believed to be less than or equal to the 1-sec resolution of the data set.  The CO instrument was calibrated at 30-60 minute intervals, and in the final release, these measurements have been replaced with missing data flags.   Inlet contamination was experienced during ground operations, and therefore, the pre-flight warm up period was minimized and in some cases eliminated.  This necessary procedural change affected data during the first hour of research flights, resulting in sensitivity slope and offset calibration coefficients which changed rapidly.   Where the time dependence in coefficients were unacceptably non-linear, data have been removed and replaced by missing data flags.
+Liquid water content: 
+A PMS-King type liquid water content sensor was installed on the GV just prior to the T-REX flights.  The probe did not operate properly due to a hardware problem, and the following two variables should not be used for anything other than visual locating of liquid water (the probe did respond, just not quantitatively). 
+PLWC
+Dissipated power (wet + dry terms) for the King probe
+PLWCC
+Cloud liquid water content (do not use at present)
+
+Icing rate indicator
+Rosemount Model 871FA Icing Rate Detector - Right Wing pylon Access Plate (RICE)
+SID-2H (Small Ice Detector, version 2)
+SID-2H measures the intensity and pattern of near-forward light scattering to determine the size, shape, and concentration of cloud particles.  The estimate of particle size is based on the integrated scattering intensity, not the peak.  Scattered light falls on multi-anode photomultiplier detector so that the scattering pattern of each particle is measured in 28 pie-shaped wedges.  Spherical particles will produce symmetric patterns.  Asymmetry in the scattering pattern indicates non-sphericity (snow crystals).  This is a single-particle instrument. The scattering intensity patterns and time of arrival are logged for each particle. SID-2H was custom-built for use on HIAPER by having very fast electronics to keep up with the fast airspeeds. 
+size range
+~1 - 60 nm diameter
+concentration range
+0 - 200 cm-3
+sample area
+~0.3 mm2 
+volume sample rate
+~50 cm3/s
+data interface
+custom, ten serial pairs
+data rate
+max ~9,000 particles per second
+more information: http://strc.herts.ac.uk/pi/proj.html
+
+
+UHSAS (Ultra-High Sensitivity Aerosol Spectrometer)
+The UHSAS is a single-particle light scattering instrument. It uses a CW high energy laser diode, wide angle collection optics centered at 90°, and four stages of amplification to size aerosol particles according to their scattered light. It assigns bins to individual particles and outputs a histogram of particle size and concentration. The RAF version of this instrument has been highly modified from the commercially-available lab bench version.  It uses volume flow controllers to keep the flow constant over a wide range of operating pressures and temperatures. It mounts in a PMS canister.
+size range
+75 - 1000 nm diameter
+concentration range
+0 - 18,000 cm-3
+number of size bins
+99
+volume sample rate
+1 cm3/s
+data interface
+serial RS-232
+data rate
+10 histograms per second
+more information: http://www.dropletmeasurement.com/products/UHSAS.htm
+
+
+CDP (Cloud Droplet Probe)
+The CDP is a commercial instrument from Droplet Measuring Technologies (DMT). It measures the intensity of forward light scattering (4 - 12°) to determine the sizes of individual cloud droplets. An internal multi-channel analyzer assigns to individual particles to bins, and the data interface outputs a histogram of particle size and concentration. On the NSF/NCAR C­-130 and HIAPER, it is mounted in a PMS canister.  
+size range
+2 - 50 µm diameter
+concentration range
+0 - 5,000 cm-3
+number of size bins
+10, 20, 30, or 40
+sample area
+200µm x 1.5mm 
+volume sample rate
+30 cm3/s at airspeed 100 m/s
+airspeed range
+10 - 200 m/s
+data interface
+serial RS-232 or RS-422
+data rate
+10 histograms per second
+more information: http://www.dropletmeasurement.com/products/CDP.htm
+
+2D-C (Two-Dimensional Optical Array Probe)
+RAF's 2DC probe is a highly modified version of the original Particle Measuring Systems (PMS) instrument.  It detects shadow images of cloud particles that pass through a laser beam. The beam illuminates a linear diode array, and each diode state changes to shadowed when a particle passes through the arms of the probe and interrupts its part of the beam. The diode array is sampled at a rate proportional to the airspeed, and this allows the shadow image to be reconstructed. 
+The recent (2007) modifications include using a laser diode instead of gas laser, changing from a 32-element diode array to a 64-element array, faster electronics, and a high speed USB-2 data interface. From the shadow image records, RAF software derives the particle concentration and size distribution. 
+size range
+25 - 1600 µm diameter
+concentration range
+0 - ~5,000 L-1
+number of size bins
+64 diodes @ 25 µm spacing
+sample area
+1600 µm x 6.1 cm 
+volume sample rate
+10 L/s at airspeed 100 m/s
+airspeed range
+10 - 240 m/s
+data interface
+USB-2
+
+
+Data logging and averaging: 
+Analog data, primarily the Rosemount and HARCO temperature sensors and the cabin temperatures, were logged at 500 sps and averaged to 1 sps.  Most of the remainder of the data were recorded as serial data (e.g., RS-232), ARINC data (IRS units), etc.
+The recordings listed for a given second contains measurements logged at e.g., 12:00:00.000 and until 12:00:01.  The value of "Time" corresponding to this interval is given a 12:00:00 in the released data set.
+All measurements are "time-tagged" at the time of logging.  Subsequently these measurements are interpolated onto a regular grid and averaged.
+RAF staff have reviewed the data set for instrumentation problems.  When an instrument has been found to be malfunctioning, specific time intervals are noted.  In those instances the bad data intervals have been filled in the netCDF data files with the missing data code of -32767.  In some cases a system may be out for an entire flight. 
+Calibrations
+
+The following table identifies the sensors serial numbers and calibrations that were used on the GV during PACDEX:
+Sensor
+Type
+DSM
+S/N
+Pre-project 
+Post-project (5/30/2007)
+A
+B*x
+C*x2
+A
+B*x
+C*x2
+PCAB
+Absolute
+307
+
+-3.221
+108.57
+-0.0165
+-3.444
+108.59
+-0.0140
+PDUMPPL
+Absolute
+307
+
+0.427
+103.06
+0.0506
+0.327
+102.95
+0.0595
+PDUMPPR
+Absolute
+307
+
+-1.026
+102.93
+0.0369
+2.106
+102.85
+0.0497
+PHIML1
+Absolute
+310
+
+103.17
+221.94
+-0.0230
+104.0
+221.63
+0.0260
+PHIMIL2
+Absolute
+310
+
+874.9
+-222.35
+-0.0242
+868.0
+-223.56
+0.3708
+PSF
+Absolute
+304
+
+-0.118
+1.000
+6.95E-7
+-0.175
+1.000
+6.17E-7
+TTFR
+Rosemont
+305
+3245
+-85.41
+23.998
+0.139
+-85.48
+24.005
+0.138
+TTHR1
+Harco
+305
+630393
+-88.78
+25.377
+0.0032
+-88.67
+25.313
+0.0082
+TTHR2
+Harco
+305
+?????
+-89.26
+25.706
+-0.0243
+-89.21
+25.59
+-0.0090
+QCR
+Mensor
+305
+590684
+-0.235
+1.0009
+-7.15E-7
+-0.248
+1.0009
+-1.22E-7
+QCF
+Mensor
+305
+590682
+-0.295
+1.001
+-3.01E-6
+-0.207
+1.000
+5.87E-6
+ADIFR
+Mensor
+305
+590688
+-0.469
+1.0009
+-4.86E-7
+-0.437
+1.0004
+-2.18E-7
+BDIFR
+Mensor
+305
+590686
+-0.266
+1.0007
+-2.41E-7
+-0.220
+1.0006
+-4.90E-7
+
+
+Data Quality Control
+
+General:
+There are interruptions in the data system recording when the GV crosses the UTC midnight. These interruptions may be as long as 5 minutes.
+DPRS, DPLS, DPRC, DPLC: dewpointers tend to overshoot and oscillate after rapid temperature increase on aircraft descents. Using best judgment, these overshoots are removed from DPXC but are left in DPLC, which is the source variable for DPXC, for comparison.
+LONC, LATC deviate where there is the 5 min interruption in data after midnight on all flights crossing UTC midnight. It is recommended that direct GPS position is used in referencing the data (GGLAT, GGLON, GGALT).
+Vertical wind speed (WIC) can deviate on steep climbs and descents. This is due to imperfections in the calculation algorithm.
+PLWC (King probe liquid water content) was part of the project but did not operate properly due to a hardware problem. The instrument did not respond correctly to changing airflow and did not output proper background signal. Although there is response from the instrument to the liquid water in clouds, it is not quantitative. Use CDP liquid water instead (PLWCD_LWI).
+Exhaust line pressures (PDUMP*) and PCAB exhibit occasional narrow (1-3 s) spikes. These spikes were removed from the final data set.
+UHSAS data sometimes are noisy and unusable during rapid descents. Additionally, there are unrealistic gaps in size distributions where the four instrument gain stages overlap. The total concentration produced by the instrument is believed to be correct. The concentrations of particles in 0.17 um and 0.2 um size ranges is affected by gain stages overlap, which is manifested as a "gap" in the first case and a "hump" in the second, which corresponds to bins 20-22 and 45-50. Depending on the research needs users may wish to average across these sections or increase bin sizes to include adjacent bins.
+
+RF01
+CONCU_100RWI noisy during 22:37 - 22:56
+
+RF02
+DPRS and DPRC near 18:16:40 - 18:33:00 and 21:50 - 22:30 noisy at low dew point. Use 
+CNT1 - see if despike takes care of a bad data section at 01:55:23.
+UHSAS data noisy at 18:23-18:27, 18:47-19:10, 23:48-23:55
+
+RF03
+CONCU_100RWI noisy during 03:28 - 03:37 and 07:38 - 08:43
+QCR and all dependent variables lost due to radome icing from 8:18:32 to 9:00:45
+WCN dried out for portions of the flight
+
+RF04
+QCR and all dependent variables lost due to radome icing from 5:55:32 to 6:00:34 and from 06:54:44 to 07:31:30.
+UHSAS noisy and unusable from 5:39 to 6:00
+
+RF05
+UHSAS noisy and unusable from 21:48 to 21:54
+
+RF06
+Radome icing from 19:30 to 19:46, resulting in loss of QCR and all related data.
+UHSAS data noisy from 19:09 to 19:36
+
+RF07
+CN flow experienced oscillations from beginning of flight to 15:10 and from 19:14 to 19:16 resulting in loss of CN concentration data.
+
+RF08
+No other issues
+
+RF09
+No other issues
+
+RF10
+Radome icing took place several times during the flight resulting in loss of QCR from 01:34:08 to 02:46:43, 02:52:00 to 04:07:22, 07:36:04 to 07:44:25, 08:06:50 to 08:15:50, 08:29:31 to 09:31:08; BDIFR from 01:40:12 to 01:56:10, 07:40:08 to 07:41:17.
+PS_A was used as a reference pressure measurement to recover data sections affected by radome icing.
+
+RF11
+Radome gust probe must have ingested water on takeoff. All wind data (QCR, ADIFR) are lost from 23:27:31 to 03:50:23 .
+Substantial differences between PSX and PS_A.
+PS_A was used as a reference pressure measurement to recover data sections affected by radome icing.
+
+RF12
+No other issues.
+
+RF13
+A glitch in GGVNS at 05:59:18 resulted in a glitch in raw wind direction and speeds. Corrected wind direction and speeds are unaffected as they are calculated from the composite coordinates.
+
+RF14
+ADIFR demonstrates an increase from 00:44 to 01:25, resulting in shift in vertical wind speed. While this looks suspicious, the attack generally tracks very well with pitch for other portions of this flight and there is not radome icing detected, so there is no reason to discard these data. Users are advised to pay closer attention to this interval of flight if vertical wind speed data are used.
+WP3 was blanked out at 00:05:18-00:06:08 due to calculation artifact after the data system recovered from the midnight data recording dropout.
