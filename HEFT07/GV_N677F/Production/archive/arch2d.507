@@ -1,0 +1,196 @@
+#! /bin/csh -f
+#
+  Archive stripped raw PMS-2D data files for yyyy-ppp ProjName
+#   to the CISL Mass Store System under the /RAF path
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2002, 2004                                                   *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Note:  This script runs only in a project's "Production/archive"
+#          subdirectory under the "dmg" login.
+#
+#  File adapted from file $JLOCAL/proj/102/Production/arch2d.181
+#   by Ron Ruth  16 October 2001
+#  RAF --> ATD bitfile move section added by Ron Ruth   2 July 2004
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script.  Quitting."
+  exit
+endif
+#
+#  Get setup information for this project
+#  Make sure I'm in the "archive" subdirectory
+set cdir = `pwd | awk -F/ '{print $NF}'`
+if ($cdir != "archive") then
+  echo '  This script is not being run from the "archive" subdirectory.'
+  exit 1
+endif
+pushd ../.. >& /dev/null
+set PROJDIR =  `pwd`
+set YEAR = `grep FY $PROJDIR/Production/proj.info | sed -e "s/FY=//"`
+cd ..
+set proj = `pwd | awk -F/ '{print $NF}'`
+set proj = (`grep $proj $PROJ_DIR/archives/msfiles/directory_map`)
+set PROJ = $proj[1]
+popd >& /dev/null
+set TYPE = PMS2D
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+#  set msrcpMachine = "vivaldi"
+endif
+#
+#  Set MSS Read PassWorD if restricted access
+set RPWD = ""
+#set RPWD = "-rpwd ReadPassword"
+#
+#  Choose a source directory
+#set SDIR = $TEMP
+#set SDIR = $PROD_DATA
+#set SDIR = $DATA_DIR
+#
+#  Move raw PMS-2D files from RAF path to ATD/DATA path
+#   (Done before production data are released)
+#goto movem
+#
+#  1st wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#  2nd wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#  3rd wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#  4th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#   th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#
+#  Get started:
+echo "#  $#SFILES Job(s) submitted on `date`"
+if ($#SFILES != $#DFILES) then
+  echo " Number of source and destination file names don't match.  Quitting"
+  exit 1
+endif
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh $msrcpMachine msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG $RPWD \
+     $SDIR/$SFILE mss:/RAF/$YEAR/$PROJ/$TYPE/$DFILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TYPE/$DFILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+      echo "#                $TYPE/$DFILE: error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+    echo "#   Cannot access source file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done.
+echo "#   Completed on `date`"
+exit
+#
+#
+#  MSS path for all bitfiles listed below:  /RAF/yyyy/ppp/
+#
+#  1st wave
+#  Job(s) submitted on 
+#
+#  2nd wave
+#  Job(s) submitted on 
+#
+#  3rd wave
+#  Job(s) submitted on
+#
+#  4th wave
+#  Job(s) submitted on
+#
+#   th wave
+#  Job(s) submitted on
+#
+#
+#  Move raw PMS-2D data from the /RAF path to the /ATD/DATA path
+movem:
+#
+#set SFILES = ( \
+#  MSS bitfile list goes here (name only stripped of its path)
+#)
+##
+#set DFILES = ( \
+#  vi command to edit a "tapes.ppp" file entry and convert it to a new
+#    bitfile name entry
+#:'c,'ds:\(.....\)  \(..\).\(..\).\(....\)  \(..\).\(..\).\(..\)\(.*\):\1.\4\2\3.\5\6\7
+#)
+#
+#  Get started:
+echo "#  $#SFILES Job(s) submitted on `date`"
+#
+#############  Set new path name here
+#set DPATH = "/ATD/DATA/2004/AIRS-II/C130_N130AR/$TYPE"
+set WPWD = "-wpwd RAFDMG"
+set todo = $#SFILES
+if ($todo != $#DFILES) then
+  echo "  Number of source ($#SFILES) and destination ($#DFILES) files don't match."
+  exit 1
+endif
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  echo \
+  msmv $RPWD $WPWD /RAF/$YEAR/$PROJ/$TYPE/$SFILE $DPATH/$DFILE.RP2.bi
+  set result = $status
+  if ($result == 0) then
+    echo "#  msmv job for $TYPE/$DFILE -- OK -- `date`"
+  else
+    echo "  msmv job FAILED with error $result."
+  endif
+  @ num ++
+end
+#
+# Done.
+echo "#   Completed on `date`"
+exit
+#
+#  Move raw PMS-2D files from /RAF/2004/109 path
+#                          to ATD/DATA/2004/AIRS-II/C130_N130AR
+#  Job submitted on
+#
