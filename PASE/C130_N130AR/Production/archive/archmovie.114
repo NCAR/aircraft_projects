@@ -1,0 +1,184 @@
+#! /bin/csh -f
+#
+#  Archive Quick-Time movie files for 2007-114 PASE
+#   to the CISL Mass Store System under the /ATD/DATA path
+#   (files digested from the forward-looking digital camera and production
+#    LRT netCDF files and assembled by Stuart Beaton)
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2005, 2006                                                   *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Note:  This script runs only in a project's "Production/archive"
+#          subdirectory under the "dmg" login.
+#
+#  File adapted from file $LOCAL/proj/135/archprodnc_L.135 with help from
+#   the file $LOCAL/proj/135/archskel.135
+#   by Ron Ruth   5 July 2005
+#  Revised by RLR  (Update to current directory structure)           9 Aug 2006
+#  Revised by RLR  (Change destination extent from .mov to .mp4)     1 Sep 2006
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script.  Quitting."
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s), if needed
+set RPWD = ""
+#
+#   Source file directory
+#set SDIR = "/h/9/beaton/Mirage"
+set SDIR = "/scr/raf/beaton"
+#
+#   Destination MSS bitfile directory/subdirectory
+set DDIR = "/ATD/DATA/2007/PASE/C130_N130AR"
+set DSDIR = "CAMERA"
+#
+#  1st wave
+#set SFILES = ( \
+#114ff03.mp4 \
+#114ff04.mp4 \
+#114rf02.mp4 \
+#114rf03.mp4 \
+#114rf04.mp4 \
+#114rf05.mp4 \
+#114rf06.mp4 \
+#114rf07.mp4 \
+#114rf08.mp4 \
+#114rf09.mp4 \
+#114rf10.mp4 \
+#114rf11.mp4 \
+#114rf12.mp4 \
+#114rf13.mp4 \
+#114rf14.mp4 \
+#)
+#set DFILES = ( \
+#FF03.FWD.20070804.202335_021319.mp4 \
+#FF04.FWD.20070908.211223_014840.mp4 \
+#RF02.FWD.20070810.185000_033309.mp4 \
+#RF03.FWD.20070813.175211_024630.mp4 \
+#RF04.FWD.20070815.190035_025453.mp4 \
+#RF05.FWD.20070818.175631_014037.mp4 \
+#RF06.FWD.20070820.154500_204638.mp4 \
+#RF07.FWD.20070823.221043_023401.mp4 \
+#RF08.FWD.20070825.183751_024134.mp4 \
+#RF09.FWD.20070827.180016_024049.mp4 \
+#RF10.FWD.20070829.180945_012824.mp4 \
+#RF11.FWD.20070901.192133_031411.mp4 \
+#RF12.FWD.20070902.180400_020753.mp4 \
+#RF13.FWD.20070904.154200_204200.mp4 \
+#RF14.FWD.20070906.180012_023545.mp4 \
+#)
+#
+#  2nd wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#  3rd wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#  4th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#   th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directory:  $DDIR/$DSDIR/"
+#echo "#  File(s) moved within MSS directory:  $DDIR/$DSDIR/"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD \
+     $SDIR/$SFILE mss:$DDIR/$DSDIR/$DFILE
+    if ($status == 0) then
+      echo "#   $DFILE -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+    echo " Cannot access file $SDIR/$SFILE"
+  endif
+#   Code to rename extant MSS bitfiles if their names need fixing
+#    msmv -wpwd $WPWD $DDIR/$DSDIR/$SFILE $DDIR/$DSDIR/$DFILE
+#    if ($status == 0) then
+#      echo "#   $DFILE -- OK -- `date`"
+#    else
+#      echo "  msmv job FAILED."
+#    endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#
+#  1st wave
+#  15 job(s) submitted on Tue Nov 27 14:26:53 MST 2007
+#  File(s) archived to MSS directory:  /ATD/DATA/2007/PASE/C130_N130AR/CAMERA/
+#   FF03.FWD.20070804.202335_021319.mp4 -- OK -- Tue Nov 27 15:09:02 MST 2007
+#   FF04.FWD.20070908.211223_014840.mp4 -- OK -- Tue Nov 27 15:34:44 MST 2007
+#   RF02.FWD.20070810.185000_033309.mp4 -- OK -- Tue Nov 27 15:43:54 MST 2007
+#   RF03.FWD.20070813.175211_024630.mp4 -- OK -- Tue Nov 27 15:50:21 MST 2007
+#   RF04.FWD.20070815.190035_025453.mp4 -- OK -- Tue Nov 27 15:52:42 MST 2007
+#   RF05.FWD.20070818.175631_014037.mp4 -- OK -- Tue Nov 27 15:54:24 MST 2007
+#   RF06.FWD.20070820.154500_204638.mp4 -- OK -- Tue Nov 27 15:55:17 MST 2007
+#   RF07.FWD.20070823.221043_023401.mp4 -- OK -- Tue Nov 27 15:55:53 MST 2007
+#   RF08.FWD.20070825.183751_024134.mp4 -- OK -- Tue Nov 27 15:57:05 MST 2007
+#   RF09.FWD.20070827.180016_024049.mp4 -- OK -- Tue Nov 27 15:58:04 MST 2007
+#   RF10.FWD.20070829.180945_012824.mp4 -- OK -- Tue Nov 27 15:58:39 MST 2007
+#   RF11.FWD.20070901.192133_031411.mp4 -- OK -- Tue Nov 27 15:59:13 MST 2007
+#   RF12.FWD.20070902.180400_020753.mp4 -- OK -- Tue Nov 27 16:00:17 MST 2007
+#   RF13.FWD.20070904.154200_204200.mp4 -- OK -- Tue Nov 27 16:01:13 MST 2007
+#   RF14.FWD.20070906.180012_023545.mp4 -- OK -- Tue Nov 27 16:02:00 MST 2007
+#   Completed on Tue Nov 27 16:02:00 MST 2007
+#
+#  2nd wave
+#  Job(s) submitted on 
+#
+#  3rd wave
+#  Job(s) submitted on 
+#
+#  4th wave
+#  Job(s) submitted on 
+#
+#   th wave
+#  Job(s) submitted on 
+#

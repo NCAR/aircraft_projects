@@ -1,0 +1,383 @@
+#! /bin/csh -f
+#
+#  Archive raw ADS data files for 2007-114 PASE
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2002                                                         *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Note:  This script runs only in a project's "Production/archive"
+#          subdirectory under the "dmg" login.
+#
+#  File adapted from file $JLOCAL/proj/102/Production/arch_ads.102
+#   by Ron Ruth  28 January 2K
+#  Revised by RLR 19 April 2002 to use DCS "msrcp" instead of MIGS
+#  Revised by RLR  7 July  2006 for new directory structure
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script.  Quitting."
+  exit 1
+endif
+#
+#######  Original procedure
+#  Get setup information for this project
+#set PROJ = `pwd | sed -e "s/\(.*\)\([0-9][0-9][0-9]\)\(.*\)/\2/g"`
+#set result = $status
+#if ($result != 0) then
+#  echo " Cannot find project number in this directory path"
+#  echo "  Quitting."
+#  exit 1
+#endif
+#set YEAR = `grep FY $JLOCAL/proj/$PROJ/Production/proj.info | sed -e "s/FY=//"`
+#
+#######  New procedure
+#  Get setup information for this project
+#  Make sure I'm in the "archive" subdirectory
+set cdir = `pwd | awk -F/ '{print $NF}'`
+if ($cdir != "archive") then
+  echo '  This script is not being run from the "archive" subdirectory.'
+  exit 1
+endif
+pushd ../.. >& /dev/null
+set PROJDIR =  `pwd`
+set YEAR = `grep FY $PROJDIR/Production/proj.info | sed -e "s/FY=//"`
+cd ..
+set proj = `pwd | awk -F/ '{print $NF}'`
+set proj = (`grep $proj $PROJ_DIR/archives/msfiles/directory_map`)
+set PROJ = $proj[1]
+popd >& /dev/null
+set TYPE = ADS
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+#  set msrcpMachine = "vivaldi"
+endif
+#
+#  Set MSS Read PassWorD if restricted access
+set RPWD = ""
+#set RPWD = "-rpwd ReadPassword"
+#
+#  Choose a source directory
+#set SDIR = $PROD_DATA
+#set SDIR = $DATA_DIR
+set SDIR = /scr/raf2/Raw_Data/PASE
+#
+#  1st wave
+#set SFILES = ( \
+#20070723_180926_tf01.ads \
+#)
+#set DFILES = ( \
+#TF01_20070723_180926 \
+#)
+#
+#  2nd wave
+#set SFILES = ( \
+#20070725_132945_tf02.ads \
+#)
+#set DFILES = ( \
+#TF02_20070725_132945 \
+#)
+#
+#  3rd wave (archive test files cleaned up on 30 July 2007)
+#   Rename original files
+#echo "#  2 Job(s) submitted on `date`"
+#echo \
+#msmv -wpwd RAFDMG /RAF/2007/114/ADS/TF01_20070723_180926 /RAF/2007/114/ADS/ORIGINAL/TF01_20070723_180926
+#echo \
+#msmv -wpwd RAFDMG /RAF/2007/114/ADS/TF02_20070725_132945 /RAF/2007/114/ADS/ORIGINAL/TF02_20070725_132945
+##
+#echo "#  Bitfiles moved to /RAF/2007/114/ADS/ORIGINAL/ on `date`:"
+#echo "#   TF01_20070723_180926"
+#echo "#   TF02_20070725_132945"
+#echo "#"
+#exit
+#   Archive modified files with "corrected" header
+#set SFILES = ( \
+#20070723_180926_tf01.ads \
+#20070725_132945_tf02.ads \
+#)
+#set DFILES = ( \
+#TF01_20070723_180926 \
+#TF02_20070725_132945 \
+#)
+#
+#  4th wave (preliminary -- TF03 named TF04 by mistake)
+#set TYPE = ADS/ORIGINAL
+#set SFILES = ( \
+#20070731_132728_tf04.ads \
+#)
+#set DFILES = ( \
+#TF04_20070731_132728 \
+#)
+#
+#  5th wave
+#set SFILES = ( \
+#20070804_183304_ff03.ads \
+#)
+#set DFILES = ( \
+#FF03_20070804_183304 \
+#)
+#
+#  6th wave (preliminary to ADS/ORIGINAL/ -- headers need tweaking)
+#   Rename previously-archived file
+#echo \
+#msmv -wpwd RAFDMG /RAF/2007/114/ADS/FF03_20070804_183304 /RAF/2007/114/ADS/ORIGINAL/FF03_20070804_183304
+#set result = $status
+#if ($result == 0) then
+#  echo "#  msmv for ORIGINAL/FF03_20070804_183304 -- OK -- `date`"
+#else
+#  echo "#  msmv job for ORIGINAL/FF03_20070804_183304 -- Failed -- `date`"
+#  echo "#                ORIGINAL/FF03_20070804_183304:  error code $result"
+#endif
+#exit
+#
+#set TYPE = "ADS/ORIGINAL"
+#set SFILES = ( \
+#20070801_133436_ff01.ads \
+#20070801_135334_ff01.ads \
+#20070801_144623_ff01.ads \
+#20070801_145149_ff01.ads \
+#20070802_143232_ff02.ads \
+#20070802_202657_ff02.ads \
+#20070802_203449_ff02.ads \
+#20070802_205855_ff02.ads \
+#20070803_144759_ff02.ads \
+#)
+#set DFILES = ( \
+#FF01_20070801_133436 \
+#FF01_20070801_135334 \
+#FF01_20070801_144623 \
+#FF01_20070801_145149 \
+#FF02_20070802_143232 \
+#FF02_20070802_202657 \
+#FF02_20070802_203449 \
+#FF02_20070802_205855 \
+#FF02_20070803_144759 \
+#)
+#
+#  7th wave
+#set SFILES = ( \
+#20070808_172341_rf01.ads \
+#20070810_181626_rf02.ads \
+#20070813_162425_rf03.ads \
+#)
+#set DFILES = ( \
+#RF01_20070808_172341 \
+#RF02_20070810_181626 \
+#RF03_20070813_162425 \
+#)
+#
+#  8th wave (corrected versions)
+#set SFILES = ( \
+#20070801_145149_ff01.ads \
+#20070803_144759_ff02.ads \
+#20070804_183304_ff03.ads \
+#)
+#set DFILES = ( \
+#FF01_20070801_145149 \
+#FF02_20070803_144759 \
+#FF03_20070804_183304 \
+#)
+#
+#  9th wave (corrected version)
+#set SFILES = ( \
+#20070731_132728_tf03.ads \
+#)
+#set DFILES = ( \
+#TF03_20070731_132728 \
+#)
+#
+# 10th wave
+set SFILES = ( \
+#20070908_210156_ff04.ads \
+#20070910_160040_ff05.ads \
+#20070912_161325_ff05.ads \
+#20070913_161233_ff06.ads \
+#20070815_170651_rf04.ads \
+#20070815_181453_rf04.ads \
+#20070818_163940_rf05.ads \
+#20070820_103828_rf06.ads \
+#20070823_163352_rf07.ads \
+#20070825_174421_rf08.ads \
+#20070827_162435_rf09.ads \
+#20070829_162053_rf10.ads \
+#20070901_171924_rf11.ads \
+#20070902_165109_rf12.ads \
+#20070904_103324_rf13.ads \
+#20070906_162406_rf14.ads \
+)
+set DFILES = ( \
+#FF04_20070908_210156 \
+#FF05_20070910_160040 \
+#FF05_20070912_161325 \
+#FF06_20070913_161233 \
+#RF04_20070815_170651 \
+#RF04_20070815_181453 \
+#RF05_20070818_163940 \
+#RF06_20070820_103828 \
+#RF07_20070823_163352 \
+#RF08_20070825_174421 \
+#RF09_20070827_162435 \
+#RF10_20070829_162053 \
+#RF11_20070901_171924 \
+#RF12_20070902_165109 \
+#RF13_20070904_103324 \
+#RF14_20070906_162406 \
+)
+#
+#   th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#
+#  Get started:
+echo "#  $#SFILES Job(s) submitted on `date`"
+if ($#SFILES != $#DFILES) then
+  echo " Number of source and destination file names don't match.  Quitting"
+  exit 1
+endif
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG $RPWD \
+     $SDIR/$SFILE mss:/RAF/$YEAR/$PROJ/$TYPE/$DFILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TYPE/$DFILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+      echo "#                $TYPE/$DFILE: error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+    echo "#   Cannot access source file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done.
+echo "#   Completed on `date`"
+exit
+#
+#
+#  MSS path for all bitfiles listed below:  /RAF/2007/114/
+#
+#  1st wave (original)
+#  1 Job(s) submitted on Tue Jul 24 10:11:17 MDT 2007
+#  msrcp job for ADS/TF01_20070723_180926 -- OK -- Tue Jul 24 10:16:22 MDT 2007
+#   Completed on Tue Jul 24 10:16:22 MDT 2007
+#
+#  2nd wave (original)
+#  1 Job(s) submitted on Mon Jul 30 09:31:26 MDT 2007
+#  msrcp job for ADS/TF02_20070725_132945 -- OK -- Mon Jul 30 09:35:57 MDT 2007
+#   Completed on Mon Jul 30 09:35:57 MDT 2007
+#
+#  3rd wave (archived test files cleaned up on 30 July 2007)
+#  2 Job(s) submitted on Tue Jul 31 14:25:41 MDT 2007
+#  Files moved to /RAF/2007/114/ADS/ORIGINAL/ on Tue Jul 31 14:25:44 MDT 2007:
+#   TF01_20070723_180926
+#   TF02_20070725_132945
+#  2 Job(s) submitted on Tue Jul 31 14:28:30 MDT 2007
+#  msrcp job for ADS/TF01_20070723_180926 -- OK -- Tue Jul 31 14:30:53 MDT 2007
+#  msrcp job for ADS/TF02_20070725_132945 -- OK -- Tue Jul 31 14:34:33 MDT 2007
+#   Completed on Tue Jul 31 14:34:33 MDT 2007
+#
+#  4th wave (original -- TF03 named TF04 by mistake)
+#  1 Job(s) submitted on Tue Jul 31 17:08:55 MDT 2007
+#  msrcp job for ADS/ORIGINAL/TF04_20070731_132728 -- OK -- Tue Jul 31 17:12:18 MDT 2007
+#   Completed on Tue Jul 31 17:12:18 MDT 2007
+#
+#  5th wave (original)
+#  1 Job(s) submitted on Mon Aug  6 11:26:01 MDT 2007
+#  msrcp job for ADS/FF03_20070804_183304 -- OK -- Mon Aug  6 11:31:09 MDT 2007
+#   Completed on Mon Aug  6 11:31:09 MDT 2007
+#
+#  6th wave (original to ADS/ORIGINAL/ -- headers need tweaking)
+#  Job(s) submitted on Tue Aug 21 16:35:57 MDT 2007
+#  msmv for ORIGINAL/FF03_20070804_183304 -- OK -- Tue Aug 21 16:36:17 MDT 2007
+#   Completed on Tue Aug 21 16:36:17 MDT 2007
+#  9 Job(s) submitted on Tue Aug 21 16:39:31 MDT 2007
+#  msrcp job for ADS/ORIGINAL/FF01_20070801_133436 -- OK -- Tue Aug 21 16:39:38 MDT 2007
+#  msrcp job for ADS/ORIGINAL/FF01_20070801_135334 -- OK -- Tue Aug 21 16:39:51 MDT 2007
+#  msrcp job for ADS/ORIGINAL/FF01_20070801_144623 -- OK -- Tue Aug 21 16:39:56 MDT 2007
+#  msrcp job for ADS/ORIGINAL/FF01_20070801_145149 -- OK -- Tue Aug 21 16:43:18 MDT 2007
+#  msrcp job for ADS/ORIGINAL/FF02_20070802_143232 -- OK -- Tue Aug 21 16:44:06 MDT 2007
+#  msrcp job for ADS/ORIGINAL/FF02_20070802_202657 -- OK -- Tue Aug 21 16:44:11 MDT 2007
+#  msrcp job for ADS/ORIGINAL/FF02_20070802_203449 -- OK -- Tue Aug 21 16:44:16 MDT 2007
+#  msrcp job for ADS/ORIGINAL/FF02_20070802_205855 -- OK -- Tue Aug 21 16:44:21 MDT 2007
+#  msrcp job for ADS/ORIGINAL/FF02_20070803_144759 -- OK -- Tue Aug 21 16:49:38 MDT 2007
+#   Completed on Tue Aug 21 16:49:38 MDT 2007
+#
+#  7th wave
+#  3 Job(s) submitted on Tue Aug 21 17:09:08 MDT 2007
+#  msrcp job for ADS/RF01_20070808_172341 -- OK -- Tue Aug 21 17:13:57 MDT 2007
+#  msrcp job for ADS/RF02_20070810_181626 -- OK -- Tue Aug 21 17:23:33 MDT 2007
+#  msrcp job for ADS/RF03_20070813_162425 -- OK -- Tue Aug 21 17:29:39 MDT 2007
+#   Completed on Tue Aug 21 17:29:39 MDT 2007
+#
+#  8th wave (corrected versions)
+#  3 Job(s) submitted on Wed Aug 22 11:50:26 MDT 2007
+#  msrcp job for ADS/FF01_20070801_145149 -- OK -- Wed Aug 22 12:04:57 MDT 2007
+#  msrcp job for ADS/FF02_20070803_144759 -- OK -- Wed Aug 22 12:27:40 MDT 2007
+#  msrcp job for ADS/FF03_20070804_183304 -- OK -- Wed Aug 22 12:49:18 MDT 2007
+#   Completed on Wed Aug 22 12:49:18 MDT 2007
+#
+#  9th wave (corrected version)
+#  1 Job(s) submitted on Wed Aug 22 15:34:10 MDT 2007
+#  msrcp job for ADS/TF03_20070731_132728 -- OK -- Wed Aug 22 15:48:37 MDT 2007
+#   Completed on Wed Aug 22 15:48:37 MDT 2007
+#
+# 10th wave
+#  16 Job(s) submitted on Mon Oct 15 13:28:39 MDT 2007
+#  msrcp job for ADS/FF04_20070908_210156 -- OK -- Mon Oct 15 13:45:13 MDT 2007
+#  msrcp job for ADS/FF05_20070910_160040 -- OK -- Mon Oct 15 13:54:24 MDT 2007
+#  msrcp job for ADS/FF05_20070912_161325 -- OK -- Mon Oct 15 14:04:25 MDT 2007
+#  msrcp job for ADS/FF06_20070913_161233 -- OK -- Mon Oct 15 14:05:38 MDT 2007
+#  msrcp job for ADS/RF04_20070815_170651 -- OK -- Mon Oct 15 14:05:59 MDT 2007
+#  msrcp job for ADS/RF04_20070815_181453 -- OK -- Mon Oct 15 14:11:31 MDT 2007
+#
+#  Note: RF05_20070818_163940.ads went as well, but I missed the msrcp OK command
+#  because I lost the output when I logged off. However, I confirmed it is on MSS
+#  and received a completion email
+#  Date: Mon, 15 Oct 2007 14:16:10 -0600
+#  Output message from msput_job script
+#  Successfully copied /scr/raf2/Raw_Data/PASE/20070818_163940_rf05.ads
+#  to MSS bitfile mss:/RAF/2007/114/ADS/RF05_20070818_163940
+# - JAG 10/17/2007
+#
+#  9 Job(s) submitted on Wed Oct 17 09:49:19 MDT 2007
+#  msrcp job for ADS/RF06_20070820_103828 -- OK -- Wed Oct 17 10:01:03 MDT 2007
+#  msrcp job for ADS/RF07_20070823_163352 -- OK -- Wed Oct 17 10:12:56 MDT 2007
+#  msrcp job for ADS/RF08_20070825_174421 -- OK -- Wed Oct 17 10:28:00 MDT 2007
+#  msrcp job for ADS/RF09_20070827_162435 -- OK -- Wed Oct 17 11:20:13 MDT 2007
+#  msrcp job for ADS/RF10_20070829_162053 -- OK -- Wed Oct 17 11:34:26 MDT 2007
+#  msrcp job for ADS/RF11_20070901_171924 -- OK -- Wed Oct 17 11:46:10 MDT 2007
+#  msrcp job for ADS/RF12_20070902_165109 -- OK -- Wed Oct 17 11:59:32 MDT 2007
+#  msrcp job for ADS/RF13_20070904_103324 -- OK -- Wed Oct 17 12:19:33 MDT 2007
+#  msrcp job for ADS/RF14_20070906_162406 -- OK -- Wed Oct 17 12:41:51 MDT 2007
+#   Completed on Wed Oct 17 12:41:51 MDT 2007
+#
+# 11th wave
+
+#
+#  Job(s) submitted on 
+#
+#   th wave
+#  Job(s) submitted on 
+#

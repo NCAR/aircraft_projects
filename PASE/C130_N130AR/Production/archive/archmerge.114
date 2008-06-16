@@ -1,0 +1,241 @@
+#! /bin/csh -f
+#
+#  Archive low-rate merged data files for 2007-114 PASE
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2002, 2004, 2007, 2008                                       *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Note:  This script runs only in a project's "Production/archive"
+#          subdirectory under the "dmg" login.
+#
+#  File adapted from file $LOCAL/projects/135/C130_N130AR/Production/archmerge_L.135
+#   by Ron Ruth   9 January 2008
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script.  Quitting."
+  exit
+endif
+#
+#  Get setup information for this project
+#set PROJ = `pwd | sed -e "s/\(.*\)\([0-9][0-9][0-9]\)\(.*\)/\2/g"`
+#set result = $status
+#if ($result != 0) then
+#  echo " Cannot find project number in this directory path"
+#  echo "  Quitting."
+#  exit 1
+#endif
+#set YEAR = `grep FY $LOCAL/proj/$PROJ/Production/proj.info | sed -e "s/FY=//"`
+#
+#######  New procedure
+#  Get setup information for this project
+#  Make sure I'm in the "archive" subdirectory
+set cdir = `pwd | awk -F/ '{print $NF}'`
+if ($cdir != "archive") then
+  echo '  This script is not being run from the "archive" subdirectory.'
+  exit 1
+endif
+pushd ../.. >& /dev/null
+set PROJDIR =  `pwd`
+set YEAR = `grep FY $PROJDIR/Production/proj.info | sed -e "s/FY=//"`
+cd ..
+set proj = `pwd | awk -F/ '{print $NF}'`
+set proj = (`grep $proj $PROJ_DIR/archives/msfiles/directory_map`)
+set PROJ = $proj[1]
+popd >& /dev/null
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+#  set msrcpMachine = "vivaldi"
+endif
+#
+#  Set MSS Read PassWorD if restricted access
+set RPWD = ""
+#set RPWD = "-rpwd ReadPassword"
+#
+#  Set source directory
+set SDIR = "/scr/raf2/Prod_Data/PASE"
+#
+#  1st wave (HRT variables: HGM232, WP3, XGSFC, XGREFF, XGRFF)
+#set TYPE = "HRT/MERGE/SET01"
+#set SFILES = ( \
+#hgm01h.nc \
+#hgm02h.nc \
+#hgm03h.nc \
+#hgm04h.nc \
+#hgm05h.nc \
+#hgm06h.nc \
+#hgm07h.nc \
+#hgm08h.nc \
+#hgm09h.nc \
+#hgm10h.nc \
+#hgm11h.nc \
+#hgm12h.nc \
+#hgm13h.nc \
+#hgm14h.nc \
+#hgmff03h.nc \
+#hgmff04h.nc \
+#)
+##
+#set DFILES = ( \
+#RF01.nc \
+#RF02.nc \
+#RF03.nc \
+#RF04.nc \
+#RF05.nc \
+#RF06.nc \
+#RF07.nc \
+#RF08.nc \
+#RF09.nc \
+#RF10.nc \
+#RF11.nc \
+#RF12.nc \
+#RF13.nc \
+#RF14.nc \
+#FF03.nc \
+#FF04.nc \
+#)
+#
+#  2nd wave (LRT HGM232, WP3, XGSFC, XGREFF, XGRFF)
+#set TYPE = "LRT/MERGE/SET01"
+#set SFILES = ( \
+#hgm01.nc \
+#hgm02.nc \
+#hgm03.nc \
+#hgm04.nc \
+#hgm05.nc \
+#hgm06.nc \
+#hgm07.nc \
+#hgm08.nc \
+#hgm09.nc \
+#hgm10.nc \
+#hgm11.nc \
+#hgm12.nc \
+#hgm13.nc \
+#hgm14.nc \
+#hgmff03.nc \
+#hgmff04.nc \
+#)
+##
+#set DFILES = ( \
+#RF01.nc \
+#RF02.nc \
+#RF03.nc \
+#RF04.nc \
+#RF05.nc \
+#RF06.nc \
+#RF07.nc \
+#RF08.nc \
+#RF09.nc \
+#RF10.nc \
+#RF11.nc \
+#RF12.nc \
+#RF13.nc \
+#RF14.nc \
+#FF03.nc \
+#FF04.nc \
+#)
+#
+#  3rd wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#   th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#
+#  Get started:
+echo "#  $#SFILES Job(s) submitted on `date`"
+if ($#SFILES != $#DFILES) then
+  echo " Number of source and destination file names don't match.  Quitting"
+  exit 1
+endif
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG $RPWD \
+     $SDIR/$SFILE mss:/RAF/$YEAR/$PROJ/$TYPE/$DFILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TYPE/$DFILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+      echo "#                $TYPE/$DFILE: error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+    echo "#   Cannot access source file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done.
+echo "#   Completed on `date`"
+exit
+#
+#
+#  1st wave (HRT variables: HGM232, WP3, XGSFC, XGREFF, XGRFF)
+#  16 Job(s) submitted on Wed Jan  9 16:59:27 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF01.nc -- OK -- Wed Jan  9 16:59:38 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF02.nc -- OK -- Wed Jan  9 16:59:47 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF03.nc -- OK -- Wed Jan  9 17:00:01 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF04.nc -- OK -- Wed Jan  9 17:00:11 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF05.nc -- OK -- Wed Jan  9 17:00:23 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF06.nc -- OK -- Wed Jan  9 17:00:39 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF07.nc -- OK -- Wed Jan  9 17:00:47 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF08.nc -- OK -- Wed Jan  9 17:00:55 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF09.nc -- OK -- Wed Jan  9 17:01:06 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF10.nc -- OK -- Wed Jan  9 17:01:21 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF11.nc -- OK -- Wed Jan  9 17:01:32 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF12.nc -- OK -- Wed Jan  9 17:01:41 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF13.nc -- OK -- Wed Jan  9 17:01:56 MST 2008
+#  msrcp job for HRT/MERGE/SET01/RF14.nc -- OK -- Wed Jan  9 17:02:04 MST 2008
+#  msrcp job for HRT/MERGE/SET01/FF03.nc -- OK -- Wed Jan  9 17:02:09 MST 2008
+#  msrcp job for HRT/MERGE/SET01/FF04.nc -- OK -- Wed Jan  9 17:02:43 MST 2008
+#   Completed on Wed Jan  9 17:02:43 MST 2008
+#
+#  2nd wave (LRT HGM232, WP3, XGSFC, XGREFF, XGRFF)
+#  16 Job(s) submitted on Wed Jan  9 17:04:36 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF01.nc -- OK -- Wed Jan  9 17:04:41 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF02.nc -- OK -- Wed Jan  9 17:04:45 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF03.nc -- OK -- Wed Jan  9 17:04:55 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF04.nc -- OK -- Wed Jan  9 17:04:59 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF05.nc -- OK -- Wed Jan  9 17:05:04 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF06.nc -- OK -- Wed Jan  9 17:05:12 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF07.nc -- OK -- Wed Jan  9 17:05:15 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF08.nc -- OK -- Wed Jan  9 17:05:21 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF09.nc -- OK -- Wed Jan  9 17:05:25 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF10.nc -- OK -- Wed Jan  9 17:05:29 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF11.nc -- OK -- Wed Jan  9 17:05:33 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF12.nc -- OK -- Wed Jan  9 17:05:39 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF13.nc -- OK -- Wed Jan  9 17:05:43 MST 2008
+#  msrcp job for LRT/MERGE/SET01/RF14.nc -- OK -- Wed Jan  9 17:05:47 MST 2008
+#  msrcp job for LRT/MERGE/SET01/FF03.nc -- OK -- Wed Jan  9 17:05:51 MST 2008
+#  msrcp job for LRT/MERGE/SET01/FF04.nc -- OK -- Wed Jan  9 17:05:55 MST 2008
+#   Completed on Wed Jan  9 17:05:55 MST 2008
+#
+#  3rd wave
+#
+#
+#   th wave
+#
+#

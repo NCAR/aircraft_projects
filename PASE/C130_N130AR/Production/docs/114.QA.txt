@@ -1,0 +1,260 @@
+									    15 November 2007
+
+		  Pacific Sulfur Experiment (PASE)
+              NCAR C-130 - Project #7-114
+                  Data Quality Report
+    
+This summary has been written to outline basic instrumentation problems affecting the quality of the data set and is not intended to point out every bit of questionable data. It is hoped that this information will facilitate use of the data as the research concentrates on specific flights and times.
+
+The following report covers only the RAF supplied instrumentation and is organized into two sections.  The first section lists recurring problems, general limitations, and systematic biases in the standard RAF measurements.  The second section lists isolated problems occurring on a flight-by-flight basis.  A discussion of the performance of the TDL hygrometer and RAF chemistry sensors will be provided separately, as will the respective data sets.
+
+Section I: General Discussion
+
+      1. RAF staff have reviewed the data set for instrumentation problems.  When an instrument has been found to be malfunctioning, specific time intervals are noted.  In those instances the bad data intervals have been filled in the netCDF data files with the missing data code of -32767. In some cases a system will be out for an entire flight.
+
+	2. The flight conditions targeted by the research were detrimental to the performance of many of the standard sensors.  Salt deposits and particulates tended to accumulate on the sensors and fuselage over the course of the flights.  In some instances sensor performance would degrade as accumulations increased.  Key sensors were washed with fresh water after each flight.
+
+ 	3. The wind data for this project were derived from measurements taken with the radome wind gust package.  As is normally the case with all wind gust systems, the ambient wind calculations can be adversely affected by either sharp changes in the aircraft's flight attitude or excessive drift in the onboard inertial reference system (IRS).  Turns, or more importantly, climbing turns are particularly disruptive to this type of measurement technique.  Wind data reported for these conditions should be used with caution.
+
+Special sets of in-flight calibration maneuvers were conducted on PASE flights TF02 & RF10 to aid in the performance analysis of the wind gust measurements.  The calibration data identified a systematic bias in the pitch and sideslip parameters. These offsets have been removed from the final data set.  The time intervals for each set of maneuvers have been documented in both the flight-by-flight data quality review and on the individual Research Flight Forms prepared for each flight. Drift in the IRS accelerometers are removed using an algorithm that employs a complementary high-pass/low-pass filter that removes the long term drift with the accurate GPS reference and preserves the shorter term fluctuations measured by the IRS. 
+
+Both the GPS corrected and basic uncorrected values are included in the final data set.  RAF strongly recommends that the GPS corrected inertial winds be used for all research efforts (WSC,WDC,UXC,VYC,WIC,UIC,VIC).  
+
+Note: This data set was processed using the new pressure correction factors empirically derived from comparisons against the trailing cone static pressure reference.
+
+4. A Garmin Global Positioning System (GPS) was used as a more accurate position reference during the program.  The system performed extremely well for position on all flights and the RAF recommends the GPS position values be used for all research efforts (GGLAT, GGLON). There may be occasional spikes or discontinuous shifts in these values due to satellite geometry and aircraft maneuvering. The algorithm referred to in (2) above also blends the GPS and IRS position to yield a best position (LATC, LONC) that generally removes the GPS spikes. 
+
+5. RAF flies redundant sensors to assure data quality. Performance characteristics differ from sensor to sensor with certain units being more susceptible to various thermal and dynamic effects than others.  Good comparisons were typically obtained between the various sensors. Exceptions are noted in the flight-by-flight summary. The backup static pressure system had a leak in the plumbing so those data (PSFRD, QCFR) unuseable.  The derived variables (PSFC, QCFRC) were removed from the final data set.  The digital static pressure (PSFDC) was selected as the reference pressure (PSXC) used in all of the derived parameters.   
+
+
+6. Temperature measurements were made using the standard heated (ATWH) and unheated (ATRR, ATRL) Rosemount temperature sensors.  Performance of all three sensors remained stable throughout the project and showed excellent agreement.  Due to its fast response, ATRR was selected as the reference value (ATX) used in calculating the derived parameters. 
+
+  	7.  Humidity measurements were made using two collocated thermoelectric dew point sensors, one experimental fast response hygrometers and an experimental TDL laser hygrometer.  A comparison of the dew point sensors (DPBC, DPTC) yielded good correlation in instrument signatures during the largest portions of the flights when both instruments were functioning normally.  Under conditions where the units had been cold soaked at high altitude and then experienced a rapid transition into a moist environment, both units showed a tendency to overshoot.  In limited cases (FF03, RF04, FF04) water accumulated inside the sensor heads and the sensors add to be allowed to dry out and be re-initialized.  DPTC tended to oscillate under drier conditions so DPBC was used as the reference humidity sensor (DPXC) in calculating all of the derived parameters.
+
+Note: Even at their best the response of the thermoelectric dew point sensors is roughly 2 seconds.  Response times are dependent upon ambient dew point depression and can exceed 10-15 seconds under very dry conditions.  These units are also susceptible to overshooting rapid changes.
+
+The experimental fast response humidity sensor (XUVI) provides a logarithmic response and is electrically unstable during the ealy portions of each flight and thermally unstable at higher altitudes. Response varied somewhat from flight-to-flight so the output was linked to the reference dew point sensor to remove large scale drift.  Typically the data are unusable for the first 15 minutes of flight. The high rate response should be adequate for flux calculations. 
+
+Note: Raw output of the sensor appears as RHOUV in the final data set.  The variables that have been linked to the reference humidity sensor are: Absolute Humidity (ATC); Dew Point Temperature (DPLA); and Mixing Ratio (MRLA).
+
+A TDL (tunable diode laser) based hygrometer was flown on an experimental basis for this project.  The system was originally designed for measuring extremely low absolute humidities at stratospheric altitudes.  The path length was shortened for the unit when it was placed on the C-130 to allow it to function at the higher humidity common to the tropical boundary layer and mid to lower troposphere.  While the humidity values encountered during this deployment were within the expected operational range of the instrument a complex pressure calibration and special data processing are required to correct the basic data.  At the time of this data release, the TDL data were not fully corrected and have therefore been removed from this data set.  We expect a subsequent release of a 'corrected' set of TDL data (MRLH) at a later date.
+
+ 8. A set of standard upward and downward facing radiometers were used to measure shortwave, ultraviolet, and infrared irradiance. It should be noted that all units are hard mounted and that none of the data have been corrected for changes in the aircraft's flight attitude.   
+
+9. Heimann radiometric sensors were used to remotely measure surface temperature (RSTB & RSTB1 the ground, RSTT cloud base.   Both down looking units functioned well through out the project with RSTB being selected as the reference system for this measurement. RSTT also functioned well.  Note that when no clouds are present above the aircraft the RSTT signal will be pegged at its maximum "cold" limit of roughly -60 oC.
+ 
+The accuracy of the remote sensing measurement is also dependent upon the total amount of water in the sensing path. For over water projects such as PASE, it is possible to correct these data for the bias resulting from the large amounts of moisture in the sample volume.  A corrected estimate of the true surface temperature (TSURF) has been included in the final data set.   
+
+	10. The altitude of the aircraft was measured in several ways. A pressure based altitude (PALT,PALTF) is derived from the static pressure using the hydrostatic equation and normally using the U.S. Standard Atmosphere, which assumes a constant surface pressure of 1013mb and a mean surface temperature of 288 K.  The lapse rate in the tropics can differ significantly from this standard.  For the PASE data set, the lapse rate used in the calculation of PALT was adjusted by using a mean surface temperature of 299 K.
+
+	The GPS positioning system also provides an altitude readout (GGALT).  This output provides a fairly accurate MSL altitude based on a ellipsoid model of the Earth (WGS-84). However, the PASE deployment was conducted in a remote area of the world where the GPS satellite coverage is less dense.  During intermittent segments of each flight there were an insufficient number of satellites to provide a good GGALT measurement.   
+
+A radar altimeter (HGM232) was onboard the aircraft for the project.  A miss match between the serial output and the new data logging system resulted in numerous spikes in the data output.  The data have been included in the final data set, but will be of limited value except for specific sections where the problem was less prevalent.    
+
+	To aid the Users in choosing a common altitude to use in their analyses, RAF now calculates a 'reference' altitude (ALTX). Due to the problems with both HGM232 and GGALT, ALTX was typically set to the pressure altitude (PALT).
+
+11.  One hot wire liquid water sensor and one optical (PVM-100) liquid water sensor were mounted on the C-130 for the program. The PMS King Probe (PLWCC) worked well during the program but the sensing element was susceptible to drift resulting from salt and aerosol accumulations.  The presence of liquid water had a detrimental effect on a number of User supplied inlets so cloud penetrations were avoided if possible.   
+
+      12. The calculation of CN sized aerosol particle concentrations (CONCN) is dependent upon total particle counts (CNTS) and the measurement of sample flow (FCN,FCNC).  The internal sample flow (FCN) has been corrected (FCNC) to ambient conditions, only, and not to STP for the calculation of particle concentration. The inlet for this measurement is susceptible to droplet splashing in all clouds.  This phenomenon results in artificial counts and unrealistic concentrations of CN particles.  All in-cloud CONCN data are bad.
+
+Note: The location of the inlet on the aircraft and length of the tubing connecting the inlet to the counter will induce a lag in the system response to changes in particle concentration.  Based on a comparison against the wing mounted SPP200 optical probe, the lag in CONCN for the PASE experiment is 2 seconds.
+
+ 	13. Four PMS particle probes (SPP300, SPP100, SPP200, 260X) were used on the project.   Problems with the left wing pod data module (DSM) late in the project resulted in the complete loss of SPP200 & SPP300 data for several flights.  Some specific details on each of the probes are summarized below:
+
+SPP200 - The SPP200 aerosol particle probe functioned 
+well for about half of the flights during the project.
+On selected flights, the unit exhibited a shift in 
+response to the number concentrations of the particles. 
+A comparison against CONCN provides a clear indicator of 
+when this situation occurred.  While the relative trends 
+in concentration remained reasonable throughout all of 
+the flights, clearly the absolute concentrations were 
+too high during the occurrences of the problem.  Data 
+from these flights have been removed from the final data
+set.  
+
+The probe being flown has been modified in order to 
+directly measure the sample flow through the instrument. 
+These data, recorded as PFLWC_WDL, have been used in the 
+calculation of particle concentrations to provide a 
+more accurate measurement of aerosol concentrations.
+Due to the sampling technique employed by this probe
+it is not suitable for use in clouds.  Counts in the lowest bin size were contaminated by excessive electronic noise.  Data from that channel have been removed from the calculation of total particle concentration (CONCP).
+
+SSP100 - The SSP100 cloud droplet probe functioned
+extremely well. Weekly servicing and re-calibration of
+the sensor optics provided good documentation for data
+processing.  Being an optical scattering probe, the
+SSP100 has no way of distinguishing between aerosols,
+ice particles and water droplets. Therefore, the liquid 
+water content calculated from this probe (PLWCF_IBR) 
+should be used with caution in this application. 
+
+SSP300 - The SSP300 aerosol probe covers a range of
+particle sizes that bridges the gap between the true
+aerosols and the smaller droplets (0.3 - 20 ?m).  Like
+all 1-D optical probes, however, the SSP300 has no way 
+to distinguish between aerosols, ice or water.  
+
+Note: The bin sizes vary significantly in the particle
+sizing routines for this probe.
+ 
+260X - While the range of this probe is specified to be 10 - 640 um in 10 um increments, it has some problems sampling the smaller sizes when mounted on an aircraft. NCAR data processing uses the Baumgardner correction alogrithms (Baumgardner, Korolev,1997; Airspeed Corrections for Optical Array Probe Sample Volumes, JTECH, 14, 1224-1229) to correct the 260X data for these problems. Effectively this changes the range of the unit to 50 - 640 ?m when it is mounted on the C-130. The unit functioned well through out the program.
+ 
+14. Virtually all measurements made on the aircraft require some sort of airspeed correction or the systems simply do not become active while the aircraft remains on the ground.  None of the data collected while the aircraft is on the ground should be considered as valid.
+
+
+*	*	*	*	*	*	*	*	*	*	*	*	
+
+
+Section II:  Flight-by-Flight Summary
+
+
+RF01	ADS failure in flight due to software glitch.  All data missing
+     from 235956 to 240517 CUT.
+
+	Intermittent loss of GPS satellite coverage.  GPS altitude
+     (GGALT) bad for seven segments of the flight.
+
+RF02	ADS failure in flight due to software glitch.  All data missing
+     from 235955 to 240518 CUT.
+
+	Intermittent loss of GPS satellite coverage.  GPS altitude
+     (GGALT) bad for seven segments of the flight.
+
+RF03 Aperture door on up looking surface temperature sensor left
+     closed.  RSTT data bad for entire flight.
+
+	Plumbing leak in RAF CN sampling system.  CONCN data bad for the
+	Entire flight.
+
+	Intermittent loss of GPS satellite coverage.  GPS altitude
+     (GGALT) bad for five segments of the flight.
+
+RF04	Uncharacteristically high concentrations derived from the SPP-200
+	aerosol probe.  All CONCP data bad for the entire flight.
+
+	Noise in output signal from PMS260X cloud droplet probe.  All
+	CONC6 data bad for the entire flight.	
+	Reference dew point temperature sensors condensing water in
+	sample chambers during rapid increases in humidity and near cloud 
+	boundaries.  DPBC, DPTC, DPXC and all moisture parameters 
+	calculated from the reference humidity are bad from 201700-
+	202018, 223340-225106, 240000-241431, and 253230-254130 UTC.
+
+RF05	Intermittent loss of GPS satellite coverage.  GPS altitude
+     (GGALT) bad for six segments of the flight.
+
+RF06	Radar altimeter failed prior to takeoff.  All HGM232 data
+Bad for the entire flight.
+
+	Intermittent loss of GPS satellite coverage.  GPS altitude
+     (GGALT) bad from 120350-120746 and 193432-195354 UTC.
+
+RF07 Uncharacteristically high concentrations derived from the SPP-200
+	aerosol probe.  All CONCP data bad for the entire flight.
+
+	Radar altimeter failed in flight.  HGM232 data bad from 251500-
+	254900 UTC.
+
+	Intermittent loss of GPS satellite coverage.  GPS altitude
+     (GGALT) bad for five segments of the flight.
+
+RF08	Uncharacteristically high concentrations derived from the SPP-200
+	aerosol probe.  All CONCP data bad for the entire flight.
+
+	Reference dew point temperature sensors condensing water in
+	sample chambers during rapid increases in humidity and near cloud 
+	boundaries.  DPBC, DPTC, DPXC and all moisture parameters 
+	calculated from the reference humidity are bad from 254118 to
+	254131 UTC.
+
+	Intermittent loss of GPS satellite coverage.  GPS altitude
+     (GGALT) bad for five segments of the flight.
+
+RF09 IRU Failure during the flight.  All 3-D wind field data missing
+	from 212721 to 264100 UTC
+
+	ADS system malfunction led to spurious spikes in numerous analog
+	signals.  Too many to identify individually.  Due to this problem 
+	TTX and ATX were switched to the heated temperature sensor (TTWH 
+	& ATWH respectively).
+
+RF10 Uncharacteristically high concentrations derived from the SPP-200
+	aerosol probe.  All CONCP data bad for the entire flight.
+
+	ADS system malfunction led to spurious spikes in virtually all 
+	Analog signals.  Too many to identify individually.  Due to this
+	problem TTX and ATX were switched to the heated temperature 
+	sensor (TTWH & ATWH respectively).
+
+	Intermittent loss of GPS satellite coverage.  GPS altitude
+     (GGALT) bad for five segments of the flight.
+	Unexplained gap in PMS data.  CONCF and CONC3 data missing from 
+	223411 to 224148 UTC.
+
+RF11	Uncharacteristically high concentrations derived from the SPP-200
+	aerosol probe.  All CONCP data bad for the entire flight.
+
+	Intermittent loss of GPS satellite coverage.  GPS altitude
+     (GGALT) bad for five segments of the flight.
+
+	TECO ozone sensor turned off prior to the end of the flight. 
+	TEO3C data missing from 270400 to 271500 UTC.
+
+RF12 Intermittent loss of GPS satellite coverage.  GPS altitude
+     (GGALT) bad for three segments of the flight.
+
+RF13	Reference dew point temperature sensors condensing water in
+	sample chambers during rapid increases in humidity and near cloud 
+	boundaries.  DPBC, DPTC, DPXC and all moisture parameters 
+	calculated from the reference humidity are bad from 130646-
+	130806 and 130958-131037 UTC.
+
+	Intermittent loss of GPS satellite coverage.  GPS altitude
+     (GGALT) bad for five segments of the flight.
+
+RF14	Uncharacteristically high concentrations derived from the SPP-200
+	aerosol probe.  All CONCP data bad for the entire flight.
+
+	Intermittent loss of GPS satellite coverage.  GPS altitude
+     (GGALT) bad for seven segments of the flight.
+
+	Uncharacteristic response in up looking surface temperature
+	sensor.  RSTT data bad from 221221 to 221808 UTC.
+
+
+FF03	Failure in data interface from PMS SPP-100 cloud droplet probe.
+	All CONCF and related data bad for the entire flight.
+
+	Reference dew point temperature sensors condensing water in
+	sample chambers during rapid increases in humidity and near cloud 
+	boundaries.  DPBC, DPTC, DPXC and all moisture parameters 
+	calculated from the reference humidity are bad from 205840-
+	210653 and 250545-261400 UTC.
+
+	Uncharacteristic response in up looking surface temperature
+	sensor.  RSTT data bad from 223330 to 223900 UTC.
+
+FF04	Uncharacteristically high concentrations derived from the SPP-200
+	aerosol probe.  All CONCP data bad for the entire flight.
+
+	Uncharacteristic response in secondary down looking surface 
+	Temperature sensor.  RSTB1 data bad for the entire flight.
+
+
+
+	Reference dew point temperature sensors condensing water in
+	sample chambers during rapid increases in humidity and near cloud 
+	boundaries.  DPBC, DPTC, DPXC and all moisture parameters 
+	calculated from the reference humidity are bad from 252027-
+	253003 and 253649-253914 UTC.
+
+	Failure in data interface from PMS 260X precipitation probe.
+	All CONC6 and related data bad for the entire flight.
+
+
+
+
+*	*	*	*	*	*	*	*	*	*	*	*	
+

@@ -1,0 +1,370 @@
+#! /bin/csh -f
+#
+#  Save pertinent NIMBUS support files for project 2007-114 PASE (Bandy, et al.)
+#   to a tar file (in prepararation for archival to the CISL Mass Store System)
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2002, 2006                                                   *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Notes:  Create a copy of, modify and run this script from a project's 
+#            "Production/archive" subdirectory.
+#          IMPORTANT:  Use the "tarit.docs" script to create an archive
+#            file for the project's documentation in the "Production/docs"
+#            subdirectory.
+#
+#  Written by Ronald L. Ruth                                           Nov 1995
+#  Revised by RLR (automatically retrieve FY, PROJ and PROJNAME)    11 Jan 1996
+#  Revised by RLR (fix order of commands to do the above)           30 May 1996
+#  Revised by RLR (fix "ProjectName" file name)                     03 Sep 1996
+#  Revised by RLR (clarify file selection instructions)             25 Jun 1997
+#  Revised by RLR (make it LINUX compatible)                        28 Jan 1999
+#  Revised by RLR (change way $PROJ is determined)                  20 Mar 2000
+#  Revised by RLR (allow running from the "archive" subdirectory)   11 Feb 2002
+#  Revised by RLR (remind about "tarit.docs" script)                 4 Mar 2002
+#  Revised by RLR (change directory refs--now runs in archive dir)  28 Aug 2002
+#  Revised by RLR (update to current directory structure)           30 Jun 2006
+#
+#  Assumptions:
+#   1.  Directory structure for projects is $JLOCAL/proj/<3-digit project #>
+#           having a "Production" subdirectory
+#   2.  Project's name (only its name!) is in the file
+#           $JLOCAL/proj/<3-digit project #>/ProjectName
+#   3.  A "proj.info" file exists in the project's "Production" subdirectory
+#
+#
+#      * * * * * * * * * * * * * * *
+#     *                             *
+#    *  Executable code starts here  *
+#     *                             *
+#      * * * * * * * * * * * * * * *
+#
+#   Check current directory
+set cdir = `pwd | awk -F/ '{print $NF}'`
+if ($cdir != "archive") then
+  echo '  This script is not being run from the "archive" subdirectory.'
+  echo '   Quitting.'
+  exit 1
+endif
+#
+#  Get setup information for this project
+pushd ../.. >& /dev/null
+set PROJDIR =  `pwd`
+cd ..
+set PROJ = `pwd | awk -F/ '{print $NF}'`
+popd >& /dev/null
+set OSTYPE = `uname`
+set FY = `grep FY $PROJDIR/Production/proj.info | sed -e "s/FY=//"`
+set PROJNAME = `cat $PROJDIR/ProjectName`
+set OFILE = "$PROJDIR/Production/$PROJ.tar"
+#
+cd $PROJDIR
+tar chvf $OFILE \
+Categories \
+Defaults \
+DependTable \
+Despike \
+Lags \
+LowRateVars \
+PMSspecs \
+PMSspecs.MIRAGE \
+ProjectName \
+StandardNames \
+UserNames \
+VarDB \
+VarDB.nc \
+ascii_parms \
+groundvars \
+groundvars.rt \
+landmarks \
+s122.default \
+s200.default \
+s200pre.default \
+s300pre.default \
+s305.default \
+vardb.ncml \
+Production/BlankOuts.ff03 \
+Production/BlankOuts.ff04 \
+Production/BlankOuts.rf01 \
+Production/BlankOuts.rf02 \
+Production/BlankOuts.rf03 \
+Production/BlankOuts.rf04 \
+Production/BlankOuts.rf05 \
+Production/BlankOuts.rf06 \
+Production/BlankOuts.rf07 \
+Production/BlankOuts.rf08 \
+Production/BlankOuts.rf09 \
+Production/BlankOuts.rf10 \
+Production/BlankOuts.rf11 \
+Production/BlankOuts.rf12 \
+Production/BlankOuts.rf13 \
+Production/BlankOuts.rf14 \
+Production/BlankOuts.tf03 \
+Production/Flight_ff03 \
+Production/Flight_ff04 \
+Production/Flight_rf01 \
+Production/Flight_rf02 \
+Production/Flight_rf03 \
+Production/Flight_rf04 \
+Production/Flight_rf05 \
+Production/Flight_rf06 \
+Production/Flight_rf07 \
+Production/Flight_rf08 \
+Production/Flight_rf09 \
+Production/Flight_rf10 \
+Production/Flight_rf11 \
+Production/Flight_rf12 \
+Production/Flight_rf13 \
+Production/Flight_rf14 \
+Production/Flight_tf03 \
+Production/logfile_HRT.ff03 \
+Production/logfile_HRT.ff04 \
+Production/logfile_HRT.rf01 \
+Production/logfile_HRT.rf02 \
+Production/logfile_HRT.rf03 \
+Production/logfile_HRT.rf04 \
+Production/logfile_HRT.rf05 \
+Production/logfile_HRT.rf06 \
+Production/logfile_HRT.rf07 \
+Production/logfile_HRT.rf08 \
+Production/logfile_HRT.rf09 \
+Production/logfile_HRT.rf10 \
+Production/logfile_HRT.rf11 \
+Production/logfile_HRT.rf12 \
+Production/logfile_HRT.rf13 \
+Production/logfile_HRT.rf14 \
+Production/logfile_HRT.tf03 \
+Production/logfile_LRT.ff03 \
+Production/logfile_LRT.ff04 \
+Production/logfile_LRT.rf01 \
+Production/logfile_LRT.rf02 \
+Production/logfile_LRT.rf03 \
+Production/logfile_LRT.rf04 \
+Production/logfile_LRT.rf05 \
+Production/logfile_LRT.rf06 \
+Production/logfile_LRT.rf07 \
+Production/logfile_LRT.rf08 \
+Production/logfile_LRT.rf09 \
+Production/logfile_LRT.rf10 \
+Production/logfile_LRT.rf11 \
+Production/logfile_LRT.rf12 \
+Production/logfile_LRT.rf13 \
+Production/logfile_LRT.rf14 \
+Production/logfile_LRT.tf03 \
+Production/proj.info \
+Production/ron.checklist \
+Production/taplog.114 \
+Production/taplog.camera.114 \
+Production/taplog.hrt.114 \
+Production/taplog.lrt.114 \
+Production/taplog.movie.114 \
+Production/archive/archads.114* \
+Production/archive/archcam.114* \
+Production/archive/archive.support* \
+Production/archive/archmerge.114 \
+Production/archive/archmovie.114* \
+Production/archive/archprodnc.114 \
+Production/archive/doit_movie* \
+Production/archive/msls.114 \
+Production/archive/oarchprodnc.114* \
+Production/archive/tapes.114 \
+Production/archive/tarit.114* \
+Production/archive/Camera_Archive/Archive_Log \
+Production/archive/Camera_Archive/File_Lists/FF02.FWD.20070803.155620_155959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF02.FWD.20070803.160000_165959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF02.FWD.20070803.170000_175959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF02.FWD.20070803.180000_185959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF02.FWD.20070803.190000_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF02.FWD.20070803.200000_205959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF02.FWD.20070803.210000_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF02.FWD.20070803.220000_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF02.FWD.20070803.230000_234451.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF03.FWD.20070804.202335_205959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF03.FWD.20070804.210000_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF03.FWD.20070804.220000_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF03.FWD.20070804.230000_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF03.FWD.20070805.000000_005959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF03.FWD.20070805.010000_015959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF03.FWD.20070805.020000_021359.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF04.FWD.20070908.211223_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF04.FWD.20070908.220000_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF04.FWD.20070908.230000_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF04.FWD.20070909.000000_005959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/FF04.FWD.20070909.010000_014840.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF02.FWD.20070810.185000_185959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF02.FWD.20070810.190000_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF02.FWD.20070810.200000_205959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF02.FWD.20070810.210000_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF02.FWD.20070810.220000_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF02.FWD.20070810.230000_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF02.FWD.20070811.000000_005959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF02.FWD.20070811.010000_015959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF02.FWD.20070811.020000_025959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF02.FWD.20070811.030000_033310.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF03.FWD.20070813.175211_175959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF03.FWD.20070813.180000_185959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF03.FWD.20070813.190000_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF03.FWD.20070813.200000_205959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF03.FWD.20070813.210000_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF03.FWD.20070813.220000_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF03.FWD.20070813.230000_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF03.FWD.20070814.000000_005959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF03.FWD.20070814.010000_015959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF03.FWD.20070814.020000_024630.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF04.FWD.20070815.190035_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF04.FWD.20070815.200000_205959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF04.FWD.20070815.210000_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF04.FWD.20070815.220000_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF04.FWD.20070815.230000_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF04.FWD.20070816.000000_005959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF04.FWD.20070816.010000_015959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF04.FWD.20070816.020000_025454.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF05.FWD.20070818.175631_175959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF05.FWD.20070818.180000_185959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF05.FWD.20070818.190000_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF05.FWD.20070818.200000_205959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF05.FWD.20070818.210000_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF05.FWD.20070818.220000_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF05.FWD.20070818.230000_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF05.FWD.20070819.000000_005959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF05.FWD.20070819.010000_014037.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF06.FWD.20070820.154500_155959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF06.FWD.20070820.160000_165959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF06.FWD.20070820.170000_175959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF06.FWD.20070820.180000_185959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF06.FWD.20070820.190000_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF06.FWD.20070820.200000_204638.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF07.FWD.20070823.221043_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF07.FWD.20070823.230000_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF07.FWD.20070824.000000_005959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF07.FWD.20070824.010000_015959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF07.FWD.20070824.020000_023402.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF08.FWD.20070825.183751_185906.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF08.FWD.20070825.190007_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF08.FWD.20070825.200000_205959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF08.FWD.20070825.210000_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF08.FWD.20070825.220000_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF08.FWD.20070825.230000_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF08.FWD.20070826.000000_005959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF08.FWD.20070826.010000_015959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF08.FWD.20070826.020000_024137.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF09.FWD.20070827.180016_185959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF09.FWD.20070827.190000_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF09.FWD.20070827.200000_205959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF09.FWD.20070827.210000_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF09.FWD.20070827.220000_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF09.FWD.20070827.230000_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF09.FWD.20070828.000000_005959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF09.FWD.20070828.010000_015959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF09.FWD.20070828.020000_024049.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF10.FWD.20070829.180945_185959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF10.FWD.20070829.190000_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF10.FWD.20070829.200000_205959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF10.FWD.20070829.210000_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF10.FWD.20070829.220000_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF10.FWD.20070829.230000_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF10.FWD.20070830.000000_005959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF10.FWD.20070830.010000_012824.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF11.FWD.20070901.192133_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF11.FWD.20070901.200000_205942.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF11.FWD.20070901.210032_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF11.FWD.20070901.220000_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF11.FWD.20070901.230000_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF11.FWD.20070902.000000_005959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF11.FWD.20070902.010000_015959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF11.FWD.20070902.020000_025959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF11.FWD.20070902.030000_031411.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF12.FWD.20070902.180400_185959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF12.FWD.20070902.190000_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF12.FWD.20070902.200000_205959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF12.FWD.20070902.210000_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF12.FWD.20070902.220000_225959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF12.FWD.20070902.230000_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF12.FWD.20070903.000000_005958.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF12.FWD.20070903.010002_015959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF12.FWD.20070903.020000_020753.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF13.FWD.20070904.154200_155959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF13.FWD.20070904.160000_165959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF13.FWD.20070904.170000_175959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF13.FWD.20070904.180000_185959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF13.FWD.20070904.190000_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF13.FWD.20070904.200000_204200.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF14.FWD.20070906.180012_185959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF14.FWD.20070906.190000_195959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF14.FWD.20070906.200000_205959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF14.FWD.20070906.210000_215959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF14.FWD.20070906.220000_225956.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF14.FWD.20070906.230008_235959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF14.FWD.20070907.000000_005959.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF14.FWD.20070907.010000_015925.jpg.tar.dir \
+Production/archive/Camera_Archive/File_Lists/RF14.FWD.20070907.020028_023545.jpg.tar.dir \
+nidas/a2d008_temp.xml \
+nidas/a2d1603_temp.xml \
+nidas/blank.xml \
+nidas/cals.txt \
+nidas/default.xml \
+nidas/ferry.xml \
+nidas/new_a2d-herc.xml \
+nidas/nidas.xsd \
+nidas/research1-herc.xml \
+nidas/research1.xml \
+nidas/spare.xml \
+nidas/test.xml \
+nidas/tf01.xml
+#
+#
+#
+#
+#
+#
+#  At this point one needs a list of files immediately under the above "tar
+#   command.  As a starting point, one can use the `vi' command:
+#                       !!ls -F ../..
+#   to get a list of files in the project's home directory then edit out the
+#   unneeded ones.  
+#  For the Production subdirectory, one can use this command:
+#                       !!ls -F ..
+#  For a subdirectory under Production (e.g., archive), one can repeat this:
+#                       !!ls -F ../archive
+#                       !!ls                  (for this specific example)
+#  For a subdirectory off the project's home directory, use a command like:
+#                       !!ls -F ../../<directory>
+#   (Execute these commands starting with the cursor at the first "#" line
+#    below the `tar' command.  The `vi' command `!!ls' replaces the current
+#    line with its output.)
+#  Other subdirectories also may have files that need to be archived.
+#  Remember that the `tar' command actually runs in the Project's home
+#  directory, so references need to be made from that path.  After you get
+#  the list of files, don't forget to add the subdirectory name (if any) to
+#  the beginning of each file name and add a trailing <space> and backslash
+#  (\) to each file name (except the last one), so the `tar' command gets
+#  the entire list of files.
+#
+#  Brief summary for standard project files:
+#      (project's home directory)
+# !!ls ../..
+#      (Production subdirectory)
+# !!ls ..
+#      (Production/archive subdirectory)
+# !!ls
+#
+#   filter out undesired files
+#   prepend appropriate subdirectory to affected file names
+#    (remember that root path is project's home directory)
+#   Add backslash at end of each line (except last)
+#   Save and exit
+#
+#
+# Production/docs/ <-- archived separately via "tarit.docs" script
+#
+#  Get tar directory list for archiving
+set dfile = $OFILE.dir
+echo " Directory list for file $PROJ.tar" >! $dfile
+echo "  Support files for Project $FY-$PROJ $PROJNAME" >> $dfile
+set dt = `date`
+echo "  Archive created on $dt" >> $dfile
+echo " "  >> $dfile
+tar tvf $OFILE >> $dfile
+#
+exit
