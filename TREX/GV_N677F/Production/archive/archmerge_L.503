@@ -1,0 +1,349 @@
+#! /bin/csh -f
+#
+#  Archive production netCDF files and complete LRT merge files for project:
+#   2006-503 T-REX (Terrain-induced Rotor EXperiment) (Vanda Grubisic, et al.)
+#   using the project number path /RAF/2006/503/
+#  Note:  The netCDF data files come directly from the nimbus processor before
+#          any merges.
+#
+#  This script is used to archive all the source and procedure files and
+#   software used to create the merged low-rate production data files which
+#   were released to the T-REX community.
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2002, 2004, 2006, 2007                                       *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  This script copied and modified from archprodnc.503 before 11 Dec 2006
+#    by Ronald L. Ruth
+#
+#
+#      * * * * * * * * * * * * * * *
+#     *                             *
+#    *  Executable code starts here  *
+#     *                             *
+#      * * * * * * * * * * * * * * *
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo ${0}:  Only the "dmg" login is allowed to run this script.  Quitting.
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+# set msrcpMachine = "vivaldi"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s)
+#set RPWD = "-rpwd hidden from view -- see CDS support personnel for password"
+set RPWD = "-rpwd bishop"
+#
+set TYPE = "LRT/MERGE"
+#
+#  For now, this is a list of procedures necessary to obtain all the source
+#  files, scripts and other software used to generate the merge files and
+#  whch actually assembled them into the final production data set.
+#  (The script file gni:/export/data/trex/trex_al_pavel_teresa/merge_script_teresa
+#  was used as a source for this narrative at Jorgen Jensen's recommendation.)
+#  
+#  1)  Sources for all the files:
+#    - machine:  gni
+#    - directory path:  /export/data/trex/
+#    - support files:  README
+#    - subdirectories:  final/
+#                       ozone_data/
+#                       trex_al/
+#                       trex_al_pavel/
+#                       trex_al_pavel_jorgen/
+#                       trex_al_pavel_teresa/
+#                       trex_high/             (empty)
+#                       trex_raw/              (one raw ADS data file)
+#                       trex_teresa/
+#    - major script:  trex_al_pavel_teresa/merge_script_teresa
+#  
+#  2)  Files:
+#    - merged dGPS data (added to Schanot's production data) by Pavel Romashki
+#        using Waypoint Software
+#       subdirectory:  trex_al_pavel/
+#       contents:
+#        -rw-r--r--  1 jbj eol 23371152 Oct 27 18:09 TREXrf01.nc
+#        -rw-r--r--  1 jbj eol 23249512 Oct 27 18:09 TREXrf02.nc
+#        -rw-r--r--  1 jbj eol 22032772 Oct 27 18:09 TREXrf03.nc
+#        -rw-r--r--  1 jbj eol 22316692 Oct 27 18:09 TREXrf04.nc
+#        -rw-r--r--  1 jbj eol 22600612 Oct 27 18:09 TREXrf05.nc
+#        -rw-r--r--  1 jbj eol 21789412 Oct 27 18:09 TREXrf06.nc
+#        -rw-r--r--  1 jbj eol 15664852 Oct 27 18:09 TREXrf07a.nc
+#        -rw-r--r--  1 jbj eol  4105252 Oct 31 00:51 TREXrf07b.nc
+#        -rw-r--r--  1 jbj eol 21748852 Oct 27 18:09 TREXrf08.nc
+#        -rw-r--r--  1 jbj eol 21586612 Oct 27 18:09 TREXrf09.nc
+#        -rw-r--r--  1 jbj eol 21383812 Oct 27 18:09 TREXrf10.nc
+#        -rw-r--r--  1 jbj eol 16678852 Oct 27 18:09 TREXrf11.nc
+#        -rw-r--r--  1 jbj eol 21586612 Oct 27 18:09 TREXrf12.nc
+#        -rw-r--r--  1 jbj eol 21667736 Oct 27 18:09 TREXtf04.nc
+#    - merged CO and TDL data (MRTDL_LHL, XCOMR added to Schanot's production data) by Teresa Campos
+#        (missing "long_name" and "units" attributes)
+#       subdirectory (original):  /jnet/productiondata/
+#       subdirectory (working):  trex_teresa/
+#       contents:
+#        -rw-r--r--  1 jbj eol 22404072 Nov  9 00:26 TREXrf01.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 22287472 Nov  9 00:26 TREXrf02.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 21121132 Nov  9 00:26 TREXrf03.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 21393292 Nov  9 00:26 TREXrf04.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 21665452 Nov  9 00:26 TREXrf05.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 20887852 Nov  9 00:26 TREXrf06.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 15016972 Oct 31 00:53 TREXrf07.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 15016972 Nov  9 00:26 TREXrf07a.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol  3936172 Nov  9 00:26 TREXrf07b.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 20848972 Nov  9 00:26 TREXrf08.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 20693452 Nov  9 00:26 TREXrf09.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 20499052 Nov  9 00:27 TREXrf10.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 15988972 Nov  9 00:27 TREXrf11.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 20693452 Nov  9 00:27 TREXrf12.chem.mrg.nc
+#    - merge software from Chris Webster
+#       subdirectory (working):  $PROJ_DIR/TREX/GV_N677F/Production/archive/Merge_Archive/Software/
+#        -rw-rw-r--  1 nimbus proj 1057 Nov 11 01:42 mrtdl.cc
+#        -rw-rw-r--  1 nimbus proj 3971 Nov 13 21:49 update2.cc
+#    - Convert ozone files to netcdf
+#       subdirectory (source):  ozone_data/
+#       subdirectory (destination):  ozone_data/
+#       contents:
+#        -rw-r--r--  1 jbj eol 1638847 Nov  3  2006 Final O3 data R1.zip
+#        -rw-r--r--  1 jbj eol  579848 Nov  3  2006 O3_GV_20060302_rafMerge.txt
+#        -rw-r--r--  1 jbj eol  554503 Nov  3  2006 O3_GV_20060305_rafMerge.txt
+#        -rw-r--r--  1 jbj eol  556831 Nov  3  2006 O3_GV_20060309_rafMerge.txt
+#        -rw-r--r--  1 jbj eol  608687 Nov  3  2006 O3_GV_20060314_rafMerge.txt
+#        -rw-r--r--  1 jbj eol  552698 Nov  3  2006 O3_GV_20060325_rafMerge.txt
+#        -rw-r--r--  1 jbj eol  539492 Nov  3  2006 O3_GV_20060402_rafMerge.txt
+#        -rw-r--r--  1 jbj eol  647765 Nov  3  2006 O3_GV_20060406_rafMerge.txt
+#        -rw-r--r--  1 jbj eol  554456 Nov  3  2006 O3_GV_20060408_rafMerge.txt
+#        -rw-r--r--  1 jbj eol  507899 Nov  3  2006 O3_GV_20060415_rafMerge.txt
+#        -rw-r--r--  1 jbj eol  520217 Nov  3  2006 O3_GV_20060416_rafMerge.txt
+#        -rw-r--r--  1 jbj eol  429506 Nov  3  2006 O3_GV_20060421_rafMerge.txt
+#        -rw-r--r--  1 jbj eol  552292 Nov  3  2006 O3_GV_20060426_rafMerge.txt
+#        -rw-r--r--  1 jbj eol  899812 Nov  9 00:27 TREXrf01.ozone.nc
+#        -rw-r--r--  1 jbj eol  860068 Nov  9 00:27 TREXrf02.ozone.nc
+#        -rw-r--r--  1 jbj eol  862324 Nov  9 00:27 TREXrf03.ozone.nc
+#        -rw-r--r--  1 jbj eol  932764 Nov  9 00:27 TREXrf04.ozone.nc
+#        -rw-r--r--  1 jbj eol  860908 Nov  9 00:27 TREXrf05.ozone.nc
+#        -rw-r--r--  1 jbj eol  835228 Nov  9 00:27 TREXrf06.ozone.nc
+#        -rw-r--r--  1 jbj eol  961348 Nov  9 00:27 TREXrf07a.ozone.nc
+#        -rw-r--r--  1 jbj eol  961348 Nov  9 00:27 TREXrf07b.ozone.nc
+#        -rw-r--r--  1 jbj eol  858340 Nov  9 00:27 TREXrf08.ozone.nc
+#        -rw-r--r--  1 jbj eol  795580 Nov  9 00:27 TREXrf09.ozone.nc
+#        -rw-r--r--  1 jbj eol  810820 Nov  9 00:27 TREXrf10.ozone.nc
+#        -rw-r--r--  1 jbj eol  664924 Nov  9 00:27 TREXrf11.ozone.nc
+#        -rw-r--r--  1 jbj eol  849004 Nov  9 00:27 TREXrf12.ozone.nc
+#        -rw-rw-r--  1 jbj eol  103764 Nov  3  2006 VarDB
+#        -rwxr-xr-x  1 jbj eol    1358 Nov  3  2006 create_ozone_nc_files*
+#        -rw-r--r--  1 jbj eol   25600 Nov  3  2006 header_insituO3.doc
+#        -rw-r--r--  1 jbj eol   40960 Nov  3  2006 readme_insituO3.doc
+#     - source files:  ozone_data/*rafMerge.txt
+#     - destination files:  ozone_data/*ozone.nc
+#    - merge ozone into (Schanot + Pavel + Teresa + Webster) files
+#       (overwrite XO3MR only)
+#       subdirectory (source):  ozone_data/
+#       subdirectory (destination):  trex_al_pavel_teresa/
+#       files:  none new
+#    - add ozone global attributes
+#       via software:  update_o3 (c-shell script from Chris Webster)
+#       subdirectory (source):  ozone_data/
+#       subdirectory (destination):  trex_al_pavel_teresa/
+#       file:  update_o3
+#    - update header variable names as per Ron Ruth's review
+#       software:  trex_update_final (executable program)
+#       program source not available
+#       file:  update_header_final_script
+#       subdirectory (destination):  trex_al_pavel_teresa/
+#    - additional header update
+#       software:  ncatted (Should we archive the entire nctools software?)
+#       subdirectory (script source):  final/
+#       script file:  copy_script_update
+#       subdirectory (data source):  /jnet/productiondata/
+#       subdirectory (data copies):  final/ (apparently moved to trex_teresa/)
+#       files:
+#        -rw-r--r--  1 jbj eol 22404072 Nov  9 00:26 TREXrf01.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 22287472 Nov  9 00:26 TREXrf02.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 21121132 Nov  9 00:26 TREXrf03.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 21393292 Nov  9 00:26 TREXrf04.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 21665452 Nov  9 00:26 TREXrf05.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 20887852 Nov  9 00:26 TREXrf06.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 15016972 Oct 31  2006 TREXrf07.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 15016972 Nov  9 00:26 TREXrf07a.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol  3936172 Nov  9 00:26 TREXrf07b.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 20848972 Nov  9 00:26 TREXrf08.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 20693452 Nov  9 00:26 TREXrf09.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 20499052 Nov  9 00:27 TREXrf10.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 15988972 Nov  9 00:27 TREXrf11.chem.mrg.nc
+#        -rw-r--r--  1 jbj eol 20693452 Nov  9 00:27 TREXrf12.chem.mrg.nc
+#    - additional header update
+#  
+#  3) Procedures (from trex_al_pavel_teresa/merge_script_teresa)
+#    - copy files to common location (gni:/export/data/trex/trex_al_pavel_teresa/)
+#     - Pavel's merged GPS data (into Allen's files)
+#     - Teresa's files with CO and TDL data (into ../trex_teresa/)
+#    - merge Teresa's variables only (CO and TDL) into Pavel's files
+#    - add long_name and units to Teresa's variables with Chris Webster's "mrtdl" program
+#    - convert ASCII ozone files to netCDF and put files in ../ozone_data/
+#    - merge ozone data into Pavel's files
+#    - add ozone global attributes to Pavel's files
+#    - change the header variable names as per Ron Ruth's review
+#  
+#  4) Checks and corrections
+#    - Teresa corrected files except (RF03 and RF10) for a CO inlet delay problem
+#    - More corrections and additions to netCDF header attributes with program "trex_update_final"
+#  
+#  5) Needed items:
+#    - source code for Chris' netCDF attribute-correction programs
+#     - mrtdl (retrieved)
+#     - trex_update_final (only "update2" available)
+#
+#  Archive assembly plan:
+#   Assemble all files in directory bora:/scr/raf2/Prod_Data/TREX_MERGE/
+#    dgps Waypoint Software basically unavailable (Windows software)
+#    get version of "ncmerge" for archiving?
+#    get version of "asc2cdf" for archiving?
+#    get version of nctools (with "ncatted") for archiving?
+# +  scp -p gni:/export/data/trex/trex_al_pavel_teresa/merge_script_teresa --> software/.
+# +  scp -p gni:/export/data/trex/trex_al_pavel_teresa/update_header_final_script --> software/.
+# +  scp -p gni:/export/data/trex/trex_al_pavel_teresa/source_mrtdl/change_header/mrtdl.cc --> software/.
+#     (mrtdl adds new variable MRTDL)
+# +  scp -p gni:/export/data/trex/trex_al_pavel_teresa/source_mrtdl/change_header/compile --> software/.
+#     (compile compiles mrtdl)
+# +  cp bora:/code/chris/trex/mrtdl, update2 and trex_update --> software/orig_*
+# +  scp -p gni:/export/data/trex/trex_al_pavel/TREXrf*.nc --> dgps/.
+#     (Pavel's merge of dgps into Schanot's files)
+# +  cp /jnet/productiondata/TREXrf*.chem.mrg.nc --> chem.mrg/.
+#     (Teresa's CO and TDL data: MRTDL_LHL, XCOMR)
+# +  scp -p gni:/export/data/trex/ozone_data/O3_GV_*_rafMerge.txt --> ../ozone/
+# +  scp -p gni:/export/data/trex/ozone_data/TREXrf*.ozone.nc --> ../ozone/
+#     (Andy Weinheimer and Ilana Pollack ozone data -- XO3MR)
+#    [update_o3 software not available (added some attributes about the
+#     origin and 'ownership' of the ozone data files)]
+# +  gzip data files
+#
+# + create tar file of /scr/raf2/Prod_Data/TREX_MERGE/chem.mrg/* --> chem.mrg.tar
+# + create tar file of /scr/raf2/Prod_Data/TREX_MERGE/dgps/* --> dgps.tar
+# + create tar file of /scr/raf2/Prod_Data/TREX_MERGE/ozone/* --> ozone.tar
+# + create tar file of /scr/raf2/Prod_Data/TREX_MERGE/software/* --> software.tar
+# + create tar directory file of chem.mrg.tar --> chem.mrg.tar.dir
+# + create tar directory file of dgps.tar --> dgps.tar.dir
+# + create tar directory file of ozone.tar --> ozone.tar.dir
+# + create tar directory file of software.tar --> software.tar.dir
+#
+#-------
+#
+#  1st wave (assembled important files, see narrative above)
+#set SDIR = "/scr/raf2/Prod_Data/TREX_MERGE"
+#set SFILES = ( \
+#README \
+#chem.mrg.tar \
+#chem.mrg.tar.dir \
+#dgps.tar \
+#dgps.tar.dir \
+#ozone.tar \
+#ozone.tar.dir \
+#software.tar \
+#software.tar.dir \
+#)
+#set DFILES = ( \
+#mss:/RAF/2006/503/$TYPE/README \
+#mss:/RAF/2006/503/$TYPE/chem.mrg.tar \
+#mss:/RAF/2006/503/$TYPE/chem.mrg.tar.dir \
+#mss:/RAF/2006/503/$TYPE/dgps.tar \
+#mss:/RAF/2006/503/$TYPE/dgps.dir \
+#mss:/RAF/2006/503/$TYPE/ozone.tar \
+#mss:/RAF/2006/503/$TYPE/ozone.dir \
+#mss:/RAF/2006/503/$TYPE/software.tar \
+#mss:/RAF/2006/503/$TYPE/software.dir \
+#)
+#
+#  2nd wave (entire directories copied from "gni:/export/data/trex/"
+#set SDIR = "/jnet/local/projects/TREX/GV_N677F/Production/archive/Merge_Archive"
+#set SFILES = ( \
+#final.tar.gz \
+#ozone_data.tar.gz \
+#trex_al.tar.gz \
+#trex_al_pavel.tar.gz \
+#trex_al_pavel_jorgen.tar.gz \
+#trex_al_pavel_teresa.tar.gz \
+#trex_teresa.tar.gz \
+#)
+#set DFILES = ( \
+#mss:/RAF/2006/503/$TYPE/final.tar.gz \
+#mss:/RAF/2006/503/$TYPE/ozone_data.tar.gz \
+#mss:/RAF/2006/503/$TYPE/trex_al.tar.gz \
+#mss:/RAF/2006/503/$TYPE/trex_al_pavel.tar.gz \
+#mss:/RAF/2006/503/$TYPE/trex_al_pavel_jorgen.tar.gz \
+#mss:/RAF/2006/503/$TYPE/trex_al_pavel_teresa.tar.gz \
+#mss:/RAF/2006/503/$TYPE/trex_teresa.tar.gz \
+#)
+#
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directory(ies):  /RAF/2006/503/$TYPE/"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DFILE
+    if ($status == 0) then
+      set d2 = $DFILE:h
+      set d1 = $d2:t
+      set d2 = $DFILE:t
+      echo "#   $d1/$d2 -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+     echo " Cannot access file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#
+#  1st wave (assembled important files, see narrative above)
+#  9 job(s) submitted on Tue May 15 15:31:02 MDT 2007
+#  File(s) archived to MSS directory(ies):  /RAF/2006/503/LRT/MERGE/
+#   MERGE/README -- OK -- Tue May 15 15:31:07 MDT 2007
+#   MERGE/chem.mrg.tar -- OK -- Tue May 15 15:31:29 MDT 2007
+#   MERGE/chem.mrg.tar.dir -- OK -- Tue May 15 15:31:34 MDT 2007
+#   MERGE/dgps.tar -- OK -- Tue May 15 15:31:59 MDT 2007
+#   MERGE/dgps.dir -- OK -- Tue May 15 15:32:04 MDT 2007
+#   MERGE/ozone.tar -- OK -- Tue May 15 15:32:09 MDT 2007
+#   MERGE/ozone.dir -- OK -- Tue May 15 15:32:14 MDT 2007
+#   MERGE/software.tar -- OK -- Tue May 15 15:32:19 MDT 2007
+#   MERGE/software.dir -- OK -- Tue May 15 15:32:23 MDT 2007
+#   Completed on Tue May 15 15:32:23 MDT 2007
+#
+#  2nd wave (entire directories copied from "gni:/export/data/trex/"
+#  7 job(s) submitted on Tue May 15 16:12:22 MDT 2007
+#  File(s) archived to MSS directory(ies):  /RAF/2006/503/LRT/MERGE/
+#   MERGE/final.tar.gz -- OK -- Tue May 15 16:13:43 MDT 2007
+#   MERGE/ozone_data.tar.gz -- OK -- Tue May 15 16:13:49 MDT 2007
+#   MERGE/trex_al.tar.gz -- OK -- Tue May 15 16:14:22 MDT 2007
+#   MERGE/trex_al_pavel.tar.gz -- OK -- Tue May 15 16:15:01 MDT 2007
+#   MERGE/trex_al_pavel_jorgen.tar.gz -- OK -- Tue May 15 16:15:39 MDT 2007
+#   MERGE/trex_al_pavel_teresa.tar.gz -- OK -- Tue May 15 16:16:05 MDT 2007
+#   MERGE/trex_teresa.tar.gz -- OK -- Tue May 15 16:16:32 MDT 2007
+#   Completed on Tue May 15 16:16:32 MDT 2007
+#

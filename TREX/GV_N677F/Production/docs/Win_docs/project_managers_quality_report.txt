@@ -1,0 +1,303 @@
+Project managers quality report, Jorgen Jensen - T-REX
+
+Information on T-REX:
+
+PI: Vanda Grubisic, DRI
+Main web site: www.eol.ucar.edu/projects/trex
+GV deployment dates: 1 March -30 April 2006
+
+Date: 20 Oct. 2006
+
+Acknowledgments: The T-REX production data set for the NSF/NCAR GV was processed by Allen Schanot. Much of the credit for generating the software and procedures should also go to Dick Friesen, Chris Webster and Al Cooper.  Teresa Campos, Ilana Pollack and Andy Weinheimer provided processed chemistry data (TDL water vapor, CO and ozone), and Pavel Romashkin processed the differential GPS data. Ron Ruth directed me to issues with documentation that materially improved the data set, and many others within RAF provided invaluable help with instrument calibration.
+
+Background: T-REX was the first deployment of the NSF/NCAR GV research aircraft for which production data have been released. The aircraft had been delivered to RAF about a year earlier, and much work had been done prior to T-REX in order to make the GV ready for deployment. The vast majority of the instruments onboard the GV for T-REX functioned extremely well, but a few required special handling in generating the data for T-REX.
+
+This summary has been written to outline basic instrumentation problems affecting the quality of the data set and is not intended to point out every bit of questionable data. It is hoped that this information will facilitate use of the data as the research concentrates on specific flights and times. The purpose is to serve as a guide for users unfamiliar with the GV sensors, variable names etc. In particular, the purpose of Section 1 is:
+
+To describe the instruments installed onboard HIAPER in T-REX in some detail. Many instruments and variable names differ from those used on the C-130. The following description covers the most commonly used variables in the T-REX GV data set.
+
+To describe the data logging procedures, including how data are filtered and averaged.
+
+Section 2 lists isolated problems occurring on a flight-by-flight basis. Documents describing the detail performance of the ACD ozone sensor and the EOL dropsonde system will be provided separately.
+
+
+
+
+Section 1: General discussion of sensors and measurements
+
+Pressure:
+Static pressure is available using two different systems:
+
+Static pressure is measured with a highly accurate Paroscientific (MODEL 1000) with a stated accuracy of 0.01% of full scale.
+		PSF/PSX	Static pressure as measured using the fuselage holes
+		PSFC/PSXC	Static pressure corrected for airflow effects (pcorr)
+		
+Use PSXC for the normal measure of pressure (e.g. in equation of state or hydrostatic equation).
+
+A second static pressure system is provided by the GV avionics system. This is slower than the Paroscientific measurement, but it has been corrected for airflow effects and it is certified for 'Reduced vertical separation minimum' (RVSM) though the calculation of pressure altitude. RAF has no documentation on how Gulfstream and Honeywell corrected this pressure measurement, but the measurement has passed very strict FAA certification requirements.
+		
+
+
+Temperature:
+Temperature was measured using four different sensors on the GV:
+
+A unheated Rosemount sensor was used for fast-response measurements. This sensor can be affected by icing, but that did not appear to be a problem in T-REX.
+Two heated Harco sensors were used to give a slower response temperature, that would also be adequate in icing conditions. A fourth measurement of temperature (slow and with some delay) was provided by the GV avionics instrumentation.
+
+The Rosemount and Harco measurements were logged using analog channels that suffered from cross-talk and drift. As a consequence, RAF recommends using the blended temperature, ATX, see below, for all uses of the T-REX data set.
+ 
+	TTRL		Total air temperature from fast Rosemount sensor
+	TT_A		Total air temperature from the avionics system
+
+ATRL		Ambient air temperature from the Rosemount system
+AT_A		Ambient temperature from the avionics system
+		ATC/ATX	Ambient temperature blended by low-pass filtering the
+				avionics temperature and high-pass filtering the Rosemount
+measurements. Please note that this is the best available temperature measurement, but also that it is not perfect. The filter cross-over point is at 30 s. In a sense we are using the absolute accuracy of the AT_A sensor and the high-frequency response of the ATRL to generate ATX.
+
+RAF recommends using ATX for the temperature in thermodynamic equations, etc.
+
+
+	
+Measurements of temperature using the fast-response Rosemount sensor (ATRL), the generally slower avionics tempertature (AT_A) and the blended temperature (ATX).
+
+
+Dewpoint temperature and vapor density:
+Humidity was measured using three different sensors:
+
+Two Buck Research 1011C cooled mirror hygrometers are used for tropospheric humidity. They have a sandwich of three Peltier elements to cool the mirror, and in comparison to earlier generations of cooled mirror hygrometers, they have a much-improved capability to measure at low temperatures. These sensors are assumed to measure dewpoint above 0C and frostpoint below 0C. The instrument has a quoted accuracy of 0.1 degC over the -75 to + 50 degC; however, based on examination of the measurements RAF is not comfortable with accuracies better 0.5 degC for dewpoint and 1 degC for frostpoint. The cooled mirror sensors are slow, in particular at lower temperatures, and this may give considerable differences between the measurements from the two units. Their cooling rates depend in part on the airflow through the sensor, and this may depend on the angle of the external stub relative to the airflow. The angle may differ between the two sensors, and this may contribute to response-time differences between the sensors. At very low temperatures the sensors may jump ("rail") to even lower temperatures. The cooled mirror temperatures are included when they are outside the sensor operating range; this is caused by the need to use values of water vapor in other calculations (e.g. true air speed)
+
+Humidity was also measured using a MayComm Open-path Laser Hygrometer. This dual-channel hygrometer detects optical absorption of water vapor at 1.37 um. The sensor has an estimated accuracy of 5-10% of ambient humidity (units of ppbv). The sensor has two spectral channels that are used to determine high and low values of humidity, and they are combined to give a single value of humidity, see below.
+
+	DPLS		Dewpoint/frostpoint for left fuselage cooled mirror sensor.
+	DPLC		Dewpoint for left cooled mirror sensor.
+	DPRS		Dewpoint/frostpoint for right cooled mirror sensor.
+	DPRC		Dewpoint for right cooled mirror sensor.
+DPXC	Dewpoint, from either right or left cooled mirror sensor. The project manager has chosen the best performing of either DPLC or DPRC for a given flight. Use this as a slow, tropospheric sensor.
+MR	Mixing ratio (g/kg) based on DPXC.
+MRTDL	Mixing ratio (g/kg) based on TDL sensor. 
+MRTDL_LHL	 Mixing ratio (ppmv) based on TDL sensor.
+MRTDL_LHS	 Do not use.
+
+RAF recommends using DPXC as a slow 'tropospheric' variable, and RAF recommends using MRTDL as a fast-response 'tropospheric' variable. MRTDL is also recommended for all 'stratospheric' use.
+
+
+
+Examples of dewpoint responses (top box). DPRC was used to calculate DPXC, which in turn was used to calculate the mixing ratio, MR, bottom box. The bottom box also shows the TDL calculated mixing ratio, MRTDL. Note that the three humidity measurements typically show large differences at cold temperatures. This is a clear example of why the TDL should be used at cold temperatures.
+
+
+
+Overshooting of cooled mirror hygrometers may occur when humidity increases rapidly.
+
+Attack and sideslip angles:
+Measurements of attack and sideslip were done using the 5-hole nose cone pressure sensors, primarily ADIFR and BDIFR. Although sampled at 50 sps, internal filtering in the Mensor pressure sensors (model 6100) limits usefulness of high-rate analysis to about 5 Hz.
+
+		ADIFR	Attack angle pressure sensor
+		ATTACK	Attack angle
+		BDIFR		Sideslip angle pressure sensor
+		SSLIP		Sideslip angle
+
+Both ATTACK and SSLIP were corrected using in-flight maneuvers. 
+
+True air speed:
+True air speed was also measured primarily using a Mensor 6100 sensor, thus limiting the effective response to 5 Hz. 
+
+The radome pitot tube system uses the center hole of the 5-hole nose cone in conjunction with the research static pressure ports on the fuselage aft of the entrance door. A standard avionics pitot tube is also mounted on the fuselage aft of the radome, and this system is also referenced to the fuselage static ports aft of the main entrance door. It was found during empirical analysis that the fuselage pitot system gave more consistent results in reverse heading maneuvers; it is suspected that this is due to random pressure changes at the radome center hole as has been suggested by modeling. The fuselage system is used for the calculation of the aircraft true air speed, as well as for attack and sideslip angles. True air speed is also provided from the aircraft avionics system, but this system is considered of slower response. Measurements using the radome and fuselage pitot systems were corrected using in-flight maneuvers.
+
+	TASR		True air speed using the radome system
+	TASF/TASX	True air speed from the fuselage pitot system
+TASHC	True air speed using the fuselage pitot system and adding humidity corrections to the calculations; this is mainly of benefit in tropical low-altitude flight.
+	TAS_A	True air speed from the avionics system
+
+RAF recommends using TASX as the aircraft true air speed.
+
+Position and ground speed:
+The measurement of aircraft position (latitude, longitude and geometric altitude) and aircraft velocities relative to the ground are done using five different sensors onboard the GV:
+
+Garmin GPS (Reference): These data are sampled at 10 sps and averaged to 1 sps. This is a simple GPS unit with a serial output, and the measurements are available in real-time. The values from this sensor start with a "G"; e.g.:
+	GGLAT	Latitude
+	GGLON	Lognitude
+	GGALT	Geometric altitude
+	GGSPD	Ground speed
+	GGVNS	Ground speed in north direction
+	GGVEW	Ground speed in east direction
+These are good values to use for cases where the highest accuracy is not needed. These variables are subsequently used to constrain the INS drift for the calculations of the GV winds; more about this below.
+
+GV GPS: The GV flight deck is equipped with another simple GPS unit, and the data from this unit has subscript "_G" at the end; i.e.:
+	LAT_G	Latitude
+	LON_G	Longitude
+	ALT_G	Geometric altitude
+	GSF_G	Ground speed
+	VNS_G	Ground speed in the north direction
+	VEW_G	Ground speed in the east direction
+	VSPD_G	Vertical speed of the aircraft
+
+Novatel differential GPS: This is an extremely accurate Novatel OEM-4 GPS system providing accuracies estimated to be in the range of better than 0.2 m for most of T-REX. These data are post-processed with data from ground stations in order to obtain the high accuracy. The differential GPS data are given relative to the NAD83 geoid. The data is logged on dedicated data logger and later merged with the main aircraft data.
+	LAT_DGPS	Latitude of the GPS antenna
+	LON_DGPS	Longitude of the GPS antenna
+	ALT_DGPS	Altitude of the GPS antenna
+ALT_DGPSP	Altitude of the static pressure transducer. This altitude is preferred for high-precision work on pressure perturbations.
+		VEWDG	Ground speed, east direction
+		VNSDG	Ground speed, north direction
+		VSPDDG	Vertical aircraft speed
+
+
+Honeywell inertial reference system 1 and 2: The GV has three inertial systems on the flight deck. Data from the first two of these are logged on the main aircraft data logger, with subscripts the latter having variable names with suffix "_IRS2". The advantage of the IRS values is that they typically have very high sample rates and very little noise from measurement to measurement. However, since they are based on accelerometers and gyroscopes, their values may drift with time. The drift is corrected for by filtering the INS positions towards the GPS positions with a long time constant filter; the filtered values have a "C" added to the end.
+	LAT		latitude from IRS 1, no GPS filtering
+	LATC		latitude from IRS 1, filtered towards GPS values
+	LAT_IRS2	latitude from IRS 2, no GPS filtering
+
+	LON		longitude from IRS 1, no GPS filtering
+	LONC		longitude from IRS 1, filtered towards GPS values
+	LON_IRS2	longitude from IRS 2, no GPS filtering
+
+	GSF		ground speed from IRS 1, no GPS filtering
+	GSF_IRS2	ground speed from IRS 2, no GPS filtering
+
+The choice of parameters for position analysis depends on the type of analysis; in general the Garmin GPS is sufficiently accurate. However, for very precise analysis we recommend using the differential GPS data. For instance, in the TREX area, the Garmin data have an accuracy of aircraft altitude of +/-3 m, whereas the differential GPS is estimated to be accurate to better than +/-0.3 m for 95% of the time. The avionics GPS may only have an altitude accuracy estimated to be +/-15 m.
+
+
+
+
+Attitude angles:
+Aircraft attitude angles are measured by the two Honeywell IRS units.
+		PITCH		pitch angle from IRS 1 (nose up is positive)
+		PITCH_IRS2	pitch angle from IRS 2
+
+		ROLL		roll angle from IRS 1 (right wing up is positive)
+		ROLL_IRS2	roll angle from IRS 2
+
+		THDG		true heading from IRS 1
+		THDG_IRS2	true heading from IRS 2
+
+The values of pitch angle (PITCH) have been corrected using in-flight measurements to give approximately the same values as the aircraft attack angle (ATTACK) for long parts of each flight; this correction is done on a flight-by-flight basis to give a near-zero mean updraft over extended flight legs. The variation from flight to flight of this offset is caused by small differences in the pre-flight alignment of the inertial navigation system. No alignment correction has been applied to PITCH_IRS2.
+
+Wind speeds:
+Wind speeds are derived based on the 5-hole nose cone, other pressure measurements, temperature and inertial measurements supported by GPS data. The use of the Mensor 6100 pressure sensors for ADIFR, BDIFR, QCF and QCF results in the following limitations on the wind data: These pressure measurements were sampled at 50 sps and thus resulting in power spectra to 25 Hz. Examination of power spectra and specifications from Mensor indicate that the sensors have internal filters with a -3dB (half-power) cutoff at 12 Hz, resulting in a noticeable roll-off in the spectra beginning approximately at 6 to 7 Hz. Users of wind data should be aware that contributions to covariances and dissipation calculations will be affected at and above these frequencies.
+
+ The following lists the most commonly used wind parameters:
+
+		UI		Wind vector, east component
+		UIC		Wind vector, east component, GPS corrected for INS drift
+		VI		Wind vector, north component
+		VIC		Wind vector, north component, GPS corrected
+
+		UX		Wind vector, longitudinal component
+		UXC		Wind vector, longitudinal component, GPS corrected
+		VY		Wind vector, lateral component
+		VYC		Wind vector, lateral component, GPS corrected
+
+		WI		Wind vector, vertical gust component
+		WIC		Wind vector, vertical gust component, GPS corrected
+
+		WS		Wind speed, horizontal component
+		WSC		Wind speed, horizontal component, GPS corrected
+		WD		Horizontal wind direction
+		WDC		Horizontal wind direction, GPS corrected
+
+RAF recommends using the GPS corrected wind components, i.e. the variables ending in "C". 
+
+
+CN:
+Condensation nuclei (CN) were measured using a Quant Technology instrument WCP-LP, modified by Aerosol Dynamics Inc. The basic instrument, prior to modification, is similar to a TSI 3786. This new instrument uses water-based supersaturation to grow particles to detectable sizes (other instruments commonly use butanol as the vapor). The minimum detectable particle size is nominally 7 nm. The CN sensor is a development project which is continuing. The sensor would on occasion stop functioning at high altitude, and commonly these periods extended until the aircraft descended to lower altitudes. This was primarily a problem earlier in the deployment period. In Section 2 are described most of the periods for which the sensor was not functioning. Users should also be aware that the periods of gently decreasing CN concentrations prior to the malfunctioning periods may also have erroneous CN concentrations.
+
+		CONCN_WCN	CN concentration
+TOCN_WCN		Temperature of sensor optics block
+PCN_WCN		Pressure at sensor optics block
+
+The CN concentration is given in units of #/cm3 inside the sensor growth tube. To calculate to ambient conditions or to standard temperature and pressure condition, users can calculate the concentrations using TOCN_WCN and PCN_WCN. For more information users are encouraged to contact Dr. Dave Rogers, 303-497-1054.
+
+Ozone:
+An ozone chemiluminescence instrument (provided by PIs Dr. Andy Weinheimer, Dr. Teresa Campos and Dr. Ilana Pollack, NCAR/ACD) was flown on the GV during T-REX. This instrument relies on a reaction beween NO and ambient ozone. Time synchronization was obtained by calculation of inlet delays, and the data was interpolated to facilitate comparison with other aircraft measurements. The ozone mixing ratio was merged into standard RAF data files:
+
+		XO3MR	Corrected ozone mixing ratio.
+		 
+A separate document (GV in situ O3) describes the ozone measurements in depth.
+
+
+TKE:
+
+An experimental parameter, TKE, has been derived based on the three components of the wind and the horizontal wind speed. This parameter is not for general use, but it will be used for internal RAF work.
+
+CO:
+
+In situ carbon monoxide was measured by a commercial vacuum ultraviolet resonance fluorescence instrument, the Aero-Laser AL5002.  An inlet compressor was implemented to allow operation at all HIAPER altitudes.  The AL5002 has a lower detection limit of 3 ppbv with an accuracy of +/- (3ppbv + 5%):
+ 
+		XCOMR	CO mixing ratio (ppbv)
+
+Quality assured data were obtained for 10 of 12 T-REX flights; the instrument was not functional during research flights 3 and 10.  Processed data have been corrected for an altitude-dependent time delay associated with the relatively long inlet line.  Delays ranged from 0-8 seconds and the data have been synchronized before being merged into the standard RAF data files. The CO instrument needed calibration every 30-60 minutes and this is apparent as missing data.  An intercomparison was conducted with CO measured from the UKMO BAe-146 during RF07.  A plot comparing data from the two instruments was prepared by Ilana Pollack and is shown below.  Please note that preliminary data was used in this figure; it is possible that agreement will improve upon further analysis.
+To correct for occasional problems with spikes in the data (as can be seen at approximately 10:05 in the intercomparison plot), a 5-second median filter was applied to the data to remove spikes.  If interest develops in faster-response data, the native 1-second data files can be made available.
+
+Comparison between GV CO measurements and BAE-146 CO measurements during T-REX RF07A.
+
+Liquid water content:
+
+A PMS-King type liquid water content sensor was installed on the GV just prior to the T-REX flights. The performance is still under investigation, and the following two variables should not be used at present:
+
+		PLWC		Dissipated power (wet + dry terms) for the King probe.
+		PLWCC	Cloud liquid water content (do not use at present)
+
+
+Data logging and averaging:
+
+Analog data, primarily the Rosemount and Heiman temperature sensors and the cabin temperatures, were logged at 500 sps and averaged to 1 sps. Most of the remainder of the data were recorded as serial data (e.g. RS-232), ARINC data (IRS units), etc.
+
+The recordings listed for a given second contains measurements logged at e.g. 12:00:00.000 and until 12:00:01. The value of "Time" corresponding to this interval is given a 12:00:00 in the released data set.
+
+All measurements are "time-tagged" at the time of logging. Subsequently these measurements are interpolated onto a regular grid and averaged.
+
+RAF staff have reviewed the data set for instrumentation problems.  When an instrument has been found to be malfunctioning, specific time intervals are noted.  In those instances the bad data intervals have been filled in the netCDF data files with the missing data code of -32767. In some cases a system will be out for an entire flight.
+
+Measurements on the ground
+
+Virtually all measurements made on the aircraft require some sort of airspeed correction or the systems simply do not become active while the aircraft remains on the ground.  None of the data collected while the aircraft is on the ground should be considered as valid.
+
+Recommendation for variable names:
+
+In general RAF recommends using the 'reference' variables (those ending in "X"), where several exist; however, as explained above, there are exceptions to this rule (e.g. high-altitude humidity).
+
+
+Section 2:  Flight-by-flight summary
+
+RF01:
+	No CN data for 17:05 - 19:05 and 22:38 - 23:52, approx.
+
+RF02:
+No CN data for 21:47 - 22:05, 22:55 - 23:40, 00:21 - 01:00, 01:30 - 01:50 and 02:35 - 03:48, approx.
+
+RF03:
+	No CN data for 21:20 - 23:23, 00:15 - 00:56 and 01:53 - 03:42, approx.
+	No CO data.
+
+RF04:
+	No CN data for 20:00 - 22:25, 23:17 - 23:59 and 00:43 - 02:06, approx.
+
+RF05:
+	No CN data for the entire flight.
+
+RF06:
+	No CN data for 15:15 - 22:26, approx.
+
+RF07A:
+No CN data for 17:23 - 18:34,  19:27 - 19:39,  20:43 - 20:57, 21:18 - 21:24, and 22:45 -  22:59.
+
+RF07B:
+	No CN data for 01:58 - 03:00, approx.
+	Data system down 22:05 - 22:07, approx.
+RF08:
+	No CN data for 12:42 - 16:07,16:34 - 18:09, 18:36 - until end of flight.
+
+RF09:
+	No CN data for 19:22 - until end of flight.
+
+RF10:
+	No CN data for 20:01 - 21:22 and 22:46 - 03:53, approx.
+	No CO data.
+
+RF11:
+	No CN data for 18:47 - 19:39, approx.
+
+RF12:
+	
+
+

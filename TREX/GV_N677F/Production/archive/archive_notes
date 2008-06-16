@@ -1,0 +1,118 @@
+Support file archive notes:
+ 1) tarit.docs:
+     read protected files: /net/www/docs/raf/Projects/TREX/Matrix_Flight.html
+                           /net/www/docs/raf/Projects/TREX/checklist
+     before running script (to update):
+       cd /net/www/docs/raf/Projects/TREX
+       cra Matrix_Flight.html checklist
+     before running script (to restore):
+       chmod 660 Matrix_Flight.html checklist
+
+ 2) tarit.503:
+     file:  Mail_Prelim_Data_Access.503 not yet added to the archive
+
+-------
+Ronald L. Ruth
+Mon Mar 19 21:38:46 GMT 2007
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+Production data file archive notes:
+
+ 1) archunalterednc.503:
+     added RF07B and TF04 to the LRT RAF "unaltered" archive (after ncReorder)
+      Tue Mar 20 11:13:19 MDT 2007
+
+ 2) T-REX LRT merged data files were generated on computer "gni."
+  A) Directory structure there is:
+      gni:/export/data/trex/
+       README
+       final/
+       ozone_data/
+       trex_al/
+       trex_al_pavel/
+       trex_al_pavel_jorgen/
+       trex_al_pavel_teresa/
+       trex_high/
+       trex_raw/
+       trex_teresa/
+     Script used for doing all the merging (except for dGPS):
+       /export/data/trex/trex_al_pavel_teresa/merge_script_teresa
+     Directories/files actually used for T-REX LRT merging:
+   a) Pavel's merged dGPS (using Waypoint Software):
+     source (netCDF):  /export/data/trex/trex_al_pavel/TREXrf??.nc
+                       /export/data/trex/trex_al_pavel/TREXrf07[ab].nc
+     source files:  /export/data/trex/trex_al_pavel_teresa/source_dGPS/
+      (when Pavel can make this subdirectory available)
+   b) Teresa's files (MRTDL_LHL and XCOMR without attribute updates):
+     source: /jnet/productiondata/TREXrf??.chem.mrg.nc
+             /jnet/productiondata/TREXrf07[ab].chem.mrg.nc
+     merged source:  /export/data/trex/trex_teresa/*
+     merged destination:  /export/data/trex/trex_al_pavel_teresa/*
+   c) Chris Webster's program to update Teresa's attributes and calculate
+       new MRTDL (gram/kg):
+        /export/data/trex/trex_al_pavel_teresa/mrtdl
+       Program source code is in directory:
+        /export/data/trex/trex_al_pavel_teresa/source_mrtdl/
+
+   d) Convert ASCII ozone files from Andy Weinheimer and Ilana Pollack to
+       netCDF
+     source files:  /export/data/trex/ozone_data/O3_GV_2006????_rafMerge.txt
+     destination files:  /export/data/trex/ozone_data/TREXrf??.ozone.nc
+                         /export/data/trex/ozone_data/TREXrf07[ab].ozone.nc
+     program:  asc2cdf -m -d "2006-mm-dd"  <source_ASCII> <destination_netCDF>
+     Note:  RF07B's date is 7 April 2006, but input date is the 6th.
+            (Resulting output file appears to be OK.)
+   e) Merge ozone data (XO3MR) into the extant merged files:
+     source files:  /export/data/trex/ozone_data/TREXrf??.ozone.nc
+                    /export/data/trex/ozone_data/TREXrf07[ab].ozone.nc
+     merged destination:  /export/data/trex/trex_al_pavel_teresa/*
+   f) Add ozone global attributes:
+     /export/data/trex/trex_al_pavel_teresa/update_o3
+      (uses ncatted to do this work)
+   g) Change header variable names for RF01 (per Ron Ruth):
+     /export/data/trex/trex_al_pavel_teresa/update_header_final_script runs:
+     /export/data/trex/trex_al_pavel_teresa/trex_update_final
+      Program source code is in directory
+       /export/data/trex/trex_al_pavel_teresa/source_trex_update_final/
+   h) Final output files:
+        gni:/export/data/trex/trex_al_pavel_teresa/TREXrf??.nc
+        gni:/export/data/trex/trex_al_pavel_teresa/TREXrf07[ab].nc
+       I assume that these final output files transferred to:
+        bora:/jnet/productiondata/trex/final/*
+       since that is the source directory used for the Mass Store LRT archive.
+       (On 20 March 2007, this directory doesn't exist.)
+  B) Archive plan for LRT merged data:
+   a) Collect all pertinent files and categorize "new" ones in separate
+       subdirectories off of gni:/export/data/trex/trex_al_pavel_teresa/
+   b) Gzip all netCDF files in these directories
+   c) Create one large tar file of the directory gni:/export/data/trex located
+       in the gni:/export/data/ directory with the name "TREX_LRT_MERGE.tar."
+   d) Copy/move this file from "gni" to "bora" in new directory:
+     bora:/jnet/local/projects/TREX/GV_N677F/Production/archive/Merge_Archive/
+   e) Create tar file directory list (TREX_LRT_MERGE.tar.dir) in directory:
+       /jnet/local/projects/TREX/GV_N677F/Production/archive/Merge_Archive/
+   f) Archive tar file and tar directory file to Mass Store in directory:
+       mss:/RAF/2006/503/LRT/MERGE/
+   g) Delete tar file (TREX_LRT_MERGE.tar) in directory:
+     bora:/jnet/local/projects/TREX/GV_N677F/Production/archive/Merge_Archive/
+       preserving only the TREX_LRT_MERGE.tar.dir file.
+
+ 3) Support file archive update
+  A) Update taplog.503 file (paths for LRT/TF04 and HRT/TF04)
+  B) Create LRT merge file archive tar file and tar.dir file
+  C) Edit tarit.503 (add new files)
+  D) Add new and updated files to "archive.support" file
+      nimbus version 3501 (LRT)
+      archive merge files (including scripts, et al.) from machine "gni."
+      Production/archive/Merge_Archive/TREX_LRT_MERGE.tar \
+      Production/archive/Merge_Archive/TREX_LRT_MERGE.tar.dir \
+  E) Rerun tarit.503 to create 503.tar and 503.tar.dir
+  F) Rerun tarit.docs to create 503.documents.tar and 503.documents.tar.dir
+  G) Rerun archive.support (completes the archive update)
+  H) cnx tarit.503
+  I) Update MSfiles/msls.503 (again)
+
+-------
+Ronald L. Ruth
+Tue Mar 20 14:49:31 MDT 2007

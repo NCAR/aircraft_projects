@@ -1,0 +1,139 @@
+#! /bin/csh -f
+#
+#  Archive production NIMBUS netCDF output files for project:
+#    2006-503 T-REX (Terrain-induced Rotor EXperiment) (Vanda Grubisic, et al.)
+#   using the new ATD directory path
+#
+#  File created by '/jnet/local/scripts/genar' Revision 15.1 on Mon Nov 20 11:22:32 MST 2006
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo ${0}:  Only the "dmg" login is allowed to run this script.  Quitting.
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+# set msrcpMachine = "vivaldi"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s)
+#set RPWD = "-rpwd hidden from view -- see CDS/DMG support personnel for it"
+#                                          Scot Loehrer ext. 2631
+#
+#  0th wave (archive unaltered LRT files:  see file archunalterednc.503)
+#
+#  1st wave (merged LRT files, research only, no test flights)
+#  2nd wave (Rearchived after ncReorder was run on the files)
+#set SDIR = "/export/data/trex/final"
+set SDIR = "/jnet/productiondata/trex/final"
+#
+#set SFILES = ( \
+#TREXrf01.nc \
+#TREXrf02.nc \
+#TREXrf03.nc \
+#TREXrf04.nc \
+#TREXrf05.nc \
+#TREXrf06.nc \
+#TREXrf07a.nc \
+#TREXrf07b.nc \
+#TREXrf08.nc \
+#TREXrf09.nc \
+#TREXrf10.nc \
+#TREXrf11.nc \
+#TREXrf12.nc \
+#)
+##
+#set DFILES = ( \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF01.20060302.150900_004400.PNI.nc \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF02.20060305.185200_042400.PNI.nc \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF03.20060309.190500_040700.PNI.nc \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF04.20060314.180400_031300.PNI.nc \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF05.20060325.151000_002600.PNI.nc \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF06.20060402.143900_233500.PNI.nc \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF07A.20060406.164100_230600.PNI.nc \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF07B.20060407.012600_030600.PNI.nc \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF08.20060408.120500_210000.PNI.nc \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF09.20060415.175800_024900.PNI.nc \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF10.20060416.191200_035800.PNI.nc \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF11.20060421.130200_195200.PNI.nc \
+#mss:/ATD/DATA/2006/TREX/GV_N677F/LRT/RF12.20060426.125500_214600.PNI.nc \
+#)
+#
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directory(ies):  /ATD/DATA/2006/TREX/GV_N677F/"
+#echo "#  (directories, if flights occurred in more than one year.)"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DFILE
+    if ($status == 0) then
+      set d2 = $DFILE:h
+      set d1 = $d2:t
+      set d2 = $DFILE:t
+      echo "#   $d1/$d2 -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+     echo " Cannot access file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#  1st wave (merged LRT files, research only, no test flights)
+#  13 job(s) submitted on Mon Nov 20 12:24:03 MST 2006
+#  File(s) archived to MSS directory:  /ATD/DATA/2006/TREX/GV_N677F/
+#   LRT/RF01.20060302.150900_004400.PNI.nc -- OK -- Mon Nov 20 12:24:13 MST 2006
+#   LRT/RF02.20060305.185200_042400.PNI.nc -- OK -- Mon Nov 20 12:24:24 MST 2006
+#   LRT/RF03.20060309.190500_040700.PNI.nc -- OK -- Mon Nov 20 12:24:33 MST 2006
+#   LRT/RF04.20060314.180400_031300.PNI.nc -- OK -- Mon Nov 20 12:24:47 MST 2006
+#   LRT/RF05.20060325.151000_002600.PNI.nc -- OK -- Mon Nov 20 12:24:56 MST 2006
+#   LRT/RF06.20060402.143900_233500.PNI.nc -- OK -- Mon Nov 20 12:25:12 MST 2006
+#   LRT/RF08.20060408.120500_210000.PNI.nc -- OK -- Mon Nov 20 12:25:18 MST 2006
+#   LRT/RF09.20060415.175800_024900.PNI.nc -- OK -- Mon Nov 20 12:25:36 MST 2006
+#   LRT/RF10.20060416.191200_035800.PNI.nc -- OK -- Mon Nov 20 12:25:45 MST 2006
+#   LRT/RF11.20060421.130200_195200.PNI.nc -- OK -- Mon Nov 20 12:25:53 MST 2006
+#   LRT/RF12.20060426.125500_214600.PNI.nc -- OK -- Mon Nov 20 12:26:03 MST 2006
+#   LRT/RF07A.20060406.164100_230600.PNI.nc -- OK -- Mon Nov 20 12:26:17 MST 2006
+#   LRT/RF07B.20060407.012600_030600.PNI.nc -- OK -- Mon Nov 20 12:26:26 MST 2006
+#   Completed on Mon Nov 20 12:26:26 MST 2006
+#
+#  2nd wave (Rearchived after ncReorder was run on the files)
+#  13 job(s) submitted on Mon Nov 27 12:22:28 MST 2006
+#  File(s) archived to MSS directory(ies):  /ATD/DATA/2006/TREX/GV_N677F/
+#   LRT/RF01.20060302.150900_004400.PNI.nc -- OK -- Mon Nov 27 12:22:36 MST 20 06
+#   LRT/RF02.20060305.185200_042400.PNI.nc -- OK -- Mon Nov 27 12:22:45 MST 2006
+#   LRT/RF03.20060309.190500_040700.PNI.nc -- OK -- Mon Nov 27 12:22:54 MST 2006
+#   LRT/RF04.20060314.180400_031300.PNI.nc -- OK -- Mon Nov 27 12:23:31 MST 2006
+#   LRT/RF05.20060325.151000_002600.PNI.nc -- OK -- Mon Nov 27 12:23:40 MST 2006
+#   LRT/RF06.20060402.143900_233500.PNI.nc -- OK -- Mon Nov 27 12:24:06 MST 2006
+#   LRT/RF07A.20060406.164100_230600.PNI.nc -- OK -- Mon Nov 27 12:25:34 MST 2006
+#   LRT/RF07B.20060407.012600_030600.PNI.nc -- OK -- Mon Nov 27 12:26:45 MST 2006
+#   LRT/RF08.20060408.120500_210000.PNI.nc -- OK -- Mon Nov 27 12:27:35 MST 2006
+#   LRT/RF09.20060415.175800_024900.PNI.nc -- OK -- Mon Nov 27 12:27:42 MST 2006
+#   LRT/RF10.20060416.191200_035800.PNI.nc -- OK -- Mon Nov 27 12:27:56 MST 2006
+#   LRT/RF11.20060421.130200_195200.PNI.nc -- OK -- Mon Nov 27 12:28:05 MST 2006
+#   LRT/RF12.20060426.125500_214600.PNI.nc -- OK -- Mon Nov 27 12:28:13 MST 2006
+#   Completed on Mon Nov 27 12:28:14 MST 2006
+#

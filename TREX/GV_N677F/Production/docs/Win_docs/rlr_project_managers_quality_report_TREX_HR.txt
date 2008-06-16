@@ -1,0 +1,296 @@
+Project managers quality report, Jorgen Jensen - T-REX
+
+HIGH-RATE NSF/NCAR GV DATA SET
+
+Information on T-REX:
+
+PI: Vanda Grubisic, DRI
+Main web site: www.eol.ucar.edu/projects/trex
+GV deployment dates: 1 March -30 April 2006
+
+Date: 23 Feb 2007
+
+Acknowledgments: Allen Schanot produced the NSF/NCAR GV high-rate production data set for T-REX. Much of the credit for generating the software and procedures should also go to Dick Friesen, Chris Webster and Al Cooper. Almost all of RAF's staff and many other EOL staff have been involved in preparing instruments for the T-REX deployment or they have participated in the GV operations, and they also deserve credit for the data.
+
+Background: T-REX was the first deployment of the NSF/NCAR GV research aircraft for which production data have been released.
+
+Data with 1 sps data rate have previously been released, and a separate project manager's Quality Report has been issued. Please refer to that for general questions about the T-REX NSF/NCAR GV data set. The present report is intended as a supplement to describe the particular issues with the high-rate T-REX netCDF processing and files.
+
+It should be noted that the two programs creating the low-rate and high-rate netCDF files are separate programs. Due to a variety of reasons, the 1 sps data files are not simply averages of the 25 sps files. However, the differences are mostly very small.
+
+Contents of the T-REX GV high-rate data files: The previously-released low-rate GV T-REX data set (1 sample per second) contains both the variables recorded on the main aircraft data logger, and also a number of other measurements using separate data systems (Laser hygrometer, ozone, differential GPS, etc.). The present high-rate data (maximum data rates of 25 sps) set contain only the data logged on the GV main aircraft data system. The remainder of the data  (Laser hygrometer, etc.) have either been released or will be released separately as high-rate files by the respective PIs. Users are requested to contact the appropriate instrument PIs for information on these data.
+
+Data were sampled at a variety of different rates depending on sensor characteristics:
+
+Most analog data (mainly RAF temperature sensors) were sampled at 500 samples per second and have been averaged to 25 sps using a Finite Impulse Response (FIR) filter with a cut-off frequency of 12.5 Hz. 
+
+Data logged with serial interfaces (e.g., pressure, dew point, many others) were sampled at a variety of data rates; those sampled at less than 25 sps have been retained at their sample rate in the high-rate data file. In some cases, the inherent response time of the sensors is much slower than 1 s (e.g., cooled mirror hygrometers at high altitude). Serial data at higher sample rates than 25 sps have been FIR filtered to 25 sps.
+
+Data from the air data computer and the IRS units are given either at the native data rate (for sample rates below 25 sps) or FIR filtered to 25 sps (for sample rates exceeding 25 sps).
+
+For some variables that it is desirable to output as 25 sps values, it has been necessary to 'increase' data rates. For instance, this is the case for dew point temperature contribution to ?e or for GPS ground speed contribution to high-rate winds. In such cases, the low-rate data (sampled at less than 25 sps) were interpolated to 25 sps and then FIR filtered. This procedure has only been used where the inputs are only slowly varying functions of time, and it is only used in the generation of the high-rate variables.
+
+The NetCDF file header contains all the information needed to examine the dependencies (i.e., what variables are used to calculate a given derived variable) as well as the sample rates of directly measured variables. Several programs can be used to examine the header of the NetCDF files; the program ncplot (available from www.eol.ucar.edu/raf/Software) can be used to both plot data and examine headers. As an example for the data from research file RF01: Enter the "view" button, then hit the "netCDF" button, and scroll down to
+
+float THETAE(time)
+	THETAE:_FillValue = -32767.f ;
+	THETAE:units = "K"
+	THETAE:long_name = "Equivalent Potential Temperature"
+	THETAE:Category = "Thermodynamic"
+	THETAE:standard_name="equivalent_potential_temperature"
+	THETAE:DataQuality = "Good"
+	THETAE:Dependencies = "4 ATX PSXC EDPC MR"
+
+The final line above shows that ?e is calculated from the reference temperature measurements ATX (for T-REX this is a blended value of the slow avionics temperature AT_A and the fast-response Rosemount temperature ATRL); from the reference static pressure PSXC; from the reference water vapor pressure EDPC; and from the water vapor mixing ratio MR. From other entries in the same netCDF file header, it can be seen that AT_A was sampled at 2 sps, ATRL is in part based on TTRL which was sampled at 500 sps, EDPC was calculated in part from DPXC which was sampled at 1 sps, etc. The fact that each of the values above may have its own dependencies illustrates that many derived high-rate values are combinations of variables measured at different sample rates. Investigators have all the material to examine the sample rates using the above measurements, and it is left to the investigator's decision to use the high-rate data file with caution.
+
+The T-REX netCDF files contain output rates of 1 sps and 25 sps, depending on the sample rate of the sensors used. For instance, although the avionics temperature, AT_A, was sampled at 2 sps, it is given as a 1 sps variable in the T-REX netCDF high-rate file. A quick way to determine the data rate of a variable in the netCDF files is to use ncplot, then bring up a time series of the variable, followed by "view" and "spectrum". The resulting plot for all the data on T-REX RF04 is shown in Fig 1. It can be seen that the AT_A data are cut off at the Nyquist frequency of 0.5 Hz, implying that the variable is given a 1 sps variable in the T-REX netCDF file. Similarly, the ATX variable has a Nyquist frequency of 12.5 Hz, implying that it is a 25 sps variable in the netCDF file. The vertical drop-off at 12.5 Hz is a result of the digital filtering.
+
+
+
+Figure 1. Power spectra of AT_A (red curve) and high-rate temperature ATX (blue curve).
+
+The GV autopilot: The flight management system on the GV allows the pilots to dial in a given flight altitude, air speed and heading. The management systems then tries to keep the aircraft within a narrow range of the desired values, but the system has small overshoots of the desired values. In practice the aircraft engine power is increased and decreased with a period of about 3 s; this is audible when flying in the GV cabin. As a result, the GV will go through periodic pitch and attack changes, the result of which can best be seen from the power spectra shown in Fig. 2. Both curves show relative peaks at about 0.4 Hz. 
+
+A properly characterized and calibrated aircraft wind system should not show any significant residuals of these oscillations in the spectra of vertical air velocity, WIC. (See the green curve in Fig. 2.)  (As pointed out independently by Drs. Al Cooper and Rod Frehlich, this was an unresolved issue in the preliminary T-REX field data set.)
+
+
+
+
+Figure 2. Power spectra of the GV pitch angle PITCH (red curve), attack angle ATTACK (blue curve) and vertical air velocity WIC (green curve). The data are from part of T-REX RF04.
+
+
+
+
+
+
+
+
+Section 1: General discussion of sensors and measurements
+
+Pressure:
+Static pressure is available using two different systems:
+
+Static pressure is measured with a highly accurate Paroscientific (MODEL 1000) with a stated accuracy of 0.01% of full scale.
+		PSF/PSX	Static pressure as measured using the fuselage holes
+		PSFC/PSXC	Static pressure corrected for airflow effects (pcorr)
+		
+Use PSXC for the normal measure of pressure (e.g., in equation of state or hydrostatic equation). PSF was sampled at a rate of 50 sps.
+
+A second static pressure system is provided by the GV avionics system. This is slower than the Paroscientific measurement, but it has been corrected for airflow effects and it is certified for 'Reduced vertical separation minimum' (RVSM) through the calculation of pressure altitude. RAF has no documentation on how Gulfstream and Honeywell corrected this pressure measurement, but the measurement has passed very strict FAA certification requirements.
+
+		
+Figure 3. Power spectrum of static pressure PSXC for a 1-hour ferry leg of RF04. The relative flatness of the spectrum at higher frequencies than 0.5 Hz is probably related to the digitization steps in the sensor; in absolute terms the Paroscientific sensors are very accurate, but they have a minimum resolution of about 0.08 hPa when sampled at 50 sps.
+
+Temperature:
+Temperature was measured using four different sensors on the GV:
+
+An unheated Rosemount sensor was used for fast-response measurements. This sensor can be affected by icing, but that did not appear to be a problem in T-REX.
+Two heated Harco sensors were used to give a slower response temperature that would also be adequate in icing conditions. A fourth measurement of temperature (slow and with some delay) was provided by the GV avionics instrumentation.
+
+The Rosemount and Harco measurements were logged using analog channels that suffered from cross talk. As a consequence, RAF recommends using the blended temperature, ATX.  See below, for all uses of the T-REX data set.
+ 
+	TTRL		Total air temperature from fast Rosemount sensor
+	TT_A		Total air temperature from the avionics system
+
+ATRL		Ambient air temperature from the Rosemount system
+AT_A		Ambient temperature from the avionics system
+		ATC/ATX	Ambient temperature blended by low-pass filtering the
+				avionics temperature and high-pass filtering the Rosemount
+measurements. Please note that this is the best available temperature measurement, but also that it is not perfect. The filter crossover point is at 30 s. In a sense we are using the absolute accuracy of the AT_A sensor and the high-frequency response of the ATRL to generate ATX.
+
+RAF recommends using ATX for the temperature in thermodynamic equations, etc.
+
+
+	
+Figure 4. Power spectrum of temperature ATX for a 1-hour ferry leg of RF04
+
+Attack and sideslip angles:
+Measurements of attack and sideslip were done using the 5-hole nose cone pressure sensors, primarily ADIFR and BDIFR. Although sampled at 50 sps, internal filtering in the Mensor pressure sensors (model 6100) limits usefulness of high-rate analysis to about 5 Hz.
+
+		ADIFR	Attack angle pressure sensor
+		ATTACK	Attack angle
+		BDIFR	Sideslip angle pressure sensor
+		SSLIP		Sideslip angle
+
+Both ATTACK and SSLIP were corrected using in-flight maneuvers. 
+
+
+
+Figure 5. Power spectra of  ADIFR (red curve) and  BDIFR (blue curve) for a boundary-layer test flight (TF04) which was done as part of T-REX. Both these sensors show distinct drop-offs at frequencies higher than about 7 Hz. This is the strongest indication that T-REX high-rate winds should not be trusted beyond 7 Hz.
+
+
+True airspeed:
+True airspeed was also measured primarily using a Mensor 6100 sensor, thus limiting the effective response to 5 Hz. 
+
+The radome pitot tube system uses the center hole of the 5-hole nose cone in conjunction with the research static pressure ports on the fuselage aft of the entrance door. A standard avionics pitot tube is also mounted on the fuselage aft of the radome, and this system is also referenced to the fuselage static ports aft of the main entrance door. It was found during empirical analysis that the fuselage pitot system gave more consistent results in reverse-heading maneuvers; it is suspected that this is due to random pressure changes at the radome center hole as has been suggested by modeling. The fuselage system is used for the calculation of the aircraft true airspeed, as well as for attack and sideslip angles. True airspeed is also provided from the aircraft avionics system, but this system is considered of slower response. Measurements using the radome and fuselage pitot systems were corrected using in-flight maneuvers.
+
+	TASR		True airspeed using the radome system
+	TASF/TASX	True airspeed from the fuselage pitot system
+TASHC	True airspeed using the fuselage pitot system and adding humidity corrections to the calculations; this is mainly of benefit in tropical low-altitude flight.
+	TAS_A	True airspeed from the avionics system
+
+RAF recommends using TASX as the aircraft true airspeed.
+
+
+
+Figure 6. Power spectra of  QCR (red curve) and  QCF (blue curve) for a boundary-layer test flight (TF04) which was done as part of T-REX. These two sensors are primarily responsible for true airspeed measurement. The sensors show a less apparent drop-offs at frequencies higher than about 7 Hz, although the sensors are the same as those used for  ADIFR and BDIFR.
+
+Position and ground speed:
+The measurement of aircraft position (latitude, longitude and geometric altitude) and aircraft velocities relative to the ground are done using five different sensors on board the GV:
+
+Garmin GPS (Reference): These data are sampled at 10 sps and averaged to 1 sps. This is a simple GPS unit with a serial output, and the measurements are available in real-time. The values from this sensor start with a "G"; e.g.,:
+	GGLAT	Latitude
+	GGLON	Longitude
+	GGALT	Geometric altitude
+	GGSPD	Ground speed
+	GGVNS	Ground speed in north direction
+	GGVEW	Ground speed in east direction
+These are good values to use for cases where the highest accuracy is not needed. These variables are subsequently used to constrain the IRS drift for the calculations of the GV winds; more about this below.
+
+GV GPS: The GV flight deck is equipped with another simple GPS unit, and the data from this unit has subscript "_G" at the end, i.e.,:
+	LAT_G	Latitude
+	LON_G	Longitude
+	ALT_G	Geometric altitude
+	GSF_G	Ground speed
+	VNS_G	Ground speed in the north direction
+	VEW_G	Ground speed in the east direction
+	VSPD_G	Vertical speed of the aircraft
+
+Honeywell inertial reference system 1 and 2: The GV has three inertial systems on the flight deck. Data from the first two of these are logged on the main aircraft data logger, with subscripts the latter having variable names with suffix "_IRS2". The advantage of the IRS values is that they typically have very high sample rates and very little noise from measurement to measurement. However, since they are based on accelerometers and gyroscopes, their values may drift with time. The drift is corrected for by filtering the IRS positions towards the GPS positions with a long time-constant filter; the filtered values have a "C" added to the end.
+	LAT		latitude from IRS 1, no GPS filtering
+	LATC		latitude from IRS 1, filtered towards GPS values
+	LAT_IRS2	latitude from IRS 2, no GPS filtering
+
+	LON		longitude from IRS 1, no GPS filtering
+	LONC		longitude from IRS 1, filtered towards GPS values
+	LON_IRS2	longitude from IRS 2, no GPS filtering
+
+	GSF		ground speed from IRS 1, no GPS filtering
+	GSF_IRS2	ground speed from IRS 2, no GPS filtering
+
+The choice of variables for position analysis depends on the type of analysis; in general the Garmin GPS is sufficiently accurate. However, for very precise analysis we recommend using the differential GPS data. For instance, in the
+T-REX area, the Garmin data have an accuracy of aircraft altitude of +/-3 m, whereas the differential GPS is estimated to be accurate to better than +/-0.3 m for 95% of the time. The avionics GPS may only have an altitude accuracy estimated to be +/-15 m.
+
+
+Attitude angles:
+The two Honeywell IRS units measure aircraft attitude angles.
+		PITCH	pitch angle from IRS 1 (nose up is positive)
+		PITCH_IRS2	pitch angle from IRS 2
+
+		ROLL		roll angle from IRS 1 (right wing down is positive)
+		ROLL_IRS2	roll angle from IRS 2
+
+		THDG		true heading from IRS 1
+		THDG_IRS2	true heading from IRS 2
+
+The values of pitch angle (PITCH) have been corrected using in-flight measurements to give approximately the same values as the aircraft attack angle (ATTACK) for long parts of each flight; this correction is done on a flight-by-flight basis to give a near-zero mean updraft over extended flight legs. The variation from flight to flight of this offset is caused by small differences in the pre-flight alignment of the inertial navigation system. No alignment correction has been applied to PITCH_IRS2.
+
+The frequency response of  PITCH is shown in Fig. 2.
+
+Wind speeds:
+Wind speeds are derived based on the 5-hole nose cone, other pressure measurements, temperature and inertial measurements supported by GPS data. The use of the Mensor 6100 pressure sensors for ADIFR, BDIFR, QCF and QCF results in the following limitations on the wind data: These pressure measurements were sampled at 50 sps and thus resulting in power spectra to 25 Hz. Examination of power spectra and specifications from Mensor indicate that the sensors have internal filters with a -3dB (half-power) cutoff at 12 Hz, resulting in a noticeable roll-off in the spectra beginning approximately at 6 to 7 Hz. Users of wind data should be aware that contributions to covariances and dissipation calculations will be affected at and above these frequencies.
+
+The flight-by-flight offset to PITCH has been implemented to give near-zero updrafts velocities over long time scales. Users doing analysis on shorter flight segments will have to decide if they feel that any remaining mean updrafts should be removed.
+
+ The following lists the most commonly used wind variables:
+
+		UI		Wind vector, east component
+		UIC		Wind vector, east component, GPS corrected for INS drift
+		VI		Wind vector, north component
+		VIC		Wind vector, north component, GPS corrected
+
+		UX		Wind vector, longitudinal component
+		UXC		Wind vector, longitudinal component, GPS corrected
+		VY		Wind vector, lateral component
+		VYC		Wind vector, lateral component, GPS corrected
+
+		WI		Wind vector, vertical gust component
+		WIC		Wind vector, vertical gust component, GPS corrected
+
+		WS		Wind speed, horizontal component
+		WSC		Wind speed, horizontal component, GPS corrected
+		WD		Horizontal wind direction
+		WDC		Horizontal wind direction, GPS corrected
+
+RAF recommends using the GPS corrected wind components, i.e., the variables ending in "C". 
+
+
+
+Figure 7. Power spectra of  UXC (blue curve), VYC (green curve) and  WIC (blue curve) for a boundary-layer test flight (TF04) which was done as part of T-REX. The curve for the along-aircraft wind component (blue) shows a reasonable -5/3 slope; the across-aircraft component (green) and the vertical wind (red) show the previously mentioned drop-off at frequencies higher than about 7 Hz.
+
+
+
+
+ 
+
+Liquid water content:
+
+A PMS-King type liquid water content sensor was installed on the GV just prior to the T-REX flights. The performance is still under investigation, and the following two variables should not be used at present:
+
+		PLWC		Dissipated power (wet + dry terms) for the King probe.
+		PLWCC	Cloud liquid water content (do not use at present)
+
+
+Data logging and averaging:
+
+Analog data, primarily the Rosemount and Harco temperature sensors and the cabin temperatures, were logged at 500 sps and averaged to 1 sps. Most of the remainder of the data were recorded as serial data (e.g., RS-232, ARINC data from the IRS units), etc.
+
+The recordings listed for a given second contains measurements logged at e.g., 12:00:00.000 and until 12:00:01. The value of "Time" corresponding to this interval is given a 12:00:00 in the released data set.
+
+All measurements are "time-tagged" at the time of logging. Subsequently these measurements are interpolated onto a regular grid and averaged.
+
+RAF staff members have reviewed the data set for instrumentation problems.  When an instrument has been found to be malfunctioning, specific time intervals are noted.  In those instances the bad data intervals have been filled in the netCDF data files with the missing data code of -32767. In some cases a system will be out for an entire flight.
+
+Measurements on the ground:
+
+Virtually all measurements made on the aircraft require some sort of airspeed correction or the systems simply do not become active while the aircraft remains on the ground.  None of the data collected while the aircraft is on the ground should be considered as valid.
+
+Recommendation for variable names:
+
+In general RAF recommends using the 'reference' variables (those ending in "X"), where several exist; however, as explained above, there are exceptions to this rule (e.g., high-altitude humidity).
+
+
+Section 2:  Flight-by-flight summary
+
+RF01:
+	No CN data for 17:05 - 19:05 and 22:38 - 23:52, approx.
+
+RF02:
+No CN data for 21:47 - 22:05, 22:55 - 23:40, 00:21 - 01:00, 01:30 - 01:50 and 02:35 - 03:48, approx.
+
+RF03:
+	No CN data for 21:20 - 23:23, 00:15 - 00:56 and 01:53 - 03:42, approx.
+	No CO data.
+
+RF04:
+	No CN data for 20:00 - 22:25, 23:17 - 23:59 and 00:43 - 02:06, approx.
+
+RF05:
+	No CN data for the entire flight.
+
+RF06:
+	No CN data for 15:15 - 22:26, approx.
+
+RF07A:
+No CN data for 17:23 - 18:34, 19:27 - 19:39, 20:43 - 20:57, 21:18 - 21:24, and 22:45 - 22:59.
+
+RF07B:
+	No CN data for 01:58 - 03:00, approx.
+	Data system down 22:05 - 22:07, approx.
+RF08:
+	No CN data for 12:42 - 16:07,16:34 - 18:09, 18:36 - until end of flight.
+
+RF09:
+	No CN data for 19:22 - until end of flight.
+
+RF10:
+	No CN data for 20:01 - 21:22 and 22:46 - 03:53, approx.
+	No CO data.
+
+RF11:
+	No CN data for 18:47 - 19:39, approx.
+
+RF12:
+	
+
+

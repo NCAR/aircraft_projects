@@ -1,0 +1,205 @@
+#! /bin/csh -f
+#
+#  Archive Raw and Processed Differential GPS netCDF files for project:
+#   2006-503 T-REX (Terrain-induced Rotor EXperiment) (Vanda Grubisic, et al.)
+#   using the RAF directory path
+#
+#  File created by Ronald L. Ruth using script archdgps_H.503 as template
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo ${0}:  Only the "dmg" login is allowed to run this script.  Quitting.
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+# set msrcpMachine = "vivaldi"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s), if needed
+#    no read password for this data set
+set RPWD = ""
+#
+#  1st wave 
+#set SDIR = "/scr/raf2/Raw_Data/TREX/DGPS"
+#set DDIR = "/RAF/2006/503/RAW_DGPS"
+#set SFILES = ( \
+#readme.txt \
+#Flight_processing/Flight_list.txt \
+#Flight_processing/Flight_list.xls \
+#Final_data.tar \
+#Final_data.tar.dir \
+#Final_data_HRT.tar \
+#Final_data_HRT.tar.dir \
+#Flight_data.tar \
+#Flight_data.tar.dir \
+#Flight_processing_RF01_03-02-06.tar \
+#Flight_processing_RF01_03-02-06.tar.dir \
+#Flight_processing_RF02_03-05-06.tar \
+#Flight_processing_RF02_03-05-06.tar.dir \
+#Flight_processing_RF03_03-09-06.tar \
+#Flight_processing_RF03_03-09-06.tar.dir \
+#Flight_processing_RF04_03-14-06.tar \
+#Flight_processing_RF04_03-14-06.tar.dir \
+#Flight_processing_RF05_03-25-06.tar \
+#Flight_processing_RF05_03-25-06.tar.dir \
+#Flight_processing_RF06_04-02-06.tar \
+#Flight_processing_RF06_04-02-06.tar.dir \
+#Flight_processing_RF07B_04-06-06.tar \
+#Flight_processing_RF07B_04-06-06.tar.dir \
+#Flight_processing_RF07_04-06-06.tar \
+#Flight_processing_RF07_04-06-06.tar.dir \
+#Flight_processing_RF08_04-08-06.tar \
+#Flight_processing_RF08_04-08-06.tar.dir \
+#Flight_processing_RF09_04-15-06.tar \
+#Flight_processing_RF09_04-15-06.tar.dir \
+#Flight_processing_RF10_04-16-06.tar \
+#Flight_processing_RF10_04-16-06.tar.dir \
+#Flight_processing_RF11_04-21-06.tar \
+#Flight_processing_RF11_04-21-06.tar.dir \
+#Flight_processing_RF12_04-26-06.tar \
+#Flight_processing_RF12_04-26-06.tar.dir \
+#Flight_processing_TF01_02-22-06.tar \
+#Flight_processing_TF01_02-22-06.tar.dir \
+#Flight_processing_TF04_04-13-06.tar \
+#Flight_processing_TF04_04-13-06.tar.dir \
+#Ground_data_from_Independence.tar \
+#Ground_data_from_Independence.tar.dir \
+#Ground_data_from_Nebraska.tar \
+#Ground_data_from_Nebraska.tar.dir \
+#)
+#set DFILES = ( \
+#readme.txt \
+#Flight_list.txt \
+#Flight_list.xls \
+#Final_data.tar \
+#Final_data.tar.dir \
+#Final_data_HRT.tar \
+#Final_data_HRT.tar.dir \
+#Flight_data.tar \
+#Flight_data.tar.dir \
+#Flight_processing_RF01_03-02-06.tar \
+#Flight_processing_RF01_03-02-06.tar.dir \
+#Flight_processing_RF02_03-05-06.tar \
+#Flight_processing_RF02_03-05-06.tar.dir \
+#Flight_processing_RF03_03-09-06.tar \
+#Flight_processing_RF03_03-09-06.tar.dir \
+#Flight_processing_RF04_03-14-06.tar \
+#Flight_processing_RF04_03-14-06.tar.dir \
+#Flight_processing_RF05_03-25-06.tar \
+#Flight_processing_RF05_03-25-06.tar.dir \
+#Flight_processing_RF06_04-02-06.tar \
+#Flight_processing_RF06_04-02-06.tar.dir \
+#Flight_processing_RF07B_04-06-06.tar \
+#Flight_processing_RF07B_04-06-06.tar.dir \
+#Flight_processing_RF07_04-06-06.tar \
+#Flight_processing_RF07_04-06-06.tar.dir \
+#Flight_processing_RF08_04-08-06.tar \
+#Flight_processing_RF08_04-08-06.tar.dir \
+#Flight_processing_RF09_04-15-06.tar \
+#Flight_processing_RF09_04-15-06.tar.dir \
+#Flight_processing_RF10_04-16-06.tar \
+#Flight_processing_RF10_04-16-06.tar.dir \
+#Flight_processing_RF11_04-21-06.tar \
+#Flight_processing_RF11_04-21-06.tar.dir \
+#Flight_processing_RF12_04-26-06.tar \
+#Flight_processing_RF12_04-26-06.tar.dir \
+#Flight_processing_TF01_02-22-06.tar \
+#Flight_processing_TF01_02-22-06.tar.dir \
+#Flight_processing_TF04_04-13-06.tar \
+#Flight_processing_TF04_04-13-06.tar.dir \
+#Ground_data_from_Independence.tar \
+#Ground_data_from_Independence.tar.dir \
+#Ground_data_from_Nebraska.tar \
+#Ground_data_from_Nebraska.tar.dir \
+#)
+#
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directory:  /RAF/2006/503/RAW_DGPS/"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE mss:$DDIR/$DFILE
+    if ($status == 0) then
+      set d2 = $DFILE:h
+      set d1 = $d2:t
+      set d2 = $DFILE:t
+      echo "#   $d1/$d2 -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+     echo " Cannot access file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#  1st wave 
+#  43 job(s) submitted on Wed Mar 12 12:45:09 MDT 2008
+#  File(s) archived to MSS directory:  /RAF/2006/503/RAW_DGPS/
+#   readme.txt/readme.txt -- OK -- Wed Mar 12 12:45:15 MDT 2008
+#   Flight_list.txt/Flight_list.txt -- OK -- Wed Mar 12 12:45:21 MDT 2008
+#   Flight_list.xls/Flight_list.xls -- OK -- Wed Mar 12 12:45:28 MDT 2008
+#   Final_data.tar/Final_data.tar -- OK -- Wed Mar 12 12:51:11 MDT 2008
+#   Final_data.tar.dir/Final_data.tar.dir -- OK -- Wed Mar 12 12:51:17 MDT 2008
+#   Final_data_HRT.tar/Final_data_HRT.tar -- OK -- Wed Mar 12 12:59:50 MDT 2008
+#   Final_data_HRT.tar.dir/Final_data_HRT.tar.dir -- OK -- Wed Mar 12 12:59:56 MDT 2008
+#   Flight_data.tar/Flight_data.tar -- OK -- Wed Mar 12 13:07:37 MDT 2008
+#   Flight_data.tar.dir/Flight_data.tar.dir -- OK -- Wed Mar 12 13:07:42 MDT 2008
+#   Flight_processing_RF01_03-02-06.tar/Flight_processing_RF01_03-02-06.tar -- OK -- Wed Mar 12 13:14:51 MDT 2008
+#   Flight_processing_RF01_03-02-06.tar.dir/Flight_processing_RF01_03-02-06.tar.dir -- OK -- Wed Mar 12 13:14:58 MDT 2008
+#   Flight_processing_RF02_03-05-06.tar/Flight_processing_RF02_03-05-06.tar -- OK -- Wed Mar 12 13:23:18 MDT 2008
+#   Flight_processing_RF02_03-05-06.tar.dir/Flight_processing_RF02_03-05-06.tar.dir -- OK -- Wed Mar 12 13:23:23 MDT 2008
+#   Flight_processing_RF03_03-09-06.tar/Flight_processing_RF03_03-09-06.tar -- OK -- Wed Mar 12 13:27:39 MDT 2008
+#   Flight_processing_RF03_03-09-06.tar.dir/Flight_processing_RF03_03-09-06.tar.dir -- OK -- Wed Mar 12 13:27:46 MDT 2008
+#   Flight_processing_RF04_03-14-06.tar/Flight_processing_RF04_03-14-06.tar -- OK -- Wed Mar 12 13:41:51 MDT 2008
+#   Flight_processing_RF04_03-14-06.tar.dir/Flight_processing_RF04_03-14-06.tar.dir -- OK -- Wed Mar 12 13:41:57 MDT 2008
+#   Flight_processing_RF05_03-25-06.tar/Flight_processing_RF05_03-25-06.tar -- OK -- Wed Mar 12 13:46:56 MDT 2008
+#   Flight_processing_RF05_03-25-06.tar.dir/Flight_processing_RF05_03-25-06.tar.dir -- OK -- Wed Mar 12 13:47:03 MDT 2008
+#   Flight_processing_RF06_04-02-06.tar/Flight_processing_RF06_04-02-06.tar -- OK -- Wed Mar 12 13:52:44 MDT 2008
+#   Flight_processing_RF06_04-02-06.tar.dir/Flight_processing_RF06_04-02-06.tar.dir -- OK -- Wed Mar 12 13:52:52 MDT 2008
+#   Flight_processing_RF07B_04-06-06.tar/Flight_processing_RF07B_04-06-06.tar -- OK -- Wed Mar 12 14:02:56 MDT 2008
+#   Flight_processing_RF07B_04-06-06.tar.dir/Flight_processing_RF07B_04-06-06.tar.dir -- OK -- Wed Mar 12 14:03:02 MDT 2008
+#   Flight_processing_RF07_04-06-06.tar/Flight_processing_RF07_04-06-06.tar -- OK -- Wed Mar 12 14:13:17 MDT 2008
+#   Flight_processing_RF07_04-06-06.tar.dir/Flight_processing_RF07_04-06-06.tar.dir -- OK -- Wed Mar 12 14:13:24 MDT 2008
+#   Flight_processing_RF08_04-08-06.tar/Flight_processing_RF08_04-08-06.tar -- OK -- Wed Mar 12 14:16:28 MDT 2008
+#   Flight_processing_RF08_04-08-06.tar.dir/Flight_processing_RF08_04-08-06.tar.dir -- OK -- Wed Mar 12 14:16:35 MDT 2008
+#   Flight_processing_RF09_04-15-06.tar/Flight_processing_RF09_04-15-06.tar -- OK -- Wed Mar 12 14:26:34 MDT 2008
+#   Flight_processing_RF09_04-15-06.tar.dir/Flight_processing_RF09_04-15-06.tar.dir -- OK -- Wed Mar 12 14:26:43 MDT 2008
+#   Flight_processing_RF10_04-16-06.tar/Flight_processing_RF10_04-16-06.tar -- OK -- Wed Mar 12 14:35:38 MDT 2008
+#   Flight_processing_RF10_04-16-06.tar.dir/Flight_processing_RF10_04-16-06.tar.dir -- OK -- Wed Mar 12 14:35:59 MDT 2008
+#   Flight_processing_RF11_04-21-06.tar/Flight_processing_RF11_04-21-06.tar -- OK -- Wed Mar 12 14:38:47 MDT 2008
+#   Flight_processing_RF11_04-21-06.tar.dir/Flight_processing_RF11_04-21-06.tar.dir -- OK -- Wed Mar 12 14:39:04 MDT 2008
+#   Flight_processing_RF12_04-26-06.tar/Flight_processing_RF12_04-26-06.tar -- OK -- Wed Mar 12 14:44:12 MDT 2008
+#   Flight_processing_RF12_04-26-06.tar.dir/Flight_processing_RF12_04-26-06.tar.dir -- OK -- Wed Mar 12 14:44:20 MDT 2008
+#   Flight_processing_TF01_02-22-06.tar/Flight_processing_TF01_02-22-06.tar -- OK -- Wed Mar 12 14:44:38 MDT 2008
+#   Flight_processing_TF01_02-22-06.tar.dir/Flight_processing_TF01_02-22-06.tar.dir -- OK -- Wed Mar 12 14:44:43 MDT 2008
+#   Flight_processing_TF04_04-13-06.tar/Flight_processing_TF04_04-13-06.tar -- OK -- Wed Mar 12 14:51:42 MDT 2008
+#   Flight_processing_TF04_04-13-06.tar.dir/Flight_processing_TF04_04-13-06.tar.dir -- OK -- Wed Mar 12 14:51:48 MDT 2008
+#   Ground_data_from_Independence.tar/Ground_data_from_Independence.tar -- OK -- Wed Mar 12 14:58:31 MDT 2008
+#   Ground_data_from_Independence.tar.dir/Ground_data_from_Independence.tar.dir -- OK -- Wed Mar 12 14:58:41 MDT 2008
+#   Ground_data_from_Nebraska.tar/Ground_data_from_Nebraska.tar -- OK -- Wed Mar 12 14:58:47 MDT 2008
+#   Ground_data_from_Nebraska.tar.dir/Ground_data_from_Nebraska.tar.dir -- OK -- Wed Mar 12 14:58:53 MDT 2008
+#   Completed on Wed Mar 12 14:58:53 MDT 2008
+#
