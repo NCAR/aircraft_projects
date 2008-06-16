@@ -583,7 +583,7 @@
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_A2D005" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_RAD" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
@@ -681,7 +681,7 @@
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_A2D007" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_MTP" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
@@ -706,7 +706,7 @@
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
         </serialSensor>
-<!--
+
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
@@ -715,7 +715,6 @@
                 <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
-                    <linear slope="-10.0" intercept="0.0" units="W"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -723,7 +722,7 @@
                 <variable name="A2DTEMP_A2D1603" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
--->
+
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>

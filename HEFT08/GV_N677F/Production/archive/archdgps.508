@@ -1,0 +1,108 @@
+#! /bin/csh -f
+#
+#  Archive Raw and Processed Differential GPS netCDF files for project:
+#   2006-508 HEFT08
+#   using the RAF directory path
+#
+#  File created by Janine Goldstein using script archdgps.503  (TREX) as template
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo ${0}:  Only the "dmg" login is allowed to run this script.  Quitting.
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+# set msrcpMachine = "vivaldi"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s), if needed
+#    no read password for this data set
+set RPWD = ""
+#
+#  1st wave 
+set SDIR = "/scr/raf2/Raw_Data/HEFT08/dgps"
+set DDIR = "/RAF/2008/508/DGPS"
+set SFILES = ( \
+dgps_20080208_170622_tf01.ads \
+dgps_20080211_195427_tf02.ads \
+dgps_20080213_151814_rf01.ads \
+dgps_20080213_194416_rf01.ads \
+dgps_20080213_194647_rf01.ads \
+dgps_20080214_141320_rf02.ads \
+dgps_20080215_130147_rf03.ads \
+dgps_20080220_142737_rf04.ads \
+dgps_20080222_163856_rf05.ads \
+dgps_20080223_164338_rf06.ads \
+dgps_20080226_155602_tf03.ads \
+)
+set DFILES = ( \
+TF01_20080208_170622_dgps.ads \
+TF02_20080211_195427_dgps.ads \
+RF01_20080213_151814_dgps.ads \
+RF01_20080213_194416_dgps.ads \
+RF01_20080213_194647_dgps.ads \
+RF02_20080214_141320_dgps.ads \
+RF03_20080215_130147_dgps.ads \
+RF04_20080220_142737_dgps.ads \
+RF05_20080222_163856_dgps.ads \
+RF06_20080223_164338_dgps.ads \
+TF03_20080226_155602_dgps.ads \
+)
+#
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directory:  /RAF/2008/508/DGPS/"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE mss:$DDIR/$DFILE
+    if ($status == 0) then
+      set d2 = $DFILE:h
+      set d1 = $d2:t
+      set d2 = $DFILE:t
+      echo "#   $d1/$d2 -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+     echo " Cannot access file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#  1st wave 
+#  11 job(s) submitted on Thu Apr  3 12:33:26 MDT 2008
+#  File(s) archived to MSS directory:  /RAF/2008/508/DGPS/
+#   TF01_20080208_170622_dgps.ads/TF01_20080208_170622_dgps.ads -- OK -- Thu Apr  3 12:36:35 MDT 2008
+#   TF02_20080211_195427_dgps.ads/TF02_20080211_195427_dgps.ads -- OK -- Thu Apr  3 12:36:45 MDT 2008
+#   RF01_20080213_151814_dgps.ads/RF01_20080213_151814_dgps.ads -- OK -- Thu Apr  3 12:36:58 MDT 2008
+#   RF01_20080213_194416_dgps.ads/RF01_20080213_194416_dgps.ads -- OK -- Thu Apr  3 12:37:09 MDT 2008
+#   RF01_20080213_194647_dgps.ads/RF01_20080213_194647_dgps.ads -- OK -- Thu Apr  3 12:37:23 MDT 2008
+#   RF02_20080214_141320_dgps.ads/RF02_20080214_141320_dgps.ads -- OK -- Thu Apr  3 12:37:43 MDT 2008
+#   RF03_20080215_130147_dgps.ads/RF03_20080215_130147_dgps.ads -- OK -- Thu Apr  3 12:38:15 MDT 2008
+#   RF04_20080220_142737_dgps.ads/RF04_20080220_142737_dgps.ads -- OK -- Thu Apr  3 12:38:36 MDT 2008
+#   RF05_20080222_163856_dgps.ads/RF05_20080222_163856_dgps.ads -- OK -- Thu Apr  3 12:38:57 MDT 2008
+#   RF06_20080223_164338_dgps.ads/RF06_20080223_164338_dgps.ads -- OK -- Thu Apr  3 12:39:25 MDT 2008
+#   TF03_20080226_155602_dgps.ads/TF03_20080226_155602_dgps.ads -- OK -- Thu Apr  3 12:39:43 MDT 2008
+#   Completed on Thu Apr  3 12:39:43 MDT 2008
