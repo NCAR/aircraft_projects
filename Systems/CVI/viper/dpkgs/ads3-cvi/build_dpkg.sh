@@ -9,7 +9,7 @@ pdir=$tmpdir/$dpkg
 [ -d $pdir ] || mkdir -p $pdir
 trap "{ rm -rf $tmpdir; }" EXIT
 
-rsync --exclude=.svn -a DEBIAN etc $pdir
+rsync --exclude=.svn -a DEBIAN etc root usr $pdir
 
 [ -d $pdir/usr/local/bin ] || mkdir -p $pdir/usr/local/bin
 [ -d $pdir/usr/local/lib ] || mkdir -p $pdir/usr/local/lib
@@ -30,7 +30,7 @@ d=`TZ=UTC date +%Y%m%d%H%M%S`
 echo "$dv $sv $d" > $stampfile
 echo -n "Stamp file: " | cat - $stampfile
 
-apps=(dsm data_stats data_dump rserial ck_xml)
+apps=(dsm data_stats data_dump rserial ck_xml ck_aout ck_dout)
 for app in ${apps[*]}; do
     rsync -a $nidas/arm/bin/$app $pdir/usr/local/bin
 done

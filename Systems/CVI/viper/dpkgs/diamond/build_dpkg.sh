@@ -75,7 +75,7 @@ fi
 shopt -s nullglob
 df=(${pdir%/*}/${dpkg}*_{arm,all}.deb)
 df=${df[0]}
-echo moving $df to $www/raf
-[ -d $www/raf ] || mkdir -p $www/raf
-mv $df $www/raf || exit 1
-cp $stampfile $www/raf/${dpkg}.stamp
+echo moving $df to $www/ads3
+[ -d $www/ads3 ] || mkdir -p $www/ads3
+mv $df $www/ads3 || exit 1
+cp $stampfile $www/ads3/${dpkg}.stamp

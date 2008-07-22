@@ -41,6 +41,7 @@ echo ""
 
 bindir=$pdir/bin
 [ -d $bindir ] || mkdir -p $bindir
+cp $nidas/arm/bin/set_pcmcom8 $bindir
 
 rsync --exclude=.svn -a etc DEBIAN $pdir
 [ -d $pdir/usr/local/stamps ] || mkdir -p $pdir/usr/local/stamps
@@ -75,7 +76,7 @@ fi
 shopt -s nullglob
 df=(${pdir%/*}/${dpkg}*_{arm,all}.deb)
 df=${df[0]}
-echo moving $df to $www/raf
-[ -d $www/raf ] || mkdir -p $www/raf
-mv $df $www/raf || exit 1
-cp $stampfile $www/raf/${dpkg}.stamp
+echo moving $df to $www/ads3
+[ -d $www/ads3 ] || mkdir -p $www/ads3
+mv $df $www/ads3 || exit 1
+cp $stampfile $www/ads3/${dpkg}.stamp
