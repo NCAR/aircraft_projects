@@ -22,7 +22,7 @@ clear_tmpdevs() {
 }
 
 create_devs() {
-    modprobe dmd_mmat
+    modprobe dmd_mmat || exit 1
     emajor=`cat /proc/devices | fgrep dmd_mmat | cut -d\  -f1`
     eminor=0
 
