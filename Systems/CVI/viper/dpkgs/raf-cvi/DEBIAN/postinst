@@ -1,5 +1,65 @@
 #!/bin/sh
 
+# Remove X11R6 from path
+if egrep "^PATH=" /etc/profile | fgrep -q X11R6; then
+    sed -i 's,^PATH=.*$,PATH=/usr/local/bin:/usr/bin:/bin,' /etc/profile
+fi
+
+if ! egrep -q "^local5" /etc/syslog.conf; then
+    echo -e "local5.debug\t\t\t/var/tmp/log/ads3/dsm.log" >> /etc/syslog.conf
+    echo -e "local5.info\t\t\t@acserver" >> /etc/syslog.conf
+fi
+# suppress local5 messages in /var/log/messages
+sed -ri '\,;kern.none[[:space:]]+/var/log/messages,s,;kern.none,;kern.none;local5.none,' /etc/syslog.conf
+
+[ -d /var/tmp/log/ads3 ] || mkdir /var/tmp/log/ads3
+touch /var/tmp/log/ads3/dsm.log
+
+# turn off mark messages, enable remote logging
+if ! egrep "^SYSLOGD=" /etc/init.d/syslogd | fgrep -q -- -r; then
+    sed -i 's,^SYSLOGD=.*$,SYSLOGD="-p /var/run/log -m 0 -r",' /etc/init.d/syslogd
+fi
+/etc/init.d/syslogd stop
+/etc/init.d/syslogd start
+
+# Add address for acserver if it isn't there
+if ! fgrep -q base /etc/hosts; then
+        echo "192.168.184.1      acserver" >> /etc/hosts
+fi
+
+# Boot into run-level 2
+if ! fgrep -q "id:2:initdefault:" /etc/inittab; then
+    sed -i "s/^id:[0-9]:initdefault:/id:2:initdefault:/" /etc/inittab
+fi
+
+cd /etc/rc2.d
+
+# Don't need nfs
+[ -L S19nfs-common ] && rm S19nfs-common
+
+# Don't need touch screen controller
+[ -L S80tsc1d ] && rm S80tsc1d
+
+# Don't need web server (yet)
+[ -L S50thttpd ] && rm S50thttpd
+
+# Disable some logrotates
+[ -d /etc/logrotate.disable ] || mkdir /etc/logrotate.disable
+for l in thttpd; do
+    [ -f /etc/logrotate.d/$l ] && mv /etc/logrotate.d/$l /etc/logrotate.disable
+done
+
+# add a logrotate crontab
+if ! crontab -l | egrep "^[^#]" | fgrep -q logrotate; then
+    crontab -l > /tmp/crontab.conf
+    echo "5 * * * *       /etc/cron.daily/logrotate" >> /tmp/crontab.conf
+    crontab /tmp/crontab.conf
+fi
+
+# avoid error messages
+touch /var/log/lastlog
+
+
 # chown root.root /root
 # chmod 755 /root
 

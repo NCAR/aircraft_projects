@@ -1,0 +1,13 @@
+# dateext is not supported by logrotate on the viper
+# Need to do our own date stamping
+# dateext
+
+/var/tmp/log/local/dsm.log {
+   rotate 31
+   weekly
+   create 0644 root root
+   postrotate
+       killall -HUP syslogd
+   endscript
+}
+
