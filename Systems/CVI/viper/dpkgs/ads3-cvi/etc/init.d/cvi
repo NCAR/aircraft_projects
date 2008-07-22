@@ -1,0 +1,63 @@
+#! /bin/sh
+
+export RAF=/usr/local/raf
+PATH=$RAF/scripts:/usr/local/bin:$PATH
+
+run_app() {
+	echo -n "Starting cvi ..."
+	$RAF/scripts/run_cvi.sh
+	echo "."
+}
+
+kill_proc() {
+    local proc=$1
+    local sig="$2"
+    ntry=0
+    while [ $ntry -lt 10 ]; do
+	# pids=(`ps -ef | fgrep $proc | fgrep -v fgrep | sed 's/  / /g' | cut -d \  -f 2`)
+	pids=(`pgrep $proc`)
+	[ ${#pids[*]} -eq 0 ] && return 0
+	# echo "kill $sig ${pids[*]} ... "
+	# kill $sig ${pids[*]}
+	echo "pkill $sig $proc ... "
+	pkill $sig $proc
+	sleep 1
+	ntry=$(($ntry + 1))
+    done
+    return 1
+}
+
+kill_dsm() {
+    kill_proc dsm -TERM || kill_proc dsm -9
+}
+
+case "$1" in
+	start)
+		run_app
+  		;;
+	stop)
+		echo "Stopping dsm ... "
+		if  kill_dsm; then
+			echo "done"
+		else
+			echo "failed"
+		fi
+  		;;
+	restart)
+		echo "Stopping dsm ... "
+		if  kill_dsm; then
+			echo "done"
+		else
+			echo "failed"
+		fi
+		kill_dsm
+  		sleep 5
+  		run_app
+  		;;
+	*)
+  		echo "Usage: /etc/init.d/cvi {start|stop|restart}"
+  		exit 1
+		;;
+esac
+
+exit 0

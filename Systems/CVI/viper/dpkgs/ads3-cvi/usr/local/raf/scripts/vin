@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# script for running data_dump on CVI inputs 0-10
+# or 11-15
+
+usage() {
+    echo "usage: $0 0 | 1"
+    echo "0: display voltages V0-V10 of first diamond card"
+    echo "1: display voltages V11-V15 of second diamond card"
+    echo "do ctrl-C to quit"
+    exit 1
+}
+
+[ $# -ne 1 ] && usage
+
+if [ $1 -eq 0 ]; then
+    data_dump -d 20 -s 11 -p sock:localhost
+else
+    data_dump -d 20 -s 21 -p sock:localhost
+fi
+
