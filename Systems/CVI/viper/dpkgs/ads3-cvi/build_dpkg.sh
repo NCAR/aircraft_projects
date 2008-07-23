@@ -20,8 +20,11 @@ chmod -R g-ws $pdir/etc
 chmod -R g-ws $pdir/usr/local/bin
 chmod -R g-ws $pdir/usr/local/lib
 
-rsync -a $nidas/arm/lib/libnidas.so $pdir/usr/local/lib
-rsync -a $nidas/arm/lib/libnidas_dynld.so $pdir/usr/local/lib
+libs=(libnidas.so libnidas_dynld.so)
+for lib in ${libs[*]}; do
+    rsync -a $nidas/arm/lib/$lib $pdir/usr/local/lib
+    arm-linux-strip $pdir/usr/local/lib/$lib
+done
 
 stampfile=$pdir/usr/local/stamps/${dpkg}.stamp
 dv=`awk /^Version:/'{print $2}' DEBIAN/control`
@@ -33,6 +36,7 @@ echo -n "Stamp file: " | cat - $stampfile
 apps=(dsm data_stats data_dump rserial ck_xml ck_aout ck_dout)
 for app in ${apps[*]}; do
     rsync -a $nidas/arm/bin/$app $pdir/usr/local/bin
+    arm-linux-strip $pdir/usr/local/bin/$app
 done
 
 # Currently we don't copy any nidas driver modules. Those are in their

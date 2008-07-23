@@ -6,9 +6,9 @@ fi
 
 umask 022
 
-PATH=/usr/local/bin:/usr/sbin:/sbin:$PATH
-
 export ADS3=/usr/local/ads3
+
+PATH=/usr/local/bin:/usr/sbin:/sbin:$PATH:$ADS3/scripts
 
 pf=$ADS3/current_project
 if [ ! -f $pf ]; then
@@ -27,9 +27,8 @@ else
 fi
 
 pf=$ADS3/projects/$PROJECT/$AIRCRAFT/scripts/dsm/cvi_env.sh
-[ -f $pf ] || echo "$pf not found. Cannot setup project environment."
-source $pf
+[ -f $pf ] && source $pf
 
-# export CVI=/root/cvi
-# [ -f $CVI/cvi_env.sh ] && source $CVI/cvi_env.sh
+export CDPATH=.:$ADS3/projects/$PROJECT/$AIRCRAFT
+
 
