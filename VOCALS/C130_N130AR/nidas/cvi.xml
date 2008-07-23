@@ -11,13 +11,13 @@
     version="$LastChangedRevision: 459 $"
     >
 <sensorcatalog>
-   <serialSensor ID="UHSAS" class="raf.UHSAS_Serial" baud="115200" parity="none" databits="8" stopbits="1">
+   <serialSensor ID="UHSAS" class="raf.UHSAS_Serial" baud="38400" parity="none" databits="8" stopbits="1">
 
         <parameter name="HSKP_SCALE" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000" type="int"/>
 
-        <sample id="1" rate="10">
+        <sample id="1" rate="2">
             <variable name="AUHSAS" length="100" units="count" longname="UHSAS Raw Count Histogram"/>
-            <variable name="UHSAS_CNTS" units="#/sec" longname="Total Counts"/-->
+            <variable name="UHSAS_CNTS" units="#/sec" longname="Total Counts"/>
             <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
             <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
             <variable name="USMPFLW" units="V" longname="UHSAS Sample Flow">
@@ -39,7 +39,7 @@
             <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
             <!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
         </sample>
-        <message separator="\xff\xff\x00" position="beg" length="234"/>
+        <message separator="\xff\xff\x00" position="beg" length="236"/>
     </serialSensor>
 
 
@@ -71,67 +71,67 @@
 	        -->
             <sample id="1" rate="10">
                 <variable name="CVF1" units="V">
-                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="0.9982" type="float"/>
                     <parameter name="corIntercept" value="0.00133" type="float"/>
                 </variable>
                 <variable name="CVFX0" units="V">
-                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="0.9982" type="float"/>
                     <parameter name="corIntercept" value="0.00133" type="float"/>
                 </variable>
                 <variable name="CVFX1" units="V">
-                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="0.9982" type="float"/>
                     <parameter name="corIntercept" value="0.00133" type="float"/>
                 </variable>
                 <variable name="CVFX2" units="V">
-                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="0.9982" type="float"/>
                     <parameter name="corIntercept" value="0.00133" type="float"/>
                 </variable>
                 <variable name="CVFX3" units="V">
-                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="0.9982" type="float"/>
                     <parameter name="corIntercept" value="0.00133" type="float"/>
                 </variable>
                 <variable name="CVFX4" units="V">
-                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="0.9982" type="float"/>
                     <parameter name="corIntercept" value="0.00133" type="float"/>
                 </variable>
                 <variable name="CVFX5" units="V">
-                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="0.9982" type="float"/>
                     <parameter name="corIntercept" value="0.00133" type="float"/>
                 </variable>
                 <variable name="CVFX6" units="V">
-                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="0.9982" type="float"/>
                     <parameter name="corIntercept" value="0.00133" type="float"/>
                 </variable>
                 <variable name="CVFX7" units="V">
-                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="0.9982" type="float"/>
                     <parameter name="corIntercept" value="0.00133" type="float"/>
                 </variable>
                 <variable name="CVFX8" units="V">
-                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="0.9982" type="float"/>
                     <parameter name="corIntercept" value="0.00133" type="float"/>
                 </variable>
                 <variable name="CVPCN" units="V">
-                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="0.9982" type="float"/>
                     <parameter name="corIntercept" value="0.00133" type="float"/>
@@ -159,24 +159,24 @@
                 -->
                 <!-- gain=16,bipolar=F gives a range of 0-1.25V -->
                 <variable name="CVTT" units="V" minValue="-10">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
                 </variable>
                 <variable name="CVTP" units="V" minValue="-10">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
                 </variable>
                 <variable name="CVTS" units="V" minValue="-10">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
                 </variable>
                 <variable name="CVTCN" units="V" minValue="-10">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
                 </variable>
                 <variable name="CVTAI" units="V" minValue="-10">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
                 </variable>
             </sample>
         </sensor>
@@ -202,7 +202,7 @@
             </sample>
             <message separator="\n" position="end" length="0"/>
         </serialSensor>
-       <serialSensor IDREF="UHSAS" devicename="/dev/ttyS6">
+       <serialSensor IDREF="UHSAS" devicename="/dev/ttyS7" id="50">
             <parameter name="sendInit" value="false" type="bool"/>
        </serialSensor>
 
