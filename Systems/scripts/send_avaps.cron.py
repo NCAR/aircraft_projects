@@ -1,7 +1,11 @@
 #!/usr/bin/python
 #
-# Script to transmit AVAPS DropSonde data files to the ground
-# through FTP.
+# This script attempts to send the dropsonde files to the ground via FTP.
+#
+# The dropsonde file(s) are archived and compressed for transfer.
+#
+# If the transfer fails then the archive is discarded and then recreated
+# (and possibly appended to) the next time the script runs.
 #
 # This is set up to run out of a cron job every 5 minutes
 # 5 * * * * /home/local/Systems/scripts/send_avaps.cron.py
