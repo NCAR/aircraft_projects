@@ -7,8 +7,8 @@
 # If the transfer fails then the archive is discarded and then recreated
 # (and possibly appended to) the next time the script runs.
 #
-# This is set up to run out of a cron job every 5 minutes
-# 5 * * * * /home/local/Systems/scripts/send_avaps.cron.py
+# This is set up to run out of a cron job every minute
+# */1 * * * * /home/local/Systems/scripts/send_avaps.cron.py
 #
 import os
 import sys
@@ -16,12 +16,13 @@ import glob
 import stat
 import time
 import ftplib
+import syslog
 
 os.chdir('/home/tmp/send_to_grnd/')
 
 # This cron script is not re-entrant, bail out if still running.
 if os.path.isfile('BUSY'):
-# print 'exiting.  send_avaps.cron.py is still running...'
+  syslog.syslog('send_avaps.cron.py: exiting, BUSY')
   sys.exit(1)
 os.system('touch BUSY')
 
@@ -34,7 +35,7 @@ files=glob.glob('D20*')
 
 # bail out if no files are found
 if (not files):
-# print 'nothing to send!'
+# syslog.syslog('send_avaps.cron.py: exiting, nothing to send')
   os.remove('BUSY')
   sys.exit(1)
 
@@ -50,23 +51,24 @@ while True:
   if (aaa==bbb):
     break
 
-# time out after 4.5 minutes,  this cron tab is scheduled for 5 min (paranoid check)
-if ( (time.time() - starttime) > 270):
-  os.remove('BUSY')
-  sys.exit(1)
+  # time out after 2 minutes while waiting for file completion
+  if ( (time.time() - starttime) > 120):
+    syslog.syslog('send_avaps.cron.py: exiting, timed out waiting for last file')
+    os.remove('BUSY')
+    sys.exit(1)
 
 # create a compressed tar file named after the first file in the archive
 tarfile=files[0]+'.tar.bz2'
 tarcmd='tar -cjf '+tarfile
 for file in files:
-# print 'send file:', file, os.stat(file)[stat.ST_SIZE]
+  syslog.syslog("send_avaps.cron.py: tarring file: %s %s" % (file, os.stat(file)[stat.ST_SIZE]) )
   tarcmd=tarcmd+' '+file
 os.system(tarcmd)
 
-# keep trying to sent the tar file until we run out of time
+# keep trying to send the tar file until we run out of time
 while True:
   try:
-#   print 'opening FTP connection'
+    syslog.syslog('send_avaps.cron.py: opening FTP connection')
 
     # send the tar file to the ground
     ftp = ftplib.FTP('eol-rt-data.guest.ucar.edu')
@@ -74,11 +76,11 @@ while True:
     ftp.cwd('avaps')
     ftp.cwd('nrlp3')
 
-#   print 'sending', tarfile, '...'
+    syslog.syslog('send_avaps.cron.py: sending %s' % tarfile)
 
     # the following is equivalent to: 'put my_local_file.foo destination_file'
     ftp.storbinary('stor '+tarfile, open(tarfile, 'r'))
-#   print 'ftp put successful'
+    syslog.syslog('send_avaps.cron.py: done, ftp successful')
 
     # move the sent files to a seperate folder
     os.remove(tarfile)
@@ -87,18 +89,16 @@ while True:
     break
 
   except ftplib.all_errors, e:
-#   print 'Error putting file: ', e
+    syslog.syslog('send_avaps.cron.py: Error putting file: %s' % e)
 
-    # time out after 4.5 minutes,  this cron tab is scheduled for 5 min
-    if ( (time.time() - starttime) > 270):
+    # time out after 2 minutes while trying to connect
+    if ( (time.time() - starttime) > 120):
 
       # well try this again sometime
-#     print 'running out of time... give up'
+      syslog.syslog('send_avaps.cron.py: exiting, timed out connecting')
       os.remove(tarfile)
       os.remove('BUSY')
       sys.exit(1)
-
-#   print 'try again'
 
 ftp.quit() 
 
