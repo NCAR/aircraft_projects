@@ -18,11 +18,14 @@ import time
 import ftplib
 import syslog
 
+# Clean up name of script for logging
+script = sys.argv[0][sys.argv[0].rfind("/")+1:]
+
 os.chdir('/home/tmp/send_to_grnd/')
 
 # This cron script is not re-entrant, bail out if still running.
 if os.path.isfile('BUSY'):
-  syslog.syslog('send_avaps.cron.py: exiting, BUSY')
+  syslog.syslog(script+': exiting, BUSY')
   sys.exit(1)
 os.system('touch BUSY')
 
@@ -35,7 +38,7 @@ files=glob.glob('D20*')
 
 # bail out if no files are found
 if (not files):
-# syslog.syslog('send_avaps.cron.py: exiting, nothing to send')
+# syslog.syslog(script+': exiting, nothing to send')
   os.remove('BUSY')
   sys.exit(1)
 
@@ -53,7 +56,7 @@ while True:
 
   # time out after 2 minutes while waiting for file completion
   if ( (time.time() - starttime) > 120):
-    syslog.syslog('send_avaps.cron.py: exiting, timed out waiting for last file')
+    syslog.syslog(script+': exiting, timed out waiting for last file')
     os.remove('BUSY')
     sys.exit(1)
 
@@ -68,7 +71,7 @@ os.system(tarcmd)
 # keep trying to send the tar file until we run out of time
 while True:
   try:
-    syslog.syslog('send_avaps.cron.py: opening FTP connection')
+    syslog.syslog(script+': opening FTP connection')
 
     # send the tar file to the ground
     ftp = ftplib.FTP('eol-rt-data.guest.ucar.edu')
@@ -76,11 +79,11 @@ while True:
     ftp.cwd('avaps')
     ftp.cwd('nrlp3')
 
-    syslog.syslog('send_avaps.cron.py: sending %s' % tarfile)
+    syslog.syslog(script+': sending %s' % tarfile)
 
     # the following is equivalent to: 'put my_local_file.foo destination_file'
     ftp.storbinary('stor '+tarfile, open(tarfile, 'r'))
-    syslog.syslog('send_avaps.cron.py: done, ftp successful')
+    syslog.syslog(script+': done, ftp successful')
 
     # move the sent files to a seperate folder
     os.remove(tarfile)
@@ -89,13 +92,13 @@ while True:
     break
 
   except ftplib.all_errors, e:
-    syslog.syslog('send_avaps.cron.py: Error putting file: %s' % e)
+    syslog.syslog(script+': Error putting file: %s' % e)
 
     # time out after 2 minutes while trying to connect
     if ( (time.time() - starttime) > 120):
 
       # well try this again sometime
-      syslog.syslog('send_avaps.cron.py: exiting, timed out connecting')
+      syslog.syslog(script+': exiting, timed out connecting')
       os.remove(tarfile)
       os.remove('BUSY')
       sys.exit(1)
