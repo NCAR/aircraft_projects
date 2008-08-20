@@ -13,7 +13,7 @@
 <sensorcatalog>
    <serialSensor ID="UHSAS" class="raf.UHSAS_Serial" baud="38400" parity="none" databits="8" stopbits="1">
 
-        <parameter name="HSKP_SCALE" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000" type="int"/>
+        <parameter name="HSKP_SCALE" value="64000 12800 6400 6400 12800 6400 6400 12800 6400  6400 12800 6400" type="int"/>
 
         <sample id="1" rate="2">
             <variable name="AUHSAS" length="100" units="count" longname="UHSAS Raw Count Histogram"/>
@@ -21,18 +21,21 @@
             <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
             <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
             <variable name="USMPFLW" units="V" longname="UHSAS Sample Flow">
-                <linear slope="0.3543" intercept="-0.155" units="sccs"/>
+                <linear slope="1." intercept="0.0" units="sccs"/>
             </variable>
             <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
             <variable name="UTEMP" units="V" longname="UHSAS Temperature in Canister, signal"/>
             <variable name="USHFLW" units="V" longname="UHSAS Air Sheath Flow">
-                <linear slope="4.1667" intercept="0.0" units="sccs"/>
+                <poly coefs="115.42 -141.21 63.38" units="sccs"/>
             </variable>
             <variable name="UDIFF" units="V" longname="UHSAS Absolute Pressure in Canister, signal"/>
             <variable name="UBTMP" units="V" longname="UHSAS Temperature in Canister">
-                <linear slope="173.722" intercept="0.0" units="K"/>
+                <linear slope="178.5714" intercept="0.0" units="K"/>
             </variable>
-            <!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/-->
+            <!-- UPFLW is skipped -->
+            <!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
+                <linear slope="20" intercept="0.0" units="sccs"/>
+            </variable -->
             <variable name="UPRESS" units="V" longname="UHSAS Absolute Pressure in Canister">
                 <linear slope="22.222" intercept="10.556" units="kPa"/>
             </variable>
@@ -41,8 +44,6 @@
         </sample>
         <message separator="\xff\xff\x00" position="beg" length="236"/>
     </serialSensor>
-
-
 </sensorcatalog>
 <site name="GV_N677F" class="raf.Aircraft">
     <parameter name="tailNumber" value="N677F" type="string"/>
@@ -202,17 +203,9 @@
             </sample>
             <message separator="\n" position="end" length="0"/>
         </serialSensor>
-       <serialSensor IDREF="UHSAS" devicename="/dev/ttyS7" id="50">
+       <serialSensor IDREF="UHSAS" devicename="/dev/ttyS7" id="50" suffix="_CVI">
             <parameter name="sendInit" value="false" type="bool"/>
        </serialSensor>
-
-       <!-- CPC -->
-       <!--
-       <serialSensor class="DSMSerialSensor"
-            baud="9600" parity="even" databits="7" stopbits="1">
-            <message separator="\n" position="end" length="0"/>
-        </serialSensor>
-        -->
 
         <!-- input from LabView via socket -->
         <socketSensor class="raf.CVI_LV_Input" devicename="inet::30006"
