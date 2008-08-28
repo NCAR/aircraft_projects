@@ -1,0 +1,371 @@
+#!/usr/bin/env python
+#
+################################################################################
+# Script to archive raw RAF datasets to the CISL Mass Storage System under the 
+# /RAF or /ATD/DATA path.
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2008                                                         *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+# Note: This script runs only in the project's "Production/archive" subdirectory
+#       under the "dmg" login. It accesses dmg-user environment variables and 
+#	extracts the project and platform from the path. The complete path MUST
+#	follow the pattern /jnet/local/projects/<PROJ>/<PLATFORM>/Production/archive
+#
+# This script is an attempt to update and consolidate the arch* csh scripts 
+# written by Ron Ruth and located in /scr/raf2/Prod_Data/archives/templates. 
+# Impetus for it's development comes from the addition of the HAIS instruments
+# to the data processing stream for HEFT08, ICE-L, PACDEX and subsequent projects.
+#
+# All Ron's old template scripts are save in SVN as old versions of this code, 
+# and this code is in SVN and deployed to /net/work/bin/scripts/mass_store. Each
+# project can archive it from there.
+################################################################################
+# Import modules used by this code. Some are part of the python library. Others
+# were written here and will exist in the same dir as this code.
+import sys, getopt
+import os
+import string
+import re
+import time
+import tarfile
+from datetime import datetime
+from os.path import join
+
+# Set some constants here so can easily find and change them
+msrcpMachine = "bora"	# the machine to run the msrcp command from
+wpwd = "RAFDMG" 	# the MSS Write PWD
+user = "dmg"
+#	For bora logins, $PROJ_DIR is an environment variable set to the 
+#	project working dir (currently /jnet/local/projects).'''
+
+# File that contains map between project and Mass Store directories where
+# production data is archived.
+dirmapfile = os.environ['PROJ_DIR']+"/archives/msfiles/directory_map"
+
+class archRAFdata:
+
+    def today(self):
+	today = time.strftime("%a, %d %b %Y %H:%M:%S local",time.localtime())
+	return today
+
+    def proj_info(self,projdir):
+	'''
+	Get some project-specific info from the proj.info file in the Production	dir
+		fiscalyear = fiscal year of the project
+		calendaryear = year data was collected, 
+			not necessarily the same as FY
+		rpwd = MSS Read PWD
+	Users will set rpwd = <some pwd> if they want the data protected, else 
+	set to "" 
+	Eventually ask the user for this directly on the command line? Not sure
+	what I want to do here. Read from a projinfo database entry?
+	'''
+	projinfo = open(projdir+"/proj.info",'r')
+	lines = projinfo.readlines()
+	projinfo.close()
+	fiscalyear = ""
+	calendaryear = ""
+	rpwd = ""
+	for line in lines:
+	    #Remove newline from end of string
+	    line = line.replace("\n","")
+	    #Echo contents of proj.info to screen to be saved in log.
+	    print line
+	    # Retrieve fiscal year
+	    match = re.search("FY",line)
+	    if match:
+		fiscalyear = string.split(line,'=')[1]
+	    # Retrieve calendar year
+	    match = re.search("CY",line)
+	    if match:
+		calendaryear = string.split(line,'=')[1]
+	    # Retrieve read password
+	    match = re.search("rpwd",line)
+	    if match:
+		rpwd = string.split(line,'=')[1]
+		rpwd.strip()	# Remove leading and trailing spaces
+	# Warn user if required params aren't in proj.info, ask user to add
+	# them, and quit.
+	if fiscalyear == "":
+	    print "Fiscal year not documented in "+projdir+ \
+		    "/proj.info. Please add it."
+	    raise SystemExit
+	if calendaryear == "":
+	    print "Calendar year not documented in "+projdir+ \
+		    "/proj.info. Please add it."
+	    raise SystemExit
+	return [fiscalyear,calendaryear,rpwd]
+
+    def checkuser(self):
+        '''
+        Check login (only "dmg" login allowed to run this script)
+        The old way was "user = os.getlogin()".
+        python.org recommends using environ over getlogin.
+        (getlogin is available on unix systems only.)'''
+
+        logname= os.environ['LOGNAME']
+
+        if user != logname:
+            print "You are logged in as user "+ logname + \
+	    ".\n Only the 'dmg' login is allowed to run this script.  Quitting.\n"
+	    raise SystemExit
+
+    def checkpath(self):
+	'''
+	Check current directory to make sure script is being run from the 
+	archive subdir and grab the project name from the path as well. This 
+	assumes the path is of the form 
+	$PROJ_DIR/<PROJ_NAME>/<PLATFORM>/Production/archive'''
+
+	# Get current working directory
+	current_dir = os.getcwd()
+	# split the path of the current dir into it's subdir components
+	path_components = string.split(current_dir,'/')
+	# Check the last section of the path. It should be a dir called "archive". 
+	# If not,  warn user and exit.
+	if path_components[len(path_components)-1] != "archive":
+	    print "You are running from "+current_dir+"\n"
+	    print 'This script must be run from '+ \
+		  os.environ['PROJ_DIR'] + \
+	          '/<proj>/<platform>/Production/archive. Quitting.\n'
+	    raise SystemExit
+
+	# Check the second to last part of the path. It should be a dir called
+	# Production. If not, warn user and exit.
+	if path_components[len(path_components)-2] != "Production":
+	    print "You are running from "+current_dir+"\n"
+	    print 'This script must be run from the '+ \
+		  os.environ['PROJ_DIR'] + \
+		  '/Production/archive subdir. Quitting.\n'
+	    raise SystemExit
+
+	# Determine the platform and project name from the path and return
+	# them to the calling routine.
+	platform = path_components[len(path_components)-3]
+	proj_name = path_components[len(path_components)-4]
+
+	# Create a string containing the path to the dir directly above "archive",
+	# which is the Production dir.
+	projdir = string.join(path_components[0:len(path_components)-1],'/')
+
+	return [platform,proj_name,projdir,current_dir]
+
+    def projnum (self,dirmapfile):
+	'''
+	PROJ = 3-digit project number - get from 
+	$PROJ_DIR/archives/msfiles/directory_map by searching for the project name
+	which we grabbed from the working dir path using checkpath()'''
+	dirmap = open(dirmapfile,'r')
+	lines = dirmap.readlines()
+	dirmap.close()
+
+	for line in lines:
+	    match = re.search(proj_name,line)
+	    if match:
+		proj = string.split(line)[0]
+		break
+	return proj
+
+    def findfiles(self,path,searchstr):
+        '''
+        Walk through a dir tree and return a list of all files matching
+        searchstring'''
+        # root - path to the directory
+        # dirs - list of the names of the subdirs in dirpath (excluding . and ..)
+        # files - list of the names of the non-directory files in dirpath
+        # To get a full path to a file or dir in dirpath, os.path.join(dirpath,name)
+	tarfiles = []
+	for root, dirs, files in os.walk(path):
+	    for name in files:
+	        match = re.search(searchstr,name)
+	        if match:
+		    name = join(path,name)
+		    #print name
+		    tarfiles.append(name)
+	return tarfiles
+
+    def tardir(self,sdir,file,searchstr,calendaryear):
+	'''
+	Create a tarfile called sibdir.tar containing all the files in the
+	dirpath that match pattern. Also create a listing of the contents
+	of the tarfile called subdiir.tar.dir. Return the location on disk
+	of both the tarfile and the listing file.'''
+
+	# Create an array to hold the list of files to put in the tarfile
+
+	# Walk through the dirpath (this will ignore paths that point to a file and
+	# only walk through paths that point to a dir.
+	path = join(sdir,file)
+
+	# Return an array containing the complete path to all the files matching
+	# searchstr in the path
+	tarfiles = archraf.findfiles(path,searchstr)
+
+	# If we found files, tar 'em up. If the path was to a file, or there were
+	# no files matching searchstr in the path, then there is nothing to tar so
+	# don't return anything.
+	if len(tarfiles) != 0:
+	    print "Creating tarfile for "+path
+
+	    # For clarity, the tarfile name should contain the date
+	    # (yyyymmdd) and flight number. Start with the directory name.
+	    # If the directory name does not contain a year, 
+	    # add it to the tarfile name.
+	    match = re.search(calendaryear,file)
+	    if not match:
+	        file = file + "_" + calendaryear
+
+	    # Create the tarfile
+	    tar = tarfile.open(file+".tar","w")
+	    for files in tarfiles:
+		archname = string.split(files,sdir+"/")
+	        tar.add(files,archname[1])
+	    tar.list()	# Echo file info to the screen for each file being 
+	    		# added to the tarfile
+	    tar.close()
+	    # Now create tarfile listing to also be archived
+	    os.system("tar -tvf "+file+".tar > "+file+".tar.dir")
+	    return [file+'.tar',file+'.tar.dir']
+	else:
+	    return ["",""]
+
+# Create an instance of the archRAFdata object
+archraf = archRAFdata()
+
+# Confirm this script  is being run as the dmg user.
+archraf.checkuser()
+
+#
+# Usage: 
+#
+if len(sys.argv) < 3 or len(sys.argv) > 6:
+	print '''"Usage: archAC.py TYPE <flag> SDIR SFILES <RAF|ATDdata>
+	where:	type is data type being archive (SID-2H, ADS)
+		(will be used a subdir name on mss)
+		flag is an optional argument that can be -r or -t
+			use -r to search for source files recursively
+			use -t to create tarballs of subdirs in the SDIR
+		SDIR = source file directory
+		SFILES = source file suffix (i.e. ads)
+		'RAF' -> data will be archived to /RAF (in house)
+		'ATDdata' -> data will be archived to /ATD/DATA (public access)'''
+	raise SystemExit
+
+# sys..argv[0] is the path and filename of this script
+# Don't currently need it for anything, so ignore it.
+
+# Read the data type from the command line. It must always
+# be the second item on the line, after calling the script
+type = sys.argv[1]
+print "Processing type " + type
+if type == 'camera':
+    print "Use archive_camera and archcam.### to archive camera images."
+    print "This code has not been written to handle camera images correctly."
+    raise SystemExit
+
+# Get the rest of the command line arguments off the command line
+index = 2
+arg = sys.argv[index]
+if re.search("^-",arg):
+    # Assume there is only one flag on the line, else
+    # bad things will happen
+    flag = arg
+    index = index+1
+else:
+    flag = ""
+sdir = sys.argv[index]
+searchstr = sys.argv[index+1]
+location = sys.argv[index+2]
+
+# Make sure this script is being run from 
+# $PROJ_DIR/<proj>/<platform>/Production/archive.
+(platform,proj_name,projdir,current_dir) = archraf.checkpath()
+
+# Get the year and rpwd from the proj.info file in the Production dir.
+(fiscalyear,calendaryear,rpwd) = archraf.proj_info(projdir)
+
+# Determine the 3-digit project number that goes with this project
+proj = archraf.projnum(dirmapfile)
+
+# Confirm we are running on bora, merlot, or shiraz since these are the big data
+# processing machines and we don't want to step on anyone elses toes.
+# Not Implemented Yet
+
+# Get the list of files to archive and store to array sfiles
+sfiles = []
+if flag == "-r":
+    sfiles = archraf.findfiles(path,searchst)
+    sdir = ""
+elif flag == "-t":
+    # List all the files/dirs in the working dir (sdir)
+    filelist = os.listdir(sdir)
+    filelist.sort()
+    for file in filelist:
+	[tfile,tfilelist]=archraf.tardir(sdir,file,searchstr,calendaryear)
+	if tfile != "":
+            # Add the tar file to the array of files to archive
+	    sfiles.append(tfile)
+            # Add the tar file list to the array of files to archive
+	    sfiles.append(tfilelist)
+    sdir = current_dir+"/"
+else:
+    lines = os.listdir(sdir)
+    for line in lines:
+	match = re.search(searchstr,line)
+	if match:
+	    sfiles.append(line)
+    sdir = sdir + '/'
+
+# Sort the files to be processed so they are processed in alphabetical order
+sfiles.sort()
+
+# Create the list of filenames to archive them under
+# In Ron's original scripts, the file names were rearranged before writing to the 
+# Mass Store and the new destination filenames were stored in dfiles.
+# Going forward, keep the same filenames.
+
+#  Get started:
+print '#  '+str(len(sfiles))+' Job(s) submitted on '+ archraf.today()
+
+#Now archive the data!
+command = []
+for spath in sfiles:
+	# Comment out print to run command
+        path_components = string.split(spath,'/')
+        if flag == "-r":
+	    sfile = path_components[len(path_components)-2]+'/'+\
+		    path_components[len(path_components)-1]
+	else:
+	    sfile = path_components[len(path_components)-1]
+	#msput_job is a script written by Ron Ruth and located in
+	#$PROJ_DIR/archives/scripts
+	if location == 'RAF':
+	    mssroot = ' mss:/RAF/'+fiscalyear+'/'+proj+'/'
+	elif location == 'ATDdata':
+	    mssroot = ' mss:/ATD/DATA/'+calendaryear+'/'+proj_name+'/'+platform+'/'
+	else:
+	    print "Missing location"
+	    raise SystemExit
+
+	command.append('ssh -x '+ msrcpMachine + ' msput_job -pe 32767 -pr 41113009 -wpwd ' + wpwd + \
+	' '+rpwd+' ' + sdir + spath+mssroot+type+'/'+sfile)
+for line in command:
+	print line
+	
+process = raw_input("Run the commands as listed? yes == enter, no == anything else: ")
+if process == "":
+    for line in command:
+	result = os.system(line)
+        path_components = string.split(line,'/')
+	sfile = path_components[len(path_components)-1]
+	if result == 0:
+	    print "#  msrcp job for "+type+"/"+sfile+" -- OK -- "+ archraf.today()
+	else:
+	    print "#  msrcp job for "+type+"/"+sfile+" -- Failed -- "+ archraf.today()
+	    print "#                "+type+"/"+sfile+": error code "+str(result)
+
+
+print "#   Successful completion on "+archraf.today()+"\n"
