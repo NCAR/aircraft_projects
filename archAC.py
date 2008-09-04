@@ -22,6 +22,10 @@
 # All Ron's old template scripts are save in SVN as old versions of this code, 
 # and this code is in SVN and deployed to /net/work/bin/scripts/mass_store. Each
 # project can archive it from there.
+#
+# Modified 9/4/2008 Janine Goldstein
+#	to rename LRT and HRT files by getting flight, date, and time from netCDF
+#	file and creating a filename of the form fltno.yyyymmdd.ShSmSs_EhEmEs.PNI.nc
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -33,6 +37,8 @@ import time
 import tarfile
 from datetime import datetime
 from os.path import join
+from subprocess import Popen
+from subprocess import PIPE
 
 # Set some constants here so can easily find and change them
 msrcpMachine = "bora"	# the machine to run the msrcp command from
@@ -232,6 +238,42 @@ class archRAFdata:
 	else:
 	    return ["",""]
 
+    def rename(self,sdir,sfile):
+	path = sdir + sfile
+        dfile = ""
+
+	# Get flight number
+	p1 = Popen(["/usr/bin/ncdump","-h",path], stdout=PIPE)
+	p2 = Popen(["grep","FlightNumber"], stdin=p1.stdout, stdout=PIPE)
+	flightnum = string.upper(string.split(p2.communicate()[0],'"')[1])
+	dfile = dfile+flightnum
+
+	# Get flight date
+	p1 = Popen(["/usr/bin/ncdump","-h",path], stdout=PIPE)
+	p2 = Popen(["grep","FlightDate"], stdin=p1.stdout, stdout=PIPE)
+	flightdate = string.upper(string.split(p2.communicate()[0],'"')[1])
+	dates = string.split(flightdate,'/')
+	dfile = dfile+'.'+dates[2]+dates[0]+dates[1]
+
+	# Get Time Interval
+	p1 = Popen(["/usr/bin/ncdump","-h",path], stdout=PIPE)
+	p2 = Popen(["grep","TimeInterval"], stdin=p1.stdout, stdout=PIPE)
+	timeinterval = string.upper(string.split(p2.communicate()[0],'"')[1])
+	timeinterval = string.replace(timeinterval,'-','_')
+	timeinterval = string.replace(timeinterval,':','')
+	dfile = dfile+'.'+timeinterval+'.PNI.nc'
+
+	#params = ["FlightNumber","FlightDate","TimeInterval"]
+	#for param in params:
+	    # Dump the header of the file
+	#    p1 = Popen(["/usr/bin/ncdump","-h",path], stdout=PIPE)
+	#    p2 = Popen(["grep",param], stdin=p1.stdout, stdout=PIPE)
+	#    dfile = dfile + string.upper(string.split(p2.communicate()[0],'"')[1]) + '.'
+	#    print dfile
+
+	return dfile
+
+
 # Create an instance of the archRAFdata object
 archraf = archRAFdata()
 
@@ -325,7 +367,7 @@ sfiles.sort()
 # Create the list of filenames to archive them under
 # In Ron's original scripts, the file names were rearranged before writing to the 
 # Mass Store and the new destination filenames were stored in dfiles.
-# Going forward, keep the same filenames.
+# Going forward, keep the same filenames, except for LRT and HRT netCDF files.
 
 #  Get started:
 print '#  '+str(len(sfiles))+' Job(s) submitted on '+ archraf.today()
@@ -350,6 +392,12 @@ for spath in sfiles:
 	    print "Missing location"
 	    raise SystemExit
 
+	match = re.search("LRT",type)
+	if match:
+	    sfile = archraf.rename(sdir,sfile)
+	match = re.search("HRT",type)
+	if match:
+	    sfile = archraf.rename(sdir,sfile)
 	command.append('ssh -x '+ msrcpMachine + ' msput_job -pe 32767 -pr 41113009 -wpwd ' + wpwd + \
 	' '+rpwd+' ' + sdir + spath+mssroot+type+'/'+sfile)
 for line in command:
