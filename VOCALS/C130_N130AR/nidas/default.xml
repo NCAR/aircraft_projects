@@ -744,7 +744,7 @@
         </serialSensor>
 
 
-        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="500">
 <!-- QCR                  | 2007-06-05 18:55:34 | {-0.384382,1.11335} -->
@@ -798,11 +798,11 @@
             </sample>
             <sample id="4" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_A2D002" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_FWDFS0" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
-        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d1" id="300">
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="220">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
@@ -817,7 +817,7 @@
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_A2D004" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_FWDFS1" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
@@ -829,9 +829,12 @@
     <dsm name="dsm321" location="Video_Rack" id="21" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
 
+<!--
+        <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS6" id="120" suffix="_MC"/>
+-->
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS6" id="120" suffix="_MC"/>
 
-        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
@@ -887,35 +890,37 @@
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_A2D010" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_VID0" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
-        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d1" id="220">
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="220">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
-                <variable name="XUVP" units="V" longname="">
+                <variable name="XUVP" units="V" longname="UV Hygrometer Pressure">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0"  type="float"/>
+                    <poly coefs="143.34 -188.86 0.0034" units="hPa"/>
                 </variable>
-                <variable name="XUVT" units="V" longname="">
+                <variable name="XUVT" units="V" longname="UV Hygrometer Temperature">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0"  type="float"/>
+                    <poly coefs="70.84 3.777 18.295" units="deg_C"/>
                 </variable>
-                <variable name="XUVI" units="V" longname="">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                <variable name="XUVI" units="V" longname="UV Hygrometer Intensity">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0"  type="float"/>
                 </variable>
                 <variable name="XSDIIMP" units="V" longname="">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0"  type="float"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_A2D011" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_VID1" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
@@ -933,21 +938,22 @@
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="500">
-                <variable name="XGLWC" units="V" longname="Gerber">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                <variable name="XGLWC" units="gram/m3" longname="Gerber PV-100 Probe Liquid Water Content">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.09377" type="float"/> <parameter name="corIntercept" value="-0.365355" type="float"/>
-                    <poly coefs="-9.9669 1078.11 -15.832" units="W/m2"/>
                 </variable>
-                <variable name="XGREFF" units="V" longname="Gerber">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                <variable name="XGREFF" units="V" longname="Gerber PV-100 Effective Droplet Radius">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.09377" type="float"/> <parameter name="corIntercept" value="-0.365355" type="float"/>
-                    <poly coefs="-9.9669 1078.11 -15.832" units="W/m2"/>
                 </variable>
-                <variable name="XGSFC" units="V" longname="Gerber">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                <variable name="XGSFC" units="V" longname="Gerber PV-100 Particle Surface Area (Raw)">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.09377" type="float"/> <parameter name="corIntercept" value="-0.365355" type="float"/>
-                    <poly coefs="-9.9669 1078.11 -15.832" units="W/m2"/>
                 </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_WPL0" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
@@ -969,6 +975,121 @@
             <parameter name="SerialNumber" type="string" value="FSSP305"/>
         </serialSensor>
 
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+<!-- FCN                  | 2007-06-09 16:25:21 | {-0.166531,1.0717} -->
+<!-- FCN                  | 2007-10-31 22:44:48 | {-0.170717,1.06783} -->
+                <variable name="FCN" units="V" longname="Raw CN Counter Sample Flow Rate">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.06783" type="float"/> <parameter name="corIntercept" value="-0.170717" type="float"/>
+                    <linear slope="0.4128" intercept="0.0" units="vlpm"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="100">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="5" type="int"/>
+<!-- XICN                 | 2007-06-09 16:31:07 | {-0.211025,1.08429} -->
+<!-- XICN                 | 2007-10-31 22:55:35 | {-0.215138,1.08066} -->
+                <variable name="XICN" units="V" longname="CN Isokinetic Side Flow Rate">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.08066" type="float"/> <parameter name="corIntercept" value="-0.215138" type="float"/>
+                    <linear slope="1.118" intercept="0.03" units="vlpm"/>
+                </variable>
+            </sample>
+            <sample id="3" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+<!-- CNTEMP               | 2007-06-09 16:23:02 | {-0.204473,1.05798} -->
+<!-- CNTEMP               | 2007-10-31 22:41:27 | {-0.208529,1.05381} -->
+                <variable name="CNTEMP" units="V" longname="CN Counter Inlet Temperature">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.05381" type="float"/> <parameter name="corIntercept" value="-0.208529" type="float"/>
+                    <poly coefs="13.85 4.668 -0.0056" units="deg_C"/>
+                </variable>
+<!-- PCN                  | 2007-06-09 16:28:46 | {-0.390289,1.07211} -->
+<!-- PCN                  | 2007-10-31 22:51:54 | {-0.400406,1.06856} -->
+                <variable name="PCN" units="V" longname="CN Counter Inlet Pressure">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.06856" type="float"/> <parameter name="corIntercept" value="-0.400406" type="float"/>
+                    <poly coefs="-3.557 108.15 -0.0149" units="hPa"/>
+                </variable>
+<!-- FO3_CL               | 2007-06-09 16:49:08 | {-0.423953,1.07613} -->
+                <variable name="FO3_CL" units="V" longname="Fast Response Ozone Mixing Ratio">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.07613" type="float"/> <parameter name="corIntercept" value="-0.423953" type="float"/>
+                    <linear slope="20.0" intercept="0.0" units="ppbv"/>
+                </variable>
+<!-- COMR_AL               | 2007-06-09 16:51:54 | {-0.170109,1.0542} -->
+                <variable name="COMR_AL" units="V" longname="Carbon Monoxide Mixing Ratio">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0542" type="float"/> <parameter name="corIntercept" value="-0.170109" type="float"/>
+                    <linear slope="400" intercept="-3.2" units="ppbv"/>
+                </variable>
+<!-- TEO3                 | 2007-07-18 16:26:07 | {-0.44941,1.0593} -->
+                <variable name="TEO3" units="V" longname="Teco Ozone Concentration">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0593" type="float"/> <parameter name="corIntercept" value="-0.44941" type="float"/>
+                    <linear slope="20.0" intercept="0.0" units="ppbv"/>
+                </variable>
+<!-- TEO3P                | 2007-07-18 16:44:58 | {-0.421797,1.05948} -->
+                <variable name="TEO3P" units="V" longname="Teco Ozone Pressure">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.05948" type="float"/> <parameter name="corIntercept" value="-0.421797" type="float"/>
+                    <linear slope="66.8624" intercept="414.6" units="hPa"/>
+                </variable>
+            </sample>
+            <sample id="4" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_AFTL0" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="220">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+                <variable name="AGNIP" units="V" longname="GNI">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+                <variable name="AGNIT" units="V" longname="GNI">
+                    <parameter name="channel" value="1" type="int"/>
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+                <variable name="AGNIRH" units="V" longname="GNI">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_AFTL1" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+    <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002" derivedData="sock::58800">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
+
+<!--  CO -->
+
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="500" suffix="_RWO">
+            <parameter name="SerialNumber" type="string" value="CDP001"/>
+        </serialSensor>
+
+        <serialSensor IDREF="S100" devicename="/dev/ttyS11" id="520" suffix="_RWI">
+            <parameter name="SerialNumber" type="string" value="FSSP109"/>
+        </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
@@ -1009,7 +1130,6 @@
                 <variable name="TTWH" units="V" longname="Total Temperature, Deiced Wing">
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.04944" type="float"/> <parameter name="corIntercept" value="-0.128447" type="float"/>
-                    <poly coefs="-65.4 26.7721 -0.328722" units="deg_C"/>
                 </variable>
 <!-- RICE                 | 2007-06-07 18:31:30 | {-0.3032,1.05496} -->
                 <variable name="RICE" units="V" longname="Raw Icing-Rate Indicator">
@@ -1018,124 +1138,113 @@
                     <parameter name="channel" value="7" type="int"/>
                 </variable>
             </sample>
-            <sample id="4" rate="1">
+            <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_A2D016" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_AFTR0" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
-        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="300">
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="220">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="100">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="5" type="int"/>
+<!-- PLWC1                | 2007-06-07 18:37:29 | {-0.296929,1.05386} -->
+<!-- PLWC1                | 2007-10-31 22:05:07 | {-0.30659,1.04874} -->
+                <variable name="PLWC1" units="V" longname="Raw PMS-King Liquid Water Content Output">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.04874" type="float"/> <parameter name="corIntercept" value="-0.30659" type="float"/>
+                    <linear slope="10.0" intercept="0.0" units="W"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+<!-- RSTT                 | 2007-06-07 18:41:37 | {-0.323666,1.05785} -->
+                <variable name="RSTT" units="V" longname="Radiometric Sky/Cloud-Base Temperature">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.05785" type="float"/> <parameter name="corIntercept" value="-0.323666" type="float"/>
+                    <poly coefs="-58.2418 10.6207 0.0458455" units="deg_C"/>
+                </variable>
+<!-- XCNCold              | 2007-06-07 18:46:32 | {-0.229177,1.04552} -->
+                <variable name="XCNCold" units="V" longname="Condensation Nuclei un-heated">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.04552" type="float"/> <parameter name="corIntercept" value="-0.229177" type="float"/>
+                    <linear slope="1000.0" intercept="0.0" units="N/cc"/>
+                </variable>
+<!-- XCNHot               | 2007-06-07 18:50:10 | {-0.464867,1.07459} -->
+                <variable name="XCNHot" units="V" longname="Condensation Nuclei heated">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.07459" type="float"/> <parameter name="corIntercept" value="-0.464867" type="float"/>
+                    <linear slope="1000.0" intercept="0.0" units="N/cc"/>
+                </variable>
+<!-- XNEPH                | 2007-07-18 16:15:26 | {-0.521508,1.07} -->
+                <variable name="XNEPH" units="V" longname="U of H Nephelometer">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.07" type="float"/> <parameter name="corIntercept" value="-0.521508" type="float"/>
+                </variable>
+<!-- XUCN                 | 2007-07-18 16:20:09 | {-0.432391,1.05917} -->
+                <variable name="XUCN" units="V" longname="Ultra-fine Condensation Nuclei">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.05917" type="float"/> <parameter name="corIntercept" value="-0.432391" type="float"/>
+                    <linear slope="10000.0" intercept="0.0" units="N/cc"/>
+                </variable>
+                <variable name="GNI1" units="V" longname="GNI 1">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+                <variable name="GNI2" units="V" longname="GNI 2">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+            </sample>
+            <sample id="3" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_AFTR1" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d2" id="240">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
-                <variable name="AGNIP" units="V" longname="GNI">
-                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
-                </variable>
-                <variable name="AGNIT" units="V" longname="GNI">
-                    <parameter name="channel" value="1" type="int"/>
-                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
-                </variable>
-                <variable name="AGNIRH" units="V" longname="GNI">
+                <variable name="XDTEMP" units="V" longname="GNI 2">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+                <variable name="XTOPTMP" units="V" longname="GNI 2">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+                <variable name="XLPWR" units="V" longname="GNI 2">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+                <variable name="XVDET" units="V" longname="GNI 2">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+                <variable name="XASTAT" units="V" longname="GNI 2">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+                <variable name="XWCN10" units="V" longname="GNI 2">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+                <variable name="XWCN25" units="V" longname="GNI 2">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+                <variable name="XSDISTR" units="V" longname="GNI 2">
+                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_A2D014" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
-
-        <output class="RawSampleOutputStream" sorterLength="0">
-            <socket type="mcrequest"/>
-        </output>
-    </dsm>
-
-    <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002" derivedData="sock::58800">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
-
-<!--  CO -->
-
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="500" suffix="_RWO">
-            <parameter name="SerialNumber" type="string" value="CDP001"/>
-        </serialSensor>
-
-        <serialSensor IDREF="S100" devicename="/dev/ttyS11" id="520" suffix="_RWI">
-            <parameter name="SerialNumber" type="string" value="FSSP109"/>
-        </serialSensor>
-
-        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="10">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="50" type="int"/>
-<!-- CNTEMP               | 2007-06-09 16:23:02 | {-0.204473,1.05798} -->
-<!-- CNTEMP               | 2007-10-31 22:41:27 | {-0.208529,1.05381} -->
-                <variable name="CNTEMP" units="V" longname="CN Counter Inlet Temperature">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.05381" type="float"/> <parameter name="corIntercept" value="-0.208529" type="float"/>
-                    <poly coefs="13.85 4.668 -0.0056" units="deg_C"/>
-                </variable>
-<!-- FCN                  | 2007-06-09 16:25:21 | {-0.166531,1.0717} -->
-<!-- FCN                  | 2007-10-31 22:44:48 | {-0.170717,1.06783} -->
-                <variable name="FCN" units="V" longname="Raw CN Counter Sample Flow Rate">
-                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.06783" type="float"/> <parameter name="corIntercept" value="-0.170717" type="float"/>
-                    <linear slope="0.4128" intercept="0.0" units="vlpm"/>
-                </variable>
-<!-- PCN                  | 2007-06-09 16:28:46 | {-0.390289,1.07211} -->
-<!-- PCN                  | 2007-10-31 22:51:54 | {-0.400406,1.06856} -->
-                <variable name="PCN" units="V" longname="CN Counter Inlet Pressure">
-                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.06856" type="float"/> <parameter name="corIntercept" value="-0.400406" type="float"/>
-                    <poly coefs="-3.557 108.15 -0.0149" units="hPa"/>
-                </variable>
-            </sample>
-            <sample id="2" rate="100">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="5" type="int"/>
-<!-- XICN                 | 2007-06-09 16:31:07 | {-0.211025,1.08429} -->
-<!-- XICN                 | 2007-10-31 22:55:35 | {-0.215138,1.08066} -->
-                <variable name="XICN" units="V" longname="CN Isokinetic Side Flow Rate">
-                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.08066" type="float"/> <parameter name="corIntercept" value="-0.215138" type="float"/>
-                    <linear slope="1.118" intercept="0.03" units="vlpm"/>
-                </variable>
-            </sample>
-            <sample id="3" rate="10">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="50" type="int"/>
-<!-- THIML1               | 2007-10-31 22:59:04 | {-0.267533,1.06389} -->
-                <variable name="THIML1" units="V" longname="HIMIL Tip Temperature">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.06389" type="float"/> <parameter name="corIntercept" value="-0.267533" type="float"/>
-                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
-                </variable>
-<!-- THIML2               | 2007-10-31 23:03:09 | {-0.356033,1.07275} -->
-                <variable name="THIML2" units="V" longname="HIMIL Tip Temperature">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.07275" type="float"/> <parameter name="corIntercept" value="-0.356033" type="float"/>
-                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
-                </variable>
-<!-- PHIML1               | 2007-10-31 23:06:49 | {-0.125589,1.05067} -->
-                <variable name="PHIML1" units="V" longname="Static Pressure inside of HIMIL @ 434L">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.05067" type="float"/> <parameter name="corIntercept" value="-0.125589" type="float"/>
-                    <poly coefs="103.165 221.94 -0.02299" units="hPa"/>
-                </variable>
-<!-- PHIML2               | 2007-10-31 23:11:02 | {-0.0734768,1.04502} -->
-                <variable name="PHIML2" units="V" longname="Differential Pressure inside of HIMIL @ 434L">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.04502" type="float"/> <parameter name="corIntercept" value="-0.0734768" type="float"/>
-                    <poly coefs="874.898 -222.354 -0.0242" units="hPa"/>
-                </variable>
-            </sample>
-            <sample id="4" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_A2D009" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_AFTR2" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
