@@ -57,9 +57,9 @@
         <sample id="0326" rate="50" process="false"><variable name="BPITCHR" units="deg/s" longname="IRS Body Pitch Rate"/></sample>
         <sample id="0327" rate="50" process="false"><variable name="BROLLR" units="deg/s" longname="IRS Body Roll Rate"/></sample>
         <sample id="0330" rate="50" process="false"><variable name="BYAWR" units="deg/s" longname="IRS Body Yaw Rate"/></sample>
-        <sample id="0331" rate="50" process="false"><variable name="BLONGA" units="G" longname="IRS Body Longitudal Acceleration"/></sample>
-        <sample id="0332" rate="50" process="false"><variable name="BLATA" units="G" longname="IRS Body Latitudal Acceleration"/></sample>
-        <sample id="0333" rate="50" process="false"><variable name="BNORMA" units="G" longname="IRS Body Normal Acceleration"/></sample>
+        <sample id="0331" rate="50"><variable name="BLONGA" units="G" longname="IRS Body Longitudal Acceleration"/></sample>
+        <sample id="0332" rate="50"><variable name="BLATA" units="G" longname="IRS Body Latitudal Acceleration"/></sample>
+        <sample id="0333" rate="50"><variable name="BNORMA" units="G" longname="IRS Body Normal Acceleration"/></sample>
         <sample id="0334" rate="25" process="false"><variable name="PHDG" units="deg" longname="IRS Platform Heading"/></sample>
         <sample id="0335" rate="50" process="false"><variable name="TKAR" units="deg/s" longname="IRS Track Angle Rate"/></sample>
         <sample id="0336" rate="50" process="false"><variable name="pitch_att_rate" units="deg/s" longname="pitch_att_rate"/></sample>
@@ -540,8 +540,15 @@
             </variable>
           </sample>
         </arincSensor>
+
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G"/>
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G">
+          <sample id="0165" rate="50">
+            <variable name="VSPD" units="m/s" longname="Avionics GPS Vertical Velocity">
+              <linear slope="1.0" intercept="-0.06" units="m/s"/>
+            </variable>
+          </sample>
+        </arincSensor>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/dsmser0" id="110">
 	    <sample id="1">
@@ -576,28 +583,36 @@
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/ttyS5" id="110">
             <sample id="1">
-                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage"/>
+                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage">
+                <linear slope="1.0014" intercept="-0.56122" units="hPa"/>
+                </variable>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/ttyS6" id="112">
             <sample id="1">
-                <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome"/>
+                <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome">
+                <linear slope="1.0006" intercept="-0.46287" units="hPa"/>
+                </variable>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/ttyS7" id="114">
             <sample id="1">
-                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome"/>
+                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome">
+                <linear slope="1.0004" intercept="-0.75019" units="hPa"/>
+                </variable>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/ttyS8" id="116">
             <sample id="1">
-                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome"/>
+                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome">
+                <linear slope="1.0003" intercept="-0.50418" units="hPa"/>
+                </variable>
             </sample>
         </serialSensor>
 
