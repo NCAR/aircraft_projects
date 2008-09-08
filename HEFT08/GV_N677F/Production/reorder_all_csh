@@ -1,0 +1,8 @@
+#!/bin/csh
+
+cd /jnet/productiondata/
+foreach FILENAME (HEFT08?f0?.nc)
+ncReorder $FILENAME temp.nc
+mv -f temp.nc $FILENAME
+end
+

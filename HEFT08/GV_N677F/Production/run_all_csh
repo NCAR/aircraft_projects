@@ -1,0 +1,14 @@
+#!/bin/csh
+
+foreach FILENAME (setup_?f*)
+/code/schanot/nimbus/src/filter/nimbus -b $FILENAME << EOF
+Y
+EOF
+end
+
+cd /jnet/data/
+foreach FILENAME (HEFT08?f0?.nc)
+ncReorder $FILENAME temp.nc
+mv -f temp.nc $FILENAME
+end
+
