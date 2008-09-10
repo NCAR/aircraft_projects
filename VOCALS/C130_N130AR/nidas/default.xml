@@ -967,9 +967,6 @@
     <dsm name="dsm323" location="AftOvrhd_L" id="23" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="323"/>
 
-        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS5" id="110"/>
-        <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="120"/>
-
         <serialSensor IDREF="S200" devicename="/dev/ttyS10" id="570" suffix="_LWO">
             <parameter name="SerialNumber" type="string" value="PCAS108"/>
         </serialSensor>
@@ -1084,6 +1081,8 @@
     <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
 
+        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS5" id="110"/>
+        <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="120"/>
 <!--  CO -->
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="500" suffix="_RWO">
@@ -1266,6 +1265,27 @@
 <!--
         <sensor IDREF="Fast260X" devicename="/dev/usbtwod_64_1" id="600" suffix="_RPC"/>
 -->
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="50">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="10" type="int"/>
+                <variable name="TDLHI" units="V" longname="TDL High">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+                <variable name="TDLLO" units="V" longname="TDL Low">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_PODRW" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
