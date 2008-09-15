@@ -160,10 +160,12 @@
     </xsd:choice>
     <xsd:attribute name="name" type="xsd:token" use="required"/>
     <xsd:attribute name="longname" type="xsd:normalizedString"/>
-    <xsd:attribute name="units" type="xsd:normalizedString" default=""/>
-    <xsd:attribute name="count" type="xsd:boolean" default="0"/>
-    <xsd:attribute name="length" type="xsd:positiveInteger" default="1"/>
+    <xsd:attribute name="units" type="xsd:normalizedString"/>
+    <xsd:attribute name="count" type="xsd:boolean"/>
+    <xsd:attribute name="length" type="xsd:positiveInteger"/>
     <xsd:attribute name="missingValue" type="xsd:float"/>
+    <xsd:attribute name="minValue" type="xsd:float"/>
+    <xsd:attribute name="maxValue" type="xsd:float"/>
 </xsd:complexType>
 
 <xsd:complexType name="variables">
@@ -230,6 +232,7 @@
     <xsd:attribute name="latency" type="xsd:float"/>
     <xsd:attribute name="height" type="xsd:token"/>
     <xsd:attribute name="depth" type="xsd:token"/>
+    <xsd:attribute name="duplicateID" type="xsd:boolean"/>
 </xsd:complexType>
 
 <xsd:complexType name="messageSensorT">
@@ -337,6 +340,7 @@
 	<xsd:choice minOccurs="0" maxOccurs="unbounded">
 	    <xsd:group ref="sensors"/>
 	    <xsd:element ref="output"/>
+            <xsd:element ref="processor"/>
 	</xsd:choice>
 	<xsd:attribute name="ID" type="xsd:ID"/>
 	<xsd:attribute name="IDREF" type="xsd:IDREF"/>
@@ -345,6 +349,7 @@
 	<xsd:attribute name="location" type="xsd:token" use="optional"/>
 	<xsd:attribute name="id" type="xsd:nonNegativeInteger" use="optional"/>
 	<xsd:attribute name="rserialPort" type="xsd:nonNegativeInteger"/>
+	<xsd:attribute name="derivedData" type="xsd:token"/>
     </xsd:complexType>
     <xsd:unique name="uniqueSensorId">
 	<xsd:selector xpath="sensor | serialSensor | arincSensor | irigSensor | socketSensor"/>
@@ -382,8 +387,7 @@
 <xsd:element name="socket">
    <xsd:complexType>
 	<xsd:attribute name="type" type="sockettype" default="mcrequest"/>
-        <xsd:attribute name="port" type="xsd:nonNegativeInteger"
-		default="30000"/>
+        <xsd:attribute name="port" type="xsd:nonNegativeInteger"/>
         <xsd:attribute name="address" type="xsd:token"/>
         <xsd:attribute name="path" type="xsd:token"/>
         <xsd:attribute name="requestNumber" type="xsd:nonNegativeInteger"/>
@@ -461,6 +465,8 @@
             <xsd:element ref="fileset"/>
         </xsd:choice>
         <xsd:attribute name="class" type="xsd:token" use="optional"/>
+        <xsd:attribute name="sorterLength" type="xsd:nonNegativeInteger"/>
+        <xsd:attribute name="heapMax" type="xsd:nonNegativeInteger"/>
    </xsd:complexType>
 </xsd:element>
 
@@ -475,7 +481,8 @@
             <xsd:element ref="goes" maxOccurs="1"/>
         </xsd:choice>
         <xsd:attribute name="class" type="xsd:token" use="optional"/>
-        <xsd:attribute name="sorterLength" type="xsd:nonNegativeInteger" default="250"/>
+        <xsd:attribute name="sorterLength" type="xsd:nonNegativeInteger"/>
+        <xsd:attribute name="heapMax" type="xsd:nonNegativeInteger"/>
    </xsd:complexType>
 </xsd:element>
 
@@ -595,8 +602,7 @@
         </xsd:choice>
         <xsd:attribute name="name"   type="xsd:token" use="required"/>
         <xsd:attribute name="system"   type="xsd:token" use="required"/>
-        <xsd:attribute name="config" type="xsd:normalizedString"
-		use="required"/>
+        <xsd:attribute name="config" type="xsd:normalizedString"/>
         <xsd:attribute name="version" type="xsd:normalizedString"
 		use="required"/>
     </xsd:complexType>
