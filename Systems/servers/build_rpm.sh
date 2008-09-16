@@ -2,7 +2,7 @@
 
 script=`basename $0`
 
-source ../satcom/repo_scripts/repo_funcs.sh
+source repo_scripts/repo_funcs.sh
 
 dopkg=all
 [ $# -gt 0 ] && dopkg=$1
