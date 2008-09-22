@@ -973,6 +973,12 @@
     <dsm name="dsm323" location="AftOvrhd_L" id="23" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="323"/>
 
+        <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
+            <sample id="1" rate="100">
+                <variable name="CNTS" units="count" longname="TSI CN Counter Output" count="true"/>
+            </sample>
+        </sensor>
+
         <serialSensor IDREF="S200" devicename="/dev/ttyS10" id="570" suffix="_LWO">
             <parameter name="SerialNumber" type="string" value="PCAS108"/>
         </serialSensor>
@@ -1089,7 +1095,10 @@
 
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS5" id="110"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="120"/>
+
+
 <!--  CO -->
+
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="500" suffix="_RWO">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
@@ -1217,33 +1226,38 @@
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
-                <variable name="XDTEMP" units="V" longname="GNI 2">
+                <variable name="XDTEMP" units="V" longname="CCN Differential Temperature">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                    <linear slope="2.3518" intercept="0.0576" units="deg_C"/>
+                </variable>
+                <variable name="XTOPTMP" units="V" longname="CCN Top Plate Temperature">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                    <linear slope="4.9497" intercept="-1.1017" units="deg_C"/>
+                </variable>
+                <variable name="XPPRES" units="V" longname="Vacuum Pump Pressure">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                    <linear slope="206.0" intercept="-103.0" units="hPa"/>
+                </variable>
+                <variable name="XVDET" units="V" longname="CCN Detector Voltage">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
                 </variable>
-                <variable name="XTOPTMP" units="V" longname="GNI 2">
+                <variable name="XASTAT" units="V" longname="CCN Status">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
                 </variable>
-                <variable name="XPPRES" units="V" longname="GNI 2">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
-                </variable>
-                <variable name="XVDET" units="V" longname="GNI 2">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
-                </variable>
-                <variable name="XASTAT" units="V" longname="GNI 2">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
-                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
-                </variable>
-                <variable name="XWCN10" units="V" longname="GNI 2">
+                <variable name="XWCN10" units="V" longname="CPC 3010 Concentration">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                    <linear slope="1000.0" intercept="0.0" units="#/cm3"/>
                 </variable>
-                <variable name="XWCN25" units="V" longname="GNI 2">
+                <variable name="XWCN25" units="V" longname="CN 3025 Concentration">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
+                    <linear slope="10000.0" intercept="0.0" units="#/cm3"/>
                 </variable>
                 <variable name="XSDISTR" units="V" longname="GNI 2">
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
@@ -1265,7 +1279,7 @@
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="325"/>
 
 <!--
-        <serialSensor IDREF="OphirIII" devicename="/dev/dsmser1" id="120"/>
+        <serialSensor IDREF="OphirIII" devicename="/dev/ttyS5" id="120"/>
 -->
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_RPI"/>
 <!--
@@ -1277,6 +1291,7 @@
             <sample id="1" rate="50">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="10" type="int"/>
+                <variable name="DUMMY" units="V" longname="Unused for OphirIII"/>
                 <variable name="TDLHI" units="V" longname="TDL High">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="-0.0" type="float"/>
