@@ -754,28 +754,28 @@
     <dsm name="dsm320" location="Fwd_FS245_1" id="20" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="320"/>
 
-        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser0" id="130">
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130">
             <sample id="1">
                 <variable name="DPT" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Top"/>
 <!--            <poly coefs="-0.6 5.9697 0.0011"/> -->
             </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser1" id="140">
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="140">
             <sample id="1">
                 <variable name="DPB" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Bottom"/>
 <!--            <poly coefs="-0.737 5.9813 0.0008"/> -->
             </sample>
         </serialSensor>
 
-        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/dsmser2" id="150">
+        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS7" id="150">
             <sample id="1">
                 <variable name="PSFD" units="hPa" longname="Raw Static Pressure, Fuselage"/>
 <!--            <poly coefs="-0.469304 1.00017 2.97013e-07"/> -->
             </sample>
         </serialSensor>
 
-        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/dsmser3" id="160">
+        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS8" id="160">
             <sample id="1">
                 <variable name="PSFRD" units="hPa" longname="Raw Static Pressure, Fuselage"/>
 <!--            <poly coefs="-0.514205 1.00049 7.09793e-09"/> -->
@@ -971,7 +971,8 @@
     <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
-        <sensor IDREF="ACDFO3" id="130" suffix="_CL"/>
+        <!-- Change suffix from CL to CL2 to avoid conflict w/dsm323 -->
+        <sensor IDREF="ACDFO3" id="130" suffix="_CL2"/>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
@@ -1308,7 +1309,7 @@
     <dsm name="dsm325" location="Wing_POD_R" id="25" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="325"/>
 
-        <serialSensor IDREF="OphirIII" devicename="/dev/ttyS5" id="120"/>
+        <serialSensor IDREF="OphirIII" devicename="/dev/ttyS10" id="120"/>
 
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_RPI"/>
 <!--
