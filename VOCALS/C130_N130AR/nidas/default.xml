@@ -535,9 +535,18 @@
         </sample>
     </sensor>
 
-    <serialSensor ID="RDMA" class="DSMSerialSensor" 
-        baud="9600" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="RDMA" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
 
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="COMR" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%f">
+            <variable name="COMR" units="V" longname="Carbon Monoxide Mixing Ratio">
+                <linear slope="400" intercept="-3.2" units="ppbv"/>
+            </variable>
+        </sample>
+        <prompt string="CONC?\r" rate="5"/>
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
 
@@ -974,7 +983,7 @@
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
         <!-- Change suffix from CL to CL2 to avoid conflict w/dsm323 -->
-        <sensor IDREF="ACDFO3" id="130" suffix="_CL2"/>
+        <sensor IDREF="ACDFO3" id="130" suffix="_CL"/>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
@@ -1061,13 +1070,13 @@
                     <parameter name="corSlope" value="1.0676"  type="float"/> <parameter name="corIntercept" value="-0.32302"   type="float"/>
                     <poly coefs="-3.557 108.15 -0.0149" units="hPa"/>
                 </variable>
-                <variable name="FO3_CL" units="V" longname="Fast Response Ozone Mixing Ratio">
+                <variable name="FO3_CL2" units="V" longname="Fast Response Ozone Mixing Ratio">
 <!-- A2D013_CH4_2F         | 2008-07-23 20:12:02 | {-0.422656,1.07296} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.07296" type="float"/> <parameter name="corIntercept" value="-0.422656"  type="float"/>
                     <linear slope="20.0" intercept="0.0" units="ppbv"/>
                 </variable>
-                <variable name="COMR_AL" units="V" longname="Carbon Monoxide Mixing Ratio">
+                <variable name="COMR_AL2" units="V" longname="Carbon Monoxide Mixing Ratio">
 <!-- A2D013_CH5_1T         | 2008-07-23 19:44:48 | {-0.176171,1.05677} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <parameter name="corSlope" value="1.05677" type="float"/> <parameter name="corIntercept" value="-0.176171"  type="float"/>
@@ -1129,10 +1138,7 @@
 
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS5" id="110"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="120"/>
-
-
-<!--  CO -->
-
+        <serialSensor IDREF="COMR" devicename="/dev/ttyS7" id="130" suffix="_AL"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="500" suffix="_RWO">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
