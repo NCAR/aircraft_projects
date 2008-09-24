@@ -657,24 +657,24 @@
 
     <serialSensor ID="OphirIII" class="DSMSerialSensor"
         baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%*d %*s %f %f %f %f %f %f %f %f %f">
+        <sample id="1" rate="1" scanfFormat="%*d %c %f %f %f %f %f %f %f %f %f">
             <!-- 
             <variable name="OGAIN" units="count" longname="Ophir-III Gain"/>
-            <variable name="OBBCOD" units="count" longname="Ophir-III Black Body Code"/>
             -->
+            <variable name="OBBCOD" units="flag" longname="Ophir-III Black Body Code"/>
             <variable name="ODETDC" units="count" longname="Ophir-III Detector Bias Voltage"/>
             <variable name="OTSNT" units="count" longname="Ophir-III Optics Temperature">
-                    <linear slope="-0.0079188" intercept="499.429969" units="deg_K"/>
+                    <poly coefs="526.06 0.0 -2.5831E-7" units="deg_K"/>
             </variable>
             <variable name="OTBNCH" units="count" longname="Ophir-III Optical Bench Temperature">
-                    <linear slope="-0.0079818" intercept="497.434236" units="deg_K"/>
+                    <poly coefs="531.09 0.0 -2.6054E-7" units="deg_K"/>
             </variable>
             <variable name="OTDET" units="count" longname="Ophir-III Detector Temperature"/>
-            <variable name="OTBBC" units="count" longname="Ophir-III Controlled Blackbody">
-                    <linear slope="-0.0079108" intercept="500.53278" units="deg_K"/>
+            <variable name="OTBBC" units="count" longname="Ophir-III Controlled Blackbody Temperature">
+                    <poly coefs="531.35 0.0 -2.6093E-7" units="deg_K"/>
             </variable>
             <variable name="OTBBF" units="" longname="Ophir-III Free Blackbody">
-                    <linear slope="-0.0079801" intercept="500.677918" units="deg_K"/>
+                    <poly coefs="533.46 0.0 -2.6185E-7" units="deg_K"/>
             </variable>
             <variable name="OSMOTR" units="count" longname="Ophir-III Chopper Motor Speed"/>
             <variable name="ODETSG" units="count" longname="Ophir-III Raw Detector Signal"/>
