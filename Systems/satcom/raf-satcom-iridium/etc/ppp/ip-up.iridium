@@ -1,0 +1,25 @@
+#!/bin/sh
+
+######################################################################
+# As of version 2.4.4, pppd execs this ip-up script with the
+# following arguments:
+#   ifname devname speed local remote ipparam
+#
+# To test this script, uncomment "set -x" and run it by hand like so:
+# ./ip-up.local ppp0 /dev/ttyS0 38400 12.42.105.41 12.42.104.9 iridium
+#
+######################################################################
+
+# set -x
+
+# PATH=/usr/sbin:/sbin:$PATH
+
+PATH=$PATH:/etc/ppp
+
+# Run ddclient
+if ! which run_ddclient.sh > /dev/null; then
+    logger -t ppp "cannot find run_ddclient.sh, is it in /etc/ppp"
+    exit 1
+fi
+
+run_ddclient.sh "$@" &

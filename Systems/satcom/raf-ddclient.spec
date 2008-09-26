@@ -48,7 +48,6 @@ sed -i 's,^SYSNAME=.*,SYSNAME=gv,' /etc/ppp/run_ddclient.sh
 
 %post -n raf-c130-ddclient
 sed -i 's,^SYSNAME=.*,SYSNAME=c130,' /etc/ppp/run_ddclient.sh
-%
 
 %clean
 rm -rf $RPM_BUILD_ROOT

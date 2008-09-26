@@ -1,7 +1,7 @@
 Summary: Configuration for PPP over Iridium
 Name: raf-satcom-iridium
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -22,6 +22,7 @@ BuildArch: noarch
 %build
 
 %install
+rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/sysconfig/networking/devices
 install -d $RPM_BUILD_ROOT/etc/sysconfig/networking/profiles/default
@@ -85,6 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ppp/options.ttyS0
 %config /etc/ppp/options.ttyACM0
 %config /etc/ppp/options.ttyACM1
+%config /etc/ppp/ip-up.iridium
 %config /etc/ppp/peers/iridium
 %config /etc/ppp/peers/iridium.chat
 %config /etc/ppp/peers/iridium-direct
@@ -93,3 +95,5 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sun Feb 10 2008 Gordon Maclean <maclean@ucar.edu>
 - initial version
+* Fri Sep 26 2008 Gordon Maclean <maclean@ucar.edu>
+- added ip-up.iridium which runs ddclient
