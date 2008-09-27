@@ -1,7 +1,7 @@
 # Please read /usr/share/doc/initscripts-*/sysconfig.txt
 # for the documentation of these parameters.
 TYPE=Modem
-MODEMPORT=/dev/ttyACM0
+MODEMPORT=/dev/ttyACM1
 ONBOOT=no
 USERCTL=yes
 PEERDNS=no
@@ -9,8 +9,9 @@ PEERDNS=no
 DEVICE=ppp0
 # Initial plan when running iridium and mpds simultaneously is
 # for the mpds connection to be the default route and use static
-# routing over iridium
-DEFROUTE=no
+# routing over iridium.  
+# For C130 without mpds, change this to yes
+DEFROUTE=yes
 DEMAND=no
 BOOTPROTO=dialup
 PERSIST=yes
@@ -18,12 +19,6 @@ PERSIST=yes
 WVDIALSECT=iridium
 # AC,BSDCOMP,VJCCOMP,CCP,PC and VJ are ignored by ifup-ppp.
 # The corresponding pppd options must be set in /etc/ppp/peers/iridium
-AC=no
-BSDCOMP=no
-VJCCOMP=yes
-CCP=yes
-PC=yes
-VJ=yes
 IPV6INIT=no
 MODEMNAME=iridium
 # IDLETIMEOUT is only used when DEMAND=yes, which we don't use
@@ -32,3 +27,4 @@ LINESPEED=19200
 # Anything other than ESCAPECHARS=yes results in "asyncmap 00000000"
 # If ESCAPECHARS=yes, then no asyncmap option is set.
 ESCAPECHARS=no
+PAPNAME='rafgs1@local'
