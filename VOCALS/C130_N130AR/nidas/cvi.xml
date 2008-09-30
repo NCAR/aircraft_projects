@@ -53,8 +53,8 @@
                 <parameter name="numpoints" value="10" type="int"/>
                 -->
                 <!-- gain=4,bipolar=F gives a range of 0-5V -->
-    <dsm name="cvi-dsm" location="cvi_rack" id="20" rserialPort="30002"
-    	derivedData="sock::58800">
+    <dsm name="cvi-dsm" location="cvi_rack" id="30" rserialPort="30002"
+    	derivedData="sock::31000">
 
         <sensor class="DSC_A2DSensor"
             devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
@@ -236,9 +236,6 @@
             <message separator="\n" position="end" length="0"/>
         </socketSensor>
 
-
-        <!--
-        -->
         <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
@@ -250,11 +247,10 @@
             </fileset>
         </output>
         -->
-        <!--
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        -->
+
         <processor class="raf.CVIProcessor">
             <parameter name="vout" value="/dev/dmmat_d2a0" type="string"/>
             <parameter name="dout" value="/dev/viper_dio0" type="string"/>
