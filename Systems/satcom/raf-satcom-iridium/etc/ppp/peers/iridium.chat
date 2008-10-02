@@ -53,16 +53,17 @@ SAY "....Resetting modem\n"
 #
 # display current signal quality, 0-5
 'OK\r\n'	 	AT+CSQ
+SAY "Checking signal quality (0-5 bars)...\n"
 #
-TIMEOUT 60
+TIMEOUT 120
 #
 # Level 3 RAS numbers
 # Local:        720-259-1189
 # Toll free:    866-450-6664
 #
-SAY "....Dialing\n"
 # 'OK\r\n'		ATTD0018664506664
 'OK\r\n'		ATTD0017202591189
+SAY "....Dialing, timeout=120\n"
 CONNECT		 	''
 SAY "\n....Connected\n"
 SAY "\n....Entering ppp\n"

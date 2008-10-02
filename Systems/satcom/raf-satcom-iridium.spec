@@ -93,7 +93,7 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ppp/peers/iridium-direct.chat
 
 %changelog
-* Sun Feb 10 2008 Gordon Maclean <maclean@ucar.edu>
-- initial version
 * Fri Sep 26 2008 Gordon Maclean <maclean@ucar.edu>
 - added ip-up.iridium which runs ddclient
+* Sun Feb 10 2008 Gordon Maclean <maclean@ucar.edu>
+- initial version
