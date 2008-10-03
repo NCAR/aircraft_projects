@@ -989,21 +989,30 @@
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="500">
-                <variable name="XGLWC" units="gram/m3" longname="Gerber PV-100 Probe Liquid Water Content">
+            <sample id="1" rate="1">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="500" type="int"/>
+                <variable name="DUMMY_LW" units="V" longname="UV Hygrometer Pressure">
 <!-- A2D1600_CH0_1T        | 2008-07-30 22:17:06 | {-0.424102,1.07077} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <parameter name="corSlope" value="1.07077" type="float"/> <parameter name="corIntercept" value="-0.424102"  type="float"/>
                 </variable>
-                <variable name="XGREFF" units="V" longname="Gerber PV-100 Effective Droplet Radius">
+            </sample>
+            <sample id="2" rate="500">
+                <variable name="XGLWC" units="gram/m3" longname="Gerber PV-100 Probe Liquid Water Content">
 <!-- A2D1600_CH1_1T        | 2008-07-30 22:15:14 | {-0.241925,1.05606} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <parameter name="corSlope" value="1.05606" type="float"/> <parameter name="corIntercept" value="-0.241925"  type="float"/>
                 </variable>
-                <variable name="XGSFC" units="V" longname="Gerber PV-100 Particle Surface Area (Raw)">
+                <variable name="XGREFF" units="V" longname="Gerber PV-100 Effective Droplet Radius">
 <!-- A2D1600_CH2_1T        | 2008-07-30 22:13:20 | {-0.212201,1.05482} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <parameter name="corSlope" value="1.05482" type="float"/> <parameter name="corIntercept" value="-0.212201"  type="float"/>
+                </variable>
+                <variable name="XGSFC" units="V" longname="Gerber PV-100 Particle Surface Area (Raw)">
+<!-- A2D1600_CH3_1T        | 2008-07-30 22:11:29 | {-0.388886,1.06898} -->
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.06898" type="float"/> <parameter name="corIntercept" value="-0.388886"  type="float"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -1147,7 +1156,7 @@
         </serialSensor>
 
         <serialSensor IDREF="S100" devicename="/dev/ttyS11" id="520" suffix="_RWI">
-            <parameter name="SerialNumber" type="string" value="FSSP109"/>
+            <parameter name="SerialNumber" type="string" value="FSSP122"/>
         </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
