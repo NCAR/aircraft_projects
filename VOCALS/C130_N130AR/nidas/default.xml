@@ -275,6 +275,11 @@
         <message separator="\n" position="end" length="0"/> 
     </serialSensor>
 
+    <serialSensor ID="CMIGITS3" class="DSMSerialSensor"
+        baud="38400" parity="odd" databits="8" stopbits="1">
+        <message separator="\xff\x81" position="beg" length="0"/>
+    </serialSensor>
+
     <serialSensor ID="DewPointer" class="DSMSerialSensor"
         baud="9600" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="%*d,%f" rate="1"/>
@@ -571,8 +576,6 @@
     </sensor>
 
     <sensor ID="Fast2DC" class="raf.TwoD64_USB">
-        <parameter name="SerialNumber" value="F2DC001" type="string"/>
-        <parameter name="RESOLUTION" value="25" type="int"/>
         <parameter name="TAS_RATE" value="10" type="int"/>
 
         <sample id="1" rate="10">
@@ -878,9 +881,8 @@
     <dsm name="dsm321" location="Video_Rack" id="21" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
 
-<!--
         <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS6" id="120" suffix="_CM3"/>
--->
+
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
@@ -947,19 +949,19 @@
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="XUVP" units="V" longname="UV Hygrometer Pressure">
 <!-- A2D1602_CH0_1T        | 2008-06-06 16:44:23 | {-0.334972,1.06295} -->
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"       type="bool"/>
                     <parameter name="corSlope" value="1.06295" type="float"/> <parameter name="corIntercept" value="-0.334972"  type="float"/>
                     <poly coefs="143.34 188.86 0.0034" units="hPa"/>
                 </variable>
                 <variable name="XUVT" units="V" longname="UV Hygrometer Temperature">
 <!-- A2D1602_CH1_1T        | 2008-06-06 16:49:30 | {-0.143207,1.04891} -->
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"       type="bool"/>
                     <parameter name="corSlope" value="1.04891" type="float"/> <parameter name="corIntercept" value="-0.143207"  type="float"/>
                     <poly coefs="70.84 -18.295" units="deg_C"/>
                 </variable>
                 <variable name="XUVI" units="V" longname="UV Hygrometer Intensity">
 <!-- A2D1602_CH2_1T        | 2008-06-06 16:51:36 | {0.00790533,1.03136} -->
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"       type="bool"/>
                     <parameter name="corSlope" value="1.03136" type="float"/> <parameter name="corIntercept" value="0.00790533" type="float"/>
                 </variable>
                 <variable name="XSDIIMP" units="V" longname="Anderson Flow Rate">
@@ -1015,7 +1017,7 @@
                     <parameter name="corSlope" value="1.06898" type="float"/> <parameter name="corIntercept" value="-0.388886"  type="float"/>
                 </variable>
             </sample>
-            <sample id="2" rate="1">
+            <sample id="3" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
                 <variable name="A2DTEMP_WPL0" units="deg_C" longname="A2D Temperature"/>
             </sample>
@@ -1156,7 +1158,7 @@
         </serialSensor>
 
         <serialSensor IDREF="S100" devicename="/dev/ttyS11" id="520" suffix="_RWI">
-            <parameter name="SerialNumber" type="string" value="FSSP122"/>
+            <parameter name="SerialNumber" type="string" value="FSSP109"/>
         </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
@@ -1341,9 +1343,15 @@
 
         <serialSensor IDREF="OphirIII" devicename="/dev/ttyS10" id="120"/>
 
-        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_RPI"/>
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_RPI">
+            <parameter name="SerialNumber" value="F2DC002" type="string"/>
+            <parameter name="RESOLUTION" value="10" type="int"/>
+        </sensor>
 <!--
-        <sensor IDREF="Fast260X" devicename="/dev/usbtwod_64_1" id="600" suffix="_RPC"/>
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_1" id="600" suffix="_RPC">
+            <parameter name="SerialNumber" value="F2DC001" type="string"/>
+            <parameter name="RESOLUTION" value="25" type="int"/>
+        </sensor>
 -->
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
@@ -1351,7 +1359,7 @@
             <sample id="1" rate="50">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="10" type="int"/>
-                <variable name="DUMMY" units="V" longname="Unused for OphirIII">
+                <variable name="DUMMY_RW" units="V" longname="Unused for OphirIII">
 <!-- A2D008_CH0_1T         | 2008-08-01 19:44:20 | {-0.0372662,1.03935} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <parameter name="corSlope" value="1.03935" type="float"/> <parameter name="corIntercept" value="-0.0372662" type="float"/>
