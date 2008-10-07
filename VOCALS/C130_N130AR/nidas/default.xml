@@ -944,9 +944,7 @@
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="220">
             <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="100">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="5" type="int"/>
+            <sample id="1" rate="500">
                 <variable name="XUVP" units="V" longname="UV Hygrometer Pressure">
 <!-- A2D1602_CH0_1T        | 2008-06-06 16:44:23 | {-0.334972,1.06295} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"       type="bool"/>
@@ -991,33 +989,25 @@
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="1">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="500" type="int"/>
-                <variable name="DUMMY_LW" units="V" longname="UV Hygrometer Pressure">
-<!-- A2D1600_CH0_1T        | 2008-07-30 22:17:06 | {-0.424102,1.07077} -->
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.07077" type="float"/> <parameter name="corIntercept" value="-0.424102"  type="float"/>
-                </variable>
-            </sample>
-            <sample id="2" rate="500">
+            <sample id="1" rate="500">
                 <variable name="XGLWC" units="gram/m3" longname="Gerber PV-100 Probe Liquid Water Content">
+                    <parameter name="channel" value="1" type="int"/>
 <!-- A2D1600_CH1_1T        | 2008-07-30 22:15:14 | {-0.241925,1.05606} -->
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <parameter name="corSlope" value="1.05606" type="float"/> <parameter name="corIntercept" value="-0.241925"  type="float"/>
                 </variable>
                 <variable name="XGREFF" units="V" longname="Gerber PV-100 Effective Droplet Radius">
 <!-- A2D1600_CH2_1T        | 2008-07-30 22:13:20 | {-0.212201,1.05482} -->
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <parameter name="corSlope" value="1.05482" type="float"/> <parameter name="corIntercept" value="-0.212201"  type="float"/>
                 </variable>
                 <variable name="XGSFC" units="V" longname="Gerber PV-100 Particle Surface Area (Raw)">
 <!-- A2D1600_CH3_1T        | 2008-07-30 22:11:29 | {-0.388886,1.06898} -->
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <parameter name="corSlope" value="1.06898" type="float"/> <parameter name="corIntercept" value="-0.388886"  type="float"/>
                 </variable>
             </sample>
-            <sample id="3" rate="1">
+            <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
                 <variable name="A2DTEMP_WPL0" units="deg_C" longname="A2D Temperature"/>
             </sample>
@@ -1347,12 +1337,6 @@
             <parameter name="SerialNumber" value="F2DC002" type="string"/>
             <parameter name="RESOLUTION" value="10" type="int"/>
         </sensor>
-<!--
-        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_1" id="600" suffix="_RPC">
-            <parameter name="SerialNumber" value="F2DC001" type="string"/>
-            <parameter name="RESOLUTION" value="25" type="int"/>
-        </sensor>
--->
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
@@ -1377,7 +1361,7 @@
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_PODRW" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_WPR0" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
@@ -1386,6 +1370,21 @@
             <socket type="mcrequest"/>
         </output>
     </dsm>
+
+    <dsm name="dsm307" location="Wing_POD_R_2" id="7" rserialPort="30002" derivedData="sock::31000">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="307"/>
+
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_RPC">
+            <parameter name="SerialNumber" value="F2DC001" type="string"/>
+            <parameter name="RESOLUTION" value="25" type="int"/>
+        </sensor>
+
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+
 
     <dsm name="cvi-dsm" location="cvi_rack" id="30" rserialPort="30002"
     	derivedData="sock::31000">
