@@ -1,0 +1,13 @@
+#!/bin/bash
+# This file should not be modified -- make local changes to
+# /etc/ppp/ip-pre-up.local instead
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+export PATH
+
+LOGDEVICE=$6
+REALDEVICE=$1
+
+[ -x /etc/ppp/ip-pre-up.local ] && /etc/ppp/ip-pre-up.local "$@"
+
+exit 0

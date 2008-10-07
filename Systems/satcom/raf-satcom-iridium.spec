@@ -1,7 +1,7 @@
 Summary: Configuration for PPP over Iridium
 Name: raf-satcom-iridium
 Version: 1.0
-Release: 2
+Release: 3
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -87,6 +87,7 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ppp/options.ttyACM0
 %config /etc/ppp/options.ttyACM1
 %config /etc/ppp/ip-up.iridium
+%config /etc/ppp/ip-pre-up.iridium
 %config /etc/ppp/peers/iridium
 %config /etc/ppp/peers/iridium.chat
 %config /etc/ppp/peers/iridium-direct

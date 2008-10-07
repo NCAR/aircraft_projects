@@ -1,0 +1,23 @@
+#!/bin/sh
+
+######################################################################
+# As of version 2.4.4, pppd execs this ip-up script with the
+# following arguments:
+#   ifname devname speed local remote ipparam
+#
+# To test this script, uncomment "set -x" and run it by hand like so:
+# ./ip-pre-up.iridium ppp0 /dev/ttyS0 38400 12.42.105.41 12.42.104.9 iridium
+#
+######################################################################
+
+# set -x
+
+# PATH=/usr/sbin:/sbin:$PATH
+
+PATH=$PATH:/etc/ppp
+
+# shutdown eth2 so that ppp will create default route for iridium
+if ip link show eth2 | fgrep ",UP"; then
+	ifdown eth2
+fi
+

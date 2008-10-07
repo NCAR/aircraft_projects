@@ -1,7 +1,7 @@
 Summary: Master package for UCAR RAF satcom network configuration
 Name: raf-satcom
 Version: 1.0
-Release: 2
+Release: 3
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -35,8 +35,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %attr(0755,root,root) /etc/ppp/ip-up.local
+%attr(0755,root,root) /etc/ppp/ip-pre-up
+%attr(0755,root,root) /etc/ppp/ip-pre-up.local
 
 %changelog
+* Mon Oct  6 2008 Gordon Maclean <maclean@ucar.edu>
+- Added ip-pre-up scripts
 * Tue Mar  4 2008 Gordon Maclean <maclean@ucar.edu>
 - With "unit N" pppd option the device name will always be pppN
 
