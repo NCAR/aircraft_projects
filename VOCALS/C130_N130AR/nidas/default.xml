@@ -746,6 +746,71 @@
 <!-- ############################################### C-130 DSMs  ############################################### -->
 <!-- ########################################################################################################### -->
 
+    <dsm name="dsm310" location="UWyo" id="10" rserialPort="30002" derivedData="sock::31000">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="310"/>
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+                <variable name="XDTEMP" units="V" longname="UWyo CCN Differential Temperature">
+<!-- A2D1603_CH0_1T        | 2008-06-11 14:39:45 | {-0.213408,1.04201} -->
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.04201" type="float"/> <parameter name="corIntercept" value="-0.213408"  type="float"/>
+                    <linear slope="2.3518" intercept="0.0576" units="deg_C"/>
+                </variable>
+                <variable name="XTOPTMP" units="V" longname="UWyo CCN Top Plate Temperature">
+<!-- A2D1603_CH1_1T        | 2008-06-11 14:42:21 | {-0.149996,1.0475} -->
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0475"  type="float"/> <parameter name="corIntercept" value="-0.149996"  type="float"/>
+                    <linear slope="4.9497" intercept="-1.1017" units="deg_C"/>
+                </variable>
+                <variable name="XPPRES" units="V" longname="UWyo Vacuum Pump Pressure">
+<!-- A2D1603_CH2_1T        | 2008-06-11 14:47:25 | {-0.094048,1.0364} -->
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0364"  type="float"/> <parameter name="corIntercept" value="-0.094048"  type="float"/>
+                    <linear slope="206.0" intercept="-103.0" units="hPa"/>
+                </variable>
+                <variable name="XVDET" units="V" longname="UWyo CCN Detector Voltage">
+<!-- A2D1603_CH3_1T        | 2008-06-11 14:52:34 | {-0.234355,1.0473} -->
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0473"  type="float"/> <parameter name="corIntercept" value="-0.234355"  type="float"/>
+                </variable>
+                <variable name="XASTAT" units="V" longname="UWyo CCN Status">
+<!-- A2D1603_CH4_1T        | 2008-06-11 14:55:52 | {-0.159869,1.04172} -->
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.04172" type="float"/> <parameter name="corIntercept" value="-0.159869"  type="float"/>
+                </variable>
+                <variable name="XWCN10" units="V" longname="UWyo CPC 3010 Concentration">
+<!-- A2D1603_CH5_2F        | 2008-06-11 15:28:25 | {-0.194663,1.03719} -->
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.03719" type="float"/> <parameter name="corIntercept" value="-0.194663"  type="float"/>
+                    <linear slope="1000.0" intercept="0.0" units="#/cm3"/>
+                </variable>
+                <variable name="XWCN25" units="V" longname="UWyo CN 3025 Concentration">
+<!-- A2D1603_CH6_2F        | 2008-06-11 15:31:01 | {-0.188994,1.02994} -->
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.02994" type="float"/> <parameter name="corIntercept" value="-0.188994"  type="float"/>
+                    <linear slope="10000.0" intercept="0.0" units="#/cm3"/>
+                </variable>
+                <variable name="XSDISTR" units="V" longname="Anderson Flow Rate">
+<!-- A2D1603_CH7_4F        | 2008-06-11 16:52:14 | {-0.11596,1.03563} -->
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.03563" type="float"/> <parameter name="corIntercept" value="-0.11596"   type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_AFTR2" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
     <dsm name="dsm319" location="Fwd_DSM_2" id="19" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="319"/>
 
@@ -1268,65 +1333,6 @@
             <sample id="3" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
                 <variable name="A2DTEMP_AFTR1" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
-
-        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d2" id="240">
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="10">
-		<!--
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="50" type="int"/>
-		-->
-                <variable name="XDTEMP" units="V" longname="UWyo CCN Differential Temperature">
-<!-- A2D016_CH0_1T         | 2008-07-24 19:02:23 | {-0.667368,1.0896} -->
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.0896"  type="float"/> <parameter name="corIntercept" value="-0.667368"  type="float"/>
-                    <linear slope="2.3518" intercept="0.0576" units="deg_C"/>
-                </variable>
-                <variable name="XTOPTMP" units="V" longname="UWyo CCN Top Plate Temperature">
-<!-- A2D016_CH1_1T         | 2008-07-24 19:06:33 | {-0.448393,1.07149} -->
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.07149" type="float"/> <parameter name="corIntercept" value="-0.448393"  type="float"/>
-                    <linear slope="4.9497" intercept="-1.1017" units="deg_C"/>
-                </variable>
-                <variable name="XPPRES" units="V" longname="UWyo Vacuum Pump Pressure">
-<!-- A2D016_CH2_1T         | 2008-07-24 19:09:38 | {-0.222338,1.04947} -->
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.04947" type="float"/> <parameter name="corIntercept" value="-0.222338"  type="float"/>
-                    <linear slope="206.0" intercept="-103.0" units="hPa"/>
-                </variable>
-                <variable name="XVDET" units="V" longname="UWyo CCN Detector Voltage">
-<!-- A2D016_CH3_1T         | 2008-07-24 19:12:18 | {-0.396898,1.06441} -->
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.06441" type="float"/> <parameter name="corIntercept" value="-0.396898"  type="float"/>
-                </variable>
-                <variable name="XASTAT" units="V" longname="UWyo CCN Status">
-<!-- A2D016_CH4_1T         | 2008-07-24 19:15:42 | {-0.309464,1.06695} -->
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.06695" type="float"/> <parameter name="corIntercept" value="-0.309464"  type="float"/>
-                </variable>
-                <variable name="XWCN10" units="V" longname="UWyo CPC 3010 Concentration">
-<!-- A2D016_CH5_2F         | 2008-07-24 19:44:47 | {-0.262859,1.0468} -->
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.0468"  type="float"/> <parameter name="corIntercept" value="-0.262859"  type="float"/>
-                    <linear slope="1000.0" intercept="0.0" units="#/cm3"/>
-                </variable>
-                <variable name="XWCN25" units="V" longname="UWyo CN 3025 Concentration">
-<!-- A2D016_CH6_2F         | 2008-07-24 19:47:32 | {-0.376521,1.05656} -->
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.05656" type="float"/> <parameter name="corIntercept" value="-0.376521"  type="float"/>
-                    <linear slope="10000.0" intercept="0.0" units="#/cm3"/>
-                </variable>
-                <variable name="XSDISTR" units="V" longname="Anderson Flow Rate">
-<!-- A2D016_CH7_4F         | 2008-07-24 20:39:20 | {-0.178458,1.05283} -->
-                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.05283" type="float"/> <parameter name="corIntercept" value="-0.178458"  type="float"/>
-                </variable>
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_AFTR2" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
