@@ -253,6 +253,14 @@ done
 iptables -A spoof-log -m limit --limit 1/minute --limit-burst 5 -j LOG --log-prefix "IPTABLES SPOOF: "
 iptables -A spoof-log -j DROP
 
+filter_igmp()
+{
+    # Server at other end of iridium ppp connections (level0)
+    # sends out igmp packets right after connection.  We'll
+    # let them through.
+    iptables -A INPUT -i $1 -d $CLASS_D_MULTICAST -p igmp -j ACCEPT
+}
+
 filter_icmp()
 {
     ## ===================================================================
@@ -329,9 +337,12 @@ filter_icmp()
 iptables -N icmp-in
 iptables -N icmp-out
 
+filter_igmp ppp+
+
 for eif in ${UNSAFE_EXT_IFS[*]}; do
     filter_icmp $eif
 done
+
 
 filter_tcp()
 {
@@ -520,11 +531,11 @@ filter_tcp()
     # from Cisco VPN Client user guide:
     # If you are running a Linux firewall (for example, ipchains or iptables),
     # be sure that the following types of traffic are allowed to pass through:
-    # ¢UDP port 50
-    # ¢UDP port 10000 (or any other port number being used for IPSec/UDP)
-    # ¢IP protocol 50 (ESP
-    # ¢TCP port configured for IPSec/TCP
-    # ¢NAT-T port 4500 
+    # UDP port 50
+    # UDP port 10000 (or any other port number being used for IPSec/UDP)
+    # IP protocol 50 (ESP
+    # TCP port configured for IPSec/TCP
+    # NAT-T port 4500 
     #
     # Protocol 50 is listed as IPv6-Crypt in linux /etc/protocols, but
     #	iana.org says 50 is ESP.
