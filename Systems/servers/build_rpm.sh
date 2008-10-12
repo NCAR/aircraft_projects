@@ -35,8 +35,7 @@ pkg=raf-ac-firewall
 if [ $dopkg == all -o $dopkg == $pkg ];then
     version=`get_version $pkg.spec`
     tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
-    # rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-    rpmbuild -ba ${pkg}.spec | tee -a $log  || exit $?
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
 pkg=raf-ac-ntp
