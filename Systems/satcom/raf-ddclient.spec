@@ -7,7 +7,8 @@ Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
 Url: http://www.eol.ucar.edu/
 Packager: Gordon Maclean <maclean@ucar.edu>
-BuildRoot: /tmp/%{name}-%{version}
+# becomes RPM_BUILD_ROOT
+BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
 Patch0: ddclient-mail-on-kill.patch
@@ -39,6 +40,7 @@ ddclient for server system on C130.
 %build
 
 %install
+rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT
 cp -r etc $RPM_BUILD_ROOT
 cp -r usr $RPM_BUILD_ROOT

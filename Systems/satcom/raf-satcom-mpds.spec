@@ -7,7 +7,8 @@ Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
 Url: http://www.eol.ucar.edu/
 Packager: Gordon Maclean <maclean@ucar.edu>
-BuildRoot: /tmp/%{name}-%{version}
+# becomes RPM_BUILD_ROOT
+BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 Requires: rp-pppoe >= 3.8-2
 Requires: ppp >= 2.4.4
@@ -23,6 +24,7 @@ BuildArch: noarch
 %build
 
 %install
+rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/sysconfig/networking/devices
 install -d $RPM_BUILD_ROOT/etc/sysconfig/networking/profiles/default

@@ -5,6 +5,10 @@ dopkg=all
 
 source repo_scripts/repo_funcs.sh
 
+get_version () {
+    awk '/^Version:/{print $2}' $1
+}
+
 topdir=`get_rpm_topdir`
 rroot=`get_eol_repo_root`
 
@@ -13,16 +17,14 @@ trap "{ rm -f $log; }" EXIT
 
 pkg=raf-satcom
 if [ $dopkg == all -o $dopkg == $pkg ]; then
-    version=1.0
-    release=1
+    version=`get_version $pkg.spec`
     tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn ${pkg}
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
 pkg=raf-ddclient
 if [ $dopkg == all -o $dopkg == $pkg ]; then
-    version=1.0
-    release=1
+    version=`get_version $pkg.spec`
     ddver=3.7.3
 
     [ -d ${pkg}/usr/sbin ] || mkdir -p ${pkg}/usr/sbin
@@ -37,8 +39,7 @@ fi
 
 pkg=raf-satcom-mpds
 if [ $dopkg == all -o $dopkg == $pkg ]; then
-    version=1.0
-    release=1
+    version=`get_version $pkg.spec`
     tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn ${pkg}
 
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
@@ -46,8 +47,7 @@ fi
 
 pkg=raf-satcom-iridium
 if [ $dopkg == all -o $dopkg == $pkg ]; then
-    version=1.0
-    release=1
+    version=`get_version $pkg.spec`
     tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn ${pkg}
 
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?

@@ -6,7 +6,8 @@ License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
 Packager: Gordon Maclean <maclean@ucar.edu>
-BuildRoot: /tmp/%{name}-%{version}
+# becomes RPM_BUILD_ROOT
+BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
 Requires: ntp
