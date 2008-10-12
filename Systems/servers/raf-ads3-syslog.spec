@@ -1,7 +1,7 @@
 Summary: Additions to syslog config for logging from NIDAS processes.
 Name: raf-ads3-syslog
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -10,14 +10,20 @@ BuildRoot: /tmp/%{name}-%{version}
 Vendor: UCAR
 BuildArch: noarch
 Requires: syslog
+Source: %{name}-%{version}.tar.gz
 
 %description
 Additions to syslog config for logging from NIDAS processes.
 
 %prep
-# %setup -n %{name}
+%setup -n %{name}
 
 %build
+
+%install
+rm -fr $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/etc
+cp -r etc/logrotate.d $RPM_BUILD_ROOT/etc
 
 %triggerin -- sysklogd rsyslog
 # %triggerin script is run when a given target package is installed or
@@ -68,12 +74,23 @@ fi
 chmod +r /var/log/messages
 /etc/init.d/syslog restart || /etc/init.d/rsyslog restart
 
+%triggerin -- logrotate
+
+if [ -f /etc/cron.daily/logrotate ]; then
+    mv /etc/cron.daily/logrotate /etc/cron.hourly
+fi
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
+%config(noreplace) %attr(0755,root,root) /etc/logrotate.d/ads3
 
 %changelog
+* Sat Oct 12 2008 Gordon Maclean <maclean@ucar.edu>  1.0-2
+- added etc/logrotate.d/ads3
+
 * Sun Feb 10 2008 Gordon Maclean <maclean@ucar.edu>
 - initial version
+

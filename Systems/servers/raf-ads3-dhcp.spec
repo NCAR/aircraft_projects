@@ -44,6 +44,7 @@ DHCP configuration for ADS3 data server in lab.
 %build
 
 %install
+rm -fr $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_sysconfdir}
 install -d $RPM_BUILD_ROOT/usr/local/admin
 cp -r etc/* $RPM_BUILD_ROOT%{_sysconfdir}

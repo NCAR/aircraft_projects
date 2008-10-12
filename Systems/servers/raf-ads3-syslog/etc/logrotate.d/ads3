@@ -1,0 +1,13 @@
+/var/log/ads3.log /var/log/ads3_debug.log /var/log/ads3_kernel_info.log /var/lo
+g/ads3_kernel_debug.log {
+    sharedscripts
+    rotate 9
+    weekly
+    dateext
+    postrotate
+        /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null ||
+true
+        /bin/kill -HUP `cat /var/run/rsyslogd.pid 2> /dev/null` 2> /dev/null ||
+ true
+    endscript
+}

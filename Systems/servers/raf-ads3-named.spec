@@ -55,6 +55,7 @@ DNS/named configuration for RAF lab system.
 %build
 
 %install
+rm -fr $RPM_BUILD_ROOT
 
 # install files to /var/named (bind_dir) and /etc
 # Then in the triggerin script, optionally run

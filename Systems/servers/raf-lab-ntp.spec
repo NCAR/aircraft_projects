@@ -20,6 +20,8 @@ Configuration for NTP on RAF ADS3 lab (non-aircraft) server systems
 
 %build
 
+%install
+rm -fr $RPM_BUILD_ROOT
 %triggerin -- ntp
 # %triggerin script is run when a given target package is installed or
 # upgraded, or when this package is installed or upgraded and the target

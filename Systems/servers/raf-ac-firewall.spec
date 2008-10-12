@@ -22,6 +22,7 @@ Iptables configuration for RAF aircraft server.
 %build
 
 %install
+rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT/usr/local/admin
 install -d $RPM_BUILD_ROOT/etc/sysconfig
