@@ -53,10 +53,14 @@ if [ $dopkg == all -o $dopkg == $pkg ]; then
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
-if [ -d $rroot ]; then
-    rpms="$topdir/RPMS/noarch/raf-satcom-*.noarch.rpm $topdir/RPMS/noarch/raf-*-ddclient-*.noarch.rpm"
-    copy_rpms_to_eol_repo $rpms
-fi
 echo "RPMS:"
 egrep "^Wrote:" $log
+rpms=`egrep '^Wrote:' $log | egrep /RPMS/ | awk '{print $2}'`
+
+if [ -d $rroot ]; then
+    echo "Moving rpms to $rroot"
+    copy_rpms_to_eol_repo $rpms > /dev/null
+else
+    echo "$rroot not found. Leaving RPMS in $topdir"
+fi
 

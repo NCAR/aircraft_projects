@@ -53,7 +53,6 @@ fi
 pkg=raf-ads3-syslog
 if [ $dopkg == all -o $dopkg == $pkg ];then
     version=`get_version $pkg.spec`
-    set -x
     tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
@@ -72,14 +71,14 @@ if [ $dopkg == all -o $dopkg == $pkg ];then
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
-
-if [ -d $rroot ]; then
-    rpms="$topdir/RPMS/noarch/raf-*.noarch.rpm"
-    for r in $rpms; do
-        echo $r
-    done
-    copy_rpms_to_eol_repo $rpms > /dev/null
-fi
-
 echo "RPMS:"
 egrep "^Wrote:" $log
+rpms=`egrep '^Wrote:' $log | egrep /RPMS/ | awk '{print $2}'`
+
+if [ -d $rroot ]; then
+    echo "Moving rpms to $rroot"
+    copy_rpms_to_eol_repo $rpms > /dev/null
+else
+    echo "$rroot not found. Leaving RPMS in $topdir"
+fi
+
