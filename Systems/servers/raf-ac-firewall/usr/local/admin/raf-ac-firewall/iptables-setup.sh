@@ -96,12 +96,21 @@ SSH_INCOMING=($ANYHOST)
 
 # Google Earth SATCOM block.
 # April 2008:
-#   google earth uses kh.google.com which is 64.233.167.91
-#   maps.google.com is 64.233.167.{99,104,147}
-#   72.14.203.91 is ro-in-f91.google.com (not sure what that provides)
+#   www.earth.google.com is an alias for www.google.com
+#   www.google.com is an alias for www.l.google.com
+#   www.l.google.com is
+#           74.125.47.{99,103,104,147} (5/1/2008 from GV on MPDS)
+#           64.233.167.{99,104,147}    (5/1/2008 from EOL)
 #   google.com is 64.233.167.99, 64.233.187.99, 72.14.207.99
-#   So blocking 64.233.167.0/24 will also block normal google searches
-GOOGLE_EARTH=(72.14.203.0/24 64.233.167.0/24)
+#   maps.google.com is 64.233.167.{99,103,104,147}
+#   google earth appears to use kh.google.com which is 64.233.167.91
+#   72.14.203.91 is ro-in-f91.google.com (not sure what that provides)
+# GOOGLE_EARTH=(72.14.203.0/24 64.233.167.0/24 74.125.47.0/24)
+# Oct 2008:
+#   www.google.com is 209.85.173.{104,147,99,103}
+#   maps.google.com is the same
+#   kh.google.com is 209.85.173.{190,91,93,136)
+GOOGLE_EARTH=(209.85.173.0/24)
 
 # external vpn servers
 VPN_SVRS=(192.43.244.230 192.143.244.231)
@@ -570,9 +579,13 @@ filter_tcp()
     # allowed by icmp-in
     iptables -A OUTPUT -o $eif -p udp --dport $TR_DEST_PORTS \
 	-m state --state NEW -j ACCEPT 
+
     # Accept incoming traceroutes from anywhere.
     iptables -A INPUT -i $eif -p udp --dport $TR_DEST_PORTS \
 	-m state --state NEW -j ACCEPT 
+
+    # Allow UDP data feed to UCAR
+    iptables -A OUTPUT -o $eif -p udp --dport 31007 -d 128.117.0.0/16 -j ACCEPT
 
     # iptables -A FORWARD -m limit -j LOG --log-prefix iptables_FORWARD \
 	#	--log-level info
