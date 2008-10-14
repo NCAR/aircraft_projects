@@ -77,7 +77,7 @@ rpms=`egrep '^Wrote:' $log | egrep /RPMS/ | awk '{print $2}'`
 
 if [ -d $rroot ]; then
     echo "Moving rpms to $rroot"
-    copy_rpms_to_eol_repo $rpms > /dev/null
+    copy_rpms_to_eol_repo $rpms
 else
     echo "$rroot not found. Leaving RPMS in $topdir"
 fi
