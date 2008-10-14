@@ -76,6 +76,8 @@ UNSAFE_EXT_IFS=(${CHEAP_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]})
 # Internal trusted interfaces. Forwarding is done between first two
 INT_IFS=(eth0 eth1)
 
+UCAR_128=128.117.0.0/16
+
 # Currently all hosts can do SSH and IRC off the plane.
 #
 # Privileged hosts can do more: HTTP, IMAP, etc.
@@ -116,19 +118,19 @@ GOOGLE_EARTH=(209.85.173.0/24)
 VPN_SVRS=(192.43.244.230 192.143.244.231)
 
 # external hosts that can establish incoming postgres connections
-POSTGRES_IN=(128.117.0.0/16)
+POSTGRES_IN=($UCAR_128)
 
 # LDM
-LDM_IN_OUT=(128.117.0.0/16)
+LDM_IN_OUT=($UCAR_128)
 
 # Who is allowed to send us smtp packets
 SMTP_IN=()
 
 # who is allowed to ping me
-EXT_PING_HOST=(128.117.0.0/16)
+EXT_PING_HOST=($UCAR_128)
 
 # who is allowed to make requests of our http server
-# HTTP_CLNTS=(128.117.0.0/16)
+# HTTP_CLNTS=($UCAR_128)
 HTTP_CLNTS=($ANYHOST)
 
 # who can make requests of outside servers
@@ -138,8 +140,8 @@ HTTP_REQUESTERS=($PRIV_HOSTS_DATA $PRIV_HOSTS_DISP)
 IRC_SERVERS=($ANYHOST)
 
 # RPC (ldm also uses RPC)
-RPC_CLIENTS=(128.117.0.0/16)
-RPC_SERVERS=(128.117.0.0/16)
+RPC_CLIENTS=($UCAR_128)
+RPC_SERVERS=($UCAR_128)
 
 # ports used by traceroute
 TR_DEST_PORTS="33434:33523"
@@ -353,7 +355,7 @@ for eif in ${UNSAFE_EXT_IFS[*]}; do
 done
 
 
-filter_tcp()
+filter_ip()
 {
     local eif=$1        # interface
     local cheap=$2      # true or false
@@ -402,6 +404,9 @@ filter_tcp()
 	iptables -A INPUT -i $eif -s $host -p tcp --dport postgres -m state --state NEW -j ACCEPT
 	iptables -A INPUT -i $eif -s $host -p udp --dport postgres -m state --state NEW -j ACCEPT
     done
+
+    # Outgoing postgres
+    iptables -A OUTPUT -o $eif -d $UCAR_128 -p tcp --dport postgres -j ACCEPT
   
     for host in ${LDM_IN_OUT[*]}; do
 	iptables -A INPUT -i $eif -s $host -p tcp --dport $ldmport -m state --state NEW -j ACCEPT
@@ -585,7 +590,7 @@ filter_tcp()
 	-m state --state NEW -j ACCEPT 
 
     # Allow UDP data feed to UCAR
-    iptables -A OUTPUT -o $eif -p udp --dport 31007 -d 128.117.0.0/16 -j ACCEPT
+    iptables -A OUTPUT -o $eif -p udp --dport 31007 -d $UCAR_128 -j ACCEPT
 
     # iptables -A FORWARD -m limit -j LOG --log-prefix iptables_FORWARD \
 	#	--log-level info
@@ -633,7 +638,7 @@ filter_tcp()
 }
 
 for eif in ${CHEAP_EXT_IFS[*]}; do
-    filter_tcp $eif true
+    filter_ip $eif true
 done
 
 for iif in ${SAFE_EXT_IFS[*]}; do
@@ -644,7 +649,7 @@ for iif in ${SAFE_EXT_IFS[*]}; do
 done
 
 for eif in ${SATCOM_EXT_IFS[*]}; do
-    filter_tcp $eif false
+    filter_ip $eif false
 done
 
 # Over ppp1 (MPDS), clamp MSS. We'll see if we can log it
