@@ -16,7 +16,7 @@ Requires: raf-satcom
 BuildArch: noarch
 
 %description
-Metapackage for all server and satcom packages needed on GV.
+Metapackage for all server and satcom packages needed on C130.
 
 %files 
 

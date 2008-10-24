@@ -83,19 +83,21 @@ fi
 #
 # Using dnssec-keygen -b 128 caused "bad base64 encoding error for named"
 # dnssec-keygen -b 512 worked.
+# 
 cf=${SYSCONFDIR}/raf.ucar.edu.key
-if [ ! -e $cf ]; then
+Kf=(/var/named/Kraf.ucar.edu.*.private)
+if [ ! -e $cf -o ! -e ${Kf[0]} ]; then
     cd /var/named
     rm -f Kraf.ucar.edu.*
     dnssec-keygen -a HMAC-MD5 -b 512 -n HOST raf.ucar.edu > /dev/null
+    # Leave the Kraf.ucar.edu.* files on /var/named for possible nsupdate uses
     cat << EOD > $cf
 key raf.ucar.edu {
     algorithm hmac-md5;
-    secret "`awk '{print $7}' Kraf.ucar.edu.*.key | sed 's/==$//'`";
+    secret "`awk '/^Key:/{print $2}' Kraf.ucar.edu.*.private`";
 };
 EOD
 fi
-# rm -f Kraf.ucar.edu.*
 
 [ -e $cf ] && chown root:named $cf
 [ -e $cf ] && chmod 0640 $cf

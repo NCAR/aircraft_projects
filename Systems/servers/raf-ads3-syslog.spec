@@ -1,7 +1,7 @@
 Summary: Additions to syslog config for logging from NIDAS processes.
 Name: raf-ads3-syslog
 Version: 1.0
-Release: 2
+Release: 3
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -66,8 +66,8 @@ s/^([^[:space:]]+)/\1;local5.none/
 
 if ! egrep -q "^local5" $cf; then
 cat >> $cf << EOD
-local5.*			/var/log/ads_debug.log
-local5.info			/var/log/ads.log
+local5.*			/var/log/ads3_debug.log
+local5.info			/var/log/ads3.log
 kern.debug			/var/log/ads3_kernel.log
 EOD
 fi
@@ -89,9 +89,10 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %attr(0755,root,root) /etc/logrotate.d/ads3
 
 %changelog
+* Fri Oct 24 2008 Gordon Maclean <maclean@ucar.edu>  1.0-3
+- fixed mistakes in log file names
 * Sat Oct 12 2008 Gordon Maclean <maclean@ucar.edu>  1.0-2
 - added etc/logrotate.d/ads3
-
 * Sun Feb 10 2008 Gordon Maclean <maclean@ucar.edu>
 - initial version
 

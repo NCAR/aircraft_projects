@@ -10,7 +10,7 @@
 Summary: DNS/named configuration for RAF aircraft server
 Name: raf-ads3-named
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -70,12 +70,12 @@ cp -r etc/* $RPM_BUILD_ROOT%{_sysconfdir}
 cp -r var/named/* $RPM_BUILD_ROOT%{bind_dir}
 cp -r usr/local/admin/raf-ads3-named $RPM_BUILD_ROOT/usr/local/admin
 
-%triggerin -n raf-ac-named -- bind
+%triggerin -n raf-ac-named -- bind bind-chroot
 export SYSCONFDIR=%{_sysconfdir}
 export DO_CHROOT=%{do_chroot}
 /usr/local/admin/raf-ads3-named/triggerin.sh ac %{name}-%{version}
 
-%triggerin -n raf-lab-named -- bind
+%triggerin -n raf-lab-named -- bind bind-chroot
 export SYSCONFDIR=%{_sysconfdir}
 export DO_CHROOT=%{do_chroot}
 /usr/local/admin/raf-ads3-named/triggerin.sh lab %{name}-%{version}
@@ -94,19 +94,21 @@ rm -rf $RPM_BUILD_ROOT
 # to /var/named/chroot and creates links to them
 # from /var/named and /etc.
 # Hence the two directives for each file below:
-%config %verify(not link) %{_sysconfdir}/named.ac.conf
-%ghost  %config %{chroot_prefix}/etc/named.ac.conf
-%config %verify(not link) /var/named/raf.ucar.edu
-%ghost  %config %{chroot_prefix}/var/named/raf.ucar.edu
-%config %verify(not link) /var/named/192.168.184
-%ghost  %config %{chroot_prefix}/var/named/192.168.184
-%config %verify(not link) /var/named/192.168.84
-%ghost  %config %{chroot_prefix}/var/named/192.168.84
+%config(noreplace) %verify(not link) %{_sysconfdir}/named.ac.conf
+%ghost  %config(noreplace) %{chroot_prefix}/etc/named.ac.conf
+%defattr(0660,named,named,0770)
+%config(noreplace) %verify(not link) /var/named/raf.ucar.edu
+%ghost  %config(noreplace) %{chroot_prefix}/var/named/raf.ucar.edu
+%config(noreplace) %verify(not link) /var/named/192.168.184
+%ghost  %config(noreplace) %{chroot_prefix}/var/named/192.168.184
+%config(noreplace) %verify(not link) /var/named/192.168.84
+%ghost  %config(noreplace) %{chroot_prefix}/var/named/192.168.84
 %else
-%config %{_sysconfdir}/named.ac.conf
-%config /var/named/raf.ucar.edu
-%config /var/named/192.168.184
-%config /var/named/192.168.84
+%config(noreplace) %{_sysconfdir}/named.ac.conf
+%defattr(0660,named,named,0770)
+%config(noreplace) /var/named/raf.ucar.edu
+%config(noreplace) /var/named/192.168.184
+%config(noreplace) /var/named/192.168.84
 %endif
 
 %dir /usr/local/admin/raf-ads3-named
@@ -124,16 +126,18 @@ rm -rf $RPM_BUILD_ROOT
 # to /var/named/chroot and creates links to them
 # from /var/named and /etc.
 # Hence the two directives for each file below:
-%config %verify(not link) %{_sysconfdir}/named.lab.conf
-%ghost  %config %{chroot_prefix}/etc/named.lab.conf
-%config %verify(not link) /var/named/raf.ucar.edu
-%ghost  %config %{chroot_prefix}/var/named/raf.ucar.edu
-%config %verify(not link) /var/named/192.168.184
-%ghost  %config %{chroot_prefix}/var/named/192.168.184
-%config %verify(not link) /var/named/192.168.84
-%ghost  %config %{chroot_prefix}/var/named/192.168.84
+%config(noreplace) %verify(not link) %{_sysconfdir}/named.lab.conf
+%ghost  %config(noreplace) %{chroot_prefix}/etc/named.lab.conf
+%defattr(0660,named,named,0770)
+%config(noreplace) %verify(not link) /var/named/raf.ucar.edu
+%ghost  %config(noreplace) %{chroot_prefix}/var/named/raf.ucar.edu
+%config(noreplace) %verify(not link) /var/named/192.168.184
+%ghost  %config(noreplace) %{chroot_prefix}/var/named/192.168.184
+%config(noreplace) %verify(not link) /var/named/192.168.84
+%ghost  %config(noreplace) %{chroot_prefix}/var/named/192.168.84
 %else
 %config %{_sysconfdir}/named.lab.conf
+%defattr(0660,named,named,0770)
 %config /var/named/raf.ucar.edu
 %config /var/named/192.168.184
 %config /var/named/192.168.84
@@ -144,6 +148,9 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/local/admin/raf-ads3-named/named.*
 
 %changelog
+* Fri Oct 24 2008 Gordon Maclean <maclean@ucar.edu>
+- small tweaks: noreplace on some configs,
+- comment out ROOTDIR in /etc/sysconfig/named if not do_chroot.
 * Sun Feb 29 2008 Gordon Maclean <maclean@ucar.edu>
 - initial version
 

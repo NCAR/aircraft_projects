@@ -72,8 +72,12 @@ done
 
 # bind-chroot-admin moves all /etc/named.* and /var/named/* files to
 # /var/named/chroot and links them back.
-if [ $DO_CHROOT -ne 0 ] && egrep -q '^ROOTDIR=' /etc/sysconfig/named; then
-    bind-chroot-admin --sync
+if [ $DO_CHROOT -ne 0 ]; then
+    if [ egrep -q '^ROOTDIR=' /etc/sysconfig/named; then
+        bind-chroot-admin --sync
+    fi
+else
+    sed -i 's/^ROOTDIR=/# ROOTDIR=/' /etc/sysconfig/named
 fi
 
 if ! { chkconfig --list named | fgrep -q "5:on"; }; then
