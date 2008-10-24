@@ -71,6 +71,12 @@ if [ $dopkg == all -o $dopkg == $pkg ];then
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
+pkg=raf-ads3-lab
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    version=`get_version $pkg.spec`
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
+
 echo "RPMS:"
 egrep "^Wrote:" $log
 rpms=`egrep '^Wrote:' $log | egrep /RPMS/ | awk '{print $2}'`
