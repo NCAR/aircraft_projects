@@ -136,7 +136,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not link) /var/named/192.168.84
 %ghost  %config(noreplace) %{chroot_prefix}/var/named/192.168.84
 %else
-%config %{_sysconfdir}/named.lab.conf
+%config(noreplace) %{_sysconfdir}/named.lab.conf
 %defattr(0660,named,named,0770)
 %config /var/named/raf.ucar.edu
 %config /var/named/192.168.184
