@@ -49,8 +49,12 @@ fi
 own=`ls -ld /var/named | awk '{print $3$4}'`
 if [ "$own" != rootnamed ]; then
     chown root.named /var/named
-    chmod g+w /var/named
 fi
+perm=`ls -ld /var/named | awk '{print $1}'`
+if [ "$perm" != "drwxrwx---" ]; then
+    chmod 770 /var/named
+fi
+
 if [ ! -d /var/named/log ]; then
     mkdir /var/named/log
     chgrp named /var/named/log
