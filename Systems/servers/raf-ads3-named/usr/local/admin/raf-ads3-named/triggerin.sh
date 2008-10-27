@@ -57,7 +57,7 @@ if [ ! -d /var/named/log ]; then
     chmod g+w /var/named/log
 fi
 
-# Copy named.loopback, named.localhost, named.empty to /var/named
+# Copy named.loopback, named.localhost, named.empty, named.ip6.local to /var/named
 # if they don't exist.  These were taken from caching-nameserver-9.4.2-3.fc7
 # (which is also used in fc8). Earlier distributions had other files.
 ad=/usr/local/admin/raf-ads3-named

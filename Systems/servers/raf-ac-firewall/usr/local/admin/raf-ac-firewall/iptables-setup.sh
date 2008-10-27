@@ -264,12 +264,13 @@ done
 iptables -A spoof-log -m limit --limit 1/minute --limit-burst 5 -j LOG --log-prefix "IPTABLES SPOOF: "
 iptables -A spoof-log -j DROP
 
+# IGMP packets are used to manage multicast groups.
 filter_igmp()
 {
-    # Server at other end of iridium ppp connections (level0)
-    # sends out igmp packets right after connection.  We'll
-    # let them through.
-    iptables -A INPUT -i $1 -d $CLASS_D_MULTICAST -p igmp -j ACCEPT
+    # Server at other end of iridium ppp connections (Level3)
+    # sends out igmp packets right after connection. Reject them, so
+    # it knows we don't want to do any multicast over this link.
+    iptables -A INPUT -i $1 -d $CLASS_D_MULTICAST -p igmp -j REJECT
 }
 
 filter_icmp()
@@ -468,7 +469,7 @@ filter_ip()
     if ! $cheap; then
       for host in ${GOOGLE_EARTH[*]}; do
 	iptables -A OUTPUT -o $eif -d $host -p tcp --dport http -m limit --limit 1/minute --limit-burst 5 -j LOG --log-prefix "IPTABLES OUT GoogleEarth: "
-	iptables -A OUTPUT -o $eif -d $host -p tcp --dport http -j DROP
+	iptables -A OUTPUT -o $eif -d $host -p tcp --dport http -j REJECT
       done
     fi
 
