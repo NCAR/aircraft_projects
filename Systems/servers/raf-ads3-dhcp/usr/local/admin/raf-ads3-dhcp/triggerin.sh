@@ -89,7 +89,7 @@ Kf=(/var/named/Kraf.ucar.edu.*.private)
 if [ ! -e $cf -o ! -e ${Kf[0]} ]; then
     cd /var/named
     rm -f Kraf.ucar.edu.*
-    dnssec-keygen -a HMAC-MD5 -b 512 -n HOST raf.ucar.edu > /dev/null
+    dnssec-keygen -a HMAC-MD5 -b 512 -n HOST raf.ucar.edu > /dev/null || exit 1
     # Leave the Kraf.ucar.edu.* files on /var/named for possible nsupdate uses
     cat << EOD > $cf
 key raf.ucar.edu {
