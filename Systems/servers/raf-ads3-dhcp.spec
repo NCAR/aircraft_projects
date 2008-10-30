@@ -1,7 +1,7 @@
 Summary: DHCP configuration for server on RAF aircraft
 Name: raf-ads3-dhcp
 Version: 1.0
-Release: 3
+Release: 4
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -10,7 +10,6 @@ Packager: Gordon Maclean <maclean@ucar.edu>
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
-Requires: dhcp
 Source: %{name}-%{version}.tar.gz
 
 %description
@@ -27,18 +26,25 @@ DHCP configuration for RAF aircraft server
 %package -n raf-gv-dhcp
 Summary: DHCP configuration for server system on GV
 Group: System Environment/Daemons
+Requires: dhcp bind
+# Specify that this package provides the virtual capability raf-ac-dhcp
+# which is required by raf-ac-named.  Similarly for raf-c130-dhcp
+Provides: raf-ac-dhcp
 %description -n raf-gv-dhcp
 DHCP configuration for server system on GV.
 
 %package -n raf-c130-dhcp
 Summary: DHCP configuration for server system on C130
 Group: System Environment/Daemons
+Requires: dhcp bind
+Provides: raf-ac-dhcp
 %description -n raf-c130-dhcp
 DHCP configuration for server system on C130.
 
 %package -n raf-lab-dhcp
 Summary: DHCP configuration for ADS3 data server in lab 
 Group: System Environment/Daemons
+Requires: dhcp bind
 %description -n raf-lab-dhcp
 DHCP configuration for ADS3 data server in lab.
 
@@ -99,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %changelog
+* Fri Oct 30 2008 Gordon Maclean <maclean@ucar.edu>
+- Added bind dependency so that the dndsec-keygen command is available
+- for the trigger script.
 * Fri Oct 24 2008 Gordon Maclean <maclean@ucar.edu>
 - Fixed up generation of key
 * Tue Apr 22 2008 Gordon Maclean <maclean@ucar.edu>

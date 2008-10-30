@@ -31,15 +31,14 @@ SYSCONFDIR=${SYSCONFDIR:-/etc}
 DO_CHROOT=${DO_CHROOT:-0}
 
 cf=${SYSCONFDIR}/named.conf
+# If there isn't an include of our named.{ac,lab}.conf in named.conf
+# save the old and create a new one.
 if ! egrep -q -E '^[[:space:]]*include[[:space:]]+"'${SYSCONFDIR}/named.${whichpkg}.conf'"' $cf; then
-    # use rpm -V to see if named.conf has been modified from the RPM
-    if rpm -V -f ${SYSCONFDIR}/named.conf | egrep -q ${SYSCONFDIR}/named.conf; then
-        dst=${SYSCONFDIR}/named.conf.rpmsave.`/bin/date +'%Y-%m-%d_%H-%M-%S.%N'`
-        echo "Saving ${SYSCONFDIR}/named.conf as $dst"
-        mv ${SYSCONFDIR}/named.conf $dst
-    fi
+    dst=${SYSCONFDIR}/named.conf.rpmsave.`/bin/date +'%Y-%m-%d_%H-%M-%S.%N'`
+    echo "Saving ${SYSCONFDIR}/named.conf as $dst"
+    mv ${SYSCONFDIR}/named.conf $dst
 
-    cat << EOD >> $cf
+    cat << EOD > $cf
 ###### start of updates from $pkg package.
 include "${SYSCONFDIR}/named.${whichpkg}.conf";
 ###### end of updates from $pkg package.

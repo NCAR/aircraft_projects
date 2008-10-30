@@ -19,18 +19,6 @@ Packager: Gordon Maclean <maclean@ucar.edu>
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
-
-Requires: bind raf-ads3-dhcp
-# %if %(%{expand:test %{do_chroot} -ne 0; echo $?})
-# Requires: bind-chroot
-# %endif
-
-# %{?do_chroot:Requires: bind-chroot}
-
-%if %{do_chroot}
-Requires: bind-chroot
-%endif
-
 Source: %{name}-%{version}.tar.gz
 
 %description
@@ -41,12 +29,20 @@ DNS/named configuration for RAF aircraft server
 %package -n raf-ac-named
 Summary: DNS/named configuration for RAF aircraft server
 Group: System Environment/Daemons
+Requires: bind raf-ac-dhcp
+%if %{do_chroot}
+Requires: bind-chroot
+%endif
 %description -n raf-ac-named
 Summary: DNS/named configuration for RAF aircraft server.
 
 %package -n raf-lab-named
 Summary: DNS/named configuration for RAF lab system
 Group: System Environment/Daemons
+Requires: bind raf-lab-dhcp
+%if %{do_chroot}
+Requires: bind-chroot
+%endif
 %description -n raf-lab-named
 DNS/named configuration for RAF lab system.
 
