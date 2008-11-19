@@ -1,0 +1,14 @@
+#!/bin/csh
+
+foreach FILENAME (setup_rf??)
+/code/schanot/nimbus/src/filter/nimbus -b $FILENAME << EOF
+Y
+EOF
+end
+
+cd /jnet/productiondata/
+foreach FILENAME (HIPPOrf??.nc)
+ncReorder $FILENAME temp.nc
+mv -f temp.nc $FILENAME
+end
+

@@ -1,0 +1,8 @@
+#!/bin/csh
+
+cd /jnet/productiondata/
+foreach FILENAME (HIPPOrf??.nc)
+ncReorder $FILENAME temp.nc
+mv -f temp.nc $FILENAME
+end
+
