@@ -514,7 +514,7 @@
                 <socket type="mcaccept"/>
             </output>
         </service>
-        <service class="RawSampleService" priority="RT_FIFO:50">
+        <service class="RawSampleService">
             <!-- input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream -->
             <input class="RawSampleInputStream">
@@ -598,9 +598,9 @@
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS8" id="140"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS9" id="150"/>
-        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS10" id="160" suffix="_NTL"/>
+        <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS10" id="140"/>
+        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS11" id="160" suffix="_NTL"/>
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -695,8 +695,6 @@
   
         <serialSensor IDREF="NOAA_CSD_O3" devicename="/dev/ttyS6" id="140" suffix="_CSD"/>
   
-        <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS7" id="150" suffix="_WCN"/>
-
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200"> <!-- a2d007 -->
             <parameter name="rate" value="500" type="int"/>
@@ -817,11 +815,9 @@
     <dsm name="dsm312" location="TDL Rack L-1" id="12" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
 
-        <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
         <sensor IDREF="NOAAUCATS" id="120" suffix="_GMD"/>
         <sensor IDREF="NONOYO3" id="130" suffix="_CL"/>
         <sensor IDREF="NOAAPANTHER" id="140" suffix="_PAN"/>
-
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
