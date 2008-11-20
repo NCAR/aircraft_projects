@@ -12,6 +12,7 @@ Requires: raf-c130-dhcp
 Requires: raf-ac-named
 Requires: raf-c130-ddclient
 Requires: raf-satcom
+Requires: raf-ads3-rsyncd
 
 BuildArch: noarch
 

@@ -12,6 +12,7 @@ Requires: raf-gv-dhcp
 Requires: raf-ac-named
 Requires: raf-gv-ddclient
 Requires: raf-satcom
+Requires: raf-ads3-rsyncd
 
 BuildArch: noarch
 

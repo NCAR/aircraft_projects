@@ -9,6 +9,7 @@ Requires: raf-ads3-syslog
 Requires: raf-lab-dhcp
 Requires: raf-lab-named
 Requires: raf-lab-ntp
+Requires: raf-ads3-rsyncd
 
 BuildArch: noarch
 
