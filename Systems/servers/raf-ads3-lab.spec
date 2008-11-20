@@ -1,7 +1,7 @@
 Summary: Metapackage for all server and satcom packages needed on GV
 Name: raf-ads3-lab
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment
 
@@ -19,5 +19,7 @@ Metapackage for all server and satcom packages needed on lab systems.
 %files 
 
 %changelog
+* Thu Nov 20 2008 Gordon Maclean <maclean@ucar.edu> 1.0-3
+- Added rad-ads3-rsyncd
 * Tue Oct 24 2008 Gordon Maclean <maclean@ucar.edu> 1.0-1
 - initial

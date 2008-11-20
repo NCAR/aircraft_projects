@@ -1,7 +1,7 @@
 Summary: Metapackage for all server and satcom packages needed on C130
 Name: raf-c130
 Version: 1.0
-Release: 2
+Release: 3
 License: GPL
 Group: System Environment
 
@@ -22,6 +22,8 @@ Metapackage for all server and satcom packages needed on C130.
 %files 
 
 %changelog
+* Thu Nov 20 2008 Gordon Maclean <maclean@ucar.edu> 1.0-3
+- Added rad-ads3-rsyncd
 * Tue Apr 15 2008 Gordon Maclean <maclean@ucar.edu> 1.0-2
 - Added raf-c130-ddclient
 * Fri Apr 4 2008 Gordon Maclean <maclean@ucar.edu> 1.0-1
