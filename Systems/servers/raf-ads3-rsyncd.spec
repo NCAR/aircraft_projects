@@ -50,6 +50,14 @@ if ! { [ -f /etc/rsyncd.conf ] && fgrep -q nidas-arm /etc/rsyncd.conf; }; then
     read only = true
     use chroot = false
     hosts allow = 127.0.0.1 192.168.0.0/16
+
+[ael-dpkgs]
+    comment = Debian packages for Arcom Embedded Linux
+    path = /opt/local/ael-dpkgs
+    syslog facility = daemon
+    read only = true
+    use chroot = false
+    hosts allow = 127.0.0.1 192.168.0.0/16
 EOD
 fi
 
