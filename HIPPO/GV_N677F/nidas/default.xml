@@ -406,6 +406,27 @@
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
 
+    <serialSensor ID="COMR" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%f">
+            <variable name="COMR" units="V" longname="Carbon Monoxide Mixing Ratio">
+                <linear slope="400" intercept="-3.2" units="ppbv"/>
+            </variable>
+        </sample>
+        <prompt string="CONC?\r" rate="5"/>
+        <message separator="\r" position="end" length="0"/>
+    </serialSensor>
+
+<!-- Tom - put this in as a place hodler - need to talk with Theresa about values -->
+    <serialSensor ID="CORAW" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%f">
+            <variable name="CORAW" units="V" longname="Carbon Monoxide Mixing Ratio">
+                <linear slope="400" intercept="-3.2" units="ppbv"/>
+            </variable>
+        </sample>
+        <prompt string="CONC?\r" rate="5"/>
+        <message separator="\r" position="end" length="0"/>
+    </serialSensor>
+
     <serialSensor ID="NOAA_CSD_O3" class="DSMSerialSensor"
         baud="9600" parity="none" databits="8" stopbits="1">
         <sample id="1" rate="1" scanfFormat="NOAA-OZONE%*d,%f,%f">
@@ -598,9 +619,8 @@
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="D_GPS" devicename="/dev/ttyS9" id="150"/>
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS10" id="140"/>
-        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS11" id="160" suffix="_NTL"/>
+        <serialSensor IDREF="D_GPS" devicename="/dev/ttyS11" id="150"/>
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -651,8 +671,15 @@
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
-<!-- TTFR                | 2008-02-04 21:54:00 | {-0.301189,1.13678} -->
-                <variable name="TTFR" units="V" longname="Total Temperature, Deiced Left">
+<!-- TTHL2 - need calibration info                | 2008-02-04 21:54:00 | {-0.301189,1.13678} -->
+                <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
+                    <parameter name="channel"  value="1"       type="int"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.13678" type="float"/> <parameter name="corIntercept" value="-0.301189"  type="float"/>
+                    <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
+                </variable>
+<!-- TTHL1 - using calib from only Left in START08                | 2008-02-04 21:54:00 | {-0.301189,1.13678} -->
+                <variable name="TTHL1" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.13678" type="float"/> <parameter name="corIntercept" value="-0.301189"  type="float"/>
@@ -688,44 +715,117 @@
         </output>
     </dsm>
    
-    <dsm name="dsm313" location="MTP Rack R-4" id="13" rserialPort="30002" derivedData="sock::58800">
+    <dsm name="dsm313" location="Chemistry Rack R-1" id="13" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="130" suffix="_VXL"/>
-  
-        <serialSensor IDREF="NOAA_CSD_O3" devicename="/dev/ttyS6" id="140" suffix="_CSD"/>
-  
+        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="160" suffix="_NTL"/>
+        <serialSensor IDREF="COMR" devicename="/dev/ttyS7" id="130" suffix="_AL"/>
+        <serialSensor IDREF="CORAW" devicename="/dev/ttyS8" id="130" suffix="_AL"/>
+ 
 
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200"> <!-- a2d007 -->
+<!-- Tom gutted PCAB, PDUMPPL, PDUMPPPR, THIML1  on Chris' suggestion that some instrument won't be flown
+      - if needed go back to START08 default.xml and pull them out
+-->
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
-<!-- PCAB                 | 2008-02-04 23:34:52 | {-0.452587,1.11221} -->
-<!-- PCAB                 | 2008-02-06 18:56:49 | {-4.34962,108.196,-0.0150027} -->
-                <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
+<!-- MEDP1                | 2008-03-27 22:06:12 | {-0.22379,1.05512} -->
+                <variable name="MEDP1" units="torr" longname="Medusa Presure 1">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.11221" type="float"/> <parameter name="corIntercept" value="-0.452587"  type="float"/>
-                    <poly coefs="-4.34962 108.196 -0.0150027" units="hPa"/>
+                    <parameter name="corSlope" value="1.05512" type="float"/> <parameter name="corIntercept" value="-0.22379"   type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="torr"/>
                 </variable>
-<!-- PDUMPPL              | 2008-02-04 23:37:30 | {-0.325723,1.09908} -->
-                <variable name="PDUMPPL" units="V" longname="Pressure of instrument exhaust duct, left">
+<!-- MEDP2                | 2008-03-27 22:09:14 | {-0.471625,1.07961} -->
+                <variable name="MEDP2" units="torr" longname="Medusa Presure 2">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.09908" type="float"/> <parameter name="corIntercept" value="-0.325723"  type="float"/>
-                    <linear slope="103.42" intercept="0" units="hPa"/>
+                    <parameter name="corSlope" value="1.07961" type="float"/> <parameter name="corIntercept" value="-0.471625"  type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="torr"/>
                 </variable>
-<!-- PDUMPPR              | 2008-02-04 23:42:04 | {-0.303313,1.10257} -->
-                <variable name="PDUMPPR" units="V" longname="Pressure of instrument exhaust duct, right">
+<!-- MEDPBYP              | 2008-03-27 22:11:51 | {-0.358841,1.07016} -->
+                <variable name="MEDPBYP" units="torr" longname="Medusa Pressure Bypass">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.10257" type="float"/> <parameter name="corIntercept" value="-0.303313"  type="float"/>
-                    <linear slope="103.42" intercept="0" units="hPa"/>
+                    <parameter name="corSlope" value="1.07016" type="float"/> <parameter name="corIntercept" value="-0.358841"  type="float"/>
+                    <linear slope="86.6" intercept="91.1" units="torr"/>
                 </variable>
-<!-- THIML1               | 2008-03-27 21:50:56 | {-0.29601,1.10392} -->
-                <variable name="THIML1" units="V" longname="HIML Tip Temperature">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.10392" type="float"/> <parameter name="corIntercept" value="-0.29601"   type="float"/>
-<!--                <linear slope="100.0" intercept="0.0" units="deg_C"/> -->
+<!-- MEDSTAT              | 2008-03-27 22:13:53 | {-0.322628,1.06807} -->
+                <variable name="MEDSTAT1" units="V" longname="Medusa Status">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.06807" type="float"/> <parameter name="corIntercept" value="-0.322628"  type="float"/>
+                    <linear slope="6.787" intercept="0.0" units="flag"/>
                 </variable>
+<!-- MEDFLOW              | 2008-03-27 22:15:46 | {-0.423619,1.07345} -->
+                <variable name="MEDFLOW" units="V" longname="Medusa Flow">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.07345" type="float"/> <parameter name="corIntercept" value="-0.423619"  type="float"/>
+                </variable>
+
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_MTP2" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+         </sensor>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+<!-- MEDCO2               | 2008-03-27 22:17:35 | {-0.259734,1.05694} -->
+                <variable name="MEDCO2" units="V" longname="Medusa CO2">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.05694" type="float"/> <parameter name="corIntercept" value="-0.259734"  type="float"/>
+                    <linear slope="50.0" intercept="0.0" units="ppmv"/>
+                </variable>
+<!-- MEDH2O - need info from Brit on this one - -->
+<!-- MEDSTAT2 - need info from Brit              | 2008-03-27 22:13:53 | {-0.322628,1.06807} -->
+                <variable name="MEDSTAT2" units="V" longname="Medusa Status">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.06807" type="float"/> <parameter name="corIntercept" value="-0.322628"  type="float"/>
+                    <linear slope="6.787" intercept="0.0" units="flag"/>
+<!-- MEDSTAT3 - need info from Brit            | 2008-03-27 22:13:53 | {-0.322628,1.06807} -->
+                <variable name="MEDSTAT3" units="V" longname="Medusa Status">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.06807" type="float"/> <parameter name="corIntercept" value="-0.322628"  type="float"/>
+                    <linear slope="6.787" intercept="0.0" units="flag"/>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_MTP2" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+         </sensor>
+
+
+
+
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+    <dsm name="dsm312" location="O2 Rack L-5" id="12" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
+
+        <serialSensor IDREF="NOAA_CSD_O3" devicename="/dev/ttyS5" id="140" suffix="_CSD"/>
+<!--  Tom
+        <sensor IDREF="NOAAUCATS" id="120" suffix="_GMD"/>
+        <sensor IDREF="NONOYO3" id="130" suffix="_CL"/>
+        <sensor IDREF="NOAAPANTHER" id="140" suffix="_PAN"/>
+-->
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+<!-- 
+     Tom Changed sample rate from 25 to 10 and numpoints value to 50
+       to mimic AnalogSensor of TCAB,AO2O2,AO2CO2, and AO2STAT in prior dsm config 
+-->
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
 <!-- TCAB                 | 2008-03-27 21:55:39 | {-0.172293,1.10227} -->
                 <variable name="TCAB" units="V" longname="Cabin Temperature at AEROSOL Rack Location">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
@@ -750,92 +850,22 @@
                     <parameter name="corSlope" value="1.09185" type="float"/> <parameter name="corIntercept" value="-0.136041"  type="float"/>
                     <linear slope="409.6" intercept="0.0" units="flag"/>
                 </variable>
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_MTP1" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
-
-
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300">
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="10">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="50" type="int"/>
-<!-- MEDP1                | 2008-03-27 22:06:12 | {-0.22379,1.05512} -->
-                <variable name="MEDP1" units="torr" longname="Medusa Presure 1">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.05512" type="float"/> <parameter name="corIntercept" value="-0.22379"   type="float"/>
-                    <linear slope="100.0" intercept="0.0" units="torr"/>
-                </variable>
-<!-- MEDP2                | 2008-03-27 22:09:14 | {-0.471625,1.07961} -->
-                <variable name="MEDP2" units="torr" longname="Medusa Presure 2">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07961" type="float"/> <parameter name="corIntercept" value="-0.471625"  type="float"/>
-                    <linear slope="100.0" intercept="0.0" units="torr"/>
-                </variable>
-<!-- MEDPBYP              | 2008-03-27 22:11:51 | {-0.358841,1.07016} -->
-                <variable name="MEDPBYP" units="torr" longname="Medusa Pressure Bypass">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07016" type="float"/> <parameter name="corIntercept" value="-0.358841"  type="float"/>
-                    <linear slope="86.6" intercept="91.1" units="torr"/>
-                </variable>
-<!-- MEDSTAT              | 2008-03-27 22:13:53 | {-0.322628,1.06807} -->
-                <variable name="MEDSTAT" units="V" longname="Medusa Status">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.06807" type="float"/> <parameter name="corIntercept" value="-0.322628"  type="float"/>
-                    <linear slope="6.787" intercept="0.0" units="flag"/>
-                </variable>
-<!-- MEDFLOW              | 2008-03-27 22:15:46 | {-0.423619,1.07345} -->
-                <variable name="MEDFLOW" units="V" longname="Medusa Flow">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07345" type="float"/> <parameter name="corIntercept" value="-0.423619"  type="float"/>
-                </variable>
-<!-- MEDCO2               | 2008-03-27 22:17:35 | {-0.259734,1.05694} -->
-                <variable name="MEDCO2" units="V" longname="Medusa CO2">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.05694" type="float"/> <parameter name="corIntercept" value="-0.259734"  type="float"/>
-                    <linear slope="50.0" intercept="0.0" units="ppmv"/>
-                </variable>
-
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_MTP2" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-         </sensor>
-
-
-        <output class="RawSampleOutputStream" sorterLength="0">
-            <socket type="mcrequest"/>
-        </output>
-    </dsm>
-
-    <dsm name="dsm312" location="TDL Rack L-1" id="12" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
-
-        <sensor IDREF="NOAAUCATS" id="120" suffix="_GMD"/>
-        <sensor IDREF="NONOYO3" id="130" suffix="_CL"/>
-        <sensor IDREF="NOAAPANTHER" id="140" suffix="_PAN"/>
-
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="25">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="20" type="int"/>
 <!-- COMR_AL              | 2008-03-27 21:39:04 | {-0.36179,1.0702} -->
+<!-- Tom 
                 <variable name="COMR_AL" units="V" longname="Carbon Monoxide Mixing Ratio">
                     <parameter name="channel"  value="4"       type="int"/>
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.0702"  type="float"/> <parameter name="corIntercept" value="-0.36179"   type="float"/>
                     <linear slope="400.0" intercept="0.0" units="ppbv"/>
                 </variable>
+-->
 <!-- CORAW_AL             | 2008-03-27 21:42:08 | {-0.172795,1.05182} -->
+<!-- Tom
                 <variable name="CORAW_AL" units="V" longname="Raw CO Signal">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.05182" type="float"/> <parameter name="corIntercept" value="-0.172795"  type="float"/>
                 </variable>
+-->
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
