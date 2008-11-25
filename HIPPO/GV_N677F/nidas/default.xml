@@ -465,7 +465,7 @@
         </sample>
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
-
+   
     <serialSensor ID="SP2" class="DSMSerialSensor"
         baud="57600" parity="none" databits="8" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%f %f %f">
@@ -475,7 +475,7 @@
         </sample>
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
-   
+
      <sensor ID="Fast2DC" class="raf.TwoD64_USB">
         <parameter name="SerialNumber" value="F2DC001" type="string"/>
         <parameter name="RESOLUTION" value="25" type="int"/>
@@ -521,13 +521,13 @@
         </sample>
     </sensor>
 
-    <sensor ID="NOAASP2"  class="raf.UDPSocketSensor" devicename="inet::32011">  <!-- Tom: assume that numeric is port assignment -->
-        <sample id="1" rate="1" scanfFormat="NOAA_SP2:%d,%f,%f,%f,%f">   <!-- Tom - will need actual format info -->
-            <variable name="SP2_Time_s"   units="seconds" longname="NOAA SP2 Time"/>
-            <variable name="SP2_BCPC" units="#/cm3" longname="NOAA SP2 Back Carbon Particle Concentration"/>
-            <variable name="SP2_SampleP"   units="torr" longname="NOAA SP2 Sample P"/>
-            <variable name="SP2_SampleFlow" units="cc/min" longname="NOAA SP2 Sample Flow"/>  <!-- Tom - unit given was vccs - used this from serial SP2 defn -->
-            <variable name="SP2_YAGP" units="V" longname="SP2 YAG Power"/>
+    <sensor ID="NOAASP2"  class="raf.UDPSocketSensor" devicename="inet::32011" suffix="_SP2">  <!-- Tom: assume that numeric is port assignment -->
+        <sample id="1" rate="1" scanfFormat="NOAA_SP2,%d,%f,%f,%f,%f">   <!-- Tom - will need actual format info -->
+            <variable name="Time_s"   units="seconds" longname="NOAA SP2 Time"/>  <!-- Tom might do %*d and skip the time - only know floating point -->
+            <variable name="BCPC" units="#/cm3" longname="NOAA SP2 Back Carbon Particle Concentration"/>
+            <variable name="SampleP"   units="torr" longname="NOAA SP2 Sample P"/>
+            <variable name="SampleFlow" units="cc/min" longname="NOAA SP2 Sample Flow"/>  <!-- Tom - unit given was vccs - used this from serial SP2 defn -->
+            <variable name="YAGP" units="V" longname="SP2 YAG Power"/>
         </sample>
     </sensor>
 
@@ -796,11 +796,13 @@
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.06807" type="float"/> <parameter name="corIntercept" value="-0.322628"  type="float"/>
                     <linear slope="6.787" intercept="0.0" units="flag"/>
+                </variable>
 <!-- MEDSTAT3 - need info from Brit            | 2008-03-27 22:13:53 | {-0.322628,1.06807} -->
                 <variable name="MEDSTAT3" units="V" longname="Medusa Status">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <parameter name="corSlope" value="1.06807" type="float"/> <parameter name="corIntercept" value="-0.322628"  type="float"/>
                     <linear slope="6.787" intercept="0.0" units="flag"/>
+                </variable>
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
