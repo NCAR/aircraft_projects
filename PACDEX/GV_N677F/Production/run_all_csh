@@ -7,9 +7,12 @@ EOF
 end
 
 cd /jnet/productiondata/
-foreach FILENAME (PACD*h.nc)
-ncReorder $FILENAME temp.nc
-mv -f temp.nc $FILENAME
+rm pac_temp.nc
+foreach FILENAME (PACDEX*.nc)
+ncReorder $FILENAME pac_temp.nc
+if (-e pac_temp.nc) then
+  mv -f pac_temp.nc $FILENAME
+endif
 end
 
 #ncfixdate /jnet/productiondata/PACDEXrf10.nc <<EOL
