@@ -1,8 +1,11 @@
 #!/bin/csh
 
 cd /jnet/productiondata/
+rm s08_temp.nc
 foreach FILENAME (START08rf??.nc)
-ncReorder $FILENAME temp.nc
-mv -f temp.nc $FILENAME
+ncReorder $FILENAME s08_temp.nc
+if (-e s08_temp.nc) then
+  mv -f s08_temp.nc $FILENAME
+endif
 end
 

@@ -7,8 +7,11 @@ EOF
 end
 
 cd /jnet/productiondata/
-foreach FILENAME (STARTrf??.nc)
-ncReorder $FILENAME temp.nc
-mv -f temp.nc $FILENAME
+rm s08_temp.nc
+foreach FILENAME (START08rf??.nc)
+ncReorder $FILENAME s08_temp.nc
+if (-e s08_temp.nc) then
+  mv -f s08_temp.nc $FILENAME
+endif
 end
 
