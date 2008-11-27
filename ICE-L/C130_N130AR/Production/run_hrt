@@ -1,0 +1,48 @@
+#!/bin/csh
+
+#/usr/bin/Xvfb :3 -ac -screen 1 1024x768x16 &
+#setenv DISPLAY :3.1
+
+#Following line not needed; PMSspecs is correct:
+#/bin/cp -f ../PMSspecs.rev1 ../PMSspecs
+/bin/cp -f ../Lags.hrt ../Lags
+/bin/cp -f ../s109.default_extended_range ../s109.default
+
+nice nimbus -b setup_tf01_hr
+nice nimbus -b setup_tf02_hr
+nice nimbus -b setup_tf03_hr
+nice nimbus -b setup_rf01_hr
+nice nimbus -b setup_rf02_hr
+nice nimbus -b setup_rf03_hr
+nice nimbus -b setup_rf04_hr
+
+# Extended range cards were removed, now use standard:
+/bin/cp -f ../s109.default_standard_range ../s109.default
+nice nimbus -b setup_rf05_hr
+nice nimbus -b setup_rf06_hr
+nice nimbus -b setup_rf07_hr
+
+#Following line not needed; PMSspecs is correct:
+#/bin/cp -f ../PMSspecs.rev2 ../PMSspecs
+
+nice nimbus -b setup_rf08_hr
+nice nimbus -b setup_rf09_hr
+nice nimbus -b setup_rf10_hr
+nice nimbus -b setup_rf11_hr
+nice nimbus -b setup_rf12_hr
+nice nimbus -b setup_tf04_hr
+
+/bin/cp -f ../Lags.lrt ../Lags
+
+# Remove Xvfb
+#kill %1
+
+cd /jnet/productiondata/
+rm ice_temp.nc
+foreach FILENAME (ICE-L*.nc)
+ncReorder $FILENAME ice_temp.nc
+if (-e ice_temp.nc) then
+  mv -f ice_temp.nc $FILENAME
+endif
+end
+
