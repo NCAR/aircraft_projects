@@ -70,13 +70,25 @@ ATT_ACCEPT	95
 DIVISOR_FLAG	0
 CT_METHOD	0
 #
-#include "../../Configuration/raf/cdp.default"
+#include "cdp.default"
 #
 FIRST_BIN	1
 LAST_BIN	31
 #
-DOF		1.38
+# Jorgen's discussion with Bill Dawson 25 Feb 2008:
+# Experimental determinations of DOF and DIA are very uncertain.
+# DMT uses a mathematically calculated sample area of 0.240 mm^2.
+# RAF code uses DOF*DIA; thus DMT recommends that we modify the
+# individual values of DOF and DIA to give 0.240 mm^2. Hmmmmmmmmmmm.....
+#
+# The following are DMT's experimental values (which we should not use):
+# DOF		1.38
+# BEAM_DIAM	0.2
+# The following are the 'adjusted' values, that give a sample area of
+# 0.240 mm^2:
+DOF		1.20
 BEAM_DIAM	0.2
+#
 DENS		1.0
 PLWFAC		1.0e-6
 DBZFAC		1.0e6
@@ -138,13 +150,15 @@ HSKP5   DUMMY   0.0     1.0     0.0
 HSKP6   DUMMY   0.0     1.0     0.0
 HSKP7   FTMP    0.0     1.0     0.0
 #
-#include "../../Configuration/raf/s100.default"
+#include "s109.default"
 #
 FIRST_BIN	1
 LAST_BIN	31
 #
-DOF		4.05
-BEAM_DIAM	0.175
+#DOF		4.05
+# DOF based on 30 Jan 2008 post-ICE-L calibration:
+DOF		2.82
+BEAM_DIAM	0.183
 DENS		1.0
 PLWFAC		1.0e-6
 DBZFAC		1.0e6
@@ -377,7 +391,7 @@ HSKP5	DUMMY	0.0	1.0	0.0
 HSKP6	DUMMY	0.0	1.0	0.0
 HSKP7	FTMP3	0.0	1.0	0.0
 #
-#include "s305.default"
+#include "../../Configuration/raf/s305.default"
 #
 FIRST_BIN	1
 LAST_BIN	31
@@ -462,7 +476,7 @@ HSKP5	DUMMY	0.0	1.0	0.0
 HSKP6	PFLWS	-729.57 0.87564 -3.5197e-4 4.750368e-8
 HSKP7	PTMP	0.0	1.0	0.0
 #
-#include "s200.default"
+#include "../../Configuration/raf/s200.default"
 #
 FIRST_BIN       5
 LAST_BIN        31
@@ -621,21 +635,37 @@ END
 # ------------------------------------------------------------------------
 START   F2DC001
 TYPE    2D-C
-EAW     1.6
+EAW     1.6 
 #
 MIN_RANGE       12.5
 MAX_RANGE       1612.5
 RANGE_STEP      25.0
 #
-FIRST_BIN       1
-LAST_BIN        64
+FIRST_BIN       1   
+LAST_BIN        64  
 #
-NDIODES         64
-RESPONSE_TIME   0.4
+NDIODES         64  
+RESPONSE_TIME   0.4 
 ARM_DISTANCE    61.0
-DENS            1.0
+DENS            1.0 
 PLWFAC          1.0e-9
 DBZFAC          1.0e3
+END
+#
+# ------------------------------------------------------------------------
+START	2DCCSU
+TYPE	2D-C
+EAW	0.8
+HSKP0	2DV15	0.0	1.0	0.0
+HSKP1	2DMTMP	0.0	1.0	0.0
+HSKP2	DUMMY	0.0	1.0	0.0
+HSKP3	DUMMY	0.0	1.0	0.0
+HSKP4	2DEE1	0.0	1.0	0.0
+HSKP5	2DEE32	0.0	1.0	0.0
+HSKP6	2DVN15	0.0	1.0	0.0
+HSKP7	2DV5	0.0	1.0	0.0
+HSKP8	SHDORC	0.0	1.0	0.0
+HSKP9	DUMMY	0.0	1.0	0.0
 END
 #
 # ------------------------------------------------------------------------
@@ -657,7 +687,7 @@ MIN_RANGE       100.0
 MAX_RANGE       6500.0
 RANGE_STEP      200.0
 #
-FIRST_BIN       1
+FIRST_BIN       3
 LAST_BIN        32
 #
 NDIODES         32
