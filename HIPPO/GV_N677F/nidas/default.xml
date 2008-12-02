@@ -406,6 +406,7 @@
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
 
+<!-- Tom - put the following two as a place holder - need to talk with Theresa about values -->
     <serialSensor ID="COMR" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="%f">
             <variable name="COMR" units="V" longname="Carbon Monoxide Mixing Ratio">
@@ -416,7 +417,6 @@
         <message separator="\r" position="end" length="0"/>
     </serialSensor>
 
-<!-- Tom - put this in as a place hodler - need to talk with Theresa about values -->
     <serialSensor ID="CORAW" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="%f">
             <variable name="CORAW" units="V" longname="Carbon Monoxide Mixing Ratio">
@@ -426,6 +426,7 @@
         <prompt string="CONC?\r" rate="5"/>
         <message separator="\r" position="end" length="0"/>
     </serialSensor>
+
 
     <serialSensor ID="NOAA_CSD_O3" class="DSMSerialSensor"
         baud="9600" parity="none" databits="8" stopbits="1">
@@ -742,36 +743,35 @@
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
-<!-- MEDP1                | 2008-03-27 22:06:12 | {-0.22379,1.05512} -->
+<!--A2D1606_CH0_2F        | 2008-06-12 14:41:01 | {-0.275358,1.06384} -->
                 <variable name="MEDP1" units="torr" longname="Medusa Presure 1">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.05512" type="float"/> <parameter name="corIntercept" value="-0.22379"   type="float"/>
+                    <parameter name="corSlope" value="1.06384" type="float"/> <parameter name="corIntercept" value="-0.275358"   type="float"/>
                     <linear slope="100.0" intercept="0.0" units="torr"/>
                 </variable>
-<!-- MEDP2                | 2008-03-27 22:09:14 | {-0.471625,1.07961} -->
+<!-- A2D1606_CH1_2F        | 2008-06-12 14:43:05 | {-0.371488,1.07743} -->
                 <variable name="MEDP2" units="torr" longname="Medusa Presure 2">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07961" type="float"/> <parameter name="corIntercept" value="-0.471625"  type="float"/>
+                    <parameter name="corSlope" value="1.07743" type="float"/> <parameter name="corIntercept" value="-0.371488"  type="float"/>
                     <linear slope="100.0" intercept="0.0" units="torr"/>
                 </variable>
-<!-- MEDPBYP              | 2008-03-27 22:11:51 | {-0.358841,1.07016} -->
+<!-- A2D1606_CH2_2F        | 2008-06-12 14:46:05 | {-0.242581,1.06555} -->
                 <variable name="MEDPBYP" units="torr" longname="Medusa Pressure Bypass">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07016" type="float"/> <parameter name="corIntercept" value="-0.358841"  type="float"/>
+                    <parameter name="corSlope" value="1.06555" type="float"/> <parameter name="corIntercept" value="-0.242581"  type="float"/>
                     <linear slope="86.6" intercept="91.1" units="torr"/>
                 </variable>
-<!-- MEDSTAT              | 2008-03-27 22:13:53 | {-0.322628,1.06807} -->
+<!-- A2D1606_CH3_2F        | 2008-06-12 14:48:38 | {-0.267391,1.0706} -->
                 <variable name="MEDSTAT1" units="V" longname="Medusa Status">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.06807" type="float"/> <parameter name="corIntercept" value="-0.322628"  type="float"/>
+                    <parameter name="corSlope" value="1.0706" type="float"/> <parameter name="corIntercept" value="-0.267391"  type="float"/>
                     <linear slope="6.787" intercept="0.0" units="flag"/>
                 </variable>
-<!-- MEDFLOW              | 2008-03-27 22:15:46 | {-0.423619,1.07345} -->
+<!-- A2D1606_CH4_2F        | 2008-06-12 14:50:48 | {-0.386284,1.07635} -->
                 <variable name="MEDFLOW" units="V" longname="Medusa Flow">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07345" type="float"/> <parameter name="corIntercept" value="-0.423619"  type="float"/>
+                    <parameter name="corSlope" value="1.07635" type="float"/> <parameter name="corIntercept" value="-0.386284"  type="float"/>
                 </variable>
-
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
@@ -784,24 +784,29 @@
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
-<!-- MEDCO2               | 2008-03-27 22:17:35 | {-0.259734,1.05694} -->
+<!-- A2D1605_CH0_2F        | 2008-07-21 17:31:18 | {-0.243167,1.03311} -->
                 <variable name="MEDCO2" units="V" longname="Medusa CO2">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.05694" type="float"/> <parameter name="corIntercept" value="-0.259734"  type="float"/>
+                    <parameter name="corSlope" value="1.03311" type="float"/> <parameter name="corIntercept" value="-0.243167"  type="float"/>
                     <linear slope="50.0" intercept="0.0" units="ppmv"/>
                 </variable>
-<!-- MEDH2O - need info from Brit on this one - -->
-<!-- MEDSTAT2 - need info from Brit              | 2008-03-27 22:13:53 | {-0.322628,1.06807} -->
+<!-- A2D1605_CH1_2F        | 2008-07-21 17:34:32 | {-0.169632,1.02771} -->
+                <variable name="MEDH2O" units="V" longname="Medusa H2O">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.02771" type="float"/> <parameter name="corIntercept" value="-0.169632"  type="float"/>
+                    <linear slope="8000.0" intercept="0.0" units="ppmv"/>
+                </variable>
+<!-- A2D1605_CH2_2F        | 2008-07-21 17:37:45 | {-0.0935705,1.01929} -->
                 <variable name="MEDSTAT2" units="V" longname="Medusa Status">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.06807" type="float"/> <parameter name="corIntercept" value="-0.322628"  type="float"/>
+                    <parameter name="corSlope" value="1.01929" type="float"/> <parameter name="corIntercept" value="-0.0935705"  type="float"/>
                     <linear slope="6.787" intercept="0.0" units="flag"/>
                 </variable>
-<!-- MEDSTAT3 - need info from Brit            | 2008-03-27 22:13:53 | {-0.322628,1.06807} -->
+<!-- A2D1605_CH3_2F        | 2008-07-21 17:40:52 | {-0.2767,1.03333} -->
                 <variable name="MEDSTAT3" units="V" longname="Medusa Status">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.06807" type="float"/> <parameter name="corIntercept" value="-0.322628"  type="float"/>
-                    <linear slope="6.787" intercept="0.0" units="flag"/>
+                    <parameter name="corSlope" value="1.03333" type="float"/> <parameter name="corIntercept" value="-0.2767"  type="float"/>
+                    <linear slope="0.1" intercept="1.0" units="flag"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -837,28 +842,28 @@
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
-<!-- TCAB                 | 2008-03-27 21:55:39 | {-0.172293,1.10227} -->
+<!-- A2D1609_CH0_4F        | 2008-06-12 19:50:50 | {-0.236264,1.10469} -->
                 <variable name="TCAB" units="V" longname="Cabin Temperature at AEROSOL Rack Location">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.10227" type="float"/> <parameter name="corIntercept" value="-0.172293"  type="float"/>
-<!--                <linear slope="100.0" intercept="0.0" units="deg_C"/> -->
+                    <parameter name="corSlope" value="1.10469" type="float"/> <parameter name="corIntercept" value="-0.236264"  type="float"/>
+<!--                    <linear slope="100.0" intercept="0.0" units="deg_C"/>  -->
                 </variable>
-<!-- AO2O2                | 2008-03-27 21:57:52 | {-0.142079,1.096} -->
+<!-- A2D1609_CH1_4F        | 2008-06-12 19:53:01 | {-0.235658,1.10722} -->
                 <variable name="AO2O2" units="V" longname="AO2 O2">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.096" type="float"/>   <parameter name="corIntercept" value="-0.142079"  type="float"/>
+                    <parameter name="corSlope" value="1.10722" type="float"/>   <parameter name="corIntercept" value="-0.235658"  type="float"/>
                     <linear slope="400.0" intercept="-1000.0" units="per meg"/>
                 </variable>
-<!-- AO2CO2               | 2008-03-27 22:00:10 | {-0.202421,1.10485} -->
+<!-- A2D1609_CH2_4F        | 2008-06-12 19:55:26 | {-0.268823,1.11443} -->
                 <variable name="AO2CO2" units="V" longname="AO2 CO2">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.10485" type="float"/> <parameter name="corIntercept" value="-0.202421"  type="float"/>
+                    <parameter name="corSlope" value="1.11443" type="float"/> <parameter name="corIntercept" value="-0.268823"  type="float"/>
                     <linear slope="50.0" intercept="300.0" units="ppmv"/>
                 </variable>
-<!-- AO2STAT              | 2008-03-27 22:02:36 | {-0.136041,1.09185} -->
+<!-- A2D1609_CH3_4F        | 2008-06-12 19:57:46 | {-0.201599,1.09876} -->
                 <variable name="AO2STAT" units="V" longname="AO2 STAT">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.09185" type="float"/> <parameter name="corIntercept" value="-0.136041"  type="float"/>
+                    <parameter name="corSlope" value="1.09876" type="float"/> <parameter name="corIntercept" value="-0.201599"  type="float"/>
                     <linear slope="409.6" intercept="0.0" units="flag"/>
                 </variable>
 <!-- COMR_AL              | 2008-03-27 21:39:04 | {-0.36179,1.0702} -->
@@ -903,10 +908,10 @@
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
-<!-- PLWC                 | 2008-04-29 20:19:50 | {-0.493512,1.07045} -->
+<!-- A2D006_CH0_2F         | 2008-07-29 13:42:56 | {-0.277191,1.04492} -->
                 <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07045" type="float"/> <parameter name="corIntercept" value="-0.493512"  type="float"/>
+                    <parameter name="corSlope" value="1.04492" type="float"/> <parameter name="corIntercept" value="-0.277191"  type="float"/>
                     <linear slope="+10.0" intercept="0.0" units="W"/>
                 </variable>
             </sample>
@@ -938,6 +943,7 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
 <!-- RICE                 | 2008-04-01 22:24:34 | {-0.0256412,1.06987} -->
+<!-- Tom - I'm not finding a A2D019 calibration set in the a2dcal file - ??  -->
                 <variable name="RICE" units="V" longname="Raw Icing-Rate Indicator">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <parameter name="corSlope" value="1.06987" type="float"/> <parameter name="corIntercept" value="-0.0256412" type="float"/>
