@@ -10,7 +10,7 @@
 Summary: DNS/named configuration for RAF aircraft server
 Name: raf-ads3-named
 Version: 1.0
-Release: 3
+Release: 4
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -111,6 +111,10 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-named/triggerin.sh
 %config /usr/local/admin/raf-ads3-named/named.*
 
+# On aircraft, eth2 is a DHCP client interface.  This dhclient 
+# configuration prevents DHCP from screwing up /etc/resolv.conf
+%config(noreplace) /etc/dhclient-eth2.conf
+
 %files -n raf-lab-named
 %defattr(0640,root,named,0750)
 
@@ -144,6 +148,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/local/admin/raf-ads3-named/named.*
 
 %changelog
+* Wed Dec 3 2008 Gordon Maclean <maclean@ucar.edu> 1.0-4
+- Added /etc/dhclient-eth2.conf
 * Wed Oct 29 2008 Gordon Maclean <maclean@ucar.edu>
 - Moved Requires into sub-package portion.
 * Fri Oct 24 2008 Gordon Maclean <maclean@ucar.edu>
