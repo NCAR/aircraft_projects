@@ -1,7 +1,7 @@
 Summary: Configuration for rsyncd on ADS3 server systems.
 Name: raf-ads3-rsyncd
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -64,6 +64,7 @@ fi
 # see man rsync_selinux
 if selinuxenabled; then
     echo "setting up SELinux permissions on /opt/local/nidas"
+    [ -d /opt/local/nidas ] || mkdir -p /opt/local/nidas
     chcon -R -t public_content_t /opt/local/nidas
     # [ -f /etc/selinux/config ] && . /etc/selinux/config
     # sef=/etc/selinux/$SELINUXTYPE/contexts/files/file_contexts.local
@@ -73,6 +74,12 @@ if selinuxenabled; then
     if ! semanage fcontext -l -t public_content_t | fgrep -q /opt/local/nidas; then
         semanage fcontext -a -t public_content_t "/opt/local/nidas(/.*)?"
     fi
+    echo "setting up SELinux permissions on /opt/local/ael-dpkgs"
+    [ -d /opt/local/ael-dpkgs/ads3 ] || mkdir -p /opt/local/ael-dpkgs/ads3
+    chcon -R -t public_content_t /opt/local/ael-dpkgs
+    if ! semanage fcontext -l -t public_content_t | fgrep -q /opt/local/ael-dpkgs; then
+        semanage fcontext -a -t public_content_t "/opt/local/ael-dpkgs(/.*)?"
+    fi
 fi
 
 exit 0
@@ -81,11 +88,14 @@ exit 0
 if selinuxenabled; then
     semanage fcontext -d -t public_content_t "/opt/local/nidas(/.*)?"
     restorecon /opt/local/nidas
+    semanage fcontext -d -t public_content_t "/opt/local/ael-dpkgs(/.*)?"
+    restorecon /opt/local/ael-dpkgs
 fi
 
 %files
 
 %changelog
+* Wed Dec 3 2008 Gordon Maclean <maclean@ucar.edu>
+- added /opt/local/ael-dpkgs
 * Wed Nov 19 2008 Gordon Maclean <maclean@ucar.edu>
 - initial version
-
