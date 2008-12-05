@@ -323,7 +323,7 @@
     </serialSensor>
 
     <serialSensor ID="CDP" class="raf.CDP_Serial"
-        baud="38400" parity="none" databits="8" stopbits="1">
+        baud="38400" parity="none" databits="8" stopbits="1" timeout="10">
 
         <parameter name="calFile" type="string" value="PMSspecs"/>
 
@@ -353,7 +353,7 @@
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
 
-    <serialSensor ID="UHSAS" class="raf.UHSAS_Serial" baud="115200" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="UHSAS" class="raf.UHSAS_Serial" baud="115200" parity="none" databits="8" stopbits="1" timeout="10">
 
         <parameter name="HSKP_SCALE" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000" type="int"/>
 
@@ -725,7 +725,7 @@
         </output>
     </dsm>
    
-    <dsm name="dsm313" location="Chemistry Rack R-1" id="13" rserialPort="30002" derivedData="sock::58800">
+    <dsm name="dsm313" location="Chem Rack R-1" id="13" rserialPort="30002" derivedData="sock::58800">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="120" suffix="_VXL"/>
