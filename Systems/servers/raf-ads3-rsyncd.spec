@@ -59,13 +59,14 @@ fi
 
 if ! { [ -f /etc/rsyncd.conf ] && fgrep -q nidas-arm /etc/rsyncd.conf; }; then
     cat >> /etc/rsyncd.conf << EOD
+# suppress log messages
+log file = /dev/null
 [nidas-arm]
     comment = nidas binaries, libraries and firmware for arm
     path = /opt/local/nidas/arm
     read only = true
     use chroot = false
     hosts allow = 127.0.0.1 192.168.0.0/16
-    log file = /dev/null
 
 [nidas-armbe]
     comment = nidas binaries, libraries and firmware for armbe
@@ -73,7 +74,6 @@ if ! { [ -f /etc/rsyncd.conf ] && fgrep -q nidas-arm /etc/rsyncd.conf; }; then
     read only = true
     use chroot = false
     hosts allow = 127.0.0.1 192.168.0.0/16
-    log file = /dev/null
 
 [ael-dpkgs]
     comment = Debian packages for Arcom Embedded Linux
@@ -81,7 +81,6 @@ if ! { [ -f /etc/rsyncd.conf ] && fgrep -q nidas-arm /etc/rsyncd.conf; }; then
     read only = true
     use chroot = false
     hosts allow = 127.0.0.1 192.168.0.0/16
-    log file = /dev/null
 EOD
 fi
 
