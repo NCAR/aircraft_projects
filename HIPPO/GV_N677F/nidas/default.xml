@@ -468,16 +468,6 @@
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
    
-    <serialSensor ID="SP2" class="DSMSerialSensor"
-        baud="57600" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%f %f %f">
-            <variable name="CIP" units="#/cm3" longname="SP2 Concentration Incand Particles"/>
-            <variable name="YAGP" units="V" longname="SP2 YAG Power"/>
-            <variable name="FLOW" units="cc/min" longname="SP2 Sample Flow Rate"/>
-        </sample>
-        <message separator="\r\n" position="end" length="0"/>
-    </serialSensor>
-
      <sensor ID="Fast2DC" class="raf.TwoD64_USB">
         <parameter name="SerialNumber" value="F2DC001" type="string"/>
         <parameter name="RESOLUTION" value="25" type="int"/>
@@ -493,15 +483,6 @@
         <sample id="3" rate="1">
             <variable name="A2DC" length="128" units="count" longname="Fast 2DC Raw Accumulation, center-in (per cell)"/>
             <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
-        </sample>
-    </sensor>
-
-    <sensor ID="NONOYO3" class="raf.UDPSocketSensor" devicename="inet::5555">
-        <sample id="1" rate="1" scanfFormat="NONOyO3,%f,%f,%f,%f">
-            <variable name="NO" units="pptv" longname="NO Mixing Ratio"/> 
-            <variable name="NOY" units="pptv" longname="NOY Mixing Ratio"/> 
-            <variable name="O3MR" units="ppbv" longname="O3 Mixing Ratio"/> 
-            <variable name="NOYO3" units="pptv/ppbv" longname="NOY to O3 Ratio"/> 
         </sample>
     </sensor>
 
@@ -523,7 +504,17 @@
         </sample>
     </sensor>
 
-    <sensor ID="NOAASP2"  class="raf.UDPSocketSensor" devicename="inet::32011" suffix="_SP2">  <!-- Tom: assume that numeric is port assignment -->
+    <serialSensor ID="SP2" class="DSMSerialSensor"
+        baud="57600" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="%f %f %f">
+            <variable name="CIP" units="#/cm3" longname="SP2 Concentration Incand Particles"/>
+            <variable name="YAGP" units="V" longname="SP2 YAG Power"/>
+            <variable name="FLOW" units="cc/min" longname="SP2 Sample Flow Rate"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+    <sensor ID="NOAASP2"  class="raf.UDPSocketSensor" devicename="inet::32011">  <!-- Tom: assume that numeric is port assignment -->
         <sample id="1" rate="1" scanfFormat="NOAA_SP2,%d,%f,%f,%f,%f">   <!-- Tom - will need actual format info -->
             <variable name="Time_s"   units="seconds" longname="NOAA SP2 Time"/>  <!-- Tom might do %*d and skip the time - only know floating point -->
             <variable name="BCPC" units="#/cm3" longname="NOAA SP2 Back Carbon Particle Concentration"/>
@@ -532,7 +523,6 @@
             <variable name="YAGP" units="V" longname="SP2 YAG Power"/>
         </sample>
     </sensor>
-
 
 </sensorcatalog>
 
@@ -828,12 +818,11 @@
     <dsm name="dsm312" location="O2 Rack L-5" id="12" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
 
+        <sensor IDREF="NOAAUCATS" id="110" suffix="_GMD"/>
+        <sensor IDREF="NOAASP2" id="120" suffix="_SP2"/>
+        <sensor IDREF="NOAAPANTHER" id="130" suffix="_PAN"/>
+
         <serialSensor IDREF="NOAA_CSD_O3" devicename="/dev/ttyS5" id="140" suffix="_CSD"/>
-<!--  Tom
-        <sensor IDREF="NOAAUCATS" id="120" suffix="_GMD"/>
-        <sensor IDREF="NONOYO3" id="130" suffix="_CL"/>
-        <sensor IDREF="NOAAPANTHER" id="140" suffix="_PAN"/>
--->
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
