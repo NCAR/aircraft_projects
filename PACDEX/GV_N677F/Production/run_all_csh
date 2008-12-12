@@ -1,10 +1,28 @@
 #!/bin/csh
 
+set display=":9"
+
+Xvfb -screen 0 1600x1200x24 -pn -ac $display &
+
+setenv DISPLAY localhost${display}.0 
+
+/bin/cp LRT/setup* .
+/bin/cp LRT/Lags ../.
 foreach FILENAME (`ls setup_rf*`)
 nimbus -b $FILENAME << EOF
 Y
 EOF
 end
+
+/bin/cp HRT/setup* .
+/bin/cp HRT/Lags ../.
+foreach FILENAME (`ls setup_rf*`)
+nimbus -b $FILENAME << EOF
+Y
+EOF
+end
+
+pkill Xvfb
 
 cd /jnet/productiondata/
 rm pac_temp.nc
@@ -15,17 +33,17 @@ if (-e pac_temp.nc) then
 endif
 end
 
-#ncfixdate /jnet/productiondata/PACDEXrf10.nc <<EOL
-#05/17/2007
-#EOL
+ncfixdate /jnet/productiondata/PACDEXrf10.nc <<EOL
+05/17/2007
+EOL
 
 ncfixdate /jnet/productiondata/PACDEXrf10h.nc <<EOP
 05/17/2007
 EOP
 
-#ncfixdate /jnet/productiondata/PACDEXrf12.nc <<EON
-#05/22/2007
-#EON
+ncfixdate /jnet/productiondata/PACDEXrf12.nc <<EON
+05/22/2007
+EON
 
 ncfixdate /jnet/productiondata/PACDEXrf12h.nc <<EOT
 05/22/2007
