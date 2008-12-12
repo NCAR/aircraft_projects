@@ -1,0 +1,24 @@
+#!/bin/csh
+
+set display=":9"
+
+Xvfb -screen 0 1600x1200x24 -pn -ac $display &
+
+setenv DISPLAY localhost${display}.0 
+
+foreach FILENAME (`ls setup_*`)
+  nimbus -b $FILENAME << EOF
+Y
+EOF
+end
+
+pkill Xvfb
+
+cd /jnet/productiondata/
+rm voc_temp.nc
+foreach FILENAME (VOCAL*.nc)
+ncReorder $FILENAME voc_temp.nc
+if (-e voc_temp.nc) then
+  mv -f voc_temp.nc $FILENAME
+endif
+end
