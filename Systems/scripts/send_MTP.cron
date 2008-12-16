@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# Script to transmit latest MTP text file to the ground.
+#
+# This is set up to run out of a cron job every 2 minutes
+# 0-59/2 * * * * /home/local/Systems/scripts/send_MTP.cron
+#
+# change into the current flight's folder
+
+cd /mnt/r2/mtp
+
+# get the penultimate new file
+#file=`ls -rt MTPcurrent_*_*.txt | tail -n 2 | head -n 1`
+file=`ls -rt | tail -n 2 | head -n 1`
+
+# exit if this file is older than 3 minutes
+let dtime=`date +%s`-`stat -c %X $file`
+[ $dtime -gt 180 ] && exit
+
+# compress the file
+bzip2 --best $file
+
+# move and send
+mv $file.bz2 ../mtp-sent/
+/usr/local/ldm/bin/pqinsert -v ../mtp-sent/$file.bz2
