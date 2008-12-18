@@ -14,8 +14,10 @@
 <sensorcatalog>
     <irigSensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
-            <variable name="Clock" units="msec"
-                    longname="milliseconds since 1970 Jan 01 00:00 +0"/>
+            <variable name="IRIG_Tdiff" units="sec"
+                    longname="IRIG-UNIX clock diff"/>
+            <variable name="IRIG_Status" units="bits"
+                    longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC"/>
         </sample>
     </irigSensor>
 
@@ -576,7 +578,7 @@
     </server>
 
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
@@ -639,7 +641,7 @@
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/ttyS5" id="110">
@@ -729,7 +731,7 @@
     </dsm>
    
     <dsm name="dsm313" location="Chem Rack R-1" id="13" rserialPort="30002" derivedData="sock::31000">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="120" suffix="_VXL"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="130" suffix="_NTL"/>
@@ -828,7 +830,7 @@
     </dsm>
 
     <dsm name="dsm312" location="O2 Rack L-5" id="12" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_312"/>
 
         <sensor IDREF="NOAAUCATS" id="110" suffix="_GMD"/>
         <sensor IDREF="NOAASP2" id="120" suffix="_SP2"/>
@@ -898,7 +900,7 @@
     </dsm>
 
     <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::31000">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_IRIG"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
@@ -934,7 +936,7 @@
     </dsm>
 
     <dsm name="dsmRWO" location="RWO" id="47" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="RWO"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
 
         <serialSensor IDREF="UHSAS" devicename="/dev/ttyS1" id="530" suffix="_RWI">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
