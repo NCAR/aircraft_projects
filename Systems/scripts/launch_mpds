@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # Bring to known state, remove any residual ppp or ddclient stuff
-sudo pkill ppp
-sudo pkill ddclient
+#sudo pkill ppp
+#sudo pkill ddclient
 
-ifdown eth2
+#ifdown eth2
 # sudo ifconfig eth3 down
 # sudo ifconfig eth3 up
 
@@ -13,6 +13,6 @@ ifdown eth2
 # New way to start pppoe.  Uses options in
 # /etc/sysconfig/network-scripts/ifcfg-ppp0
 
-ifup ppp0
+ifup mpds
  
 tail -f /var/log/messages | grep -e ppp -e ddclient
