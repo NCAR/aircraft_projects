@@ -1,0 +1,14 @@
+#!/bin/csh
+#
+#  This script will recreate the database on the ground
+#    so that inserts sent from the plane will be successful
+#    Takes an argument that is a zipped file of SQL commands
+#    usually found in the directory /tmp/xmit
+#
+#    Called by Nimbus
+#
+
+setenv PGHOST eol-rt-data.guest.ucar.edu
+
+cd /tmp/xmit
+gunzip -c $argv[1] | psql
