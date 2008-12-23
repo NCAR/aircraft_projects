@@ -14,21 +14,36 @@ cameraLog="/mnt/r2/camera/FwdCam/camera.log"
 # directory name starts at the 38th character.
 imageDirectory="/mnt/r2/camera/FwdCam/`tail -n1 $cameraLog |cut -c 38-`"
 
-last=`ls -t $imageDirectory*jpg |head -n1`
+if [ -d $imageDirectory ]; then
+
+last=`ls -t $imageDirectory |head -n1`
+echo "Camera files being stored to : " $imageDirectory
 echo "Checking camera files..."
 sleep 2
 
 #See if new file arrived. Repeat.
 for ((i=0; i<5; i++));do
-    curr=`ls -t $imageDirectory*jpg |head -n1`
-    if [ $curr != $last ]; then
-        echo "New images arriving OK!"
-        exit
-    fi
-    sleep 1
-    echo "still checking..."
+        curr=`ls -t $imageDirectory |head -n1`
+        if [ $curr != $last ]; then
+	        echo "New images arriving OK!"
+		echo "Displaying most recent image for 10 seconds"
+		display $imageDirectory$last &
+		sleep 10
+	        exit
+	fi
+        sleep 1
+	echo "still checking..."
 done
 
 # Shouldn't get here unless no new images arrived.
 echo "No new camera images found!"
-echo "Check DSMC01 power, or wait for plane to be airborne at least 10 seconds."
+echo "Check DSMC01 power, or wait for plane to be airborne at least 10 seconds." 
+sleep 20
+
+else
+
+   echo "ERROR: Image Directory: "
+   echo "     $imageDirectory"
+   echo "DOES NOT EXIST - is camera on?"
+   sleep 20
+fi
