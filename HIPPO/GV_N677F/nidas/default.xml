@@ -526,13 +526,14 @@
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
 
-    <sensor ID="NOAASP2"  class="raf.UDPSocketSensor" devicename="inet::32011">  <!-- Tom: assume that numeric is port assignment -->
-        <sample id="1" rate="1" scanfFormat="NOAA_SP2,%*dT%*d,%f,%f,%f,%f">   <!-- Tom - will need actual format info -->
+    <sensor ID="NOAASP2"  class="raf.UDPSocketSensor" devicename="inet::32011">
+        <sample id="1" rate="1" scanfFormat="NOAA_SP2,%*dT%*d,%f,%f,%f,%f,%f">
 <!--            <variable name="Time_s"   units="seconds" longname="NOAA SP2 Time"/-->  <!-- Tom might do %*d and skip the time - only know floating point -->
             <variable name="BCPC" units="#/cm3" longname="NOAA SP2 Back Carbon Particle Concentration"/>
             <variable name="SampleP"   units="torr" longname="NOAA SP2 Sample P"/>
             <variable name="SampleFlow" units="cc/min" longname="NOAA SP2 Sample Flow"/>  <!-- Tom - unit given was vccs - used this from serial SP2 defn -->
             <variable name="YAGP" units="V" longname="SP2 YAG Power"/>
+            <variable name="PCAB" units="V" longname="SP2 Cabin Pressure"/>
         </sample>
     </sensor>
 
