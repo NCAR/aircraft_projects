@@ -8,4 +8,4 @@ INCLUDEPATH += .
 # Input
 HEADERS += udp2sql.h
 SOURCES += main.cc udp2sql.cc
-LIBS += -lpq
+LIBS += -lpq -lbz2
