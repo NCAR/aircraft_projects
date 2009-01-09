@@ -9,3 +9,12 @@ INCLUDEPATH += .
 HEADERS += udp2sql.h
 SOURCES += main.cc udp2sql.cc
 LIBS += -lpq -lbz2
+
+###################
+# Set install path.
+# Use "sudo make install" to copy the executable to
+# a system folder.
+
+TARGET = udp2sql
+target.path=/usr/local/bin/
+INSTALLS = target
