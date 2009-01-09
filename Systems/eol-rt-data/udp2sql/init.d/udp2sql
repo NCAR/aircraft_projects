@@ -1,43 +1,55 @@
 #!/bin/sh
 #
-# Start udp2sql to read UDP packets from the aircraft and write
-# the data to the database
+#	/etc/rc.d/init.d/udp2sql
 #
+#	Startup script for udp2sql
+#
+# chkconfig: 2345 95 05
+# description: Read UDP packets from the aircraft and write.
+# pidfile: /var/run/udp2sql.pid
+#
+# Note:
+#   This is killed before, and started after the 'network' script.
+
+# Source function library.
+. /etc/init.d/functions
+
+prog=udp2sql
 
 # User to run udp2sql as
-user="ads"
+user="root"
 
 # This is where the log will go
-logfile="/tmp/udp2sql.log"
-
-# Move the previous logfile, if any
-if [[ -e $logfile ]]; then
-        mv $logfile $logfile.old
-fi
-
-# Start the new udp2sql in background, logging to $logfile.  Assume that udp2sql
-# lives in the same place as this script.
-homedir=/home/$user/udp2sql
+logfile="/var/log/$prog.log"
 
 # Start command.
-cmd="$homedir/udp2sql < /dev/null >$logfile 2>&1 &"
+cmd="/usr/local/bin/$prog < /dev/null >>$logfile 2>&1 &"
+
+start() {
+	# Move the previous logfile, if any
+	if [[ -e $logfile ]]; then
+		mv $logfile $logfile.old
+	fi
+	action $"Starting $prog:" su $user -c "$cmd"
+}
+
+stop() {
+        echo -n $"Shutting down $prog: "
+        killproc $prog
+        echo
+}
 
 case "$1" in
-  start)
-    $0 stop
-    su $user -c "$cmd"
-    ;;
-  stop)
-    killall udp2sql
-    ;;
-  restart)
-    $0 stop
-    su $user -c "$cmd"
-    ;;
-  *)
-    echo $"Usage: rt_db {start|stop|restart}"
-    exit 1
+    start|restart)
+	stop
+	start
+	;;
+    stop)
+	stop
+	;;
+    *)
+	echo $"Usage: $prog {start|stop|restart}"
+	exit 1
+	;;
 esac
-
-exit 0
-
+exit $?
