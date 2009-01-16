@@ -1,7 +1,7 @@
 Summary: Additions to syslog config for logging from NIDAS processes.
 Name: raf-ads3-syslog
 Version: 1.0
-Release: 3
+Release: 4
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -31,19 +31,19 @@ cp -r etc/logrotate.d $RPM_BUILD_ROOT/etc
 # upgraded, or when this package is installed or upgraded and the target
 # is already installed.
 
-# if SYSLOGD_OPTIONS doesn't exist add it, with a -r option
-# if it does and it doesn't have -r, add -r option
+# if SYSLOGD_OPTIONS doesn't exist add it, with a -r  -s " " options
+# if it does and it doesn't have -r -s, add -r and -s option
 
 cf=/etc/sysconfig/syslog
-[ -f $cf ] || cf=/etc/sysconfig/rsyslog
-if ! egrep -q "^[[:space:]]*SYSLOGD_OPTIONS=" $cf; then
-    sed -i -c '${
+if [ -f $cf ]; then
+    if ! egrep -q "^[[:space:]]*SYSLOGD_OPTIONS=" $cf; then
+        sed -i -c '${
 a###### start %{name}-%{version} ######
 aSYSLOGD_OPTIONS="-m 0 -r -s raf.ucar.edu:eol.ucar.edu:atd.ucar.edu"
 a###### end %{name}-%{version} ######
 }' $cf
-else
-    sed -i -c '/^[[:space:]]*SYSLOGD_OPTIONS=/{
+    else
+        sed -i -c '/^[[:space:]]*SYSLOGD_OPTIONS=/{
 # If -r and -s option, done
 /-r -s/b
 i###### start %{name}-%{version} ######
@@ -54,6 +54,49 @@ x
 s/SYSLOGD_OPTIONS="[^"]*/& -r -s raf.ucar.edu:eol.ucar.edu:atd.ucar.edu/
 a###### end %{name}-%{version} ######
 }' $cf
+    fi
+fi
+
+# for /etc/sysconfig/rsyslog, add -s "" to -c 3.
+cf=/etc/sysconfig/rsyslog
+if [ -f $cf ]; then
+    if ! egrep -q "^[[:space:]]*SYSLOGD_OPTIONS=" $cf; then
+        sed -i -c '${
+a###### start %{name}-%{version} ######
+aSYSLOGD_OPTIONS="-c 3 -s raf.ucar.edu:eol.ucar.edu:atd.ucar.edu"
+a###### end %{name}-%{version} ######
+}' $cf
+    else
+        sed -i -c '/^[[:space:]]*SYSLOGD_OPTIONS=/{
+# If -c 3 -s option, done
+/-c 3 -s/b
+i###### start %{name}-%{version} ######
+h
+# comment out existing statement
+s/.*/# &/p
+x
+/-c 3/b c3
+s/SYSLOGD_OPTIONS="[^"]*/& -c 3 -s raf.ucar.edu:eol.ucar.edu:atd.ucar.edu/
+b
+: c3
+s/SYSLOGD_OPTIONS="[^"]*/& -s isff.ucar.edu:eol.ucar.edu:atd.ucar.edu/
+a###### end %{name}-%{version} ######
+}' $cf
+    fi
+fi
+
+cf=/etc/rsyslog.conf
+if [ -f $cf ]; then
+    # enable these modules
+    modules=(imuxsock.so imklog.so imudp.so)
+    for mod in ${modules[*]}; do
+        sed -i -r '/^[[:space:]]*#[[:space:]]*\$ModLoad[[:space:]]+'$mod'/s/^[[:space:]]*#//' $cf
+    done
+    # uncomment these statements
+    stmts=(UDPServerRun)
+    for stmt in ${stmts[*]}; do
+        sed -i -r '/^[[:space:]]*#[[:space:]]*\$'$stmt'/s/^[[:space:]]*#//' $cf
+    done
 fi
 
 cf=/etc/syslog.conf
@@ -73,7 +116,14 @@ EOD
 fi
 
 chmod +r /var/log/messages
-/etc/init.d/syslog restart || /etc/init.d/rsyslog restart
+touch /var/log/ads3_debug.log
+touch /var/log/ads3.log
+touch /var/log/ads3_kernel.log
+if [ -x /etc/init.d/syslog ]; then
+        /etc/init.d/syslog restart
+else
+        /etc/init.d/rsyslog restart
+fi
 
 %triggerin -- logrotate
 
@@ -89,6 +139,8 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %attr(0755,root,root) /etc/logrotate.d/ads3
 
 %changelog
+* Fri Jan 16 2009 Gordon Maclean <maclean@ucar.edu>
+- better support for rsyslog
 * Fri Oct 24 2008 Gordon Maclean <maclean@ucar.edu>  1.0-3
 - fixed mistakes in log file names
 * Sat Oct 12 2008 Gordon Maclean <maclean@ucar.edu>  1.0-2
