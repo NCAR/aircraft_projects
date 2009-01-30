@@ -6,9 +6,22 @@ Xvfb -screen 0 1600x1200x24 -pn -ac $display &
 
 setenv DISPLAY localhost${display}.0 
 
-foreach FILENAME (`ls setup_*`)
-  nimbus -b $FILENAME << EOF
-Y
+/bin/cp -f ${PROJ_DIR}/VOCALS/C130_N130AR/SegmentA/* ${PROJ_DIR}/VOCALS/C130_N130AR
+
+foreach FILENAME (`ls setup_rf0[1-4]`)
+  nimbus -b $FILENAME
+EOF
+end
+
+/bin/cp -f ${PROJ_DIR}/VOCALS/C130_N130AR/SegmentB/* ${PROJ_DIR}/VOCALS/C130_N130AR
+foreach FILENAME (`ls setup_rf0[5-9]`)
+  nimbus -b $FILENAME
+EOF
+end
+
+/bin/cp -f ${PROJ_DIR}/VOCALS/C130_N130AR/SegmentC/* ${PROJ_DIR}/VOCALS/C130_N130AR
+foreach FILENAME (`ls setup_rf0[5-9]`)
+  nimbus -b $FILENAME
 EOF
 end
 
