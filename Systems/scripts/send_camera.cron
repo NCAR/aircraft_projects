@@ -3,20 +3,32 @@
 # Script to transmit latest camera image to the ground.
 #
 # This is set up to run out of a cron job every 2 minutes
-# 0-59/2 * * * * /home/local/raf/nimbus/scripts/send.cron
+# */2 * * * * /home/local/Systems/scripts/send_camera.cron
 #
+#set -x
+
 key=GV_camera_
 
+# change into the camera folder
+flight="/mnt/r2/camera/FwdCam"
+[[ -d $flight ]] || exit
+cd $flight
+
 # change into the current flight's folder
-cd /mnt/r2/camera
-cd `ls --file-type -rt | grep '/$' | tail -n 1`
+flight=`ls --file-type -rt | grep '/$' | tail -n 1`
+[[ -d $flight ]] || exit
+cd $flight
+
+#exit if folder is empty-ish
+nfiles=`ls -l | wc -l`
+[[ $nfiles -lt 3 ]] && exit
 
 # create a folder to hold the sent images
-[ -d .sent ] || mkdir .sent
+[[ -d ../../sent ]] || mkdir ../../sent
 
 # ----- start DEBUG ---------------------------------------------
 # cd /mnt/r2/camera/506tf02
-# [ -d .sent ] || mkdir .sent
+# [[ -d ../../sent ]] || mkdir ../../sent
 # files=`ls -rt | tail -n 10`
 # for file in ${files[*]}; do
 #   title=`echo $file | sed 's/\.jpg//'`
@@ -24,10 +36,10 @@ cd `ls --file-type -rt | grep '/$' | tail -n 1`
 #   convert $file -crop 755x715+150+0 -modulate 85,,97 \
 #           -sharpen 0.0x1.0 -scale 50% \
 #           -gravity southeast -fill white -annotate 0 $title \
-#           .sent/$key$file
+#           ../../sent/$key$file
 # 
-#   ls -l .sent/$key$file
-#   pqinsert -v .sent/$key$file
+#   ls -l ../../sent/$key$file
+#   pqinsert -v ../../sent/$key$file
 #   sleep 5
 # done
 # exit
@@ -39,14 +51,14 @@ title=`echo $file | sed 's/\.jpg//'`
 
 # exit if this file is older than 3 minutes
 let dtime=`date +%s`-`stat -c %Z $file`
-#[ $dtime -gt 180 ] && echo "not sending out old image: "$PWD"/"$file
-[ $dtime -gt 180 ] && exit
+#[ $dtime -gt 180 ]] && echo "not sending out old image: "$PWD"/"$file
+[[ $dtime -gt 180 ]] && exit
 
 # alter the image
-convert $file -crop 755x715+150+0 -modulate 85,,97 \
-        -sharpen 0.0x1.0 -scale 50% \
-        -gravity southeast -fill white -annotate 0 $title \
-        .sent/$key$file
+convert $file -sharpen 0.0x1.0 -scale 25% \
+        -gravity northwest -fill 'grey80' -undercolor 'grey20' \
+        -font "Helvetica-Bold" -pointsize 18 -annotate 0 $title \
+        ../../sent/$key$file
 
 # send
-/usr/local/ldm/bin/pqinsert -v .sent/$key$file
+#/usr/local/ldm/bin/pqinsert -v ../../sent/$key$file
