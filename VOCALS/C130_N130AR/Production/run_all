@@ -13,14 +13,20 @@ foreach FILENAME (`ls setup_rf0[1-4]`)
 EOF
 end
 
-/bin/cp -f ${PROJ_DIR}/VOCALS/C130_N130AR/SegmentB/* ${PROJ_DIR}/VOCALS/C130_N130AR
-foreach FILENAME (`ls setup_rf0[5-9]`)
+/bin/cp -f ${PROJ_DIR}/VOCALS/C130_N130AR/SegmentC/* ${PROJ_DIR}/VOCALS/C130_N130AR
+foreach FILENAME (`ls setup_rf05`)
   nimbus -b $FILENAME
 EOF
 end
 
-/bin/cp -f ${PROJ_DIR}/VOCALS/C130_N130AR/SegmentC/* ${PROJ_DIR}/VOCALS/C130_N130AR
-foreach FILENAME (`ls setup_rf0[5-9]`)
+/bin/cp -f ${PROJ_DIR}/VOCALS/C130_N130AR/SegmentB/* ${PROJ_DIR}/VOCALS/C130_N130AR
+foreach FILENAME (`ls setup_rf0[6-7] setup_rf09 setup_rf1*`)
+  nimbus -b $FILENAME
+EOF
+end
+
+/bin/cp -f ${PROJ_DIR}/VOCALS/C130_N130AR/SegmentD/* ${PROJ_DIR}/VOCALS/C130_N130AR
+foreach FILENAME (`ls setup_rf08`)
   nimbus -b $FILENAME
 EOF
 end
