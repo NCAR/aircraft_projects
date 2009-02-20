@@ -795,30 +795,23 @@
 
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D009.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="500">
                 <variable name="QCR" units="V" longname="Raw Dynamic Pressure, Radome">
-<!-- A2D009_CH0_2F         | 2008-07-24 14:55:41 | {-0.280251,1.0548} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.0548"  type="float"/> <parameter name="corIntercept" value="-0.280251"  type="float"/>
                     <poly coefs="-1.12563 17.3035 -0.00514298" units="hPa"/>
                 </variable>
                 <variable name="QCF" units="V" longname="Raw Dynamic Pressure, Fuselage">
-<!-- A2D009_CH1_2F         | 2008-07-24 14:58:36 | {-0.405107,1.06881} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.06881" type="float"/> <parameter name="corIntercept" value="-0.405107"  type="float"/>
                     <poly coefs="0.890809 17.2321 -0.00393028" units="hPa"/>
                 </variable>
                 <variable name="ADIFR" units="V" longname="Vertical Differential Pressure, Radome">
-<!-- A2D009_CH2_1T         | 2008-07-24 14:32:20 | {-0.331067,1.06979} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.06979" type="float"/> <parameter name="corIntercept" value="-0.331067"  type="float"/>
                     <poly coefs="-0.0156321 6.93387 0.00545018" units="hPa"/>
                 </variable>
                 <variable name="BDIFR" units="V" longname="Horizontal Differential Pressure, Radome">
-<!-- A2D009_CH3_1T         | 2008-07-24 14:35:28 | {-0.427599,1.08184} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.08184" type="float"/> <parameter name="corIntercept" value="-0.427599"  type="float"/>
                     <poly coefs="-0.0323812 5.13826 8.09753e-05" units="hPa"/>
                 </variable>
             </sample>
@@ -826,23 +819,17 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="TTRL" units="V" longname="Total Temperature, Radome Left">
-<!-- A2D009_CH4_4F         | 2008-07-24 15:57:13 | {-0.181431,1.06548} -->
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.06548" type="float"/> <parameter name="corIntercept" value="-0.181431"  type="float"/>
                     <poly coefs="-62.6034 24.727 -0.125968" units="deg_C"/>
                 </variable>
                 <variable name="TTRR" units="V" longname="Total Temperature, Radome Right">
-<!-- A2D009_CH5_4F         | 2008-07-24 15:59:41 | {-0.215263,1.07399} -->
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07399" type="float"/> <parameter name="corIntercept" value="-0.215263"  type="float"/>
                     <poly coefs="-64.553 25.1259 -0.190518" units="deg_C"/>
                 </variable>
             </sample>
             <sample id="3" rate="500">
                 <variable name="QCFR" units="V" longname="Raw Dynamic Pressure, Fuselage Right">
-<!-- A2D009_CH6_2F         | 2008-07-24 15:12:53 | {-0.252616,1.0518} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.0518"  type="float"/> <parameter name="corIntercept" value="-0.252616"  type="float"/>
                     <poly coefs="-0.327737 13.798 -0.00460835" units="hPa"/>
                 </variable>
             </sample>
@@ -858,9 +845,7 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
                 <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
-<!-- A2D007_CH0_1T         | 2008-07-22 16:27:56 | {-0.398951,1.10966} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.10966" type="float"/> <parameter name="corIntercept" value="-0.398951"  type="float"/>
                     <poly coefs="-1.19357 108.496 -0.0272088" units="hPa"/>
                 </variable>
             </sample>
@@ -882,55 +867,40 @@
         <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS6" id="120" suffix="_CM3"/>
 -->
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1601.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="TRSTB" units="V" longname="TRSTB Sensor Head Temperature">
-<!-- A2D1601_CH0_1T        | 2008-06-05 17:16:16 | {-0.416729,1.07713} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.07713" type="float"/> <parameter name="corIntercept" value="-0.416729"  type="float"/>
                 </variable> 
                 <variable name="SWB" units="V" longname="Shortwave Irradiance, Bottom">
-<!-- A2D1601_CH1_4F        | 2008-06-05 20:54:02 | {-0.165501,1.06362} -->
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.06362" type="float"/> <parameter name="corIntercept" value="-0.165501"  type="float"/>
                     <poly coefs="-15.2258 1077.62 -0.06222" units="W/m2"/>
                 </variable>
                 <variable name="UVB" units="V" longname="Ultraviolet Irradiance, Bottom">
-<!-- A2D1601_CH2_4F        | 2008-06-05 20:56:07 | {-0.207476,1.07326} -->
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07326" type="float"/> <parameter name="corIntercept" value="-0.207476"  type="float"/>
                     <poly coefs="-0.0554596 16.2247 4.79291e-05" units="W/m2"/>
                 </variable>
                 <variable name="IRB" units="V" longname="Raw Infrared Irradiance, Bottom">
-<!-- A2D1601_CH3_4F        | 2008-06-05 20:58:09 | {-0.242021,1.08494} -->
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.08494" type="float"/> <parameter name="corIntercept" value="-0.242021"  type="float"/>
                     <poly coefs="-1074.5 2540.16 120.528" units="W/m2"/>
                 </variable>
                 <variable name="STB" units="V" longname="Pyrgeometer Sink Temperature, Bottom">
-<!-- A2D1601_CH4_2F        | 2008-06-05 20:13:04 | {-0.182091,1.05443} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.05443" type="float"/> <parameter name="corIntercept" value="-0.182091"  type="float"/>
                     <poly coefs="47.8716 -15.3547 0.673076" units="deg_C"/>
                 </variable>
                 <variable name="DTB" units="V" longname="Pyrgeometer Dome Temperature, Bottom">
-<!-- A2D1601_CH5_2F        | 2008-06-05 20:18:04 | {-0.392771,1.07293} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07293" type="float"/> <parameter name="corIntercept" value="-0.392771"  type="float"/>
                     <poly coefs="47.7745 -15.3823 0.67728" units="deg_C"/>
                 </variable>
                 <variable name="RSTB" units="V" longname="Radiometric Surface Temperature">
-<!-- A2D1601_CH6_1T        | 2008-06-05 19:34:10 | {-0.287032,1.05795} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.05795" type="float"/> <parameter name="corIntercept" value="-0.287032"  type="float"/>
                     <poly coefs="-64.91 11.8232 0.00233904" units="deg_C"/>
                 </variable>
                 <variable name="RSTB1" units="V" longname="Radiometric Surface Temperature">
-<!-- A2D1601_CH7_1T        | 2008-06-05 19:37:15 | {-0.266198,1.06202} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.06202" type="float"/> <parameter name="corIntercept" value="-0.266198"  type="float"/>
                     <poly coefs="-67.0292 12.2477 -0.0199191" units="deg_C"/>
                 </variable>
             </sample>
@@ -941,31 +911,24 @@
         </sensor>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="220">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1602.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="XUVP" units="V" longname="UV Hygrometer Pressure">
-<!-- A2D1602_CH0_1T        | 2008-06-06 16:44:23 | {-0.334972,1.06295} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.06295" type="float"/> <parameter name="corIntercept" value="-0.334972"  type="float"/>
                     <poly coefs="143.34 188.86 0.0034" units="hPa"/>
                 </variable>
                 <variable name="XUVT" units="V" longname="UV Hygrometer Temperature">
-<!-- A2D1602_CH1_1T        | 2008-06-06 16:49:30 | {-0.143207,1.04891} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.04891" type="float"/> <parameter name="corIntercept" value="-0.143207"  type="float"/>
                     <poly coefs="70.84 -18.295" units="deg_C"/>
                 </variable>
                 <variable name="XUVI" units="V" longname="UV Hygrometer Intensity">
-<!-- A2D1602_CH2_1T        | 2008-06-06 16:51:36 | {0.00790533,1.03136} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.03136" type="float"/> <parameter name="corIntercept" value="0.00790533" type="float"/>
                 </variable>
                 <variable name="XSDIIMP" units="V" longname="">
-<!-- A2D1602_CH3_4F        | 2008-06-09 21:39:26 | {-0.122285,1.05631} -->
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.05631" type="float"/> <parameter name="corIntercept" value="-0.122285"  type="float"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -988,22 +951,17 @@
         <sensor IDREF="ACDFO3" id="130" suffix="_CL"/>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1600.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="500">
                 <variable name="XGLWC" units="gram/m3" longname="Gerber PV-100 Probe Liquid Water Content">
-<!-- A2D1600_CH0_1T        | 2008-07-30 22:17:06 | {-0.424102,1.07077} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.07077" type="float"/> <parameter name="corIntercept" value="-0.424102"  type="float"/>
                 </variable>
                 <variable name="XGREFF" units="V" longname="Gerber PV-100 Effective Droplet Radius">
-<!-- A2D1600_CH1_1T        | 2008-07-30 22:15:14 | {-0.241925,1.05606} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.05606" type="float"/> <parameter name="corIntercept" value="-0.241925"  type="float"/>
                 </variable>
                 <variable name="XGSFC" units="V" longname="Gerber PV-100 Particle Surface Area (Raw)">
-<!-- A2D1600_CH2_1T        | 2008-07-30 22:13:20 | {-0.212201,1.05482} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.05482" type="float"/> <parameter name="corIntercept" value="-0.212201"  type="float"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -1036,14 +994,13 @@
 
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D013.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
                 <variable name="FCN" units="V" longname="Raw CN Counter Sample Flow Rate">
-<!-- A2D013_CH0_2T         | 2008-07-23 20:26:06 | {-0.0797479,1.05522} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.05522" type="float"/> <parameter name="corIntercept" value="-0.0797479" type="float"/>
                     <linear slope="0.4128" intercept="0.0" units="vlpm"/>
                 </variable>
             </sample>
@@ -1051,9 +1008,7 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="XICN" units="V" longname="CN Isokinetic Side Flow Rate">
-<!-- A2D013_CH1_2T         | 2008-07-23 20:29:35 | {-0.201411,1.07968} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.07968" type="float"/> <parameter name="corIntercept" value="-0.201411"  type="float"/>
                     <linear slope="1.118" intercept="0.03" units="vlpm"/>
                 </variable>
             </sample>
@@ -1061,39 +1016,27 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
                 <variable name="CNTEMP" units="V" longname="CN Counter Inlet Temperature">
-<!-- A2D013_CH2_1T         | 2008-07-23 19:36:52 | {-0.300111,1.06972} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.06972" type="float"/> <parameter name="corIntercept" value="-0.300111"  type="float"/>
                     <poly coefs="13.85 4.668 -0.0056" units="deg_C"/>
                 </variable>
                 <variable name="PCN" units="V" longname="CN Counter Inlet Pressure">
-<!-- A2D013_CH3_2F         | 2008-07-23 20:09:44 | {-0.32302,1.0676} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.0676"  type="float"/> <parameter name="corIntercept" value="-0.32302"   type="float"/>
                     <poly coefs="9.25361 106.036 -0.0205082" units="hPa"/>
                 </variable>
                 <variable name="FO3_CL2" units="V" longname="Fast Response Ozone Mixing Ratio">
-<!-- A2D013_CH4_2F         | 2008-07-23 20:12:02 | {-0.422656,1.07296} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07296" type="float"/> <parameter name="corIntercept" value="-0.422656"  type="float"/>
                     <linear slope="20.0" intercept="0.0" units="ppbv"/>
                 </variable>
                 <variable name="COMR_AL2" units="V" longname="Carbon Monoxide Mixing Ratio">
-<!-- A2D013_CH5_1T         | 2008-07-23 19:44:48 | {-0.176171,1.05677} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.05677" type="float"/> <parameter name="corIntercept" value="-0.176171"  type="float"/>
                     <linear slope="400" intercept="-3.2" units="ppbv"/>
                 </variable>
                 <variable name="TEO3" units="V" longname="Teco Ozone Concentration">
-<!-- A2D013_CH6_2F         | 2008-07-23 20:17:23 | {-0.355582,1.06472} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.06472" type="float"/> <parameter name="corIntercept" value="-0.355582"  type="float"/>
                     <linear slope="20.0" intercept="0.0" units="ppbv"/>
                 </variable>
                 <variable name="TEO3P" units="V" longname="Teco Ozone Pressure">
-<!-- A2D013_CH7_2F         | 2008-07-23 20:19:51 | {-0.246618,1.05377} -->
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.05377" type="float"/> <parameter name="corIntercept" value="-0.246618"  type="float"/>
                     <linear slope="66.8624" intercept="414.6" units="hPa"/>
                 </variable>
             </sample>
@@ -1338,24 +1281,19 @@
 -->
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D008.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="50">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="10" type="int"/>
                 <variable name="DUMMY" units="V" longname="Unused for OphirIII">
-<!-- A2D008_CH0_1T         | 2008-08-01 19:44:20 | {-0.0372662,1.03935} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.03935" type="float"/> <parameter name="corIntercept" value="-0.0372662" type="float"/>
                 </variable>
                 <variable name="TDLHI" units="V" longname="TDL High">
-<!-- A2D008_CH1_1T         | 2008-08-01 19:46:54 | {-0.232913,1.05294} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.05294" type="float"/> <parameter name="corIntercept" value="-0.232913"  type="float"/>
                 </variable>
                 <variable name="TDLLO" units="V" longname="TDL Low">
-<!-- A2D008_CH2_1T         | 2008-08-01 19:49:05 | {-0.256966,1.06005} -->
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.06005" type="float"/> <parameter name="corIntercept" value="-0.256966"  type="float"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
