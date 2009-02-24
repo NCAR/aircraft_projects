@@ -681,42 +681,33 @@
         </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D005.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
-<!-- TTHL2 - aka A2D005_CH0_4F | 2008-02-04 21:54:00 | {-0.301189,1.13678} -->
 <!--
                 <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.13678" type="float"/> <parameter name="corIntercept" value="-0.301189"  type="float"/>
                     <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
                 </variable>
 -->
-<!-- TTHL1 - aka A2D005_CH1_4F | 2008-02-04 21:54:00 | {-0.301189,1.13678} -->
                 <variable name="TTFR" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.13678" type="float"/> <parameter name="corIntercept" value="-0.301189"  type="float"/>
                     <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
                 </variable>
-<!-- TTHR2 - aka A2D005_CH2_4F | 2008-02-04 21:56:08 | {-0.25473,1.1299} -->
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.1299"  type="float"/> <parameter name="corIntercept" value="-0.25473"   type="float"/>
                     <poly coefs="-89.336 25.588 0.01" units="deg_C"/>
                 </variable>
-<!-- TTHR1 - aka A2D005_CH3_4F | 2008-02-04 21:58:21 | {-0.1603,1.11304} -->
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.11304" type="float"/> <parameter name="corIntercept" value="-0.1603"    type="float"/>
                     <poly coefs="-88.838 25.305 0.0098" units="deg_C"/>
                 </variable>
-<!-- NOSETMP - aka A2D005_CH4_4F | 2008-02-04 22:03:37 | {-0.654478,1.14729} -->
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.14729" type="float"/> <parameter name="corIntercept" value="-0.654478"  type="float"/>
                     <linear slope="10.0" intercept="-50.0" units="deg_C"/>
                 </variable>
             </sample>
@@ -746,38 +737,29 @@
 -->
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1606.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
-<!--A2D1606_CH0_2F        | 2008-06-12 14:41:01 | {-0.275358,1.06384} -->
                 <variable name="MEDP1" units="torr" longname="Medusa Presure 1">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.06384" type="float"/> <parameter name="corIntercept" value="-0.275358"   type="float"/>
                     <linear slope="100.0" intercept="0.0" units="torr"/>
                 </variable>
-<!-- A2D1606_CH1_2F        | 2008-06-12 14:43:05 | {-0.371488,1.07743} -->
                 <variable name="MEDP2" units="torr" longname="Medusa Presure 2">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07743" type="float"/> <parameter name="corIntercept" value="-0.371488"  type="float"/>
                     <linear slope="100.0" intercept="0.0" units="torr"/>
                 </variable>
-<!-- A2D1606_CH2_2F        | 2008-06-12 14:46:05 | {-0.242581,1.06555} -->
                 <variable name="MEDPBYP" units="torr" longname="Medusa Pressure Bypass">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.06555" type="float"/> <parameter name="corIntercept" value="-0.242581"  type="float"/>
                     <linear slope="86.6" intercept="91.1" units="torr"/>
                 </variable>
-<!-- A2D1606_CH3_2F        | 2008-06-12 14:48:38 | {-0.267391,1.0706} -->
                 <variable name="MEDSTAT1" units="V" longname="Medusa Status">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.0706" type="float"/> <parameter name="corIntercept" value="-0.267391"  type="float"/>
                     <linear slope="6.787" intercept="0.0" units="flag"/>
                 </variable>
-<!-- A2D1606_CH4_2F        | 2008-06-12 14:50:48 | {-0.386284,1.07635} -->
                 <variable name="MEDFLOW" units="V" longname="Medusa Flow">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.07635" type="float"/> <parameter name="corIntercept" value="-0.386284"  type="float"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -787,32 +769,25 @@
          </sensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="320">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1605.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
-<!-- A2D1605_CH0_2F        | 2008-07-21 17:31:18 | {-0.243167,1.03311} -->
                 <variable name="MEDCO2" units="V" longname="Medusa CO2">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.03311" type="float"/> <parameter name="corIntercept" value="-0.243167"  type="float"/>
                     <linear slope="50.0" intercept="0.0" units="ppmv"/>
                 </variable>
-<!-- A2D1605_CH1_2F        | 2008-07-21 17:34:32 | {-0.169632,1.02771} -->
                 <variable name="MEDH2O" units="V" longname="Medusa H2O">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.02771" type="float"/> <parameter name="corIntercept" value="-0.169632"  type="float"/>
                     <linear slope="8000.0" intercept="0.0" units="ppmv"/>
                 </variable>
-<!-- A2D1605_CH2_2F        | 2008-07-21 17:37:45 | {-0.0935705,1.01929} -->
                 <variable name="MEDSTAT2" units="V" longname="Medusa Status">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.01929" type="float"/> <parameter name="corIntercept" value="-0.0935705"  type="float"/>
                     <linear slope="6.787" intercept="0.0" units="flag"/>
                 </variable>
-<!-- A2D1605_CH3_2F        | 2008-07-21 17:40:52 | {-0.2767,1.03333} -->
                 <variable name="MEDSTAT3" units="V" longname="Medusa Status">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.03333" type="float"/> <parameter name="corIntercept" value="-0.2767"  type="float"/>
                     <linear slope="0.1" intercept="1.0" units="flag"/>
                 </variable>
             </sample>
@@ -840,6 +815,7 @@
         <serialSensor IDREF="NOAA_CSD_O3" devicename="/dev/ttyS6" id="140" suffix="_CSD"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1609.dat"/>
             <parameter name="rate" value="500" type="int"/>
 <!-- 
      Tom Changed sample rate from 25 to 10 and numpoints value to 50
@@ -848,28 +824,20 @@
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
-<!-- A2D1609_CH0_4F        | 2008-06-12 19:50:50 | {-0.236264,1.10469} -->
                 <variable name="TCAB" units="V" longname="Cabin Temperature at AEROSOL Rack Location">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.10469" type="float"/> <parameter name="corIntercept" value="-0.236264"  type="float"/>
 <!--                    <linear slope="100.0" intercept="0.0" units="deg_C"/>  -->
                 </variable>
-<!-- A2D1609_CH1_4F        | 2008-06-12 19:53:01 | {-0.235658,1.10722} -->
                 <variable name="AO2O2" units="V" longname="AO2 O2">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.10722" type="float"/>   <parameter name="corIntercept" value="-0.235658"  type="float"/>
                     <linear slope="400.0" intercept="-1000.0" units="per meg"/>
                 </variable>
-<!-- A2D1609_CH2_4F        | 2008-06-12 19:55:26 | {-0.268823,1.11443} -->
                 <variable name="AO2CO2" units="V" longname="AO2 CO2">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.11443" type="float"/> <parameter name="corIntercept" value="-0.268823"  type="float"/>
                     <linear slope="50.0" intercept="300.0" units="ppmv"/>
                 </variable>
-<!-- A2D1609_CH3_4F        | 2008-06-12 19:57:46 | {-0.201599,1.09876} -->
                 <variable name="AO2STAT" units="V" longname="AO2 STAT">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.09876" type="float"/> <parameter name="corIntercept" value="-0.201599"  type="float"/>
                     <linear slope="409.6" intercept="0.0" units="flag"/>
                 </variable>
 <!-- COMR_AL              | 2008-03-27 21:39:04 | {-0.36179,1.0702} -->
@@ -910,14 +878,13 @@
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LWO"/>
 -->
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D006.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
-<!-- A2D006_CH0_2F         | 2008-07-29 13:42:56 | {-0.277191,1.04492} -->
                 <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.04492" type="float"/> <parameter name="corIntercept" value="-0.277191"  type="float"/>
                     <linear slope="+10.0" intercept="0.0" units="W"/>
                 </variable>
             </sample>
@@ -944,14 +911,13 @@
         </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D019.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
-<!-- A2D019_CH0_1T         | 2008-11-20 20:26:12 | {-0.0224124,1.07182} -->
                 <variable name="RICE" units="V" longname="Raw Icing-Rate Indicator">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope" value="1.07182" type="float"/> <parameter name="corIntercept" value="-0.0224124" type="float"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
