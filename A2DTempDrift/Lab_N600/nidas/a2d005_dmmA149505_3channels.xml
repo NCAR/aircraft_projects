@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="A2DTempDrift"
+    system="Lab_N600"
+    config="a2d005_dmmA149505"
+    version="$LastChangedRevision: 2514 $"
+    >
+
+<sensorcatalog>
+    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+        <sample id="1">
+            <variable name="Clock" units="msec" longname="milliseconds since 1970 Jan 01 00:00 +0"/>
+        </sample>
+    </irigSensor>
+</sensorcatalog>
+
+<site name="Lab_N600" class="raf.Aircraft">
+   <parameter name="tailNumber" value="N600" type="string"/>
+
+    <server>
+        <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="RawSampleService">
+            <!-- input from every DSM on this aircraft that has
+                 a socket output of type RawSampleOutputStream -->
+            <input class="RawSampleInputStream">
+                <socket type="mcaccept"/>
+            </input>
+            <processor class="SampleArchiver">
+                <output class="SampleOutputStream">
+                    <fileset dir="/media/disk/${PROJECT}"
+                        file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
+                        length="0"/>
+                </output>
+<!--
+                <output class="SampleOutputStream">
+                    <fileset dir="/tmp/${PROJECT}"
+                        file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
+                        length="0"/>
+                </output>
+-->
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30000"/>
+                </output>
+            </processor>
+            <processor class="raf.SyncRecordGenerator">
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30001"/>
+                </output>
+            </processor>
+        </service>
+    </server>
+
+    <dsm name="dsmJDW" location="radome" id="1" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_WRD"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="100">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="5" type="int"/>
+
+                <variable name="A2D005_CH1_4F" units="V" longname="Total Temperature, Deiced Left">
+                    <parameter name="channel" value="1"     type="int"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
+                </variable>
+                <variable name="A2D005_CH2_4F" units="V" longname="Total Temperature, Deiced Right">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
+                </variable>
+                <variable name="A2D005_CH3_4F" units="V" longname="Total Temperature, Deiced Right">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_RAD" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300" latency="0.25">
+            <parameter name="rate" type="int" value="500"/>
+            <sample id="1" rate="10">
+                <parameter name="filter"    value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50"     type="int"/>
+                <variable name="V1_DMMAT" units="V">
+                    <parameter name="channel" value="1"     type="int"/>
+                    <parameter name="gain"    value="4.0"   type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                </variable>
+            </sample>
+        </sensor> 
+
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+</site>
+</project>

@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="A2DTempDrift"
+    system="Lab_N600"
+    config="default"
+    version="$LastChangedRevision: 2514 $"
+    >
+
+<sensorcatalog>
+    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+        <sample id="1">
+            <variable name="Clock" units="msec" longname="milliseconds since 1970 Jan 01 00:00 +0"/>
+        </sample>
+    </irigSensor>
+</sensorcatalog>
+
+<site name="Lab_N600" class="raf.Aircraft">
+   <parameter name="tailNumber" value="N600" type="string"/>
+
+    <server>
+        <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="RawSampleService">
+            <!-- input from every DSM on this aircraft that has
+                 a socket output of type RawSampleOutputStream -->
+            <input class="RawSampleInputStream">
+                <socket type="mcaccept"/>
+            </input>
+            <processor class="SampleArchiver">
+                <output class="SampleOutputStream">
+                    <fileset dir="/media/disk/${PROJECT}"
+                        file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
+                        length="0"/>
+                </output>
+<!--
+                <output class="SampleOutputStream">
+                    <fileset dir="/tmp/${PROJECT}"
+                        file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
+                        length="0"/>
+                </output>
+-->
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30000"/>
+                </output>
+            </processor>
+            <processor class="raf.SyncRecordGenerator">
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30001"/>
+                </output>
+            </processor>
+        </service>
+    </server>
+
+    <dsm name="dsmWRD" location="WIRED_UP" id="1" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="JDW"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+<!-- A2D1608_CH0_1T       | 2008-08-08 20:14:13 | {-0.29387,1.03874} -->
+                <variable name="A2D1608_CH0_1T" units="V" longname="A2D1608 channel 0 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"        type="float"/>
+                </variable>
+<!-- A2D1608_CH1_1T       | 2008-08-08 20:17:16 | {-0.247309,1.02888} -->
+                <variable name="A2D1608_CH1_1T" units="V" longname="A2D1608 channel 1 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!-- A2D1608_CH2_1T       | 2008-08-08 20:20:28 | {-0.102035,1.01508} -->
+                <variable name="A2D1608_CH2_1T" units="V" longname="A2D1608 channel 2 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!-- A2D1608_CH3_1T       | 2008-08-08 20:22:56 | {-0.267672,1.03507} -->
+                <variable name="A2D1608_CH3_1T" units="V" longname="A2D1608 channel 3 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!-- A2D1608_CH4_1T       | 2008-08-08 20:25:23 | {-0.148335,1.01671} -->
+                <variable name="A2D1608_CH4_1T" units="V" longname="A2D1608 channel 4 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!-- A2D1608_CH5_1T       | 2008-08-08 20:28:09 | {-0.0475335,1.00871} -->
+                <variable name="A2D1608_CH5_1T" units="V" longname="A2D1608 channel 5 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"      type="float"/>
+                </variable>
+<!-- A2D1608_CH6_1T       | 2008-08-08 20:43:15 | {-0.205488,1.02064} -->
+                <variable name="A2D1608_CH6_1T" units="V" longname="A2D1608 channel 6 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!-- A2D1608_CH7_1T       | 2008-08-08 20:46:23 | {-0.296579,1.02981} -->
+                <variable name="A2D1608_CH7_1T" units="V" longname="A2D1608 channel 7 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_A2D1608" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+<!--
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+<!__ A2D1609_CH0_1T       | 2008-08-08 20:49:16 | {-0.438915,1.09926} __>
+                <variable name="A2D1609_CH0_1T" units="V" longname="A2D1609 channel 0 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!__ A2D1609_CH1_1T       | 2008-08-08 20:51:59 | {-0.426234,1.10198} __>
+                <variable name="A2D1609_CH1_1T" units="V" longname="A2D1609 channel 1 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!__ A2D1609_CH2_1T       | 2008-08-08 20:54:27 | {-0.486036,1.10921} __>
+                <variable name="A2D1609_CH2_1T" units="V" longname="A2D1609 channel 2 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!__ A2D1609_CH3_1T       | 2008-08-08 20:56:40 | {-0.356762,1.09346} __>
+                <variable name="A2D1609_CH3_1T" units="V" longname="A2D1609 channel 3 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!__ A2D1609_CH4_1T       | 2008-08-08 20:59:01 | {-0.304203,1.0875} __>
+                <variable name="A2D1609_CH4_1T" units="V" longname="A2D1609 channel 4 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"        type="float"/>
+                </variable>
+<!__ A2D1609_CH5_1T       | 2008-08-08 21:01:38 | {-0.161059,1.07624} __>
+                <variable name="A2D1609_CH5_1T" units="V" longname="A2D1609 channel 5 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!__ A2D1609_CH6_1T       | 2008-08-08 21:03:33 | {-0.314022,1.0896} __>
+                <variable name="A2D1609_CH6_1T" units="V" longname="A2D1609 channel 6 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"        type="float"/>
+                </variable>
+<!__ A2D1609_CH7_1T       | 2008-08-08 21:05:47 | {-0.267452,1.08883} __>
+                <variable name="A2D1609_CH7_1T" units="V" longname="A2D1609 channel 7 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_A2D1609" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d2" id="400">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+<!__ A2D1607_CH0_1T       | 2008-08-08 19:53:39 | {-0.32103,1.04321} __>
+                <variable name="A2D1607_CH0_1T" units="V" longname="A2D1607 channel 0 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"        type="float"/>
+                </variable>
+<!__ A2D1607_CH1_1T       | 2008-08-08 19:55:25 | {-0.147823,1.02859} __>
+                <variable name="A2D1607_CH1_1T" units="V" longname="A2D1607 channel 1 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!__ A2D1607_CH2_1T       | 2008-08-08 19:57:07 | {-0.0901408,1.02709} __>
+                <variable name="A2D1607_CH2_1T" units="V" longname="A2D1607 channel 2 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"      type="float"/>
+                </variable>
+<!__ A2D1607_CH3_1T       | 2008-08-08 20:00:58 | {-0.325168,1.04331} __>
+                <variable name="A2D1607_CH3_1T" units="V" longname="A2D1607 channel 3 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!__ A2D1607_CH4_1T       | 2008-08-08 20:02:48 | {-0.266787,1.03448} __>
+                <variable name="A2D1607_CH4_1T" units="V" longname="A2D1607 channel 4 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!__ A2D1607_CH5_1T       | 2008-08-08 20:06:35 | {-0.348083,1.04407} __>
+                <variable name="A2D1607_CH5_1T" units="V" longname="A2D1607 channel 5 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+<!__ A2D1607_CH6_1T       | 2008-08-08 20:09:09 | {-0.0481488,1.01283} __>
+                <variable name="A2D1607_CH6_1T" units="V" longname="A2D1607 channel 6 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"      type="float"/>
+                </variable>
+<!__ A2D1607_CH7_1T       | 2008-08-08 20:12:09 | {-0.367848,1.04222} __>
+                <variable name="A2D1607_CH7_1T" units="V" longname="A2D1607 channel 7 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="0.0"       type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_A2D1607" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+-->
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+    <dsm name="dsm321" location="FORWARD" id="2" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+                <variable name="A2D1601_CH0_1T" units="V" longname="A2D1601 channel 0 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1601_CH1_1T" units="V" longname="A2D1601 channel 1 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1601_CH2_1T" units="V" longname="A2D1601 channel 2 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1601_CH3_1T" units="V" longname="A2D1601 channel 3 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1601_CH4_1T" units="V" longname="A2D1601 channel 4 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1601_CH5_1T" units="V" longname="A2D1601 channel 5 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1601_CH6_1T" units="V" longname="A2D1601 channel 6 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1601_CH7_1T" units="V" longname="A2D1601 channel 7 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_A2D1601" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+                <variable name="A2D1602_CH0_1T" units="V" longname="A2D1602 channel 0 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1602_CH1_1T" units="V" longname="A2D1602 channel 1 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1602_CH2_1T" units="V" longname="A2D1602 channel 2 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1602_CH3_1T" units="V" longname="A2D1602 channel 3 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1602_CH4_1T" units="V" longname="A2D1602 channel 4 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1602_CH5_1T" units="V" longname="A2D1602 channel 5 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1602_CH6_1T" units="V" longname="A2D1602 channel 6 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1602_CH7_1T" units="V" longname="A2D1602 channel 7 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_A2D1602" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d2" id="400">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+                <variable name="A2D1603_CH0_1T" units="V" longname="A2D1603 channel 0 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1603_CH1_1T" units="V" longname="A2D1603 channel 1 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1603_CH2_1T" units="V" longname="A2D1603 channel 2 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1603_CH3_1T" units="V" longname="A2D1603 channel 3 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1603_CH4_1T" units="V" longname="A2D1603 channel 4 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1603_CH5_1T" units="V" longname="A2D1603 channel 5 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1603_CH6_1T" units="V" longname="A2D1603 channel 6 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+                <variable name="A2D1603_CH7_1T" units="V" longname="A2D1603 channel 7 [-10 to +10] volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0" type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_A2D1603" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+</site>
+</project>
