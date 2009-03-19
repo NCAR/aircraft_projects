@@ -164,6 +164,40 @@
         <sample id="0377" rate="2" process="false"><variable name="equipment_id" units="" longname="equipment id"/></sample>
     </arincSensor>
 
+    <serialSensor ID="D_GPS" class="DSMSerialSensor" baud="115200" parity="none" databits="8" stopbits="1">
+        <message separator="\xaa\x44\x12" position="beg" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="Novatel_GPS" class="GPS_NMEA_Serial"
+        baud="38400" parity="none" databits="8" stopbits="1">
+
+        <!-- GGA record -->
+        <sample id="1" rate="5">
+            <variable name="GGSECSDAY" units="sec" longname="Reference GPS seconds of day"/>
+            <variable name="GGLAT" units="degree_N" longname="Reference GPS Latitude"/>
+            <variable name="GGLON" units="degree_E" longname="Reference GPS Longitude"/>
+            <variable name="GGQUAL" units="none" longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS"/>
+            <variable name="GGNSAT" units="number" longname="Reference GPS number of satellites tracked"/>
+            <variable name="GGHORDIL" units="none" longname="Reference GPS Horizontal dilution of position"/>
+            <variable name="GGALT" units="m" longname="Reference GPS Altitude (MSL)"/>
+            <variable name="GGEOIDHT" units="m" longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid"/>
+            <variable name="GGDAGE" units="s" longname="Time in seconds since last DGPS update"/>
+            <variable name="GGREFID" units="none" longname="DGPS station ID number"/>
+        </sample>
+        <!-- RMC record -->
+        <sample id="2" rate="5">
+            <variable name="GGSTATUS" units="none" longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)"/>
+            <variable name="GGSPD" units="m/s" longname="Reference GPS Ground Speed"/>
+            <variable name="GGTRK" units="degree_T" longname="Reference GPS Track Angle"/>
+            <variable name="GGVEW" units="m/s" longname="Reference GPS Ground Speed Vector, East Component"/>
+            <variable name="GGVNS" units="m/s" longname="Reference GPS Ground Speed Vector, North Component"/>
+            <variable name="GGDAY" units="day" longname="Reference GPS Day of month (1-31)"/>
+            <variable name="GGMONTH" units="month" longname="Reference GPS Month of year (1-12)"/>
+            <variable name="GGYEAR" units="year" longname="Reference GPS 2 digit year"/>
+        </sample>
+        <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
     <serialSensor ID="Garmin_GPS" class="GPS_NMEA_Serial"
         baud="4800" parity="none" databits="8" stopbits="1">
 
@@ -360,13 +394,24 @@
     <serialSensor ID="HoneywellPPT" class="DSMSerialSensor"
         baud="19200" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="?%*2dCP=%f"/>
+	<sample id="2" scanfFormat="?%*2dCT=%f"/>
         <message separator="\r" position="end" length="0"/>
-        <prompt string="*00P1\r" rate="100"/>
+	<!-- temporary for test flights - return to 100hz pressure later -->
+        <!-- <prompt string="*00P1\r" rate="100"/> -->
+        <prompt string="*00P1\r*00T1\r" rate="50"/>
 	<!-- How to obtain the PPT temperature - need mods to DSMSerialSensor to 
 	     allow for two different parameters at different rates 
 		<sample id="2" scanfFormat="?%*2dTP=%f"/>
 		<prompt string="*00T1\r" rate="1"/>  
 	-->
+    </serialSensor>
+
+    <!-- allows for control of PPT through rserial program w/out stream of data -->
+    <serialSensor ID="HoneywellPPTcntrl" class="DSMSerialSensor"
+        baud="19200" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="?%*2dCP=%f"/>
+	<sample id="2" scanfFormat="?%*2dCT=%f"/>
+        <message separator="\r" position="end" length="0"/>
     </serialSensor>
 
 </sensorcatalog>
@@ -442,27 +487,28 @@
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G"/>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000"
-                devicename="/dev/dsmser0" id="110">
+                devicename="/dev/ttyS5" id="110">
 	    <sample id="1">
                 <variable name="PSF" units="hPa" longname="Raw Static Pressure, Fuselage"/>
 	    </sample>
         </serialSensor>
 
         <serialSensor IDREF="DewPointer"
-                devicename="/dev/dsmser1" id="130">
+                devicename="/dev/ttyS6" id="120">
 	    <sample id="1">
                 <variable name="DPLS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left"/>
 	    </sample>
         </serialSensor>
 
         <serialSensor IDREF="DewPointer"
-                devicename="/dev/dsmser2" id="140">
+                devicename="/dev/ttyS7" id="130">
 	    <sample id="1">
                 <variable name="DPRS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right"/>
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS10" id="120"/>
+        <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS10" id="140"/>
+	<serialSensor IDREF="D_GPS" devicename="/dev/ttyS11" id="150"/>
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -475,69 +521,97 @@
         <serialSensor IDREF="HoneywellPPT"
                 devicename="/dev/ttyS5" id="110">
             <sample id="1">
-                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage"/>
+                <variable name="QCF" units="psi" longname="Raw Dynamic Pressure, Fuselage">
+		    <linear slope="68.9475" intercept="0.0" units="hPa"/>
+		</variable>
+            </sample>
+            <sample id="2">
+                <variable name="QCFTEMP" units="deg_C" longname="Temperature of QCF Probe"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="HoneywellPPT"
-                devicename="/dev/ttyS6" id="112">
+                devicename="/dev/ttyS6" id="120">
             <sample id="1">
-                <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome"/>
+                <variable name="QCR" units="psi" longname="Raw Dynamic Pressure, Radome">
+		    <linear slope="68.9475" intercept="0.0" units="hPa"/>
+		</variable>
+            </sample>
+            <sample id="2">
+                <variable name="QCRTEMP" units="deg_C" longname="Temperature of QCR Probe"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="HoneywellPPT"
-                devicename="/dev/ttyS7" id="114">
+                devicename="/dev/ttyS7" id="130">
             <sample id="1">
-                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome"/>
+                <variable name="ADIFR" units="psi" longname="Vertical Differential Pressure, Radome">
+		    <linear slope="68.9475" intercept="0.0" units="hPa"/>
+		</variable>
+            </sample>
+            <sample id="2">
+                <variable name="ADIFRTEMP" units="deg_C" longname="Temperature of ADIFR Probe"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="HoneywellPPT"
-                devicename="/dev/ttyS8" id="116">
+                devicename="/dev/ttyS8" id="140">
             <sample id="1">
-                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome"/>
+                <variable name="BDIFR" units="psi" longname="Horizontal Differential Pressure, Radome">
+		    <linear slope="68.9475" intercept="0.0" units="hPa"/>
+		</variable>
+            </sample>
+            <sample id="2">
+                <variable name="BDIFRTEMP" units="deg_C" longname="Temperature of BDIFR Probe"/>
             </sample>
         </serialSensor>
 
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
-            <sample id="1" rate="500">
-<!--  A2D005_CH0_4F        | 2007-08-09 19:37:57 | {-0.078848,1.09091} -->
-                <variable name="DUMMY" units="V" longname="Place Holder">
-                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                    <parameter name="corSlope" value="1.09091" type="float"/> <parameter name="corIntercept" value="-0.078848" type="float"/>
-                </variable>
-<!--  A2D005_CH1_4F        | 2007-08-09 19:40:17 | {-0.301615,1.13454} -->
-                <variable name="TTFR" units="V" longname="Total Temperature, Radome Left">
-                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                    <parameter name="corSlope" value="1.13454" type="float"/> <parameter name="corIntercept" value="-0.301615" type="float"/>
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+	    <parameter name="rate" value="500" type="int"/>
+	    <sample id="1" rate="100">
+	        <parameter name="filter" value="boxcar" type="string"/>
+	        <parameter name="numpoints" value="5" type="int"/>
+<!-- TTHL2 - aka A2D005_CH0_4F | 2008-02-04 21:54:00 | {-0.301189,1.13678} -->
+<!--
+                <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
+                    <parameter name="channel"  value="1"       type="int"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.13678" type="float"/> <parameter name="corIntercept" value="-0.301189"  type="float"/>
                     <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
                 </variable>
-<!--  A2D005_CH2_4F        | 2007-08-09 19:42:40 | {-0.255828,1.12773} -->
+-->
+<!-- TTHL1 - aka A2D005_CH1_4F | 2008-02-04 21:54:00 | {-0.301189,1.13678} -->
+<!-- TTHL1 - aka A2D005_CH1_4F | 2009-03-18 18:58:00 | {-0.304558,1.12946} -->
+                <variable name="TTFR" units="V" longname="Total Temperature, Deiced Left">
+                    <parameter name="channel"  value="1"       type="int"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.12946" type="float"/> <parameter name="corIntercept" value="-0.304558"  type="float"/> 
+                    <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
+                </variable>
+<!-- TTHR2 - aka A2D005_CH2_4F | 2008-02-04 21:56:08 | {-0.25473,1.1299} -->
+<!-- TTHR2 - aka A2D005_CH2_4F | 2009-03-18 19:09:08 | {-0.163782,1.10589} -->
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
-                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                    <parameter name="corSlope" value="1.12773" type="float"/> <parameter name="corIntercept" value="-0.255828" type="float"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.10589"  type="float"/> <parameter name="corIntercept" value="-0.163782"   type="float"/>
                     <poly coefs="-89.336 25.588 0.01" units="deg_C"/>
                 </variable>
-<!--  A2D005_CH3_4F        | 2007-08-09 19:44:10 | {-0.161707,1.11097} -->
+<!-- TTHR1 - aka A2D005_CH3_4F | 2008-02-04 21:58:21 | {-0.1603,1.11304} -->
+<!-- TTHR1 - aka A2D005_CH3_4F | 2009-03-18 19:17:21 | {-0.257215,1.12247} -->
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
-                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                    <parameter name="corSlope" value="1.11097" type="float"/> <parameter name="corIntercept" value="-0.161707" type="float"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.12247" type="float"/> <parameter name="corIntercept" value="-0.257215"    type="float"/> 
                     <poly coefs="-88.838 25.305 0.0098" units="deg_C"/>
                 </variable>
-<!--  A2D005_CH4_2F        | 2007-08-09 16:40:58 | {-0.661433,1.14559} -->
+<!-- NOSETMP - aka A2D005_CH4_4F | 2008-02-04 22:03:37 | {-0.654478,1.14729} -->
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                    <parameter name="corSlope" value="1.14559" type="float"/> <parameter name="corIntercept" value="-0.661433" type="float"/>
-		    <linear slope="10.0" intercept="-50.0" units="deg_C"/>
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <!-- <parameter name="corSlope" value="1.14729" type="float"/> <parameter name="corIntercept" value="-0.654478"  type="float"/> -->
+                    <linear slope="10.0" intercept="-50.0" units="deg_C"/>
                 </variable>
             </sample>
-        </sensor>
-
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_RAD" units="deg_C">
-                </variable>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_RAD" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
