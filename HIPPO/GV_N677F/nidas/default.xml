@@ -589,7 +589,7 @@
           </sample>
           <sample id="0324" rate="50">
             <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.38" units="degree"/>
+              <linear slope="1.0" intercept="0.3" units="degree"/>
             </variable>
           </sample>
         </arincSensor>
@@ -610,7 +610,7 @@
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G">
           <sample id="0165" rate="50">
             <variable name="VSPD" units="m/s" longname="Avionics GPS Vertical Velocity">
-              <linear slope="1.0" intercept="-0.06" units="m/s"/>
+              <linear slope="1.1" intercept="-0.06" units="m/s"/>
             </variable>
           </sample>
         </arincSensor>
@@ -666,7 +666,7 @@
                 devicename="/dev/ttyS7" id="114">
             <sample id="1">
                 <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome">
-                <linear slope="1.0004" intercept="-0.75019" units="hPa"/>
+                <linear slope="1.0008" intercept="-0.5364" units="hPa"/>
                 </variable>
             </sample>
         </serialSensor>
@@ -675,7 +675,7 @@
                 devicename="/dev/ttyS8" id="116">
             <sample id="1">
                 <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome">
-                <linear slope="1.0003" intercept="-0.50418" units="hPa"/>
+                <linear slope="1.0005" intercept="-0.2671" units="hPa"/>
                 </variable>
             </sample>
         </serialSensor>
@@ -696,15 +696,15 @@
                 <variable name="TTFR" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
+                    <poly coefs="-86.749 24.431 0.074388" units="deg_C"/>
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-89.336 25.588 0.01" units="deg_C"/>
+                    <poly coefs="-91.225 26.577 -0.15634" units="deg_C"/>
                 </variable>
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-88.838 25.305 0.0098" units="deg_C"/>
+                    <poly coefs="-90.065 25.927 0.080279" units="deg_C"/>
                 </variable>
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
