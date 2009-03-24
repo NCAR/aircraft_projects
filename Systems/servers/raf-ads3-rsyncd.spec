@@ -105,6 +105,11 @@ if selinuxenabled; then
     fi
 fi
 
+# other notes about selinux:
+# audit2allow -a
+#============= rsync_t ==============
+# allow rsync_t unconfined_tmp_t:file getattr;
+
 exit 0
 
 %postun

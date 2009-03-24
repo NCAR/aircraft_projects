@@ -54,11 +54,9 @@ if [ "$perm" != "drwxrwx---" ]; then
     chmod 770 /var/named
 fi
 
-if [ ! -d /var/named/log ]; then
-    mkdir /var/named/log
-    chgrp named /var/named/log
-    chmod g+w /var/named/log
-fi
+[ ! -d /var/named/log ] || mkdir /var/named/log
+chgrp -R named /var/named/log
+chmod -R g+w /var/named/log
 
 # Copy named.loopback, named.localhost, named.empty, named.ip6.local to /var/named
 # if they don't exist.  These were taken from caching-nameserver-9.4.2-3.fc7

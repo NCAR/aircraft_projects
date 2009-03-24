@@ -1,7 +1,7 @@
 Summary: PPP and PPPOE configuration for Inmarsat MPDS
 Name: raf-satcom-mpds
 Version: 1.0
-Release: 4
+Release: 5
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -44,7 +44,7 @@ for f in ifcfg-mpds ifcfg-eth3; do
     done
 done
 
-%post
+%triggerin -- ppp
 
 # disable /etc/ppp/options.  I think the default version from the ppp RPM
 # contains a "lock" option, which I believe will fail on an ethernet port
@@ -70,7 +70,6 @@ ${muser} 	mpds 	None
 fi
 chmod 600 /etc/ppp/pap-secrets
 
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -93,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ppp/pppoe-lost
 
 %changelog
+* Fri Jan 6 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5
+- changed post script to a trigger script so that we can patchup pap-secrets
+- if ppp package messes with it.
 * Fri Apr 11 2008 Gordon Maclean <maclean@ucar.edu> 1.0-4
 - removed passive option for mpds, LCP_INTERVALfrom 40 to 20,
 - and LCP_FAILURE from 6 to 3

@@ -2,6 +2,8 @@
 
 script=`basename $0`
 
+umask 0002
+
 source repo_scripts/repo_funcs.sh
 
 get_version () {
