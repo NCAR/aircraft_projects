@@ -391,7 +391,7 @@
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="HoneywellPPT" class="DSMSerialSensor"
+    <serialSensor ID="HoneywellPPT" class="raf.PPT_Serial"
         baud="19200" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="?%*2dCP=%f"/>
 	<sample id="2" scanfFormat="?%*2dCT=%f"/>
@@ -404,14 +404,6 @@
 		<sample id="2" scanfFormat="?%*2dTP=%f"/>
 		<prompt string="*00T1\r" rate="1"/>  
 	-->
-    </serialSensor>
-
-    <!-- allows for control of PPT through rserial program w/out stream of data -->
-    <serialSensor ID="HoneywellPPTcntrl" class="DSMSerialSensor"
-        baud="19200" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="?%*2dCP=%f"/>
-	<sample id="2" scanfFormat="?%*2dCT=%f"/>
-        <message separator="\r" position="end" length="0"/>
     </serialSensor>
 
 </sensorcatalog>
