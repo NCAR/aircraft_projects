@@ -648,7 +648,7 @@
                 devicename="/dev/ttyS5" id="110">
             <sample id="1">
                 <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage">
-                <linear slope="1.0014" intercept="-0.56122" units="hPa"/>
+                <linear slope="1.0011" intercept="-0.3449" units="hPa"/>
                 </variable>
             </sample>
         </serialSensor>
@@ -657,7 +657,7 @@
                 devicename="/dev/ttyS6" id="112">
             <sample id="1">
                 <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome">
-                <linear slope="1.0006" intercept="-0.46287" units="hPa"/>
+                <linear slope="1.0007" intercept="-0.2478" units="hPa"/>
                 </variable>
             </sample>
         </serialSensor>
@@ -693,18 +693,21 @@
                     <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
                 </variable>
 -->
+<!--
+Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 hand calculated multiple point calibrations.
+-->
                 <variable name="TTFR" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-86.749 24.431 0.074388" units="deg_C"/>
+                    <poly coefs="-105.663048 39.530760 -3.828450 0.331160" units="deg_C"/>
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-91.225 26.577 -0.15634" units="deg_C"/>
+                    <poly coefs="-98.200816 32.386316 -1.782778 0.153851" units="deg_C"/>
                 </variable>
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-90.065 25.927 0.080279" units="deg_C"/>
+                    <poly coefs="-97.481298 32.098536 -1.740687 0.150691" units="deg_C"/>
                 </variable>
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
