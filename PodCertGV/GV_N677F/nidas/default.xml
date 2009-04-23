@@ -602,43 +602,30 @@
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
 	    <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D1606.dat"/>
             <sample id="0" rate="500">
-<!--  A2D008_CH1_4F        | 2007-08-16 20:32:53 | {-0.0790317,1.0281} -->
                 <variable name="ACCEL_RWM_RTX" units="V" longname="Rt wing mid/rt lateral accel">
                     <parameter name="gain"     value="4"      type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <!-- <parameter name="corSlope" value="1.0281" type="float"/> <parameter name="corIntercept" value="-0.0790317" type="float"/> -->
+                    <linear slope="10.7527" intercept="-27.634439" units="G"/>
                 </variable>
-<!--  A2D008_CH2_4F        | 2007-08-16 20:34:20 | {-0.0980288,1.03507} -->
                 <variable name="ACCEL_RWM_RTY" units="V" longname="Rt wing mid/rt long. accel">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <!-- <parameter name="corSlope" value="1.03507" type="float"/> <parameter name="corIntercept" value="-0.0980288" type="float"/> -->
+                    <linear slope="10.3093" intercept="-26.288715" units="G"/>
                 </variable>
-<!--  A2D008_CH3_4F        | 2007-08-16 20:36:17 | {-0.0821353,1.03488} -->
                 <variable name="ACCEL_RWM_RTZ" units="V" longname="Rt wing mid/rt vertcal accel">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <!-- <parameter name="corSlope" value="1.03488" type="float"/> <parameter name="corIntercept" value="-0.0821353" type="float"/> -->
+                    <linear slope="9.3458" intercept="-22.710294" units="G"/>
                 </variable>
-<!--  A2D008_CH4_4F        | 2007-08-16 20:37:55 | {-0.066927,1.02988} -->
                 <variable name="ACCEL_RWM_LTX" units="V" longname="Rt wing mid/left lateral accel">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                    <!-- <parameter name="corSlope" value="1.02988" type="float"/> <parameter name="corIntercept" value="-0.066927" type="float"/> -->
+                    <linear slope="9.5238" intercept="-23.904738" units="G"/>
                 </variable>
-<!--  A2D008_CH5_4F        | 2007-08-16 20:39:28 | {-0.14398,1.04304} -->
                 <variable name="ACCEL_RWM_LTY" units="V" longname="Rt wing mid/left long. accel">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"    type="bool"/>
-                    <!-- <parameter name="corSlope" value="1.04304" type="float"/> <parameter name="corIntercept" value="-0.14398" type="float"/> -->
+                    <linear slope="9.7087" intercept="-24.368837" units="G"/>
                 </variable>
-<!--  A2D008_CH6_4F        | 2007-08-16 20:41:01 | {-0.139401,1.04236} -->
                 <variable name="ACCEL_RWM_LTZ" units="V" longname="Rt wing mid/left vertcal accel">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                    <!-- <parameter name="corSlope" value="1.04236" type="float"/> <parameter name="corIntercept" value="-0.139401" type="float"/> -->
+                    <linear slope="10.2041" intercept="-24.898004" units="G"/>
                 </variable>
-<!--
-<!__  A2D008_CH7_4F        | 2007-08-16 20:42:33 | {-0.0545407,1.02753} __>
-                <variable name="A2D008_CH7_4F" units="V" longname="A2D008 channel 7 [  0 to  +5] volts">
-                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.02753" type="float"/> <parameter name="corIntercept" value="-0.0545407" type="float"/>
-                </variable>
--->
             </sample>
 	    <sample id="2" rate="1">
 	        <parameter name="temperature" value="true" type="bool"/>
@@ -651,12 +638,15 @@
             <sample id="0" rate="500">
                  <variable name="ACCEL_RWM_AFTX" units="V" longname="Rt wing mid/aft lateral accel">
                      <parameter name="gain"     value="4"      type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                     <linear slope="10.6383" intercept="-26.808516" units="G"/>
                  </variable>
                  <variable name="ACCEL_RWM_AFTY" units="V" longname="Rt wing mid/aft long. accel">
                      <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                     <linear slope="10.2041" intercept="-25.816373" units="G"/>
                  </variable>
                  <variable name="ACCEL_RWM_AFTZ" units="V" longname="Rt wing mid/aft vertical accel">
                      <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                     <linear slope="10.4167" intercept="-25.208414" units="G"/>
                  </variable>
              </sample>
              <sample id="2" rate="1">
@@ -678,12 +668,15 @@
             <sample id="0" rate="500"> 
                  <variable name="ACCEL_RWO_X" units="V" longname="Rt wing outboard lateral accel">
                      <parameter name="gain"     value="4"      type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                     <linear slope="10.5263" intercept="-26.631539" units="G"/>
                  </variable>
                  <variable name="ACCEL_RWO_Y" units="V" longname="Rt wing outboard longitudinal accel">
                      <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                     <linear slope="10.6383" intercept="-27.127665" units="G"/>
                  </variable>
                  <variable name="ACCEL_RWO_Z" units="V" longname="Rt wing outboard vertical accel">
                      <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                     <linear slope="10.4167" intercept="-25.104247" units="G"/>
                  </variable>
              </sample>
              <sample id="2" rate="1">
@@ -705,12 +698,15 @@
             <sample id="0" rate="500">
                  <variable name="ACCEL_RWI_X" units="V" longname="Rt wing inboard lateral accel">
                      <parameter name="gain"     value="4"      type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                     <linear slope="9.9010" intercept="-25.04953" units="G"/>
                  </variable>
                  <variable name="ACCEL_RWI_Y" units="V" longname="Rt wing inboard longitudinal accel">
                      <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                     <linear slope="10.7527" intercept="-27.096804" units="G"/>
                  </variable>
                  <variable name="ACCEL_RWI_Z" units="V" longname="Rt wing inboard vertical accel">
                      <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                     <linear slope="10.7527" intercept="-25.914007" units="G"/>
                  </variable>
              </sample>
              <sample id="2" rate="1">
