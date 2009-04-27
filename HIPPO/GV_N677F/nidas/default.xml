@@ -6,7 +6,7 @@
     xmlns="http://www.eol.ucar.edu/nidas"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
-    name="HIPPO-Global"
+    name="HIPPO-1"
     system="GV_N677F"
     version="$LastChangedRevision: 2514 $"
     >
@@ -589,7 +589,7 @@
           </sample>
           <sample id="0324" rate="50">
             <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.3" units="degree"/>
+              <linear slope="1.0" intercept="0.35" units="degree"/>
             </variable>
           </sample>
         </arincSensor>
@@ -610,14 +610,16 @@
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G">
           <sample id="0165" rate="50">
             <variable name="VSPD" units="m/s" longname="Avionics GPS Vertical Velocity">
-              <linear slope="1.1" intercept="-0.06" units="m/s"/>
+              <linear slope="1.02" intercept="-0.06" units="m/s"/>
             </variable>
           </sample>
         </arincSensor>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110">
 	    <sample id="1">
-                <variable name="PSF" units="hPa" longname="Raw Static Pressure, Fuselage"/>
+                <variable name="PSF" units="hPa" longname="Raw Static Pressure, Fuselage">
+                <linear slope="1.0006" intercept="-0.4453" units="hPa"/>
+                </variable>
 	    </sample>
         </serialSensor>
 
