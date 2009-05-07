@@ -6,7 +6,7 @@
     xmlns="http://www.eol.ucar.edu/nidas"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
-    name="GVWSVT"
+    name="PodCertGV"
     system="GV_N677F"
     version="$LastChangedRevision: 660 $"
     >
@@ -393,17 +393,13 @@
 
     <serialSensor ID="HoneywellPPT" class="raf.PPT_Serial"
         baud="19200" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="?%*2dCP=%f"/>
-	<sample id="2" scanfFormat="?%*2dCT=%f"/>
+        <sample id="1" scanfFormat="?%*2dCP=%f">
+           <prompt string="*00P1\r" rate="50"/>
+	</sample>
+	<sample id="2" scanfFormat="?%*2dCT=%f">
+           <prompt string="*00T1\r" rate="1"/>
+	</sample>
         <message separator="\r" position="end" length="0"/>
-	<!-- temporary for test flights - return to 100hz pressure later -->
-        <!-- <prompt string="*00P1\r" rate="100"/> -->
-        <prompt string="*00P1\r*00T1\r" rate="50"/>
-	<!-- How to obtain the PPT temperature - need mods to DSMSerialSensor to 
-	     allow for two different parameters at different rates 
-		<sample id="2" scanfFormat="?%*2dTP=%f"/>
-		<prompt string="*00T1\r" rate="1"/>  
-	-->
     </serialSensor>
 
 </sensorcatalog>
@@ -556,18 +552,10 @@
 	    <sample id="1" rate="100">
 	        <parameter name="filter" value="boxcar" type="string"/>
 	        <parameter name="numpoints" value="5" type="int"/>
-<!-- Right now there is only one sensor on the left - before the gvt tests start there will be two.  -->
-<!-- TTHL2 - aka A2D005_CH0_4F | 2008-02-04 21:54:00 | {-0.301189,1.13678} -->
-<!--
-                <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
-                    <parameter name="channel"  value="1"       type="int"/>
+                <variable name="DUMMY" units="V" longname="Nose Dummy">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.13678" type="float"/> <parameter name="corIntercept" value="-0.301189"  type="float"/>
-                    <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
                 </variable>
--->
                 <variable name="TTFR" units="V" longname="Total Temperature, Deiced Left">
-                    <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
                 </variable>
