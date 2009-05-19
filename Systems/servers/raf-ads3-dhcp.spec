@@ -105,6 +105,8 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %changelog
+* Tue Mar 24 2009 John Wasinger <wasinger@ucar.edu>
+- Added vulcan-00658
 * Fri Oct 30 2008 Gordon Maclean <maclean@ucar.edu>
 - Added bind dependency so that the dndsec-keygen command is available
 - for the trigger script.
