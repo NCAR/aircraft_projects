@@ -370,6 +370,7 @@
             <variable name="REJAT" units="" longname="SPP-100 Average Transit Rejected Particles"/>
             <variable name="OVFLW" units="" longname="SPP-100 AtoD Converter Overflow/Overrange"/>
             <variable name="AS100" length="31" units="count" longname="FSSP-100 Raw Accumulation (per cell) - DMT"/>
+            <variable name="DELTAT" units="msec" longname="SPP-100 Time between last sample and this sample"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
@@ -398,6 +399,7 @@
             </variable>
             <variable name="PTMP" units="deg_C" longname="SPP-200 Detector Temperature"/>
             <variable name="AS200" length="31" units="count" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT"/>
+            <variable name="DELTAT" units="msec" longname="SPP-200 Time between last sample and this sample"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
         <message length="154"/>
@@ -419,6 +421,7 @@
             <variable name="FREF3" units="V" longname="FSSP-300 Laser Reference Voltage"/>
             <variable name="FTMP3" units="deg_C" longname="FSSP-300 Housekeeping Data"/>
             <variable name="AS300" length="31" units="count" longname="SPP-300 (FSSP-300) Raw Accumulation (per cell) - DMT"/>
+            <variable name="DELTAT" units="msec" longname="SPP-300 Time between last sample and this sample"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
@@ -449,6 +452,7 @@
             <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
 
             <variable name="ACDP" length="31" units="count" longname="CDP Raw Accumulation (per cell)"/>
+            <variable name="DELTAT" units="msec" longname="CDP Time between last sample and this sample"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
@@ -527,10 +531,12 @@
             <variable name="A1DC" length="64" units="count" longname="Fast 2DC Raw Accumulation, entire-in (per cell)"/>
             <variable name="DT1DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
         </sample>
+<!--
         <sample id="3" rate="1">
             <variable name="A2DC" length="128" units="count" longname="Fast 2DC Raw Accumulation, center-in (per cell)"/>
             <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
         </sample>
+-->
     </sensor>
 
 
@@ -1176,11 +1182,12 @@
                 <variable name="A1DP" length="32" units="count" longname="2D-P Raw Accumulation, entire-in (per cell)"/>
                 <variable name="DT1DP" units="msec" longname="2D-P Probe Dead Time"/>
             </sample>
+<!--
             <sample id="3" rate="1">
                 <variable name="A2DP" length="64" units="count" longname="Fast 2D-P Raw Accumulation, center-in (per cell)"/>
                 <variable name="DT2DP" units="msec" longname="2D-P Probe Dead Time"/>
             </sample>
-
+-->
         </sensor>
 
         <output class="RawSampleOutputStream" sorterLength="0">
