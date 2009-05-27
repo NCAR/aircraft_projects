@@ -2,17 +2,5 @@
 
 foreach FILENAME (setup_rf??)
 #/code/schanot/nimbus/src/filter/nimbus -b $FILENAME << EOF
-nimbus -b $FILENAME << EOF
-Y
-EOF
+nimbus -b $FILENAME
 end
-
-cd /jnet/productiondata/
-rm s08_temp.nc
-foreach FILENAME (START08rf??.nc)
-ncReorder $FILENAME s08_temp.nc
-if (-e s08_temp.nc) then
-  mv -f s08_temp.nc $FILENAME
-endif
-end
-
