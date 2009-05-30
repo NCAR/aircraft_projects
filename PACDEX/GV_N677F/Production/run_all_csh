@@ -28,7 +28,7 @@ pkill Xvfb
 /bin/rm setup*
 /bin/cp LRT/Lags ../.
 
-cd /jnet/productiondata/
+cd ${PROD_DATA}
 rm pac_temp.nc
 foreach FILENAME (PACDEX*.nc)
 ncReorder $FILENAME pac_temp.nc
@@ -37,19 +37,19 @@ if (-e pac_temp.nc) then
 endif
 end
 
-ncfixdate /jnet/productiondata/PACDEXrf10.nc <<EOL
+ncfixdate ${PROD_DATA}/PACDEXrf10.nc <<EOL
 05/17/2007
 EOL
 
-ncfixdate /jnet/productiondata/PACDEXrf10h.nc <<EOP
+ncfixdate ${PROD_DATA}/PACDEXrf10h.nc <<EOP
 05/17/2007
 EOP
 
-ncfixdate /jnet/productiondata/PACDEXrf12.nc <<EON
+ncfixdate ${PROD_DATA}/PACDEXrf12.nc <<EON
 05/22/2007
 EON
 
-ncfixdate /jnet/productiondata/PACDEXrf12h.nc <<EOT
+ncfixdate ${PROD_DATA}/PACDEXrf12h.nc <<EOT
 05/22/2007
 EOT
 
