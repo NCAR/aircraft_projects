@@ -1,8 +1,8 @@
 #!/bin/csh
 
-cd /scr/raf/local_productiondata/
+cd ${PROD_DATA}
 foreach FILENAME (HIPPO-1rf??.nc)
 ncReorder $FILENAME temp.nc
-mv -f temp.nc $FILENAME
+/bin/mv -f temp.nc $FILENAME
 end
 
