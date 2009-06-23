@@ -302,24 +302,26 @@
     <serialSensor ID="Water_CN_Counter" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1"
         init_string="SM,4,1\r">
-        <sample id="1" rate="10" scanfFormat="D,%f,%f,%f,%f,%f,%f,%f,%f">
-	    <variable name="MCN_WCN" units="none" longname="WCN Current Operating Mode"/>
-	    <variable name="SFLCN_WCN" units="none" longname="WCN Status Flags"/>
-	    <variable name="CONCN_WCN" units="#/cm3" longname="WCN Aggregated Concentration"/>
-	    <variable name="ETCN_WCN" units="second" longname="WCN Sample Time (Elapsed Time)"/>
-	    <variable name="LTCN_WCN" units="second" longname="WCN Live Time"/>
-	    <variable name="CNTS_WCN" units="count" longname="WCN Accumulated Particle Counts"/>
-	    <variable name="PCN_WCN" units="hPa" longname="WCN Absolute Pressure"/>
-	    <variable name="RPCN_WCN" units="none" longname="WCN Raw Photometric Value"/>
+        <sample id="1" rate="10" scanfFormat="D,%f,%f,%*f,%f,%f,%f,%f,%f">
+	    <variable name="MCN" units="none" longname="WCN Current Operating Mode"/>
+	    <variable name="SFLCN" units="none" longname="WCN Status Flags"/>
+	    <!--variable name="CONCN" units="#/cm3" longname="WCN Aggregated Concentration"/-->
+	    <variable name="ETCN" units="second" longname="WCN Sample Time (Elapsed Time)"/>
+	    <variable name="LTCN" units="second" longname="WCN Live Time"/>
+	    <variable name="CNTS" units="count" longname="WCN Accumulated Particle Counts"/>
+	    <variable name="PCN" units="hPa" longname="WCN Absolute Pressure"/>
+	    <variable name="RPCN" units="none" longname="WCN Raw Photometric Value"/>
         </sample>
         <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
-	    <variable name="FCN_WCN" units="cm3/min" longname="WCN Sample Flow Rate"/>
-	    <variable name="TFCN_WCN" units="cm3/min" longname="WCN Total Flow Rate"/>
-	    <variable name="SFCN_WCN" units="cm3/min" longname="WCN Sheath Flow Rate"/>
-	    <variable name="APCN_WCN" units="hPa" longname="WCN Absolute Pressure"/>
-	    <variable name="STCN_WCN" units="deg_C" longname="WCN Saturator Temperature"/>
-	    <variable name="GTCN_WCN" units="deg_C" longname="WCN Growth Tube Temperature"/>
-	    <variable name="OTCN_WCN" units="deg_C" longname="WCN Optics Temperature"/>
+            <variable name="FCNC" units="cm3/min" longname="WCN Sample Flow Rate">
+                 <linear slope="0.001" intercept="0.0" units="vlpm"/>
+            </variable>
+            <variable name="FTCN" units="cm3/min" longname="WCN Total Flow Rate"/>
+            <variable name="FSHCN" units="cm3/min" longname="WCN Sheath Flow Rate"/>
+            <variable name="PACN" units="hPa" longname="WCN Absolute Pressure"/>
+            <variable name="TSCN" units="deg_C" longname="WCN Saturator Temperature"/>
+            <variable name="TGCN" units="deg_C" longname="WCN Growth Tube Temperature"/>
+            <variable name="TOCN" units="deg_C" longname="WCN Optics Temperature"/>
         </sample>
         <message separator="\r" position="end" length="0"/>
     </serialSensor>
@@ -580,7 +582,7 @@
             </sample>
         </serialSensor>
 
-        <serialSensor IDREF="TDLH2O" devicename="/dev/dsmser3" id="120" suffix="_MC">
+        <serialSensor IDREF="TDLH2O" devicename="/dev/dsmser3" id="120" suffix="_MC"/>
 
 	<socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000"
 	    id="150">
@@ -651,9 +653,7 @@
     <dsm name="dsm308" location="AEROSOL_rack" id="8" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
 
-        <serialSensor IDREF="Water_CN_Counter"
-                devicename="/dev/dsmser1" id="110">
-        </serialSensor>
+        <serialSensor IDREF="Water_CN_Counter" devicename="/dev/dsmser1" id="110" suffix="_WCN"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
