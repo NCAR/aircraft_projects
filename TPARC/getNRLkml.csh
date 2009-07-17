@@ -1,10 +1,14 @@
 #!/bin/csh
-set tclist = "012 013"
-set sensorlist = "37rgb 85rgb"
+
+# Get 44W (which is a bogus TC centered on Guam),
+# and any other TCs listed on the command line
+set tclist = "$* 44W"
+set sensorlist = "37rgb 85rgb visir"
 
 cd /space/tmp/NRLkml
 set baseURL = "http://www.nrlmry.navy.mil/archdat/test/kml/TC/2008/WPAC"
-# We have to pull each file individually, since 
+# We have to pull each file individually, since the NRL web server
+# denies recursive downloads.
 foreach tc ($tclist)
     mkdir -p $tc
     pushd $tc
