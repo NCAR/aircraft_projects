@@ -13,7 +13,7 @@ foreach FILENAME (`ls setup_rf0[1-4]`)
 end
 
 /bin/cp -f ${PROJ_DIR}/VOCALS/C130_N130AR/SegmentC/* ${PROJ_DIR}/VOCALS/C130_N130AR
-foreach FILENAME (`ls setup_rf05`)
+foreach FILENAME (`ls setup_rf08 setup_rf09 setup_rf10`)
   nimbus -b $FILENAME
 end
 
@@ -23,7 +23,7 @@ foreach FILENAME (`ls setup_rf0[6-7] setup_rf1[1-4]`)
 end
 
 /bin/cp -f ${PROJ_DIR}/VOCALS/C130_N130AR/SegmentD/* ${PROJ_DIR}/VOCALS/C130_N130AR
-foreach FILENAME (`ls setup_rf0[8-9] setup_rf10`)
+foreach FILENAME (`ls setup_rf05`)
   nimbus -b $FILENAME
 end
 
@@ -34,6 +34,6 @@ rm voc_temp.nc
 foreach FILENAME (VOCAL*.nc)
 ncReorder $FILENAME voc_temp.nc
 if (-e voc_temp.nc) then
-  mv -f voc_temp.nc $FILENAME
+  /bin/mv -f voc_temp.nc $FILENAME
 endif
 end
