@@ -33,7 +33,9 @@ set RPWD = ""
 set SDIR = /scr/raf2/Prod_Data/PACDEX
 #
 #  1st wave (LRT)
-#set SFILES = ( \
+set SFILES = ( \
+PACDEXrf03.nc \
+)
 #PACDEXrf01.nc \
 #PACDEXrf02.nc \
 #PACDEXrf03.nc \
@@ -48,8 +50,9 @@ set SDIR = /scr/raf2/Prod_Data/PACDEX
 #PACDEXrf12.nc \
 #PACDEXrf13.nc \
 #PACDEXrf14.nc \
-#)
-#set DFILES = ( \
+set DFILES = ( \
+mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF03.20070502.023510_103847.PNI.nc \
+)
 #mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF01.20070429.160230_233627.PNI.nc \
 #mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF02.20070430.175830_025405.PNI.nc \
 #mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF03.20070502.023510_103847.PNI.nc \
@@ -64,7 +67,6 @@ set SDIR = /scr/raf2/Prod_Data/PACDEX
 #mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF12.20070522.002725_085123.PNI.nc \
 #mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF13.20070523.022810_101835.PNI.nc \
 #mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF14.20070524.191605_024727.PNI.nc \
-#)
 #  2nd wave (RF12 after "reorder")
 #set SFILES = ( \
 #PACDEXrf12.nc \
@@ -129,6 +131,18 @@ set SDIR = /scr/raf2/Prod_Data/PACDEX
 #mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF11.20070519.231230_082248.PNI.nc \
 #mss:/ATD/DATA/2007/PACDEX/GV_N677F/LRT/RF12.20070522.002725_085123.PNI.nc \
 #)
+#
+#  9th wave (rearchive all LRT - uncomment 1st wave and run)
+# Received updated CCN data, so re-merged and re-archived
+#
+# 10th wave (move files to VERSION2 subdir - see mvit script in this dir)
+#
+# 11th wave (removed 2D vars from LRT and remerged so rearchive all LRT - uncomment 1st wave and run)
+#
+# 12th wave (HRT was rerun to remove 2D vars so rearchive HRT - uncomment wave 3)
+#
+# 13th wave (rearchive all LRT with new 2D vars and updated CFDC -
+# uncomment wave 1)
 echo "#  $#SFILES job(s) submitted on `date`"
 echo "#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/"
 #
@@ -138,7 +152,7 @@ while ($num <= $todo)
   set SFILE = $SFILES[$num]
   set DFILE = $DFILES[$num]
   if (-r $SDIR/$SFILE) then
-    echo \
+#    echo \
     ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DFILE
     if ($status == 0) then
       set d2 = $DFILE:h
@@ -267,7 +281,7 @@ exit
 #   LRT/RF14.20070524.191605_024727.PNI.nc -- OK -- Tue May 13 13:33:55 MDT 2008
 #   Completed on Tue May 13 13:33:55 MDT 2008
 #
-# 8th save (rearchive LRT for RF9,11,and 12. Error in SP2 merge caused data after 3:46 AM
+# 8th wave (rearchive LRT for RF9,11,and 12. Error in SP2 merge caused data after 3:46 AM
 # of second day to be wrong.
 #  3 job(s) submitted on Mon Jun  2 12:46:20 MDT 2008
 #  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/
@@ -275,3 +289,63 @@ exit
 #   LRT/RF11.20070519.231230_082248.PNI.nc -- OK -- Mon Jun  2 12:46:52 MDT 2008
 #   LRT/RF12.20070522.002725_085123.PNI.nc -- OK -- Mon Jun  2 12:47:00 MDT 2008
 #   Completed on Mon Jun  2 12:47:00 MDT 2008
+#
+# 9th wave (received updated CCN data so re-merged and re-archived data)
+#  14 job(s) submitted on Tue Jul 29 18:17:01 MDT 2008
+#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/
+#   LRT/RF01.20070429.160230_233627.PNI.nc -- OK -- Tue Jul 29 18:17:34 MDT 2008
+#   LRT/RF02.20070430.175830_025405.PNI.nc -- OK -- Tue Jul 29 18:17:55 MDT 2008
+#   LRT/RF03.20070502.023510_103847.PNI.nc -- OK -- Tue Jul 29 18:18:45 MDT 2008
+#   LRT/RF04.20070503.035440_122923.PNI.nc -- OK -- Tue Jul 29 18:19:07 MDT 2008
+#   LRT/RF05.20070505.170130_012630.PNI.nc -- OK -- Tue Jul 29 18:19:56 MDT 2008
+#   LRT/RF06.20070506.165545_004530.PNI.nc -- OK -- Tue Jul 29 18:20:29 MDT 2008
+#   LRT/RF07.20070513.145300_221800.PNI.nc -- OK -- Tue Jul 29 18:20:46 MDT 2008
+#   LRT/RF08.20070514.190700_023634.PNI.nc -- OK -- Tue Jul 29 18:21:02 MDT 2008
+#   LRT/RF09.20070515.195330_045229.PNI.nc -- OK -- Tue Jul 29 18:21:28 MDT 2008
+#   LRT/RF10.20070517.012000_102312.PNI.nc -- OK -- Tue Jul 29 18:21:51 MDT 2008
+#   LRT/RF11.20070519.231230_082248.PNI.nc -- OK -- Tue Jul 29 18:22:16 MDT 2008
+#   LRT/RF12.20070522.002725_085123.PNI.nc -- OK -- Tue Jul 29 18:22:41 MDT 2008
+#   LRT/RF13.20070523.022810_101835.PNI.nc -- OK -- Tue Jul 29 18:23:32 MDT 2008
+#   LRT/RF14.20070524.191605_024727.PNI.nc -- OK -- Tue Jul 29 18:23:56 MDT 2008
+#   Completed on Tue Jul 29 18:23:56 MDT 2008
+#
+# 10th wave (moved 9th wave to VERSION2 subdir on MSS)
+#
+# 11th wave (LRT was rerun to remove 2D vars so so re-merged and re-archived data)
+#  14 job(s) submitted on Wed Dec 31 11:05:04 MST 2008
+#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/
+#   LRT/RF01.20070429.160230_233627.PNI.nc -- OK -- Wed Dec 31 11:05:16 MST 2008
+#   LRT/RF02.20070430.175830_025405.PNI.nc -- OK -- Wed Dec 31 11:05:40 MST 2008
+#   LRT/RF03.20070502.023510_103847.PNI.nc -- OK -- Wed Dec 31 11:05:54 MST 2008
+#   LRT/RF04.20070503.035440_122923.PNI.nc -- OK -- Wed Dec 31 11:06:02 MST 2008
+#   LRT/RF05.20070505.170130_012630.PNI.nc -- OK -- Wed Dec 31 11:06:15 MST 2008
+#   LRT/RF06.20070506.165545_004530.PNI.nc -- OK -- Wed Dec 31 11:06:23 MST 2008
+#   LRT/RF07.20070513.145300_221800.PNI.nc -- OK -- Wed Dec 31 11:06:32 MST 2008
+#   LRT/RF08.20070514.190700_023634.PNI.nc -- OK -- Wed Dec 31 11:06:44 MST 2008
+#   LRT/RF09.20070515.195330_045229.PNI.nc -- OK -- Wed Dec 31 11:06:50 MST 2008
+#   LRT/RF10.20070517.012000_102312.PNI.nc -- OK -- Wed Dec 31 11:07:18 MST 2008
+#   LRT/RF11.20070519.231230_082248.PNI.nc -- OK -- Wed Dec 31 11:07:42 MST 2008
+#   LRT/RF12.20070522.002725_085123.PNI.nc -- OK -- Wed Dec 31 11:07:53 MST 2008
+#   LRT/RF13.20070523.022810_101835.PNI.nc -- OK -- Wed Dec 31 11:08:06 MST 2008
+#   LRT/RF14.20070524.191605_024727.PNI.nc -- OK -- Wed Dec 31 11:08:20 MST 2008
+#   Completed on Wed Dec 31 11:08:20 MST 2008
+#
+# 12th wave (HRT was rerun to remove 2D vars so rearchive HRT - uncomment wave 3)
+#  14 job(s) submitted on Wed Dec 31 11:23:18 MST 2008
+#  File(s) archived to MSS directory:  /ATD/DATA/2007/PACDEX/GV_N677F/
+#   HRT/RF01.20070429.160230_233609.PNI.nc -- OK -- Wed Dec 31 11:23:55 MST 2008
+#   HRT/RF02.20070430.175830_025347.PNI.nc -- OK -- Wed Dec 31 11:24:32 MST 2008
+#   HRT/RF03.20070502.023510_103829.PNI.nc -- OK -- Wed Dec 31 11:25:25 MST 2008
+#   HRT/RF04.20070503.035440_122905.PNI.nc -- OK -- Wed Dec 31 11:26:18 MST 2008
+#   HRT/RF05.20070505.170130_012630.PNI.nc -- OK -- Wed Dec 31 11:26:58 MST 2008
+#   HRT/RF06.20070506.165545_004530.PNI.nc -- OK -- Wed Dec 31 11:27:39 MST 2008
+#   HRT/RF07.20070513.145300_221800.PNI.nc -- OK -- Wed Dec 31 11:28:17 MST 2008
+#   HRT/RF08.20070514.190700_023616.PNI.nc -- OK -- Wed Dec 31 11:28:48 MST 2008
+#   HRT/RF09.20070515.195330_045211.PNI.nc -- OK -- Wed Dec 31 11:31:37 MST 2008
+#   HRT/RF10.20070517.012000_102254.PNI.nc -- OK -- Wed Dec 31 11:32:17 MST 2008
+#   HRT/RF11.20070519.231230_082230.PNI.nc -- OK -- Wed Dec 31 11:34:12 MST 2008
+#   HRT/RF12.20070522.002725_085105.PNI.nc -- OK -- Wed Dec 31 11:34:53 MST 2008
+#   HRT/RF13.20070523.022810_101817.PNI.nc -- OK -- Wed Dec 31 11:35:27 MST 2008
+#   HRT/RF14.20070524.191605_024709.PNI.nc -- OK -- Wed Dec 31 11:35:56 MST 2008
+#   Completed on Wed Dec 31 11:35:56 MST 2008
+#

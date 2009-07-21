@@ -77,7 +77,10 @@ set SDIR = /scr/productiondata
 #mss:/RAF/2007/506/UNALTERED/LRT/RF12.20070522.002725_085123.PNI.nc \
 #)
 #
-#  3rd wave (HRT)
+#  3rd wave (LRT files were updated - remove 2DC and ambient T changes - rearchive)
+# Just uncomment first and second wave and run.
+#
+#  4th wave (HRT)
 #set SFILES = ( \
 #PACDEXrf01h.nc \
 #PACDEXrf02h.nc \
@@ -121,7 +124,7 @@ while ($num <= $todo)
   set SFILE = $SFILES[$num]
   set DFILE = $DFILES[$num]
   if (-r $SDIR/$SFILE) then
-    echo \
+     echo \
     ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DFILE
     if ($status == 0) then
       set d2 = $DFILE:h
@@ -170,6 +173,45 @@ exit
 #   LRT/RF12.20070522.002725_085123.PNI.nc -- OK -- Thu Mar 13 14:35:43 MDT 2008
 #   Completed on Thu Mar 13 14:35:43 MDT 2008
 #
-#  3rd wave (HRT)
+#  3rd wave (LRT)
 #  Job(s) submitted on 
+#  12 job(s) submitted on Wed Dec 31 12:54:55 MST 2008
+#  File(s) archived to MSS directory:  /RAF/2007/506/UNALTERED/
+#   LRT/RF01.20070429.160230_233627.PNI.nc -- OK -- Wed Dec 31 12:55:09 MST 2008
+#   LRT/RF02.20070430.175830_025405.PNI.nc -- OK -- Wed Dec 31 12:55:24 MST 2008
+#   LRT/RF03.20070502.023510_103847.PNI.nc -- OK -- Wed Dec 31 12:55:43 MST 2008
+#   LRT/RF04.20070503.035440_122923.PNI.nc -- OK -- Wed Dec 31 12:56:06 MST 2008
+#   LRT/RF05.20070505.170130_012630.PNI.nc -- OK -- Wed Dec 31 12:56:22 MST 2008
+#   LRT/RF06.20070506.165545_004530.PNI.nc -- OK -- Wed Dec 31 12:56:32 MST 2008
+#   LRT/RF07.20070513.145300_221800.PNI.nc -- OK -- Wed Dec 31 12:57:05 MST 2008
+#   LRT/RF08.20070514.190700_023634.PNI.nc -- OK -- Wed Dec 31 12:57:17 MST 2008
+#   LRT/RF09.20070515.195330_045229.PNI.nc -- OK -- Wed Dec 31 12:57:28 MST 2008
+#   LRT/RF11.20070519.231230_082248.PNI.nc -- OK -- Wed Dec 31 12:57:58 MST 2008
+#   LRT/RF13.20070523.022810_101835.PNI.nc -- OK -- Wed Dec 31 12:58:08 MST 2008
+#   LRT/RF14.20070524.191605_024727.PNI.nc -- OK -- Wed Dec 31 12:58:18 MST 2008
+#   Completed on Wed Dec 31 12:58:18 MST 2008
+#  2 job(s) submitted on Wed Dec 31 13:00:55 MST 2008
+#  File(s) archived to MSS directory:  /RAF/2007/506/UNALTERED/
+#   LRT/RF10.20070517.012000_102312.PNI.nc -- OK -- Wed Dec 31 13:01:06 MST 2008
+#   LRT/RF12.20070522.002725_085123.PNI.nc -- OK -- Wed Dec 31 13:01:15 MST 2008
+#   Completed on Wed Dec 31 13:01:15 MST 2008
+#
+# 4th wave (HRT)
+#  14 job(s) submitted on Wed Dec 31 13:09:55 MST 2008
+#  File(s) archived to MSS directory:  /RAF/2007/506/UNALTERED/
+#   HRT/RF01.20070429.160230_233609.PNI.nc -- OK -- Wed Dec 31 13:11:00 MST 2008
+#   HRT/RF02.20070430.175830_025347.PNI.nc -- OK -- Wed Dec 31 13:12:12 MST 2008
+#   HRT/RF03.20070502.023510_103829.PNI.nc -- OK -- Wed Dec 31 13:12:40 MST 2008
+#   HRT/RF04.20070503.035440_122905.PNI.nc -- OK -- Wed Dec 31 13:13:14 MST 2008
+#   HRT/RF05.20070505.170130_012630.PNI.nc -- OK -- Wed Dec 31 13:14:31 MST 2008
+#   HRT/RF06.20070506.165545_004530.PNI.nc -- OK -- Wed Dec 31 13:15:07 MST 2008
+#   HRT/RF07.20070513.145300_221800.PNI.nc -- OK -- Wed Dec 31 13:15:56 MST 2008
+#   HRT/RF08.20070514.190700_023616.PNI.nc -- OK -- Wed Dec 31 13:17:12 MST 2008
+#   HRT/RF09.20070515.195330_045211.PNI.nc -- OK -- Wed Dec 31 13:17:53 MST 2008
+#   HRT/RF10.20070516.012000_102254.PNI.nc -- OK -- Wed Dec 31 13:18:34 MST 2008
+#   HRT/RF11.20070519.231230_082230.PNI.nc -- OK -- Wed Dec 31 13:19:39 MST 2008
+#   HRT/RF12.20070521.002725_085105.PNI.nc -- OK -- Wed Dec 31 13:20:08 MST 2008
+#   HRT/RF13.20070523.022810_101817.PNI.nc -- OK -- Wed Dec 31 13:20:37 MST 2008
+#   HRT/RF14.20070524.191605_024709.PNI.nc -- OK -- Wed Dec 31 13:21:59 MST 2008
+#   Completed on Wed Dec 31 13:21:59 MST 2008
 #
