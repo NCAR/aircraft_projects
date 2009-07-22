@@ -367,7 +367,7 @@
 
                 </output>
                 <output class="SampleOutputStream">
-                    <fileset dir="/var/r2/${PROJECT}"
+                    <fileset dir="/tmp/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
 
@@ -383,6 +383,20 @@
             </processor>
         </service>
     </server>
+
+    <dsm name="dsm301" location="LAMS_rack" id="1" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
+        <sensor class="raf.LamsSensor" devicename="/dev/lams0" id="140">
+            <sample id="1" rate="2">
+                <variable name="LAMSMAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
+                <variable name="LAMSAVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
+            </sample>
+        </sensor>
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
 <!--
     <dsm name="dsm302" location="lab" id="2" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
@@ -425,13 +439,6 @@
 
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/dsmser5" id="120">
         </serialSensor>
-
-        <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_007">
-            <parameter name="SerialNumber" value="001" type="string"/>
-            <sample id="1">
-                <variable name="SHADOR" units="count" longname="High Speed 2DC Shadow-or count"/>
-            </sample>
-        </sensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
@@ -577,173 +584,6 @@
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-
-    </dsm>
-
-    <dsm name="dsm306" location="chaps_rack" id="6" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="306"/>
-
-        <serialSensor IDREF="TDLH2O"
-                devicename="/dev/dsmser3" id="120">
-        </serialSensor>
-
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
-            <sample id="1" rate="500">
-                <variable name="PDUMPPR" units="V" longname="Pressure of instrument exhaust duct, right">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-<!-- PDUMPPR              | 2006-03-31 21:14:30 | {-0.172594,1.04743}   +0   +5 +10 -->
-                    <parameter name="corSlope"     value="1.04743"    type="float"/>
-                    <parameter name="corIntercept" value="-0.172594"  type="float"/>
-                    <linear slope="103.42" intercept="0" units="mb"/>
-                </variable>
-                <variable name="PDUMPPL" units="V" longname="Pressure of instrument exhaust duct, left">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-<!-- PDUMPPL              | 2006-03-31 21:17:22 | {-0.416897,1.07263}   +0   +5 +10 -->
-                    <parameter name="corSlope"     value="1.07263"    type="float"/>
-                    <parameter name="corIntercept" value="-0.416897"  type="float"/>
-                    <linear slope="103.42" intercept="0" units="mb"/>
-                </variable>
-                <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-<!-- PCAB                 | 2006-03-31 21:20:31 | {-0.21372,1.05393}    +0   +5 +10 -->
-                    <parameter name="corSlope"     value="1.05393"   type="float"/>
-                    <parameter name="corIntercept" value="-0.21372"  type="float"/>
-                    <linear slope="108.09" intercept="-1.3596" units="mb"/>
-                </variable>
-                <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
-<!-- PLWC                 | 2006-03-31 21:25:45 | {0.008986,1.03486}    -8   -5  -2 -->
-<!-- PLWC                 | 2006-03-31 21:27:57 | {0.00890147,1.03505}  +8   +5  +2 -->
-<!-- PLWC                 | 2006-03-31 21:32:08 | {0.0088094,1.03504}   -8   +0  +8 -->
-                    <parameter name="corSlope"     value="1.03504"    type="float"/>
-                    <parameter name="corIntercept" value="0.0088094"  type="float"/>
-                </variable>
-                <variable name="TCAB1" units="V">
-                    <parameter name="gain" value="20" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-<!-- TCAB1                | 2006-03-31 21:35:04 | {-0.0352207,1.0386}   +0 +0.5  +1 -->
-                    <parameter name="corSlope"     value="1.0386"      type="float"/>
-                    <parameter name="corIntercept" value="-0.0352207"  type="float"/>
-                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
-                </variable>
-                <variable name="TCAB4" units="V">
-                    <parameter name="gain" value="20" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-<!-- TCAB4                | 2006-03-31 21:37:12 | {-0.0177743,1.0251}   +0 +0.5  +1 -->
-                    <parameter name="corSlope"     value="1.0251"      type="float"/>
-                    <parameter name="corIntercept" value="-0.0177743"  type="float"/>
-                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
-                </variable>
-                <variable name="XO3" units="V">
-                    <parameter name="gain" value="2" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-<!-- XO3                  | 2006-03-31 21:40:23 | {-0.162664,1.02144}   +0   +5 +10 -->
-                    <parameter name="corSlope"     value="1.02144"    type="float"/>
-                    <parameter name="corIntercept" value="-0.162664"  type="float"/>
-                    <linear slope="200.0" intercept="0.0" units="ppb"/>
-                </variable>
-                <variable name="PLWC1" units="V" longname="Raw PMS-King Liquid Water Content Output">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
-<!-- PLWC1                | 2006-03-31 21:46:30 | {-0.137439,1.02604}   -8   -5  -2 -->
-<!-- PLWC1                | 2006-03-31 21:48:16 | {-0.137609,1.02617}   +8   +5  +2 -->
-<!-- PLWC1                | 2006-03-31 21:51:22 | {-0.137111,1.0261}    -8   +0  +8 -->
-                    <parameter name="corSlope"     value="1.0261"     type="float"/>
-                    <parameter name="corIntercept" value="-0.137111"  type="float"/>
-                </variable>
-            </sample>
-        </sensor>
-
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_CHAPS" units="deg_C">
-                </variable>
-            </sample>
-        </sensor>
-
-        <sensor class="DSC_A2DSensor" devicename="/dev/rtldsc_a2d0" id="220">
-            <sample id="1" rate="500">
-                <variable name="TCAB1DIA" units="V">
-                    <parameter name="gain" value="16.0" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <linear slope="125.0" intercept="0.0" units="deg_C"/>
-                </variable>
-<!--
-                <variable name="PLWC1DIA" units="V" longname="Raw PMS-King Liquid Water Content Output">
-                    <parameter name="gain" value="1" type="float"/>
-                    <parameter name="bipolar" value="true" type="bool"/>
-                    <linear slope="125.0" intercept="0.0" units="deg_C"/>
-                </variable>
--->
-            </sample>
-        </sensor>
-
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
-
-    </dsm>
-
-    <dsm name="dsm308" location="AEROSOL_rack" id="8" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
-
-        <serialSensor IDREF="Water_CN_Counter"
-                devicename="/dev/dsmser1" id="110">
-        </serialSensor>
-
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
-            <sample id="1" rate="500">
-                <variable name="XCOMR" units="V" longname="CO Mixing Ratio">
-                    <parameter name="gain" value="4" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.02321" type="float"/>
-                    <parameter name="corIntercept" value="-0.044942" type="float"/>
-                    <linear slope="400.0" intercept="0.0" units="ppbv"/>
-                </variable>
-                <variable name="XCOCNTS" units="V" longname="Raw CO Signal">
-                    <parameter name="gain" value="4" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.04357" type="float"/>
-                    <parameter name="corIntercept" value="-0.14343" type="float"/>
-                </variable>
-                <variable name="TCAB2" units="V">
-                    <parameter name="gain" value="20" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.02836" type="float"/>
-                    <parameter name="corIntercept" value="-0.0172062" type="float"/>
-                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
-                </variable>
-                <variable name="TCAB3" units="V">
-                    <parameter name="gain" value="20" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.03528" type="float"/>
-                    <parameter name="corIntercept" value="-0.022055" type="float"/>
-                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
-                </variable>
-                <variable name="PHIM2" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
-                    <parameter name="gain" value="20" type="float"/>
-                    <parameter name="bipolar" value="false" type="bool"/>
-                    <parameter name="corSlope" value="1.03144" type="float"/>
-                    <parameter name="corIntercept" value="-0.028268" type="float"/>
-                </variable>
-            </sample>
-        </sensor>
-
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_AEROSOL" units="deg_C">
-                </variable>
-            </sample>
-        </sensor>
-
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
-
     </dsm>
 
 </site>
