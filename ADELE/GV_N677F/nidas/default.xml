@@ -513,6 +513,19 @@
         </service>
     </server>
 
+    <dsm name="dsm301" location="LAMS_rack" id="1" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
+        <sensor class="raf.LamsSensor" devicename="/dev/lams0" id="140">
+            <sample id="1" rate="2">
+                <variable name="LAMSMAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
+                <variable name="LAMSAVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
+            </sample>
+        </sensor>
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
