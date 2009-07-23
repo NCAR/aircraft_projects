@@ -20,10 +20,121 @@
         </sample>
     </irigSensor>
 
-    <lamsSensor ID="LAMS" class="raf.LamsSensor">
+    <serialSensor ID="Garmin_GPS" class="GPS_NMEA_Serial"
+        baud="4800" parity="none" databits="8" stopbits="1">
+
+        <!-- GGA record -->
         <sample id="1" rate="1">
-            <variable name="LAMS_AVG"  length="256" units="Mhz" longname="LAMS histogram averages"/>
-            <variable name="LAMS_MAX"  length="256" units="Mhz" longname="LAMS histogram maximums"/>
+            <variable name="GGSECSDAY" units="sec" longname="Reference GPS seconds of day"/>
+            <variable name="GGLAT" units="degree_N" longname="Reference GPS Latitude"/>
+            <variable name="GGLON" units="degree_E" longname="Reference GPS Longitude"/>
+            <variable name="GGQUAL" units="none" longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS"/>
+            <variable name="GGNSAT" units="count" longname="Reference GPS number of satellites tracked"/>
+            <variable name="GGHORDIL" units="none" longname="Reference GPS Horizontal dilution of position"/>
+            <variable name="GGALT" units="m" longname="Reference GPS Altitude (MSL)"/>
+            <variable name="GGEOIDHT" units="m" longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid"/>
+            <variable name="GGDAGE" units="s" longname="Time in seconds since last DGPS update"/>
+            <variable name="GGREFID" units="none" longname="DGPS station ID number"/>
+        </sample>
+        <!-- RMC record -->
+        <sample id="2" rate="1">
+            <variable name="GGSTATUS" units="none" longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)"/>
+            <variable name="GGSPD" units="m/s" longname="Reference GPS Ground Speed"/>
+            <variable name="GGTRK" units="degree_T" longname="Reference GPS Track Angle"/>
+            <variable name="GGVEW" units="m/s" longname="Reference GPS Ground Speed Vector, East Component"/>
+            <variable name="GGVNS" units="m/s" longname="Reference GPS Ground Speed Vector, North Component"/>
+            <variable name="GGDAY" units="day" longname="Reference GPS Day of month (1-31)"/>
+            <variable name="GGMONTH" units="month" longname="Reference GPS Month of year (1-12)"/>
+            <variable name="GGYEAR" units="year" longname="Reference GPS 2 digit year"/>
+        </sample>
+        <message separator="\n" position="end" length="0"/> 
+    </serialSensor>
+
+    <serialSensor ID="DewPointer" class="DSMSerialSensor"
+        baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%*d,%f" rate="1"/>
+        <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="Mensor_6100" class="DSMSerialSensor"
+        baud="57600" parity="none" databits="8" stopbits="1">
+	<!-- Turn off internal filtering on the Mensor:
+		#1FL ?	query the value (factory default is 90%)
+		#1FL 0	set to 0
+		#1FL ?
+		#1SAVE 	save to EEPROM
+	-->
+        <sample id="1" scanfFormat="%*1d%f"/>
+        <message separator="\n" position="end" length="0"/>
+        <prompt string="#1?\r" rate="50"/>
+    </serialSensor>
+
+    <serialSensor ID="Paro_DigiQuartz_1000" class="DSMSerialSensor"
+        baud="57600" parity="none" databits="8" stopbits="1">
+	<!-- initialization commands for the Paro:
+	  unprompted mode, set rate with PI (and in sample tag)
+	  	If we set MD=2, don't need P4 init string
+	  *9900BR=57600
+	  *0100EW*0100MD=2	turn off  Model 715 output, unprompted
+	  *0100EW*0100UN=2	units=millibars
+	  *0100EW*0100PI=10	rate=50
+	-->
+
+        <sample id="1" scanfFormat="*%*2d%*2d%f" rate="50">
+	</sample>
+        <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="Water_CN_Counter" class="DSMSerialSensor"
+        baud="115200" parity="none" databits="8" stopbits="1"
+        init_string="SM,4,1\r">
+        <sample id="1" rate="10" scanfFormat="D,%f,%f,%f,%f,%f,%f,%f,%f">
+	    <variable name="MCN_WCN" units="none" longname="WCN Current Operating Mode"/>
+	    <variable name="SFLCN_WCN" units="none" longname="WCN Status Flags"/>
+	    <variable name="CONCN_WCN" units="#/cm3" longname="WCN Aggregated Concentration"/>
+	    <variable name="ETCN_WCN" units="s" longname="WCN Sample Time (Elapsed Time)"/>
+	    <variable name="LTCN_WCN" units="s" longname="WCN Live Time"/>
+	    <variable name="CNTS_WCN" units="count" longname="WCN Accumulated Particle Counts"/>
+	    <variable name="PCN_WCN" units="hPa" longname="WCN Absolute Pressure"/>
+	    <variable name="RPCN_WCN" units="none" longname="WCN Raw Photometric Value"/>
+        </sample>
+        <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
+	    <variable name="FSACN_WCN" units="cm3/min" longname="WCN Sample Flow Rate"/>
+	    <variable name="FTCN_WCN" units="cm3/min" longname="WCN Total Flow Rate"/>
+	    <variable name="FSHCN_WCN" units="cm3/min" longname="WCN Sheath Flow Rate"/>
+	    <variable name="PACN_WCN" units="hPa" longname="WCN Absolute Pressure"/>
+	    <variable name="TSCN_WCN" units="deg_C" longname="WCN Saturator Temperature"/>
+	    <variable name="TGCN_WCN" units="deg_C" longname="WCN Growth Tube Temperature"/>
+	    <variable name="TOCN_WCN" units="deg_C" longname="WCN Optics Temperature"/>
+        </sample>
+        <message separator="\r" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="TDLH2O" class="DSMSerialSensor"
+        baud="115200" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="20" scanfFormat="%*f %*f %f %f %*f %*f %f %f %f %f %f %f %f %f">
+	    <variable name="PCELL_LHS" units="hPa" longname="Sample Cell Pressure"/>
+	    <variable name="TCELL_LHS" units="deg_C" longname="Sample Cell Temperature"/>
+	    <variable name="PP2F_LHS" units="count" longname="2f Signal Amplitude"/>
+	    <variable name="PWR_LHS" units="count" longname="Laser Power"/>
+	    <variable name="IDX_LHS" units="count" longname="Spectral Line Position"/>
+	    <variable name="DK_LHS" units="count" longname="Zero Level"/>
+	    <variable name="PP2F_LHL" units="count" longname="2f Signal Amplitude"/>
+	    <variable name="PWR_LHL" units="count" longname="Laser Power"/>
+	    <variable name="IDX_LHL" units="count" longname="Spectral Line Position"/>
+	    <variable name="DK_LHL" units="count" longname="Zero Level"/>
+        </sample>
+        <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
+    <lamsSensor ID="LAMS" class="raf.LamsSensor">
+        <parameter name="calm"  type="int" value="1"/>
+        <parameter name="nAVG"  type="int" value="40"/>
+        <parameter name="nSKIP" type="int" value="0"/>
+        <parameter name="nPEAK" type="int" value="1000"/>
+        <sample id="1" rate="1">
+            <variable name="LAMSAVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
+            <variable name="LAMSMAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
         </sample>
     </lamsSensor>
 
@@ -46,10 +157,9 @@
             </input>
             <processor class="SampleArchiver">
                 <output class="SampleOutputStream">
-                    <fileset dir="/var/r1/${PROJECT}"
+                    <fileset dir="/media/disk/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
-
                 </output>
                 <output class="SampleOutputStream">
                     <socket type="server" port="30000"/>
@@ -63,8 +173,8 @@
         </service>
     </server>
 
-    <dsm name="dsm311" location="cabin_mpdb" id="4" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
+    <dsm name="dsm301" location="LAMS_rack" id="1" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
         <lamsSensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
 
         <output class="RawSampleOutputStream">
