@@ -525,8 +525,9 @@
     </server>
 
     <dsm name="dsm301" location="LAMS_rack" id="1" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="LAMS"/>
         <lamsSensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
+
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
@@ -673,6 +674,38 @@
     </dsm>
 
 
+    <dsm name="dsm313" location="Cabin" id="13" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D1601.dat"/>
+            <sample id="0" rate="500">
+                <!-- Crossbow Accelerometer S/N: 0701007508 -->
+                <variable name="ACCELX" units="V" longname="LWO lateral accel">
+                    <parameter name="gain"     value="4"      type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <linear slope="10.3093" intercept="-26.185622" units="G"/>
+                </variable>
+                <variable name="ACCELY" units="V" longname="LWO long. accel">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <linear slope="10.8696" intercept="-27.608784" units="G"/>
+                </variable>
+                <variable name="ACCELZ" units="V" longname="LWO vertcal accel">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <linear slope="10.7527" intercept="-25.914007" units="G"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_313" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+
     <dsm name="dsmRWI" location="Right Wing Inboard Pod" id="90" rserialPort="30002" derivedData="sock::31000">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWI"/>
 
@@ -741,30 +774,6 @@
         </output>
     </dsm>
 
-    <dsm name="dsmLWM" location="Left Wing Middle Pod" id="82" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWM"/>
-
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D019.dat"/>
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="100">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="5" type="int"/>
-                <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <linear slope="+10.0" intercept="0.0" units="W"/>
-                </variable>
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_LWO" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
-
-        <output class="RawSampleOutputStream" sorterLength="0">
-            <socket type="mcrequest"/>
-        </output>
-    </dsm>
 
     <dsm name="dsmLWO" location="Left Wing Outboard Pod" id="83" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
