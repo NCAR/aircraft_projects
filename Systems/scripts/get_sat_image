@@ -1,0 +1,16 @@
+#!/bin/csh
+
+# Adapt on a per project basis.
+
+pkill wget
+
+cd /var/www/html/images
+
+find . -name "*.jpg" -mmin +1440 -exec rm {} \;
+
+rm tmp.jpg
+wget --limit-rate=4000 http://www.eol.ucar.edu/~cjw/misc/c130_vis.jpg -O tmp.jpg
+/bin/mv tmp.jpg `date +%y%m%d-%H%M%S`_vis-c130.jpg
+
+wget --limit-rate=4000 http://www.eol.ucar.edu/~cjw/misc/c130_ir.jpg -O tmp.jpg
+/bin/mv tmp.jpg `date +%y%m%d-%H%M%S`_ir-c130.jpg
