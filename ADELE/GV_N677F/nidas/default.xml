@@ -473,9 +473,9 @@
 
     <lamsSensor ID="LAMS" class="raf.LamsSensor">
         <parameter name="calm"  type="int" value="1"/>
-        <parameter name="nAVG"  type="int" value="40"/>
+        <parameter name="nAVG"  type="int" value="80"/>
         <parameter name="nSKIP" type="int" value="0"/>
-        <parameter name="nPEAK" type="int" value="1000"/>
+        <parameter name="nPEAK" type="int" value="2000"/>
         <sample id="1" rate="1">
             <variable name="LAMSAVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
             <variable name="LAMSMAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
@@ -708,7 +708,11 @@
 
     <dsm name="dsmRWI" location="Right Wing Inboard Pod" id="90" rserialPort="30002" derivedData="sock::31000">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWI"/>
-
+<!--  Test location.
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_RMO">
+            <parameter name="SerialNumber" type="string" value="CDP001"/>
+        </serialSensor>
+-->
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_RIO">
             <parameter name="SerialNumber" value="F2DC001" type="string"/>
             <parameter name="RESOLUTION" value="25" type="int"/>
@@ -722,7 +726,7 @@
     <dsm name="dsmRWM" location="Right Wing Middle Pod" id="91" rserialPort="30002" derivedData="sock::31000">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWM"/>
 
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS2" id="730" suffix="_RMO">
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_RMO">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
         </serialSensor>
 
