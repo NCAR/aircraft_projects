@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/csh -x
 
 # Adapt on a per project basis.
 
@@ -6,8 +6,27 @@ pkill wget
 
 cd /var/www/html/images
 
-find . -name "*.jpg" -mmin +1440 -exec rm {} \;
+# Age-off; 720 minutes is 12 hours, 1440 is 24 hours.
+find . -name "*.jpg" -mmin +720 -exec rm {} \;
 
+# Greg Stossmeister puts the latest filename into the aircraft database
+# and sends a NOTIFY.  listen_sat.pl on the aircraft hears it, and calls
+# this script.
+
+# Get filename from database, and then retrieve file.
+set sql_cmd="SELECT filename FROM satellite WHERE PRODUCT = '$argv[1]';"
+set name=`psql -q -t -c "$sql_cmd"`
+wget --limit-rate=4000 ftp://data.eol.ucar.edu/pub/incoming/catalog/adele_sprite/$name -O $name
+
+if (-s $name) then
+  /bin/cp $name latest_$1.jpg
+else
+  rm $name
+endif
+
+exit
+
+# Previous method.
 rm tmp.jpg
 wget --limit-rate=4000 http://www.eol.ucar.edu/~cjw/misc/c130_vis.jpg -O tmp.jpg
 /bin/mv tmp.jpg `date +%y%m%d-%H%M%S`_vis-c130.jpg
