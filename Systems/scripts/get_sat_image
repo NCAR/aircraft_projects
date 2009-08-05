@@ -14,7 +14,7 @@ find . -name "*.jpg" -mmin +720 -exec rm {} \;
 # this script.
 
 # Get filename from database, and then retrieve file.
-set sql_cmd="SELECT filename FROM satellite WHERE PRODUCT = '$argv[1]';"
+set sql_cmd="SELECT filename FROM satellite WHERE product = '$argv[1]';"
 set name=`psql -q -t -c "$sql_cmd"`
 wget --limit-rate=4000 ftp://data.eol.ucar.edu/pub/incoming/catalog/adele_sprite/$name -O $name
 
