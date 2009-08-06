@@ -4,8 +4,23 @@
 
 cd /var/www/html/images
 
-# Sounding, Proj=ADELE, Melbourne Florida
-wget -q -r --limit-rate=4000 http://www.rap.ucar.edu/weather/upper/jax.gif -O jax.gif
+# Sounding, Proj=ADELE, Jacksonville Florida
+wget -q -r --limit-rate=4000 http://www.rap.ucar.edu/weather/upper/jax.gif -O tmp.gif
+if (-s tmp.gif) then
+ /bin/mv tmp.gif jax.gif
+endif
+
+# Sounding, Proj=ADELE, Tampa Florida
+wget -q -r --limit-rate=4000 http://www.rap.ucar.edu/weather/upper/tbw.gif -O tmp.gif
+if (-s tmp.gif) then
+ /bin/mv tmp.gif tbw.gif
+endif
+
+# Sounding, Proj=ADELE, Miami Florida
+wget -q -r --limit-rate=4000 http://www.rap.ucar.edu/weather/upper/mfl.gif -O tmp.gif
+if (-s tmp.gif) then
+ /bin/mv tmp.gif mfl.gif
+endif
 
 # No update for Melbourne since July 11.
 #wget -q -r --limit-rate=4000 http://www.rap.ucar.edu/weather/upper/xmr.gif -O xmr.gif
