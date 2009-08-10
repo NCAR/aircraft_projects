@@ -15,23 +15,26 @@ flight=$flight"/forward"
 [[ -d $flight ]] || exit
 cd $flight
 
-#exit if folder is empty-ish
+# exit if folder is empty-ish
 nfiles=`ls -l | wc -l`
 [[ $nfiles -lt 3 ]] && exit
 
-# create a folder to hold the sent images
+# create a folder to hold the sent files
 [[ -d ../sent ]] || mkdir ../sent
 
 # get the penultimate new file
 file=`ls -t | head -n 2 | tail -n 1`
-title=`echo $file | sed 's/\.jpg//'`
 
 # exit if this file is older than 3 minutes
-let dtime=`date +%s`-`stat -c %Z $file`
-#[[ $dtime -gt 180 ]] && echo "not sending out old image: "$PWD"/"$file
-[[ $dtime -gt 180 ]] && exit
+let dtime=`date +%s`-`stat -c %X $file`
+#[ $dtime -gt 180 ] && echo "not sending out old file: "$PWD"/"$file
+[ $dtime -gt 180 ] && exit
 
-# alter the image
+# exit if this file was already sent
+[[ -f ../sent/$key$file ]] && exit
+
+# compress the file
+title=`echo $file | sed 's/\.jpg//'`
 convert $file -sharpen 0.0x1.0 -scale 25% \
         -gravity northwest -fill 'grey80' -undercolor 'grey20' \
         -font "Helvetica-Bold" -pointsize 18 -annotate 0 $title \
