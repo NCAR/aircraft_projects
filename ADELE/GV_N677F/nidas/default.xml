@@ -646,15 +646,15 @@
                 </variable>
                 <variable name="TTFR" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-105.663048 39.530760 -3.828450 0.331160" units="deg_C"/>
+                    <poly coefs="-81.8451 23.2878 0.2797" units="deg_C"/>
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-98.200816 32.386316 -1.782778 0.153851" units="deg_C"/>
+                    <poly coefs="-91.553 25.9926 -0.0168" units="deg_C"/>
                 </variable>
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-97.481298 32.098536 -1.740687 0.150691" units="deg_C"/>
+                    <poly coefs="-89.413 25.436 -0.0021" units="deg_C"/>
                 </variable>
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
@@ -707,11 +707,7 @@
 
     <dsm name="dsmRWI" location="Right Wing Inboard Pod" id="90" rserialPort="30002" derivedData="sock::31000">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWI"/>
-<!--  Test location.
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_RMO">
-            <parameter name="SerialNumber" type="string" value="CDP001"/>
-        </serialSensor>
--->
+
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_RIO">
             <parameter name="SerialNumber" value="F2DC001" type="string"/>
             <parameter name="RESOLUTION" value="25" type="int"/>
@@ -728,11 +724,6 @@
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_RMO">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
         </serialSensor>
-
-        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_RMI">
-            <parameter name="SerialNumber" value="F2DC002" type="string"/>
-            <parameter name="RESOLUTION" value="10" type="int"/>
-        </sensor>
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
