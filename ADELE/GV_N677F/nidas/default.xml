@@ -769,7 +769,7 @@
     </dsm>
 
 
-    <dsm name="dsmLWO" location="Left Wing Outboard Pod" id="83" rserialPort="30002">
+    <dsm name="dsmLWO" location="Left Wing Outboard Pod" id="83" rserialPort="30002" derivedData="sock::31000" >
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
@@ -783,8 +783,9 @@
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130" suffix="_GP">
             <sample id="1">
                 <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome">
-                    <linear slope="-1.0" intercept="0.0" units="hPa"/>
-                </variable>
+		   <!-- Compensate for inserting Gust Probe "upside down" -->
+                   <linear slope="-1.0" intercept="0.0" units="Degrees"/>
+		</variable>
             </sample>
             <sample id="2">
                 <variable name="BDIFRTEMP" units="deg_C" longname="Temperature of BDIFR Probe"/>
@@ -794,8 +795,9 @@
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140" suffix="_GP">
             <sample id="1">
                 <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome">
-                    <linear slope="-1.0" intercept="0.0" units="hPa"/>
-                </variable>
+		   <!-- Compensate for inserting Gust Probe "upside down" -->
+                   <linear slope="-1.0" intercept="0.0" units="Degrees"/>
+		</variable>
             </sample>
             <sample id="2">
                 <variable name="ADIFRTEMP" units="deg_C" longname="Temperature of ADIFR Probe"/>
