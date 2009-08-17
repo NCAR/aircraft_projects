@@ -14,7 +14,7 @@ use IO::Select;
 
 $| = 1;
 
-$host = "localhost";
+$host = "eol-rt-data.guest.ucar.edu";
 
 $dbattr = {RaiseError => 1, AutoCommit => 1};
 
@@ -22,6 +22,7 @@ $dbh = DBI->connect("dbi:Pg:dbname=real-time;host=$host",'ads','',{AutoCommit =>
 
 $dbh->do("LISTEN sat_vis");
 $dbh->do("LISTEN sat_ir");
+$dbh->do("LISTEN radar");
 
 my $fd = $dbh->func("getfd");
 my $sel = IO::Select->new($fd);
@@ -34,7 +35,12 @@ while (1) {
         my ($relname, $pid) = @$notify;
         my $row = $dbh->selectrow_hashref("SELECT now()");
         print "$relname from PID $pid at $row->{now}\n";
-        my $product = substr $relname, 4;
-        system("/home/local/Systems/scripts/get_sat_image $product");
+	if ($relname eq "radar") {
+          system("/home/local/Systems/scripts/get_radar_image");
+	}
+	else {
+          my $product = substr $relname, 4;
+          system("/home/local/Systems/scripts/get_sat_image $product");
+	}
     }
 }
