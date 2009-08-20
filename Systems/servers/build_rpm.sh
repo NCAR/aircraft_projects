@@ -40,6 +40,13 @@ if [ $dopkg == all -o $dopkg == $pkg ];then
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
+pkg=raf-ac-nagios
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    version=`get_version $pkg.spec`
+    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
+
 pkg=raf-ac-ntp
 if [ $dopkg == all -o $dopkg == $pkg ];then
     version=`get_version $pkg.spec`

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+cmd="psql -qAt -U ads -h $1 -d real-time -c"
+stat=`$cmd "select status from camera;"`
+message=`$cmd "select message from camera;"`
+
+if [ "$?" = "0" ]; then
+
+	if [ "$stat" = "0" ]; then
+		echo "Capture CRITICAL; $message"
+		exit 2
+	else
+		echo "Capture OK; $message"
+		exit 0
+	fi
+
+else
+		echo "Capture CRITICAL; Could not connect to db for status check"
+		exit 2
+fi
