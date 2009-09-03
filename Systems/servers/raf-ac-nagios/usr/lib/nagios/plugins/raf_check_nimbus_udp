@@ -14,12 +14,13 @@ s.bind((HOST, PORT))
 
 r,w,e = select.select([s], [], [], 3)
 if r:
-	if (s.recv(3) == "IWG"):
-		print "NIMBUS OK; Recieved valid udp packet"
+	packet = r[0].recv(100)
+	if (packet[0:3] == "IWG"):
+		print "NIMBUS OK; ", packet
 		s.close()
 		sys.exit(0)
 	else:
-		print "NIMBUS WARNING; Recieved udp packet that did not start with IWG"
+		print "NIMBUS WARNING; ", packet
 		s.close()
 		sys.exit(1)
 else:

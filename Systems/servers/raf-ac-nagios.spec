@@ -1,4 +1,4 @@
-Summary: Configuration and plugins for nagios.
+Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
 Release: 1
@@ -22,17 +22,15 @@ Configuration and additional plugins for RAF aircraft servers.
 %build
 
 %pre
-# localhost.cfg in fc11 will move into nagios/objects
-mv $RPM_BUILD_ROOT%{_sysconfdir}/nagios/localhost.cfg $RPM_BUILD_ROOT%{_sysconfdir}/nagios/localhost.cfg.rpmsave
 
 %install
-rm -fr $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/nagios
-install -d $RPM_BUILD_ROOT/usr/lib/nagios/plugins
-cp usr/lib/nagios/plugins/* $RPM_BUILD_ROOT/usr/lib/nagios/plugins
+rm -rf %{buildroot}
+install -d %{buildroot}%{_sysconfdir}/nagios
+install -d %{buildroot}%{_libdir}/nagios/plugins
+cp usr/lib/nagios/plugins/* %{buildroot}%{_libdir}/nagios/plugins
 
-cp etc/nagios/localhost.cfg $RPM_BUILD_ROOT%{_sysconfdir}/nagios
-cp etc/nagios/raf_command.cfg $RPM_BUILD_ROOT%{_sysconfdir}/nagios
+cp etc/nagios/raf_commands.cfg %{buildroot}%{_sysconfdir}/nagios
+cp etc/nagios/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios
 
 %triggerin -- nagios
 # allow all access to nagios.
@@ -41,20 +39,21 @@ sed -i 's/use_authentication=1/use_authentication=0/g' $cf
 
 %post
 # commands.cfg in fc11 will move into nagios/objects
-cf=/etc/nagios/commands.cfg
-cat /etc/nagios/raf_command.cfg >> $cf
+cf=/etc/nagios/nagios.cfg
+sed -i 's/commands.cfg/commands.cfg\n\ncfg_file=\/etc\/nagios\/raf_commands.cfg/' $cf
+sed -i 's/\/localhost.cfg/\/raf_localhost.cfg/' $cf
 
 /etc/init.d/nagios restart
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%config %attr(0644,root,root) %{_sysconfdir}/nagios/localhost.cfg
-%config %attr(0644,root,root) %{_sysconfdir}/nagios/raf_command.cfg
-%attr(0644,root,root) /usr/lib/nagios/plugins/raf_*
+%{_sysconfdir}/nagios/raf_commands.cfg
+%{_sysconfdir}/nagios/raf_localhost.cfg
+%{_libdir}/nagios/plugins/raf_*
 
 %changelog
-* Sun Aug 23 2009 Chris Webster <cjw@ucar.edu>
+* Sun Aug 23 2009 Chris Webster <cjw@ucar.edu> - 1.0-1
 - initial version
