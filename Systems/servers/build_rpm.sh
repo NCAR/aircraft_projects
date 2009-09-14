@@ -92,6 +92,48 @@ if [ $dopkg == all -o $dopkg == $pkg ];then
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
+# START: Mission Coordinator Web Interface RPMS
+pkg=raf-www-camera
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    version=`get_version $pkg.spec`
+    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/camera
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
+
+pkg=raf-www-control
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    version=`get_version $pkg.spec`
+    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/control
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
+
+pkg=raf-www-images
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    version=`get_version $pkg.spec`
+    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/images
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
+
+pkg=raf-www-index
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    version=`get_version $pkg.spec`
+    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/index.html
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
+
+pkg=raf-www-map
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    version=`get_version $pkg.spec`
+    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/osm
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
+
+pkg=raf-www
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
+# END: Mission Coordinator Web Interface RPMS
+
 echo "RPMS:"
 egrep "^Wrote:" $log
 rpms=`egrep '^Wrote:' $log | egrep /RPMS/ | awk '{print $2}'`

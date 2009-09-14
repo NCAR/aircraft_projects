@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--Set content-type, favicon and stylesheets -->
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Camera Viewer</title>
+		<link rel="icon" type="image/vnd.microsoft.icon" href="favicon.ico" />
+		<link type="text/css" href="/jQuery/css/smoothness/jquery-ui-1.7.1.custom.css" rel="stylesheet" />	
+		<link type="text/css" href="css/style.css" rel="stylesheet" />	
+
+		<!--Load in jquery libraries, date library and the code for just this page (cameras.js) -->
+		<script type="text/javascript" src="/jQuery/js/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="/jQuery/js/jquery-ui-1.7.1.custom.min.js"></script>
+		<script type="text/javascript" src="js/date.format.js"></script>
+		<script type="text/javascript" src="js/cameras.js"></script>
+
+	</head>
+
+	<body>
+
+		<div id="tabs">
+<!--			<ul>
+			<li><a href="#tabs-1">Live Camera Images</a></li>
+			<li><a href="#tabs-2">Capture Controls</a></li>
+			</ul>
+-->		
+			<div id="tabs-1">
+				<form action="#"> 
+
+					<div class="right">
+						Flight Number: <span class="flightNum">unknown</span> 
+						 - <span class="status">unknown</span>
+					</div> 
+					<div class="clear"></div>
+					<div class="right2"><div class="greyBox" id="selectors">
+						<!--This div holds the options for the viewer -->
+						<strong> Image Source: </strong><br />
+						<!--<button id="manRefresh">Update Image(s)</button> <br /> <br /> -->
+						
+						<input type="checkbox" id="autoUpdate" checked />
+						<label for="autoUpdate">Live (Current)</label><br /> 
+						<input type="checkbox" id="playButton" />
+						<label for="playButton">Playback</label><br />
+						<br />	
+						<strong> Camera Feed(s): </strong><br />
+						<div id="camSelectors"></div>
+						<br />	
+						<strong> Other Options: </strong><br />
+						<input type="checkbox" id="autoScale" checked />
+						<label for="autoScale">Fit To Browser</label><br />
+						<input type="checkbox" id="sideways" checked />
+						<label for="sideways">Horizontal</label><br />
+						<input type="checkbox" id="grids" />
+						<label for="grids">Grid</label><br />
+						<input type="checkbox" id="fdCheck" />
+						<label for="fdCheck">Flight Data</label><br />
+
+						</div>
+					</div>
+
+				</form> 
+
+				<div >
+					<!--JavaScript will create and manage this table -->
+					<table  id="imageTable">
+					</table>
+				</div>
+
+				<div class="clear"></div>	
+				
+				<div style="text-align:center;width:500px;margin-left:auto;margin-right:auto;display:none;" id="fdDiv" >
+					<!--Display data from flightData.php - filled in by JavaScript-->
+					<span id="flightData"> </span> 
+				</div> 
+
+				<div id="sliderbox"><div id="slider"></div></div>
+
+				<form action="#" style="margin-top:1em;">
+					<span class="left">
+						<!--Allow user to change the scale of the sliderbar -->
+						<input type="text" value="5" size="3" id="sliderMin" /> Minutes Ago 
+					</span>
+					<span class="right">
+						<!--Display the date/time of the image(s) currently displayed -->
+						<span id="imgNum">0</span><br />
+						<span class="loading">loading image...</span>
+					</span>
+				</form>
+				<br />
+			</div> <!--tabs-1 -->
+		</div> <!--tabs -->
+
+	</body>
+
+</html>
+
+

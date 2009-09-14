@@ -1,0 +1,87 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Controls</title>
+	
+		<link rel="icon" type="image/vnd.microsoft.icon" href="power.ico" />
+		<link rel="stylesheet" href="style.css" type="text/css" />
+		<link rel="stylesheet" href="/jQuery/css/smoothness/jquery-ui-1.7.2.custom.css" type="text/css" />
+	
+		<script type="text/javascript" src="/jQuery/js/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="/jQuery/js/jquery-ui-1.7.2.custom.min.js"></script>
+		<script type="text/javascript">
+		/* set the refresh rate, in seconds, for each section */
+		var nagiosUpdateInterval = 60;
+		var timetagUpdateInterval = 3;
+		var dsmdetailsUpdateInterval = 3;
+
+		/* add any items whose nagios status you want to be dispayed to this list
+			for start/stop buttons to work, there must be appropriate functions
+			in commands.php
+		*/
+		var nagiosItems = new Array(
+			{ name: 'DSM-Server', nagiosTags: ['12. DSM Server'] },
+			{ name: 'SATCOM-MPDS', nagiosTags: ['16. SATCOM MPDS'] },
+			{ name: 'Nimbus', nagiosTags: ['13. nimbus process', '14. nimbus udp'] },
+			{ name: 'Cameras', nagiosTags: ['15. Camera Capture'] }
+		);
+
+		/* any xmlrpc item returned by the GetDsmList xmlrpc call will be added 
+			automatically. Add any other items whose timetag is returned
+			in the GetClocks xmlrpc call to this list
+		*/ 
+		var xmlrpcItems = new Array(
+			{ name: 'Nimbus', xmlrpcTag: 'nimbus' },
+			{ name: 'DSM-Server', xmlrpcTag: 'dsm_server' }
+		);
+				
+		</script>
+		<script type="text/javascript" src="main.js"></script>
+	</head>
+
+	<body>
+		<table id="controls0">
+			<thead>
+				<tr>
+					<th scope="col">
+						<a href="#" id="refreshNag"><span class="ui-icon ui-icon-refresh"/></a>
+						Nagios Item
+					</th>
+					<th scope="col">State</th>
+					<th scope="col">Status</th>
+					<th scope="col">Control</th>
+				</tr>
+			</thead>
+			<tbody> 
+			</tbody>
+		</table>
+		<table id="controls1">
+			<thead>
+				<tr>
+					<th scope="col">
+						<a href="#" id="refreshXMLRPC"><span class="ui-icon ui-icon-refresh"/></a>
+						XMLRPC Item
+					</th>
+					<th scope="col">State</th>
+					<th scope="col">Timetag</th>
+					<th scope="col">Ping Result</th>
+				</tr>
+			</thead>
+			<tbody class="sel">
+			</tbody>
+			<tfoot>
+				<tr><td colspan="4"></td></tr>
+				<tr><td colspan="4" style="text-align:center;" > 
+					<!--<button id="detailer" type="button" class='ui-state-default ui-corner-all' > &darr; Show Details</button> -->
+					<!--<button id="calibrater" type="button" class='ui-state-default ui-corner-all' > &plusmn; Calibrate</button> -->
+					<button id="testvolter" type="button" class='ui-state-default ui-corner-all' > &radic; Set Test Voltage</button> | 
+					<button id="pinger" type="button" class='ui-state-default ui-corner-all' > &hArr; Ping</button> 
+					<button id="rebooter" type="button" class='ui-state-default ui-corner-all' > &empty; Soft Reboot</button> 
+				</td></tr>
+			</tfoot>
+		</table>
+		<div id="dsm-table"></div>
+		<div id="dsm-dialog"></div>
+		<div id="reboot-dialog"></div>
+	</body>
+</html>
