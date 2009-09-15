@@ -33,8 +33,11 @@
 	$result = pg_query($query) or die('Query Failed: '. pg_last_error());
 	$flNum = str_replace(" ","",pg_fetch_array($result));
 
+	//get and format the current date/time
+	$UTCdate = gmdate("U", time()) * 1000;
+
 	//put all data in an array, pack into JSON and return it to the viewer
-	$a = array('chost'=>$chost[0], 'curFlNum'=>$flNum[0]);
+	$a = array('chost'=>$chost[0], 'curFlNum'=>$flNum[0], 'datetime'=>$UTCdate);
 	echo json_encode($a);
 
 	//close the database connection

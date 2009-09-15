@@ -27,12 +27,12 @@
 	$status = pg_fetch_row($result);	
 
 	//display message, color coding by value of status
-	if ($status[0]) {
+	if ($status[0] == "1") {
 		echo "<strong style=\"color: green\">";
 	} else {
 		echo "<strong style=\"color: red\">";
 	}
-	echo "$status[1]</strong>";
+	echo "$status[1]</strong><div id='camPGstatus' style=\"display:none\">{$status[0]}</div>";
 
 	//close db connection
 	pg_free_result($result);

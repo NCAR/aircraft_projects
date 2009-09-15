@@ -2,6 +2,9 @@
 	//display errors
 	ini_set('display_errors','1');
 
+	//sort function - 'left' is low, 'right' is high, everything else goes in the middle
+	function std_order($a, $b) { return ($a=="left"?-1: ($a=="right"?1: ($b=="left"?1:-1))); }
+
 	//make sure browser does not cache this page
 	if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)) {
 	  # This is for Internet Explorer, the browser that doesn't listen to HTTP standards.
@@ -32,9 +35,10 @@
 	//output a checkbox for each camera, with label and alt tag. Default the first
 	//checkbox to checked, others unchecked
 	$count = 1;
+	usort($directions, "std_order");
 	foreach ($directions as $dir) {
 		echo '<input type="checkbox" id="showCam'.$count.'" class="camCheck" alt="'.$dir.'"' ;
-		if ($count == 1) echo " checked";
+		if (isset($_GET[$dir])) echo " checked";
 		echo ' onClick="autoscaler();" /><label for="showCam' . $count . '">' . $dir . "</label><br />\n";
 		$count++;
 	}

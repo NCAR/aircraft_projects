@@ -2,6 +2,9 @@
 	//write out errors 
 	ini_set('display_errors', '1');
 
+	//sort function - 'left' is low, 'right' is high, everything else goes in the middle
+	function std_order($a, $b) { return ($a=="left"?-1: ($a=="right"?1: ($b=="left"?1:-1))); }
+
 	//make sure that browser does not cache this page
 	if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)) {
 	  # This is for Internet Explorer, the browser that doesn't listen to HTTP standards.
@@ -25,7 +28,7 @@
 	//set refresh rate from GET (or default to every 5 seconds)
 	$rate = 5;
 	if (isset($_GET['refresh'])) $rate = $_GET['refresh'];
-	echo "<meta http-equiv=\"refresh\" content=\"$rate\" >"; 
+	echo "<meta http-equiv=\"refresh\" content=\"$rate\" >\n"; 
 
 	//get flight number from global_attributes table
 	$query = "SELECT value FROM global_attributes WHERE key='FlightNumber'";
@@ -52,15 +55,19 @@
 	//use regex to parse out each direction from the "array" returned by posgres
 	preg_match('/\{(.+)\}/', $camDB['direction'], $direc);
 	$directions = explode(',', $direc[1]);
+	usort($directions, "std_order");
 
+	echo "<div style='text-align: center'>\n";
 	//build url to display each image on the page
+	$scale = " ";
+	if (isset($_GET['height'])) $scale = $scale . "height=\"{$_GET['height']}\" ";
+	if (isset($_GET['width'])) $scale = $scale . "width=\"{$_GET['width']}\" ";
 	$i = 0;
 	foreach ($directions as $dir) {
-		echo "<img src='http://lenado/camera/flight_number_$flNum/$dir/$latest[$i].jpg' ";
-		if (isset($_GET['scale'])) echo "width= ".$_GET['scale'];
-		echo " />\n";
+		echo "\t<img src='camera_images/flight_number_$flNum/$dir/$latest[$i].jpg' $scale />\n";
 		$i++;
 	}
+	echo "</div>\n";
 
 	//close up the database connection
 	pg_free_result($result);

@@ -1,10 +1,10 @@
 var capturePHP="/camera/capture.php"; //path from webroot to capture.php (update this manuall if it changes)
-var camServer="http://sloop2.eol.ucar.edu"; //camserver (gets updated from db automatically)
+var camServer="http://192.168.84.204"; //camserver (gets updated from db automatically)
 
 //Global Vars
 var imgSrc = new Array();
 var flightNumber = 0;
-var maxVal = -2, imgsReady=0;
+var maxVal = -2, offsetTime=0, imgsReady=0;
 var grids=false;
 var scale = "1024";
 var now = new Date();
@@ -18,8 +18,8 @@ function getNames(offset, pbmode){
 			setImgs(data.jsonImgs[$(".camCheck").size()-1], false);
 		});
 	} else {
-		d.setTime(now.valueOf() + (1000*offset) );
-		newImg = d.format("yymmdd-HHMMss") + ".jpg";
+		d.setTime(now.valueOf() + (1000*offset) + offsetTime);
+		newImg = d.format("yymmdd-HHMMss", true) + ".jpg";
 		setImgs(newImg, pbmode);
 	}
 }
@@ -29,16 +29,12 @@ function setImgs(name, pbmode){
 	for (i=1; i<=$(".camCheck").size(); i=i+1){
 		if ($("#showCam"+i).attr('checked') == 1 ){
 /*TODO: put this back*/
-			/*imgSrc[i]  = "camera_images/flight_number_";
+			imgSrc[i]  = "camera_images/flight_number_";
 		 	imgSrc[i] += flightNumber;
 			imgSrc[i] += "/";
 			imgSrc[i] += $("#showCam"+i).attr('alt');
 			imgSrc[i] += "/";
-			imgSrc[i] += name;*/
-
-			imgSrc[i]  = "camera_images/";
-			imgSrc[i] += $("#showCam"+i).attr('alt');
-			imgSrc[i] += "/test.jpg";
+			imgSrc[i] += name;
 	
 			if (pbmode) {
 				$('<img>')
@@ -87,6 +83,7 @@ function timedFunc() {
 	if ($("#fdCheck").attr("checked") == true){
 		$("span[id='flightData']").load("flightData.php");
 	}
+	if ($("#camPGstatus").text()=="2") {$('#camSelectors').load('camSelect.php');}
 	setTimeout("timedFunc()", 1000);
 }
 
@@ -159,6 +156,13 @@ function autoscaler() {
 	if ($("#autoUpdate").attr('checked') == false) {
 		getNames($("#slider").slider('value'),false);
 	}
+	setCookie("autoScale", auto ? "C" : "X", 10);
+	var cams_selected = "";
+	$(".camCheck:checked").each(function(i){
+		cams_selected += this.alt + "&";
+	});
+	setCookie("cams_selected", cams_selected, 10);
+
 }
 
 function buildImageTable(sideways) {
@@ -187,6 +191,11 @@ function buildImageTable(sideways) {
 function setupGlobals(){
 	//get data from server needed for setting up the page
 	$.getJSON("getData.php", function(data){
+	        //check for offset between local and server clock
+        	var servDate = new Date;
+	        servDate.setTime(data.datetime);
+        	var locDate = new Date();
+	        offsetTime = servDate.valueOf() - locDate.valueOf();
 
 		//update flight number from DB
 		flightNumber = data.curFlNum;
@@ -194,6 +203,11 @@ function setupGlobals(){
 
 		//get hostname of the camserver that last updated the database	
 		camServer = 'http://' + data.chost;
+
+		//get global setting cookies
+		grids = getCookie("grids") != "X";
+		$("#grids").attr('checked', grids); 
+		$("#sliderMin").val(getCookie("sliderMin"));
 	});
 }
 
@@ -206,7 +220,7 @@ $(function(){
  **************************************************/
 
 	/*=========    SET UP HTML   ============*/
-	
+
 	//get status info
 	$(".status").load("status.php");
 
@@ -214,23 +228,33 @@ $(function(){
 	setupGlobals();
 
 	//load camera selector checkboxes (get names from DB)
-	$('#camSelectors').load('camSelect.php', function(){
-		buildImageTable( true ); //set up image table
+	$('#camSelectors').load('camSelect.php?'+getCookie("cams_selected"), function(){
+
+		//load data from cookies before building tables, etc
+		$("#autoScale").attr('checked', getCookie("autoScale") != "X");
+
+		var sideways_checked = getCookie("sideways") != "X";
+		$("#sideways").attr('checked', sideways_checked);
+		buildImageTable( sideways_checked ); //set up image table
+
 		timedFunc();  //start showing/refreshing images	
 	});
 
 	//set time scale for slider
 	$("#sliderMin").change(function() {
-		var newTime = (-60 * $("#sliderMin").attr('value'));
+		var newval = $("#sliderMin").attr('value')
+		var newTime = (-60 * newval);
 		$("#slider").slider('option', 'min', newTime);
+		setCookie("sliderMin", newval, 10);
 	});
 
 	//set up tabs
 //	$("#tabs").tabs();		
 
 	//set up Slider
+	var minSliderValue_fromCookie = -60 * getCookie("sliderMin");
 	$('#slider').slider({
-		min: -300,
+		min: minSliderValue_fromCookie, 
 		max: maxVal,
 		step: 1,
 		slide: function(event, ui) {
@@ -240,15 +264,14 @@ $(function(){
 			var mins=Math.floor(-ui.value/60);
 			if (mins) { infostring +=  mins + " Minutes " + (-ui.value%60) + " Seconds Ago"; }
 			else { infostring += (-ui.value%60) + " Seconds Ago"; }
-			curtimedate.setTime(now.valueOf() + (1000*ui.value) );
-			infostring += ("&raquo " + niceTime(curtimedate.format("yymmdd-HHMMss")));
+			curtimedate.setTime(now.valueOf() + (1000*ui.value) + offsetTime);
+			infostring += ("&raquo " + niceTime(curtimedate.format("yymmdd-HHMMss", true)));
 			$("#imgNum").html(infostring);
 		},
 		stop: function(event, ui) {
 			getNames(ui.value, false)
 		}
 	});
-
 
 	/*=========    SET UP EVENT HANDLERS    ============*/
 
@@ -258,11 +281,13 @@ $(function(){
 
 	//live flight data
 	$("#fdCheck").click(function() {
-		if ($("#fdCheck").attr('checked')) {
+		var livedata = $("#fdCheck").attr('checked');
+		if (livedata) {
 			$("#fdDiv").show();
 		} else {
 			$("#fdDiv").hide();
 		}
+		setCookie("fdCheck", livedata ? "C" : "X", 10);
 	});
 
 	//grid event
@@ -273,12 +298,14 @@ $(function(){
 				$("img.grid:eq("+(i-1)+")").hide();
 			}
 		} else { autoscaler(); }
-		
+		setCookie("grids", grids ? "C" : "X", 10);
 	});					
 
 	//request horizonal image layout
 	$("#sideways").click(function() {
-		buildImageTable($("#sideways").attr('checked'));	
+		var sideways_checked = $("#sideways").attr('checked');
+		buildImageTable(sideways_checked);	
+		setCookie("sideways", sideways_checked ? "C" : "X", 10);
 	});
 	
 	//start,stop, refresh buttons
@@ -307,5 +334,33 @@ $(function(){
 			playFunc();		
 		}
 	});
-
+	
+	//show flight data if cooke is there	
+	$("#fdCheck").attr('checked', getCookie("fdCheck") != "X");
+	$("#fdCheck").triggerHandler('click');
 });
+
+
+/*==============Cookie handlers===================*/
+function setCookie(c_name, value, expire_days) {
+	var exdate=new Date();
+	exdate.setDate(exdate.getDate()+expire_days);
+	document.cookie=c_name+ "=" +escape(value)+
+	((expire_days==null) ? "" : ";expires="+exdate.toGMTString());
+}
+function getCookie(c_name)
+{
+    if (document.cookie.length>0)
+    {
+	c_start=document.cookie.indexOf(c_name + "=");
+	if (c_start!=-1)
+	{
+	    c_start=c_start + c_name.length+1;
+	    c_end=document.cookie.indexOf(";",c_start);
+	    if (c_end==-1) c_end=document.cookie.length;
+	    return unescape(document.cookie.substring(c_start,c_end));
+	}
+    }
+    return "X";
+}
+	
