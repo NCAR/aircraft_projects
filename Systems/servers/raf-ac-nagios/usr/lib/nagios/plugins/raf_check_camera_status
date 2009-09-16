@@ -1,20 +1,42 @@
 #!/bin/bash
 
+age_limit=10 #number of seconds old the last_update column can be and still return OK
+
+#get vars from database
 cmd="psql -qAt -U ads -h $1 -d real-time -c"
 stat=`$cmd "select status from camera;"`
 message=`$cmd "select message from camera;"`
+age=`$cmd "select age(current_timestamp, last_update) from camera;"`
+verify=$?
 
-if [ "$?" = "0" ]; then
+#split up last_update into discrete units
+age_hour=`echo $age | cut -d ":" -f 1`
+age_min=`echo $age | cut -d ":" -f 2`
+age_sec=`echo $age | cut -d ":" -f 3 | cut -d "." -f 1`
 
-	if [ "$stat" = "0" ]; then
-		echo "Capture CRITICAL; $message"
-		exit 2
-	else
-		echo "Capture OK; $message"
-		exit 0
-	fi
+if [ ! "$verify" = "0" ]; then
 
+        echo "Capture CRITICAL; Could not connect to db for status check"
+        exit 2
 else
-		echo "Capture CRITICAL; Could not connect to db for status check"
-		exit 2
+
+    if [ "$age_hour" = "00" ]; then
+        if [ $age_min -eq 0 ]; then
+            str_age="$age_sec seconds"
+        else
+            str_age="$age_min minutes"
+        fi
+    else
+        str_age="$age_hour hours"
+    fi
+
+    if [ "$stat" != "0" -a "$age_hour" = "00" -a $age_min -eq 0 -a $age_sec -lt $age_limit  ]; then
+        echo "Capture OK; $message|$age"
+        exit 0
+    else
+        echo "Capture CRITICAL; last update was $str_age ago|$age"
+        exit 2
+    fi
+
 fi
+~      
