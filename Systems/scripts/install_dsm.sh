@@ -66,6 +66,7 @@ if [ $# == 3 ] && [ $3 == "rsync" ] ; then
   echo "dpkg -i -F depends /tmp/root-user_*_all.deb"
   echo
   ssh root@$1
+  echo "\n\t...now run '$0 $1 $2 kernel' to install the latest kernel.\n"
   exit
 fi
 
@@ -99,8 +100,9 @@ if [ $# == 3 ] && [ $3 == "kernel" ] ; then
     ssh root@$1 "dpkg -i -F depends /tmp/linux-image-2.6.21.7-ael1-2-vulcan_ncar.1_armbe.deb"
     ;;
   esac
-  echo "\n\tRebooting the DSM."
+  echo "\nRebooting the DSM."
   ssh root@$1 "reboot"
+  echo "\n\t...now run '$0 $1 $2' After the DSM finishes booting.\n"
   exit
 fi
 
