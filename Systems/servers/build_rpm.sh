@@ -117,7 +117,7 @@ fi
 pkg=raf-www-index
 if [ $dopkg == all -o $dopkg == $pkg ];then
     version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/index.html
+    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/{index.html,display}
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 

@@ -22,12 +22,15 @@ This package installs the index page for MC site (buttons across the top, conten
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/var/www/html/
 cp index.html $RPM_BUILD_ROOT/var/www/html/
+cp -r display $RPM_BUILD_ROOT/var/www/html/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(0664,ads,apache)
+%defattr(0664,ads,ads)
+%dir %attr(0775,ads,ads) /var/www/html/display
+/var/www/html/display/*
 /var/www/html/index.html
 
 %changelog

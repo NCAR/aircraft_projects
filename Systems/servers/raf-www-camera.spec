@@ -6,7 +6,7 @@ Group: Applications/Web
 Source: %{name}-%{version}.tar.gz
 License: none
 Distribution: RHEL 5.3 Linux
-Requires: httpd php php-pgsql php-pecl-json raf-jquery
+Requires: httpd php php-pgsql php-pecl-json jquery
 Buildroot: %{_tmppath}/%{name}-root
 BuildArch: noarch
 
@@ -24,7 +24,8 @@ mkdir -p $RPM_BUILD_ROOT/var/www/html
 cp -r camera $RPM_BUILD_ROOT/var/www/html/
 
 %post
-echo "/var/www/html/camera *(rw,sync,root_squash)" >> /etc/exports
+mkdir /mnt/r2/camera_images
+ln -s /mnt/r2/camera_images /var/www/html/camera/camera_images
 phpconf=`find /etc -name "php.conf"`
 echo "SetEnv PGHOST acserver" >> $phpconf
 echo "SetEnv PGUSER ads" >> $phpconf
@@ -32,7 +33,7 @@ echo "SetEnv PGDATABASE real-time" >> $phpconf
 service httpd restart
 
 %postun
-sed -i '/var\/www\/html\/camera/ d' /etc/exports
+rm /var/www/html/camera/camera_images
 phpconf=`find /etc -name "php.conf"`
 sed -i '/SetEnv PGHOST/ d' $phpconf
 sed -i '/SetEnv PGUSER/ d' $phpconf

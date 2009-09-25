@@ -1,6 +1,6 @@
 <?php
 	//write out errors 
-	ini_set('display_errors', '1');
+	//ini_set('display_errors', '1');
 
 	//sort function - 'left' is low, 'right' is high, everything else goes in the middle
 	function std_order($a, $b) { return ($a=="left"?-1: ($a=="right"?1: ($b=="left"?1:-1))); }

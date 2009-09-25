@@ -4,7 +4,7 @@ var statusColor = new Array('#0A0', '#AA0'  ,'#A00'    ,'#505'   ,'#999' );
 var dsmlist = new Array();
 var DsmDetail = { en: false, list: [100], 
 	next: function(){ var a=this.list.shift(); this.list.push(a); return a; }
-}
+};
 
 /********************************************
  *      == jquery init function ==          *
@@ -15,7 +15,7 @@ $(function(){
 	//build table rows for the nagios items:
 	var startStop = new Array("start", "stop");
 	for (var item in nagiosItems) {
-		makerow(0, 'nagItem'+item, nagiosItems[item].name, 4, "", startStop)
+		makerow(0, 'nagItem'+item, nagiosItems[item].name, 4, "", startStop);
 	}
 	
 	//build tabe rows for XMLRPC items:
@@ -46,7 +46,7 @@ $(function(){
 				.dialog('open');
 		} else {
 			var hname = $('.ui-selected:first').attr('id').split("-", 1);
-			$('#dsm-dialog').text("Loading...").dialog('open');
+			$('#dsm-dialog').html("<img src='display/load.gif'/> Loading...").dialog('open');
 			$.get(
 				"xmlrpcHTML.php",
 				{'port':'30003', 'method':'List_NCAR_A2Ds', 'rcvr':'rcvr', 'host':hname},
@@ -147,7 +147,7 @@ function buildXMLRPCtable(clear) {
 	for (var item in xmlrpcItems) {
 		var num = ((item-0)+100);
 		makerow(1, num, xmlrpcItems[item].name, 3, "", null); 
-		dsmlist[num] = 'localhost'; 
+		dsmlist[num] = xmlrpcItems[item].hostname; 
 	}
 
 	//ajax get json array of dsms, finnish the table with these:

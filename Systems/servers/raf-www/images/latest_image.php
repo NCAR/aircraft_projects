@@ -6,11 +6,11 @@
 		<meta http-equiv="refresh" content="900" >
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>Sat Image</title>
-		<link type="text/css" href="../camera/css/smoothness/jquery-ui-1.7.1.custom.css" rel="stylesheet" />	
-		<link type="text/css" href="../camera/css/style.css" rel="stylesheet" />	
+		<link type="text/css" href="/jQuery/css/smoothness/jquery-ui-1.7.2.custom.css" rel="stylesheet" />	
+		<link type="text/css" href="style.css" rel="stylesheet" />	
 
-		<script type="text/javascript" src="../camera/js/jquery-1.3.2.min.js"></script>
-		<script type="text/javascript" src="../camera/js/jquery-ui-1.7.1.custom.min.js"></script>
+		<script type="text/javascript" src="/jQuery/js/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="/jQuery/js/jquery-ui-1.7.2.custom.min.js"></script>
 
 		<script type="text/javascript">
 var playing=false, loopid=0;

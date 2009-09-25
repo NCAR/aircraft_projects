@@ -334,11 +334,48 @@ $(function(){
 			playFunc();		
 		}
 	});
+
+	$("#sendLatest").click(function(){
+		loadingBox();
+		$.get("sendLastImage.php", function(data){
+			[dSent, dTitle, dMesg] = data.split("^^", 3);
+			$("#messageboxdiv")
+				.html(dMesg)
+				.dialog('option', 'title', dTitle)
+				.dialog('option', 'buttons', 
+					dSent == "1" ? 
+					{'Ok' : function() {$(this).dialog('close');} } :
+					{'Send Anway': sendImageOverride,
+					 'I\'ll Wait' : function() {$(this).dialog('close');} }
+				);
+		});
+	});
+	$("#messageboxdiv").dialog({autoOpen: false});
 	
 	//show flight data if cooke is there	
 	$("#fdCheck").attr('checked', getCookie("fdCheck") != "X");
 	$("#fdCheck").triggerHandler('click');
 });
+
+function loadingBox() {
+	$("#messageboxdiv")
+		.dialog('option', 'title', "Please Wait...")
+		.html("<img src='/display/load.gif' />")
+		.dialog('open')
+		.dialog('option', 'buttons', {});
+}
+
+function sendImageOverride() {
+	loadingBox();
+	$.get("sendLastImage.php?override=true", function(data){
+		[dTitle, dMesg] = data.split("^^", 2);
+		$("#messageboxdiv")
+			.html(dMesg)
+			.dialog('option', 'title', dTitle)
+			.dialog('option', 'buttons', {'Ok' : function() {$(this).dialog('close');} })
+			.dialog('open');
+	});
+}
 
 
 /*==============Cookie handlers===================*/
