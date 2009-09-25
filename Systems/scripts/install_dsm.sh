@@ -1,0 +1,185 @@
+#!/bin/sh
+
+alias echo="echo -e"
+
+function usage
+{
+  echo "\nPlease specify board type and DSM."
+  echo "\nExample:"
+  echo "\t$0 dsm319 viper [rsync|kernel]"
+  echo "\t$0 dsmRWO vulcan [rsync|kernel]"
+  echo
+  echo "You will need a console port actively connected to the DSM!"
+  echo
+  echo "This script should be run thrice.  When using this script"
+  echo "the 'rsync' option should be used first to install rsync."
+  echo
+  echo "Then use the 'kernel' option.  The DSM will be automatically"
+  echo "rebooted.  Press Ctrl-C to drop into RedBoot to set up"
+  echo "its kernel as such..."
+  echo "\nfor VIPER:"
+  echo "\tRedBoot> alias kernel"
+  echo "\t'kernel' = '/boot/vmlinuz-2.6.16.28-arcom1-1-viper'"
+  echo "\tRedBoot> alias kernel /boot/vmlinuz-2.6.16.28-arcom1-2-viper"
+  echo "\tRedBoot> reset"
+  echo "\nfor VULCAN:"
+  echo "\tRedBoot> alias kernel"
+  echo "\t'kernel' = '/boot/vmlinuz-2.6.11.11-arcom1-2-vulcan'"
+  echo "\tRedBoot> alias kernel /boot/vmlinuz-2.6.21.7-ael1-2-vulcan"
+  echo "\tRedBoot> reset"
+  echo
+}
+
+if [ $# -lt 2 ]; then
+  usage
+  exit
+fi
+
+case $2 in
+viper) be="";;
+vulcan) be="be";;
+*)
+  usage; exit;;
+esac
+
+echo "'$1' uses an arm$be processor.\n"
+
+# Test to see if the DSM is on-line.
+#
+ping -c 1 -W 2 $1 > /dev/null || exit $?
+
+# You will be confronted with the following issue regarding
+# the RSA key:
+#
+# The authenticity of host '192.168.184.1 (192.168.184.1)' can't be established.
+# RSA key fingerprint is 7d:3f:25:86:4e:26:9c:30:f4:13:67:4d:72:41:3e:dc.
+# Are you sure you want to continue connecting (yes/no)? yes
+# Warning: Permanently added '192.168.184.1' (RSA) to the list of known hosts.
+# ads@192.168.184.1's password: 
+#
+if [ $# == 3 ] && [ $3 == "rsync" ] ; then
+  echo "Shelling into '$1'... Issue the following commands then type 'exit' to resume."
+  echo
+  echo "scp ads@192.168.184.1:/opt/local/ael-dpkgs/rsync_*_arm$be.deb /tmp/"
+  echo "dpkg -i /tmp/rsync_*_arm$be.deb"
+  echo
+  ssh root@$1
+  exit
+fi
+
+# You still need console access to the DSM in order to install the latest
+# kernel.  After this reboots Ctrl-C the console to drop into RedBoot.
+#
+if [ $# == 3 ] && [ $3 == "kernel" ] ; then
+  echo "\n\tInstalling the kernel... watch for the reboot in the serial console!"
+  echo "\nClick on the terminal and get ready to press Ctrl-C to drop into RedBoot"
+  echo "over there.  If you miss it the DSM will still boot with its older kernel."
+  echo "Simply log in over there, reboot and try again."
+  echo "\n\twatch for the 'Trying NPE-B...success. Using NPE-B with PHY 0.'"
+
+  case $2 in
+  viper)
+    echo "\nfor VIPER:"
+    echo "\tRedBoot> alias kernel"
+    echo "\t'kernel' = '/boot/vmlinuz-2.6.16.28-arcom1-1-viper'"
+    echo "\tRedBoot> alias kernel /boot/vmlinuz-2.6.16.28-arcom1-2-viper"
+    echo "\tRedBoot> reset"
+    ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/linux-image-2.6.16.28-arcom1-2-viper_ncar.1_arm.deb /tmp/"
+    ssh root@$1 "dpkg -i /tmp/linux-image-2.6.16.28-arcom1-2-viper_ncar.1_arm.deb"
+    ;;
+  vulcan)
+    echo "\nfor VULCAN:"
+    echo "\tRedBoot> alias kernel"
+    echo "\t'kernel' = '/boot/vmlinuz-2.6.11.11-arcom1-2-vulcan'"
+    echo "\tRedBoot> alias kernel /boot/vmlinuz-2.6.21.7-ael1-2-vulcan"
+    echo "\tRedBoot> reset"
+    ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/linux-image-2.6.21.7-ael1-2-vulcan_ncar.1_armbe.deb /tmp/"
+    ssh root@$1 "dpkg -i /tmp/linux-image-2.6.21.7-ael1-2-vulcan_ncar.1_armbe.deb"
+    ;;
+  esac
+  ssh root@$1 "reboot"
+  exit
+fi
+
+# The remainder of the script will operate w/o need of user intervention.
+#
+ssh root@$1 uname -a
+
+ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/isfs/libelf0_*_arm$be.deb /tmp/"
+ssh root@$1 "dpkg -i -F depends /tmp/libelf0_*_arm$be.deb"
+ssh root@$1 "ls -lrt /tmp/*.deb"
+ssh root@$1 "rm /tmp/*.deb"
+
+ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/*_arm$be.deb /tmp/"
+ssh root@$1 "dpkg -i /tmp/gawk_*_arm$be.deb"
+ssh root@$1 "dpkg -i /tmp/libxerces-c_*_arm$be.deb"
+ssh root@$1 "dpkg -i /tmp/libxmlrpc++_*_arm$be.deb"
+ssh root@$1 "dpkg -i /tmp/minicom_*_arm$be.deb"
+ssh root@$1 "dpkg -i /tmp/ntpd_*_arm$be.deb"
+ssh root@$1 "dpkg -i /tmp/ntpdate_*_arm$be.deb"
+ssh root@$1 "dpkg -i /tmp/procps_*_arm$be.deb"
+ssh root@$1 "ls -lrt /tmp/*.deb"
+ssh root@$1 "rm /tmp/*.deb"
+
+ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/ads3/etc-files_*_all.deb /tmp/"
+ssh root@$1 "dpkg -i -F depends /tmp/etc-files_*_all.deb"
+ssh root@$1 "ls -lrt /tmp/*.deb"
+ssh root@$1 "rm /tmp/*.deb"
+
+# Create the missing 'etc/modprobe.d/ads3' file and install it.
+#
+rm -f /tmp/$0-ads3
+cat > /tmp/$0-ads3 << EOF
+# 
+# ads3 modprobe configuration
+#
+# Using an alias of "ads3_unstable", list the driver modules
+# that should be copied to the dsm on every boot, and
+# activated via modprobe in the ads3 boot script.
+alias ads3_unstable pc104sg
+#options ncar_a2d IoPort=0xfa0,0xfb0,0xfc0
+options ncar_a2d IoPort=0xfa0
+alias ads3_unstable ncar_a2d
+
+# Using an alias of "ads3_stable", list the driver modules
+# that are installed via a Debian package to the compact flash,
+# rather than rsync'd from the server on every boot, and
+# are activated via modprobe in the ads3 boot script.
+EOF
+ssh root@$1 "mkdir -p /etc/modprobe.d"
+scp /tmp/$0-ads3 root@$1:/etc/modprobe.d/ads3
+rm -f /tmp/$0-ads3
+
+echo "\n\tRebooting the DSM... This script will resume processing in 2 minutes.\n"; date
+ssh root@$1 "reboot"
+sleep 120
+ping -c 1 -W 2 $1 > /dev/null || exit $?
+
+# Check to see of the CF card is ready.
+#
+if [ `ssh root@$1 "df | grep -c hda1"` -eq 0 ]; then
+  echo "CF not set up or present on '$1'"
+  exit
+fi
+
+ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/ads3/*_all.deb /tmp/"
+ssh root@$1 "dpkg -i -F depends /tmp/ads3-firmware_*_all.deb"
+ssh root@$1 "dpkg -i -F depends /tmp/root-user_1.0_all.deb"
+ssh root@$1 "ls -lrt /tmp/*.deb"
+ssh root@$1 "rm /tmp/*.deb"
+
+ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/ads3/*_arm$be.deb /tmp/"
+ssh root@$1 "dpkg -i -F depends /tmp/ads3-modules_*_arm$be.deb"
+ssh root@$1 "dpkg -i -F depends /tmp/pcmcom8_*_arm$be.deb"
+ssh root@$1 "ls -lrt /tmp/*.deb"
+ssh root@$1 "rm /tmp/*.deb"
+
+ssh root@$1 "depmod" 
+
+echo "\n\tRebooting the DSM... This script will resume processing in 2 minutes.\n"; date
+ssh root@$1 "reboot"
+sleep 120
+ping -c 1 -W 2 $1 > /dev/null || exit $?
+
+ssh root@$1 "lsmod"
+ssh root@$1 "ps aux | grep dsm"
