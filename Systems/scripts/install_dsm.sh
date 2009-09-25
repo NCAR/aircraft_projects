@@ -61,7 +61,9 @@ if [ $# == 3 ] && [ $3 == "rsync" ] ; then
   echo "Shelling into '$1'... Issue the following commands then type 'exit' to resume."
   echo
   echo "scp ads@192.168.184.1:/opt/local/ael-dpkgs/rsync_*_arm$be.deb /tmp/"
-  echo "dpkg -i /tmp/rsync_*_arm$be.deb"
+  echo "dpkg -i -F depends /tmp/rsync_*_arm$be.deb"
+  echo "scp ads@192.168.184.1/ael-dpkgs/ads3/*_all.deb /tmp/"
+  echo "dpkg -i -F depends /tmp/root-user_*_all.deb"
   echo
   ssh root@$1
   exit
@@ -85,7 +87,7 @@ if [ $# == 3 ] && [ $3 == "kernel" ] ; then
     echo "\tRedBoot> alias kernel /boot/vmlinuz-2.6.16.28-arcom1-2-viper"
     echo "\tRedBoot> reset"
     ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/linux-image-2.6.16.28-arcom1-2-viper_ncar.1_arm.deb /tmp/"
-    ssh root@$1 "dpkg -i /tmp/linux-image-2.6.16.28-arcom1-2-viper_ncar.1_arm.deb"
+    ssh root@$1 "dpkg -i -F depends /tmp/linux-image-2.6.16.28-arcom1-2-viper_ncar.1_arm.deb"
     ;;
   vulcan)
     echo "\nfor VULCAN:"
@@ -94,9 +96,10 @@ if [ $# == 3 ] && [ $3 == "kernel" ] ; then
     echo "\tRedBoot> alias kernel /boot/vmlinuz-2.6.21.7-ael1-2-vulcan"
     echo "\tRedBoot> reset"
     ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/linux-image-2.6.21.7-ael1-2-vulcan_ncar.1_armbe.deb /tmp/"
-    ssh root@$1 "dpkg -i /tmp/linux-image-2.6.21.7-ael1-2-vulcan_ncar.1_armbe.deb"
+    ssh root@$1 "dpkg -i -F depends /tmp/linux-image-2.6.21.7-ael1-2-vulcan_ncar.1_armbe.deb"
     ;;
   esac
+  echo "\n\tRebooting the DSM."
   ssh root@$1 "reboot"
   exit
 fi
@@ -111,13 +114,13 @@ ssh root@$1 "ls -lrt /tmp/*.deb"
 ssh root@$1 "rm /tmp/*.deb"
 
 ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/*_arm$be.deb /tmp/"
-ssh root@$1 "dpkg -i /tmp/gawk_*_arm$be.deb"
-ssh root@$1 "dpkg -i /tmp/libxerces-c_*_arm$be.deb"
-ssh root@$1 "dpkg -i /tmp/libxmlrpc++_*_arm$be.deb"
-ssh root@$1 "dpkg -i /tmp/minicom_*_arm$be.deb"
-ssh root@$1 "dpkg -i /tmp/ntpd_*_arm$be.deb"
-ssh root@$1 "dpkg -i /tmp/ntpdate_*_arm$be.deb"
-ssh root@$1 "dpkg -i /tmp/procps_*_arm$be.deb"
+ssh root@$1 "dpkg -i -F depends /tmp/gawk_*_arm$be.deb"
+ssh root@$1 "dpkg -i -F depends /tmp/libxerces-c_*_arm$be.deb"
+ssh root@$1 "dpkg -i -F depends /tmp/libxmlrpc++_*_arm$be.deb"
+ssh root@$1 "dpkg -i -F depends /tmp/minicom_*_arm$be.deb"
+ssh root@$1 "dpkg -i -F depends /tmp/ntpd_*_arm$be.deb"
+ssh root@$1 "dpkg -i -F depends /tmp/ntpdate_*_arm$be.deb"
+ssh root@$1 "dpkg -i -F depends /tmp/procps_*_arm$be.deb"
 ssh root@$1 "ls -lrt /tmp/*.deb"
 ssh root@$1 "rm /tmp/*.deb"
 
@@ -171,9 +174,16 @@ if [ `ssh root@$1 "df | grep -c hda1"` -eq 0 ]; then
   exit
 fi
 
+# Purge what was once on the CF card.
+#
+ssh root@$1 "umount /media/cf"
+ssh root@$1 "mount /media/cf"
+ssh root@$1 "rm -rf /media/cf/*"
+
+# These debian packages get installed on the CF card.
+#
 ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/ads3/*_all.deb /tmp/"
 ssh root@$1 "dpkg -i -F depends /tmp/ads3-firmware_*_all.deb"
-ssh root@$1 "dpkg -i -F depends /tmp/root-user_1.0_all.deb"
 ssh root@$1 "ls -lrt /tmp/*.deb"
 ssh root@$1 "rm /tmp/*.deb"
 
