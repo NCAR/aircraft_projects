@@ -101,7 +101,7 @@ if [ $# == 3 ] && [ $3 == "kernel" ] ; then
   exit
 fi
 
-# The remainder of the script will operate w/o need of user intervention.
+# The remainder of the script will operate w/o need of user intervention...
 #
 ssh root@$1 uname -a
 
@@ -126,10 +126,19 @@ ssh root@$1 "dpkg -i -F depends /tmp/etc-files_*_all.deb"
 ssh root@$1 "ls -lrt /tmp/*.deb"
 ssh root@$1 "rm /tmp/*.deb"
 
+# Give the DSM its name.
+#
+rm -f /tmp/$0-hostname
+cat > /tmp/$0-hostname << EOF_HOSTNAME
+$1
+EOF_HOSTNAME
+scp /tmp/$0-hostname root@$1:/etc/hostname
+rm -f /tmp/$0-hostname
+
 # Create the missing 'etc/modprobe.d/ads3' file and install it.
 #
 rm -f /tmp/$0-ads3
-cat > /tmp/$0-ads3 << EOF
+cat > /tmp/$0-ads3 << EOF_ADS3
 # 
 # ads3 modprobe configuration
 #
@@ -145,7 +154,7 @@ alias ads3_unstable ncar_a2d
 # that are installed via a Debian package to the compact flash,
 # rather than rsync'd from the server on every boot, and
 # are activated via modprobe in the ads3 boot script.
-EOF
+EOF_ADS3
 ssh root@$1 "mkdir -p /etc/modprobe.d"
 scp /tmp/$0-ads3 root@$1:/etc/modprobe.d/ads3
 rm -f /tmp/$0-ads3
