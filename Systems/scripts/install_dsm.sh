@@ -62,7 +62,7 @@ if [ $# == 3 ] && [ $3 == "rsync" ] ; then
   echo
   echo "scp ads@192.168.184.1:/opt/local/ael-dpkgs/rsync_*_arm$be.deb /tmp/"
   echo "dpkg -i -F depends /tmp/rsync_*_arm$be.deb"
-  echo "scp ads@192.168.184.1/ael-dpkgs/ads3/*_all.deb /tmp/"
+  echo "scp ads@192.168.184.1:/opt/local/ael-dpkgs/ads3/root-user_*_all.deb /tmp/"
   echo "dpkg -i -F depends /tmp/root-user_*_all.deb"
   echo
   ssh root@$1
