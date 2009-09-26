@@ -202,5 +202,16 @@ ssh root@$1 "reboot"
 sleep 120
 ping -c 1 -W 2 $1 > /dev/null || exit $?
 
+echo "__________________________________"
+echo "does the DSM know was time it is? \\____________________"
+ssh root@$1 "date"
+echo "_______________________"
+echo "are the modues loaded? \\_______________________________"
 ssh root@$1 "lsmod"
+echo "____________________"
+echo "is the dsm running? \\__________________________________"
 ssh root@$1 "ps aux | grep dsm"
+echo "___________________________________"
+echo "is the compact flash card mounted? \\___________________"
+ssh root@$1 "df"
+echo "\n\n"
