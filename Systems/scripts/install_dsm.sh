@@ -60,10 +60,10 @@ ping -c 1 -W 2 $1 > /dev/null || exit $?
 if [ $# == 3 ] && [ $3 == "rsync" ] ; then
   echo "Shelling into '$1'... Issue the following commands then type 'exit' to resume."
   echo
-  echo "scp ads@192.168.184.1:/opt/local/ael-dpkgs/rsync_*_arm$be.deb /tmp/"
-  echo "dpkg -i -F depends /tmp/rsync_*_arm$be.deb"
   echo "scp ads@192.168.184.1:/opt/local/ael-dpkgs/ads3/root-user_*_all.deb /tmp/"
   echo "dpkg -i -F depends /tmp/root-user_*_all.deb"
+  echo "scp ads@192.168.184.1:/opt/local/ael-dpkgs/rsync_*_arm$be.deb /tmp/"
+  echo "dpkg -i -F depends /tmp/rsync_*_arm$be.deb"
   echo
   ssh root@$1
   echo "\n\t...now run '$0 $1 $2 kernel' to install the latest kernel.\n"
@@ -140,37 +140,10 @@ EOF_HOSTNAME
 scp /tmp/$0-hostname root@$1:/etc/hostname
 rm -f /tmp/$0-hostname
 
-# Create the missing 'etc/modprobe.d/ads3' file and install it.
-#
-rm -f /tmp/$0-ads3
-cat > /tmp/$0-ads3 << EOF_ADS3
-# 
-# ads3 modprobe configuration
-#
-# Using an alias of "ads3_unstable", list the driver modules
-# that should be copied to the dsm on every boot, and
-# activated via modprobe in the ads3 boot script.
-alias ads3_unstable pc104sg
-#options ncar_a2d IoPort=0xfa0,0xfb0,0xfc0
-options ncar_a2d IoPort=0xfa0
-alias ads3_unstable ncar_a2d
-
-# Using an alias of "ads3_stable", list the driver modules
-# that are installed via a Debian package to the compact flash,
-# rather than rsync'd from the server on every boot, and
-# are activated via modprobe in the ads3 boot script.
-EOF_ADS3
-ssh root@$1 "mkdir -p /etc/modprobe.d"
-scp /tmp/$0-ads3 root@$1:/etc/modprobe.d/ads3
-rm -f /tmp/$0-ads3
-
-echo "\n\tRebooting the DSM... This script will resume processing in 2 minutes.\n"; date
-ssh root@$1 "reboot"
-sleep 120
-ping -c 1 -W 2 $1 > /dev/null || exit $?
-
 # Check to see of the CF card is ready.
 #
+ssh root@$1 "umount /media/cf"
+ssh root@$1 "mount /media/cf"
 if [ `ssh root@$1 "df | grep -c hda1"` -eq 0 ]; then
   echo "CF not set up or present on '$1'"
   exit
@@ -178,8 +151,6 @@ fi
 
 # Purge what was once on the CF card.
 #
-ssh root@$1 "umount /media/cf"
-ssh root@$1 "mount /media/cf"
 ssh root@$1 "rm -rf /media/cf/*"
 
 # These debian packages get installed on the CF card.
