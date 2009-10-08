@@ -896,12 +896,14 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
     </dsm>
 
     <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::31000">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWC"/>
 
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LWO">
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LCI">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
         </serialSensor>
-        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LWO"/>
+
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LCO"/>
+
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D006.dat"/>
             <parameter name="rate" value="500" type="int"/>
@@ -915,7 +917,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_LWO" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_LWC" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
