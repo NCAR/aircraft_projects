@@ -796,7 +796,7 @@
         </service>
         <service class="RawSampleService"
 		rawSorterLength="0.25" rawHeapMax="100M"
-		procSorterLength="1.0" procHeapMax="500M">
+		procSorterLength="1.0" procHeapMax="500M" priority="RT_FIFO:50">
             <!-- input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream -->
             <input class="RawSampleInputStream">
@@ -813,11 +813,13 @@
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
                 </output>
+		<!--
                 <output class="RawSampleOutputStream">
                     <fileset dir="/media/disk/projects/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
                 </output>
+		-->
                 <output class="RawSampleOutputStream">
                     <socket type="server" port="30000"/>
                 </output>
@@ -853,7 +855,7 @@
             <message separator="\x01" position="beg" length="52"/>
         </socketSensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -952,8 +954,8 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
-            <socket type="mcrequest"/>
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest" block="false"/>
         </output>
     </dsm>
 
@@ -1025,7 +1027,7 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -1040,7 +1042,7 @@
             <parameter name="RESOLUTION" value="10" type="int"/>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -1110,7 +1112,7 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -1162,7 +1164,7 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -1178,7 +1180,7 @@
         </sensor>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D008.dat"/>
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D006.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="50">
                 <parameter name="filter" value="boxcar" type="string"/>
@@ -1197,7 +1199,7 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -1205,7 +1207,7 @@
     <dsm name="dsm307" location="Wing_POD_R_2" id="7" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="307"/>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -1403,7 +1405,7 @@
             <socket type="server" port="30000"/>
         </output>
         <!--
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <fileset dir="/var/tmp"
                 file="${DSM}_%Y%m%d_%H%M%S.dat"
                 length="1800">
