@@ -378,6 +378,35 @@
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
+<!-- JDW - what is the syntax for butanol CN Counters? -->
+<!--       The following is just a guess...            -->
+    <serialSensor ID="Butanol_CN_Counter" class="DSMSerialSensor"
+        baud="115200" parity="none" databits="8" stopbits="1"
+        init_string="SM,4,1\r">
+        <sample id="1" rate="10" scanfFormat="D,%f,%f,%*f,%f,%f,%f,%f,%f">
+	    <variable name="MCN" units="none" longname="BCN Current Operating Mode"/>
+	    <variable name="SFLCN" units="none" longname="BCN Status Flags"/>
+	    <!--variable name="CONCN" units="#/cm3" longname="BCN Aggregated Concentration"/-->
+	    <variable name="ETCN" units="s" longname="BCN Sample Time (Elapsed Time)"/>
+	    <variable name="LTCN" units="s" longname="BCN Live Time"/>
+	    <variable name="CNTS" units="count" longname="BCN Accumulated Particle Counts" count="true"/>
+	    <variable name="PCN" units="hPa" longname="BCN Absolute Pressure"/>
+	    <variable name="RPCN" units="none" longname="BCN Raw Photometric Value"/>
+        </sample>
+        <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
+	    <variable name="FCNC" units="cm3/min" longname="BCN Sample Flow Rate">
+                 <linear slope="0.1" intercept="0.0" units="vlpm"/>
+            </variable>
+	    <variable name="FTCN" units="cm3/min" longname="BCN Total Flow Rate"/>
+	    <variable name="FSHCN" units="cm3/min" longname="BCN Sheath Flow Rate"/>
+	    <variable name="PACN" units="hPa" longname="BCN Absolute Pressure"/>
+	    <variable name="TSCN" units="deg_C" longname="BCN Saturator Temperature"/>
+	    <variable name="TGCN" units="deg_C" longname="BCN Growth Tube Temperature"/>
+	    <variable name="CNTEMP" units="deg_C" longname="BCN Optics Temperature"/>
+        </sample>
+        <message separator="\r" position="end" length="0"/>
+    </serialSensor>
+
     <serialSensor ID="Water_CN_Counter" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1"
         init_string="SM,4,1\r">
@@ -815,6 +844,13 @@
             </sample>
         </sensor>
 
+        <socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="200">
+            <sample id="1" rate="50">
+                <variable name="PRAKE12" units="hPa" longname="Pressure Rake dynamic pressure array" length="12"/>
+            </sample>
+            <message separator="\x01" position="beg" length="52"/>
+        </socketSensor>
+
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
@@ -828,7 +864,6 @@
                 <variable name="DPTB" units="unk" longname="Dew/Frost Point Balance, Fuselage Top"/>
                 <variable name="DPT" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Top"/>
                 <variable name="DPTTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Top"/>
-<!--            <poly coefs="-0.6 5.9697 0.0011"/> -->
             </sample>
         </serialSensor>
 
@@ -837,7 +872,6 @@
                 <variable name="DPBB" units="unk" longname="Dew/Frost Point Balance, Fuselage Bottom"/>
                 <variable name="DPB" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Bottom"/>
                 <variable name="DPBTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Bottom"/>
-<!--            <poly coefs="-0.737 5.9813 0.0008"/> -->
             </sample>
         </serialSensor>
 
@@ -999,7 +1033,6 @@
     <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002" derivedData="sock::31000">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
-<!-- JDW - What are the SerialNumbers for these probes? -->
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LP">
             <parameter name="SerialNumber" value="F2DC002" type="string"/>
             <parameter name="RESOLUTION" value="10" type="int"/>
@@ -1020,6 +1053,8 @@
         </sensor>
 
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS5" id="110"/>
+
+        <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS6" id="120" suffix="_WCN"/>
 
 <!-- JDW - What are the SerialNumbers for these probes? -->
         <serialSensor IDREF="S100" devicename="/dev/ttyS10" id="520" suffix="_LWI">
@@ -1049,15 +1084,25 @@
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <linear slope="0.3229" intercept="0.0" units="vlpm"/>
                 </variable>
+                <variable name="HIMLTRAY" units="V" longname="Himil Tray Heater">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                </variable>
+                <variable name="PSUHSAS" units="V" longname="Absolute Pressure UHSAS">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                </variable>
+                <variable name="PSINLET" units="V" longname="Absolute Pressure Inlet">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                </variable>
             </sample>
-<!-- JDW - Ask Al Schanot about these. -->
-<!--
-Himil Tray Heater     - what is this?  "HIMIL Pressure of aerosol from inside of fixed"     - PHIM1 from ProgSci.
-                                       "HIMIL Pressure of aerosol from inside of migrating" - PHIM2 from ProgSci.
-PSRAKE                - serial device used on ProgSci?
-PSINLET               - analog device used on ICE-L?    a.k.a. INPS2
---> 
-            <sample id="2" rate="1">
+            <sample id="3" rate="100">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="5" type="int"/>
+                <variable name="XICN" units="V" longname="CN Isokinetic Side Flow Rate">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <linear slope="1.118" intercept="0.03" units="vlpm"/>
+                </variable>
+            </sample>
+            <sample id="4" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
                 <variable name="A2DTEMP_AFTL0" units="deg_C" longname="A2D Temperature"/>
             </sample>
@@ -1071,13 +1116,13 @@ PSINLET               - analog device used on ICE-L?    a.k.a. INPS2
     <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002" derivedData="sock::31000">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
 
-<!-- JDW - Ask Bill Irwin about these.  Is it Garmin_GPS or Novatel_GPS? -->
-        <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS5" id="110"/>
- 
-<!-- JDW - Ask Bill Irwin about these. -->
-        <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS6" id="120" suffix="_WCN1"/>
+        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS5" id="110" suffix="_NTL"/>
 
-        <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS7" id="130" suffix="_WCN2"/>
+        <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS6" id="120"/>
+ 
+        <serialSensor IDREF="Butanol_CN_Counter" devicename="/dev/ttyS7" id="130" suffix="_BCN1"/>
+
+        <serialSensor IDREF="Butanol_CN_Counter" devicename="/dev/ttyS8" id="140" suffix="_BCN2"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="500" suffix="_RWI">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
@@ -1149,7 +1194,6 @@ PSINLET               - analog device used on ICE-L?    a.k.a. INPS2
                 <variable name="A2DTEMP_WPR0" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
-
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
