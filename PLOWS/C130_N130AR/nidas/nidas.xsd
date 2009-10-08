@@ -166,6 +166,7 @@
     <xsd:attribute name="missingValue" type="xsd:float"/>
     <xsd:attribute name="minValue" type="xsd:float"/>
     <xsd:attribute name="maxValue" type="xsd:float"/>
+    <xsd:attribute name="plotrange" type="xsd:normalizedString"/>
 </xsd:complexType>
 
 <xsd:complexType name="variables">
@@ -190,6 +191,7 @@
 	<xsd:element name="variable" type="variable"/>
 	<xsd:element name="variables" type="variable"/>
 	<xsd:element name="parameter" type="parameter"/>
+        <xsd:element name="prompt" type="promptType"/>
     </xsd:choice>
     <xsd:attribute name="id" type="xsd:nonNegativeInteger"/>
     <xsd:attribute name="rate" type="xsd:float"/>
@@ -233,6 +235,7 @@
     <xsd:attribute name="height" type="xsd:token"/>
     <xsd:attribute name="depth" type="xsd:token"/>
     <xsd:attribute name="duplicateID" type="xsd:boolean"/>
+    <xsd:attribute name="timeout" type="xsd:float"/>
 </xsd:complexType>
 
 <xsd:complexType name="messageSensorT">
@@ -280,6 +283,13 @@
     </xsd:complexContent>
 </xsd:complexType>
 
+<xsd:complexType name="lamsSensorT">
+    <xsd:complexContent>
+	<xsd:extension base="sensorT">
+	</xsd:extension>
+    </xsd:complexContent>
+</xsd:complexType>
+
 <xsd:complexType name="arincSensorT">
     <xsd:annotation>
         <xsd:documentation>
@@ -315,6 +325,7 @@
 	</xsd:element>
 	<xsd:element name="irigSensor"  type="sensorT"/>
 	<xsd:element name="socketSensor"  type="socketSensorT"/>
+	<xsd:element name="lamsSensor"  type="lamsSensorT"/>
     </xsd:choice>
 </xsd:group>
 
@@ -349,10 +360,16 @@
 	<xsd:attribute name="location" type="xsd:token" use="optional"/>
 	<xsd:attribute name="id" type="xsd:nonNegativeInteger" use="optional"/>
 	<xsd:attribute name="rserialPort" type="xsd:nonNegativeInteger"/>
+	<xsd:attribute name="statusAddr" type="xsd:token"/>
 	<xsd:attribute name="derivedData" type="xsd:token"/>
+	<xsd:attribute name="rawSorterLength" type="xsd:float"/>
+	<xsd:attribute name="procSorterLength" type="xsd:float"/>
+        <!-- max heap size in bytes, followed by K,M or G -->
+	<xsd:attribute name="rawHeapMax" type="xsd:token"/>
+	<xsd:attribute name="procHeapMax" type="xsd:token"/>
     </xsd:complexType>
     <xsd:unique name="uniqueSensorId">
-	<xsd:selector xpath="sensor | serialSensor | arincSensor | irigSensor | socketSensor"/>
+	<xsd:selector xpath="sensor | serialSensor | arincSensor | irigSensor | socketSensor | lamsSensor"/>
 	<xsd:field    xpath="@id"/>
     </xsd:unique>
 </xsd:element>
@@ -379,8 +396,13 @@
 	<xsd:enumeration value="mcrequest"/>
 	<xsd:enumeration value="dgaccept"/>
 	<xsd:enumeration value="dgrequest"/>
+	<xsd:enumeration value="mcacceptUDP"/>
+	<xsd:enumeration value="mcrequestUDP"/>
+	<xsd:enumeration value="dgacceptUDP"/>
+	<xsd:enumeration value="dgrequestUDP"/>
 	<xsd:enumeration value="server"/>
 	<xsd:enumeration value="client"/>
+	<xsd:enumeration value="dataUDP"/>
     </xsd:restriction>
 </xsd:simpleType>
 
@@ -433,6 +455,14 @@
    </xsd:complexType>
 </xsd:element>
 
+<xsd:simpleType name="goesRFbaudtype">
+    <xsd:restriction base="xsd:positiveInteger">
+	<xsd:enumeration value="100"/>
+	<xsd:enumeration value="300"/>
+	<xsd:enumeration value="1200"/>
+    </xsd:restriction>
+</xsd:simpleType>
+
 <xsd:element name="goes">
    <xsd:complexType>
 	<xsd:attribute name="baud" type="baudtype"/>
@@ -445,6 +475,7 @@
 	<xsd:attribute name="channel" type="xsd:positiveInteger"/>
 	<xsd:attribute name="xmitInterval" type="xsd:positiveInteger"/>
 	<xsd:attribute name="xmitOffset" type="xsd:nonNegativeInteger"/>
+	<xsd:attribute name="rfbaud" type="goesRFbaudtype"/>
 	<xsd:attribute name="statusFile" type="xsd:token"/>
         <xsd:attribute name="class" type="xsd:token" use="optional"/>
    </xsd:complexType>
@@ -465,7 +496,7 @@
             <xsd:element ref="fileset"/>
         </xsd:choice>
         <xsd:attribute name="class" type="xsd:token" use="optional"/>
-        <xsd:attribute name="sorterLength" type="xsd:nonNegativeInteger"/>
+        <xsd:attribute name="sorterLength" type="xsd:float"/>
         <xsd:attribute name="heapMax" type="xsd:nonNegativeInteger"/>
    </xsd:complexType>
 </xsd:element>
@@ -473,15 +504,15 @@
 <xsd:element name="output">
    <xsd:complexType>
         <xsd:choice minOccurs="1" maxOccurs="unbounded">
-	    <xsd:element name="sample" type="sample" maxOccurs="unbounded"/>
             <xsd:element ref="socket" maxOccurs="1"/>
             <xsd:element ref="fileset" maxOccurs="1"/>
             <xsd:element ref="postgresdb" maxOccurs="1"/>
             <xsd:element ref="ncserver" maxOccurs="1"/>
             <xsd:element ref="goes" maxOccurs="1"/>
+            <xsd:element name="parameter" type="parameter" maxOccurs="unbounded"/>
         </xsd:choice>
         <xsd:attribute name="class" type="xsd:token" use="optional"/>
-        <xsd:attribute name="sorterLength" type="xsd:nonNegativeInteger"/>
+        <xsd:attribute name="sorterLength" type="xsd:float"/>
         <xsd:attribute name="heapMax" type="xsd:nonNegativeInteger"/>
    </xsd:complexType>
 </xsd:element>
@@ -509,6 +540,12 @@
 	<xsd:attribute name="class" type="xsd:token"/>
 	<xsd:attribute name="ID" type="xsd:ID"/>
 	<xsd:attribute name="IDREF" type="xsd:IDREF"/>
+	<xsd:attribute name="priority" type="xsd:token"/>
+	<xsd:attribute name="rawSorterLength" type="xsd:float"/>
+	<xsd:attribute name="procSorterLength" type="xsd:float"/>
+        <!-- max heap size in bytes, followed by K,M or G -->
+	<xsd:attribute name="rawHeapMax" type="xsd:token"/>
+	<xsd:attribute name="procHeapMax" type="xsd:token"/>
    </xsd:complexType>
 </xsd:element>
 
@@ -518,6 +555,7 @@
 	    <xsd:element ref="service"/>
 	</xsd:choice>
         <xsd:attribute name="name" type="xsd:token" use="optional"/>
+	<xsd:attribute name="statusAddr" type="xsd:token"/>
     </xsd:complexType>
 </xsd:element>
 
@@ -533,6 +571,7 @@
     </xsd:annotation>
     <xsd:attribute name="filematch" type="xsd:token" use="optional"/>
     <xsd:attribute name="functionmatch" type="xsd:token" use="optional"/>
+    <xsd:attribute name="tagmatch" type="xsd:token" use="optional"/>
     <xsd:attribute name="level" type="loglevel" use="optional"/>
     <xsd:attribute name="line" type="xsd:nonNegativeInteger" use="optional"/>
     <xsd:attribute name="activate" type="xsd:boolean" use="optional"/>

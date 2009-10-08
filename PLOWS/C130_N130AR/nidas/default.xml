@@ -788,35 +788,37 @@
 <site name="C130_N130AR" class="raf.Aircraft">
     <parameter name="tailNumber" value="N130AR" type="string"/>
 
-    <server>
+    <server statusAddr="sock::30001">
         <service class="XMLConfigService">
             <output>
                 <socket type="mcaccept"/>
             </output>
         </service>
-        <service class="RawSampleService">
+        <service class="RawSampleService"
+		rawSorterLength="0.25" rawHeapMax="100M"
+		procSorterLength="1.0" procHeapMax="500M">
             <!-- input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream -->
             <input class="RawSampleInputStream">
                 <socket type="mcaccept"/>
             </input>
             <processor class="SampleArchiver">
-                <output class="SampleOutputStream">
+                <output class="RawSampleOutputStream">
                     <fileset dir="/var/r1/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
                 </output>
-                <output class="SampleOutputStream">
+                <output class="RawSampleOutputStream">
                     <fileset dir="/var/r2/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
                 </output>
-                <output class="SampleOutputStream">
+                <output class="RawSampleOutputStream">
                     <fileset dir="/media/disk/projects/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
                 </output>
-                <output class="SampleOutputStream">
+                <output class="RawSampleOutputStream">
                     <socket type="server" port="30000"/>
                 </output>
             </processor>
@@ -832,7 +834,7 @@
 <!-- ############################################### C-130 DSMs  ############################################### -->
 <!-- ########################################################################################################### -->
 
-    <dsm name="dsm319" location="Fwd_DSM_2" id="19" rserialPort="30002">
+    <dsm name="dsm319" location="Fwd_DSM_2" id="19" rserialPort="30002" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="319"/>
 
         <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="7000"/>
@@ -856,7 +858,7 @@
         </output>
     </dsm>
 
-    <dsm name="dsm320" location="Fwd_FS245_1" id="20" rserialPort="30002">
+    <dsm name="dsm320" location="Fwd_FS245_1" id="20" rserialPort="30002" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="320"/>
 
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130">
@@ -955,7 +957,7 @@
         </output>
     </dsm>
 
-    <dsm name="dsm321" location="Video_Rack" id="21" rserialPort="30002">
+    <dsm name="dsm321" location="Video_Rack" id="21" rserialPort="30002" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
 
         <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS5" id="120" suffix="_CM3"/>
@@ -1030,7 +1032,7 @@
 
     <!-- Any dsm with a TwoD probe needs the derivedData="sock::31000" attribute,
          in order to get true airspeed from the derived data feed -->
-    <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002" derivedData="sock::31000">
+    <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LP">
@@ -1043,7 +1045,7 @@
         </output>
     </dsm>
 
-    <dsm name="dsm323" location="AftOvrhd_L" id="23" rserialPort="30002" derivedData="sock::31000">
+    <dsm name="dsm323" location="AftOvrhd_L" id="23" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="323"/>
 
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
@@ -1113,7 +1115,7 @@
         </output>
     </dsm>
 
-    <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002" derivedData="sock::31000">
+    <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
 
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS5" id="110" suffix="_NTL"/>
@@ -1165,7 +1167,7 @@
         </output>
     </dsm>
 
-    <dsm name="dsm325" location="Wing_POD_R" id="25" rserialPort="30002" derivedData="sock::31000">
+    <dsm name="dsm325" location="Wing_POD_R" id="25" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="325"/>
 
         <serialSensor IDREF="OphirIII" devicename="/dev/ttyS10" id="120"/>
@@ -1200,7 +1202,7 @@
         </output>
     </dsm>
 
-    <dsm name="dsm307" location="Wing_POD_R_2" id="7" rserialPort="30002" derivedData="sock::31000">
+    <dsm name="dsm307" location="Wing_POD_R_2" id="7" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="307"/>
 
         <output class="RawSampleOutputStream" sorterLength="0">
@@ -1208,10 +1210,7 @@
         </output>
     </dsm>
 
-
-
-    <dsm name="cvi-dsm" location="cvi_rack" id="30" rserialPort="30002"
-    	derivedData="sock::31000">
+    <dsm name="cvi-dsm" location="cvi_rack" id="30" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
 
         <sensor class="DSC_A2DSensor"
             devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
