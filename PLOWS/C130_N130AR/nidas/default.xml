@@ -378,33 +378,13 @@
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
-<!-- JDW - what is the syntax for butanol CN Counters? -->
-<!--       The following is just a guess...            -->
     <serialSensor ID="Butanol_CN_Counter" class="DSMSerialSensor"
-        baud="115200" parity="none" databits="8" stopbits="1"
-        init_string="SM,4,1\r">
-        <sample id="1" rate="10" scanfFormat="D,%f,%f,%*f,%f,%f,%f,%f,%f">
-	    <variable name="MCN" units="none" longname="BCN Current Operating Mode"/>
-	    <variable name="SFLCN" units="none" longname="BCN Status Flags"/>
-	    <!--variable name="CONCN" units="#/cm3" longname="BCN Aggregated Concentration"/-->
-	    <variable name="ETCN" units="s" longname="BCN Sample Time (Elapsed Time)"/>
-	    <variable name="LTCN" units="s" longname="BCN Live Time"/>
-	    <variable name="CNTS" units="count" longname="BCN Accumulated Particle Counts" count="true"/>
-	    <variable name="PCN" units="hPa" longname="BCN Absolute Pressure"/>
-	    <variable name="RPCN" units="none" longname="BCN Raw Photometric Value"/>
+        baud="9600" parity="even" databits="7" stopbits="1">
+        <sample id="1" scanfFormat="%f">
+            <variable name="CONCN" units="#/cm3" longname="6 second sample oncentration"/>
         </sample>
-        <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
-	    <variable name="FCNC" units="cm3/min" longname="BCN Sample Flow Rate">
-                 <linear slope="0.1" intercept="0.0" units="vlpm"/>
-            </variable>
-	    <variable name="FTCN" units="cm3/min" longname="BCN Total Flow Rate"/>
-	    <variable name="FSHCN" units="cm3/min" longname="BCN Sheath Flow Rate"/>
-	    <variable name="PACN" units="hPa" longname="BCN Absolute Pressure"/>
-	    <variable name="TSCN" units="deg_C" longname="BCN Saturator Temperature"/>
-	    <variable name="TGCN" units="deg_C" longname="BCN Growth Tube Temperature"/>
-	    <variable name="CNTEMP" units="deg_C" longname="BCN Optics Temperature"/>
-        </sample>
-        <message separator="\r" position="end" length="0"/>
+        <message separator="\r\n" position="end" length="0"/>
+        <prompt string="RD\r" rate="1"/>
     </serialSensor>
 
     <serialSensor ID="Water_CN_Counter" class="DSMSerialSensor"
@@ -795,7 +775,7 @@
             </output>
         </service>
         <service class="RawSampleService"
-		rawSorterLength="0.25" rawHeapMax="100M"
+		rawSorterLength="0" rawHeapMax="100M"
 		procSorterLength="1.0" procHeapMax="500M" priority="RT_FIFO:50">
             <!-- input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream -->
@@ -915,6 +895,12 @@
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <poly coefs="-0.0323812 5.13826 8.09753e-05" units="hPa"/>
                 </variable>
+                <variable name="QCFR" units="V" longname="Raw Dynamic Pressure, Fuselage Right">
+                    <parameter name="channel" value="6" type="int"/>
+                    <parameter name="gain"     value="2"       type="float"/>
+		    <parameter name="bipolar"  value="false"      type="bool"/>
+                    <poly coefs="-0.327737 13.798 -0.00460835" units="hPa"/>
+                </variable>
             </sample>
             <sample id="2" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
@@ -925,13 +911,7 @@
                     <poly coefs="-64.553 25.1259 -0.190518" units="deg_C"/>
                 </variable>
             </sample>
-            <sample id="3" rate="500">
-                <variable name="QCFR" units="V" longname="Raw Dynamic Pressure, Fuselage Right">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-0.327737 13.798 -0.00460835" units="hPa"/>
-                </variable>
-            </sample>
-            <sample id="4" rate="1">
+            <sample id="3" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
                 <variable name="A2DTEMP_FWDFS0" units="deg_C" longname="A2D Temperature"/>
             </sample>
@@ -1037,7 +1017,7 @@
     <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
-        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LP">
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LPO">
             <parameter name="SerialNumber" value="F2DC002" type="string"/>
             <parameter name="RESOLUTION" value="10" type="int"/>
         </sensor>
@@ -1056,18 +1036,14 @@
             </sample>
         </sensor>
 
-        <serialSensor IDREF="D_GPS" devicename="/dev/ttyS5" id="110"/>
+        <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS5" id="120" suffix="_WCN"/>
 
-        <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS6" id="120" suffix="_WCN"/>
-
-<!-- JDW - What are the SerialNumbers for these probes? -->
         <serialSensor IDREF="S100" devicename="/dev/ttyS10" id="520" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="FSSP109"/>
         </serialSensor>
 
-<!-- JDW - What are the SerialNumbers for these probes? -->
         <serialSensor IDREF="S100" devicename="/dev/ttyS11" id="570" suffix="_LWO">
-            <parameter name="SerialNumber" type="string" value="FSSP109"/>
+            <parameter name="SerialNumber" type="string" value="FSSP122"/>
         </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
@@ -1088,7 +1064,7 @@
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <linear slope="0.3229" intercept="0.0" units="vlpm"/>
                 </variable>
-                <variable name="HIMLTRAY" units="V" longname="Himil Tray Heater">
+                <variable name="THIML1" units="V" longname="HIMIL Tip Temperature">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                 </variable>
                 <variable name="PSUHSAS" units="V" longname="Absolute Pressure UHSAS">
@@ -1120,13 +1096,13 @@
     <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
 
-        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS5" id="110" suffix="_NTL"/>
+        <serialSensor IDREF="D_GPS" devicename="/dev/ttyS5" id="110"/>
 
-        <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS6" id="120"/>
+        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="120"/>
+
+        <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS7" id="130" suffix="_GMN"/>
  
-        <serialSensor IDREF="Butanol_CN_Counter" devicename="/dev/ttyS7" id="130" suffix="_BCN1"/>
-
-        <serialSensor IDREF="Butanol_CN_Counter" devicename="/dev/ttyS8" id="140" suffix="_BCN2"/>
+        <serialSensor IDREF="Butanol_CN_Counter" devicename="/dev/ttyS8" id="140" suffix="_BCN"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="500" suffix="_RWI">
             <parameter name="SerialNumber" type="string" value="CDP001"/>
@@ -1204,6 +1180,7 @@
         </output>
     </dsm>
 
+<!--
     <dsm name="dsm307" location="Wing_POD_R_2" id="7" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="307"/>
 
@@ -1211,6 +1188,7 @@
             <socket type="mcrequest"/>
         </output>
     </dsm>
+-->
 
     <dsm name="cvi-dsm" location="cvi_rack" id="30" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
 
