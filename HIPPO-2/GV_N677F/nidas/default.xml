@@ -899,10 +899,13 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWC"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LCI">
-            <parameter name="SerialNumber" type="string" value="CDP001"/>
+            <parameter name="SerialNumber" type="string" value="CDP002"/>
         </serialSensor>
 
-        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LCO"/>
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LCO">
+            <parameter name="SerialNumber" value="F2DC003" type="string"/>
+            <parameter name="RESOLUTION" value="25" type="int"/>
+        </sensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D006.dat"/>
