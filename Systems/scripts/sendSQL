@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/bash
 #
 #  This script will recreate the database on the ground
 #    so that inserts sent from the plane will be successful
@@ -8,7 +8,12 @@
 #    Called by Nimbus
 #
 
-setenv PGHOST eol-rt-data.guest.ucar.edu
-
 cd /tmp/xmit
-gunzip -c $argv[1] | psql
+
+export PGHOST="eol-rt-data.guest.ucar.edu"
+#echo $PGHOST
+
+export PGDATABASE="real-time-"`gunzip -c $1 | head -n1`
+#echo $PGDATABASE
+
+gunzip -c $1 | psql
