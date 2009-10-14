@@ -16,4 +16,7 @@ export PGHOST="eol-rt-data.guest.ucar.edu"
 export PGDATABASE="real-time-"`gunzip -c $1 | head -n1`
 #echo $PGDATABASE
 
-gunzip -c $1 | psql
+let len=`gunzip -c $1 | wc -l`-2
+#echo $len
+
+gunzip -c $1 | tail -n $len | psql
