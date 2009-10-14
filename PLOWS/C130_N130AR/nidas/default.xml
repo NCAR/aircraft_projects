@@ -327,7 +327,6 @@
             <variable name="CTHDG" units="degree_T" longname="Reference CMIGITS3 True Heading"/>
         </sample>
         <message separator="\xff\x81" position="beg" length="0"/>
-
     </serialSensor>
 
     <serialSensor ID="DewPointer" class="DSMSerialSensor"
@@ -380,11 +379,11 @@
 
     <serialSensor ID="Butanol_CN_Counter" class="DSMSerialSensor"
         baud="9600" parity="even" databits="7" stopbits="1">
-        <sample id="1" scanfFormat="%f">
+        <sample id="1" scanfFormat="%d">
             <variable name="CIICNTS" units="count" longname="Butanol particle counts"/>
         </sample>
-        <message separator="\r\n" position="end" length="0"/>
         <prompt string="RB\r" rate="1"/>
+        <message separator="\r" position="end" length="0"/>
     </serialSensor>
 
     <serialSensor ID="Water_CN_Counter" class="DSMSerialSensor"
@@ -942,12 +941,12 @@
         </output>
     </dsm>
 
-    <dsm name="dsm321" location="Video_Rack" id="21" rserialPort="30002" statusAddr="sock::30001">
+    <dsm name="dsm321" location="Video_Rack" id="21" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
 
         <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS5" id="120" suffix="_CM3"/>
 
-        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1605.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
@@ -1023,6 +1022,29 @@
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LPC">
             <parameter name="SerialNumber" value="F2DC002" type="string"/>
             <parameter name="RESOLUTION" value="10" type="int"/>
+        </sensor>
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1600.dat"/>
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="500">
+                <variable name="XGLWC" units="gram/m3" longname="Gerber PV-100 Probe Liquid Water Content">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <linear slope="1.0" intercept="-0.014" units="gram/m3"/>
+                    <parameter name="channel" value="1" type="int"/>
+                </variable>
+                <variable name="XGREFF" units="V" longname="Gerber PV-100 Effective Droplet Radius">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                </variable>
+                <variable name="XGSFC" units="V" longname="Gerber PV-100 Particle Surface Area (Raw)">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <linear slope="2980.0" intercept="0.0" units="cm2/m3"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_WPL0" units="deg_C" longname="A2D Temperature"/>
+            </sample>
         </sensor>
 
         <output class="RawSampleOutputStream">
