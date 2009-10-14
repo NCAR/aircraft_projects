@@ -19,10 +19,10 @@ NAME	RAF Cloud Droplet Probe (CDP).
 #
 #include "cdp.default"
 #
-FIRST_BIN	0
+FIRST_BIN	1
 LAST_BIN	30
 #
-DOF		1.38
+DOF		1.125
 BEAM_DIAM	0.192
 DENS		1.0
 PLWFAC		1.0e-6
@@ -49,9 +49,9 @@ CELL_SIZE       0.075, 0.07699, 0.07903, 0.08112, 0.08327, 0.08548, 0.08775, 0.0
                 0.76979, 0.79019, 0.81114, 0.83264, 0.85472, 0.87737, 0.90063, 0.92451,
                 0.94902, 0.97418, 1.0
 #
-FIRST_BIN       0
+FIRST_BIN       1
 # 100th bin is an overflow, do not use as part of histogram.
-LAST_BIN        99
+LAST_BIN        100
 #
 END
 #
@@ -65,7 +65,7 @@ NAME	RAF FSSP-100 with DMT electronics.
 #
 #include "s109.default"
 #
-FIRST_BIN	7
+FIRST_BIN	2
 LAST_BIN	30
 #
 DOF		2.83
@@ -110,10 +110,10 @@ NAME	RAF FSSP-100 with DMT electronics.
 #
 # Setup stuff.
 #
-#include "../../Configuration/raf/s100.default"
+#include "s122.default"
 #
-FIRST_BIN       1
-LAST_BIN        31
+FIRST_BIN       2
+LAST_BIN        30
 #
 DOF             2.55
 BEAM_DIAM       0.19
@@ -154,9 +154,11 @@ NAME	RAF FSSP-300 with DMT electronics.
 #
 #include "s305.default"
 #
-FIRST_BIN	0
-LAST_BIN	30
-SAMPLE_AREA	0.060
+FIRST_BIN	2
+LAST_BIN	31
+SAMPLE_AREA	0.15
+#SAMPLE_AREA	0.125
+#SAMPLE_AREA	0.060
 END
 #
 # ------------------------------------------------------------------------
@@ -204,8 +206,29 @@ NAME	RAF PCASP with DMT electronics.
 #
 #include "s200.default"
 #
-FIRST_BIN	1
-LAST_BIN        30
+FIRST_BIN       2
+LAST_BIN        31
+END
+#
+# ------------------------------------------------------------------------
+#
+START	260X06
+TYPE	260X
+NAME	RAF 260X.
+#
+MIN_RANGE	15.0
+MAX_RANGE	635.0
+RANGE_STEP	10.0
+#
+FIRST_BIN       2
+LAST_BIN        63
+#
+NDIODES         64
+RESPONSE_TIME   0.35
+ARM_DISTANCE    61.0
+DENS            1.0
+PLWFAC          1.0e-9
+DBZFAC          1.0e3
 END
 #
 # ------------------------------------------------------------------------
@@ -247,7 +270,7 @@ MIN_RANGE       12.5
 MAX_RANGE       1612.5
 RANGE_STEP      25.0
 #
-FIRST_BIN       0
+FIRST_BIN       3
 LAST_BIN        64
 #
 NDIODES         64
@@ -267,7 +290,7 @@ MIN_RANGE       5.0
 MAX_RANGE       645.0
 RANGE_STEP      10.0
 #
-FIRST_BIN       0
+FIRST_BIN       6
 LAST_BIN        64
 #
 NDIODES         64
