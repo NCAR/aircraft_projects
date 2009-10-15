@@ -414,7 +414,15 @@
                 <linear slope="400" intercept="-3.2" units="ppbv"/>
             </variable>
 -->
+<!--  Try for both?  (see prompt comments)
+        <sample id="1" scanfFormat="%f%f">
+            <variable name="COMR" units="V" longname="Carbon Monoxide Mixing Ratio"/>
+	    <variable name="CORAW" units="V" longname="Carbon Monoxide Raw Values"/>
+-->
         </sample>
+<!--  Tom - can we prompt for both Mix Ratio and Raw and get both?
+        <prompt string="CONC?\rSIG?\r" rate="5"/>
+-->
         <prompt string="CONC?\r" rate="5"/>
         <message separator="\r" position="end" length="0"/>
     </serialSensor>
@@ -545,6 +553,27 @@
            <prompt string="*00T1\r" rate="1"/>
         </sample>
         <message separator="\r" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="QCLS" class="DSMSerialSensor"
+        baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="A%*d,%f,%f,%f,,,,,">
+	<!-- Ignored
+	    <variable name="Igortime" units = "seconds since 1/1/1904 UTC"/> 
+	-->
+            <variable name="CH4" units="ppb" longname="Methane"/>
+            <variable name="N2O" units="ppb" longname="Nitrous Oxide"/>
+            <variable name="CO" units="ppb" longname="Carbon Monoxide"/>
+        </sample>
+<!--   See if we can distinguish the two based on existence of floating point values between commas
+        <sample id="2" rate="1" scanfFormat="A%*d,%f,,,,,,,">
+-->
+	<!-- <variable name="Igortime" units = "seconds since 1/1/1904 UTC"/> -->
+<!--
+	    <variable name="CO2" units="ppb" longname="Carbon Dioxide"/>
+	</sample>
+-->
+        <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
 
 </sensorcatalog>
@@ -838,8 +867,9 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
         <sensor IDREF="NOAASP2" id="120" suffix="_SP2"/>
         <sensor IDREF="NOAAPANTHER" id="130" suffix="_PAN"/>
 
-        <serialSensor IDREF="NOAA_CSD_O3" devicename="/dev/ttyS6" id="140" suffix="_CSD"/>
-        <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS7" id="150" suffix="_CSD"/>
+        <serialSensor IDREF="QCLS" devicename="/dev/ttyS5" id="140" suffix="_QLIVE"/>
+        <serialSensor IDREF="NOAA_CSD_O3" devicename="/dev/ttyS6" id="150" suffix="_CSD"/>
+        <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS7" id="160" suffix="_CSD"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1609.dat"/>
@@ -896,9 +926,9 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
     </dsm>
 
     <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::31000">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWC"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LCI">
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LOI">
             <parameter name="SerialNumber" type="string" value="CDP002"/>
         </serialSensor>
 
@@ -920,7 +950,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_LWC" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP_LWO" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
