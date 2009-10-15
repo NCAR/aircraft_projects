@@ -21,4 +21,6 @@ $TTL 3600	; 1 hour
 ; cvi pc and dsm don't do dhcp, so they need an address here
 cvi-dsm			A	192.168.184.142
 cvi-pc			A	192.168.184.143
-; xmas-island		A	192.168.84.151
+# psi9116 is a bootp client, not dhcp. dhcpd doesn't seem to do
+# dynamic DNS with bootp clients, so we need this A record for psi9116
+psi9116			A	192.168.84.156

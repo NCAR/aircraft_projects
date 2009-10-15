@@ -86,6 +86,16 @@ fi
 # 
 cf=${SYSCONFDIR}/raf.ucar.edu.key
 Kf=(/var/named/Kraf.ucar.edu.*.private)
+
+# More than one Kraf file, somethings fishy
+[ ${#Kf[*]} -ne 1 ] && rm -f ${Kf[*]}
+
+# keys don't agree
+if [ -e $cf -a -e ${Kf[0]} ]; then
+    key="`awk '/^Key:/{print $2}' ${Kf[0]}`"
+    fgrep -q "$key" $cf || rm -f $cf
+fi
+
 if [ ! -e $cf -o ! -e ${Kf[0]} ]; then
     cd /var/named
     rm -f Kraf.ucar.edu.*
