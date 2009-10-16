@@ -1,7 +1,7 @@
 Summary: DHCP configuration for server on RAF aircraft
 Name: raf-ads3-dhcp
 Version: 1.0
-Release: 11
+Release: 12
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -105,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %changelog
+* Fri Oct 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-12
+- added default ddns-hostname for systems without a known MAC address
+- Additions of some lab vulcans.
 * Thu Oct 15 2009 Gordon Maclean <maclean@ucar.edu> 1.0-11
 - In triggerin.sh, add more checks for good keys.
 * Tue Mar 24 2009 John Wasinger <wasinger@ucar.edu>
