@@ -830,8 +830,13 @@
             </sample>
         </sensor>
 
-        <socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="200">
-            <sample id="1" rate="50">
+        <socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="200"
+		init_string="c 00 1 fff 1 100 8 0">
+	    <!-- by default the PSI9116 generates 50 samples/sec.
+                To set to 10Hz: send "c 00 1 fff 1 100 8 0" as the init_string.
+                Also remember to change the rate value in the <sample>.
+            -->
+            <sample id="1" rate="10">
                 <variable name="PRAKE12" units="hPa" longname="Pressure Rake dynamic pressure array" length="12"/>
             </sample>
             <message separator="\x01" position="beg" length="52"/>
@@ -1085,11 +1090,11 @@
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <poly coefs="13.85 4.668 -0.0056" units="deg_C"/>
                 </variable>
-                 <variable name="FCN" units="V" longname="Raw CN Counter Sample Flow Rate">
+                <variable name="FCN" units="V" longname="Raw CN Counter Sample Flow Rate">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <linear slope="0.3229" intercept="0.0" units="vlpm"/>
                 </variable>
-                <variable name="THIML1" units="V" longname="HIMIL Tip Temperature">
+                <variable name="BROKEN" units="V" longname="HIMIL Tip Temperature">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                 </variable>
                 <variable name="PSUHSAS" units="V" longname="Absolute Pressure UHSAS">
@@ -1110,6 +1115,31 @@
             <sample id="4" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
                 <variable name="A2DTEMP_AFTL0" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="220">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1609.dat"/>
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
+                <variable name="THIML1" units="V" longname="HIMIL Tip Temperature">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                </variable>
+                <variable name="THIML2" units="V" longname="HIMIL Tip Temperature">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                </variable>
+                <variable name="THIML3" units="V" longname="HIMIL Tip Temperature">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                </variable>
+                <variable name="THIML4" units="V" longname="HIMIL Tip Temperature">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                </variable>
+            </sample>
+            <sample id="4" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_AFTL1" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
