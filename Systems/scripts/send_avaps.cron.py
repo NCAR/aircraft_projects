@@ -2,10 +2,9 @@
 #
 # This script attempts to send the dropsonde files to the ground via FTP.
 #
-# The dropsonde file(s) are archived and compressed for transfer.
+# The dropsonde file(s) are compressed for transfer.
 #
-# If the transfer fails then the archive is discarded and then recreated
-# (and possibly appended to) the next time the script runs.
+# If the transfer fails then the file is uncompressed.
 #
 # This is set up to run out of a cron job every minute
 # */1 * * * * /home/local/Systems/scripts/send_avaps.cron.py
@@ -13,97 +12,66 @@
 import os
 import sys
 import glob
-import stat
-import time
 import ftplib
 import syslog
 
 # Clean up name of script for logging
-script = sys.argv[0][sys.argv[0].rfind("/")+1:]
+ident = sys.argv[0][sys.argv[0].rfind("/")+1:]
+syslog.openlog(ident, 0, syslog.LOG_CRON)
 
 os.chdir('/home/tmp/send_to_grnd/')
 
-# This cron script is not re-entrant, bail out if still running.
+# This cron script is not re-entrant, bail out if its still running.
 if os.path.isfile('BUSY'):
-  syslog.syslog(script+': exiting, BUSY')
-  sys.exit(1)
+    syslog.syslog('exiting, BUSY')
+    syslog.closelog()
+    sys.exit(1)
 os.system('touch BUSY')
 
-os.system('mkdir -p inserted')
-
-# get the start time of this script
-starttime=time.time()
-
-files=glob.glob('D20*')
+list=glob.glob('D????????_??????_P.?')
 
 # bail out if no files are found
-if (not files):
-# syslog.syslog(script+': exiting, nothing to send')
-  os.remove('BUSY')
-  sys.exit(1)
-
-# sort files by creation time
-files.sort(lambda x, y: cmp(os.path.getmtime(x),os.path.getmtime(y)))
-
-# ensure that the last file is complete before proceeding
-file=files[len(files)-1]
-while True:
-  aaa = os.stat(file)[stat.ST_SIZE]
-  time.sleep(2)
-  bbb = os.stat(file)[stat.ST_SIZE]
-  if (aaa==bbb):
-    break
-
-  # time out after 2 minutes while waiting for file completion
-  if ( (time.time() - starttime) > 120):
-    syslog.syslog(script+': exiting, timed out waiting for last file')
+if (not list):
+    # syslog.syslog('exiting, nothing to send')
     os.remove('BUSY')
+    syslog.closelog()
     sys.exit(1)
 
-# create a compressed tar file named after the first file in the archive
-tarfile=files[0]+'.tar.bz2'
-tarcmd='tar -cjf '+tarfile
-for file in files:
-  syslog.syslog("send_avaps.cron.py: tarring file: %s %s" % (file, os.stat(file)[stat.ST_SIZE]) )
-  tarcmd=tarcmd+' '+file
-os.system(tarcmd)
+# sort files by creation time in reverse order
+list.sort(lambda y, x: cmp(os.path.getmtime(x),os.path.getmtime(y)))
 
-# keep trying to send the tar file until we run out of time
-while True:
-  try:
-    syslog.syslog(script+': opening FTP connection')
+# Send the latest file first
+for file in list:
 
-    # send the tar file to the ground
-    ftp = ftplib.FTP('eol-rt-data.guest.ucar.edu')
-    ftp.login('ads', 'blue;spruce')
-    ftp.cwd('avaps')
-    ftp.cwd('nrlp3')
+    # bzip2/bunzip2 doesn't modify the creation date of the file!
+    cmd='bzip2 --best '+file
+    os.system(cmd)
+    file_bz2=file+'.bz2'
 
-    syslog.syslog(script+': sending %s' % tarfile)
+    while True:
+        try:
+            syslog.syslog('opening FTP connection')
 
-    # the following is equivalent to: 'put my_local_file.foo destination_file'
-    ftp.storbinary('stor '+tarfile, open(tarfile, 'r'))
-    syslog.syslog(script+': done, ftp successful')
+            ftp = ftplib.FTP('eol-rt-data.guest.ucar.edu')
+            ftp.login('ads', 'blue;spruce')
+            ftp.cwd('avaps')
+            ftp.cwd('c130')
 
-    # move the sent files to a seperate folder
-    os.remove(tarfile)
-    for file in files:
-      os.rename(file, 'inserted/'+file)
-    break
+            ftp.storbinary('stor '+file_bz2, open(file_bz2, 'r'))
+            syslog.syslog(file_bz2+' sent')
+            break
 
-  except ftplib.all_errors, e:
-    syslog.syslog(script+': Error putting file: %s' % e)
+        except ftplib.all_errors, e:
+            syslog.syslog('Error putting file: %s' % e)
 
-    # time out after 2 minutes while trying to connect
-    if ( (time.time() - starttime) > 120):
+            cmd='bunzip2 '+file_bz2
+            os.system(cmd)
+            os.remove('BUSY')
+            syslog.closelog()
+            sys.exit(1)
 
-      # well try this again sometime
-      syslog.syslog(script+': exiting, timed out connecting')
-      os.remove(tarfile)
-      os.remove('BUSY')
-      sys.exit(1)
-
-ftp.quit() 
+    ftp.quit() 
 
 # remove busy flag
 os.remove('BUSY')
+syslog.closelog()
