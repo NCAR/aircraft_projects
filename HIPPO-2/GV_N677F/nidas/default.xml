@@ -387,13 +387,14 @@
     <serialSensor ID="VCSEL" class="raf.VCSEL_Serial"
         baud="19200" parity="none" databits="8" stopbits="1">
         <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
-        <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %*c %*f %f %*f %*f %f %f %f %f">
+        <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %c %*f %f %*f %*f %f %f %f %f">
             <variable name="STATUS" units="none" longname="VCSEL Status Code"/>
             <variable name="AT" units="deg_K" longname="VCSEL Ambient Temperature"/>
             <variable name="PS" units="torr" longname="VCSEL Ambient Pressure"/>
             <variable name="LSRTMP" units="ohm" longname="VCSEL Laser Temperature"/>
             <variable name="SETTMP" units="ohm" longname="VCSEL Set Temperature"/>
             <variable name="TCC" units="count" longname="VCSEL Thermoelectric Cooler Current"/>
+	    <variable name="MODE" units="none" longname="VCSEL Mode"/>
             <variable name="CNTRCUR" units="count" longname="VCSEL Center Current"/>
             <variable name="PKPOS" units="count" longname="VCSEL Peak Position"/>
             <variable name="PREGAIN" units="count" longname="VCSEL Pre Gain"/>
@@ -510,7 +511,7 @@
         </sample>
     </sensor>
 
-    <sensor ID="NOAAPANTHER"  class="raf.UDPSocketSensor" devicename="inet::38808">
+    <sensor ID="NOAAPANTHER"  class="raf.UDPSocketSensor" devicename="inet::28808">
         <sample id="1" rate="1" scanfFormat="PAN:%f,%f">
             <variable name="PresLN2" units="psi" longname="NOAA PANTHER Press N2 Low"/>
             <variable name="PresLHe" units="psi" longname="NOAA PANTHER Press He Low"/>
@@ -557,7 +558,7 @@
 
     <serialSensor ID="QCLS" class="DSMSerialSensor"
         baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="A%*d,%f,%f,%f,,,,,">
+        <sample id="1" rate="1" scanfFormat="a%*f,%f,%f,%f,,,,,">
 	<!-- Ignored
 	    <variable name="Igortime" units = "seconds since 1/1/1904 UTC"/> 
 	-->
@@ -566,12 +567,12 @@
             <variable name="CO" units="ppb" longname="Carbon Monoxide"/>
         </sample>
 <!--   See if we can distinguish the two based on existence of floating point values between commas
-        <sample id="2" rate="1" scanfFormat="A%*d,%f,,,,,,,">
 -->
+        <sample id="2" rate="1" scanfFormat="t=%*f m=%f M=%*f">
 	<!-- <variable name="Igortime" units = "seconds since 1/1/1904 UTC"/> -->
-<!--
 	    <variable name="CO2" units="ppb" longname="Carbon Dioxide"/>
 	</sample>
+<!--
 -->
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
