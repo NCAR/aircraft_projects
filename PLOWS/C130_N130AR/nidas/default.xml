@@ -83,7 +83,7 @@
         <sample id="0364" rate="50"               ><variable name="ACINS"              units="m/s2"     longname="IRS Vertical Acceleration"/></sample>
         <sample id="0365" rate="25">
           <variable name="VSPD" units="m/s" longname="IRS Vertical Speed">
-            <linear slope="1.05" intercept="-0.02" units="degree"/>
+            <linear slope="1.0" intercept="0.0" units="degree"/>
           </variable>
         </sample>
         <sample id="0366" rate="10"               ><variable name="VNS"                units="m/s"      longname="IRS Ground Speed Vector, North Component"/></sample>
@@ -890,11 +890,11 @@
             <sample id="1" rate="100">
                 <variable name="QCR" units="V" longname="Raw Dynamic Pressure, Radome">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-1.12563 17.3035 -0.00514298" units="hPa"/>
+                    <poly coefs="-1.62563 17.3035 -0.00514298" units="hPa"/>
                 </variable>
                 <variable name="QCF" units="V" longname="Raw Dynamic Pressure, Fuselage">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="0.890809 17.2321 -0.00393028" units="hPa"/>
+                    <poly coefs="0.3908 17.2321 -0.00393028" units="hPa"/>
                 </variable>
                 <variable name="ADIFR" units="V" longname="Vertical Differential Pressure, Radome">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
@@ -912,7 +912,7 @@
                 <variable name="QCFR" units="V" longname="Raw Dynamic Pressure, Fuselage Right">
                     <parameter name="gain"     value="2"       type="float"/>
 		    <parameter name="bipolar"  value="false"      type="bool"/>
-                    <poly coefs="-0.327737 13.798 -0.00460835" units="hPa"/>
+                    <poly coefs="-0.827737 13.798 -0.00460835" units="hPa"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -957,11 +957,11 @@
                 <variable name="RSTB" units="V" longname="Radiometric Surface Temperature">
                     <parameter name="channel" value="6" type="int"/>
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <poly coefs="-49.598 8.4341 0.1757" units="deg_C"/>
+                    <poly coefs="-47.098 8.4341 0.1757" units="deg_C"/>
                 </variable>
                 <variable name="RSTB1" units="V" longname="Radiometric Surface Temperature">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <poly coefs="-55.531 10.405 0.0201" units="deg_C"/>
+                    <poly coefs="-53.531 10.405 0.0201" units="deg_C"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -1033,7 +1033,7 @@
             <sample id="1" rate="500">
                 <variable name="XGLWC" units="gram/m3" longname="Gerber PV-100 Probe Liquid Water Content">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <linear slope="1.0" intercept="-0.014" units="gram/m3"/>
+                    <linear slope="1.0" intercept="-0.054" units="gram/m3"/>
                     <parameter name="channel" value="1" type="int"/>
                 </variable>
                 <variable name="XGREFF" units="V" longname="Gerber PV-100 Effective Droplet Radius">
@@ -1041,7 +1041,7 @@
                 </variable>
                 <variable name="XGSFC" units="V" longname="Gerber PV-100 Particle Surface Area (Raw)">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <linear slope="2980.0" intercept="0.0" units="cm2/m3"/>
+                    <linear slope="1000.0" intercept="0.0" units="cm2/m3"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -1082,7 +1082,7 @@
                 <parameter name="numpoints" value="50" type="int"/>
                 <variable name="PCN" units="V" longname="CN Counter Inlet Pressure">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="9.25361 106.036 -0.0205082" units="hPa"/>
+                    <poly coefs="7.25361 106.036 -0.0205082" units="hPa"/>
                 </variable>
                 <variable name="CNTEMP" units="V" longname="CN Counter Inlet Temperature">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
@@ -1124,15 +1124,19 @@
                 <parameter name="numpoints" value="50" type="int"/>
                 <variable name="THIML1" units="V" longname="HIMIL Tip Temperature">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="0 100 0" units="deg_C"/>
                 </variable>
                 <variable name="THIML2" units="V" longname="HIMIL Tip Temperature">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="0 100 0" units="deg_C"/>
                 </variable>
                 <variable name="THIML3" units="V" longname="HIMIL Tip Temperature">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="0 100 0" units="deg_C"/>
                 </variable>
                 <variable name="THIML4" units="V" longname="HIMIL Tip Temperature">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="0 100 0" units="deg_C"/>
                 </variable>
             </sample>
             <sample id="4" rate="1">
@@ -1184,7 +1188,7 @@
                 <parameter name="numpoints" value="50" type="int"/>
                 <variable name="RSTT" units="V" longname="Radiometric Sky/Cloud-Base Temperature">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <poly coefs="-58.525 11.723 -0.096" units="deg_C"/>
+                    <poly coefs="-55.6 11.723 -0.096" units="deg_C"/>
                 </variable>
             </sample>
             <sample id="3" rate="1">
