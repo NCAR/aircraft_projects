@@ -19,7 +19,7 @@ import syslog
 ident = sys.argv[0][sys.argv[0].rfind("/")+1:]
 syslog.openlog(ident, 0, syslog.LOG_CRON)
 
-os.chdir('/home/tmp/send_to_grnd/')
+os.chdir('/mnt/r2/dropsondes/')
 
 # This cron script is not re-entrant, bail out if its still running.
 if os.path.isfile('BUSY'):
@@ -44,33 +44,35 @@ list.sort(lambda y, x: cmp(os.path.getmtime(x),os.path.getmtime(y)))
 for file in list:
 
     # bzip2/bunzip2 doesn't modify the creation date of the file!
+    syslog.syslog('compressing '+file)
     cmd='bzip2 --best '+file
     os.system(cmd)
     file_bz2=file+'.bz2'
 
-    while True:
-        try:
-            syslog.syslog('opening FTP connection')
+    try:
+        syslog.syslog('opening FTP connection for '+file_bz2)
 
-            ftp = ftplib.FTP('eol-rt-data.guest.ucar.edu')
-            ftp.login('ads', 'blue;spruce')
-            ftp.cwd('avaps')
-            ftp.cwd('c130')
+        ftp = ftplib.FTP('eol-rt-data.guest.ucar.edu')
+        ftp.login('ads', 'blue;spruce')
+        ftp.cwd('avaps')
+        ftp.cwd('c130')
 
-            ftp.storbinary('stor '+file_bz2, open(file_bz2, 'r'))
-            syslog.syslog(file_bz2+' sent')
-            break
+        ftp.storbinary('stor '+file_bz2, open(file_bz2, 'r'))
+        syslog.syslog(file_bz2+' sent')
 
-        except ftplib.all_errors, e:
-            syslog.syslog('Error putting file: %s' % e)
+    except ftplib.all_errors, e:
+        syslog.syslog('Error putting file: %s' % e)
 
-            cmd='bunzip2 '+file_bz2
-            os.system(cmd)
-            os.remove('BUSY')
-            syslog.closelog()
-            sys.exit(1)
+        cmd='bunzip2 '+file_bz2
+        os.system(cmd)
+        os.remove('BUSY')
+        syslog.closelog()
+        sys.exit(1)
 
     ftp.quit() 
+
+    # exit for loop early... only send one per minute.
+    break
 
 # remove busy flag
 os.remove('BUSY')
