@@ -779,7 +779,7 @@
             </output>
         </service>
         <service class="RawSampleService"
-		rawSorterLength="0" rawHeapMax="100M"
+		rawSorterLength="0.25" rawHeapMax="100M"
 		procSorterLength="1.0" procHeapMax="500M" priority="RT_FIFO:50">
             <!-- input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream -->
@@ -832,14 +832,20 @@
             </sample>
         </sensor>
 
-        <socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="200"
-		init_string="c 00 1 fff 1 100 8 0">
-	    <!-- by default the PSI9116 generates 50 samples/sec.
-                To set to 10Hz: send "c 00 1 fff 1 100 8 0" as the init_string.
-                Also remember to change the rate value in the <sample>.
-            -->
+        <socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="200">
             <sample id="1" rate="10">
-                <variable name="PRAKE12" units="hPa" longname="Pressure Rake dynamic pressure array" length="12"/>
+                <variable name="PSCAN_0" units="hPa" longname="Pressure Scanner dynamic pressure, port 0" length="1"/>
+                <variable name="PSCAN_1" units="hPa" longname="Pressure Scanner dynamic pressure, port 1" length="1"/>
+                <variable name="PSCAN_2" units="hPa" longname="Pressure Scanner dynamic pressure, port 2" length="1"/>
+                <variable name="PSCAN_3" units="hPa" longname="Pressure Scanner dynamic pressure, port 3" length="1"/>
+                <variable name="PSCAN_4" units="hPa" longname="Pressure Scanner dynamic pressure, port 4" length="1"/>
+                <variable name="PSCAN_5" units="hPa" longname="Pressure Scanner dynamic pressure, port 5" length="1"/>
+                <variable name="PSCAN_6" units="hPa" longname="Pressure Scanner dynamic pressure, port 6" length="1"/>
+                <variable name="PSCAN_7" units="hPa" longname="Pressure Scanner dynamic pressure, port 7" length="1"/>
+                <variable name="PSCAN_8" units="hPa" longname="Pressure Scanner dynamic pressure, port 8" length="1"/>
+                <variable name="PSCAN_9" units="hPa" longname="Pressure Scanner dynamic pressure, port 9" length="1"/>
+                <variable name="PSCAN_10" units="hPa" longname="Pressure Scanner dynamic pressure, port 10" length="1"/>
+                <variable name="PSCAN_11" units="hPa" longname="Pressure Scanner dynamic pressure, port 11" length="1"/>
             </sample>
             <message separator="\x01" position="beg" length="52"/>
         </socketSensor>
@@ -896,7 +902,7 @@
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="0.3908 17.2321 -0.00393028" units="hPa"/>
                 </variable>
-                <variable name="ADIFR" units="V" longname="Vertical Differential Pressure, Radome">
+                <variable name="DSM320A0C2" units="V" longname="Vertical Differential Pressure, Radome">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <poly coefs="-0.0156321 6.93387 0.00545018" units="hPa"/>
                 </variable>
@@ -912,7 +918,11 @@
                 <variable name="QCFR" units="V" longname="Raw Dynamic Pressure, Fuselage Right">
                     <parameter name="gain"     value="2"       type="float"/>
 		    <parameter name="bipolar"  value="false"      type="bool"/>
-                    <poly coefs="-0.827737 13.798 -0.00460835" units="hPa"/>
+                    <poly coefs="-0.327737 13.798 -0.00460835" units="hPa"/>
+                </variable>
+                <variable name="ADIFR" units="V" longname="Vertical Differential Pressure, Radome">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <poly coefs="-0.0156321 6.93387 0.00545018" units="hPa"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -930,6 +940,14 @@
                 <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <poly coefs="-1.19357 108.496 -0.0272088" units="hPa"/>
+                </variable>
+                <variable name="TEO3" units="V" longname="Teco Ozone Concentration">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <linear slope="20.0" intercept="0.0" units="ppbv"/>
+                </variable>
+                <variable name="TEO3P" units="V" longname="Teco Ozone Pressure">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <linear slope="66.8624" intercept="414.6" units="hPa"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -967,47 +985,6 @@
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
                 <variable name="A2DTEMP_VID0" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
-
-        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="220">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1606.dat"/>
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="10">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="50" type="int"/>
-                <variable name="TEO3" units="V" longname="Teco Ozone Concentration">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <linear slope="20.0" intercept="0.0" units="ppbv"/>
-                </variable>
-                <variable name="TEO3P" units="V" longname="Teco Ozone Pressure">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <linear slope="66.8624" intercept="414.6" units="hPa"/>
-                </variable>
-                <variable name="XCOMR" units="V" longname="Raw Carbon Monoxide Concentration">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <linear slope="1.0" intercept="0.0" units="ppb"/>
-                </variable>
-                <variable name="XCOFS" units="V" longname="Carbon Monoxide Sample Flow">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <linear slope="100.0" intercept="0.0" units="sccm"/>
-                </variable>
-                <variable name="XCOFCAL" units="V" longname="Carbon Monoxide Cal Gas Flow">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <linear slope="100.0" intercept="0.0" units="sccm"/>
-                </variable>
-                <variable name="XCOCELL" units="V" longname="Carbon Monoxide Cell Pressure">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <linear slope="4.0" intercept="0.0" units="torr"/>
-                </variable>
-                <variable name="XCOPIN" units="V" longname="Carbon Monoxide Inlet Pressure">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <linear slope="200.0" intercept="0.0" units="torr"/>
-                </variable>
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_VID1" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
