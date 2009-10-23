@@ -5,6 +5,10 @@
 #include <qsocketnotifier.h>
 #include <sys/time.h>
 
+#include <map>
+#include <string>
+using namespace std;
+
 /**
  * Class to read UDP broadcast data from EOL aircraft, reformat the
  * data and insert it into the eol-rt-data exposed host database.
@@ -22,7 +26,7 @@ protected slots:
 
 protected:
   void	newUDPConnection();
-  void	newPostgresConnection();
+  void	newPostgresConnection(string aircraft);
 
   QSocketDevice * _udp;
   QSocketNotifier * _notify;

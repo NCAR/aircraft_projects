@@ -6,6 +6,8 @@
 
 #include "udp2sql.h"
 
+using namespace std;
+
 static const int port = 31007;
 
 /* -------------------------------------------------------------------- */
@@ -18,15 +20,18 @@ udp2sql::udp2sql()
 }
 
 /* -------------------------------------------------------------------- */
-void udp2sql::newPostgresConnection()
+void udp2sql::newPostgresConnection(string aircraft)
 {
-  _conn = PQconnectdb("");
+  string spec="user=ads dbname=real-time-"+aircraft;
+  cout << spec << endl;
+
+  _conn = PQconnectdb(spec.c_str());
 
   if (PQstatus(_conn) == CONNECTION_BAD)
   {
-    std::cerr << "SourceSQL: Connection failed: "
+    cout << "SourceSQL: Connection failed: "
          << "(Check PGHOST, PGDATABASE & PGUSER environment variables.)\n";
-    std::cerr << PQerrorMessage(_conn) << std::endl;
+    cout << PQerrorMessage(_conn) << endl;
     PQfinish(_conn);
     _conn = NULL;
   }
@@ -42,7 +47,7 @@ void udp2sql::newUDPConnection()
 //host.setAddress("12.47.179.48");	// Reachback.
 
   _udp->setAddressReusable(true);
-  std::cout << "conn = " << _udp->bind(host, port) << std::endl;
+  cout << "conn = " << _udp->bind(host, port) << endl;
 
   _notify = new QSocketNotifier(_udp->socket(), QSocketNotifier::Read);
   QObject::connect(_notify, SIGNAL(activated(int)), this, SLOT(newData()));
@@ -51,9 +56,9 @@ void udp2sql::newUDPConnection()
 /* -------------------------------------------------------------------- */
 void udp2sql::timerEvent(QTimerEvent *)
 {
-  std::cout << "Resetting connection\n";
-  PQfinish(_conn);
-  newPostgresConnection();
+  cout << "Resetting connection\n";
+//PQfinish(_conn);
+//newPostgresConnection();
 //  delete _notify;
 //  delete _udp;
 //  _timer_id = 0;
@@ -91,17 +96,18 @@ void udp2sql::newData()
     bzFile b;
     b.lastErr = ret;
     int errnum;
-    printf( "Failed to decompress the ground feed stream: %s\n", BZ2_bzerror(&b, &errnum) );
+    cout << "Failed to decompress the ground feed stream: " << BZ2_bzerror(&b, &errnum) << endl;
     return;
   }
-  printf("\ndecompressed %d -> %d\n", nBytes, bufLen);
-  printf("%s\n",buffer);
+  cout << "\ndecompressed " << nBytes << " -> " << bufLen << endl;
+  cout << buffer << endl;
 
   // filter out messages from un-expected sources
-  if (strncmp(buffer, "C130", 4) &&
-      strncmp(buffer, "GV", 2) &&
-      strncmp(buffer, "P3", 2))
-    return;
+  string aircraft;
+  if      (strncmp(buffer, "C130", 4) == 0) aircraft = "C130";
+  else if (strncmp(buffer, "GV", 2) == 0)   aircraft = "GV";
+  else if (strncmp(buffer, "P3", 2) == 0)   aircraft = "P3";
+  else return;
 
   // break the stream into two usable substrings
   p = strtok(buffer, ",");
@@ -116,17 +122,17 @@ void udp2sql::newData()
 
   // create postgres statement
   sprintf(sql_str, "INSERT INTO raf_lrt VALUES ('%s',%s);", timestamp, vars);
-  std::cout << strlen(sql_str) << ": " << sql_str << std::endl;
+  cout << strlen(sql_str) << ": " << sql_str << endl;
   
-  newPostgresConnection();
+  newPostgresConnection(aircraft);
   PGresult * res;
   res = PQexec(_conn, sql_str);
-  std::cerr << PQerrorMessage(_conn);
+  cout << PQerrorMessage(_conn);
   PQclear(res);
 
   sprintf(sql_str, "UPDATE global_attributes SET value='%s.999' WHERE key='EndTime';", timestamp);
   res = PQexec(_conn, sql_str);
-  std::cerr << PQerrorMessage(_conn);
+  cout << PQerrorMessage(_conn);
   PQclear(res);
   PQfinish(_conn);
 
