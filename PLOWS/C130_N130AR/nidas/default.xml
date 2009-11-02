@@ -784,7 +784,7 @@
             <!-- input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream -->
             <input class="RawSampleInputStream">
-                <socket type="mcaccept"/>
+                <socket type="mcaccept" maxIdle="60"/>
             </input>
             <processor class="SampleArchiver">
                 <output class="RawSampleOutputStream">
@@ -832,7 +832,7 @@
             </sample>
         </sensor>
 
-        <socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="200" timeout="10">
+        <socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="200" timeout="600">
             <sample id="1" rate="10">
                 <variable name="PSCAN_0" units="hPa" longname="Pressure Scanner dynamic pressure, port 0" length="1"/>
                 <variable name="PSCAN_1" units="hPa" longname="Pressure Scanner dynamic pressure, port 1" length="1"/>
@@ -908,12 +908,12 @@
                 </variable>
                 <variable name="BDIFR" units="V" longname="Horizontal Differential Pressure, Radome">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <poly coefs="-0.0323812 5.13826 8.09753e-05" units="hPa"/>
+                    <poly coefs="-0.098 5.1373 8.3231e-05" units="hPa"/>
                 </variable>
                 <variable name="TTRR" units="V" longname="Total Temperature, Radome Right">
                     <parameter name="channel" value="5" type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-64.553 25.1259 -0.190518" units="deg_C"/>
+                    <poly coefs="-68.309 27.092 -0.4413" units="deg_C"/>
                 </variable>
                 <variable name="QCFR" units="V" longname="Raw Dynamic Pressure, Fuselage Right">
                     <parameter name="gain"     value="2"       type="float"/>
@@ -922,7 +922,7 @@
                 </variable>
                 <variable name="ADIFR" units="V" longname="Vertical Differential Pressure, Radome">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <poly coefs="-0.0156321 6.93387 0.00545018" units="hPa"/>
+                    <poly coefs="-0.396 6.9423 0.0028" units="hPa"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -998,12 +998,11 @@
     <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
-<!-- Not available at this time.  Hopefully for second half.
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LPC">
             <parameter name="SerialNumber" value="F2DC002" type="string"/>
             <parameter name="RESOLUTION" value="10" type="int"/>
         </sensor>
--->
+
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1600.dat"/>
             <parameter name="rate" value="500" type="int"/>
@@ -1042,6 +1041,8 @@
         </sensor>
 
         <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS5" id="120" suffix="_WCN"/>
+
+        <sensor IDREF="TwoD_House" devicename="/dev/ttyS6" id="610" suffix="_LWI"/>
 
         <serialSensor IDREF="S100" devicename="/dev/ttyS10" id="520" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="FSSP109"/>
@@ -1150,7 +1151,7 @@
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="TTWH" units="V" longname="Total Temperature, Deiced Wing">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-65.9606 26.7273 -0.321917" units="deg_C"/>
+                    <poly coefs="-69.925 28.126 -0.416" units="deg_C"/>
                 </variable>
                 <variable name="RICE" units="V" longname="Raw Icing-Rate Indicator">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
