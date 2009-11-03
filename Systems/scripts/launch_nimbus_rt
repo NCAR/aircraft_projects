@@ -7,18 +7,12 @@ setenv XMIT_DIR /tmp/xmit
 # Make sure it exists.
 /bin/mkdir -p $XMIT_DIR
 
-# Expire any existing stuff (or is this done on the ground side???)
-/usr/local/ldm/bin/pqexpire -a 0.001 -i 0 -p "nimbus_sql"
-
-# Remove any existing sql files.
-set nonomatch
-foreach file (${XMIT_DIR}/*sql*)
-  /bin/rm $file
-end
-
 # Remove AVAPS DropSonde files.
 /bin/rm -f /mnt/r2/send_to_grnd/D20*
 /bin/rm -f /tmp/avaps-rt
+
+(setenv PGDATABSE real-time-C130; /home/local/Systems/scripts/listen_sat.pl) &
+
 
 # Start google map/earth updater onboard.
 pkill acTrack2kml
