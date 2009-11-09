@@ -437,7 +437,9 @@
             <variable name="FTMP" units="deg_C" longname="SPP-100 Housekeeping Data"/>
             <variable name="FRNG" units="" longname="SPP-100 Size Range Category"/>
             <variable name="REJDOF" units="count" longname="SPP-100 Particles Rejected (Outside Depth-of-Field))"/>
-            <variable name="REJAT" units="" longname="SPP-100 Average Transit Rejected Particles"/>
+            <variable name="REJAT" units="" longname="SPP-100 Average Transit Rejected Particles">
+                <linear slope="0.1" intercept="0.0" units=""/>
+            </variable>
             <variable name="OVFLW" units="" longname="SPP-100 AtoD Converter Overflow/Overrange"/>
             <variable name="AS100" length="31" units="count" longname="SPP-100 Raw Accumulation (per cell) - DMT"/>
             <variable name="DELTAT" units="msec" longname="SPP-100 Time between last sample and this sample"/>
@@ -860,8 +862,12 @@
 
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130">
             <sample id="1">
-                <variable name="DPTB" units="unk" longname="Dew/Frost Point Balance, Fuselage Top"/>
-                <variable name="DPT" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Top"/>
+                <variable name="DPTB" units="unk" longname="Dew/Frost Point Balance, Fuselage Top">
+                    <linear slope="1.0" intercept="-1.5" units="unk"/>
+                </variable>
+                <variable name="DPT" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Top">
+                    <linear slope="1.0" intercept="-1.8" units="deg_C"/>
+                </variable>
                 <variable name="DPTTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Top"/>
             </sample>
         </serialSensor>
@@ -1009,7 +1015,7 @@
             <sample id="1" rate="500">
                 <variable name="XGLWC" units="gram/m3" longname="Gerber PV-100 Probe Liquid Water Content">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <linear slope="1.0" intercept="-0.054" units="gram/m3"/>
+                    <linear slope="1.0" intercept="0.04" units="gram/m3"/>
                     <parameter name="channel" value="1" type="int"/>
                 </variable>
                 <variable name="XGREFF" units="V" longname="Gerber PV-100 Effective Droplet Radius">
@@ -1215,6 +1221,7 @@
         </output>
     </dsm>
     <dsm name="clyde" id="77" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
+
         <sensor IDREF="TwoDP" devicename="/dev/usbtwod_32_0" id="800" suffix="_RWI">
             <parameter name="SerialNumber" value="2DP10" type="string"/>
 
@@ -1223,16 +1230,7 @@
                 <variable name="DT1DP" units="msec" longname="2D-P Probe Dead Time"/>
             </sample>
         </sensor>
-<!--
-        <sensor class="raf.TwoD32_USB" devicename="/dev/usbtwod_32_0" id="800" suffix="_RWI">
-            <parameter name="SerialNumber" value="001" type="string"/>
-            <parameter name="RESOLUTION" value="200" type="int"/>
-            <parameter name="TAS_RATE" value="10" type="int"/>
-            <sample id="1" rate="10">
-                <variable name="PTCLS" units="count" longname="Low Speed 2D_32 Particle count (# sync words)"/>
-            </sample>
-        </sensor>
--->
+
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
