@@ -1,7 +1,7 @@
 Summary: Metapackage for all server and satcom packages needed on GV
 Name: raf-gv
 Version: 1.0
-Release: 3
+Release: 4
 License: GPL
 Group: System Environment
 
@@ -12,7 +12,8 @@ Requires: raf-gv-dhcp
 Requires: raf-ac-named
 Requires: raf-gv-ddclient
 Requires: raf-satcom
-Requires: raf-ads3-rsyncd
+Obsoletes: raf-ads3-rsyncd
+Requires: ael-local-dpkgs
 
 BuildArch: noarch
 
@@ -22,6 +23,8 @@ Metapackage for all server and satcom packages needed on GV.
 %files 
 
 %changelog
+* Mon Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
+- Added ael-local-dpkgs, remove raf-ads3-rsyncd
 * Thu Nov 20 2008 Gordon Maclean <maclean@ucar.edu> 1.0-3
 - Added rad-ads3-rsyncd
 * Tue Apr 15 2008 Gordon Maclean <maclean@ucar.edu> 1.0-2
