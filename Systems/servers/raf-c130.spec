@@ -23,7 +23,7 @@ Metapackage for all server and satcom packages needed on C130.
 %files 
 
 %changelog
-* Mon Nov 166 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5
+* Mon Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5
 - Added raf-ads3-sudoers
 * Mon Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
 - Added ael-local-dpkgs, remove raf-ads3-rsyncd
