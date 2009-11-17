@@ -1,7 +1,7 @@
 Summary: Metapackage for all server and satcom packages needed on C130
 Name: raf-c130
 Version: 1.0
-Release: 4
+Release: 5
 License: GPL
 Group: System Environment
 
@@ -12,7 +12,7 @@ Requires: raf-c130-dhcp
 Requires: raf-ac-named
 Requires: raf-c130-ddclient
 Requires: raf-satcom
-Obsoletes: raf-ads3-rsyncd
+Requires: raf-ads3-sudoers
 Requires: ael-local-dpkgs
 
 BuildArch: noarch
@@ -23,6 +23,8 @@ Metapackage for all server and satcom packages needed on C130.
 %files 
 
 %changelog
+* Mon Nov 166 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5
+- Added raf-ads3-sudoers
 * Mon Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
 - Added ael-local-dpkgs, remove raf-ads3-rsyncd
 * Thu Nov 20 2008 Gordon Maclean <maclean@ucar.edu> 1.0-3
