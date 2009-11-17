@@ -86,6 +86,12 @@ if [ $dopkg == all -o $dopkg == $pkg ];then
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
+pkg=raf-ads3-sudoers
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    version=`get_version $pkg.spec`
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
+
 # pkg=raf-ads3-rsyncd
 # if [ $dopkg == all -o $dopkg == $pkg ];then
 #     version=`get_version $pkg.spec`
