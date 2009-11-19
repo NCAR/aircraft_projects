@@ -55,7 +55,7 @@
     <!--<sample id="0323" rate="50"    process="false"><variable name="Flt Pth Accel"      units="G"        longname="Flt Pth Accel"/></sample>                   not used    -->
         <sample id="0324" rate="50">
           <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-            <linear slope="1.0" intercept="-0.08" units="degree"/>
+            <linear slope="1.0" intercept="-0.23" units="degree"/>
           </variable>
         </sample>
         <sample id="0325" rate="50">
@@ -863,7 +863,7 @@
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130">
             <sample id="1">
                 <variable name="DPTB" units="unk" longname="Dew/Frost Point Balance, Fuselage Top">
-                    <linear slope="1.0" intercept="-1.5" units="unk"/>
+                    <linear slope="1.0" intercept="0.0" units="unk"/>
                 </variable>
                 <variable name="DPT" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Top">
                     <linear slope="1.0" intercept="-1.8" units="deg_C"/>
@@ -875,7 +875,9 @@
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="140">
             <sample id="1">
                 <variable name="DPBB" units="unk" longname="Dew/Frost Point Balance, Fuselage Bottom"/>
-                <variable name="DPB" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Bottom"/>
+                <variable name="DPB" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Bottom">
+                    <linear slope="1.0" intercept="-1.5" units="deg_C"/>
+                </variable>
                 <variable name="DPBTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Bottom"/>
             </sample>
         </serialSensor>
