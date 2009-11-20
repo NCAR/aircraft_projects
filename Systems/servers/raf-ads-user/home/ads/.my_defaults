@@ -1,0 +1,86 @@
+#
+# cshell startup script
+#
+
+setenv XKEYSYMDB /usr/share/X11/XKeysymDB
+unset noclobber
+set clobber
+
+setenv EDITOR	/bin/vi
+setenv PRINTER	shop
+setenv LPDEST	shop
+setenv LESS	mCb50
+setenv MORE	-c
+setenv PAGER	less
+setenv VISUAL	/bin/vi
+
+setenv AEROS_CONFIG_DIR $HOME/aeros_configs
+setenv RSYNC_RSH ssh
+
+if ( ! $?ADS3 ) then
+    source $HOME/ads3_environment.csh
+endif
+
+setenv RAW_DATA_DIR /var/r1/$PROJECT
+
+set cdpath = ($ADS3/projects/$PROJECT/$AIRCRAFT $ADS3)
+
+set path=(/usr/java/latest/bin $path /home/local/Systems/scripts \
+	/opt/local/nidas/x86/bin /opt/arcom/bin /opt/arm_tools/bin \
+	/usr/local/bin /sbin /usr/sbin /home/ads/bin \
+	/usr/local/ldm/bin /usr/lib/qt-3.3/bin)
+
+unsetenv LD_LIBRARY_PATH
+
+
+# HIAPER SQL Stuff.
+setenv PGDATA		/home/DataBases
+setenv PGHOST		localhost
+setenv PGUSER		ads
+setenv PGDATABASE	real-time
+
+setenv MANPATH	/usr/share/man:/usr/local/man:/opt/rtldk-2.2/doc/man
+
+if (`uname` == 'Linux') then
+  alias cd 'set dot=$cwd; chdir \!* ; set prompt="c130:$cwd \!\% "'
+  alias ls 'ls --color=tty'
+else
+  alias cd 'set dot=$cwd; chdir \!* ; set prompt="c130:$cwd \! % "'
+
+endif
+
+alias ,		'set odot=$cwd; chdir $dot; set dot=$odot; pwd'
+alias ..	'cd ..'
+alias clr	'clear'
+alias cls	'clear; ls'
+alias cp	'cp -i'
+alias ctagit	'ctags --extra=fq -eRo tags .'
+alias dir	'ls -l \!* | more'
+alias empty	'/bin/cp /dev/null'
+alias ff	'find . -name \!* -print'
+alias ftp	'ftp -i'
+alias gerp	'grep'
+alias h		history
+alias hp	'cd /home/local/aeros/source/\!*'
+alias lman	'nroff -man \!* | $PAGER'
+alias lookup	'grep \!* /usr/dict/words'
+alias lpr4	'expand -4 \!* | lpr'
+alias maek	'make'
+alias mkae	'make'
+alias mv	'mv -i'
+alias proj	'cd /home/local/projects/\!*'
+alias psg	'ps ax | grep \!*'
+alias scons     'nice scons -j4'
+alias socsh	'source ~/.cshrc'
+alias vh	'$PAGER /usr/include/\!*.h'
+alias vhdr	'$PAGER $JLOCAL/include/header.h'
+alias vi	vim
+alias x		'chmod +x'
+alias e		'xemacs -fg LightBlue -bg Maroon -geometry 90x46 &'
+
+alias dat	'cd $DATA_DIR/\!*'
+alias dev	'cd $LOCAL/raf/\!*'
+alias flights   'cd $ADS3/projects/$PROJECT/$AIRCRAFT/flights/'
+
+# nimbus needs this to be happy.
+setenv XMIT_DIR /tmp/xmitdir

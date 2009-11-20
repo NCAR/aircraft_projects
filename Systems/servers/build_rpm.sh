@@ -21,6 +21,13 @@ trap "{ rm -f $log; }" EXIT
 
 set -o pipefail
 
+pkg=raf-ads-user
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    version=`get_version $pkg.spec`
+    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
+    rpmbuild -bb ${pkg}.spec | tee -a $log  || exit $?
+fi
+
 pkg=raf-gv
 if [ $dopkg == all -o $dopkg == $pkg ];then
     version=`get_version $pkg.spec`
