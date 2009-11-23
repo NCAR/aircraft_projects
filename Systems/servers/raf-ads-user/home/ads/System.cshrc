@@ -34,7 +34,7 @@ endsw
 #
 # Linux
 #
-XKEYSYMDB /usr/lib/X11/XKeysymDB
+setenv XKEYSYMDB /usr/share/X11/XKeysymDB
 
 set path=( /usr/kerberos/bin /bin /usr/bin /usr/X11R6/bin \
 	/opt/local/bin )
