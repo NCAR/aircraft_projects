@@ -32,54 +32,24 @@ switch (`uname`)
 endsw
 
 #
-# Set up the environment according to which OS we're running.
-#
-
-switch ( $MYOS )
-#
-# Solaris
-#
-    case Solaris:
-	set path=( /usr/bin /usr/sbin /usr/local/bin \
-		/usr/dt/bin /usr/openwin/bin )
-
-	setenv MANPATH /usr/share/man:/usr/local/man:/usr/openwin/man
-	setenv LD_LIBRARY_PATH /usr/dt/lib:/usr/openwin/lib:/usr/local/lib:/usr/local/X11R6/lib
-	setenv XKEYSYMDB /usr/openwin/lib/XKeysymDB
-	setenv XAPPLRESDIR /usr/openwin/lib/app-defaults:/usr/local/lib/app-defaults
-	setenv XFILESEARCHPATH /usr/lib/X11/%T/%N:/usr/openwin/lib/%T/%N%S:/usr/openwin/lib/locale/%L/%T/%N%S
-
-	# use kilobyte-style output for df and du in Solaris
-	alias   df      'df -k'
-	alias   du      'du -k'
-    breaksw
-#
 # Linux
 #
-    case Linux:
 #	echo "System.cshrc thinks I'm running Linux"
 #	SN - feb08- figure out if it's RHEL or CentOS 5
 # grep returns a 0 if there is a match, hence complement the logic
-	grep "release 4" /etc/redhat-release > /dev/null
-	set rhel4 = $status
-	if ! $rhel4 then
-		setenv XKEYSYMDB /usr/lib/X11/XKeysymDB
-	else
-		setenv XKEYSYMDB /usr/share/X11/XKeysymDB
-	endif
+grep "release 4" /etc/redhat-release > /dev/null
+set rhel4 = $status
+if ! $rhel4 then
+	setenv XKEYSYMDB /usr/lib/X11/XKeysymDB
+else
+	setenv XKEYSYMDB /usr/share/X11/XKeysymDB
+endif
 
-	set path=( /usr/kerberos/bin /bin /usr/bin /usr/X11R6/bin \
+set path=( /usr/kerberos/bin /bin /usr/bin /usr/X11R6/bin \
 	/opt/local/bin /net/local_lnx/bin)
-	setenv IDL_DIR /net/csoft_lnx/itt/idl
+
+setenv IDL_DIR /net/csoft_lnx/itt/idl
 	
-     breaksw
-#
-# None of the above
-#
-    default:
-	echo "System.cshrc does not know which OS is being run: $MYOS, paths not set."
-    breaksw
-endsw
 
 if ($?USER == 0 || $?prompt == 0) exit
 #echo "System.cshrc interactive..."
@@ -97,6 +67,7 @@ setenv PAGER less
 unset autologout
 umask 002
 limit coredumpsize 0k
+
 # place stty commands in System.login
 #stty sane
 # The following is commented until a global ATD-wide locate database can be

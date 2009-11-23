@@ -32,6 +32,8 @@ set path=(/usr/java/latest/bin $path /home/local/Systems/scripts \
 
 unsetenv LD_LIBRARY_PATH
 
+# nimbus needs this to be happy.
+setenv XMIT_DIR /tmp/xmitdir
 
 # HIAPER SQL Stuff.
 setenv PGDATA		/home/DataBases
@@ -68,7 +70,7 @@ alias lpr4	'expand -4 \!* | lpr'
 alias maek	'make'
 alias mkae	'make'
 alias mv	'mv -i'
-alias proj	'cd /home/local/projects/\!*'
+alias proj	'cd ${PROJ_DIR}/\!*'
 alias psg	'ps ax | grep \!*'
 alias scons     'nice scons -j4'
 alias socsh	'source ~/.cshrc'
@@ -81,6 +83,3 @@ alias e		'xemacs -fg LightBlue -bg Maroon -geometry 90x46 &'
 alias dat	'cd $DATA_DIR/\!*'
 alias dev	'cd $LOCAL/raf/\!*'
 alias flights   'cd $ADS3/projects/$PROJECT/$AIRCRAFT/flights/'
-
-# nimbus needs this to be happy.
-setenv XMIT_DIR /tmp/xmitdir

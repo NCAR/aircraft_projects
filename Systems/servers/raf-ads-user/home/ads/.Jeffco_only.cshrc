@@ -15,27 +15,24 @@
 ################################################################################
 
 
-setenv LOCAL /net/local_lnx
+setenv LOCAL /opt/local
+
 # next 3 lines moved from System.cshrc on 24Feb04 - SN
 setenv PRINTER               raf-hp2300
 setenv LPDEST                raf-hp2300
 
-if ( $MYOS == Linux ) then
-   setenv JLOCAL /opt/local
-else if ( $MYOS == Solaris ) then
-   setenv JLOCAL /jnet/solaris
-endif
+setenv JLOCAL /opt/local
 
 if (!($?PROJ_DIR)) then
-   setenv PROJ_DIR /net/jlocal/projects
+   setenv PROJ_DIR /home/local/projects
 endif
 
 if (!($?RAW_DATA_DIR)) then
-   setenv RAW_DATA_DIR /scr/raf2/Raw_Data
+   setenv RAW_DATA_DIR /var/r1/
 endif
 
 if (!($?DATA_DIR)) then
-   setenv DATA_DIR /scr/jdata
+   setenv DATA_DIR /home/data
 endif
 
 if (!($?PROD_DATA)) then
@@ -51,7 +48,7 @@ endif
 
 # University Hawaii GMT package, used by ncplot geo-pol map.
 
-setenv GMTHOME		$JLOCAL/GMT
+setenv GMTHOME		$LOCAL/GMT
 
 ################################################################################
 # UNIX aliases                                                                 #
@@ -67,12 +64,6 @@ switch ( $MYOS )
       alias fastfind locate
    breaksw
 endsw
-
-# passwd alias is broken...
-#alias passwd	rsh ale yppasswd
-
-alias openscan nice +5 openscan
-
 
 setenv XAPPLRESDIR	$JLOCAL/lib/app-defaults
 set path = ($path $JLOCAL/scripts $JLOCAL/bin /usr/X11R6/bin)
