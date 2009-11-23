@@ -39,9 +39,6 @@ if (!($?PROD_DATA)) then
    setenv PROD_DATA /scr/productiondata
 endif
 
-# Commented out by Chris 09/09/03.
-#setenv LD_LIBRARY_PATH  $JLOCAL/lib:${LD_LIBRARY_PATH}
-
 ################################################################################
 # 3rd party software environment variables                                     #
 ################################################################################
@@ -65,7 +62,10 @@ switch ( $MYOS )
    breaksw
 endsw
 
-setenv XAPPLRESDIR	$JLOCAL/lib/app-defaults
+setenv XAPPLRESDIR	/usr/share/X11/app-defaults
+
 set path = ($path $JLOCAL/scripts $JLOCAL/bin /usr/X11R6/bin)
 
 alias hl	'set dot=$cwd ; cd /home/local/\!*'
+alias ninc      'set dot=$cwd ; cd /home/local/raf/nimbus/include/\!*'
+alias nsrc      'set dot=$cwd ; cd /home/local/raf/nimbus/src/\!*'

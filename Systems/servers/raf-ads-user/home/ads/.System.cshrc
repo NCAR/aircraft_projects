@@ -34,22 +34,11 @@ endsw
 #
 # Linux
 #
-#	echo "System.cshrc thinks I'm running Linux"
-#	SN - feb08- figure out if it's RHEL or CentOS 5
-# grep returns a 0 if there is a match, hence complement the logic
-grep "release 4" /etc/redhat-release > /dev/null
-set rhel4 = $status
-if ! $rhel4 then
-	setenv XKEYSYMDB /usr/lib/X11/XKeysymDB
-else
-	setenv XKEYSYMDB /usr/share/X11/XKeysymDB
-endif
+XKEYSYMDB /usr/lib/X11/XKeysymDB
 
 set path=( /usr/kerberos/bin /bin /usr/bin /usr/X11R6/bin \
-	/opt/local/bin /net/local_lnx/bin)
+	/opt/local/bin )
 
-setenv IDL_DIR /net/csoft_lnx/itt/idl
-	
 
 if ($?USER == 0 || $?prompt == 0) exit
 #echo "System.cshrc interactive..."
@@ -135,11 +124,6 @@ endif
 	    breaksw
 	endsw
 endif
-
-
-#if ( -f /etc/motd ) then
-#   cat /etc/motd
-#endif
 
 
 #
