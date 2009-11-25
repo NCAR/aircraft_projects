@@ -1,11 +1,12 @@
 Summary: Metapackage for all server and satcom packages needed on GV
 Name: raf-ads3-lab
 Version: 1.0
-Release: 4
+Release: 5
 License: GPL
 Group: System Environment
 
 Requires: raf-ads3-syslog
+Requires: raf-ads-user
 Requires: raf-lab-dhcp
 Requires: raf-lab-named
 Requires: raf-lab-ntp
@@ -20,6 +21,8 @@ Metapackage for all server and satcom packages needed on lab systems.
 %files 
 
 %changelog
+* Wed Nov 24 2009 John Wasinger <wasinger@ucar.edu> 1.0-5
+- Added raf-ads-user
 * Fri Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
 - Added raf-ads3-sudoers
 * Mon Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-3
