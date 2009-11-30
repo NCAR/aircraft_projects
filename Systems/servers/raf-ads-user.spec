@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 3
+Release: 4
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -27,19 +27,23 @@ cp home/ads/login ${RPM_BUILD_ROOT}/home/ads/.login
 cp home/ads/bin/svn-ask-username.sh ${RPM_BUILD_ROOT}/home/ads/bin/svn-ask-username.sh
 
 %files
-%config(noreplace) %attr(-,ads,ads) /home/ads/.Jeffco_only.cshrc
-%config(noreplace) %attr(-,ads,ads) /home/ads/.System.cshrc
-%config(noreplace) %attr(-,ads,ads) /home/ads/.cshrc
-%config(noreplace) %attr(-,ads,ads) /home/ads/.my_defaults
-%config(noreplace) %attr(-,ads,ads) /home/ads/ads3_environment.csh
-%config(noreplace) %attr(-,ads,ads) /home/ads/.login
-%config(noreplace) %attr(-,ads,ads) /home/ads/bin/svn-ask-username.sh
+%defattr(-,ads,ads)
+%config /home/ads/.Jeffco_only.cshrc
+%config /home/ads/.System.cshrc
+%config /home/ads/.cshrc
+%config /home/ads/.my_defaults
+%config /home/ads/ads3_environment.csh
+%config /home/ads/.login
+%config /home/ads/bin/svn-ask-username.sh
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
-* Thu Nov 23 2009 John Wasinger <wasinger@ucar.edu> 1.2
+* Mon Nov 30 2009 John Wasinger <wasinger@ucar.edu> 1.4
+- Now creates '.rpmsave' files to back up previous changes.
+- Fixed prompt string.
+* Thu Nov 23 2009 John Wasinger <wasinger@ucar.edu> 1.3
 - Added bin/svn-ask-username.sh
 * Thu Nov 23 2009 John Wasinger <wasinger@ucar.edu> 1.2
 - Added .login and ads3_environment.csh, clean up .my_defaults
