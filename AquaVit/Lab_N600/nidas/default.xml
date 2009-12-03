@@ -20,6 +20,26 @@
         </sample>
     </irigSensor>
 
+    <serialSensor ID="VCSEL" class="DSMSerialSensor"
+        baud="19200" parity="none" databits="8" stopbits="1">
+        <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
+        <sample id="1" rate="1" scanfFormat="SWS %f %*f %f %f %f %f %f %*c %*f %*f %*f %*f %*f %*f %*f %*f">
+            <variable name="VTIME" units="second" longname="VCSEL Timestamp"/>
+            <variable name="AT" units="deg_K" longname="VCSEL Ambient Temperature"/>
+            <variable name="PS" units="torr" longname="VCSEL Ambient Pressure"/>
+            <variable name="LSRTMP" units="ohm" longname="VCSEL Laser Temperature"/>
+            <variable name="SETTMP" units="ohm" longname="VCSEL Set Temperature"/>
+            <variable name="TCC" units="count" longname="VCSEL Thermoelectric Cooler Current"/>
+        </sample>
+        <sample id="2" rate="25" scanfFormat="%f %f %f %f">
+            <variable name="CONC_H2O" units="#/cm3" longname="VCSEL Moisture Number Density"/>     <!-- molecules/cm^3 -->
+            <variable name="STDV_H20" units="#/cm3" longname="VCSEL Std Dev H2O"/>                 <!-- molecules/cm^3 -->
+            <variable name="DP" units="deg_C" longname="VCSEL Frost Dew Point"/>
+            <variable name="NGOOD" units="none" longname="VCSEL Number of Good Scans"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
     <serialSensor ID="DewPointer" class="DSMSerialSensor"
         baud="9600" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="%*d,%f" rate="1"/>
@@ -134,66 +154,76 @@
     </server>
 
 <!-- dsm311 | viper-03125 | serial-12250 | a2d006 | irig-32688 | dcdc-A128944 -->
-    <dsm name="dsm311" location="lab" id="1" rserialPort="30002">
+<!-- dsmChem1 | viper-03128 | serial-12250 | a2d001 | irig-30277 | dcdc-A127594 -->
+    <dsm name="dsmChem1" location="lab" id="1" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
 
-        <serialSensor IDREF="TDLH2O" devicename="/dev/dsmser0" id="120" suffix="_MC"/>
+        <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="110" suffix="_VXL"/>
 
-        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser1" id="130">
+        <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS6" id="120" suffix="_MC"/>
+
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130">
             <sample id="1">
                 <variable name="DPL" units="deg_C" longname="Dew/Frost Point Temperature, Lab"/>
             </sample>
         </serialSensor>
 
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
-            <sample id="1" rate="500">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="10">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="50" type="int"/>
 <!-- REFDP                | 2007-10-02 16:46:58 | {-0.0510172,1.0468} -->
+<!-- 001                  | BIGBLU_CH0_4F        | A/D Initial 54 C     | 2008-07-23 16:53:19 | {-0.14292,1.05911} -->
+<!-- 001                  | REFDP                | _4T at 52.2 deg_C    | 2009-06-19 21:44:38 | {-0.0504032,1.05829} -->
                 <variable name="REFDP" units="V" longname="Reference Dew Pointer"> <!-- -2.5 to 2.5 -->
                     <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope"     value="1.0468"     type="float"/>
-                    <parameter name="corIntercept" value="-0.0510172" type="float"/>
+                    <parameter name="corSlope"     value="1.05829"    type="float"/>
+                    <parameter name="corIntercept" value="-0.0504032" type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
 <!-- REFDPTMP             | 2007-10-02 16:49:56 | {-0.07776,1.05717} -->
+<!-- 001                  | BIGBLU_CH1_4F        | A/D Initial 54 C     | 2008-07-23 16:56:04 | {-0.181801,1.06433} -->
+<!-- 001                  | REFDPTMP             | _4T at 52.1 deg_C    | 2009-06-19 21:47:49 | {-0.073689,1.06351} -->
                 <variable name="REFDPTMP" units="V" longname="Reference Dew Pointer Temperature"> <!-- -2.5 to 2.5 -->
                     <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope"     value="1.05717"    type="float"/>
-                    <parameter name="corIntercept" value="-0.07776"   type="float"/>
+                    <parameter name="corSlope"     value="1.06351"    type="float"/>
+                    <parameter name="corIntercept" value="-0.073689"  type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
-<!-- CELLPRES             | 2007-10-02 16:52:39 | {-0.27984,1.07806} -->
-                <variable name="CELLPRES" units="V" longname="Test Hygrometer Pressure"> <!-- 0..5 -->
-                    <parameter name="gain"         value="4"          type="float"/>
+<!-- DP1011B             | 2007-10-02 16:52:39 | {-0.27984,1.07806} -->
+<!-- 001                  | BIGBLU_CH2_4F        | A/D Initial 54 C     | 2008-07-23 17:01:10 | {-0.0764917,1.04359} -->
+                <variable name="DP1011B" units="V" longname="Downstream 1011B Dew Point Hygrometer "> <!-- 0..10 -->
+                    <parameter name="gain"         value="2"          type="float"/>
                     <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope"     value="1.07806"    type="float"/>
-                    <parameter name="corIntercept" value="-0.27984"   type="float"/>
+                    <parameter name="corSlope"     value="1.04359"    type="float"/>
+                    <parameter name="corIntercept" value="-0.0764917" type="float"/>
                     <linear slope="266.6666" intercept="0.0" units="hPa"/>
                 </variable>
 <!-- REFDPP               | 2007-10-02 16:57:48 | {-0.211627,1.06542} -->
+<!-- 001                  | BIGBLU_CH3_4F        | A/D Initial 54 C     | 2008-07-23 17:04:37 | {-0.197833,1.07214} -->
                 <variable name="REFDPP" units="V" longname="Reference Hygrometer Pressure"> <!-- 0..5 -->
                     <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope"     value="1.06542"    type="float"/>
-                    <parameter name="corIntercept" value="-0.211627"  type="float"/>
+                    <parameter name="corSlope"     value="1.07214"    type="float"/>
+                    <parameter name="corIntercept" value="-0.197833"  type="float"/>
                     <linear slope="266.6666" intercept="0.0" units="hPa"/>
                 </variable>
 <!-- REFDGP               | 2007-10-02 17:00:16 | {-0.203823,1.06441} -->
+<!-- 001                  | BIGBLU_CH4_4F        | A/D Initial 54 C     | 2008-07-23 17:07:20 | {-0.183958,1.0689} -->
                 <variable name="REFDGP" units="V" longname="Reference Dew Point Generator Pressure"> <!-- 0..5 -->
                     <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope"     value="1.06441"    type="float"/>
-                    <parameter name="corIntercept" value="-0.203823"  type="float"/>
+                    <parameter name="corSlope"     value="1.0689"     type="float"/>
+                    <parameter name="corIntercept" value="-0.183958"  type="float"/>
                     <linear slope="266.6666" intercept="0.0" units="hPa"/>
                 </variable>
             </sample>
-        </sensor>
-
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_LAB" units="deg_C">
-                </variable>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_CHEMLAB" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
