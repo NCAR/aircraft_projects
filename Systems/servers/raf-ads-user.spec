@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 5
+Release: 6
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -43,6 +43,8 @@ chown -R ads:ads /home/ads/bin
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Fri Dec 04 2009 John Wasinger <wasinger@ucar.edu> 1.6
+- Fixed JLOCAL and LOCAL to /home/local instead of /opt/local.
 * Fri Dec 04 2009 John Wasinger <wasinger@ucar.edu> 1.5
 - chown -R ads:ads /home/ads/bin
 * Mon Nov 30 2009 John Wasinger <wasinger@ucar.edu> 1.4
