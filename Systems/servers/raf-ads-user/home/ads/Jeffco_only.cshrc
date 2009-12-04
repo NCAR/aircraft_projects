@@ -15,13 +15,13 @@
 ################################################################################
 
 
-setenv LOCAL /home/local
+setenv LOCAL /opt/local
 
 # next 3 lines moved from System.cshrc on 24Feb04 - SN
 setenv PRINTER               raf-hp2300
 setenv LPDEST                raf-hp2300
 
-setenv JLOCAL /home/local
+setenv JLOCAL /opt/local
 
 if (!($?PROJ_DIR)) then
    setenv PROJ_DIR /home/local/projects
