@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 4
+Release: 5
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -36,10 +36,15 @@ cp home/ads/bin/svn-ask-username.sh ${RPM_BUILD_ROOT}/home/ads/bin/svn-ask-usern
 %config /home/ads/.login
 %config /home/ads/bin/svn-ask-username.sh
 
+%post
+chown -R ads:ads /home/ads/bin
+
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Fri Dec 04 2009 John Wasinger <wasinger@ucar.edu> 1.5
+- chown -R ads:ads /home/ads/bin
 * Mon Nov 30 2009 John Wasinger <wasinger@ucar.edu> 1.4
 - Now creates '.rpmsave' files to back up previous changes.
 - Fixed prompt string.
