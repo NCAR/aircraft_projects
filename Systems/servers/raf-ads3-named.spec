@@ -10,7 +10,7 @@
 Summary: DNS/named configuration for RAF aircraft server
 Name: raf-ads3-named
 Version: 1.0
-Release: 6
+Release: 7
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -29,7 +29,7 @@ DNS/named configuration for RAF aircraft server
 %package -n raf-ac-named
 Summary: DNS/named configuration for RAF aircraft server
 Group: System Environment/Daemons
-Requires: bind raf-ac-dhcp
+Requires: bind
 %if %{do_chroot}
 Requires: bind-chroot
 %endif
@@ -39,7 +39,7 @@ Summary: DNS/named configuration for RAF aircraft server.
 %package -n raf-lab-named
 Summary: DNS/named configuration for RAF lab system
 Group: System Environment/Daemons
-Requires: bind raf-lab-dhcp
+Requires: bind
 %if %{do_chroot}
 Requires: bind-chroot
 %endif
@@ -148,6 +148,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/local/admin/raf-ads3-named/named.*
 
 %changelog
+* Tue Dec  8 2009 Gordon Maclean <maclean@ucar.edu> 1.0-7
+- Removed Requires: raf-ac-dhcp
 * Thu Nov 13 2009 Chris Webster <cjw@ucar.edu> 1.0-6
 - Fixed improper comment character from 1.0-5
 * Thu Oct 15 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5

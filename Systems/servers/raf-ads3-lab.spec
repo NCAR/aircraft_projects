@@ -1,4 +1,4 @@
-Summary: Metapackage for all server and satcom packages needed on GV
+Summary: Metapackage for all server and satcom packages needed on lab systems.
 Name: raf-ads3-lab
 Version: 1.0
 Release: 5

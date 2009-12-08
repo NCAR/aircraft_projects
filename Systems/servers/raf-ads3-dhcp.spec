@@ -1,7 +1,7 @@
 Summary: DHCP configuration for server on RAF aircraft
 Name: raf-ads3-dhcp
 Version: 1.0
-Release: 12
+Release: 13
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -27,9 +27,6 @@ DHCP configuration for RAF aircraft server
 Summary: DHCP configuration for server system on GV
 Group: System Environment/Daemons
 Requires: dhcp bind
-# Specify that this package provides the virtual capability raf-ac-dhcp
-# which is required by raf-ac-named.  Similarly for raf-c130-dhcp
-Provides: raf-ac-dhcp
 %description -n raf-gv-dhcp
 DHCP configuration for server system on GV.
 
@@ -37,7 +34,6 @@ DHCP configuration for server system on GV.
 Summary: DHCP configuration for server system on C130
 Group: System Environment/Daemons
 Requires: dhcp bind
-Provides: raf-ac-dhcp
 %description -n raf-c130-dhcp
 DHCP configuration for server system on C130.
 
@@ -105,6 +101,10 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %changelog
+* Tue Dec 8 2009 Gordon Maclean <maclean@ucar.edu> 1.0-13
+- removed Provides: raf-ac-dhcp from both raf-gv-dhcp and raf-c130-dhcp.
+- This caused a problem because raf-ac-named required raf-ac-dhcp, but
+- we couldn't be sure whether yum/rpm would install raf-gv-dhcp or raf-c130-dhcp.
 * Fri Oct 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-12
 - added default ddns-hostname for systems without a known MAC address
 - Additions of some lab vulcans.
