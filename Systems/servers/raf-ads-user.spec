@@ -39,6 +39,8 @@ cp home/ads/bin/svn-ask-username.sh ${RPM_BUILD_ROOT}/home/ads/bin/svn-ask-usern
 %post
 chown -R ads:ads /home/ads/bin
 
+echo "\n   Make sure ads uid is 12900, and ads gid is 1381!\n"
+
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
