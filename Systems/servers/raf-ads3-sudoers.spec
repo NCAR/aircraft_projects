@@ -29,7 +29,7 @@ cp /etc/sudoers $tmpsudo
 # add mkfs, tune2fs, dumpe2fs to STORAGE alias
 if egrep -q "^Cmnd_Alias STORAGE" $tmpsudo; then
     if ! egrep "^Cmnd_Alias STORAGE" | fgrep -q mkfs $tmpsudo; then
-        sed -ir 's@^(Cmnd_Alias STORAGE.*)$@\1, /sbin/fsck, /sbin/fsck.ext3, /sbin/mkfs, /sbin/mkfs.ext3, /sbin/tune2fs, /sbin/dumpe2fs@' $tmpsudo
+        sed -ir 's@^\(Cmnd_Alias STORAGE.*\)$@\1, /sbin/fsck, /sbin/fsck.ext3, /sbin/mkfs, /sbin/mkfs.ext3, /sbin/tune2fs, /sbin/dumpe2fs@' $tmpsudo
     fi
 else
     echo "Cmnd_Alias STORAGE = /sbin/fdisk, /sbin/sfdisk, /sbin/parted, /sbin/partprobe, /bin/mount, /bin/umount, /sbin/fsck, /sbin/fsck.ext3, /sbin/mkfs, /sbin/mkfs.ext3, /sbin/tune2fs, /sbin/dumpe2fs" >> $tmpsudo
