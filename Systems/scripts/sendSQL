@@ -13,7 +13,4 @@ cd /tmp/xmit
 gunzip $1
 set filename=`basename $1 .gz`
 
-setenv PGHOST eol-rt-data.guest.ucar.edu
-setenv PGDATABASE real-time-`head -n1 $filename`
-
-sed 1,1d $filename | psql
+sed 1,1d $filename | psql -h eol-rt-data.guest.ucar.edu -d $PGGRND
