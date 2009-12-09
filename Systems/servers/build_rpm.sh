@@ -157,4 +157,3 @@ if [ -d $rroot ]; then
 else
     echo "$rroot not found. Leaving RPMS in $topdir"
 fi
-

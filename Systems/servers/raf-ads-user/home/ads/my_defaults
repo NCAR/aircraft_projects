@@ -4,6 +4,8 @@
 
 unset noclobber
 set clobber
+set prompt      = "$AIRCRAFT \!% "
+set fignore     = .o
 
 set path=(/usr/java/latest/bin $path /home/local/Systems/scripts \
 	/opt/local/nidas/x86/bin /opt/arcom/bin /opt/arm_tools/bin \
@@ -14,11 +16,22 @@ unsetenv LD_LIBRARY_PATH
 
 setenv MANPATH	/usr/share/man:/opt/local/man:/opt/rtldk-2.2/doc/man
 
-if (`uname` == 'Linux') then
-  alias cd 'set dot=$cwd; chdir \!* ; set prompt="! `hostname`:$cwd \!\% "'
+alias cd        'set dot=$cwd; chdir'
+alias ,         'set odot=$cwd; chdir $dot; set dot=$odot; pwd'
+
+if ($?TERM) then
+  if ($TERM =~ xterm || $TERM =~ vs100 || $TERM =~ dtterm) then
+    alias cd 'set dot=$cwd; chdir \!*; sett "$AIRCRAFT":`pwd`'
+    alias ,  'set odot=$cwd; chdir $dot; set dot=$odot; pwd; sett "$AIRCRAFT":`pwd`'
+  endif
+endif
+
+if ($?TERM && `uname` == Linux) then
   alias ls 'ls --color=tty'
-else
-  alias cd 'set dot=$cwd; chdir \!* ; set prompt="! `hostname`:$cwd \! % "'
+  if ($TERM =~ xterm || $TERM =~ vs100 || $TERM =~ dtterm) then
+    alias cd 'set dot=$cwd; chdir \!*; setl "$AIRCRAFT":`pwd`'
+    alias ,  'set odot=$cwd; chdir $dot; set dot=$odot; pwd; setl "$AIRCRAFT":`pwd`'
+  endif
 endif
 
 alias ,		'set odot=$cwd; chdir $dot; set dot=$odot; pwd'
@@ -39,6 +52,7 @@ alias lpr4	'expand -4 \!* | lpr'
 alias maek	'make'
 alias mkae	'make'
 alias mv	'mv -i'
+alias pgrnd	'psql -h eol-rt-data.guest.ucar.edu -d $PGGRND'
 alias proj	'cd ${PROJ_DIR}/\!*'
 alias psg	'ps ax | grep \!*'
 alias scons     'nice scons -j4'

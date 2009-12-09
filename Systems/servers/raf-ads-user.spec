@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 5
+Release: 6
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -45,6 +45,9 @@ echo "\n   Make sure ads uid is 12900, and ads gid is 1381!\n"
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Fri Dec 04 2009 Chris Webster <cjw@ucar.edu> 1.6
+- Add PGGRND variable for ground database.
+- Prompt clean up.
 * Fri Dec 04 2009 John Wasinger <wasinger@ucar.edu> 1.5
 - chown -R ads:ads /home/ads/bin
 * Mon Nov 30 2009 John Wasinger <wasinger@ucar.edu> 1.4
