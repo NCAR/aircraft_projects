@@ -14,14 +14,12 @@
 #                                                                              #
 ################################################################################
 
-
 setenv LOCAL /opt/local
+setenv JLOCAL /opt/local
 
 # next 3 lines moved from System.cshrc on 24Feb04 - SN
 setenv PRINTER               raf-hp2300
 setenv LPDEST                raf-hp2300
-
-setenv JLOCAL /opt/local
 
 if (!($?PROJ_DIR)) then
    setenv PROJ_DIR /home/local/projects
@@ -47,22 +45,14 @@ endif
 
 setenv GMTHOME		$LOCAL/GMT
 
+setenv XAPPLRESDIR	/usr/share/X11/app-defaults
+
+
 ################################################################################
 # UNIX aliases                                                                 #
 ################################################################################
 
-switch ( $MYOS )
-   case Linux:
-      alias view "vi -R"
-      alias fastfind locate
-   breaksw
-
-   case Solaris:
-      alias fastfind locate
-   breaksw
-endsw
-
-setenv XAPPLRESDIR	/usr/share/X11/app-defaults
+alias view "vi -R"
 
 set path = ($path $JLOCAL/scripts $JLOCAL/bin /usr/X11R6/bin)
 

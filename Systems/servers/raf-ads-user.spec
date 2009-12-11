@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 6
+Release: 7
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -39,12 +39,17 @@ cp home/ads/bin/svn-ask-username.sh ${RPM_BUILD_ROOT}/home/ads/bin/svn-ask-usern
 %post
 chown -R ads:ads /home/ads/bin
 
-echo "\n   Make sure ads uid is 12900, and ads gid is 1381!\n"
+echo "\n   Make sure ads uid is 12900, and ads gid is 1318 !!\n"
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Fri Dec 11 2009 Chris Webster <cjw@ucar.edu> 1.7
+- Remove prompt stuff from System.cshrc
+- Remove $MYOS.  Should use $OSTYPE anyways.
+- Moved source'ing of ads3_environment.csh from .login to .my_defaults.
+- Added setl binary (I don't know where the source is anymore).
 * Fri Dec 04 2009 Chris Webster <cjw@ucar.edu> 1.6
 - Add PGGRND variable for ground database.
 - Prompt clean up.

@@ -2,6 +2,8 @@
 # cshell startup script
 #
 
+source $HOME/ads3_environment.csh
+
 unset noclobber
 set clobber
 set prompt      = "$AIRCRAFT \!% "
@@ -26,7 +28,7 @@ if ($?TERM) then
   endif
 endif
 
-if ($?TERM && `uname` == Linux) then
+if ($?TERM && $OSTYPE == linux) then
   alias ls 'ls --color=tty'
   if ($TERM =~ xterm || $TERM =~ vs100 || $TERM =~ dtterm) then
     alias cd 'set dot=$cwd; chdir \!*; setl "$AIRCRAFT":`pwd`'

@@ -14,22 +14,8 @@
 #   Determine which operating system and network is being used
 #
 
-setenv HOST     `uname -n`
-setenv LANG C
-
-switch (`uname`)
-   case SunOS:
-      setenv MYOS Solaris
-   breaksw
-
-   case Linux:
-      setenv MYOS Linux
-   breaksw
-
-   default:
-      setenv MYOS unknown
-   breaksw
-endsw
+setenv HOST	`uname -n`
+setenv LANG	C
 
 #
 # Linux
@@ -57,12 +43,6 @@ unset autologout
 umask 002
 limit coredumpsize 0k
 
-# place stty commands in System.login
-#stty sane
-# The following is commented until a global ATD-wide locate database can be
-# implemented...  MDD 2/6/02
-#alias locate "locate -d /usr/local/var/locatedb"
-
 alias help	"man man"
 alias h		'history | more '
 alias ..	'set dot=$cwd ; cd ..'
@@ -73,58 +53,10 @@ alias lg	'ls -lag \!* | more'
 alias lt	'ls -alt \!* | more'
 
 #
-##The following chunk sets the prompt
+# The following chunk sets the prompt
 #
-if ($USER == root ) then
- set prompt="`uname -n`:$cwd \!# "
- alias cd 'set dot=$cwd; chdir \!* ; set prompt="`uname -n`:$cwd \! # "'
-
-else if ( $MYOS == Linux && !($?NO_PROMPT) ) then
- set prompt="`hostname `:$cwd \!% "
- alias cd 'set dot=$cwd; chdir \!* ; set prompt="%m:%~ %h%% "'
-
-else if ( !($?NO_PROMPT) ) then
- set prompt="`uname -n`:$cwd \!% "
- alias cd 'set dot=$cwd; chdir \!* ; set prompt="`uname -n`:$cwd \! % "'
-endif
-
-
+# Removed prompt stuff.  CJW.
 #
-	set HN=`uname -n | awk -F'.' '{print $1}'`
-
-	switch ( `basename $shell` )
-	    case csh:
-		if ( !($?NO_PROMPT) ) then
-                   if ($USER == root) then
-		      alias cwdcmd 'set prompt="\! `echo $HN`:$cwd # "'
-                   else
-		      alias cwdcmd 'set prompt="\! `echo $HN`:$cwd-> "'
-                   endif
-		   cwdcmd
-		   alias cd 'cd \!* ; cwdcmd'
-		   alias popd 'popd ; cwdcmd'
-		   alias pushd 'pushd \!* ; cwdcmd'
-		endif
-		set filec
-	    breaksw
-	    case tcsh:
-		unset autologout
-		set nobeep
-		if ( !($?NO_PROMPT) ) then
-                   if ($USER == root) then
-		      alias cwdcmd 'set prompt="\! `echo $HN`:$cwd # "'
-                   else
-		      alias cwdcmd 'set prompt="\! `echo $HN`:$cwd-> "'
-                   endif
-		   cwdcmd
-		   alias cd 'cd \!* ; cwdcmd'
-		   alias popd 'popd ; cwdcmd'
-		   alias pushd 'pushd \!* ; cwdcmd'
-		endif
-	    breaksw
-	endsw
-endif
-
 
 #
 # This sets a DISPLAY env var, useful for Exceed users on DHCP
