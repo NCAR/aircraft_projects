@@ -1,88 +1,73 @@
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>Controls</title>
-	
-		<link rel="icon" type="image/vnd.microsoft.icon" href="power.ico" />
-		<link rel="stylesheet" href="style.css" type="text/css" />
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+		<link rel="icon" type="image/vnd.microsoft.icon" href="css/power.ico" />
 		<link rel="stylesheet" href="/jQuery/css/smoothness/jquery-ui-1.7.2.custom.css" type="text/css" />
+		<link rel="stylesheet" href="css/style.css" type="text/css" />
 	
 		<script type="text/javascript" src="/jQuery/js/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="/jQuery/js/jquery-ui-1.7.2.custom.min.js"></script>
-		<script type="text/javascript">
-		/* set the refresh rate, in seconds, for each section */
-		var nagiosUpdateInterval = 60;
-		var timetagUpdateInterval = 3;
-		var dsmdetailsUpdateInterval = 3;
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/model.js"></script>
+		<script type="text/javascript" src="js/view.js"></script>
+		<script type="text/javascript" src="js/controller.js"></script>
 
-		/* add any items whose nagios status you want to be dispayed to this list
-			for start/stop buttons to work, there must be appropriate functions
-			in commands.php
-		*/
-		var nagiosItems = new Array(
-			{ name: 'DSM-Server', nagiosTags: ['12. DSM Server'] },
-			{ name: 'SATCOM-MPDS', nagiosTags: ['16. SATCOM MPDS'] },
-			{ name: 'Nimbus', nagiosTags: ['13. nimbus process', '14. nimbus udp'] },
-			{ name: 'Cameras', nagiosTags: ['15. Camera Capture'] }
-		);
-
-		/* any xmlrpc item returned by the GetDsmList xmlrpc call will be added 
-			automatically. Add any other items whose timetag is returned
-			in the GetClocks xmlrpc call to this list
-		*/ 
-		var xmlrpcItems = new Array(
-			{ name: 'Nimbus', xmlrpcTag: 'nimbus', hostname: 'localhost' },
-			{ name: 'DSM-Server', xmlrpcTag: 'dsm_server', hostname: 'localhost' },
-			{ name: 'GV-Cam', xmlrpcTag: 'Cameras', hostname: 'gvcamera' }
-		);
-				
-		</script>
-		<script type="text/javascript" src="main.js"></script>
 	</head>
-
 	<body>
-		<table id="controls0">
-			<thead>
-				<tr>
-					<th scope="col">
-						<a href="#" id="refreshNag"><span class="ui-icon ui-icon-refresh"/></a>
-						Nagios Item
-					</th>
-					<th scope="col">State</th>
-					<th scope="col">Status</th>
-					<th scope="col">Control</th>
-				</tr>
-			</thead>
-			<tbody> 
-			</tbody>
-		</table>
-		<table id="controls1">
-			<thead>
-				<tr>
-					<th scope="col">
-						<a href="#" id="refreshXMLRPC"><span class="ui-icon ui-icon-refresh"/></a>
-						XMLRPC Item
-					</th>
-					<th scope="col">State</th>
-					<th scope="col">Timetag</th>
-					<th scope="col">Ping Result</th>
-				</tr>
-			</thead>
-			<tbody class="sel">
-			</tbody>
-			<tfoot>
-				<tr><td colspan="4"></td></tr>
-				<tr><td colspan="4" style="text-align:center;" > 
-					<!--<button id="detailer" type="button" class='ui-state-default ui-corner-all' > &darr; Show Details</button> -->
-					<!--<button id="calibrater" type="button" class='ui-state-default ui-corner-all' > &plusmn; Calibrate</button> -->
-					<button id="testvolter" type="button" class='ui-state-default ui-corner-all' > &radic; Set Test Voltage</button> | 
-					<button id="pinger" type="button" class='ui-state-default ui-corner-all' > &hArr; Ping</button> 
-					<button id="rebooter" type="button" class='ui-state-default ui-corner-all' > &empty; Soft Reboot</button> 
-				</td></tr>
-			</tfoot>
-		</table>
-		<div id="dsm-table"></div>
-		<div id="dsm-dialog"></div>
-		<div id="reboot-dialog"></div>
+
+		<div id="tooltip"></div>
+
+		<div id="all_tabs">
+			<ul>
+				<li><a href="#maintab">Live Status</a></li>
+				<li><a href="#controls">Controls</a></li>
+				<li><a href="#settings">Settings</a></li>
+			</ul>
+
+			<div id="maintab" class="tablewrap">
+				<div id="viewFilter"><span id="fltrLbl">Filter </span></div>
+				<div id="viewTable"></div>
+				<div id="details">
+					<span class='little' style='float:right; clear:all;'>
+					[press 'p' to ping all dsms]
+					</span>
+				</div>
+			</div>
+
+			<div id="settings">
+				<table id="cg_list" class="settings">
+					<thead><tr>
+						<th scope="col">Setting</th>
+						<th scope="col" >Value</th>
+					</tr></thead>
+				</table>
+			</div>
+
+			<div id="controls">
+				<table id="cd_list" class="settings">
+				<thead><tr>
+					<th scope="col">Host</th>
+					<th scope="col" colspan="2">Name</th>
+				</tr></thead>
+				<tfoot><tr> <td><input id="newDsmInput" /></td>
+					<td><input id="newDsmInput2" /></td>
+					<td><img onclick="C.addDsm()" src='css/add.png' />
+				</td></tr></tfoot></table>
+				<div id="contrl_wrap"></div>
+					<div id="listDiv"><h3>Control List</h3><table></table></div>
+					<div id="showDiv"><div>Click a DSM to show details</div>
+				</div>
+			</div>
+
+			<div class='clear' /><button class='ui-state-default ui-corner-all'
+			id='saveButton' >Save All Changes</button>
+
+		</div>
+
+		<div id="dialogs"></div>
+
 	</body>
 </html>
+

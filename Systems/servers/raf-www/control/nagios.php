@@ -11,8 +11,11 @@
 	
 	//reformat array to make more sense
 	for ($i=0; $i<count($out[1]); $i++) {
-		$status['status']["{$out[1][$i]}"] = $out[2][$i];
-		$status['message']["{$out[1][$i]}"] = $out[3][$i];
+		//only send items with Warning or critical status
+		if ($out[2][$i] > 0) {
+			$status['status']["{$out[1][$i]}"] = $out[2][$i];
+			$status['message']["{$out[1][$i]}"] = $out[3][$i];
+		}
 	}
 
 	//encode as json and return array
