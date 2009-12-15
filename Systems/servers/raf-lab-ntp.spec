@@ -1,7 +1,7 @@
 Summary: Configuration for NTP on RAF ADS3 lab (non-aircraft) server systems
 Name: raf-lab-ntp
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -49,7 +49,7 @@ fi
 cf=/etc/ntp/step-tickers
 if ! egrep -q "^[[:space:]]*128.117" $cf && \
     ! egrep -q "^[[:space:]]*.ucar.edu" $cf; then
-    echo "syrah.atd.ucar.edu" > $cf
+    echo "syrah.eol.ucar.edu" > $cf
 fi
 
 if ! { chkconfig --list ntpd | fgrep -q "5:on"; }; then
@@ -64,5 +64,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 
 %changelog
+* Tue Dec 15 2009 John Wasinger <wasinger@ucar.edu>
+- s/atd/eol/g
 * Sun Feb 29 2008 Gordon Maclean <maclean@ucar.edu>
 - initial version
