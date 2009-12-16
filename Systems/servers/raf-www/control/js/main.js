@@ -1,28 +1,30 @@
-/* These will be pointers to the Model, View and Controller objects */
+/* These global variables will be pointers to the 
+   Model, View and Controller singletons */
 var M,V,C;
 
+
+/*===============================*
+ *          main function        *
+ *===============================*/
 /* This function is executed on page load, analogous to int main() */
 $(function() {
 
-	/* create M,V,C objects */
+	/* instantiate M,V,C objects */
 	M = new model();
 	V = new view();
 	C = new controller();
 
-	/* get configuration file and parse as JSON object */
+	/* get configuration file using the jQuery ajax GET function. 
+	   Then parse the result as JSON object, j */
 	$.getJSON('js/config.json', function(j) { 
-		/* this annonymous function is executed after the JSON config
-		   file is loaded. */
+		/* this annonymous function is an asynchronous callback which 
+		   will be executed when the ajax GET query returns. */
+
 		M.sConf=j; /* store the static configuration in the Model */
 		C.initialize(); /* Register event handlers and Start timed events */
 	});
 
 });
-
-/*
-   This file contains my 'virtual' classes (sort of a misnomer in javascript).
-   They are mainly used as templates for sub-classes in the model
-*/
 
 
 /*===============================*
@@ -61,7 +63,7 @@ xmlrpcCommand.prototype.exec = function(params, callback_func) {
 		for (var i in params) {
 			argstring += 'args[' + i + ']=' + params[i] + "&";
 		}
-	} else if ( typeof(params)!=undefined ) {
+	} else if ( typeof(params) != "undefined" ) {
 		/* otherwise the params' .toString() will be called, this is
 		   valid for all other datatypes (number, string, etc) */
 		argstring = 'args='+params;
@@ -107,14 +109,18 @@ xmlrpcCommand.prototype.callback_default = function(dataObj, statusString) {
 
 /* constructor for controllable. Allows specification of:
    name, and tag */
-function controllable(name_in, tag_in) {
-	this.name = name_in; /* human intentifier. */
-	this.tag = tag_in;   /* machine indentifier. */
-	this.methods = {};   /* container of xmlrpcCommand objects */
+function controllable(name_in, tag_in, host_in) {
+	this.name = name_in; /* human intentifier. Should be descriptive*/
+	this.tag = tag_in;   /* statusListener indentifier. MUST BE UNIQUE */
+	this.host = host_in; /* dns hostname. Used for ping test. */
+	this.methods = {};   /* container for xmlrpcCommand objects */
 
 	this.defaultHost = "localhost";
-	this.defaultPort = 30003;
+	this.defaultPort = M.sConf.dsmXmlRpcPort;
 	this.defaultMethod = "help";
+
+	/* Special Cases TODO: in config file somewhere? */
+	if (tag_in == "dsm_server") {this.defaultPort = M.sConf.dsmServerPort;}
 }
 
 /* function to add a method to the methodlist, setting defaults for parameters
@@ -128,10 +134,9 @@ controllable.prototype.addMethod = function(paramsObj) {
 
 	/* make sure we do not overwrite methodnames */
 	if ( typeof(this.methods[name]) != "undefined" ) {
-		/* add salt (random number) to name until we find a free name */
+		/* avoid overwrite existing methods */
 		V.alert("namespace conflict");
 		return;
-		//name = newMethod + Math.random();
 	}
 
 	/* xmlrpcCommand ctor will apply callback only if it's a function */
@@ -142,12 +147,20 @@ controllable.prototype.addMethod = function(paramsObj) {
 	this.methods[name] = newMethod;
 }
 
-/* The following three functions do not exist for the 'virtual' 
-   implementation of controllable. These functions are merely placeholders
-   to avoid the consequenses of calling a non-existant function. 
-   TODO: They could probably be removed after the site is fully developed
+/* The following three functions allow the site to dynamicly add methods
+   that are specifed using introspection.
 */
-controllable.prototype.getMethods = function() { alert("no getMethod()!"); }
+controllable.prototype.getMethods = function() { 
+	var that = this;
+	var introspect = new xmlrpcCommand(this.host, this.defaultPort, 
+	"system.listMethods", function(names,ts) { 
+		if (ts != "success" || names.faultCode !== undefined) {return;}	
+		for (i in names) {
+			that.addMethod({ "method":names[i] });
+		}
+	});
+	introspect.exec();
+}
 controllable.prototype.getParams = function() { alert("no getParams()!"); }
 controllable.prototype.getHelp = function() { return "no getHelp()!" }
 

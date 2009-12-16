@@ -7,43 +7,55 @@ function model() {
 	this.sConf = {};          /* Holds static configuration */
 }
 model.prototype.getListFromDsmServer = function() {
-	var getList = new xmlrpcCommand("localhost", 30003, "GetDsmList");
+	var getList = new xmlrpcCommand("localhost", M.sConf.dsmServerPort, "GetDsmList");
 	getList.exec("", function(data, ts) {
 
 		if (ts != "success") {V.alert("error fetching DSM List");}
 		else {
 			for (var Dsm in data) {
-				M.addDsm(data[Dsm], Dsm);
+				/* add dsm, only if it's not already specified in sConf */
+				if (M.sConf.dsms[Dsm] === undefined) {
+					M.addDsm(data[Dsm], Dsm, Dsm, true);
+				}
 			}
 		}
 	});
 }
-
-model.prototype.addDsm = function(dsmName, dsmHost){
+model.prototype.getListFromStaticConfig = function() {
+	for (var Dsm in this.sConf.dsms) {
+		this.addDsm(this.sConf.dsms[Dsm].name, Dsm, 
+			this.sConf.dsms[Dsm].host, false);
+	}
+}
+model.prototype.addDsm = function(dsmName, dsmTag, dsmHost, dynamic){
 	/* create a new controllable object to represent the DSM */
-	var newDsm = new controllable(dsmName, dsmHost);
+	var newDsm = new controllable(dsmName, dsmTag, dsmHost);
 
 	/* add the new DSM to the View (table) */
-	var newRowDom = V.table.register(dsmName, dsmHost, "DSM");	
+	var newRowDom = V.table.register(dsmName, dsmHost, dsmTag, "Dsm");
+	//"DSM"+"<span class='little'>["+(dynamic? "d": "s")+"]</span>");	
 
 	/* let controller handle events related to this row */
-	C.registerRow(newDsm, newRowDom);
+	C.registerRowClick(newDsm, newRowDom);
+	C.registerRowHover(newDsm, newRowDom);
 	
 	// TODO:
-	// write get_methods (introspection) query
 	// write get_params query
 	// write get_help query
 
+	/* add methods using xmlrpc introspection */
+	newDsm.getMethods();
+
 	/* add method to get detailed status from statuslistener */
 	newDsm.addMethod({ 
-		"name":"status",
+		"name":"statusListenerDetails",
 		"host":"localhost",
-		"port": 30006,
+		"port": M.sConf.statusListenerPort,
 		"method":"GetStatus"
 	});
 
 	/* add this dsm to the Model's dsm list */
-	this.dsms[dsmHost] = newDsm;
+	this.dsms[dsmTag] = newDsm;
 }
 
 model.prototype.eachDsm = function(inFunc) {

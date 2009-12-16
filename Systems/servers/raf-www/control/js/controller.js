@@ -1,14 +1,21 @@
 function controller() {
 	
 }
-controller.prototype.registerRow = function(controlObj, rowDom) {
+controller.prototype.registerRowHover = function(controlObj, rowDom) {
+	rowDom.hover(function(){
+		V.showTooltip(controlObj);
+	}, function(){
+		V.hideTooltip(controlObj);
+	});
+}
+controller.prototype.registerRowClick = function(controlObj, rowDom) {
 	/* set click event handlers for all columns of the specified row */
 	var tds = rowDom.children();
 
 	tds.click(function(){
 		V.selectedObj = controlObj;
 		V.highlightRow(rowDom);
-		V.showDetails(controlObj, "status");
+		V.showDetails(controlObj, "statusListenerDetails");
 	});
 
 	/* add dsms from dsmList to control tab, unless they're already there */
@@ -16,9 +23,10 @@ controller.prototype.registerRow = function(controlObj, rowDom) {
 		var newdsm = {};
 		newdsm[controlObj.tag] = {};
 		newdsm[controlObj.tag]["name"] = controlObj.name;
+		newdsm[controlObj.tag]["host"] = controlObj.host;
 		newdsm[controlObj.tag]["controls"] = {};
 
-		V.generateDsmControl(newdsm, false);
+		V.generateDsmControl(newdsm, true);
 	}
 }
 controller.prototype.handleClickControl = function(cObj, meth) {
@@ -49,7 +57,8 @@ controller.prototype.save = function(){
 					if (stat=="success") {
 						if (ret == 0) { location.reload(true);}
 						else {
-							$(div_conf).text("Failed, error code: "+ret);
+							$(div_conf).text("Failed, error code: "+ret
+							+". Check permissions on config file.");
 						}
 					} else { 
 						$(div_conf).text("Failed to contact server. error: "
@@ -76,11 +85,61 @@ controller.prototype.tabSelect = function(e, u) {
 		$("#saveButton").show();
 	}
 }
+controller.prototype.keypress = function(e) {
+	if ($("#all_tabs").tabs("option","selected") != 0) {return;}
+	switch( e.which ) { 
+	case 0: /* 'esc' key */
+		V.selectedObj = undefined;
+		V.hideDetails(); 
+		break;
+
+	case 112: /* 'p' key */
+		/* clear the timer if it's still running */
+		clearTimeout(V.pingTimer);
+
+		/* send ping request to each dsm */
+		for (var el in V.table.elements) {
+			$.getJSON("ping.php?tag="+el+"&hostname="+M.dsms[el].host,
+			function(d, ts){
+				V.table.elements[d.tag].find("td.ping").text(d.message)
+					.css("color",M.sConf.statusColor[d.status]);
+			});
+		}
+
+		/* in 15 seconds, grey out the result */
+		V.pingTimer = setTimeout(function(){ 
+			$("td.ping").css("color","#BBB"); 
+		}, 15000);
+		break;	
+
+	case 102: /* 'f' key */
+		var filterDom = "#viewFilter";
+		/* generate the filter once, otherwise show/hide the dom */
+		if (V.filterGenerated) {
+			$(filterDom).toggle();
+		} else {
+			V.generateFilter("#viewFilter");
+			V.filterGenerated = true;
+		}
+		break;
+
+	case 104: /* 'h' key */
+		V.alert("<p><b>h</b> - Show this quick reference.</p>"
+			+ "<p><b>Esc</b> - Clear details field.</p>"
+			+ "<p><b>p</b> - Ping all items with hostname.</p>"
+			+ "<p><b>f</b> - Show filter controls.</p>",
+			"Keyboard Reference");
+		break;
+	default: break;
+	}
+}
 controller.prototype.initialize = function() {
 	/* set up built-in jquery UI event handlers */
 	$("#all_tabs").tabs({"select":this.tabSelect});
 
-	/* Retrieve DSM list from DSMServer, adding rows for each dsm */
+	/* Add rows for each dsm in the static config. Then Retrieve the 
+	   DSM list from DSMServer, adding rows for each new dsm */
+	M.getListFromStaticConfig();
 	M.getListFromDsmServer();
 	
 	/* Create input & event handlers for settings tab */
@@ -91,35 +150,10 @@ controller.prototype.initialize = function() {
 	$().mousemove(this.handleMouseMove);
 
 	/* Register keypress event handler */
-	$().keypress(function(e) {
-		switch( e.which ) { 
-		case 0: /* 'esc' key */
-			V.hideDetails(); 
-			break;
-		case 112: /* 'p' key */
-
-			/* clear the timer if it's still running */
-			clearTimeout(V.pingTimer);
-
-			/* send ping request to each dsm */
-			for (var el in V.table.elements) {
-				$.getJSON("ping.php?hostname="+el, function(d, ts){
-					V.table.elements[d.hostname].find("td.ping").text(d.message)
-						.css("color",M.sConf.statusColor[d.status]);
-				});
-			}
-
-			/* in 15 seconds, grey out the result */
-			V.pingTimer = setTimeout(function(){ 
-				$("td.ping").css("color","#BBB"); 
-			}, 15000);
-			break;	
-		default: break;
-		}
-	});
+	$().keypress(this.keypress);
 
 	/* Create status listener event */
-	this.statListenCmd = new xmlrpcCommand("localhost", 30006, "GetClocks", 
+	this.statListenCmd = new xmlrpcCommand("localhost", M.sConf.statusListenerPort, "GetClocks", 
 		function(data, ts) {
 		for (var d in M.dsms) {	
 			var curData = data[d];
@@ -143,13 +177,13 @@ controller.prototype.initialize = function() {
 
 	/* Set timer for status listener timestamp event */
 	this.statListenTimer = setInterval(function(){
-		C.statListenCmd.exec();
+		C.statListenCmd.exec('');
 	}, M.sConf.timetagUpdateInterval * 1000);
- 	C.statListenCmd.exec();
+ 	C.statListenCmd.exec('');
 	
 	/* Set timer for status listener details event */
 	this.statDetailTimer = setInterval(function(){
-		if (V.selectedObj !== undefined) { V.showDetails(V.selectedObj, "status"); }
+		if (V.selectedObj !== undefined) { V.showDetails(V.selectedObj, "statusListenerDetails"); }
 	}, M.sConf.dsmdetailsUpdateInterval * 1000);
 
 	/* Create update nagios event */
@@ -177,42 +211,56 @@ controller.prototype.removeDsm = function(that, tag) {
 controller.prototype.addDsm = function(dName) {
 		 
 		/* get name & tag from input boxes, unless passed in */
-		var newtag = (dName === undefined)? $("#newDsmInput").val(): dName.tag;
-		var newname = (dName === undefined)? $("#newDsmInput2").val(): dName.name;
+		var newtag=(dName===undefined)? $("#newDsmInputT").val(): dName.tag;
+		var newhost=(dName===undefined)? $("#newDsmInputH").val(): dName.host;
+		var newname=(dName===undefined)? $("#newDsmInputN").val(): dName.name;
 
-		if (newtag == "" && newname == "") {
-			$("#newDsmInput, #newDsmInput2").effect('pulsate', {"times":2}, 200);
-			return;
-		} else if (newtag == "" && newname != "") {
-			$("#newDsmInput").effect('pulsate', {"times":2}, 200);
-			return;
-		} else if (newtag != "" && newname == "") {
-			$("#newDsmInput2").effect('pulsate', {"times":2}, 200);
-			return;
-		}
-	
 		if (dName !== undefined) { /* was a dynamic dsm */
+
 			var newdsm = {};
 			newdsm[newtag] = {};
 			newdsm[newtag]["name"] = newname;
+			newdsm[newtag]["host"] = newhost;
 			newdsm[newtag]["controls"] = {};
 
 			M.sConf.dsms[newtag] = newdsm[newtag];
-			$(dName.dom).replaceWith("<img src='css/del.png' "
-				+ "onclick='C.removeDsm(this,\"" + newtag  + "\");'/>");
+			var newDom = "<img src='css/del.png' "
+				+ "onclick='C.removeDsm(this,\"" + newtag  + "\");'/>";
+			$(dName.dom).replaceWith(newDom);
 
-		} else if (typeof(M.sConf.dsms[newtag]) == "undefined") {
-			var newdsm = {};
-			newdsm[newtag] = {};
-			newdsm[newtag]["name"] = newname;
-			newdsm[newtag]["controls"] = {};
-			V.generateDsmControl(newdsm);
+			this.editDsm(newtag, newDom);	
 
-			M.sConf.dsms[newtag] = newdsm[newtag];
-			$("#newDsmInput, #newDsmInput2").val("");
+		} else { 
 
-		} else {
-			V.alert('That item already exists!', "Error");
+			if (typeof(M.sConf.dsms[newtag]) == "undefined" && 
+			typeof(M.dsms[newtag]) == "undefined") {
+
+				/* validate input */
+				var narray = ["#newDsmInputT", 
+					"#newDsmInputH", "#newDsmInputN"];
+				var good = true;
+				for (var input in narray) {
+					if ($(narray[input]).val() == "") { 
+						$(narray[input]).effect('pulsate', {"times":2}, 200);
+						good=false;	
+					}
+				}
+				if (!good) {return;}
+		
+				/* create new item from valid input */	
+				var newdsm = {};
+				newdsm[newtag] = {};
+				newdsm[newtag]["name"] = newname;
+				newdsm[newtag]["host"] = newhost;
+				newdsm[newtag]["controls"] = {};
+				V.generateDsmControl(newdsm, false);
+	
+				M.sConf.dsms[newtag] = newdsm[newtag];
+				$("#newDsmInputT,#newDsmInputH,#newDsmInputN,").val("");
+	
+			} else {
+				V.alert('Tag must be unique!', "Error");
+			}
 		}
 
 }
@@ -227,7 +275,7 @@ controller.prototype.editDsm = function(tag, that) {
 			$("#listDiv h3").text(thisDsm.name);
 			for (var i in thisDsm.methods) {
 				$("#listDiv table").append("<tr><td>"+i
-					+ "</td></td><td><td><img src='css/play.jpg' onclick='"
+					+ "</td><td></td><td><img src='css/play.jpg' onclick='"
 					+ "C.execDsmControl(\""+tag+"\",\""+i+"\")"
 					+ "' /></td></tr>");
 			}
@@ -332,7 +380,7 @@ controller.prototype.editDsmContrl = function(tag, name, param) {
 controller.prototype.addDsmContrlParam = function(tag, com) {
 		V.prompt("Enter the name of the new Parameter.", function(cname){
 			M.sConf.dsms[tag].controls[com].params[cname] = "0";
-			C.showDsmControls(tag, com);	
+			C.showDsmControls(tag, com);
 		});
 }
 

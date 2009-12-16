@@ -11,7 +11,7 @@
 	$host = isset($_GET['host']) ? $_GET['host'] : 'localhost' ;
 	$port = isset($_GET['port']) ? $_GET['port'] : 30003 ;
 	$method = isset($_GET['method']) ? $_GET['method'] : 'GetDsmList' ;
-	$args = isset($_GET['args']) ? $_GET['args'] : '' ;
+	$args = isset($_GET['args']) ? $_GET['args'] : null ;
 
 	//send request to status-listener
 	$rpcArray = xu_rpc_http_concise( array( 'method' => $method,

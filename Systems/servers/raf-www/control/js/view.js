@@ -40,10 +40,10 @@ view.prototype.showDetails = function(controlObj, method) {
 }
 view.prototype.hideDetails = function() { $("#details").hide(); }
              
-view.prototype.showTooltip = function(controlObj, method) { 
+view.prototype.showTooltip = function(controlObj) { 
 	this.tooltiptimer = setTimeout(function() {
-		$("#tooltip").html(controlObj.tag+", "+method).fadeIn(); 
-	}, 500);
+		$("#tooltip").html("Tag: "+controlObj.tag).fadeIn(); 
+	}, M.sConf.toolTipTimer * 1000);
 }
 view.prototype.hideTooltip = function() { 
 	clearTimeout(this.tooltiptimer);
@@ -67,11 +67,14 @@ view.prototype.alert = function(text_in, title_in) {
 view.prototype.prompt = function(text_in, callback, initial) {
 	var text = text_in? text_in: "Prompt";
 
+		"<input id='jqPrompt_data' class='fulllength' value='"
+		+ (initial === undefined? "": initial)  + "'/>"
+
 	var div = $("<div>");
 	div.appendTo(this.dialogDiv);
 	$(div)
 	.append("<input id='jqPrompt_data' class='fulllength' value='"
-		+ (initial === undefined? "": initial)  + "'/>")
+		+ (initial === undefined? "": initial)  + "'/>" )
 	.dialog({
 		"title":text, 
 		"modal":true,
@@ -81,7 +84,10 @@ view.prototype.prompt = function(text_in, callback, initial) {
 		"buttons":{
 			"Ok":function(){
 				ret_data = $("#jqPrompt_data").val();
-				if (ret_data != "") {
+				if (ret_data.toLowerCase() == "null") {
+					callback();
+					$(this).dialog('close').remove();
+				} else if (ret_data != "") {
 					callback(ret_data);
 					$(this).dialog('close').remove();
 				} else {
@@ -98,7 +104,8 @@ view.prototype.prompt = function(text_in, callback, initial) {
 function viewTable(sel) {
 	this.head = ["Name","Host","Type","Status","Message"];
 	this.elements = {}; /* tag:DOM element maps */
-	this.filter = {"apply":false, "col":"Name", "show":"true"};
+	this.filter = {"apply":false, "col":"Name", "search":'', 
+		"show":"false", "i":false};
 
 	/* create HTML table, and append to the parent DOM element */
 	this.dom = $("<table>");
@@ -128,7 +135,7 @@ viewTable.prototype.sort = function(icon,column) {
 	/* set the selected icon to north or south */
 	icon.className = "ui-icon ui-icon-carat-1-"+ (reverse? "s":"n"); 
 	
-	/* actually sort the table! */
+	/* TODO actually sort the table! */
 	
 	
 }
@@ -136,7 +143,7 @@ viewTable.prototype.applyFilter = function(row) {
 	//(row.find("td."+this.filter.col.toLowerCase()+":first")
 	//.html().indexOf(this.filter.search) != -1)?
 
-	var re=new RegExp(this.filter.search,"i");
+	var re=new RegExp(this.filter.search,(this.filter.i?"":"i"));
 	re.test(row.find("td."+this.filter.col.toLowerCase()+":first")
 	.html())?
 		(this.filter.show == "true"? row.hide(): row.show()): 
@@ -147,13 +154,17 @@ viewTable.prototype.applyFilterAll = function() {
 	for (var i in this.elements) {
 		this.applyFilter(this.elements[i]);
 	}
+
+	$("tr.nagios").each(function() {
+		V.table.applyFilter($(this));
+	});
 }
-viewTable.prototype.register = function(name, tag, type) {
+viewTable.prototype.register = function(name, host, tag, type) {
 	var newRow = $("<tr>");
 	this.elements[tag] = newRow;
 
 	newRow.append("<td class='name'>" + name
-		+ "</td><td class='tag'>" + tag + "</td><td class='type'>" + type 
+		+ "</td><td class='host'>" + host + "</td><td class='type'>" + type 
 		+ "</td><td class='status'>"
 		+ "</td><td class='message'></td><td class='ping'></td>" );
 
@@ -198,6 +209,7 @@ viewTable.prototype.updateNag = function(d, ts) {
 				+ ";'>" + mess + "</td>" );
 
 			V.table.dom.prepend(newRow);
+			C.registerRowHover({"tag":n},newRow);
 		}
 	}
 }
@@ -207,7 +219,7 @@ view.prototype.generateSettings = function() {
 		var value = M.sConf[key];
 
 		if (key == "dsms") {
-			this.generateDsmControl(value, true);
+			this.generateDsmControl(value, false);
 		} else if (typeof(value) == "object") {
 			for (var i in value) {
 				$("#cg_list").append(	
@@ -233,15 +245,16 @@ view.prototype.generateDsmControl = function(slObj, dynamic) {
 		/* if the dsm in dynamic (from dsmserver list), then we need a "+" 
 		   instead of an "x" to 'add' the dynamic dsm to the static list */
 		var icon = dynamic?
-			"<td><img src='css/del.png' onclick='C.removeDsm(this,\""
-			+ l + "\")'/></td></tr>":
-
 			"<td><img src='css/add.png' onclick='C.addDsm({\"tag\":\""
-			+ l + "\",\"name\":\"" + z.name + "\",\"dom\":this})'/></td></tr>";
+			+ l + "\",\"name\":\"" + z.name + "\",\"dom\":this})'/></td></tr>":
+
+			"<td><img src='css/del.png' onclick='C.removeDsm(this,\""
+			+ l + "\")'/></td></tr>";
 
 		$("#cd_list").append("<tr><td onclick='C.editDsm(\""+l+"\",this)'>"
-				+ l + "</td>" + "<td onclick='C.editDsm(\""+l+"\",this)'>" 
-				+ z.name + "</td>" + icon );
+				+ z.name +"</td>"+ "<td onclick='C.editDsm(\""+l+"\",this)'>" 
+				+ l +"</td>"+ "<td onclick='C.editDsm(\""+l+"\",this)'>" 
+				+ z.host + "</td>" + icon );
 	}
 
 }
@@ -249,22 +262,29 @@ view.prototype.generateFilter = function(sel) {
 	var column = $("<select class='ui-corner-all' />");
 	var match = $("<select />");
 	var search = $("<input />");
-	var engage = $("<input type='checkbox' id='enChck' />");
+	var engage = $("<input type='checkbox' id='enChck' checked />");
+	var casesense = $("<input type='checkbox' id='iChck' />");
 	
 	for (var i in this.table.head) {
 		column.append("<option value='"+this.table.head[i]+"' >"
 		+this.table.head[i]+"</option>");
 	}
 	
-	match.append("<option value='true' >Does Not Match</option>");
 	match.append("<option value='false' >Matches</option>");
+	match.append("<option value='true' >Does Not Match</option>");
 
 	$(sel)
+		.append('<strong id="fltrLbl">Table Filter </strong>')
+		.append(casesense)
+		.append("<label for='iChck'>Match Case</label>")
+		.append(engage)
+		.append("<label for='enChck'>Enable</label><br>")
 		.append(column)
 		.append(match)
 		.append(search)
-		.append(engage)
-		.append("<label for='enChck'>Enable</label>");
+		.append('<span class="little">[regular expressions supported]</span>');
+
+	V.table.filter.apply = true;
 
 	column.change(function() { 
 		V.table.filter.col = $(this).val(); 
@@ -272,6 +292,10 @@ view.prototype.generateFilter = function(sel) {
 	});
 	match.change(function() { 
 		V.table.filter.show = $(this).val(); 
+		V.table.applyFilterAll();
+	});
+	casesense.change(function() { 
+		V.table.filter.i = $(this).is(":checked"); 
 		V.table.applyFilterAll();
 	});
 	engage.change(function() { 

@@ -27,13 +27,12 @@
 			</ul>
 
 			<div id="maintab" class="tablewrap">
-				<div id="viewFilter"><span id="fltrLbl">Filter </span></div>
+				<div id="viewFilter"></div>
 				<div id="viewTable"></div>
-				<div id="details">
-					<span class='little' style='float:right; clear:all;'>
-					[press 'p' to ping all dsms]
-					</span>
-				</div>
+				<button class='ui-state-default ui-corner-all upperRight' 
+					id='pingButton' onclick='C.keypress({"which":112})' >
+					Ping</button>
+				<div id="details"></div>
 			</div>
 
 			<div id="settings">
@@ -48,11 +47,13 @@
 			<div id="controls">
 				<table id="cd_list" class="settings">
 				<thead><tr>
-					<th scope="col">Host</th>
-					<th scope="col" colspan="2">Name</th>
+					<th scope="col">Name</th>
+					<th scope="col">StatusListener Tag</th>
+					<th scope="col" colspan="2">Host</th>
 				</tr></thead>
-				<tfoot><tr> <td><input id="newDsmInput" /></td>
-					<td><input id="newDsmInput2" /></td>
+				<tfoot><tr> <td><input id="newDsmInputN" /></td>
+					<td><input id="newDsmInputT" /></td>
+					<td><input id="newDsmInputH" /></td>
 					<td><img onclick="C.addDsm()" src='css/add.png' />
 				</td></tr></tfoot></table>
 				<div id="contrl_wrap"></div>
@@ -61,9 +62,9 @@
 				</div>
 			</div>
 
-			<div class='clear' /><button class='ui-state-default ui-corner-all'
-			id='saveButton' >Save All Changes</button>
-
+			<div class='clear' />
+			<button class='ui-state-default ui-corner-all upperRight'
+				id='saveButton'>Save All Changes</button>
 		</div>
 
 		<div id="dialogs"></div>

@@ -4,7 +4,7 @@
 	else { header('Cache-Control: no-cache, must-revalidate'); header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); }
 	
 	$host = $_GET['hostname'];
-	$retval['hostname'] = $host;
+	$retval['tag'] = $_GET['tag'];
 
 	//ping host from shell, parse output
 	$result = shell_exec("ping -c 1 $host");
