@@ -10,8 +10,9 @@ model.prototype.getListFromDsmServer = function() {
 	var getList = new xmlrpcCommand("localhost", M.sConf.dsmServerPort, "GetDsmList");
 	getList.exec("", function(data, ts) {
 
-		if (ts != "success") {V.alert("error fetching DSM List");}
-		else {
+		if (ts != "success" || data.faultCode !== undefined) {
+			V.alert("error fetching DSM List");
+		} else {
 			for (var Dsm in data) {
 				/* add dsm, only if it's not already specified in sConf */
 				if (M.sConf.dsms[Dsm] === undefined) {
@@ -32,8 +33,8 @@ model.prototype.addDsm = function(dsmName, dsmTag, dsmHost, dynamic){
 	var newDsm = new controllable(dsmName, dsmTag, dsmHost);
 
 	/* add the new DSM to the View (table) */
-	var newRowDom = V.table.register(dsmName, dsmHost, dsmTag, "Dsm");
-	//"DSM"+"<span class='little'>["+(dynamic? "d": "s")+"]</span>");	
+	var newRowDom = V.table.register(dsmName, dsmHost, dsmTag, 
+		(dynamic? "Dsm": "Static"));	
 
 	/* let controller handle events related to this row */
 	C.registerRowClick(newDsm, newRowDom);

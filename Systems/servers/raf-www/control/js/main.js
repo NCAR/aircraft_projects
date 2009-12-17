@@ -115,7 +115,7 @@ function controllable(name_in, tag_in, host_in) {
 	this.host = host_in; /* dns hostname. Used for ping test. */
 	this.methods = {};   /* container for xmlrpcCommand objects */
 
-	this.defaultHost = "localhost";
+	this.defaultHost = host_in? host_in: "localhost";
 	this.defaultPort = M.sConf.dsmXmlRpcPort;
 	this.defaultMethod = "help";
 

@@ -400,7 +400,7 @@ controller.prototype.execDsmControl = function(tag, cmd) {
 
 	/* if we got here, and meth is defined, get the parameters and call exec */
 	if (meth !== undefined) {
-		V.prompt("Parameters for "+cmd+" : ", function(p){meth.exec(p)}, tag);
+		V.promptParams(tag, cmd);
 
 	} else {
 		/* otherwise, create the command from static conf and exec it */

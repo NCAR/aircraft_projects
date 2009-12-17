@@ -62,7 +62,7 @@ view.prototype.alert = function(text_in, title_in) {
 	}});
 }
 
-/* alert function displays a pop-up box with input, calling the supplied
+/* prompt function displays a pop-up box with input, calling the supplied
    callback function with the user-specified data */
 view.prototype.prompt = function(text_in, callback, initial) {
 	var text = text_in? text_in: "Prompt";
@@ -93,6 +93,58 @@ view.prototype.prompt = function(text_in, callback, initial) {
 				} else {
 					$(this).effect('pulsate', {"times":2}, 200);
 				}
+			},
+			"Cancel":function(){
+				$(this).dialog('close').remove();
+			}
+		}
+	});
+}
+
+/* function displays a pop-up box with input, calling the supplied
+   callback function with the user-specified data */
+view.prototype.promptParams = function(dsmtag, methname) {
+	var dsmObj = M.dsms[dsmtag];
+	var method = dsmObj.methods[methname];
+
+	var text = "Parameters for "+methname+" on "+dsmObj.name;
+
+	var div = $("<div>");
+	div.appendTo(this.dialogDiv);
+
+	$(div)
+	.append("<span class='little'>[Send No Parameters]</span>")
+	.dialog({
+		"title":text, 
+		"modal":true,
+		"width":600,
+		"close":function(){
+			$(this).remove();
+		},
+		"buttons":{
+			"Send":function(){
+				var pNames = $(this).children().filter("input:even");
+				var pValues = $(this).children().filter("input:odd");
+
+				if (pNames == []) {
+					method.exec();
+				} else {
+					var pMap = {};
+					if (typeof(pNames) != "object") {
+						pMap[pNames.val()] = pValues.val();	
+					} else {
+						for (var n = 0; n < pNames.length; n++) { 
+							pMap[pNames[n].value] = pValues[n].value; 
+						}
+					}
+					method.exec(pMap);
+				}
+				$(this).dialog('close').remove();
+			},
+			"Add Parameter":function(){
+				$(this).append("Param: <input class='param'/>")
+				       .append("Value: <input class='value'/><br />")
+				       .find("span").remove();
 			},
 			"Cancel":function(){
 				$(this).dialog('close').remove();
@@ -211,6 +263,9 @@ viewTable.prototype.updateNag = function(d, ts) {
 			V.table.dom.prepend(newRow);
 			C.registerRowHover({"tag":n},newRow);
 		}
+
+		/* if there is an active filter, apply it to these new updates */
+		if (V.table.filter.apply) { V.table.applyFilterAll(); }
 	}
 }
 view.prototype.generateSettings = function() {
