@@ -38,11 +38,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %attr(0664, ads, apache) /var/www/html/flight_data/*
 %dir %attr(0775, ads, apache) /var/www/html/flight_data
-%dir %attr(0775, ads, apache) /var/www/html/flight_data/js
-%dir %attr(0775, ads, apache) /var/www/html/flight_data/css
-%dir %attr(0775, ads, apache) /var/www/html/flight_data/GE
-%dir %attr(0775, ads, apache) /var/www/html/flight_data/display
-%dir %attr(0775, ads, apache) /var/www/html/flight_data/images
 
 %attr(0664, ads, apache) /var/www/cgi-bin/flight_data/*
 %dir %attr(0775, ads, apache) /var/www/cgi-bin/flight_data

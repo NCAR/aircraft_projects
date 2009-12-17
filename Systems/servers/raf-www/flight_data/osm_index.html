@@ -1,0 +1,50 @@
+<body>
+	<table id="menu" class="bar"><tr>
+
+		<td class="nob" title="Platform"><span id="pform_label">none</span><div id="pformDialog"></div></td>
+		<td onClick="toggleHelp();" title="Quick Reference"><div class="icon_question" id="helpIcon"></div></td>
+		<td onClick="map.centerOnPlane()" title="Go To Plane"><div class="icon_plane"></div></td>
+		<td id="zoom_out" onClick="map.zoomOut();" title="Zoom out"><div class="icon_mag_m"></div></td>
+		<td id="zoom_in" onClick="map.zoomIn();" title="Zoom in"><div class="icon_mag_p"></div></td>
+		<td id="movToggle" title="Directional Pad"><div class="icon_move">
+			<table style="width: 100%; height:100%">
+				<tr><td class='x'></td><td onclick="map.pan(0,-150)"></td><td class='x'></td></tr>
+				<tr><td onclick="map.pan(-150,0)"></td><td class='x'></td><td onclick="map.pan(150,0)"></td></tr>
+				<tr><td class='x'></td><td onclick="map.pan(0,150)"></td><td class='x'></td></tr>
+			</table>
+		</div></td>
+		<td onclick="map.togglexMarker()" title="Toggle Marker"><div class="icon_arrow_r" id='xMarkButton'></div></td>
+		<td onclick="map.togglexMarkerLines()" title="Marker Lines"><div class="icon_ruler"></div></td>
+		<td id="camToggle" title="Camera Image"><div class="icon_cam" id="showcam"></div></td>
+		<td id="lSwitchToggle" title="Layer Switcher"><div class="icon_opac"></div></td>
+
+	</tr></table>
+
+	<div id="cameraBox" class="greybx nodisp" style="position:absolute;"> 
+		<img id="cam" style="width:100%;" />
+	</div>
+	<div id="lSwitchBox" class="greybx nodisp" style="position:absolute;"> 
+		<div id='lListDiv'></div>
+		<p id="oSliderLabel" style="display:none; margin-top:10px; padding:5px; border-top:1px solid #111;">Image Opacity:</p>
+		<div title="Image Opacity" id="oSlider"></div>
+	</div>
+	<div class="detail_hidden" id="detailsBox">
+		<h3 id="kName"></h3>
+		<span id="kDescription"></span>
+	</div>
+
+	<div id="dataBak" class="bar" ><table id="data" ><tr>
+		<td style="width:240px"><span id="position"></span></td>
+		<td style="width:100px"><span id="curHovItem"></span></td>
+		<td style="width:260px"> <span class="greentop">Plane&rArr;Marker:</span><span id="dest"></span> </td>
+		<td style="width:260px"> <span class="bluetop">Marker&rArr;Mouse:</span><span id="dest2"></span> </td>
+		<td style="width:80px">Zoom:<span id="curZoomLevel"></span></td>
+	</tr></table></div>
+
+	<!-- MAP -->
+	<div id="map"></div>
+
+	<div id="debug"></div>
+</body>
+</html>
+

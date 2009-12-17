@@ -1,0 +1,61 @@
+<html>
+<head>
+	<title>EOL Flight Data - Quick Reference</title>
+	<link rel="icon" type="image/png" href="/flight_data/display/favicon.png" />
+	<link rel="stylesheet" href="/flight_data/css/osm.css" type="text/css" />
+	<script type="text/javascript">
+	    function getCookie(c_name) {
+	        //retrieve information from cookie with <c_name>
+	        if (document.cookie.length>0)
+	        {
+	            c_start=document.cookie.indexOf(c_name + "=");
+	            if (c_start!=-1)
+	            {
+	                c_start=c_start + c_name.length+1;
+	                c_end=document.cookie.indexOf(";",c_start);
+	                if (c_end==-1) c_end=document.cookie.length;
+	                return unescape(document.cookie.substring(
+	                            c_start,c_end));
+	            }
+	        }
+	        return false;
+	    }
+	
+		window.onload = function(){
+			document.getElementById('pform_label_h').innerHTML = 
+			getCookie("platform");
+		}
+
+	</script>
+</head>
+<body style="background: #4096e1;">
+	<div id="helpDialog" title="Quick Help">
+		<h3>Tips & Tricks</h3>
+		<ul>
+		<li>Zoom in and out by scrolling the mouse wheel.</li>
+		<li>Hold shift while clicking and dragging the mouse over an area to zoom in on the specifed area.</li>
+		<li>Double click on the map to zoom in one level, centered on the position of the click.</li>
+		<li>Click on a placemark from an imported KML file (i.e. a VOR) and the items name and description will show in a pop-up bubble.</li>
+		<li>Clicking on an empty area of the map will hide the bubble.</li>
+		</ul>
+		<h3>Menubar Buttons (top)</h3>
+		<div class="item"><span id="pform_label_h">none</span> <b>Platform:</b><br/>  Displays the current platform. Click on the platform  name to choose a new platform.</div>
+		<div class="item"><div class="icon_question">&nbsp;</div> <b>Help:</b><br/> Display this quick reference dialog box.</div>
+		<div class="item"><div class="icon_plane">&nbsp;</div> <b>Go To Plane:</b><br/> Click this icon to have the map centered on the current location of the plane. </div>
+		<div class="item"><div class="icon_mag_m">&nbsp;</div> <b>Zoom Out</b><br/> Click this icon to zoom out one level on the map </div>
+		<div class="item"><div class="icon_mag_p">&nbsp;</div> <b>Zoom In</b><br/> Click this icon to zoom in one level on the map </div>
+		<div class="item"><div class="icon_move">&nbsp;</div> <b>Directional Pad</b><br/> The Directional pad is an alternate way to move around the map, in place of clicking and dragging. Clicking on an arrow will pan the viewport in the indicated direction.</div>
+		<div class="item"><div class="icon_arrow_r">&nbsp;</div> <b>Toggle Marker:</b><br/> Click this icon to toggle the marker between the bottom and top layers. The icon will be red if the maker is the bottom layer, and green if the marker is the top layer. When the marker is green (top layer) you can reposition it by clicking and dragging it. When the marker is red (bottom layer) you can select items in other layers (such as lightning or VOR's) to get those item's detail bubbles. The heading/distance measurements in the statusbar below will update reguardless of the marker position.</div>
+		<div class="item"><div class="icon_ruler">&nbsp;</div> <b>Marker Lines:</b><br/> Click here to toggle colored marker lines. These are useful to help visualize the headings and distances that are being displayed in the statusbar below.</div>
+		<div class="item"><div class="icon_cam">&nbsp;</div> <b>Camera:</b><br/> Click here to toggle the display of the latest camera image. Once the image is displayed it can be repositioned by clicking and dragging the image. It can also be resized by dragging the lower-left corner of the image. Double click the image to reset it to its orignal size.</div>
+		<div class="item"><div class="icon_opac">&nbsp;</div> <b>Layer Switcher:</b><br/> 
+		Click here to show the layer list. Check any layers that you want to be shown on the map. Layers are shown on the map in the same order as this list. 
+		<br/><br/><i>Image Opacity:</i> Adjust this slider to change the opacity of any image overlays (such as radar or visible).</div>
+		<h3>Statusbar Information (bottom)</h3>
+		<div class="item"><b>Cursor:</b><br/> Shows the current lat/lon of your mouse (degrees and decimal minutes) as well as the name of any selectable item that is under the cursor.</p></div>
+		<div class="item"><b style="color: green">Plane-&gt;Marker:</b><br/> Shows the heading (in degrees) and distance (in nautical miles) from location of the plane to the location of the marker.</div>
+		<div class="item"><b style="color: blue">Marker-&gt;Mouse:</b><br/> Shows the heading (in degrees) and distance (in nautical miles) from the location of the marker to your cursor.</div>
+		<div class="item"><b>Zoom:</b><br/> Shows the current zoom level.</div>
+	</div>
+</body>
+</html>
