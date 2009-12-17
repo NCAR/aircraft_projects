@@ -21,13 +21,6 @@
 	$dbconn = pg_connect("host=$dbh dbname=$dbd user=$dbU")
 		or die('Could not connect: '.pg_last_error());
 
-	//get the hostname of the camserver which is updating the database 
-	//		This is used by the viewer to send start/stop requests to
-	//		camserver instead of the webserver
-	$query = "SELECT cam_host FROM camera";
-	$result = pg_query($query) or die('Query Failed: '. pg_last_error());
-	$chost = pg_fetch_row($result);
-
 	//get the flight number from the database
 	$query = "SELECT value FROM global_attributes WHERE key='FlightNumber'";
 	$result = pg_query($query) or die('Query Failed: '. pg_last_error());
@@ -37,7 +30,7 @@
 	$UTCdate = gmdate("U", time()) * 1000;
 
 	//put all data in an array, pack into JSON and return it to the viewer
-	$a = array('chost'=>$chost[0], 'curFlNum'=>$flNum[0], 'datetime'=>$UTCdate);
+	$a = array('chost'=>"", 'curFlNum'=>$flNum[0], 'datetime'=>$UTCdate);
 	echo json_encode($a);
 
 	//close the database connection

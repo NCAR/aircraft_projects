@@ -105,7 +105,7 @@ fi
 #     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 # fi
 
-# START: Mission Coordinator Web Interface RPMS
+# Mission Coordinator Web Interface RPMS
 pkg=raf-www-camera
 if [ $dopkg == all -o $dopkg == $pkg ];then
     version=`get_version $pkg.spec`
@@ -120,32 +120,12 @@ if [ $dopkg == all -o $dopkg == $pkg ];then
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
-pkg=raf-www-images
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/images
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
-
-pkg=raf-www-index
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/{index.html,display}
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
-
 pkg=raf-www-map
 if [ $dopkg == all -o $dopkg == $pkg ];then
     version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/osm
+    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/flight_data
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
-
-pkg=raf-www
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
-# END: Mission Coordinator Web Interface RPMS
 
 echo "RPMS:"
 egrep "^Wrote:" $log

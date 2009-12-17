@@ -79,7 +79,7 @@ controller.prototype.save = function(){
 	
 }
 controller.prototype.tabSelect = function(e, u) {
-	if (u.index == 0) {
+	if (u.index < 2) {
 		$("#saveButton").hide();
 	} else {
 		$("#saveButton").show();

@@ -30,7 +30,7 @@ phpconf=`find /etc -name "php.conf"`
 echo "SetEnv PGHOST acserver" >> $phpconf
 echo "SetEnv PGUSER ads" >> $phpconf
 echo "SetEnv PGDATABASE real-time" >> $phpconf
-service httpd restart
+/sbin/service httpd restart
 
 %postun
 rm /var/www/html/camera/camera_images
@@ -38,7 +38,7 @@ phpconf=`find /etc -name "php.conf"`
 sed -i '/SetEnv PGHOST/ d' $phpconf
 sed -i '/SetEnv PGUSER/ d' $phpconf
 sed -i '/SetEnv PGDATABASE/ d' $phpconf
-service httpd restart
+/sbin/service httpd restart
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -52,7 +52,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Mon Aug 31 2009 <dlagreca@ucar.edu> 0.1-1
-- detached jquery library from this package, now requires raf-jquery
+- detached jquery library from this package, now requires jquery
 
 * Wed Jul 22 2009 <dlagreca@ucar.edu> 0.1-1
 - set correct permissions on /var/www/html/camera/css/smoothness/images

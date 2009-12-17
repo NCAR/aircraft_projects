@@ -28,7 +28,6 @@ function setImgs(name, pbmode){
 //start loading the images for the next playback frame
 	for (i=1; i<=$(".camCheck").size(); i=i+1){
 		if ($("#showCam"+i).attr('checked') == 1 ){
-/*TODO: put this back*/
 			imgSrc[i]  = "camera_images/flight_number_";
 		 	imgSrc[i] += flightNumber;
 			imgSrc[i] += "/";
@@ -83,7 +82,6 @@ function timedFunc() {
 	if ($("#fdCheck").attr("checked") == true){
 		$("span[id='flightData']").load("flightData.php");
 	}
-	if ($("#camPGstatus").text()=="2") {$('#camSelectors').load('camSelect.php');}
 	setTimeout("timedFunc()", 1000);
 }
 
@@ -207,7 +205,8 @@ function setupGlobals(){
 		//get global setting cookies
 		grids = getCookie("grids") != "X";
 		$("#grids").attr('checked', grids); 
-		$("#sliderMin").val(getCookie("sliderMin"));
+		var slcookie = getCookie("sliderMin");
+		$("#sliderMin").val(slcookie == "X"?5:slcookie);
 	});
 }
 
@@ -252,9 +251,9 @@ $(function(){
 //	$("#tabs").tabs();		
 
 	//set up Slider
-	var minSliderValue_fromCookie = -60 * getCookie("sliderMin");
+	var minSliderValue = -60 * $("#sliderMin").val();
 	$('#slider').slider({
-		min: minSliderValue_fromCookie, 
+		min: minSliderValue, 
 		max: maxVal,
 		step: 1,
 		slide: function(event, ui) {
@@ -272,6 +271,7 @@ $(function(){
 			getNames(ui.value, false)
 		}
 	});
+	setInterval(function(){$('#camSelectors').load('camSelect.php?'+getCookie("cams_selected"));}, 15000);
 
 	/*=========    SET UP EVENT HANDLERS    ============*/
 

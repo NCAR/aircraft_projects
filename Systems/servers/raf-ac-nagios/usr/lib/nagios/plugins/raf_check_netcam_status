@@ -1,0 +1,14 @@
+#!/bin/bash
+
+RUNNING=$(curl -s "http://fwdcam.raf.ucar.edu/admin/op_enable.shtml" | grep 'Application is') 
+echo $RUNNING | sed 's/^[ ]//g'
+
+if [ "$RUNNING" = '         Application is disabled' ]; then
+	exit 2
+
+elif [ "$RUNNING" = '         Application is enabled' ]; then
+	exit 0
+
+else
+	exit 3
+fi

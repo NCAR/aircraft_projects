@@ -6,7 +6,7 @@ Group: Applications/Engineering
 Source: %{name}-%{version}.tar.gz
 License: none
 Distribution: RHEL 5.3 Linux
-Requires: mapnik mod_tile openlayers httpd php php-pgsql php-pecl-json 
+Requires: openlayers jquery httpd php php-pgsql php-pecl-json 
 Buildroot: %{_tmppath}/%{name}-root
 BuildArch: noarch
 
@@ -24,17 +24,28 @@ This package will install the openlayers webpage to display the tiles, using mod
 %install
 rm -rf $RPM_BUILD_ROOT
 
-#copy slippymap files to webspace
+#copy files to webspace
 mkdir -p $RPM_BUILD_ROOT/var/www/html/
-cp -r osm $RPM_BUILD_ROOT/var/www/html/
+cp -r flight_data $RPM_BUILD_ROOT/var/www/html/
+
+mkdir -p $RPM_BUILD_ROOT/var/www/cgi-bin/flight_data/
+mv $RPM_BUILD_ROOT/var/www/html/flight_data/cgi-bin/flight_data $RPM_BUILD_ROOT/var/www/cgi-bin/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%attr(0664, ads, apache) /var/www/html/osm/*
-%dir %attr(0775, ads, apache) /var/www/html/osm
+%attr(0664, ads, apache) /var/www/html/flight_data/*
+%dir %attr(0775, ads, apache) /var/www/html/flight_data
+%dir %attr(0775, ads, apache) /var/www/html/flight_data/js
+%dir %attr(0775, ads, apache) /var/www/html/flight_data/css
+%dir %attr(0775, ads, apache) /var/www/html/flight_data/GE
+%dir %attr(0775, ads, apache) /var/www/html/flight_data/display
+%dir %attr(0775, ads, apache) /var/www/html/flight_data/images
+
+%attr(0664, ads, apache) /var/www/cgi-bin/flight_data/*
+%dir %attr(0775, ads, apache) /var/www/cgi-bin/flight_data
 
 %changelog
 * Fri Sep 4 2009 <dlagreca@ucar.edu> 1-1

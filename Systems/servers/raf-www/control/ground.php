@@ -3,6 +3,8 @@
 
 //include utils file for xmlrpc functions
 include_once('utils.php');
+
+/* if list is set, then show list, otherwise assume a command is being sent */
 if (isset($_GET['list'])) sendList();
 else {
 	if (! (isset($_GET['method']) && isset($_GET['host']) && isset($_GET['port']))) 
@@ -32,7 +34,9 @@ function sendList(){
 	'args'   => '', 'host'   => 'localhost', 'uri'    => '/RPC2',
 	'port'   => '30003', 'debug'  =>  '0', 'output' => 'xmlrpc' ));
 
-	$allMethods = Array();
+	/* this array will hold all of the methods from the static config file, 
+	   as well as any that can be obtained via introspection */
+	$allMethods = Array(); 
 
 	foreach ($config['dsms'] as $tag => $dsm) {
 		$allMethods[$tag]['name'] = $dsm['name'];
@@ -76,6 +80,12 @@ function sendList(){
 		}
 	}
 
+	/* Add static links here: */
+	echo "<h2>Static Commands (Not Implemented Yet):</h2>\n<ul>\n";
+	echo "<li>Reboot MTP Laptop</l>\n";
+	echo "</ul>\n";
+
+	/* The rest of the links will be generated here: */
 	foreach ($allMethods as $tag => $obj) {
 		echo "<h2>{$obj['name']} ($tag):</h2>\n<ul>\n";
 

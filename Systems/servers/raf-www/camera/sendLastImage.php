@@ -44,7 +44,7 @@
 		global $timefile;
 
 		touch($timefile);
-		shell_exec("/home/local/Systems/scrips/send_camera.cron");
+		shell_exec("/home/local/Systems/scripts/send_camera.cron");
 	
 		return;
 	}

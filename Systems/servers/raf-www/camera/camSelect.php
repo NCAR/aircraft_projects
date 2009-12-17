@@ -1,6 +1,6 @@
 <?php
 	//display errors
-	ini_set('display_errors','1');
+	//ini_set('display_errors','1');
 
 	//sort function - 'left' is low, 'right' is high, everything else goes in the middle
 	function std_order($a, $b) { return ($a=="left"?-1: ($a=="right"?1: ($b=="left"?1:-1))); }
@@ -31,16 +31,19 @@
 	//parse array using regex, to get each individual direction
 	preg_match('/\{(.+)\}/', $result[0], $direc);
 	$directions = explode(',', $direc[1]);
-
-	//output a checkbox for each camera, with label and alt tag. Default the first
-	//checkbox to checked, others unchecked
-	$count = 1;
-	usort($directions, "std_order");
-	foreach ($directions as $dir) {
-		echo '<input type="checkbox" id="showCam'.$count.'" class="camCheck" alt="'.$dir.'"' ;
-		if (isset($_GET[$dir])) echo " checked";
-		echo ' onClick="autoscaler();" /><label for="showCam' . $count . '">' . $dir . "</label><br />\n";
-		$count++;
+	if ($directions[0] == "0") {
+		echo '<span>none</span>';
+	} else {
+		//output a checkbox for each camera, with label and alt tag. Default the first
+		//checkbox to checked, others unchecked
+		$count = 1;
+		usort($directions, "std_order");
+		foreach ($directions as $dir) {
+			echo '<input type="checkbox" id="showCam'.$count.'" class="camCheck" alt="'.$dir.'"' ;
+			if (isset($_GET[$dir])) echo " checked";
+			echo ' onClick="autoscaler();" /><label for="showCam' . $count . '">' . $dir . "</label><br />\n";
+			$count++;
+		}
 	}
 
 	//close db connection

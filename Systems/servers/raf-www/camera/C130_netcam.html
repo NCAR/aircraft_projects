@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>Forward Looking Camera</title>
+<script type="text/javascript">
+function newimage(){
+		var img = document.getElementById("latest");
+		img.src =  '/flight_data/images/latest_forward?' + (new Date()).valueOf();
+}
+window.onload = function() {
+	if (window.location.hash.match("horiz") != null) {
+		document.getElementById("latest").style.height = "90%";
+	} else if (window.location.hash.match("vert") != null) {
+		document.getElementById("latest").style.width = "90%";
+	}
+
+	newimage();
+	setInterval(newimage, 2000);
+}
+</script>
+</head>
+	<body>
+		<img id="latest" />
+	</body>
+</html>
