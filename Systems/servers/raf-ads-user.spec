@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 7
+Release: 8
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -18,13 +18,14 @@ Provides the 'ads' user cshrc files.
 rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}/home/ads/bin
 
-cp home/ads/System.cshrc ${RPM_BUILD_ROOT}/home/ads/.System.cshrc
-cp home/ads/Jeffco_only.cshrc ${RPM_BUILD_ROOT}/home/ads/.Jeffco_only.cshrc
-cp home/ads/cshrc ${RPM_BUILD_ROOT}/home/ads/.cshrc
-cp home/ads/my_defaults ${RPM_BUILD_ROOT}/home/ads/.my_defaults
-cp home/ads/ads3_environment.csh ${RPM_BUILD_ROOT}/home/ads/ads3_environment.csh
-cp home/ads/login ${RPM_BUILD_ROOT}/home/ads/.login
-cp home/ads/bin/svn-ask-username.sh ${RPM_BUILD_ROOT}/home/ads/bin/svn-ask-username.sh
+cp home/ads/System.cshrc             ${RPM_BUILD_ROOT}/home/ads/.System.cshrc
+cp home/ads/Jeffco_only.cshrc        ${RPM_BUILD_ROOT}/home/ads/.Jeffco_only.cshrc
+cp home/ads/cshrc                    ${RPM_BUILD_ROOT}/home/ads/.cshrc
+cp home/ads/my_defaults              ${RPM_BUILD_ROOT}/home/ads/.my_defaults
+cp home/ads/ads3_environment.csh     ${RPM_BUILD_ROOT}/home/ads/ads3_environment.csh
+cp home/ads/login                    ${RPM_BUILD_ROOT}/home/ads/.login
+cp home/ads/bin/svn-ask-username.sh  ${RPM_BUILD_ROOT}/home/ads/bin/svn-ask-username.sh
+cp home/ads/bin/foldertab            ${RPM_BUILD_ROOT}/home/ads/bin/foldertab
 
 %files
 %defattr(-,ads,ads)
@@ -35,16 +36,27 @@ cp home/ads/bin/svn-ask-username.sh ${RPM_BUILD_ROOT}/home/ads/bin/svn-ask-usern
 %config /home/ads/ads3_environment.csh
 %config /home/ads/.login
 %config /home/ads/bin/svn-ask-username.sh
+%config /home/ads/bin/foldertab
 
 %post
 chown -R ads:ads /home/ads/bin
 
-echo "\n   Make sure ads uid is 12900, and ads gid is 1318 !!\n"
+echo
+echo "  Make sure ads uid is 12900, and ads gid is 1318 !!"
+echo
+echo "  If your installing this on an aircraft then fix the AIRCRAFT"
+echo "  variable in ~/ads3_environment.csh !!!"
+echo
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Wed Dec 16 2009 John Wasinger <wasinger@ucar.edu> 1.8
+- Spaced out 'install' cp list for clearity.
+- Fixed prompt to use hostname when not installed on an aircraft.
+- Removed '\n' strings in echo statement.  Did not create desired effect.
+- Added /home/ads/bin/foldertab
 * Fri Dec 11 2009 Chris Webster <cjw@ucar.edu> 1.7
 - Remove prompt stuff from System.cshrc
 - Remove $MYOS.  Should use $OSTYPE anyways.

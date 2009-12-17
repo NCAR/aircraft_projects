@@ -1,0 +1,11 @@
+#!/bin/sh
+fill="________________________________________________________________________________"
+maxlen=${#fill}
+blah=$@
+len=${#blah}
+
+echo ${fill:0:${len}+1}
+echo -n $blah
+echo -n " \\"
+echo ${fill:0:${maxlen}-${len}-2}
+echo

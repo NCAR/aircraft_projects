@@ -6,8 +6,13 @@ source $HOME/ads3_environment.csh
 
 unset noclobber
 set clobber
-set prompt      = "$AIRCRAFT \!% "
 set fignore     = .o
+
+if ($AIRCRAFT == "Lab_N600" ) then
+  set prompt      = "`hostname` \!% "
+else
+  set prompt      = "$AIRCRAFT \!% "
+endif
 
 set path=(/usr/java/latest/bin $path /home/local/Systems/scripts \
 	/opt/local/nidas/x86/bin /opt/arcom/bin /opt/arm_tools/bin \
