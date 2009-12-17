@@ -1,11 +1,12 @@
 #!/bin/sh
+
 fill="________________________________________________________________________________"
 maxlen=${#fill}
-blah=$@
-len=${#blah}
+cmd_args=$@
+len=${#cmd_args}
 
 echo ${fill:0:${len}+1}
-echo -n $blah
+echo -n $cmd_args
 echo -n " \\"
 echo ${fill:0:${maxlen}-${len}-2}
 echo
