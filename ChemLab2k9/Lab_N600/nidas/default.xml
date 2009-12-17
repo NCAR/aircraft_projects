@@ -123,7 +123,7 @@
 <site name="Lab_N600" class="raf.Aircraft">
    <parameter name="tailNumber" value="N600" type="string"/>
 
-    <server>
+    <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
             <output>
                 <socket type="mcaccept"/>
@@ -155,7 +155,7 @@
 
 <!-- dsm311 | viper-03125 | serial-12250 | a2d006 | irig-32688 | dcdc-A128944 -->
 <!-- dsmChem1 | viper-03128 | serial-12250 | a2d001 | irig-30277 | dcdc-A127594 -->
-    <dsm name="dsmChem1" location="lab" id="1" rserialPort="30002">
+    <dsm name="dsmChem1" location="lab" id="1" rserialPort="30002" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="110" suffix="_VXL"/>
