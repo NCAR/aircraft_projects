@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 8
+Release: 9
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -26,6 +26,7 @@ cp home/ads/ads3_environment.csh     ${RPM_BUILD_ROOT}/home/ads/ads3_environment
 cp home/ads/login                    ${RPM_BUILD_ROOT}/home/ads/.login
 cp home/ads/bin/svn-ask-username.sh  ${RPM_BUILD_ROOT}/home/ads/bin/svn-ask-username.sh
 cp home/ads/bin/foldertab            ${RPM_BUILD_ROOT}/home/ads/bin/foldertab
+cp home/ads/bin/setl                 ${RPM_BUILD_ROOT}/home/ads/bin/setl
 
 %files
 %defattr(-,ads,ads)
@@ -37,6 +38,7 @@ cp home/ads/bin/foldertab            ${RPM_BUILD_ROOT}/home/ads/bin/foldertab
 %config /home/ads/.login
 %config /home/ads/bin/svn-ask-username.sh
 %config /home/ads/bin/foldertab
+%config /home/ads/bin/setl
 
 %post
 chown -R ads:ads /home/ads/bin
@@ -52,6 +54,8 @@ echo
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Thu Dec 17 2009 John Wasinger <wasinger@ucar.edu> 1.9
+- (re) added /home/ads/bin/setl file.
 * Wed Dec 16 2009 John Wasinger <wasinger@ucar.edu> 1.8
 - Spaced out 'install' cp list for clearity.
 - Fixed prompt to use hostname when not installed on an aircraft.
