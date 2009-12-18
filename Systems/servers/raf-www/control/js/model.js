@@ -12,6 +12,9 @@ model.prototype.getListFromDsmServer = function() {
 
 		if (ts != "success" || data.faultCode !== undefined) {
 			V.alert("error fetching DSM List");
+
+			/* try again in 15 seconds */
+			setTimeout(M.getListFromDsmServer, 15000);
 		} else {
 			for (var Dsm in data) {
 				/* add dsm, only if it's not already specified in sConf */
