@@ -26,8 +26,17 @@ mkdir -p $RPM_BUILD_ROOT/var/www/html/
 cp -r control $RPM_BUILD_ROOT/var/www/html/
 
 %post
-echo "# start script to run shell commands from controls page" >> /etc/rc.local
-echo "su ads -c \"/home/local/Systems/scripts/xmlrpc2shell.py\"" >> /etc/rc.local
+#add to sessions config
+ASFILE = ~/.config/autostart/python.desktop
+rm $ASFILE
+touch $ASFILE
+
+echo "[Desktop Entry]" >>$ASFILE
+echo "Name=No name" >>$ASFILE
+echo "Encoding=UTF-8" >>$ASFILE
+echo "Version=1.0" >>$ASFILE
+echo "Exec=/usr/bin/python /home/local/Systems/scripts/xmlrpc2shell.py" >>$ASFILE
+echo "X-GNOME-Autostart-enabled=true" >>$ASFILE
 
 %clean
 rm -rf $RPM_BUILD_ROOT
