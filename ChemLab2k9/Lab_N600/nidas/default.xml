@@ -824,58 +824,34 @@
         </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D001.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
-<!-- SELECT serial_number, var_name, cal_date, cal FROM calibrations WHERE serial_number = '001' ; -->
-<!-- REFDP                | 2007-10-02 16:46:58 | {-0.0510172,1.0468} -->
-<!-- 001                  | BIGBLU_CH0_4F        | A/D Initial 54 C     | 2008-07-23 16:53:19 | {-0.14292,1.05911} -->
-<!-- 001                  | REFDP                | _4T at 52.2 deg_C    | 2009-06-19 21:44:38 | {-0.0504032,1.05829} -->
-                <variable name="REFDP" units="V" longname="Reference Dew Pointer"> <!-- -2.5..2.5 -->
+                <variable name="REFDP" units="V" longname="Reference Dew Pointer"> <!-- -2.5 to 2.5 -->
                     <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope"     value="1.05829"    type="float"/>
-                    <parameter name="corIntercept" value="-0.0504032" type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
-<!-- REFDPTMP             | 2007-10-02 16:49:56 | {-0.07776,1.05717} -->
-<!-- 001                  | BIGBLU_CH1_4F        | A/D Initial 54 C     | 2008-07-23 16:56:04 | {-0.181801,1.06433} -->
-<!-- 001                  | REFDPTMP             | _4T at 52.1 deg_C    | 2009-06-19 21:47:49 | {-0.073689,1.06351} -->
                 <variable name="REFDPTMP" units="V" longname="Reference Dew Pointer Temperature"> <!-- -2.5 to 2.5 -->
                     <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="true"       type="bool"/>
-                    <parameter name="corSlope"     value="1.06351"    type="float"/>
-                    <parameter name="corIntercept" value="-0.073689"  type="float"/>
-                    <linear slope="10.0" intercept="0.0" units="deg_C"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
-<!-- DP1011B             | 2007-10-02 16:52:39 | {-0.27984,1.07806} -->
-<!-- 001                  | BIGBLU_CH2_1T        | A/D Initial 54 C     | 2008-07-23 14:46:27 | {-0.118608,1.04368} -->
-<!-- 001                  | BIGBLU_CH2_4F        | A/D Initial 54 C     | 2008-07-23 17:01:10 | {-0.0764917,1.04359} -->
-<!-- 001                  | BIGBLU_CH2_2F        | A/D Initial 54 C     | 2008-07-23 15:25:53 | {-0.152082,1.04339} -->
-                <variable name="DP1011B" units="V" longname="Downstream 1011B Dew Point Hygrometer "> <!-- -10 to 10 -->
-                    <parameter name="gain"         value="1"          type="float"/>
-                    <parameter name="bipolar"      value="true"      type="bool"/>
-                    <parameter name="corSlope"     value="1.04368"    type="float"/>
-                    <parameter name="corIntercept" value="-0.118608"  type="float"/>
-                    <linear slope="10.0" intercept="0.0" units="deg_C"/>
+                <variable name="DP1011B" units="V" longname="Downstream 1011B Dew Point Hygrometer "> <!-- 0..10 -->
+                    <parameter name="gain"         value="2"          type="float"/>
+                    <parameter name="bipolar"      value="false"      type="bool"/>
+                    <linear slope="266.6666" intercept="0.0" units="hPa"/>
                 </variable>
-<!-- REFDPP               | 2007-10-02 16:57:48 | {-0.211627,1.06542} -->
-<!-- 001                  | BIGBLU_CH3_4F        | A/D Initial 54 C     | 2008-07-23 17:04:37 | {-0.197833,1.07214} -->
                 <variable name="REFDPP" units="V" longname="Reference Hygrometer Pressure"> <!-- 0..5 -->
                     <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope"     value="1.07214"    type="float"/>
-                    <parameter name="corIntercept" value="-0.197833"  type="float"/>
                     <linear slope="266.6666" intercept="0.0" units="hPa"/>
                 </variable>
-<!-- REFDGP               | 2007-10-02 17:00:16 | {-0.203823,1.06441} -->
-<!-- 001                  | BIGBLU_CH4_4F        | A/D Initial 54 C     | 2008-07-23 17:07:20 | {-0.183958,1.0689} -->
                 <variable name="REFDGP" units="V" longname="Reference Dew Point Generator Pressure"> <!-- 0..5 -->
                     <parameter name="gain"         value="4"          type="float"/>
                     <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope"     value="1.0689"     type="float"/>
-                    <parameter name="corIntercept" value="-0.183958"  type="float"/>
                     <linear slope="266.6666" intercept="0.0" units="hPa"/>
                 </variable>
             </sample>
