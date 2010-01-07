@@ -1,11 +1,12 @@
 Summary: Metapackage for all server and satcom packages needed on GV
 Name: raf-gv
 Version: 1.0
-Release: 5
+Release: 6
 License: GPL
 Group: System Environment
 
 Requires: raf-ads3-syslog
+Requires: raf-ads-user
 Requires: raf-ac-ntp
 Requires: raf-ac-firewall
 Requires: raf-gv-dhcp
@@ -23,6 +24,8 @@ Metapackage for all server and satcom packages needed on GV.
 %files 
 
 %changelog
+* Wed Jan 06 2010 Chris Webster <cjw@ucar.edu> 1.0-6
+- Added raf-ads-user
 * Mon Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5
 - Added raf-ads3-sudoers
 * Mon Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
