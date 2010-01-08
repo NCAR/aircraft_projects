@@ -6,20 +6,20 @@
     xmlns="http://www.eol.ucar.edu/nidas"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
-    name="HEFT-10"
+    name="HEFT10"
     system="GV_N677F"
     version="$LastChangedRevision: 2514 $"
     >
 
 <sensorcatalog>
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="IRIG_Tdiff" units="sec"
                     longname="IRIG-UNIX clock diff"/>
             <variable name="IRIG_Status" units="bits"
                     longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
         <!-- Taken from the Honeywell installation manual for the         -->
@@ -636,8 +636,8 @@
         </service>
     </server>
 
-    <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
+    <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002" derivedData="sock::31000">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
@@ -712,7 +712,7 @@
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
 
         <serialSensor IDREF="HoneywellPPT"
                 devicename="/dev/ttyS5" id="110">
@@ -797,7 +797,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
    
 
     <dsm name="dsmLWO" location="Left Wing Outboard Pod" id="83" rserialPort="30002" derivedData="sock::31000" >
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
             <sample id="1">
@@ -847,7 +847,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
 
 
     <dsm name="dsmLWI" location="LWI" id="81" rserialPort="30002" derivedData="sock::31000">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWI"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWI"/>
 
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LWIO">
             <parameter name="SerialNumber" value="F2DC003" type="string"/>
@@ -865,7 +865,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
 
 
     <dsm name="dsmRWO" location="RWO" id="92" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="510" suffix="_RWOO">
             <parameter name="SerialNumber" type="string" value="CDP058"/>
