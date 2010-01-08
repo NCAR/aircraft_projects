@@ -607,24 +607,26 @@
                 <socket type="mcaccept"/>
             </output>
         </service>
-        <service class="RawSampleService">
+        <service class="RawSampleService"
+		rawSorterLength="0.25" rawHeapMax="100M"
+		procSorterLength="1.0" procHeapMax="500M" priority="RT_FIFO:50">
             <!-- input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream -->
             <input class="RawSampleInputStream">
                 <socket type="mcaccept"/>
             </input>
             <processor class="SampleArchiver">
-                <output class="SampleOutputStream">
+                <output class="RawSampleOutputStream">
                     <fileset dir="/var/r1/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
                 </output>
-                <output class="SampleOutputStream">
+                <output class="RawSampleOutputStream">
                     <fileset dir="/var/r2/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
                 </output>
-                <output class="SampleOutputStream">
+                <output class="RawSampleOutputStream">
                     <socket type="server" port="30000"/>
                 </output>
             </processor>
@@ -706,7 +708,7 @@
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS11" id="160"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS12" id="170"/>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -790,7 +792,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -840,7 +842,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
         </serialSensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -855,10 +857,10 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
         </sensor>
 
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
@@ -887,11 +889,8 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
-        </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
-            <socket type="server" port="30000"/>
         </output>
     </dsm>
 
