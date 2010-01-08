@@ -60,7 +60,7 @@
         </sample>
         <sample id="0325" rate="50">
           <variable name="ROLL" units="degree" longname="IRS Aircraft Roll Angle">
-            <linear slope="1.0" intercept="0.0" units="degree"/>
+            <linear slope="1.0" intercept="-0.75" units="degree"/>
           </variable>
         </sample>
         <sample id="0326" rate="50"               ><variable name="BPITCHR"            units="deg/s"    longname="IRS Body Pitch Rate"/></sample>
@@ -81,11 +81,7 @@
     <!--<sample id="0362" rate="50"    process="false"><variable name="Along Trk Accel"    units="G"        longname="Along Trk Accel"/></sample>                 not used    -->
     <!--<sample id="0363" rate="50"    process="false"><variable name="Cross Trk Accel"    units="G"        longname="Cross Trk Accel"/></sample>                 not used    -->
         <sample id="0364" rate="50"               ><variable name="ACINS"              units="m/s2"     longname="IRS Vertical Acceleration"/></sample>
-        <sample id="0365" rate="25">
-          <variable name="VSPD" units="m/s" longname="IRS Vertical Speed">
-            <linear slope="1.0" intercept="0.0" units="degree"/>
-          </variable>
-        </sample>
+        <sample id="0365" rate="25"               ><variable name="VSPD"               units="m/s"      longname="IRS Vertical Speed"/></sample>
         <sample id="0366" rate="10"               ><variable name="VNS"                units="m/s"      longname="IRS Ground Speed Vector, North Component"/></sample>
         <sample id="0367" rate="10"               ><variable name="VEW"                units="m/s"      longname="IRS Ground Speed Vector, East Component"/></sample>
     <!--<sample id="0370" rate="5"     process="false"><variable name="norm_accel"         units="G"        longname="norm_accel"/></sample>                      not used    -->
@@ -926,7 +922,7 @@
                 <variable name="QCFR" units="V" longname="Raw Dynamic Pressure, Fuselage Right">
                     <parameter name="gain"     value="2"       type="float"/>
 		    <parameter name="bipolar"  value="false"      type="bool"/>
-                    <poly coefs="-0.327737 13.798 -0.00460835" units="hPa"/>
+                    <poly coefs="-1.0277 13.798 -0.00460835" units="hPa"/>
                 </variable>
                 <variable name="ADIFR" units="V" longname="Vertical Differential Pressure, Radome">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
@@ -1159,7 +1155,7 @@
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="TTWH" units="V" longname="Total Temperature, Deiced Wing">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-69.925 28.126 -0.416" units="deg_C"/>
+                    <poly coefs="-68.485 28.126 -0.416" units="deg_C"/>
                 </variable>
                 <variable name="RICE" units="V" longname="Raw Icing-Rate Indicator">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
