@@ -474,6 +474,7 @@
     </serialSensor>
 
     <lamsSensor ID="LAMS" class="raf.LamsSensor">
+        <parameter name="TAS_level"  type="float" value="155.0"/>
         <parameter name="calm"  type="int" value="1"/>
         <parameter name="nAVG"  type="int" value="4"/>
         <parameter name="nSKIP" type="int" value="0"/>
@@ -489,7 +490,7 @@
 <site name="GV_N677F" class="raf.Aircraft">
     <parameter name="tailNumber" value="N677F" type="string"/>
 
-    <server>
+    <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
             <output>
                 <socket type="mcaccept"/>
@@ -521,7 +522,7 @@
         </service>
     </server>
 
-    <dsm name="dsm301" location="LAMS_rack" id="1" rserialPort="30002" derivedData="sock::31000">
+    <dsm name="dsm301" location="LAMS_rack" id="1" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="LAMS"/>
         <sensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
 
