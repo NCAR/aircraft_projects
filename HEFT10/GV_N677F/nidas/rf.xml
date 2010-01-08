@@ -601,7 +601,7 @@
 <site name="GV_N677F" class="raf.Aircraft">
     <parameter name="tailNumber" value="N677F" type="string"/>
 
-    <server>
+    <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
             <output>
                 <socket type="mcaccept"/>
@@ -636,7 +636,7 @@
         </service>
     </server>
 
-    <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002" derivedData="sock::31000">
+    <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
@@ -711,7 +711,7 @@
         </output>
     </dsm>
 
-    <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
+    <dsm name="dsm305" location="radome" id="5" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
 
         <serialSensor IDREF="HoneywellPPT"
@@ -796,7 +796,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
     </dsm>
    
 
-    <dsm name="dsmLWO" location="Left Wing Outboard Pod" id="83" rserialPort="30002" derivedData="sock::31000">
+    <dsm name="dsmLWO" location="Left Wing Outboard Pod" id="83" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
@@ -846,7 +846,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
     </dsm>
 
 
-    <dsm name="dsmLWI" location="LWI" id="81" rserialPort="30002" derivedData="sock::31000">
+    <dsm name="dsmLWI" location="LWI" id="81" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWI"/>
 
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LWIO">
@@ -864,7 +864,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
     </dsm>
 
 
-    <dsm name="dsmRWO" location="RWO" id="92" rserialPort="30002">
+    <dsm name="dsmRWO" location="RWO" id="92" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
 
         <serialSensor IDREF="UHSAS" devicename="/dev/ttyS1" id="530" suffix="_RWOO">
