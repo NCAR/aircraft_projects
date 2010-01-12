@@ -230,9 +230,8 @@
         <message separator="\n" position="end" length="0"/> 
     </serialSensor>
 
-    <serialSensor ID="DewPointer" class="DSMSerialSensor"
-        baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="%*d,%f" rate="1"/>
+    <serialSensor ID="DewPointer" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%d,%f,%*d,%*d,%d" rate="1"/>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
@@ -625,17 +624,21 @@
 
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120">
 	    <sample id="1">
+	        <variable name="DPLB" units="unk" longname="Dew/Frost Point Balance, Fuselage Left"/>
                 <variable name="DPLS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left">
                     <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
                 </variable>
+                <variable name="DPLTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Left"/>
 	    </sample>
         </serialSensor>
 
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130">
 	    <sample id="1">
+	         <variable name="DPRB" units="unk" longname="Dew/Frost Point Balance, Fuselage Right"/>
                 <variable name="DPRS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right">
                     <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
                 </variable>
+                <variable name="DPRTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Right"/>
 	    </sample>
         </serialSensor>
 

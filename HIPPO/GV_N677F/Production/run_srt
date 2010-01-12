@@ -1,0 +1,12 @@
+#!/bin/csh
+
+foreach FILENAME (setup_rf??_srt)
+  nimbus -b $FILENAME
+end
+
+#cd ${PROD_DATA}
+cd ${DATA_DIR}
+foreach FILENAME (HIPPOrf??srt.nc)
+  ncReorder $FILENAME temp.nc
+  /bin/mv -f temp.nc $FILENAME
+end
