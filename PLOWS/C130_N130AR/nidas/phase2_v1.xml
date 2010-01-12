@@ -849,7 +849,8 @@
                 <variable name="PSCAN_14" units="hPa" longname="Pressure Scanner dynamic pressure, port 14" length="1"/>
                 <variable name="PSCAN_15" units="hPa" longname="Pressure Scanner dynamic pressure, port 15" length="1"/>
             </sample>
-            <message separator="\x01" position="beg" length="52"/>
+            <!-- the PSI message length should be  the number of variables above, times 4 plus 4 bytes for the sequence number -->
+            <message separator="\x01" position="beg" length="68"/>
         </socketSensor>
 
         <output class="RawSampleOutputStream">
