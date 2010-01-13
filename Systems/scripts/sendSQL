@@ -18,10 +18,11 @@ last_compare=0
 
 export PGHOST=eol-rt-data.guest.ucar.edu
 export PGDATABASE=$PGGRND
+export PLATFORM_DATABASE='platforms'
 
 function compareChecksum {
-	groundCS=$(psql -t -c "SELECT value from global_attributes where key='checksum'")
-	onboardCS=$(psql -h localhost real-time -t -c "SELECT value from global_attributes where key='checksum'")
+	groundCS=$(psql -t -c "SELECT value FROM global_attributes WHERE key='checksum'")
+	onboardCS=$(psql -h localhost real-time -t -c "SELECT value FROM global_attributes WHERE key='checksum'")
 
 	if [ "$onboardCS" = "$groundCS" ]; then
 		last_compare=1
@@ -32,9 +33,14 @@ function compareChecksum {
 
 
 #MAIN SCRIPT
-cd $XMIT_DIR #/tmp/xmit
+cd $XMIT_DIR
 gunzip $1
 touch $statusFile #exists only if checksums are not verified
+
+platformID=`head -n 1 $filename`
+flightNum=$(psql -h localhost real-time -t -c "SELECT value FROM global_attributes WHERE key='FlightNumber'")
+projectName=$(psql -h localhost real-time -t -c "SELECT value FROM global_attributes WHERE key='ProjectName'")
+
 
 while [ 1 ]; do 
 
@@ -42,6 +48,8 @@ while [ 1 ]; do
 	if [ $last_compare -eq 1 ]; then
 		$logNot "nimbus checksums match."
 		rm -f $statusFile 
+		psql -d $PLATFORM_DATABASE -t -c "UPDATE platform_list SET flightnumber='$flightNum' WHERE platformid='$platformID'"
+		psql -d $PLATFORM_DATABASE -t -c "UPDATE platform_list SET projectname='$projectName' WHERE platformid='$platformID'"
 		exit 0
 
 	else
