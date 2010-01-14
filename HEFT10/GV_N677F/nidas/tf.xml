@@ -595,6 +595,18 @@
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
 
+    <lamsSensor ID="LAMS" class="raf.LamsSensor">
+        <parameter name="TAS_level"  type="float" value="155.0"/>
+        <parameter name="calm"  type="int" value="1"/>
+        <parameter name="nAVG"  type="int" value="4"/>
+        <parameter name="nSKIP" type="int" value="0"/>
+        <parameter name="nPEAK" type="int" value="1500"/>
+        <sample id="1" rate="1">
+            <variable name="LAMSAVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
+            <variable name="LAMSMAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
+        </sample>
+    </lamsSensor>
+
 </sensorcatalog>
 
 
@@ -637,6 +649,15 @@
             </processor>
         </service>
     </server>
+
+    <dsm name="dsm301" location="LAMS_rack" id="1" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="LAMS"/>
+        <sensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
 
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
