@@ -517,6 +517,7 @@ elif flag == "-t":
 	# For clarity, the tarfile name should contain the 
 	# date (yyyymmdd) and flight number. Start with the 
 	# directory name.
+	tarfilename = file
 
 	# If the directory name does not contain a year, 
 	# add it to the tarfile name.
