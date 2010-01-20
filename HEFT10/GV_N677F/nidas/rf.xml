@@ -851,11 +851,9 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
     <dsm name="dsmLWI" location="LWI" id="81" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWI"/>
 
-        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LWIO">
-            <parameter name="SerialNumber" value="F2DC003" type="string"/>
-            <parameter name="RESOLUTION" value="25" type="int"/>
-        </sensor>
-
+        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS1" id="530" suffix="_RWOO">
+            <parameter name="SerialNumber" type="string" value="UHSAS001"/>
+        </serialSensor>
 
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -869,9 +867,10 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
     <dsm name="dsmRWO" location="RWO" id="92" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
 
-        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS1" id="530" suffix="_RWOO">
-            <parameter name="SerialNumber" type="string" value="UHSAS001"/>
-        </serialSensor>
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LWIO">
+            <parameter name="SerialNumber" value="F2DC003" type="string"/>
+            <parameter name="RESOLUTION" value="25" type="int"/>
+        </sensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D019.dat"/>
