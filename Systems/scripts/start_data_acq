@@ -1,0 +1,381 @@
+#!/bin/sh
+
+# Script which prompts the user for the name of a data acquisition period,
+# aka a "configuration", and the nidas XML to use for the period.
+# The data acquisition period can be either a test flight (tfNN),
+# a ferry flight (ffNN),  research flight (rfNN) or a
+# "hangar" period, with any name not starting with tf,ff or rf.
+# 
+# The user can extend the time period of an existing flight or
+# hangar data acq period, or create a new one.
+# 
+# The history of flights and hangar data acq periods for a project
+# is kept in an XML file:
+# $ADS3/projects/$PROJECT/$AIRCRAFT/nidas/flights.xml
+#
+# This script uses the proj_configs application to read
+# and update that XML file.
+# 
+# Once the period and the nidas XML have been chosen, and
+# the flights.xml file is updated, then the
+# dsm_server process is started, with a runstring argument of
+# the nidas XML file name.
+#
+# This script uses kdialog to look almost GUI-like!
+# 
+
+set -x
+
+# source the functions, should be in the same directory as this script
+here=${0%/*}
+
+source $here/data_acq_funcs.sh
+
+create_err_files $0
+
+start_dcopserver
+
+check_env_vars
+
+set_config_dir
+
+# [ -n "xxx" ] && { generate_error xxx || exit 1; }
+
+nidasxmls=(`get_nidas_xmls`)
+
+if [ ${#nidasxmls} -eq 0 ]; then
+    kdialog --caption "No XML Configurations Available" \
+        --warningcontinuecancel "No nidas XML files found on $cfgdir ($PWD)"
+    exit 1
+fi
+
+# Create an empty flights.xml if it doesn't exist.
+if [ ! -f flights.xml ]; then
+    cat << EOD > flights.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+</configs>
+EOD
+fi
+
+# all config names in flights.xml
+allcfgs=(`get_flights`) || exit 1
+
+tfs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^tf[0-9]{2}$"`) # test flights
+ffs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^ff[0-9]{2}$"`) # ferry flights
+rfs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^rf[0-9]{2}$"`) # research flights
+afs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^[tfr]f[0-9]{2}$"`) # all flights
+hfs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep -v -e "^[tfr]f[0-9]{2}$"`)   # hangar
+
+lastflights=()
+
+# last test flight
+ltf=`get_last ${tfs[@]}`
+lastflights=(${lastflights[@]} $ltf)
+
+# last ferry flight
+lff=`get_last ${ffs[@]}`
+lastflights=(${lastflights[@]} $lff)
+
+# last research flight
+lrf=`get_last ${rfs[@]}`
+lastflights=(${lastflights[@]} $lrf)
+
+# previous flight, either test,ferry or research or empty
+prevflight=`get_last ${afs[@]}`
+
+prevhangar=`get_last ${hfs[@]}`
+
+# last config, could be empty
+lastconfig=`get_last ${allcfgs[@]}`
+
+# type of last flight, tf, ff, rf
+prevtype=xx
+[ -n "$prevflight" ] && prevtype=`flight_type $prevflight`
+
+if false; then
+echo "allcfgs=${allcfgs[@]}"
+echo "tfs=${tfs[@]}"
+echo "ffs=${ffs[@]}"
+echo "rfs=${rfs[@]}"
+echo "hfs=${hfs[@]}"
+echo "lastconfig=$lastconfig"
+fi
+
+topchoice=display
+while [ $topchoice == display ]; do
+
+    choices=(newflight "new flight" on)
+    [ ${#lastflights[@]} -gt 0 ] && choices=("${choices[@]}" \
+        ctdflight "continue a previous flight" off)
+    choices=("${choices[@]}" newhang "new hangar" off)
+    [ ${#hfs[@]} -gt 0 ] && choices=("${choices[@]}" \
+        ctdhang "continue a previous hangar" off)
+    [ ${#allcfgs[@]} -gt 0 ] && choices=("${choices[@]}" \
+        display "display all sampling periods for this project" off)
+
+    # Prior to kde 3.4, kdialog doesn't use geometry
+    topchoice=`kdialog --caption "Start Data Acquisition" --geometry 600x400 \
+            --radiolist "Choose from the following:" "${choices[@]}"`
+    [ $? -ne 0 ] && exit 1
+    [ $topchoice == display ] && { display_configs || exit 1; }
+
+done
+
+# echo "topchoice=$topchoice"
+
+offon=(off on)
+
+if [ $topchoice == newflight ]; then
+    lst=()
+    if [ -n "$ltf" ]; then 
+        ntf=`next_flight $ltf`
+    else
+        ntf=tf01
+    fi
+    oo=${offon["$prevtype" == tf]}
+    lst=("${lst[@]}" $ntf "test flight: $ntf" $oo)
+
+    if [ -n "$lff" ]; then 
+        nff=`next_flight $lff`
+    else
+        nff=ff01
+    fi
+    oo=${offon["$prevtype" == ff]}
+    lst=("${lst[@]}" $nff "ferry flight: $nff" $oo)
+
+    if [ -n "$lrf" ]; then 
+        nrf=`next_flight $lrf`
+    else
+        nrf=rf01
+    fi
+    oo=${offon["$prevtype" == rf]}
+    lst=("${lst[@]}" $nrf "research flight: $nrf" $oo)
+
+    # echo "lst=${lst[@]}"
+
+    fname=""
+    while [ -z $fname ]; do
+        fname=`kdialog --caption "New Flight" --radiolist "Choose a new flight name:" "${lst[@]}"`
+        [ $? -eq 0 ] || exit 1
+    done
+
+    case `flight_type $fname` in
+    tf)
+        prevflight=$ltf # empty string if no previous test flight
+        ;;
+    ff)
+        prevflight=$lff # empty string if no previous ferry flight
+        ;;
+    rf)
+        prevflight=$lrf # empty string if no previous research flight
+        ;;
+    esac
+elif [ $topchoice == newhang ]; then
+    while true; do
+        fname=""
+        while [ -z $fname ]; do
+            fname=`kdialog --caption "New Hangar" --inputbox "Enter a new hangar name:" " "`
+            [ $? -eq 0 ] || exit 1
+        done
+        if [ `config_type $fname` == flight ]; then
+            kdialog --caption "Bad Hangar Config" \
+                --warningcontinuecancel \
+                "hangar period names should not start with tf,ff, or rf.\n\
+                Press continue to choose another name"
+            # $?: continue=0, cancel=2
+            stat=$?
+            [ $stat -eq 0 ] && continue
+            [ $stat -eq 2 ] && exit 1
+        fi
+
+        existing=false
+        for c in ${hfs[@]}; do
+            [ $fname == $c ] && existing=true
+        done
+        $existing || break
+
+        kdialog --caption "Sampling Periods Name Exists" --warningyesnocancel \
+            "$fname exists, do you want to use it?"
+        # $?: yes/continue=0, no=1, cancel=2
+        stat=$?
+        [ $stat -eq 2 ] && exit 1
+        if [ $stat -eq 0 ]; then
+            prevhangar=$fname
+            break
+        fi
+    done
+elif [ $topchoice == ctdflight ]; then
+    lst=()
+    first=true
+    for f in "${lastflights[@]}"; do
+        $first || lst=(${lst[@]} off)
+        lst=(${lst[@]} $f $f)
+        first=false
+    done
+    lst=(${lst[@]} on)
+    # echo "${lst[@]}"
+
+    fname=""
+    while [ -z $fname ]; do
+        fname=`kdialog --caption "Continue Flight" --radiolist "Choose a flight:" ${lst[@]}`
+        [ $? -eq 0 ] || exit 1
+    done
+    prevflight=$fname
+
+elif [ $topchoice == ctdhang ]; then
+    lst=()
+    first=true
+    for f in "${hfs[@]}" ; do
+        $first || lst=(${lst[@]} off)
+        lst=(${lst[@]} $f $f)
+        first=false
+    done
+    lst=(${lst[@]} on)
+    # echo "${lst[@]}"
+
+    fname=""
+    while [ -z $fname ]; do
+        fname=`kdialog --caption "Continue Hangar" --radiolist "Choose a hangar:" ${lst[@]}`
+        [ $? -eq 0 ] || exit 1
+    done
+    prevhangar=$fname
+fi
+
+tnow=`utime now`
+
+addconfig=false
+choosexml=false
+case `config_type $fname` in
+flight)
+    # echo "flight config, fname=$fname, prevflight=$prevflight"
+    if [ -n "$prevflight" ]; then
+        prevparams=(`get_config $prevflight`) || exit 1
+        defaultxml=${prevparams[0]}
+        bdate=${preparams[1]}
+        edate=${prevparams[2]}
+    fi
+
+    if [ $fname != "$prevflight" ]; then  # new flight
+        [ -n "$lastconfig" ] && { terminate_config $lastconfig $tnow || exit 1; }
+        addconfig=true
+        choosexml=true
+    elif [ $fname != "$lastconfig" ]; then  # must have done a quick cal
+        [ -n "$lastconfig" ] && { terminate_config $lastconfig $tnow || exit 1; }
+        addconfig=true
+    fi
+    ;;
+hangar)
+    # set -x
+    # echo "hangar config, fname=$fname, prevhangar=$prevhangar"
+    if [ -n "$prevhangar" ]; then
+        prevparams=(`get_config $prevhangar`) || exit 1
+        defaultxml="${prevparams[0]}"
+        bdate=${prevparams[1]}
+        edate=${prevparams[2]}
+    fi
+
+    if [ $fname != "$prevhangar" ]; then  # new hangar configuration
+        [ -n "$lastconfig" ] && { terminate_config $lastconfig $tnow || exit 1; }
+        addconfig=true
+        choosexml=true
+    elif [ $fname != "$lastconfig" ]; then
+        [ -n "$lastconfig" ] && { terminate_config $lastconfig $tnow || exit 1; }
+        addconfig=true
+    elif [ $bdate -lt $(($tnow - 14 * 3600)) ]; then  # start new period
+        terminate_config $lastconfig $tnow || exit 1
+        addconfig=true
+    fi
+    ;;
+esac
+
+# echo "addconfig=$addconfig"
+# echo "choosexml=$choosexml"
+
+xmlchoice=$defaultxml
+if $choosexml; then
+    dinode=-1
+    f=`eval echo $defaultxml`
+    [ -n "$f" ] && dinode=`ls -li $f | awk '{print $1}'`
+    xmllist=()
+    for f in ${nidasxmls[@]}; do
+        inode=`ls -li $f | awk '{print $1}'`
+        ff=$cfgdir/$f
+        if [ $dinode -eq $inode ]; then
+            xmllist=(${xmllist[@]} $defaultxml ${defaultxml##*/} on)
+        else
+            xmllist=(${xmllist[@]} $ff ${ff##*/} off)
+        fi
+    done
+    xmlchoice=`kdialog --caption "Choose XML File"  \
+        --radiolist \
+        "Choose an XML file in $cfgdir for $fname" \
+        "${xmllist[@]}"`
+    [ $? -ne 0 ] && exit 1
+fi
+
+xmlname=`eval echo $xmlchoice`
+
+if ! ck_xml $xmlname > $txtfile 2> $errfile; then
+    kdialog --caption "XML Syntax Error" \
+        -error "Error parsing $xmlchoice:\n$(<$errfile)"
+    # --warningcontinuecancel "Error parsing $xmlchoice:\n$(<$errfile)"
+    # $?: continue=0, cancel=2
+    exit 1
+fi
+
+if $addconfig; then
+    kdialog --caption "Confirm" --warningcontinuecancel \
+        "Add this `config_type $fname` configuration?\n\
+        name: $fname\n\
+        xml: $xmlchoice"
+    # $?: continue=0, cancel=2
+    stat=$?
+    [ $stat -ne 0 ] && exit 1
+
+
+    # set end time to 00:00 at least 14 hours in future
+    tend=$(($tnow + 38 * 3600))
+    tend=$(($tend - ($tend % (24 * 3600))))
+    if ! proj_configs -a $fname $xmlchoice $tnow $tend flights.xml 2> $errfile; then
+        kdialog --caption "Add Configuration Error" \
+            --warningcontinuecancel "`head -5 $errfile`"
+        # $?: continue=0, cancel=2
+        [ $? -eq 2 ] && exit 1
+    fi
+else
+    kdialog --caption "Confirm" --warningcontinuecancel \
+        "continue this `config_type $fname` configuration?\n\
+        name: $fname\n\
+        xml: $xmlchoice"
+    # $?: continue=0, cancel=2
+    stat=$?
+    [ $stat -ne 0 ] && exit 1
+
+    # set end time to 00:00 at least 14 hours in future
+    tend=$(($tnow + 38 * 3600))
+    tend=$(($tend - ($tend % (24 * 3600))))
+    extend_config $tend || exit 1
+fi
+
+if [ `check_dsm_server` -ne 0 ]; then
+    stop_dsm_server
+fi
+
+export FLIGHT=$fname
+
+# Start local dsm process
+# Shutdown any existing process
+#if [ -f /tmp/dsm.pid ]; then
+#    pkill -TERM $(</tmp/dsm.pid)
+#    for (( i = 0; i < 10; i++ )); do
+#        pgrep $(</tmp/dsm.pid) || break;
+#        sleep 5
+#	pkill -TERM $(</tmp/dsm.pid)
+#    done
+#fi
+#dsm "$xmlchoice"
+
+# finally!
+start_dsm_server $fname "$xmlchoice"
+

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Script which shuts down dsm_server and sets the end time of the
+# last flight or in-hangar sampling period.
+#
+# This script uses kdialog to look almost GUI-like!
+# 
+set -x
+
+# source the functions, should be in the same directory as this script
+here=${0%/*}
+
+source $here/data_acq_funcs.sh
+
+create_err_files $0
+
+start_dcopserver
+
+check_env_vars
+
+set_config_dir
+
+stop_dsm_server
+
+# Shutdown any existing process
+if [ -f /tmp/dsm.pid ]; then
+    pkill -TERM $(</tmp/dsm.pid)
+fi
+
+terminate_last_config || exit 1
+
