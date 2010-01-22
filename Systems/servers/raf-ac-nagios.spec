@@ -1,7 +1,7 @@
 Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -55,5 +55,7 @@ rm -rf %{buildroot}
 %{_libdir}/nagios/plugins/raf_*
 
 %changelog
+* Fri Jan 22 2010 Chris Webster <cjw@ucar.edu> - 1.0-2
+- Add raf_ to local commands.  Switch check_ntp to check_ntp_peer
 * Sun Aug 23 2009 Chris Webster <cjw@ucar.edu> - 1.0-1
 - initial version
