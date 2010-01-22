@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 10
+Release: 11
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -54,6 +54,8 @@ echo
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Thu Jan 21 2010 Chris Webster <cjw@ucar.edu> 1.11
+- PATH updates.
 * Wed Jan 13 2010 Chris Webster <cjw@ucar.edu> 1.10
 - Correct env var name, from XMIT to XMIT_DIR
 * Thu Dec 17 2009 John Wasinger <wasinger@ucar.edu> 1.9

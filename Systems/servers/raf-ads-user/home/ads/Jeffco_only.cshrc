@@ -54,7 +54,7 @@ setenv XAPPLRESDIR	/usr/share/X11/app-defaults
 
 alias view "vi -R"
 
-set path = ($path $JLOCAL/scripts $JLOCAL/bin /usr/X11R6/bin)
+set path = ($path $JLOCAL/scripts)
 
 alias hl	'set dot=$cwd ; cd /home/local/\!*'
 alias ninc      'set dot=$cwd ; cd /home/local/raf/nimbus/include/\!*'
