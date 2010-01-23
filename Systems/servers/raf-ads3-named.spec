@@ -10,7 +10,7 @@
 Summary: DNS/named configuration for RAF aircraft server
 Name: raf-ads3-named
 Version: 1.0
-Release: 7
+Release: 8
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -148,6 +148,10 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/local/admin/raf-ads3-named/named.*
 
 %changelog
+* Sat Jan 23 2010 Gordon Maclean <maclean@ucar.edu> 1.0-8
+- Changed etc/dhclient-eth2.conf: from append to supercede domain-name "raf.ucar.edu";,
+- so eol.ucar.edu shouldn't be searched for non-qualified names after the server
+- comes up as a dhcp client on the guest net.
 * Tue Dec  8 2009 Gordon Maclean <maclean@ucar.edu> 1.0-7
 - Removed Requires: raf-ac-dhcp
 * Thu Nov 13 2009 Chris Webster <cjw@ucar.edu> 1.0-6
