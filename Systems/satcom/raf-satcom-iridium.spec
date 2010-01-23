@@ -87,12 +87,12 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ppp/options.ttyS0
 %config /etc/ppp/options.ttyACM0
 %config /etc/ppp/options.ttyACM1
-%config /etc/ppp/ip-up.iridium
-%config /etc/ppp/ip-pre-up.iridium
+%attr(0755,root,root) /etc/ppp/ip-up.iridium
+%attr(0755,root,root) /etc/ppp/ip-pre-up.iridium
 %config /etc/ppp/peers/iridium
-%config /etc/ppp/peers/iridium.chat
+%attr(0755,root,root) /etc/ppp/peers/iridium.chat
 %config /etc/ppp/peers/iridium-direct
-%config /etc/ppp/peers/iridium-direct.chat
+%attr(0755,root,root) /etc/ppp/peers/iridium-direct.chat
 
 %changelog
 * Fri Jan 6 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4

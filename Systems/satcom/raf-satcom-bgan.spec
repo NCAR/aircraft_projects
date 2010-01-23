@@ -88,10 +88,10 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/sysconfig/network-scripts/ifcfg-eth3
 %config /etc/sysconfig/networking/devices/ifcfg-eth3
 %config /etc/sysconfig/networking/profiles/default/ifcfg-eth3
-%config /etc/ppp/ip-up.bgan
-%config /etc/ppp/ip-pre-up.bgan
+%attr(0755,root,root) /etc/ppp/ip-up.bgan
+%attr(0755,root,root) /etc/ppp/ip-pre-up.bgan
 %config /etc/ppp/options.eth3
-%config /etc/ppp/pppoe-lost
+%attr(0755,root,root) /etc/ppp/pppoe-lost
 
 %changelog
 * Fri Nov 6 2009 Gordon Maclean <maclean@ucar.edu> 1.0-1
