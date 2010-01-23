@@ -55,6 +55,14 @@ if [ $dopkg == all -o $dopkg == $pkg ]; then
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
+pkg=raf-satcom-bgan
+if [ $dopkg == all -o $dopkg == $pkg ]; then
+    version=`get_version $pkg.spec`
+    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn ${pkg}
+
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
+
 echo "RPMS:"
 egrep "^Wrote:" $log
 rpms=`egrep '^Wrote:' $log | egrep /RPMS/ | awk '{print $2}'`

@@ -6,7 +6,7 @@
 #   ifname devname speed local remote ipparam
 #
 # To test this script, uncomment "set -x" and run it by hand like so:
-# ./ip-pre-up.iridium ppp0 /dev/ttyS0 38400 12.42.105.41 12.42.104.9 iridium
+# ./ip-up.local ppp0 /dev/ttyS0 38400 12.42.105.41 12.42.104.9 iridium
 #
 ######################################################################
 
@@ -14,8 +14,12 @@
 
 # PATH=/usr/sbin:/sbin:$PATH
 
-# shutdown eth2 so that ppp can replace default route with iridium
-if ip link show eth2 | fgrep -q ",UP"; then
-	ifdown eth2
+PATH=$PATH:/etc/ppp
+
+# Run ddclient
+if ! which run_ddclient.sh > /dev/null; then
+    logger -t ppp "cannot find run_ddclient.sh, is it in /etc/ppp"
+    exit 1
 fi
 
+run_ddclient.sh "$@" &

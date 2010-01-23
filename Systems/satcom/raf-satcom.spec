@@ -11,7 +11,6 @@ Packager: Gordon Maclean <maclean@ucar.edu>
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
-Requires: raf-satcom-mpds
 Requires: raf-satcom-iridium
 # Requires: raf-ddclient
 

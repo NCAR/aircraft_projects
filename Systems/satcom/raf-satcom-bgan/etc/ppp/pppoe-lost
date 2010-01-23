@@ -1,0 +1,25 @@
+#!/bin/sh
+
+######################################################################
+# pppoe-connect runs this script with the following arguments:
+#   ifname devname ipparam
+#
+######################################################################
+
+PATH=$PATH:/etc/ppp
+IP=/sbin/ip
+
+if [ $# -lt 3 ]; then
+    logger -t ppp "Error $0: need 3 arguments: pppN ethN ipparam"
+    exit 1
+fi
+
+DEVICE=$1
+ETH=$2
+IPPARAM=$3
+
+$IP link set $ETH down
+sleep 1
+$IP link set $ETH up mtu 1500
+sleep 1
+

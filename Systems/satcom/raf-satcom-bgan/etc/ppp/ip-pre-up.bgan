@@ -14,8 +14,15 @@
 
 # PATH=/usr/sbin:/sbin:$PATH
 
-# shutdown eth2 so that ppp can replace default route with iridium
+# shutdown eth2 so that ppp can replace default route with bgan
 if ip link show eth2 | fgrep -q ",UP"; then
 	ifdown eth2
 fi
 
+# bring up eth3 ethernet device
+# ip link show eth3
+# 5: eth3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast qlen 10
+#     link/ether 00:04:23:b5:b7:1d brd ff:ff:ff:ff:ff:ff
+if ! ( ip link show eth3 | fgrep -q ",UP" ); then
+	ifup eth3
+fi

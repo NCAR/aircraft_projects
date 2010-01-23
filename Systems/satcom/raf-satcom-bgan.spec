@@ -1,7 +1,7 @@
-Summary: PPP and PPPOE configuration for Inmarsat MPDS
-Name: raf-satcom-mpds
+Summary: PPP and PPPOE configuration for Inmarsat BGAN
+Name: raf-satcom-bgan
 Version: 1.0
-Release: 6
+Release: 1
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -12,11 +12,12 @@ BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 Requires: rp-pppoe >= 3.8-2
 Requires: ppp >= 2.4.4
+Obsoletes: raf-satcom-mpds
 BuildArch: noarch
 
 # LIC: GPL
 %description
-/etc files for configuring pppoe and ppp for Inmarsat MPDS
+/etc files for configuring pppoe and ppp for Inmarsat BGAN
 
 %prep
 %setup -n %{name}
@@ -35,7 +36,7 @@ cp -r etc $RPM_BUILD_ROOT
 # to do it with a %post script
 cd $RPM_BUILD_ROOT/etc/sysconfig
 # Link these files into these other directories
-for f in ifcfg-mpds ifcfg-eth3; do
+for f in ifcfg-bgan ifcfg-eth3; do
     for d in networking/devices networking/profiles/default; do
         if [ ! network-scripts/$f -ef $d/$f ]; then
             rm -f $d/$f
@@ -44,7 +45,7 @@ for f in ifcfg-mpds ifcfg-eth3; do
     done
 done
 
-%triggerin -- ppp
+%post
 
 # disable /etc/ppp/options.  I think the default version from the ppp RPM
 # contains a "lock" option, which I believe will fail on an ethernet port
@@ -53,18 +54,18 @@ done
 if [ -f /etc/ppp/options ]; then
     osize=`wc -w /etc/ppp/options |  cut -f 1 -d \ `
     if [ $osize -gt 0 ]; then
-        echo "/etc/ppp/options has non-zero size, and it may conflict with raf-satcom-mpds. Renaming the original to /etc/ppp/options.disable"
+        echo "/etc/ppp/options has non-zero size, and it may conflict with raf-satcom-bgan. Renaming the original to /etc/ppp/options.disable"
         mv /etc/ppp/options /etc/ppp/options.disable
     fi
 fi
 touch /etc/ppp/options
 
-muser=`egrep  "^[:space:]*USER=" /etc/sysconfig/network-scripts/ifcfg-mpds | sed "s/.*=[\"']*\([^\"']*\)[\"']*/\1/"`
+muser=`egrep  "^[:space:]*USER=" /etc/sysconfig/network-scripts/ifcfg-bgan | sed "s/.*=[\"']*\([^\"']*\)[\"']*/\1/"`
 
 if [ -n $muser ]; then
     if ! egrep "^[:space:]*[^#]" /etc/ppp/pap-secrets | fgrep -q $muser; then
         echo "###### from %{name}-%{version} ######
-${muser} 	mpds 	None
+${muser} 	bgan 	None
 ###### end %{name}-%{version} ######" >> /etc/ppp/pap-secrets
     fi
 fi
@@ -81,29 +82,17 @@ rm -rf $RPM_BUILD_ROOT
 # Use %config(noreplace) if you want locally changed
 # files to be left alone, and newly installed files to become .rpmnew
 %defattr(-,root,root)
-%config /etc/sysconfig/network-scripts/ifcfg-mpds
-%config /etc/sysconfig/networking/devices/ifcfg-mpds
-%config /etc/sysconfig/networking/profiles/default/ifcfg-mpds
+%config /etc/sysconfig/network-scripts/ifcfg-bgan
+%config /etc/sysconfig/networking/devices/ifcfg-bgan
+%config /etc/sysconfig/networking/profiles/default/ifcfg-bgan
 %config /etc/sysconfig/network-scripts/ifcfg-eth3
 %config /etc/sysconfig/networking/devices/ifcfg-eth3
 %config /etc/sysconfig/networking/profiles/default/ifcfg-eth3
-%config /etc/ppp/ip-up.mpds
-%config /etc/ppp/ip-pre-up.mpds
+%config /etc/ppp/ip-up.bgan
+%config /etc/ppp/ip-pre-up.bgan
 %config /etc/ppp/options.eth3
 %config /etc/ppp/pppoe-lost
 
 %changelog
-* Sat Jan 23 2010 Gordon Maclean <maclean@ucar.edu> 1.0-6
-- add ip-pre-up script to shutdown eth2 (raf-satcom-iridium already had it)
-* Fri Jan 6 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5
-- changed post script to a trigger script so that we can patchup pap-secrets
-- if ppp package messes with it.
-* Fri Apr 11 2008 Gordon Maclean <maclean@ucar.edu> 1.0-4
-- removed passive option for mpds, LCP_INTERVALfrom 40 to 20,
-- and LCP_FAILURE from 6 to 3
-* Sun Mar 10 2008 Gordon Maclean <maclean@ucar.edu>
-- added ifcfg-eth3 config
-* Sun Mar  9 2008 Gordon Maclean <maclean@ucar.edu>
-- added pppoe-lost script, turn off persist
-* Sun Feb 10 2008 Gordon Maclean <maclean@ucar.edu>
+* Fri Nov 6 2009 Gordon Maclean <maclean@ucar.edu> 1.0-1
 - initial version

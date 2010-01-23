@@ -1,0 +1,368 @@
+# This option is passed to pppd by pppoe-connect. Not needed here.
+# plugin rp-pppoe.so
+
+# debug  Enables connection debugging facilities.  If this  option
+# is given, pppd will log the contents of all control pack-
+# ets sent or received in a readable form.  The packets are
+# logged  through  syslog  with  facility  daemon and level
+# debug.  This information can be directed  to  a  file  by
+# setting   up  /etc/syslog.conf  appropriately  (see  sys-
+# log.conf(5)).
+debug
+
+# dump set options
+dump
+
+# Cannot lock ethernet device
+# Causes "unrecognized option 'lock'" error from pppoe plugin.
+# lock
+
+# logfile filename
+# Append log messages to the  file  filename  (as  well  as
+# sending  the log messages to syslog).  The file is opened
+# with the privileges of the  user  who  invoked  pppd,  in
+# append mode.
+# Put the log file on /var/log rather than a subdirectory. pppd
+# does not create logfile directories and will fail if the
+# directory path to logfile does not exist.
+logfile /var/log/pppd_bgan.log
+
+# unit num
+# Sets the ppp unit number (for a ppp0 or ppp1  etc  inter-
+# face name) for outbound connections.
+# We'll use ppp0 for iridium and ppp1 for bgan.
+unit 1
+
+# pppoe-connect passes this in the runstring to pppd, based on the value
+# of DEFROUTE in the config file, so don't specify it here.
+# defaultroute
+
+# user name
+# Sets the name used for authenticating the local system to
+# the peer to name.
+# Set via USER environment var in ifcfg-bgan and passed to pppd
+# via runstring by pppoe-connect
+# user hiaper
+
+# remotename name
+# Set the assumed name of the remote system for authentica-
+# tion purposes to name.
+# This is matched against the second field in pap-secrets
+remotename bgan
+
+# linkname name: Sets the logical name of the link to name.
+# Pppd will  create  a file  named  ppp-name.pid  in /var/run
+# (or /etc/ppp on some sys-tems) containing its process ID.
+# This can be useful  in  determining  which  instance of pppd
+# is responsible for the link to a given peer system.
+#  This is a privileged option.
+#  It is set to bgan by pppoe-connect if we're using ifcfg-bgan for config
+#  so we don't need to over-ride it here
+# linkname bgan
+
+# ipparam string: Provides an extra parameter to the ip-up, ip-pre-up
+# and  ip-down scripts. If this option is given, the string supplied
+# is given as the 6th parameter to those scripts.
+#  It is set to bgan by pppoe-connect if we're using ifcfg-bgan for config
+#  so we don't need to over-ride it here
+# ipparam bgan
+
+# persist: Do not exit after a connection is terminated; instead try
+# to reopen the connection. The maxfail option still has
+# an effect on persistent connections.
+# The /usr/sbin/pppoe-connect script (started from /usr/sbin/pppoe-start)
+# does an infinite loop, starting pppd every time it fails, which gives
+# a persistent connection.  
+# This needs testing to see if there is any advantage to having pppd persist,
+# or whether it is better to have it fail and restart it in pppoe-connect.
+# persist
+
+# nodetach
+# Don’t detach from the controlling terminal.  Without this
+# option, if a serial device other than the terminal on the
+# standard input is specified, pppd will fork to  become  a
+# background process.
+nodetach
+
+# updetach: With this option, pppd will detach from its controlling terminal
+# once  it has successfully established the ppp connection (to the
+# point where the first network control protocol, usually  the  IP
+# control protocol, has come up). Don't use with rp-pppoe.
+# updetach
+
+# passive: Enables the "passive" option in the LCP.  With this option, pppd
+# will  attempt  to initiate a connection; if no reply is received
+# from the peer, pppd will then just wait passively  for  a  valid
+# LCP  packet from the peer, instead of exiting, as it would with-
+# out this option.
+# Don't use it.  It seems to result in 100 sec waits after a LCP
+# failure before the next reconnect attempt.
+# passive
+
+# auth   Require  the  peer to authenticate itself before allowing
+# network packets to be sent or received.  This  option  is
+# the  default  if the system has a default route.  If nei-
+# ther this option nor the noauth option is specified, pppd
+# will only allow the peer to use IP addresses to which the
+# system does not already have a route.
+# noauth Do not require the peer  to  authenticate  itself.   This
+# option is privileged.
+# We don't need the remote system to authenticate, so use noauth.
+noauth
+
+# mru n  Set the MRU [Maximum Receive Unit] value to n. Pppd  will
+# ask  the  peer  to  send packets of no more than n bytes.
+# The value of n must be between 128 and 16384; the default
+# is  1500.   A  value of 296 works well on very slow links
+# (40 bytes for TCP/IP header + 256 bytes of  data).   Note
+# that  for  the  IPv6  protocol,  the MRU must be at least
+# 1280.
+# PPPOE adds 8 bytes of overhead. Max MRU for ethernet is 1500
+# so max MRU is 1500-8=1492.
+# This is set by pppoe-connect so it is not necessary to set it here.
+# mru 1492
+
+# mtu n  Set the MTU [Maximum Transmit Unit] value to  n.   Unless
+# the  peer  requests  a smaller value via MRU negotiation,
+# pppd will request that the kernel  networking  code  send
+# data packets of no more than n bytes through the PPP net-
+# work interface.  Note that for the IPv6 protocol, the MTU
+# must be at least 1280
+# PPPOE adds 8 bytes of overhead. Max MRU for ethernet is 1500
+# so max MTU is 1500-8=1492
+# This is set by pppoe-connect so it is not necessary to set it here.
+# mtu 1492
+
+# default-asyncmap
+# Disable asyncmap negotiation, forcing all control  characters  to
+# be escaped for both the transmit and the receive direction.
+# This was set in the pppd runstring by pppoe-connect.
+# It is now disabled in our local version.
+#
+# asyncmap map
+# This option sets the Async-Control-Character-Map (ACCM) for  this
+# end  of  the link.  The ACCM is a set of 32 bits, one for each of
+# the ASCII control characters with values from 0 to 31, where a  1
+# bit indicates that the corresponding control character should not
+# be used in PPP packets sent to this system.  The map  is  encoded
+# as  a  hexadecimal  number (without a leading 0x) where the least
+# significant bit (00000001) represents character 0  and  the  most
+# significant  bit  (80000000)  represents character 31.  Pppd will
+# ask the  peer  to  send  these  characters  as  a  2-byte  escape
+# sequence.  If multiple asyncmap options are given, the values are
+# ORed together.  If no asyncmap option is given,  the  default  is
+# zero, so pppd will ask the peer not to escape any control charac-
+# ters.  To escape transmitted characters, use the escape option.
+# In particular,  it  is often useful to escape XON (^Q) and XOFF (^S), using
+# asyncmap a0000.  If the path includes  a  telnet,  you  probably  should
+# escape  ^] as well (asyncmap 200a0000).  If the path includes an rlogin,
+# you will need to use the escape ff option on the end  which  is  running
+# the  rlogin  client, since many rlogin implementations are not transpar-
+# ent; they will remove the sequence [0xff, 0xff, 0x73, 0x73, followed  by
+# any 8 bytes] from the stream.
+asyncmap 00000000
+
+# novj   Disable  Van Jacobson style TCP/IP header compression in both the
+# transmit and the receive direction.
+
+# vj-max-slots n
+# Sets  the number of connection slots to be used by the Van Jacob-
+# son TCP/IP header compression and decompression code to n,  which
+# must be between 2 and 16 (inclusive).
+vj-max-slots 16
+
+# novjccomp
+# Disable the connection-ID  compression  option  in  Van  Jacobson
+# style TCP/IP header compression.  With this option, pppd will not
+# omit the connection-ID byte from Van Jacobson  compressed  TCP/IP
+# headers, nor ask the peer to do so.
+# Doing connection-ID compression saves 1 byte per packet - probably
+# not a big savings, but I don't see that it would have much adverse effect.
+# novjccomp
+
+# nobsdcomp
+# bsdcomp nr,nt
+# Request  that  the peer compress packets that it sends, using the
+# BSD-Compress scheme, with a maximum code size  of  nr  bits,  and
+# agree  to  compress  packets sent to the peer with a maximum code
+# size of nt bits.  If nt is not  specified,  it  defaults  to  the
+# value  given for nr.  Values in the range 9 to 15 may be used for
+# nr and nt; larger values give better compression but consume more
+# kernel  memory  for  compression  dictionaries.  Alternatively, a
+# value of 0 for nr or nt disables compression in the corresponding
+# direction.   Use  nobsdcomp  or bsdcomp 0 to disable BSD-Compress
+# compression entirely.
+bsdcomp 0
+
+# nodeflate
+# deflate nr,nt
+# Request  that  the peer compress packets that it sends, using the
+# Deflate scheme, with a maximum window size of  2**nr  bytes,  and
+# agree  to compress packets sent to the peer with a maximum window
+# size of 2**nt bytes.  If nt is not specified, it defaults to  the
+# value  given for nr.  Values in the range 9 to 15 may be used for
+# nr and nt; larger values give better compression but consume more
+# kernel  memory  for  compression  dictionaries.  Alternatively, a
+# value of 0 for nr or nt disables compression in the corresponding
+# direction.   Use  nodeflate  or deflate 0 to disable Deflate com-
+# pression entirely.  (Note: pppd requests Deflate  compression  in
+# preference to BSD-Compress if the peer can do either.)
+# deflate 15,15
+deflate 0
+
+# noccp  Disable  CCP  (Compression  Control  Protocol) negotiation.  This
+# option should only be required if the peer is buggy and gets con-
+# fused by requests from pppd for CCP negotiation.
+
+# maxfail n: Terminate after n consecutive failed connection attempts.
+# A value of 0 means no limit.  The default value is 10.
+# pppoe-connect does an infinite reconnect loop anyway, unless
+# DEBUG=1 or RETRY_ON_FAILURE=no. It may be good for pppd to
+# finally fail and get restarted, so we'll use 10
+maxfail 10
+
+# pap-restart n
+# Set  the PAP restart interval (retransmission timeout) to n sec-
+# onds (default 3).
+pap-restart 20
+
+# pap-timeout n
+# Set the maximum time that pppd will wait for the peer to authen-
+# ticate itself with PAP to n seconds (0 means no limit).
+# Not sure if this has any effect on the client.
+pap-timeout 20
+
+# chap-restart n
+#     Set the CHAP restart interval (retransmission timeout for
+#     challenges) to n seconds (default 3).
+# Not used
+# chap-restart 20
+
+# connect-delay n
+# Wait for up to n milliseconds after the connect script  finishes
+# for  a valid PPP packet from the peer.  At the end of this time,
+# or when a valid PPP packet is received from the peer, pppd  will
+# commence  negotiation  by  sending  its  first  LCP packet.  The
+# default value is 1000 (1 second).  This wait period only applies
+# if the connect or pty option is used.
+# connect/pty are not used for bgan, but perhaps this
+# is used to time the PPPoE discovery phase.
+connect-delay 5000
+
+# lcp-echo-interval n: If this option is given, pppd will send
+# an LCP echo-request frame to the peer every n seconds.  Normally
+# the peer should respond to the echo-request by sending an
+# echo-reply.   This  option   can   be   used   with   the
+# lcp-echo-failure  option  to  detect  that the peer is no
+# longer connected.
+# This is set in ifcfg-bgan with LCP_INTERVAL and passed by pppoe-connect
+# in the runstring to pppd.
+# lcp-echo-interval 40
+
+# lcp-echo-failure n: If this option is given, pppd will presume
+# the peer to be dead if n LCP echo-requests are sent without
+# receiving  a valid  LCP echo-reply.  If this happens, pppd will
+# terminate the connection.  Use of this option requires a  non-
+# zero  value  for  the  lcp-echo-interval parameter.  This
+# option can be used to enable pppd to terminate after  the
+# physical  connection has been broken (e.g., the modem has
+# hung up) in situations where no  hardware  modem  control
+# lines are available.
+# This is set in ifcfg-bgan with LCP_FAILURE, and passed by pppoe-connect
+# in the runstring to pppd.
+# lcp-echo-failure 6
+
+# lcp-max-configure n
+# Set the maximum number of LCP configure-request transmis-
+# sions to n (default 10).
+lcp-max-configure 5
+
+# lcp-max-failure n: Set  the  maximum  number  of LCP
+# configure-NAKs returned before starting to send
+# configure-Rejects  instead  to  n (default 10).
+lcp-max-failure 5
+
+# lcp-max-terminate n: Set the maximum number of LCP
+# terminate-request transmissions to n (default 3).
+lcp-max-terminate 5
+
+# lcp-restart n: Set the LCP restart interval
+# (retransmission timeout) to n seconds (default 3).
+# pppd code says: Set time in seconds between LCP retransmissions
+lcp-restart 20
+
+# holdoff n: Specifies  how  many seconds to wait before
+# re-initiating the link after it terminates.  This option only
+# has any effect if the  persist or demand option is used.  The
+# holdoff period is not applied if the link was  terminated
+# because it was idle.
+# pppoe-connect does a sleep 5 before restarting pppd
+holdoff 2
+
+# ipcp-accept-local: With this option, pppd will accept the
+# peers idea of our local IP address, even if the local IP
+# address was specified in an option.
+ipcp-accept-local
+
+# ipcp-accept-remote: With this option, pppd will accept the
+# peers idea of its (remote) IP address, even if the remote
+# IP address was specified in an option.
+ipcp-accept-remote
+
+# ipcp-max-configure n: Set the maximum number of IPCP 
+# configure-request  transmissions to n (default 10).
+ipcp-max-configure 5
+
+# ipcp-max-failure n: Set  the  maximum  number of IPCP
+# configure-NAKs returned before starting to send configure-Rejects
+# instead  to  n (default 10).
+ipcp-max-failure 5
+
+# ipcp-max-terminate n: Set  the  maximum number of IPCP
+# terminate-request transmissions to n (default 3).
+ipcp-max-terminate 5
+
+# ipcp-restart n: Set the IPCP restart interval (retransmission
+# timeout) to n seconds (default 3).
+ipcp-restart 20
+
+# ktune  Enables pppd to alter  kernel  settings  as  appropriate.
+#     Under  Linux,  pppd  will  enable IP forwarding (i.e. set
+#     /proc/sys/net/ipv4/ip_forward  to  1)  if  the   proxyarp
+#     option  is  used,  and will enable the dynamic IP address
+#     option (i.e. set /proc/sys/net/ipv4/ip_dynaddr to  1)  in
+#     demand mode if the local address changes.
+# Since we don't use proxyarp or demand mode, it probably isn't useful
+# ktune
+
+# proxyarp
+# Add  an  entry  to  this system’s ARP [Address Resolution
+# Protocol] table with the IP address of the peer  and  the
+# Ethernet  address  of  this  system.   This will have the
+# effect of making the peer appear to other systems  to  be
+# on the local ethernet.
+noproxyarp
+#
+# record filename
+# Specifies that pppd should record all characters sent and
+# received  to  a file named filename.  This file is opened
+# in append mode, using the users user-ID and permissions.
+# This  option is implemented using a pseudo-tty and a pro-
+# cess to transfer characters between  the  pseudo-tty  and
+# the  real  serial device, so it will increase the latency
+# and CPU overhead of transferring data over the ppp inter-
+# face.   The characters are stored in a tagged format with
+# timestamps, which can be displayed in readable form using
+# the pppdump(8) program.
+# Not supported.
+# record /tmp/ppp_record
+
+# usepeerdns
+# Ask  the  peer  for  up  to  2 DNS server addresses.  The
+# addresses supplied by the peer (if any) are passed to the
+# /etc/ppp/ip-up  script  in the environment variables DNS1
+# and DNS2, and the environment variable USEPEERDNS will be
+# set   to   1.    In   addition,   pppd   will  create  an
+# /var/run/ppp/resolv.conf file containing one or two name-
+# server lines with the address(es) supplied by the peer.
+
