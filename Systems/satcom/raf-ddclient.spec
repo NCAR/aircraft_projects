@@ -76,7 +76,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Sat Jan 23 2010 Gordon Maclean <maclean@ucar.edu> 1.0-5
-- Use ipparam (mpds or bgan) as temporary way to fig
+- New version of run_ddclient.sh which uses checkip.dyndns.org to get IP.
 * Tue Apr 15 2008 Gordon Maclean <maclean@ucar.edu>
 - Bug fix in run_ddclient script
 * Tue Apr 15 2008 Gordon Maclean <maclean@ucar.edu>
