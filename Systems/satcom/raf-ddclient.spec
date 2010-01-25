@@ -1,7 +1,7 @@
 Summary: ddclient perl script and supporting scripts for running ddclient from pppd
 Name: raf-ddclient
 Version: 1.0
-Release: 4
+Release: 5
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -54,6 +54,12 @@ sed -i 's,^SYSNAME=.*,SYSNAME=c130,' /etc/ppp/run_ddclient.sh
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+# If a file does not change between RPM versions, then locally edited
+# %config files are not altered (no overwriting and no .rpmnew or .rpmsave).
+# If a file is changed from one package version to another then
+# use %config if you want locally changed files to be renamed to .rpmsave,
+# Use %config(noreplace) if you want locally changed
+# files to be left alone, and newly installed files to become .rpmnew
 %files -n raf-gv-ddclient
 %defattr(-,root,root)
 %attr(0755,root,root) /usr/sbin/ddclient
@@ -69,6 +75,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/run_ddclient.sh
 
 %changelog
+* Sat Jan 23 2010 Gordon Maclean <maclean@ucar.edu> 1.0-5
+- Use ipparam (mpds or bgan) as temporary way to fig
 * Tue Apr 15 2008 Gordon Maclean <maclean@ucar.edu>
 - Bug fix in run_ddclient script
 * Tue Apr 15 2008 Gordon Maclean <maclean@ucar.edu>

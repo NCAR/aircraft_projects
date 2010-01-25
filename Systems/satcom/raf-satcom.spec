@@ -12,7 +12,6 @@ BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
 Requires: raf-satcom-iridium
-# Requires: raf-ddclient
 
 # LIC: GPL
 %description
