@@ -12,13 +12,27 @@
 use DBI;
 use IO::Select;
 
+$SIG{'ALRM'} = 'handler';
+
+($PROG = $0) =~ s%.*/%%;
+#  print "PROG=$PROG\n";
+
+  $num = grep /$PROG/,`/bin/ps -f -u ads`;
+#  print "num=$num\n";
+  if($num >= 2) {
+#   print "convert_trans.pl: Instance already running. exiting\n";
+   exit;
+  }
+
 $| = 1;
 
 $host = "eol-rt-data.guest.ucar.edu";
 
 $dbattr = {RaiseError => 1, AutoCommit => 1};
 
-$dbh = DBI->connect("dbi:Pg:dbname=real-time;host=$host",'ads','',{AutoCommit => 1, RaiseError => 1, PrintError => 0});
+$dbh = DBI->connect("dbi:Pg:dbname=real-time-C130;host=$host",'ads','',{AutoCommit => 1, RaiseError => 1, PrintError => 0}) or die "Couldn't connect to database: " . DBI->errstr;
+
+print "Connected to ground database.";
 
 $dbh->do("LISTEN sat_vis");
 $dbh->do("LISTEN sat_ir");
@@ -28,8 +42,12 @@ my $fd = $dbh->func("getfd");
 my $sel = IO::Select->new($fd);
 
 while (1) {
-    print "waiting...";
+  print "waiting...";
+
+  eval {
     $sel->can_read;
+    $dbh->{RaiseError} = 1;
+
     my $notify = $dbh->func("pg_notifies");
     if ($notify) {
         my ($relname, $pid) = @$notify;
@@ -43,4 +61,9 @@ while (1) {
           system("/home/local/Systems/scripts/get_sat_image $product");
 	}
     }
+  };
+  if($@) {
+     print "Error $@ with the database\n";
+     exit;
+  }
 }
