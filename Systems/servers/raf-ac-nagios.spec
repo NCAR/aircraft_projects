@@ -1,7 +1,7 @@
 Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
-Release: 2
+Release: 3
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -40,7 +40,9 @@ sed -i 's/use_authentication=1/use_authentication=0/g' $cf
 %post
 # commands.cfg in fc11 will move into nagios/objects
 cf=/etc/nagios/nagios.cfg
-sed -i 's/commands.cfg/commands.cfg\n\ncfg_file=\/etc\/nagios\/raf_commands.cfg/' $cf
+if ! egrep -q "raf_commands" $cf; then
+  sed -i 's/commands.cfg/commands.cfg\ncfg_file=\/etc\/nagios\/raf_commands.cfg/' $cf
+fi
 sed -i 's/\/localhost.cfg/\/raf_localhost.cfg/' $cf
 
 /etc/init.d/nagios restart
@@ -55,6 +57,10 @@ rm -rf %{buildroot}
 %{_libdir}/nagios/plugins/raf_*
 
 %changelog
+* Fri Jan 26 2010 Chris Webster <cjw@ucar.edu> - 1.0-3
+- Re-arrange some things.  Add a nidas host to group things better.
+- Fix sed in spec to check if change exists first.
+- Add check for squid.
 * Fri Jan 22 2010 Chris Webster <cjw@ucar.edu> - 1.0-2
 - Add raf_ to local commands.  Switch check_ntp to check_ntp_peer
 * Sun Aug 23 2009 Chris Webster <cjw@ucar.edu> - 1.0-1
