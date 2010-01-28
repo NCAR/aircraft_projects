@@ -26,6 +26,8 @@
 # Modified 9/4/2008 Janine Goldstein
 #	to rename LRT and HRT files by getting flight, date, and time from netCDF
 #	file and creating a filename of the form fltno.yyyymmdd.ShSmSs_EhEmEs.PNI.nc
+# Modified 12/8/2009 Janine Aquino (Goldstein)
+#	to include tarring camera images by hour and archiving to MSS.
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -291,7 +293,9 @@ class archRAFdata:
 			use -r to search for source files recursively
 			use -t to create tarballs of subdirs in the SDIR
 			use -p <pointing> to indicate camera
-			use -m to recover and archive tarfiles in current dir
+			use -m to recover and archive tarfiles in current
+			    dir, or to archive movie files to the CAMERA dir on
+			    mss.
 			pointing for CAMERA files if
 			pointing isn't given in path or
 			filename. Possible values are FWD,
@@ -327,9 +331,6 @@ class archRAFdata:
 	    match = re.search("HRT",type)
 	    if match:
 	        sfile = archraf.rename(sdir,sfile)
-	    match = re.search("CAMERA",type)
-	    if match:
-	        sdir = os.getcwd()+"/"
 
             (msrcpMachine,wpwd)=archraf.setMSSenv()
 
@@ -532,7 +533,7 @@ elif flag == "-t":
 	    sfiles.append(tfilelist)
     sdir = current_dir+"/"
 else:
-    if flag == "-m":
+    if (flag == "-m") & (searchstr != "mp4"):
 	sdir = os.getcwd()
 
     lines = os.listdir(sdir)
