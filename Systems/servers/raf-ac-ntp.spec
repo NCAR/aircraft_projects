@@ -34,7 +34,10 @@ cf=/etc/ntp.conf
 if ! egrep -q "^[[:space:]]*server[[:space:]]+timeserver" $cf; then
     sed -i -c '${
 a###### start %{name}-%{version} ######
-aserver timeserver
+# When not sync'd, poll every 2^4=16 seconds. Default minpoll is 2^6=64.
+# After syncing, require ntpd to poll the timeserver at least every 2^6=64 seconds.
+# The default maxpoll is 2^10=1024 secs.
+aserver timeserver minpoll 4 maxpoll 6
 aserver tardis.ntp.ucar.edu
 arestrict 192.168.0.0 mask 255.255.0.0 nomodify notrap
 a###### end %{name}-%{version} ######
