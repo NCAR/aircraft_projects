@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Check time offset of a remote host.
+
+offset=`ntpq -p $1 | grep timeserver | cut -c62-70`
+offset=`ntpq -p $1 | grep 128 | cut -c62-70`
+
+if [ -z $offset ]; then
+  echo "UNKNOWN: No response."
+  exit 3
+fi
+
+# multiply by 1000 with bc, remove decimal portion:
+msec_offset=$(echo "$offset*1000" | bc)	# microseconds
+msec_offset=${offset%.*}
+
+if [[ $msec_offset -le -1000 || $msec_offset -ge 1000 ]]; then
+  echo "CRITICAL: Offset is $offset seconds."
+  rc=2
+elif [[ $msec_offset -le -500 || $msec_offset -ge 500 ]]; then
+  echo "WARNING: Offset is $offset seconds."
+  rc=1
+else
+  echo "NTP OK: Offset is $offset seconds."
+  rc=0
+fi
+
+exit $rc
