@@ -1,7 +1,7 @@
 Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
-Release: 3
+Release: 4
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_libdir}/nagios/plugins/raf_*
 
 %changelog
+* Fri Feb 01 2010 Chris Webster <cjw@ucar.edu> - 1.0-4
+- check_ppp should check ppp1, not eth3.
+- Add raf_check_proc, check for a local process.  Needed because default check_proc can't find something run under python, because python is the process.
 * Fri Jan 26 2010 Chris Webster <cjw@ucar.edu> - 1.0-3
 - Re-arrange some things.  Add a nidas host to group things better.
 - Fix sed in spec to check if change exists first.
