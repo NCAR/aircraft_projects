@@ -3,7 +3,6 @@
 # Check time offset of a remote host.
 
 offset=`ntpq -p $1 | grep timeserver | cut -c62-70`
-offset=`ntpq -p $1 | grep 128 | cut -c62-70`
 
 if [ -z $offset ]; then
   echo "UNKNOWN: No response."
