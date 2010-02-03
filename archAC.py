@@ -293,8 +293,9 @@ class archRAFdata:
 			use -r to search for source files recursively
 			use -t to create tarballs of subdirs in the SDIR
 			use -p <pointing> to indicate camera
-			use -m to recover and archive tarfiles in current
-			    dir, or to archive movie files to the CAMERA dir on
+			use -a to recover and archive tarfiles in current
+			    dir 
+			use -m to archive movie files to the CAMERA dir on
 			    mss.
 			pointing for CAMERA files if
 			pointing isn't given in path or
@@ -428,7 +429,7 @@ else:
 # Going forward, keep the same filenames, except for LRT and HRT netCDF files,
 # which are renamed using the rename subroutine.
 sfiles = []
-if (type == "CAMERA") & (flag != "-m"):
+if (type == "CAMERA") & (flag != "-a") & (flag != "-m"):
     aircraft = platform
     print "This project took place aboard the "+aircraft+" aircraft\n"
     if platform == "GV_N677F":
@@ -483,6 +484,12 @@ if (type == "CAMERA") & (flag != "-m"):
 		    # output tarfile name is like 
 		    # RF##.FWD.Sdate.Stime_etime.jpg.tar and tar.dir
 		    index = regex.search("[RrTtFf][Ff]",fullname)
+		    if (index == -1):
+			print "Flight number not found in image path. Please"
+			print " rename camera dirs to contain flight numbers"
+			print " e.g. RF01\n"
+	                raise SystemExit
+
 	            flightnum = string.upper(fullname[index:index+4])
 		    tarfilename=flightnum+"."+pointing+"."+\
 		        byr+bmo+bdy+"."+bhr+bmn+bsc+"_"+\
@@ -533,9 +540,10 @@ elif flag == "-t":
 	    sfiles.append(tfilelist)
     sdir = current_dir+"/"
 else:
-    if (flag == "-m") & (searchstr != "mp4"):
+    if (flag == "-m"):
 	sdir = os.getcwd()
 
+    # if flag == "-a" do regular processing
     lines = os.listdir(sdir)
     for line in lines:
 	match = re.search(searchstr,line)
