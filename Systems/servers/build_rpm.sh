@@ -73,6 +73,12 @@ if [ $dopkg == all -o $dopkg == $pkg ];then
     rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
 fi
 
+pkg=raf-ads3-sysctl
+if [ $dopkg == all -o $dopkg == $pkg ];then
+    version=`get_version $pkg.spec`
+    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+fi
+
 pkg=raf-ads3-dhcp
 if [ $dopkg == all -o $dopkg == $pkg ];then
     version=`get_version $pkg.spec`
