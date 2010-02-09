@@ -9,15 +9,5 @@
 /bin/rm -f /mnt/r2/send_to_grnd/D20*
 /bin/rm -f /tmp/avaps-rt
 
-(setenv PGDATABASE $PGGRND; /home/local/Systems/scripts/listen_sat.pl) &
-
-
-# Start google map/earth updater onboard.
-pkill acTrack2kml
-acTrack2kml -o &
-
 # Fire up nimbus in real-time with transmit on.
 nimbus -rt3 -x
-
-# remove google updater.
-pkill acTrack2kml
