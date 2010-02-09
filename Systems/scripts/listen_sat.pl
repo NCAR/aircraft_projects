@@ -26,11 +26,12 @@ $SIG{'ALRM'} = 'handler';
 
 $| = 1;
 
-$host = "eol-rt-data.guest.ucar.edu";
+$pghost = "eol-rt-data.guest.ucar.edu";
+$pgdb = "$ENV{'PGGRND'}";
 
 $dbattr = {RaiseError => 1, AutoCommit => 1};
 
-$dbh = DBI->connect("dbi:Pg:dbname=real-time-C130;host=$host",'ads','',{AutoCommit => 1, RaiseError => 1, PrintError => 0}) or die "Couldn't connect to database: " . DBI->errstr;
+$dbh = DBI->connect("dbi:Pg:dbname=$pgdb;host=$pghost",'ads','',{AutoCommit => 1, RaiseError => 1, PrintError => 0}) or die "Couldn't connect to database: " . DBI->errstr;
 
 print "Connected to ground database.";
 
