@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Script to ensure miscellanious prcesses are running.  Run out of cron
+# periodically, say every 3-5 minutes.
+
+if ! ps ax | grep status_listener | grep -qv grep
+then
+  nohup status_listener >& /var/log/status_listener &
+fi
+
+if ! ps ax | grep acTrack2kml | grep -qv grep
+then
+  nohup acTrack2kml -o >& /var/log/acTrack2kml.log &
+fi
+
+if ! ps ax | grep listen_sat.pl | grep -qv grep
+then
+  nohup listen_sat.pl >& /var/log/listen_sat.log &
+fi
