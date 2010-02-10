@@ -11,7 +11,7 @@
 # 
 # The history of flights and hangar data acq periods for a project
 # is kept in an XML file:
-# $ADS3/projects/$PROJECT/$AIRCRAFT/nidas/flights.xml
+# $PROJ_DIR/$PROJECT/$AIRCRAFT/nidas/flights.xml
 #
 # This script uses the proj_configs application to read
 # and update that XML file.
@@ -240,6 +240,25 @@ elif [ $topchoice == ctdhang ]; then
         [ $? -eq 0 ] || exit 1
     done
     prevhangar=$fname
+else
+    kdialog --caption "Error: Flight type not valid." \
+        --warningcontinuecancel "Error: topchoice variable did not match valid choices, = [$topchoice].\n\
+	This is most likely what causes the flights.xml mess up.  Call Chris"
+    exit 1
+fi
+
+if [ -z $lastconfig ]; then
+    kdialog --caption "Error: lastconfig variable is empty." \
+        --warningcontinuecancel "Error: lastconfig variable is empty, something wrong, not proceeding.\n\
+	This is most likely what causes the flights.xml mess up.  Call Chris"
+    exit 1
+fi
+
+if [ -z $fname ]; then
+    kdialog --caption "Error: fname variable is empty." \
+        --warningcontinuecancel "Error: fname variable is empty, something wrong, not proceeding.\n\
+	This is most likely what causes the flights.xml mess up.  Call Chris"
+    exit 1
 fi
 
 tnow=`utime now`

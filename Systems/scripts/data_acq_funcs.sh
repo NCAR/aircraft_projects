@@ -4,7 +4,7 @@
 # 
 # The history of flights and hangar data acq periods for a project
 # is kept in an XML file:
-# $ADS3/projects/$PROJECT/$AIRCRAFT/nidas/flights.xml
+# $PROJ_DIR/$PROJECT/$AIRCRAFT/nidas/flights.xml
 #
 # These functions use the proj_configs application to read
 # and update that XML file.
