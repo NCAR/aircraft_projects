@@ -1,7 +1,7 @@
 Summary: Additions to syslog config for logging from NIDAS processes.
 Name: raf-ads3-syslog
 Version: 1.0
-Release: 4
+Release: 5
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -37,13 +37,13 @@ cp -r etc/logrotate.d $RPM_BUILD_ROOT/etc
 cf=/etc/sysconfig/syslog
 if [ -f $cf ]; then
     if ! egrep -q "^[[:space:]]*SYSLOGD_OPTIONS=" $cf; then
-        sed -i -c '${
+        sed -i '${
 a###### start %{name}-%{version} ######
 aSYSLOGD_OPTIONS="-m 0 -r -s raf.ucar.edu:eol.ucar.edu:atd.ucar.edu"
 a###### end %{name}-%{version} ######
 }' $cf
     else
-        sed -i -c '/^[[:space:]]*SYSLOGD_OPTIONS=/{
+        sed -i '/^[[:space:]]*SYSLOGD_OPTIONS=/{
 # If -r and -s option, done
 /-r -s/b
 i###### start %{name}-%{version} ######
@@ -61,13 +61,13 @@ fi
 cf=/etc/sysconfig/rsyslog
 if [ -f $cf ]; then
     if ! egrep -q "^[[:space:]]*SYSLOGD_OPTIONS=" $cf; then
-        sed -i -c '${
+        sed -i '${
 a###### start %{name}-%{version} ######
 aSYSLOGD_OPTIONS="-c 3 -s raf.ucar.edu:eol.ucar.edu:atd.ucar.edu"
 a###### end %{name}-%{version} ######
 }' $cf
     else
-        sed -i -c '/^[[:space:]]*SYSLOGD_OPTIONS=/{
+        sed -i '/^[[:space:]]*SYSLOGD_OPTIONS=/{
 # If -c 3 -s option, done
 /-c 3 -s/b
 i###### start %{name}-%{version} ######
@@ -101,7 +101,7 @@ fi
 
 cf=/etc/syslog.conf
 [ -f $cf ] || cf=/etc/rsyslog.conf
-sed -i -c -r '/^\*\.info/{
+sed -i -r '/^\*\.info/{
 # Add local5.none to *.info if it is not there
 /local5.none/b
 s/^([^[:space:]]+)/\1;local5.none/
@@ -139,7 +139,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %attr(0755,root,root) /etc/logrotate.d/ads3
 
 %changelog
-* Fri Jan 16 2009 Gordon Maclean <maclean@ucar.edu>
+* Tue Feb 9 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5
+- sed 4.2 (Fedora) doesn't have -c option
+* Fri Jan 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
 - better support for rsyslog
 * Fri Oct 24 2008 Gordon Maclean <maclean@ucar.edu>  1.0-3
 - fixed mistakes in log file names
