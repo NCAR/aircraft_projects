@@ -1,9 +1,24 @@
 #!/bin/sh
 
+script=`basename $0`
+
+usage() {
+    echo $script [-i]
+    echo "-i: install RPM on EOL yum repository (if accessible)"
+    exit 1
+}
+
+doinstall=false
+
+case $1 in
+-i)
+    doinstall=true
+    shift
+    ;;
+esac
+
 dopkg=all
 [ $# -gt 0 ] && dopkg=$1
-
-umask 0002
 
 source repo_scripts/repo_funcs.sh
 
@@ -67,10 +82,14 @@ echo "RPMS:"
 egrep "^Wrote:" $log
 rpms=`egrep '^Wrote:' $log | egrep /RPMS/ | awk '{print $2}'`
 
-if [ -d $rroot ]; then
-    echo "Moving rpms to $rroot"
-    copy_rpms_to_eol_repo $rpms
+if $doinstall; then
+    if [ -d $rroot ]; then
+        echo "Moving rpms to $rroot"
+        copy_rpms_to_eol_repo $rpms
+    else
+        echo "$rroot not found. Leaving RPMS in $topdir"
+    fi
 else
-    echo "$rroot not found. Leaving RPMS in $topdir"
+    echo "-i option not specified, RPMs will not be installed in $rroot"
 fi
 
