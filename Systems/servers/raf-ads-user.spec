@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 11
+Release: 12
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -26,7 +26,6 @@ cp home/ads/ads3_environment.csh     ${RPM_BUILD_ROOT}/home/ads/ads3_environment
 cp home/ads/login                    ${RPM_BUILD_ROOT}/home/ads/.login
 cp home/ads/bin/svn-ask-username.sh  ${RPM_BUILD_ROOT}/home/ads/bin/svn-ask-username.sh
 cp home/ads/bin/foldertab            ${RPM_BUILD_ROOT}/home/ads/bin/foldertab
-cp home/ads/bin/setl                 ${RPM_BUILD_ROOT}/home/ads/bin/setl
 
 %files
 %defattr(-,ads,ads)
@@ -38,7 +37,6 @@ cp home/ads/bin/setl                 ${RPM_BUILD_ROOT}/home/ads/bin/setl
 %config /home/ads/.login
 %config /home/ads/bin/svn-ask-username.sh
 %config /home/ads/bin/foldertab
-%config /home/ads/bin/setl
 
 %post
 chown -R ads:ads /home/ads/bin
@@ -54,6 +52,8 @@ echo
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Thu Feb 18 2010 Chris Webster <cjw@ucar.edu> 1.12
+- Remove setl binary.  tcsh has options in prompt command to update title.
 * Thu Jan 21 2010 Chris Webster <cjw@ucar.edu> 1.11
 - PATH updates.
 * Wed Jan 13 2010 Chris Webster <cjw@ucar.edu> 1.10

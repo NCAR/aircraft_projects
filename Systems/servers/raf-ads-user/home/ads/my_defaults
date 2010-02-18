@@ -7,12 +7,7 @@ source $HOME/ads3_environment.csh
 unset noclobber
 set clobber
 set fignore     = .o
-
-if ($AIRCRAFT == "Lab_N600" ) then
-  set prompt      = "`hostname` \!% "
-else
-  set prompt      = "$AIRCRAFT \!% "
-endif
+set prompt      = '\!% '
 
 set path=(/usr/java/latest/bin $path /home/local/Systems/scripts \
 	/opt/local/nidas/x86/bin /opt/arcom/bin \
@@ -26,18 +21,12 @@ setenv MANPATH	/usr/share/man:/opt/local/man:/opt/rtldk-2.2/doc/man
 alias cd        'set dot=$cwd; chdir'
 alias ,         'set odot=$cwd; chdir $dot; set dot=$odot; pwd'
 
-if ($?TERM) then
-  if ($TERM =~ xterm || $TERM =~ vs100 || $TERM =~ dtterm) then
-    alias cd 'set dot=$cwd; chdir \!*; sett "$AIRCRAFT":`pwd`'
-    alias ,  'set odot=$cwd; chdir $dot; set dot=$odot; pwd; sett "$AIRCRAFT":`pwd`'
-  endif
-endif
-
 if ($?TERM && $OSTYPE == linux) then
   alias ls 'ls --color=tty'
-  if ($TERM =~ xterm || $TERM =~ vs100 || $TERM =~ dtterm) then
-    alias cd 'set dot=$cwd; chdir \!*; setl "$AIRCRAFT":`pwd`'
-    alias ,  'set odot=$cwd; chdir $dot; set dot=$odot; pwd; setl "$AIRCRAFT":`pwd`'
+  if ($AIRCRAFT == "Lab_N600" ) then
+    set prompt      = "%{\033]0;%m:%~\007%}%m \!% "
+  else
+    set prompt      = "%{\033]0;%m:%~\007%}$AIRCRAFT \!% "
   endif
 endif
 
