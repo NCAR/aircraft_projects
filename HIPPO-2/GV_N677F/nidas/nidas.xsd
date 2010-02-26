@@ -167,6 +167,7 @@
     <xsd:attribute name="minValue" type="xsd:float"/>
     <xsd:attribute name="maxValue" type="xsd:float"/>
     <xsd:attribute name="plotrange" type="xsd:normalizedString"/>
+    <xsd:attribute name="dynamic" type="xsd:boolean"/>
 </xsd:complexType>
 
 <xsd:complexType name="variables">
@@ -198,6 +199,7 @@
     <xsd:attribute name="period" type="xsd:float"/>
     <xsd:attribute name="process" type="xsd:boolean"/>
     <xsd:attribute name="scanfFormat" type="xsd:normalizedString"/>
+    <xsd:attribute name="suffix" type="xsd:token"/>
 </xsd:complexType>
 
 <xsd:complexType name="sensorT" abstract="false">
@@ -360,7 +362,13 @@
 	<xsd:attribute name="location" type="xsd:token" use="optional"/>
 	<xsd:attribute name="id" type="xsd:nonNegativeInteger" use="optional"/>
 	<xsd:attribute name="rserialPort" type="xsd:nonNegativeInteger"/>
+	<xsd:attribute name="statusAddr" type="xsd:token"/>
 	<xsd:attribute name="derivedData" type="xsd:token"/>
+	<xsd:attribute name="rawSorterLength" type="xsd:float"/>
+	<xsd:attribute name="procSorterLength" type="xsd:float"/>
+        <!-- max heap size in bytes, followed by K,M or G -->
+	<xsd:attribute name="rawHeapMax" type="xsd:token"/>
+	<xsd:attribute name="procHeapMax" type="xsd:token"/>
     </xsd:complexType>
     <xsd:unique name="uniqueSensorId">
 	<xsd:selector xpath="sensor | serialSensor | arincSensor | irigSensor | socketSensor | lamsSensor"/>
@@ -498,6 +506,7 @@
 <xsd:element name="output">
    <xsd:complexType>
         <xsd:choice minOccurs="1" maxOccurs="unbounded">
+            <xsd:element name="sample" type="sample" maxOccurs="unbounded"/>
             <xsd:element ref="socket" maxOccurs="1"/>
             <xsd:element ref="fileset" maxOccurs="1"/>
             <xsd:element ref="postgresdb" maxOccurs="1"/>
@@ -535,6 +544,11 @@
 	<xsd:attribute name="ID" type="xsd:ID"/>
 	<xsd:attribute name="IDREF" type="xsd:IDREF"/>
 	<xsd:attribute name="priority" type="xsd:token"/>
+	<xsd:attribute name="rawSorterLength" type="xsd:float"/>
+	<xsd:attribute name="procSorterLength" type="xsd:float"/>
+        <!-- max heap size in bytes, followed by K,M or G -->
+	<xsd:attribute name="rawHeapMax" type="xsd:token"/>
+	<xsd:attribute name="procHeapMax" type="xsd:token"/>
    </xsd:complexType>
 </xsd:element>
 
@@ -544,6 +558,7 @@
 	    <xsd:element ref="service"/>
 	</xsd:choice>
         <xsd:attribute name="name" type="xsd:token" use="optional"/>
+	<xsd:attribute name="statusAddr" type="xsd:token"/>
     </xsd:complexType>
 </xsd:element>
 
