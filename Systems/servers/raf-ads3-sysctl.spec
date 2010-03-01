@@ -11,7 +11,7 @@ Packager: Chris Webster <cjw@ucar.edu>
 Vendor: UCAR
 BuildArch: noarch
 Requires: initscripts
-Source: %{name}-%{version}.tar.gz
+#Source: %{name}-%{version}.tar.gz
 
 %description
 Modify sysctl.conf to engage IP forwarding, and allow Alt + SysRq + B to reboot the computer.
