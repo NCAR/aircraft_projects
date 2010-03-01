@@ -1,7 +1,7 @@
 Summary: Configuration for NTP on RAF aircraft server systems
 Name: raf-ac-ntp
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -68,5 +68,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 
 %changelog
+* Mon Mar 1 2010 Chris Webster <cjw@ucar.edu>
+- Up version number mod Gordon to set minpoll and maxpoll
 * Sun Feb 29 2008 Gordon Maclean <maclean@ucar.edu>
 - initial version
