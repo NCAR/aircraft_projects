@@ -1,7 +1,7 @@
 Summary: Master package for UCAR RAF satcom network configuration
 Name: raf-satcom
 Version: 1.0
-Release: 3
+Release: 4
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -39,6 +39,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/ip-pre-up.local
 
 %changelog
+* Tue Mar  2 2010 Chris Webster <cjw@ucar.edu>
+- Change dependencies for spliting aircraft into MPDS and BGAN.
 * Mon Oct  6 2008 Gordon Maclean <maclean@ucar.edu>
 - Added ip-pre-up scripts
 * Tue Mar  4 2008 Gordon Maclean <maclean@ucar.edu>
