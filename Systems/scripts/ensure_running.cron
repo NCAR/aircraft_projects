@@ -5,15 +5,15 @@
 
 if ! ps ax | grep status_listener | grep -qv grep
 then
-  nohup status_listener > /tmp/status_listener.log 2>&1 &
+  nohup /opt/local/nidas/x86/bin/status_listener > /tmp/status_listener.log 2>&1 &
 fi
 
 if ! ps ax | grep acTrack2kml | grep -qv grep
 then
-  nohup acTrack2kml -o > /tmp/acTrack2kml.log 2>&1 &
+  nohup /opt/local/bin/acTrack2kml -o > /tmp/acTrack2kml.log 2>&1 &
 fi
 
 if ! ps ax | grep listen_sat.pl | grep -qv grep
 then
-  nohup listen_sat.pl > /tmp/listen_sat.log 2>&1 &
+  nohup /home/local/Systems/scripts/listen_sat.pl > /tmp/listen_sat.log 2>&1 &
 fi
