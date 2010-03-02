@@ -12,6 +12,10 @@ BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 Requires: rp-pppoe >= 3.8-2
 Requires: ppp >= 2.4.4
+# User must remove raf-satcom-mpds if it exists, because it contains
+# contains some of the same files as this package, like /etc/ppp/options.eth3.
+# Removing raf-satcom-mpds in the %pre stage is too late.
+Conflicts: raf-satcom-mpds
 BuildArch: noarch
 
 # LIC: GPL
@@ -43,10 +47,6 @@ for f in ifcfg-bgan ifcfg-eth3; do
         fi
     done
 done
-
-%pre
-# nuke mpds RPM if it exists
-rpm -q raf-satcom-mpds && rpm -e raf-satcom-mpds
 
 %post
 
