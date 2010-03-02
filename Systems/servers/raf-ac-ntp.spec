@@ -34,7 +34,7 @@ cf=/etc/ntp.conf
 if ! egrep -q "^[[:space:]]*server[[:space:]]+timeserver" $cf; then
     sed -i -c '${
 a###### start %{name}-%{version} ######
-# When not sync'd, poll every 2^4=16 seconds. Default minpoll is 2^6=64.
+# When not synced, poll every 2^4=16 seconds. Default minpoll is 2^6=64.
 # After syncing, require ntpd to poll the timeserver at least every 2^6=64 seconds.
 # The default maxpoll is 2^10=1024 secs.
 aserver timeserver minpoll 4 maxpoll 6
@@ -68,7 +68,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 
 %changelog
-* Mon Mar 1 2010 Chris Webster <cjw@ucar.edu>
-- Up version number mod Gordon to set minpoll and maxpoll
+* Mon Mar 2 2010 Chris Webster <cjw@ucar.edu>
+- Up version number for mod Gordon did to set minpoll and maxpoll
 * Sun Feb 29 2008 Gordon Maclean <maclean@ucar.edu>
 - initial version
