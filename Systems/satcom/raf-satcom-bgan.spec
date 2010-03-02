@@ -1,7 +1,7 @@
 Summary: PPP and PPPOE configuration for Inmarsat BGAN
 Name: raf-satcom-bgan
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -12,7 +12,6 @@ BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 Requires: rp-pppoe >= 3.8-2
 Requires: ppp >= 2.4.4
-Obsoletes: raf-satcom-mpds
 BuildArch: noarch
 
 # LIC: GPL
@@ -44,6 +43,10 @@ for f in ifcfg-bgan ifcfg-eth3; do
         fi
     done
 done
+
+%pre
+# nuke mpds RPM if it exists
+rpm -q raf-satcom-mpds && rpm -e raf-satcom-mpds
 
 %post
 
@@ -94,5 +97,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/pppoe-lost
 
 %changelog
+* Tue Mar 2 2010 Gordon Maclean <maclean@ucar.edu> 1.0-2
+- removed Obsoletes: raf-satcom-mpds. If B obsoletes A, and A is installed,
+- yum will see a dependency there and yum update will install B. So yum update
+- was trying to install this raf-satcom-bgan on the GV - not what I wanted.
+- Instead we'll do an rpm -e raf-satcom-mpds in the %pre - see if that works.
 * Fri Nov 6 2009 Gordon Maclean <maclean@ucar.edu> 1.0-1
 - initial version
