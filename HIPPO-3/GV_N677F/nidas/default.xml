@@ -410,8 +410,10 @@
 
     <serialSensor ID="COMR" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="%f">
+	    <variable name="CORAW" units="V" longname="Carbon Monoxide Raw Values"/>
+<!-- The following is for mixing ratio - used on Hippo1 and 2
             <variable name="COMR" units="V" longname="Carbon Monoxide Mixing Ratio"/>
-<!-- Tom - Teresa says no slope for this
+                Tom - Teresa says no slope for this any more (hippo-2)
                 <linear slope="400" intercept="-3.2" units="ppbv"/>
             </variable>
 -->
@@ -421,10 +423,13 @@
 	    <variable name="CORAW" units="V" longname="Carbon Monoxide Raw Values"/>
 -->
         </sample>
-<!--  Tom - can we prompt for both Mix Ratio and Raw and get both?
+<!--  can we prompt for both Mix Ratio and Raw and get both? - too risky - can't be sure we get in the right order
         <prompt string="CONC?\rSIG?\r" rate="5"/>
 -->
+<!-- prompt for just mixing ratio - commented out for Hippo-3
         <prompt string="CONC?\r" rate="5"/>
+-->
+        <prompt string="SIG?\r" rate="5"/>
         <message separator="\r" position="end" length="0"/>
     </serialSensor>
 
