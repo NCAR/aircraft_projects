@@ -6,20 +6,20 @@
     xmlns="http://www.eol.ucar.edu/nidas"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
-    name="HIPPO-2"
+    name="HIPPO-3"
     system="GV_N677F"
     version="$LastChangedRevision: 2514 $"
     >
 
 <sensorcatalog>
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="IRIG_Tdiff" units="sec"
                     longname="IRIG-UNIX clock diff"/>
             <variable name="IRIG_Status" units="bits"
                     longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
         <!-- Taken from the Honeywell installation manual for the         -->
@@ -406,7 +406,8 @@
             <variable name="SMPLSRINT" units="count" longname="VCSEL Sample Laser Intensity"/>     
             <variable name="DP" units="deg_C" longname="VCSEL Frost Dew Point"/>
         </sample>
-        <sample id="3" rate="0.0033" scanfFormat="SPEC %98f">
+        <!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
+        <sample id="3" rate="1" scanfFormat="SPEC %98f">
             <variable name="ABSPEC" length="98" units="count" longname="VCSEL Absorbption Spectrum"/>
         </sample>
         <message separator="\r\n" position="end" length="0"/>
@@ -521,9 +522,10 @@
     </sensor>
 
     <sensor ID="NOAAPANTHER"  class="raf.UDPSocketSensor" devicename="inet::28808">
-        <sample id="1" rate="1" scanfFormat="PAN:%f,%f">
+        <sample id="1" rate="1" scanfFormat="PAN:%f,%f,%f">
             <variable name="PresLN2" units="psi" longname="NOAA PANTHER Press N2 Low"/>
             <variable name="PresLHe" units="psi" longname="NOAA PANTHER Press He Low"/>
+            <variable name="H2OMR" units="ppmv" longname="NOAA PANTHER Water Vapor Mixing Ratio"/> 
         </sample>
         <sample id="2" rate="1" scanfFormat="PMR:%f,%f,%f,%f">
             <variable name="F11" units="pptv" longname="NOAA PANTHER CFC-11"/>
@@ -628,7 +630,7 @@
     </server>
 
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
@@ -696,13 +698,13 @@
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS11" id="150"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS12" id="160"/>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
 
         <serialSensor IDREF="HoneywellPPT"
                 devicename="/dev/ttyS5" id="110">
@@ -782,13 +784,13 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
    
     <dsm name="dsm310" location="Chem Rack R-1" id="10" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="120" suffix="_VXL"/>
 
@@ -867,19 +869,24 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
          </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm313" location="O2 Rack L-5" id="12" rserialPort="30002" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
 
-        <sensor IDREF="NOAAUCATS" id="110" suffix="_GMD"/>
+<!--
+    For HIPPO-3 UCATS instrument has been removed
+    Water Vaper Mixing Ratio has been moved to the Panther Instrument
+    will likely need to be deleted for HIPPO-4 or not - check w
+    <sensor IDREF="NOAAUCATS" id="110" suffix="_GMD"/>
+-->
         <sensor IDREF="NOAASP2" id="120" suffix="_SP2"/>
         <sensor IDREF="NOAAPANTHER" id="130" suffix="_PAN"/>
 
-        <serialSensor IDREF="QCLS" devicename="/dev/ttyS5" id="140" suffix="_QLIVE"/>
+        <serialSensor IDREF="QCLS" devicename="/dev/ttyS5" id="140" suffix="_QCLS"/>
         <serialSensor IDREF="NOAA_CSD_O3" devicename="/dev/ttyS6" id="150" suffix="_CSD"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
@@ -908,22 +915,6 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <linear slope="409.6" intercept="0.0" units="flag"/>
                 </variable>
-<!-- COMR_AL              | 2008-03-27 21:39:04 | {-0.36179,1.0702} -->
-<!-- Tom 
-                <variable name="COMR_AL" units="V" longname="Carbon Monoxide Mixing Ratio">
-                    <parameter name="channel"  value="4"       type="int"/>
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.0702"  type="float"/> <parameter name="corIntercept" value="-0.36179"   type="float"/>
-                    <linear slope="400.0" intercept="0.0" units="ppbv"/>
-                </variable>
--->
-<!-- CORAW_AL             | 2008-03-27 21:42:08 | {-0.172795,1.05182} -->
-<!-- Tom
-                <variable name="CORAW_AL" units="V" longname="Raw CO Signal">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <parameter name="corSlope" value="1.05182" type="float"/> <parameter name="corIntercept" value="-0.172795"  type="float"/>
-                </variable>
--->
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
@@ -931,13 +922,13 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
         </sensor>
  
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LOI">
             <parameter name="SerialNumber" type="string" value="CDP058"/>
@@ -966,16 +957,16 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
         </sensor>
 
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
 
     <dsm name="dsmRWO" location="RWO" id="47" rserialPort="30002" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D019.dat"/>
@@ -993,10 +984,10 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
