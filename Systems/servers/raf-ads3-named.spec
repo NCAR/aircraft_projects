@@ -10,7 +10,7 @@
 Summary: DNS/named configuration for RAF aircraft server
 Name: raf-ads3-named
 Version: 1.0
-Release: 8
+Release: 9
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -148,6 +148,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/local/admin/raf-ads3-named/named.*
 
 %changelog
+* Thu Mar 18 2010 Gordon Maclean <maclean@ucar.edu> 1.0-9
+- egrep -E fails under Fedora 12 (-E is redundant). Use grep -E, or just egrep
 * Sat Jan 23 2010 Gordon Maclean <maclean@ucar.edu> 1.0-8
 - Changed etc/dhclient-eth2.conf: from append to supercede domain-name "raf.ucar.edu";,
 - so eol.ucar.edu shouldn't be searched for non-qualified names after the server

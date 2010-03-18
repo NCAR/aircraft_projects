@@ -1,7 +1,7 @@
 Summary: Package containing updates for /etc/sudoers file for ADS3 data acquisition
 Name: raf-ads3-sudoers
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Administration
 Url: http://www.eol.ucar.edu/
@@ -29,7 +29,7 @@ cp /etc/sudoers $tmpsudo
 # add mkfs, tune2fs, dumpe2fs to STORAGE alias
 if egrep -q "^Cmnd_Alias STORAGE" $tmpsudo; then
     if ! egrep "^Cmnd_Alias STORAGE" | fgrep -q mkfs $tmpsudo; then
-        sed -ir 's@^\(Cmnd_Alias STORAGE.*\)$@\1, /sbin/fsck, /sbin/fsck.ext3, /sbin/mkfs, /sbin/mkfs.ext3, /sbin/tune2fs, /sbin/dumpe2fs@' $tmpsudo
+        sed -i -r 's@^(Cmnd_Alias STORAGE.*)$@\1, /sbin/fsck, /sbin/fsck.ext3, /sbin/mkfs, /sbin/mkfs.ext3, /sbin/tune2fs, /sbin/dumpe2fs@' $tmpsudo
     fi
 else
     echo "Cmnd_Alias STORAGE = /sbin/fdisk, /sbin/sfdisk, /sbin/parted, /sbin/partprobe, /bin/mount, /bin/umount, /sbin/fsck, /sbin/fsck.ext3, /sbin/mkfs, /sbin/mkfs.ext3, /sbin/tune2fs, /sbin/dumpe2fs" >> $tmpsudo
@@ -39,7 +39,7 @@ fi
 # do sudo from bootup scripts.
 if egrep -q "^Defaults[[:space:]]+requiretty" $tmpsudo; then
     if ! egrep -q '^Defaults[[:space:]]*:[[:space:]]*ads[[:space:]]*!requiretty/' $tmpsudo; then
-        sed -ire '
+        sed -i '
 /^Defaults[[:space:]]*requiretty/a\
 Defaults:ads !requiretty' $tmpsudo
     fi
@@ -74,5 +74,7 @@ fi
 %files
 
 %changelog
+* Thu Mar 18 2010 Gordon Maclean <maclean@ucar.edu> 1.0-2
+- sed -ir should be sed -i -r
 * Fri Nov 6 2009 Gordon Maclean <maclean@ucar.edu> 1.0-1
 - initial

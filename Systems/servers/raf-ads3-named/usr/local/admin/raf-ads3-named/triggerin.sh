@@ -33,7 +33,7 @@ DO_CHROOT=${DO_CHROOT:-0}
 cf=${SYSCONFDIR}/named.conf
 # If there isn't an include of our named.{ac,lab}.conf in named.conf
 # save the old and create a new one.
-if ! egrep -q -E '^[[:space:]]*include[[:space:]]+"'${SYSCONFDIR}/named.${whichpkg}.conf'"' $cf; then
+if ! grep -E -q '^[[:space:]]*include[[:space:]]+"'${SYSCONFDIR}/named.${whichpkg}.conf'"' $cf; then
     dst=${SYSCONFDIR}/named.conf.rpmsave.`/bin/date +'%Y-%m-%d_%H-%M-%S.%N'`
     echo "Saving ${SYSCONFDIR}/named.conf as $dst"
     mv ${SYSCONFDIR}/named.conf $dst
@@ -74,7 +74,7 @@ done
 # bind-chroot-admin moves all /etc/named.* and /var/named/* files to
 # /var/named/chroot and links them back.
 if [ $DO_CHROOT -ne 0 ]; then
-    if [ egrep -q '^ROOTDIR=' /etc/sysconfig/named; then
+    if [ grep -q '^ROOTDIR=' /etc/sysconfig/named; then
         bind-chroot-admin --sync
     fi
 else
