@@ -413,7 +413,7 @@
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="COMR" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="COMR" class="DSMSerialSensor" baud="38400" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="%f">
 	    <variable name="CORAW" units="V" longname="Carbon Monoxide Raw Values"/>
 <!-- The following is for mixing ratio - used on Hippo1 and 2
@@ -794,7 +794,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="120" suffix="_VXL"/>
 
-        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS6" id="530" suffix="_RWI">
+        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS6" id="530" suffix="_RWO">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
         </serialSensor>
 
@@ -805,7 +805,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
 
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1606.dat"/>
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D014.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
@@ -837,7 +837,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
          </sensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="320">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1605.dat"/>
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D018.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
@@ -852,7 +852,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
                 </variable>
                 <variable name="MEDSTAT2" units="V" longname="Medusa Status">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <linear slope="6.787" intercept="0.0" units="flag"/>
+                    <linear slope="6.8303" intercept="0.0" units="flag"/>
                 </variable>
                 <variable name="MEDSTAT3" units="V" longname="Medusa Status">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
@@ -890,7 +890,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
         <serialSensor IDREF="NOAA_CSD_O3" devicename="/dev/ttyS6" id="150" suffix="_CSD"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1609.dat"/>
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1601.dat"/>
             <parameter name="rate" value="500" type="int"/>
 <!-- 
      Tom Changed sample rate from 25 to 10 and numpoints value to 50
@@ -940,7 +940,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
         </sensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D006.dat"/>
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D019.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
@@ -969,7 +969,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D019.dat"/>
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D008.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
