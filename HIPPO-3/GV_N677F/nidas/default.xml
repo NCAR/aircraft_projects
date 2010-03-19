@@ -600,11 +600,13 @@
                 <socket type="mcaccept"/>
             </output>
         </service>
-        <service class="RawSampleService">
+        <service class="RawSampleService"
+            rawSorterLength="0.25" rawHeapMax="100M"
+            procSorterLength="1.0" procHeapMax="500M" priority="RT_FIFO:50">
             <!-- input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream -->
             <input class="RawSampleInputStream">
-                <socket type="mcaccept"/>
+                <socket type="mcaccept" maxIdle="60"/>
             </input>
             <processor class="SampleArchiver">
                 <output class="SampleOutputStream">
