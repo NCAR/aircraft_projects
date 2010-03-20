@@ -6,8 +6,8 @@ License: GPL
 Group: System Administration
 Url: http://www.eol.ucar.edu/
 Packager: Gordon Maclean <maclean@ucar.edu>
-# becomes RPM_BUILD_ROOT
-# BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# BuildRoot is only needed by older rpm versions
+BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
 
@@ -21,6 +21,9 @@ Package containing updates for /etc/sudoers file for ADS3 data acquisition
 # %build
 
 # %install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %triggerin -- sudo
 tmpsudo=/tmp/sudoers_$$

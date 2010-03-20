@@ -5,7 +5,8 @@ Release: 12
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
-Buildroot: %{_tmppath}/%{name}
+# BuildRoot is only needed by older rpm versions
+BuildRoot: %{_tmppath}/%{name}
 BuildArch: noarch
 
 %description

@@ -7,7 +7,8 @@ Source: %{name}-%{version}.tar.gz
 License: none
 Distribution: RHEL 5.3 Linux
 Requires: openlayers jquery httpd php php-pgsql php-pecl-json 
-Buildroot: %{_tmppath}/%{name}-root
+# BuildRoot is only needed by older rpm versions
+BuildRoot: %{_tmppath}/%{name}-root
 BuildArch: noarch
 
 %description
