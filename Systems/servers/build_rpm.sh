@@ -1,9 +1,17 @@
 #!/bin/sh
 
+if grep -q Fedora /etc/redhat-release; then
+    echo "Error: noarch RPMs built on Fedora seem to be incompatible with RHEL"
+    echo "Until this is resolved, do this build on a RHEL system."
+    echo "/etc/redhat-release = $(</etc/redhat-release)"
+    echo "rpmbuild --version = " `rpmbuild --version`
+    exit 1
+fi
+
 script=`basename $0`
 
 usage() {
-    echo $script [-i]
+    echo "$script [-i] [dpkg]"
     echo "-i: install RPM on EOL yum repository (if accessible)"
     exit 1
 }
