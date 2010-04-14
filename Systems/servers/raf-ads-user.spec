@@ -25,8 +25,7 @@ cp home/ads/cshrc                    ${RPM_BUILD_ROOT}/home/ads/.cshrc
 cp home/ads/my_defaults              ${RPM_BUILD_ROOT}/home/ads/.my_defaults
 cp home/ads/ads3_environment.csh     ${RPM_BUILD_ROOT}/home/ads/ads3_environment.csh
 cp home/ads/login                    ${RPM_BUILD_ROOT}/home/ads/.login
-cp home/ads/bin/svn-ask-username.sh  ${RPM_BUILD_ROOT}/home/ads/bin/svn-ask-username.sh
-cp home/ads/bin/foldertab            ${RPM_BUILD_ROOT}/home/ads/bin/foldertab
+cp home/ads/bin/*                    ${RPM_BUILD_ROOT}/home/ads/bin
 
 %files
 %defattr(-,ads,ads)
@@ -36,8 +35,9 @@ cp home/ads/bin/foldertab            ${RPM_BUILD_ROOT}/home/ads/bin/foldertab
 %config /home/ads/.my_defaults
 %config /home/ads/ads3_environment.csh
 %config /home/ads/.login
-%config /home/ads/bin/svn-ask-username.sh
-%config /home/ads/bin/foldertab
+%attr(0775,ads,ads) /home/ads/bin/swcreate
+%attr(0775,ads,ads) /home/ads/bin/svn-ask-username.sh
+%attr(0755,ads,ads) /home/ads/bin/foldertab
 
 %post
 chown -R ads:ads /home/ads/bin

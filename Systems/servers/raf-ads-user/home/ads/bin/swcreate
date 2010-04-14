@@ -1,0 +1,64 @@
+#!/bin/sh
+
+# script to copy nidas Debian packages to a usb flash disk for later
+# installation on a viper/vulcan using swupdate.
+
+usage() {
+    echo "$0 [usb | path ]"
+    echo "usb: copy debian packages and version files to /media/usbdisk/software"
+    echo "other: a path to another destination, e.g. /media/disk/software"
+}
+
+if [ $# -lt 1 ]; then
+    usage
+    exit 1
+fi
+
+unmount=false
+
+case $1 in
+usb)
+    if ! mount | fgrep -q /media/usbdisk; then
+        mount /media/usbdisk || exit 1
+        unmount=true
+    fi
+    dest=/media/usbdisk/software
+     [ -d $dest ] || sudo mkdir -p $dest || exit 1
+     tmptest=.$$
+     if ! touch $dest/$tmptest > /dev/null; then
+        sudo chown -R $USER $dest || exit 1
+        gid=`id -g`
+        sudo chgrp -R $gid $dest || exit 1
+        sudo chmod g+ws $dest
+    else
+        rm $dest/$tmptest
+    fi
+    ;;
+*)
+    dest=$1
+    [ -d $dest ] || mkdir -p $dest
+    if [ ! -d $dest ]; then
+        echo "$dest not found"
+        exit 1
+    fi
+    ;;
+esac
+
+[ -d $dest ] || mkdir -p $dest || exit 1
+
+rsync_path=ael-dpkgs
+
+rsync -vt --exclude="*_armbe.*" /opt/local/$rsync_path/*.{deb,ver} $dest || exit 1
+
+mkdir -p $dest/ads3 || exit 1
+rsync -vt --exclude="*_armbe.*" /opt/local/$rsync_path/ads3/*.{deb,ver} $dest/ads3 || exit 1
+
+# put swinstall on /media/usbdisk/software where it is found by swupdate
+rsync -vt /opt/local/$rsync_path/ads3/swinstall $dest || exit 1
+rsync -vt /opt/local/$rsync_path/dpkg_install_funcs.sh $dest || exit 1
+
+if $unmount; then
+    echo "unmounting /media/usbdisk"
+    umount /media/usbdisk
+fi
+
