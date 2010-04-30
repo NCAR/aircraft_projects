@@ -7,7 +7,6 @@
 
 #include <map>
 #include <string>
-using namespace std;
 
 /**
  * Class to read UDP broadcast data from EOL aircraft, reformat the
@@ -17,7 +16,10 @@ class udp2sql : public QObject
 {
   Q_OBJECT
 
+
 public:
+  typedef std::string string;
+
   udp2sql();
 
 protected slots:
@@ -25,8 +27,13 @@ protected slots:
   void	timerEvent(QTimerEvent *);
 
 protected:
-  void	newUDPConnection();
-  void	newPostgresConnection(string aircraft);
+  void  newUDPConnection();
+  bool  newPostgresConnection(string platform);
+  void  closePostgresConnection();
+  void  execute(const char* sql_str);
+
+  void  handleSoundingMessage(string platform, char* buffer);
+  void  handleAircraftMessage(string aircraft, char* buffer);
 
   QSocketDevice * _udp;
   QSocketNotifier * _notify;

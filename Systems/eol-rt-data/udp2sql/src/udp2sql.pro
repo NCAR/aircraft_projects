@@ -8,7 +8,7 @@ INCLUDEPATH += .
 # Input
 HEADERS += udp2sql.h
 SOURCES += main.cc udp2sql.cc
-LIBS += -lpq -lbz2
+LIBS += -lpq -lbz2 -lssl
 
 ###################
 # Set install path.
