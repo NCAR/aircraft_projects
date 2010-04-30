@@ -29,6 +29,10 @@ udp2sql::udp2sql()
 bool udp2sql::newPostgresConnection(string platform)
 {
   string spec="user=ads dbname=real-time-"+platform;
+  if (platform == "GAUS")
+  {
+    spec="user=ads dbname=soundings";
+  }
   cout << spec << endl;
 
   _conn = PQconnectdb(spec.c_str());
