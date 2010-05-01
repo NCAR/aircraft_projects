@@ -9,6 +9,10 @@ int main(int argc, char *argv[])
   QApplication app(argc, argv, false);
 
   udp2sql reader;
+  if (argc > 1)
+  {
+    reader.setConnectionQualifier(argv[1]);
+  }
 
   app.exec();
  

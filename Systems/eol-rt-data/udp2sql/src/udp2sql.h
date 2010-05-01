@@ -1,3 +1,5 @@
+// -*- C++ -*-
+
 #include <libpq-fe.h>
 
 #include <qhostaddress.h>
@@ -14,13 +16,18 @@
  */
 class udp2sql : public QObject
 {
-  Q_OBJECT
-
+  Q_OBJECT;
 
 public:
   typedef std::string string;
 
   udp2sql();
+
+  void
+  setConnectionQualifier(const std::string& qspec)
+  {
+    _qspec = qspec;
+  }
 
 protected slots:
   void	newData();
@@ -42,5 +49,11 @@ protected:
   int _timer_id;
 
   PGconn * _conn;
+
+  // Special qualifier to add to connection string, such as to specify
+  // host=<host> and port=<port>.  The user and database will always
+  // be specified explicitly, and this string will be appended.
+  string _qspec;
+
 };
 

@@ -33,6 +33,7 @@ bool udp2sql::newPostgresConnection(string platform)
   {
     spec="user=ads dbname=soundings";
   }
+  spec += " " + this->_qspec;
   cout << spec << endl;
 
   _conn = PQconnectdb(spec.c_str());

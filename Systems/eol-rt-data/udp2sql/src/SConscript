@@ -1,0 +1,17 @@
+# -*- python -*-
+
+env = Environment(tools = ["default", "qt"])
+
+env.AppendUnique(LIBS = ["ssl", "pq", "bz2"])
+
+SOURCES = Split("""
+main.cc
+udp2sql.cc
+""")
+
+HEADERS = Split("""
+udp2sql.h
+""")
+
+env.Program("udp2sql", SOURCES)
+
