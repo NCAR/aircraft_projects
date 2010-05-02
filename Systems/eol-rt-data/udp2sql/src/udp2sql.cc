@@ -34,15 +34,15 @@ bool udp2sql::newPostgresConnection(string platform)
     spec="user=ads dbname=soundings";
   }
   spec += " " + this->_qspec;
-  cout << spec << endl;
+  cerr << spec << endl;
 
   _conn = PQconnectdb(spec.c_str());
 
   if (PQstatus(_conn) == CONNECTION_BAD)
   {
-    cout << "SourceSQL: Connection failed: "
+    cerr << "SourceSQL: Connection failed: "
          << "(Check PGHOST, PGDATABASE & PGUSER environment variables.)\n";
-    cout << PQerrorMessage(_conn) << endl;
+    cerr << PQerrorMessage(_conn) << endl;
     PQfinish(_conn);
     _conn = 0;
   }
@@ -66,9 +66,9 @@ udp2sql::
 execute(const char* sql_str)
 {
   PGresult * res;
-  cout << "execute(" << sql_str << ")\n";
+  cerr << "execute(" << sql_str << ")\n";
   res = PQexec(_conn, sql_str);
-  cout << PQerrorMessage(_conn);
+  cerr << PQerrorMessage(_conn);
   PQclear(res);
 }
 
@@ -83,7 +83,7 @@ void udp2sql::newUDPConnection()
 //host.setAddress("12.47.179.48");	// Reachback.
 
   _udp->setAddressReusable(true);
-  cout << "conn = " << _udp->bind(host, port) << endl;
+  cerr << "conn = " << _udp->bind(host, port) << endl;
 
   _notify = new QSocketNotifier(_udp->socket(), QSocketNotifier::Read);
   QObject::connect(_notify, SIGNAL(activated(int)), this, SLOT(newData()));
@@ -92,7 +92,7 @@ void udp2sql::newUDPConnection()
 /* -------------------------------------------------------------------- */
 void udp2sql::timerEvent(QTimerEvent *)
 {
-  cout << "Resetting connection\n";
+  cerr << "Resetting connection\n";
 //PQfinish(_conn);
 //newPostgresConnection();
 //  delete _notify;
@@ -110,8 +110,8 @@ namespace
   init_passwords()
   {
     passwords["test1"] = "this will never work";
-    passwords["mgaus1"] = "ntltpresent";
-    passwords["mgaus2"] = "awpnboils";
+    passwords["ncar1"] = "ntltpresent";
+    passwords["ncar2"] = "awpnboils";
     passwords["nssl1"] = "neveriamyears";
     passwords["nssl2"] = "twdwtmwy";
   }
@@ -172,12 +172,12 @@ void udp2sql::newData()
     bzFile b;
     b.lastErr = ret;
     int errnum;
-    cout << "Failed to decompress the ground feed stream: " 
+    cerr << "Failed to decompress the ground feed stream: " 
 	 << BZ2_bzerror(&b, &errnum) << endl;
     return;
   }
-  cout << "\ndecompressed " << nBytes << " -> " << bufLen << endl;
-  cout << buffer << endl;
+  cerr << "\ndecompressed " << nBytes << " -> " << bufLen << endl;
+  cerr << buffer << endl;
 
   // Now see if this message has a digest.
   if (strncmp(buffer, "DIGEST:", 7) == 0)
@@ -187,11 +187,11 @@ void udp2sql::newData()
     // there are not enough.
     if (strlen(buffer) < 41)
     {
-      cout << "expected digest, but none found: ";
+      cerr << "expected digest, but none found: ";
       return;
     }
     string digest = string(buffer, buffer+40);
-    cout << "found digest: " << digest << "\n";
+    cerr << "found digest: " << digest << "\n";
     buffer += 41; // skip the newline between digest and id.
 
     // Next is the id.
@@ -202,11 +202,11 @@ void udp2sql::newData()
     }
     string id = string(idp, buffer);
     if (*buffer) ++buffer; // skip newline after id
-    cout << "found id: " << id << "\n";
+    cerr << "found id: " << id << "\n";
     std::string pwd = get_password(id);
     if (pwd.size() == 0)
     {
-      cout << "unrecognized id, ignoring this message!\n";
+      cerr << "unrecognized id '" << id << "': ignoring this message!\n";
       return;
     }
 
@@ -215,7 +215,7 @@ void udp2sql::newData()
     RIPEMD160_CTX ctx;
     if (! RIPEMD160_Init(&ctx))
     {
-      cout << "hash init failed!\n";
+      cerr << "hash init failed!\n";
       return;
     }
     RIPEMD160_Update(&ctx, id.c_str(), id.length());
@@ -224,7 +224,7 @@ void udp2sql::newData()
     unsigned char md[RIPEMD160_DIGEST_LENGTH];
     if (! RIPEMD160_Final(md, &ctx))
     {
-      cout << "final digest computation failed!\n";
+      cerr << "final digest computation failed!\n";
       return;
     }
 
@@ -235,11 +235,12 @@ void udp2sql::newData()
       sprintf(hexmd + 2*i, "%02x", (int)md[i]);
     }
     hexmd[2*RIPEMD160_DIGEST_LENGTH] = 0;
-    cout << "expected digest: " << hexmd << "\n";
+    cerr << "expected digest: " << hexmd << "\n";
 
     if (digest != hexmd)
     {
-      cout << "digests do not match, ignoring message!\n";
+      cerr << "authentication failed for '" << id
+	   << "', ignoring message!\n";
       return;
     }
 
@@ -310,7 +311,7 @@ handleAircraftMessage(string aircraft, char* buffer)
   {
     // create postgres statement
     sprintf(sql_str, "INSERT INTO raf_lrt VALUES ('%s',%s);", timestamp, vars);
-    cout << strlen(sql_str) << ": " << sql_str << endl;
+    cerr << strlen(sql_str) << ": " << sql_str << endl;
     execute(sql_str);
     sprintf(sql_str, 
 	    "UPDATE global_attributes SET value='%s.999' WHERE key='EndTime';",
