@@ -642,7 +642,7 @@
           </sample>
           <sample id="0324" rate="50">
             <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.35" units="degree"/>
+              <linear slope="1.0" intercept="0.25" units="degree"/>
             </variable>
           </sample>
         </arincSensor>
@@ -757,23 +757,20 @@
                 <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="channel"  value="0"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
+                    <poly coefs="-90.997 25.705 0.063667" units="deg_C"/> <!-- Post-HIPPO-3 cal --> 
                 </variable>
-<!--
-Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 hand calculated multiple point calibrations.
--->
                 <variable name="TTHL1" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-105.663048 39.530760 -3.828450 0.331160" units="deg_C"/>
+                    <poly coefs="-90.772 25.67 0.069654" units="deg_C"/> <!-- Post-HIPPO-3 cal -->
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-98.200816 32.386316 -1.782778 0.153851" units="deg_C"/>
+                    <poly coefs="-91.647 26.364 -0.020022" units="deg_C"/> <!-- Post-HIPPO-3 cal -->
                 </variable>
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-97.481298 32.098536 -1.740687 0.150691" units="deg_C"/>
+                    <poly coefs="-90.874 26.076 -0.00095893" units="deg_C"/> <!-- Post-HIPPO-3 cal -->
                 </variable>
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
@@ -949,7 +946,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <linear slope="+10.0" intercept="0.0" units="W"/>
+                    <linear slope="+10.0" intercept="2.0" units="W"/> <!-- Added +2 intercept to correct baseline position with 135 Wire Temp -->
                 </variable>
             </sample>
             <sample id="2" rate="1">
