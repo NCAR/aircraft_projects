@@ -642,7 +642,7 @@
           </sample>
           <sample id="0324" rate="50">
             <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.25" units="degree"/>
+              <linear slope="1.0" intercept="0.3" units="degree"/>
             </variable>
           </sample>
         </arincSensor>
@@ -754,23 +754,61 @@
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
+<!-- 
+      The following poly coefs were modified according to William 'Al' Cooper's work in dealing with the temperature affected A2D calibration values.
+      Since the Post HIPPO3 Cals were taken using A2D calibrations that were taken at a much higher temperature than the A2D was running during the
+      taking of these "Engineering" Calibrations, one needs to compensate for that.  The compensation is calculated as follows:
+          F0 = F0p,  F1 = F1p(1+C1*Beta),  F2 = F2p((1+C1*Beta)^2)
+      Where F0 is the corrected polynomial fit sub 0, F0p is the measured polynomial fit sub 0
+            F1 is the corrected polynomial fit sub 1, F1p is the measured polynomial fit sub 1
+            F2 is the corrected polynomial fit sub 2, F2p is the measured polynomial fit sub 2
+            C1 is the A2D slope coeficient calculated or measured at 40 degrees C
+            and Beta is Gamma * delta T where 
+                 Gamma = 0.00033 and 
+                 delta T is the Temperature difference of the A2D board between the original A2D calibration in the lab (52 degrees) 
+                                                                         and the "engineering" calibration on the plane (35 degrees)
+
+       OK our test using the above pushed us in the opposite direction as expected, further we noted that the algorithm Al devised for 
+       the A2D correction went in the opposite direction as what was measured (see the file A2D007.dat in the Configuration/raf/cal_files/A2D dir)
+       so we believe that the sign above delta T is backwards and thus the poly coefs below are calculated using Beta of positive 0.00561
+ -->
                 <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="channel"  value="0"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-90.997 25.705 0.063667" units="deg_C"/> <!-- Post-HIPPO-3 cal --> 
+                    <!--<poly coefs="-90.997 25.705 0.063667" units="deg_C"/> --> <!-- Post-HIPPO-3 cal --> 
+                    <!--<poly coefs="-90.997 25.544 0.062873" units="deg_C"/> --> <!-- Modified Post-HIPPO-3 cal based on A2D cal calculated to 40 degrees --> 
+                    <!--<poly coefs="-90.997 25.545 0.062870" units="deg_C"/> --> <!-- Modified Post-HIPPO-3 cal based on measured A2D cal at 40 degrees -->
+                    <!--<poly coefs="-90.997 25.865 0.064461" units="deg_C"/> --> <!-- Modified Post-HIPPO-3 cal measured A2D cal and deltaT = 17 (rather than -17) -->
+                    <poly coefs="-90.691 25.554 0.08566" units="deg_C"/>   <!-- Pre-HIPPO-3 cal --> 
+                    <!--<poly coefs="-90.691 25.713 0.086728" units="deg_C"/> --> <!-- Modified Pre-HIPPO-3 cal measured A2D cal and deltaT = 17 (rather than -17) --> 
                 </variable>
                 <variable name="TTHL1" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-90.772 25.67 0.069654" units="deg_C"/> <!-- Post-HIPPO-3 cal -->
+                    <!--<poly coefs="-90.772 25.67  0.069654" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
+                    <!--<poly coefs="-90.772 25.511 0.068796" units="deg_C"/> --> <!-- Modified Post-HIPPO-3 cal based on A2D cal calculated to 40 degrees -->
+                    <!--<poly coefs="-90.772 25.512 0.068801" units="deg_C"/> --> <!-- Modified Post-HIPPO-3 cal based on measured A2D cal at 40 degrees -->
+                    <!--<poly coefs="-90.772 25.828 0.070512" units="deg_C"/> --> <!-- Modified Post-HIPPO-3 cal measured A2D cal and deltaT = 17 (rather than -17) -->
+                    <poly coefs="-90.802 25.69  0.068852" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
+                    <!--<poly coefs="-90.802 25.848 0.069700" units="deg_C"/>--> <!-- Modified Pre-HIPPO-3 cal measured A2D cal and deltaT = 17 (rather than -17) -->
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-91.647 26.364 -0.020022" units="deg_C"/> <!-- Post-HIPPO-3 cal -->
+                    <!--<poly coefs="-91.647 26.364 -0.020022" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
+                    <!--<poly coefs="-91.647 26.201 -0.019775" units="deg_C"/> --> <!-- Modified Post-HIPPO-3 cal based on A2D cal calculated to 40 degrees -->
+                    <!--<poly coefs="-91.647 26.202 -0.019776" units="deg_C"/> --> <!-- Modified Post-HIPPO-3 cal based on measured A2D cal at 40 degrees -->
+                    <!--<poly coefs="-91.647 26.526 -0.020269" units="deg_C"/> --> <!-- Modified Post-HIPPO-3 cal measured A2D cal and deltaT = 17 (rather than -17) -->
+                    <poly coefs="-91.701 26.385 -0.020225" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
+                    <!--<poly coefs="-91.701 26.547 -0.020475" units="deg_C"/> --> <!-- Modified Pre-HIPPO-3 cal measured A2D cal and deltaT = 17 (rather than -17) -->
                 </variable>
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-90.874 26.076 -0.00095893" units="deg_C"/> <!-- Post-HIPPO-3 cal -->
+                    <!--<poly coefs="-90.874 26.076 -0.00095893" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
+                    <!--<poly coefs="-90.874 25.914 -0.000947" units="deg_C"/> --> <!-- Modified Post-HIPPO-3 cal based on A2D cal calculated to 40 degrees -->
+                    <!--<poly coefs="-90.874 25.915 -0.000947" units="deg_C"/> --> <!-- Modified Post-HIPPO-3 cal based on measured A2D cal at 40 degrees -->
+                    <!--<poly coefs="-90.874 26.237 -0.000971" units="deg_C"/> --> <!-- Modified Post-HIPPO-3 cal measured A2D cal and deltaT = 17 (rather than -17) -->
+                    <poly coefs="-91.049 26.152 -0.0073493" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
+                     <!-- <poly coefs="-91.049 26.314 -0.007440" units="deg_C"/> --> <!-- Modified Pre-HIPPO-3 cal measured A2D cal and deltaT = 17 (rather than -17) -->
                 </variable>
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
