@@ -12,11 +12,11 @@
     >
 <sensorcatalog>
 
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="Clock" units="msec" longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
     <arincSensor ID="IRS-C130" class="raf.IRS_HW_YG1854">
         <!-- Taken from the Honeywell installation manual for the -->
@@ -355,13 +355,16 @@
 	<parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
 
         <sample id="1">
-	    <variable name="FREF" units="V" longname="CDP Laser Reference Voltage"/>
-	    <variable name="FTMP" units="deg_C" longname="CDP Housekeeping Data"/>
-	    <variable name="FRNG" units="" longname="CDP Size Range Category"/>
-	    <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
-	    <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
-	    <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
-	    <variable name="ACDP" length="30" units="count" longname="CDP Raw Accumulation (per cell)"/>
+            <variable name="CDPLSRC" units="mAmp" longname="CDP Laser Current"/>
+            <variable name="CDPLSRP" units="V" longname="CDP Laser Power Monitor"/>
+            <variable name="CDPWBTMP" units="deg_C" longname="CDP Wing Board Temperature"/>
+            <variable name="CDPLBTMP" units="deg_C" longname="CDP Laser Block Temperature"/>
+            <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
+            <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
+            <variable name="AVGTRNS" units="" longname="CDP Average Transit Time"/>
+            <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
+
+            <variable name="ACDP" length="31" units="count" longname="CDP Raw Accumulation (per cell)"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
@@ -548,7 +551,7 @@
     </server>
 <!--
     <dsm name="dsm302" location="lab" id="2" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
 
         <serialSensor IDREF="Water_CN_Counter"
                 devicename="/dev/dsmser0" id="120">
@@ -560,7 +563,7 @@
     </dsm>
 -->
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_I2"/>
@@ -673,7 +676,7 @@
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser0" id="110">
@@ -802,7 +805,7 @@
     </dsm>
 
     <dsm name="dsm311" location="blue_box" id="11" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
         <!--serialSensor IDREF="S200" devicename="/dev/dsmser5" id="710"/-->
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -810,7 +813,7 @@
     </dsm>
 <!--
     <dsm name="dsm323" location="_c130-323" id="23" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="323"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="323"/>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="C130_323_0_A0" units="V" longname="C130_323_0 Analog 0">
@@ -876,7 +879,7 @@
     </dsm>
 -->
     <dsm name="dsm303" location="_blue_box" id="21" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/>
         <!-- Jumper configuration on COM8 boards:
             ports 0-4 are RS232, 5-7 are RS422 -->
 
@@ -1167,7 +1170,7 @@
         - John (Sept. 1, 2006)
     -->    
     <dsm name="dsm306" location="chaps_rack" id="6" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="306"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="306"/>
 
         <serialSensor IDREF="Mensor_6100" devicename="/dev/dsmser0" id="110">
             <sample id="1">
