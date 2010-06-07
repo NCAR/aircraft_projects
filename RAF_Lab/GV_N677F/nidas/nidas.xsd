@@ -167,6 +167,7 @@
     <xsd:attribute name="minValue" type="xsd:float"/>
     <xsd:attribute name="maxValue" type="xsd:float"/>
     <xsd:attribute name="plotrange" type="xsd:normalizedString"/>
+    <xsd:attribute name="dynamic" type="xsd:boolean"/>
 </xsd:complexType>
 
 <xsd:complexType name="variables">
@@ -198,6 +199,7 @@
     <xsd:attribute name="period" type="xsd:float"/>
     <xsd:attribute name="process" type="xsd:boolean"/>
     <xsd:attribute name="scanfFormat" type="xsd:normalizedString"/>
+    <xsd:attribute name="suffix" type="xsd:token"/>
 </xsd:complexType>
 
 <xsd:complexType name="sensorT" abstract="false">
@@ -504,6 +506,7 @@
 <xsd:element name="output">
    <xsd:complexType>
         <xsd:choice minOccurs="1" maxOccurs="unbounded">
+            <xsd:element name="sample" type="sample" maxOccurs="unbounded"/>
             <xsd:element ref="socket" maxOccurs="1"/>
             <xsd:element ref="fileset" maxOccurs="1"/>
             <xsd:element ref="postgresdb" maxOccurs="1"/>
