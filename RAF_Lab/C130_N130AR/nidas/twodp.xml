@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="PLOWS"
+    system="C130_N130AR"
+    config="${PROJ_DIR}/PLOWS/C130_N130AR/nidas/twodp.xml"
+    version="$LastChangedRevision: 428 $" >
+    
+<sensorcatalog>
+
+    <sensor ID="IRIG" class="raf.IRIGSensor">
+        <sample id="1">
+            <variable name="Clock" units="msec" longname="milliseconds since 1970 Jan 01 00:00 +0"/>
+        </sample>
+    </sensor>
+
+    <sensor ID="TwoDP" class="raf.TwoD32_USB">
+        <parameter name="calFile" type="string" value="PMSspecs"/>
+
+        <parameter name="RESOLUTION" value="200" type="int"/>
+        <parameter name="TAS_RATE" value="10" type="int"/>
+        <sample id="1" rate="1">
+            <variable name="TCNT" units="count" longname="2D-P Particle count (# sync words)"/>
+        </sample>
+        <sample id="2" rate="1">
+            <variable name="A1DP" length="32" units="count" longname="2D-P Raw Accumulation, entire-in (per cell)"/>
+            <variable name="DT1DP" units="msec" longname="2D-P Probe Dead Time"/>
+        </sample>
+    </sensor>
+
+    <serialSensor ID="TwoD_House" class="raf.TwoD_House" 
+        baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1">
+            <variable name="H2DV15" units="V" longname="2D-P Probe Housekeeping"/>
+            <variable name="H2DMTMP" units="V" longname="2D-P Probe Housekeeping"/>
+            <variable name="H2DEE1" units="V" longname="2D-P End Diode Voltage"/>
+            <variable name="H2DEE32" units="V" longname="2D-P End Diode Voltage"/>
+            <variable name="H2DVN15" units="V" longname="2D-P Probe Housekeeping"/>
+            <variable name="H2DV5" units="V" longname="2D-P Probe Housekeeping"/>
+            <variable name="SHDORP" units="count" longname="2D-P Shadow OR Counts"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+</sensorcatalog>
+
+
+<site name="C130_N130AR" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N130AR" type="string"/>
+
+    <dsm name="tads" id="77" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
+<!--  
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
+-->
+        <sensor IDREF="TwoDP" devicename="/dev/usbtwod_32_0" id="800" suffix="_RWI">
+            <parameter name="SerialNumber" value="2DP10" type="string"/>
+
+            <sample id="2" rate="1">
+                <variable name="A1DP" length="32" units="count" longname="2D-P Raw Accumulation, entire-in (per cell)"/>
+                <variable name="DT1DP" units="msec" longname="2D-P Probe Dead Time"/>
+            </sample>
+        </sensor>
+
+        <!--
+        <sensor IDREF="TwoD_House" devicename="/dev/ttyS6" id="610" suffix="_RWI"/>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+	-->
+        <output class="RawSampleOutputStream">
+            <socket type="server" port="30000"/>
+        </output>
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <fileset dir="/home/data" file="usb_%Y%m%d_%H%M%S.dat" length="1800"/>
+        </output>
+    </dsm>
+</site>
+</project>
