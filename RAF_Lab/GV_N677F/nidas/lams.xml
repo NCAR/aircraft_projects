@@ -19,7 +19,7 @@
         </sample>
     </sensor>
 
-    <lamsSensor ID="LAMS" class="raf.LamsSensor">
+    <sensor ID="LAMS" class="raf.LamsSensor">
         <parameter name="TAS_level"  type="float" value="155.0"/>
         <parameter name="nAVG"  type="int" value="4"/>
         <parameter name="nSKIP" type="int" value="0"/>
@@ -28,7 +28,7 @@
             <variable name="LAMS_AVG"  length="256" units="Mhz" longname="LAMS histogram averages"/>
             <variable name="LAMS_MAX"  length="256" units="Mhz" longname="LAMS histogram maximums"/>
         </sample>
-    </lamsSensor>
+    </sensor>
 
 </sensorcatalog>
 
@@ -68,7 +68,7 @@
 
     <dsm name="bigblu" location="blue_box" id="3" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/>
-        <lamsSensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
+        <sensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
 
 
         <output class="RawSampleOutputStream">
