@@ -627,17 +627,17 @@
                 <socket type="mcaccept" maxIdle="60"/>
             </input>
             <processor class="SampleArchiver">
-                <output class="SampleOutputStream">
+                <output class="RawSampleOutputStream">
                     <fileset dir="/var/r1/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
                 </output>
-                <output class="SampleOutputStream">
+                <output class="RawSampleOutputStream">
                     <fileset dir="/var/r2/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
                 </output>
-                <output class="SampleOutputStream">
+                <output class="RawSampleOutputStream">
                     <socket type="server" port="30000"/>
                 </output>
             </processor>
@@ -685,6 +685,10 @@
                 <variable name="A2DTEMP_ADS" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
     </dsm>
 
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002" statusAddr="sock::30001">
@@ -919,9 +923,6 @@
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream">
-            <socket type="server" port="30000"/>
-        </output>
     </dsm>
 
 
@@ -935,9 +936,6 @@
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
-        </output>
-        <output class="RawSampleOutputStream">
-            <socket type="server" port="30000"/>
         </output>
     </dsm>
 
@@ -964,9 +962,6 @@
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream">
-            <socket type="server" port="30000"/>
-        </output>
     </dsm>
 
 
@@ -981,9 +976,6 @@
 
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
-        </output>
-        <output class="RawSampleOutputStream">
-            <socket type="server" port="30000"/>
         </output>
     </dsm>
 
@@ -1014,9 +1006,6 @@
 
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
-        </output>
-        <output class="RawSampleOutputStream">
-            <socket type="server" port="30000"/>
         </output>
     </dsm>
 
