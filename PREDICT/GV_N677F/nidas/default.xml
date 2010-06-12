@@ -848,7 +848,7 @@
         </output>
     </dsm>
    
-    <dsm name="dsm310" location="MC R-3" id="10" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
+    <dsm name="dsm310" location="MC R-3" id="10" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
@@ -863,11 +863,10 @@
         </output>
     </dsm>
 
-    <dsm name="dsm313" location="Chem Rack L-5" id="13" rserialPort="30002" statusAddr="sock::30001">
+    <dsm name="dsm313" location="Chem Rack L-5" id="13" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="120" suffix="_VXL"/>
-
  
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -876,7 +875,7 @@
 
 
 
-    <dsm name="dsmLWO" location="LWO" id="83" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
+    <dsm name="dsmLWO" location="LWO" id="83" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
@@ -926,7 +925,7 @@
     </dsm>
 
 
-    <dsm name="dsmLWM" location="Left Wing Middle Pod" id="82" rserialPort="30002">
+    <dsm name="dsmLWM" location="Left Wing Middle Pod" id="82" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWM"/>
 
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LMI">
@@ -939,7 +938,8 @@
         </output>
     </dsm>
 
-    <dsm name="dsmLWI" location="Left Wing Inboard Pod" id="81" rserialPort="30002">
+
+    <dsm name="dsmLWI" location="Left Wing Inboard Pod" id="81" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWI"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
@@ -965,8 +965,7 @@
     </dsm>
 
 
-
-    <dsm name="dsmRWM" location="Right Wing Middle Pod" id="91" rserialPort="30002" derivedData="sock::31000">
+    <dsm name="dsmRWM" location="Right Wing Middle Pod" id="91" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWM"/>
 
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_RMI">
@@ -980,8 +979,7 @@
     </dsm>
 
 
-
-    <dsm name="dsmRWO" location="RWO" id="92" rserialPort="30002" statusAddr="sock::30001">
+    <dsm name="dsmRWO" location="RWO" id="92" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_ROI">
