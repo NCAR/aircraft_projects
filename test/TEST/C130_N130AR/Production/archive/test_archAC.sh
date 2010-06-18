@@ -5,8 +5,8 @@
 #
 # Note that merlot and shiraz also have access to the needed libraries, not just
 # bora, so test code on those too.
-#
+
 #../../../../../archAC/archAC.py ADS /net/work/dev/jaa/archcam_archAC_merge/data/ads ads RAF
-../../../../../archAC/archAC.py LRT ../../../../../data/LRT nc ATDdata
-#../../../../../archAC/archAC.py CAMERA -p FWD ../../../../../data/GV/camera jpg ATDdata
+../../../../../archAC.py LRT ../../../../../data/LRT nc ATDdata
+#../../../../../archAC.py CAMERA -p FWD ../../../../../data/GV/camera jpg ATDdata
 #../../../../../archAC/archAC.py CAMERA ../../../../../data/GV/camera/flight_number_rf01 jpg RAF

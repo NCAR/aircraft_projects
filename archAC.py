@@ -33,6 +33,7 @@
 #	filenameFormat definition. Just match on date/time portion of
 #	filename.
 #	Updated to omit subdirs called "sent" from archive.
+#	Updated to omit subdirs called "removed" from archive.
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -454,7 +455,12 @@ if (type == "CAMERA") & (flag != "-a") & (flag != "-m"):
 
 	            fullname = os.path.join(root,name)
 		    print fullname
+		    # Skip sent dirs (don't archive them)
 	            match = re.search("sent",fullname)
+	            if match:
+	              continue;
+		    # Skip removed dirs (don't archive them)
+	            match = re.search("removed",fullname)
 	            if match:
 	              continue;
 
