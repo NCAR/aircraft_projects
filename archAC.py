@@ -28,6 +28,11 @@
 #	file and creating a filename of the form fltno.yyyymmdd.ShSmSs_EhEmEs.PNI.nc
 # Modified 12/8/2009 Janine Aquino (Goldstein)
 #	to include tarring camera images by hour and archiving to MSS.
+# Modified 6/17/2010 Janine Aquino
+#	to be more flexible in matching flight names. Realized I don't need
+#	filenameFormat definition. Just match on date/time portion of
+#	filename.
+#	Updated to omit subdirs called "sent" from archive.
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -262,23 +267,24 @@ class archRAFdata:
 
 	return dfile
 
-    def parse_date(self,filenameFormat,name):
-	print "filenameFormat:"+filenameFormat
+    def parse_date(self,name):
 	(root, name) = os.path.split(name)
-	if filenameFormat == "YYMMDD-HHMMSS.jpg":
-	    # In the future, modify this routine to 
-	    # parse the filename format to determine where
-	    # components are!
-	    endhr = 9
-	    index = regex.search("[0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9]",name)
+	index = regex.search("[0-9][0-9][0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9][0-9]",name)
+	if (index != -1):
+	    #print "match found for date format. Parsing date."
 	    year = "20"+name[index:index+2]
 	    month = name[index+2:index+4]
 	    day = name[index+4:index+6]
-	    hour = name[index+7:index+endhr]
+	    hour = name[index+7:index+9]
 	    min = name[index+9:index+11]
 	    sec = name[index+11:index+13]
 	    #print year+"/"+month+"/"+day+" "+hour+":"+min+":"+sec
-	    hoursearchstr = name[0:endhr] +'\d\d\d\d.'
+	    hoursearchstr = name[0:index+9] +'\d\d\d\d.'
+	    print "Searching for files matching "+hoursearchstr
+	else:
+	    print "filename doesn't match \d\d\d\d\d\d.\d\d\d\d\d\d"
+	    print "code can't parse date and will die"
+	    
 	return [year,month,day,hour,min,sec,hoursearchstr]
 
     def usage(self):
@@ -432,13 +438,6 @@ sfiles = []
 if (type == "CAMERA") & (flag != "-a") & (flag != "-m"):
     aircraft = platform
     print "This project took place aboard the "+aircraft+" aircraft\n"
-    if platform == "GV_N677F":
-	filenameFormat = "YYMMDD-HHMMSS.jpg"
-    elif platform == "C130_N130AR":
-	filenameFormat = "YYMMDD-HHMMSS.jpg"
-    else:
-	print "Unknown platform: "+platform
-	raise SystemExit
 
     # List all the files/dirs in the working dir (sdir)
     for root, dirs, files in os.walk(sdir):
@@ -451,10 +450,13 @@ if (type == "CAMERA") & (flag != "-a") & (flag != "-m"):
 	        print "Found file "+name
 	        match = re.search(searchstr,name)
 	        if match: 
-		    (byr,bmo,bdy,bhr,bmn,bsc,hoursearchstr)=archraf.parse_date(filenameFormat,name)
+		    (byr,bmo,bdy,bhr,bmn,bsc,hoursearchstr)=archraf.parse_date(name)
 
 	            fullname = os.path.join(root,name)
-		    #print fullname
+		    print fullname
+	            match = re.search("sent",fullname)
+	            if match:
+	              continue;
 
 		    # Get camera location (fwd, etc) from path
 		    # or make user enter on command line.
@@ -480,7 +482,7 @@ if (type == "CAMERA") & (flag != "-a") & (flag != "-m"):
 
 	            tarfiles.sort()
 		    Efile = tarfiles[len(tarfiles)-1]
-		    (eyr,emo,edy,ehr,emn,esc,hoursearchstr)=archraf.parse_date(filenameFormat,Efile)
+		    (eyr,emo,edy,ehr,emn,esc,hoursearchstr)=archraf.parse_date(Efile)
 		    # output tarfile name is like 
 		    # RF##.FWD.Sdate.Stime_etime.jpg.tar and tar.dir
 		    index = regex.search("[RrTtFf][Ff]",fullname)
