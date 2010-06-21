@@ -13,12 +13,12 @@
     >
 <sensorcatalog>
 
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="Clock" units="msec"
                     longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
     <arincSensor ID="IRS-C130" class="raf.IRS_HW_YG1854">
         <!-- Taken from the Honeywell installation manual for the -->
@@ -341,8 +341,8 @@
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
-    <lamsSensor ID="LAMS" class="raf.LamsSensor">
-        <parameter name="calm"  type="int" value="1"/>
+    <sensor ID="LAMS" class="raf.LamsSensor">
+        <parameter name="TAS_level"  type="int" value="80"/>
         <parameter name="nAVG"  type="int" value="40"/>
         <parameter name="nSKIP" type="int" value="0"/>
         <parameter name="nPEAK" type="int" value="1000"/>
@@ -350,7 +350,7 @@
             <variable name="LAMSAVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
             <variable name="LAMSMAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
         </sample>
-    </lamsSensor>
+    </sensor>
 
 </sensorcatalog>
 
@@ -396,7 +396,7 @@
     </server>
 
     <dsm name="dsm301" location="LAMS_rack" id="1" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
         <lamsSensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -405,7 +405,7 @@
 
 <!--
     <dsm name="dsm302" location="lab" id="2" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
 
         <serialSensor IDREF="Water_CN_Counter"
                 devicename="/dev/dsmser0" id="120">
@@ -417,7 +417,7 @@
     </dsm>
 -->
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_I2"/>
@@ -478,7 +478,7 @@
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser0" id="110">
