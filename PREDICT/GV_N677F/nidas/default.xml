@@ -341,6 +341,36 @@
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
+    <serialSensor ID="S200" class="raf.SPP200_Serial" baud="38400" parity="none" databits="8" stopbits="1">
+
+        <parameter name="calFile" type="string" value="PMSspecs"/>
+
+        <parameter name="NCHANNELS" type="int" value="30"/>
+        <parameter name="RANGE" type="int" value="0"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
+        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
+        <parameter name="CHAN_THRESH" type="int" value="692 1040 1517 2157 4096 4231 4348 4537 4825 5251 5859 6703 8192 8345 8502 8682 8872 9070 9252 9432 9544 9737 9937 10166 10471 10797 11162 11499 11852 12288"/>
+
+        <sample id="1">
+            <variable name="PHGB" units="V" longname="SPP-200 High-Gain Baseline"/>
+            <variable name="PMGB" units="V" longname="SPP-200 Mid-Gain Baseline"/>
+            <variable name="PLGB" units="V" longname="SPP-200 Low-Gain Baseline"/>
+            <variable name="PFLW" units="cnts" longname="SPP-200 Flow">
+                <poly coefs="-0.0165 7.9354e-5 1.1453e-7" units="std cm3/s"/>
+            </variable>
+            <variable name="PREF" units="V" longname="SPP-200 Laser Reference Voltage"/>
+            <variable name="PFLWS" units="cnts" longname="SPP-200 Sheath Flow">
+                <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>
+            </variable>
+            <variable name="PTMP" units="deg_C" longname="SPP-200 Detector Temperature"/>
+            <variable name="AS200" length="31" units="count" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT"/>
+            <variable name="DELTAT" units="msec" longname="SPP-200 Time between last sample and this sample"/>
+        </sample>
+        <prompt string="\x1b\x02\x1d\x00" rate="10"/>
+        <message length="154"/>
+    </serialSensor>
+
     <serialSensor ID="CDP" class="raf.CDP_Serial"
         baud="38400" parity="none" databits="8" stopbits="1" timeout="10"> 
 
@@ -657,7 +687,7 @@
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="160"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D1703.dat"/>
+            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D007.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
@@ -756,6 +786,10 @@
 	    </sample>
         </serialSensor>
 
+        <serialSensor IDREF="S200" devicename="/dev/ttyS10" id="300" suffix="_OPC"/>
+        <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS11" id="320" suffix="_WCN"/>
+        <serialSensor IDREF="VCSEL" devicename="/dev/ttyS12" id="330" suffix="_VXL"/>
+
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
@@ -852,22 +886,11 @@
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
-        <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS6" id="120" suffix="_WCN"/>
 
-        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS8" id="530" suffix="_RWO">
+        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS6" id="530" suffix="_RWO">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
         </serialSensor>
 
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
-    </dsm>
-
-    <dsm name="dsm313" location="Chem Rack L-5" id="13" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
-
-        <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="120" suffix="_VXL"/>
- 
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
@@ -939,31 +962,6 @@
     </dsm>
 
 
-    <dsm name="dsmLWI" location="Left Wing Inboard Pod" id="81" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWI"/>
-
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D019.dat"/>
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="100">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="5" type="int"/>
-                <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <linear slope="+10.0" intercept="2.0" units="W"/> <!-- Added +2 intercept to correct baseline position with 135 Wire Temp -->
-                </variable>
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_LWO" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
-
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
-    </dsm>
-
 
     <dsm name="dsmRWM" location="Right Wing Middle Pod" id="91" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWM"/>
@@ -977,7 +975,6 @@
             <socket type="mcrequest"/>
         </output>
     </dsm>
-
 
     <dsm name="dsmRWO" location="RWO" id="92" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
