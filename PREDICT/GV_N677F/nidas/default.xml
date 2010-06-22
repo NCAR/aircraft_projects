@@ -926,21 +926,21 @@
 
 
     <dsm name="dsmLWM" location="Left Wing Middle Pod" id="82" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWM"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWM"/>
 
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LMI">
             <parameter name="SerialNumber" value="F2DC003" type="string"/>
             <parameter name="RESOLUTION" value="25" type="int"/>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
 
     <dsm name="dsmLWI" location="Left Wing Inboard Pod" id="81" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWI"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWI"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D019.dat"/>
@@ -959,21 +959,21 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
 
     <dsm name="dsmRWM" location="Right Wing Middle Pod" id="91" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWM"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWM"/>
 
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_RMI">
             <parameter name="SerialNumber" value="F2DC002" type="string"/>
             <parameter name="RESOLUTION" value="10" type="int"/>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
