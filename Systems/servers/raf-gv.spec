@@ -1,13 +1,14 @@
 Summary: Metapackage for all server and satcom packages needed on GV
 Name: raf-gv
 Version: 1.0
-Release: 7
+Release: 8
 License: GPL
 Group: System Environment
 
 Requires: raf-ads3-syslog
 Requires: raf-ads-user
 Requires: raf-ac-ntp
+Requires: raf-ac-nagios
 Requires: raf-ac-firewall
 Requires: raf-gv-dhcp
 Requires: raf-ac-named
@@ -15,6 +16,8 @@ Requires: raf-gv-ddclient
 Requires: raf-satcom
 Requires: raf-satcom-mpds
 Requires: raf-ads3-sudoers
+Requires: nidas
+Requires: nidas-x86-build
 Requires: ael-local-dpkgs
 
 BuildArch: noarch

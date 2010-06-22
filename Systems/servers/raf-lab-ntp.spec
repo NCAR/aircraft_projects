@@ -1,7 +1,7 @@
 Summary: Configuration for NTP on RAF ADS3 lab (non-aircraft) server systems
 Name: raf-lab-ntp
 Version: 1.0
-Release: 2
+Release: 3
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -11,6 +11,8 @@ BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
 Requires: ntp
+Requires: nidas
+Requires: nidas-x86-build
 # Source: %{name}-%{version}.tar.gz
 
 %description
