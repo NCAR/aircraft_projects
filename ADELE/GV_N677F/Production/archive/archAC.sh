@@ -1,12 +1,12 @@
 #! /bin/csh -f
 #
-# This is an example script.
 # Set PROJECT and uncomment each command to archive that data type.
 
-###############
-#   Project   #
-###############
+####################
+#   ADELE/SPRITE   #
+####################
 set PROJECT = "ADELE"
+
 #echo "Make sure netCDF files have been reordered before archiving!!!"
 
 ### ADS - done
@@ -31,13 +31,8 @@ set PROJECT = "ADELE"
 ### KML files - done
 #/net/work//bin/scripts/mass_store/archAC/archAC.py KML /scr/raf2/Prod_Data/$PROJECT kml ATDdata
 
-### MOVIES
-/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -m /scr/raf2/Raw_Data/$PROJECT/Movies mp4 ATDdata
-
-### DGPS
-#/net/work/bin/scripts/mass_store/archAC/archAC.py DGPS /scr/raf2/Raw_Data/$PROJECT/dgps ads ATDdata
+### MOVIES -done
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -m /scr/raf2/Raw_Data/$PROJECT/Movies mp4 ATDdata
 
 ### SID2H -done
 #/net/work/bin/scripts/mass_store/archAC/archAC.py SID2H -t /scr/raf2/Raw_Data/$PROJECT/sid2h srd RAF
-
-### VCSEL
