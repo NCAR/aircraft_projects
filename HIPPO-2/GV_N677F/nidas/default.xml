@@ -12,14 +12,14 @@
     >
 
 <sensorcatalog>
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="IRIG_Tdiff" units="sec"
                     longname="IRIG-UNIX clock diff"/>
             <variable name="IRIG_Status" units="bits"
                     longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
         <!-- Taken from the Honeywell installation manual for the         -->
@@ -619,7 +619,7 @@
     </server>
 
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
@@ -687,13 +687,13 @@
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS11" id="150"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS12" id="160"/>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
 
         <serialSensor IDREF="HoneywellPPT"
                 devicename="/dev/ttyS5" id="110">
@@ -770,13 +770,13 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
    
     <dsm name="dsm310" location="Chem Rack R-1" id="10" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="120" suffix="_VXL"/>
         <serialSensor IDREF="COMR" devicename="/dev/ttyS7" id="140" suffix="_AL"/>
@@ -853,13 +853,13 @@
             </sample>
          </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm313" location="O2 Rack L-5" id="12" rserialPort="30002" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
 
         <sensor IDREF="NOAAUCATS" id="110" suffix="_GMD"/>
         <sensor IDREF="NOAASP2" id="120" suffix="_SP2"/>
@@ -918,13 +918,13 @@
             </sample>
         </sensor>
  
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LOI">
             <parameter name="SerialNumber" type="string" value="CDP058"/>
@@ -953,16 +953,16 @@
         </sensor>
 
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
 
     <dsm name="dsmRWO" location="RWO" id="47" rserialPort="30002" statusAddr="sock::30001">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
 
         <serialSensor IDREF="UHSAS" devicename="/dev/ttyS1" id="530" suffix="_RWI">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
@@ -984,10 +984,10 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
