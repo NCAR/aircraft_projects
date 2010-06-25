@@ -21,9 +21,13 @@ set PROJECT = "HIPPO"
 ### CHAT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf2/Raw_Data/$PROJECT/Chat log RAF
 
-### CAMERA - use archcam.510, not this script.
+### CAMERA -  done
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -p FWD /scr/raf2/Raw_Data/HIPPO/Camera/TF01.081213-123723 jpg ATDdata
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -a /jnet/local/projects/HIPPO/GV_N677F/Production/archive tar ATDdata
 
-### MOVIES
+
+### MOVIES - prelim
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -m /scr/raf2/Raw_Data/HIPPO/Camera mov RAF
 
 ### MTP - done
 #/net/work/bin/scripts/mass_store/archAC/archAC.py MTP /scr/raf2/Raw_Data/HIPPO MTP_HIPPO_20081213_20090130.tar.gz RAF

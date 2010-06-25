@@ -1,8 +1,10 @@
 #!/bin/csh
 
-cd ${PROD_DATA}
-foreach FILENAME (HIPPO-1rf??.nc)
-ncReorder $FILENAME temp.nc
-/bin/mv -f temp.nc $FILENAME
+#cd ${PROD_DATA}
+cd /scr/raf/local_data
+foreach FILENAME (HIPPO1_?f??.nc)
+echo $FILENAME
+ncReorder $FILENAME temp_h1.nc
+/bin/mv -f temp_h1.nc $FILENAME
 end
 
