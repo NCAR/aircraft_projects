@@ -670,7 +670,7 @@
           </sample>
           <sample id="0324" rate="50">
             <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.35" units="degree"/>
+              <linear slope="1.0" intercept="0.30" units="degree"/>
             </variable>
           </sample>
         </arincSensor>
@@ -783,25 +783,44 @@
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
+
+<!-- 
+      The following poly coefs were modified according to William 'Al' Cooper's work in dealing with the temperature affected A2D calibration values.
+      Since the Post HIPPO3 Cals were taken using A2D calibrations that were taken at a much higher temperature than the A2D was running during the
+      taking of these "Engineering" Calibrations, one needs to compensate for that.  The compensation is calculated as follows:
+          F0 = F0p,  F1 = F1p(1+C1*Beta),  F2 = F2p((1+C1*Beta)^2)
+      Where F0 is the corrected polynomial fit sub 0, F0p is the measured polynomial fit sub 0
+            F1 is the corrected polynomial fit sub 1, F1p is the measured polynomial fit sub 1
+            F2 is the corrected polynomial fit sub 2, F2p is the measured polynomial fit sub 2
+            C1 is the A2D slope coeficient measured at 40 degrees C
+            and Beta is Gamma * delta T where 
+                 Gamma = 0.00033 and 
+                 delta T is the Temperature difference of the A2D board between the original A2D calibration in the lab (52 degrees) 
+                                                                         and the "engineering" calibration on the plane (35 degrees)
+ -->
                 <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
+                    <parameter name="channel"  value="0"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
+                    <!--<poly coefs="-90.997 25.705 0.063667" units="deg_C"/> <! Post-HIPPO-3 cal > -->
+                    <poly coefs="-90.997 25.544 0.062873" units="deg_C"/> <!-- Modified Post-HIPPO-3 cal -->
                 </variable>
-<!--
-Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 hand calculated multiple point calibrations.
--->
                 <variable name="TTHL1" units="V" longname="Total Temperature, Deiced Left">
+                    <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-105.663048 39.530760 -3.828450 0.331160" units="deg_C"/>
+                    <!--<poly coefs="-90.772 25.67 0.069654" units="deg_C"/> <! Post-HIPPO-3 cal >-->
+                    <poly coefs="-90.772 25.511 0.068796" units="deg_C"/> <!-- Modified Post-HIPPO-3 cal -->
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-98.200816 32.386316 -1.782778 0.153851" units="deg_C"/>
+                    <!--<poly coefs="-91.647 26.364 -0.020022" units="deg_C"/> <! Post-HIPPO-3 cal >-->
+                    <poly coefs="-91.647 26.201 -0.019775" units="deg_C"/> <!-- Modified Post-HIPPO-3 cal -->
                 </variable>
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-97.481298 32.098536 -1.740687 0.150691" units="deg_C"/>
+                    <!--<poly coefs="-90.874 26.076 -0.00095893" units="deg_C"/> <! Post-HIPPO-3 cal >-->
+                    <poly coefs="-90.874 25.914 -0.000947" units="deg_C"/> <!-- Modified Post-HIPPO-3 cal -->
                 </variable>
+
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <linear slope="10.0" intercept="-50.0" units="deg_C"/>
