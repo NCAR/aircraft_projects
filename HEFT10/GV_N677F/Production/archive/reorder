@@ -1,0 +1,78 @@
+#! /bin/csh -f
+#
+#  Script to run "ncReorder" on a list of files
+#   - original file will have the letter "s" prepended to its name
+#   - reordered file will be given the original file's name
+#   - reordered file will have both its "modified" time stamp and its
+#      permission bits set to that of the original file
+#
+#  Written by Ron Ruth                                              21 Jul 2004
+#  Revision 1.0  (Check for successful reorder)                     26 May 2005
+#
+# List of files
+set files = ( \
+HEFT10ff01.nc \
+HEFT10ff02.nc \
+HEFT10rf01.nc \
+HEFT10tf01.nc \
+HEFT10tf02.nc \
+HEFT10tf03.nc \
+HEFT10tf04.nc \
+HEFT10tf05.nc \
+HEFT10tf06.nc \
+)
+#
+# Do the work
+foreach file ($files)
+ set sfile = "s$file"           # Set renamed source file name (original file)
+ set ofile = "r$file"           # Set new output file name (temporary)"
+ nice ncReorder $file $ofile    # Reorder
+#  Check for successful run
+ if ($status != 0) then
+   echo " Since input file already reordered, no renaming is necessary."
+ else
+   mv $file $sfile
+   mv $ofile $file
+ endif
+#
+# Get date stamp from source file and format it correctly
+ set stamp = (`ls --full-time $sfile`)
+ set perm  = `echo $stamp | awk '{print $1}'`
+ set stamp = `echo $stamp | awk '{print $6,$7}'`
+ set stamp = `echo $stamp | sed -e "s/-//g"`
+ set stamp = `echo $stamp | sed -e "s/://"`
+ set stamp = `echo $stamp | sed -e "s/ //g"`
+ set stamp = `echo $stamp | sed -e "s/:.*//"`
+#
+#  $perm has -rwx and needs to be converted to a 3-digit number for chmod
+ @ p1 = 0
+ @ p2 = 0
+ @ p3 = 0
+ set perm1 = `echo $perm | sed -e "s/.\(.\)\(.*\)/\1/"`
+ set perm2 = `echo $perm | sed -e "s/..\(.\)\(.*\)/\1/"`
+ set perm3 = `echo $perm | sed -e "s/...\(.\)\(.*\)/\1/"`
+ if ($perm1 == "r") @ p1 +=4
+ if ($perm2 == "w") @ p1 +=2
+ if ($perm3 == "x") @ p1 +=1
+ set perm1 = `echo $perm | sed -e "s/....\(.\)\(.*\)/\1/"`
+ set perm2 = `echo $perm | sed -e "s/.....\(.\)\(.*\)/\1/"`
+ set perm3 = `echo $perm | sed -e "s/......\(.\)\(.*\)/\1/"`
+ if ($perm1 == "r") @ p2 +=4
+ if ($perm2 == "w") @ p2 +=2
+ if ($perm3 == "x") @ p2 +=1
+ set perm1 = `echo $perm | sed -e "s/.......\(.\)\(.*\)/\1/"`
+ set perm2 = `echo $perm | sed -e "s/........\(.\)\(.*\)/\1/"`
+ set perm3 = `echo $perm | sed -e "s/.........\(.\)/\1/"`
+ if ($perm1 == "r") @ p3 +=4
+ if ($perm2 == "w") @ p3 +=2
+ if ($perm3 == "x") @ p3 +=1
+#
+# Set new file's modified time to that of the original source file
+ touch -m -t $stamp $file
+# And give it the same permissions, too
+ chmod $p1$p2$p3 $file
+#
+end
+#
+#  Done.
+exit
