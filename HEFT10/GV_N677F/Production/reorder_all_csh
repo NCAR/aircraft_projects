@@ -1,0 +1,8 @@
+#!/bin/csh
+
+cd /scr/raf/local_data
+foreach FILENAME (HEFT10_?f??.nc)
+echo $FILENAME
+ncReorder $FILENAME temp_heft.nc
+mv temp_heft.nc $FILENAME
+end
