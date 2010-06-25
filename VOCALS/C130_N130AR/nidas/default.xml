@@ -14,14 +14,14 @@
     >
 <sensorcatalog>
 
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="IRIG_Tdiff" units="sec"
                     longname="IRIG-UNIX clock diff"/>
             <variable name="IRIG_Status" units="bits"
                     longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
     <arincSensor ID="IRS-C130" class="raf.IRS_HW_YG1854">
         <!-- Taken from the Honeywell installation manual for the -->
@@ -634,7 +634,7 @@
 
     <sensor ID="Fast2DC" class="raf.TwoD64_USB">
         <parameter name="TAS_RATE" value="10" type="int"/>
-        <parameter name="AREA_RATIO_REJECT" value="0.3" type="float"/>
+        <parameter name="AREA_RATIO_REJECT" value="0.5" type="float"/>
 
         <sample id="1" rate="10">
             <variable name="SHDORC" units="count" longname="Fast 2DC Shadow OR Count"/>
@@ -807,7 +807,7 @@
 <!-- ########################################################################################################### -->
 
     <dsm name="dsm310" location="UWyo" id="10" rserialPort="30002" derivedData="sock::7071">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="310"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="310"/>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1603.dat"/>
@@ -851,13 +851,13 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm319" location="Fwd_DSM_2" id="19" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="319"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="319"/>
 
         <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="7000"/>
 
@@ -868,13 +868,13 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm320" location="Fwd_FS245_1" id="20" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="320"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="320"/>
 
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130">
             <sample id="1">
@@ -973,13 +973,13 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm321" location="Video_Rack" id="21" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
 
         <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS6" id="120" suffix="_CM3"/>
 
@@ -1052,7 +1052,7 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -1060,7 +1060,7 @@
     <!-- Any dsm with a TwoD probe needs the derivedData="sock::7071" attribute,
          in order to get true airspeed from the derived data feed -->
     <dsm name="dsm322" location="Wing_POD_L" id="22" rserialPort="30002" derivedData="sock::7071">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
         <!-- Change suffix from CL to CL2 to avoid conflict w/dsm323 -->
         <sensor IDREF="ACDFO3" id="130" suffix="_CL"/>
@@ -1088,13 +1088,13 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm323" location="AftOvrhd_L" id="23" rserialPort="30002" derivedData="sock::7071">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="323"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="323"/>
 
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
             <sample id="1" rate="100">
@@ -1188,13 +1188,13 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm324" location="AftOvrhd_R" id="24" rserialPort="30002" derivedData="sock::7071">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
 
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS5" id="110" suffix="_NTL"/>
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS6" id="140"/>
@@ -1295,13 +1295,13 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm325" location="Wing_POD_R" id="25" rserialPort="30002" derivedData="sock::7071">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="325"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="325"/>
 
         <serialSensor IDREF="OphirIII" devicename="/dev/ttyS10" id="120"/>
 
@@ -1331,20 +1331,20 @@
         </sensor>
 
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm307" location="Wing_POD_R_2" id="7" rserialPort="30002" derivedData="sock::7071">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="307"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="307"/>
 
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_RPC">
             <parameter name="SerialNumber" value="F2DC001" type="string"/>
             <parameter name="RESOLUTION" value="25" type="int"/>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -1548,7 +1548,7 @@
             <socket type="server" port="30000"/>
         </output>
         <!--
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <fileset dir="/var/tmp"
                 file="${DSM}_%Y%m%d_%H%M%S.dat"
                 length="1800">
