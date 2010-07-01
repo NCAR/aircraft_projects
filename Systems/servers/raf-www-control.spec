@@ -28,16 +28,17 @@ cp -r control $RPM_BUILD_ROOT/var/www/html/
 
 %post
 #add to sessions config
-ASFILE = ~/.config/autostart/python.desktop
-rm $ASFILE
-touch $ASFILE
+as_path=~ads/.config/autostart
+as_file=$as__path/python.desktop
+mkdir -p $as_path
+cat /dev/null > $as_file
 
-echo "[Desktop Entry]" >>$ASFILE
-echo "Name=No name" >>$ASFILE
-echo "Encoding=UTF-8" >>$ASFILE
-echo "Version=1.0" >>$ASFILE
-echo "Exec=/usr/bin/python /home/local/Systems/scripts/xmlrpc2shell.py" >>$ASFILE
-echo "X-GNOME-Autostart-enabled=true" >>$ASFILE
+echo "[Desktop Entry]" >>$as_file
+echo "Name=No name" >>$as_file
+echo "Encoding=UTF-8" >>$as_file
+echo "Version=1.0" >>$as_file
+echo "Exec=/usr/bin/python /home/local/Systems/scripts/xmlrpc2shell.py" >>$as_file
+echo "X-GNOME-Autostart-enabled=true" >>$as_file
 
 %clean
 rm -rf $RPM_BUILD_ROOT
