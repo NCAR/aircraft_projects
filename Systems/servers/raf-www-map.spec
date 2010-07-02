@@ -6,7 +6,7 @@ Group: Applications/Engineering
 Source: %{name}-%{version}.tar.gz
 License: none
 Distribution: RHEL 5.3 Linux
-Requires: openlayers jquery httpd php php-pgsql php-pecl-json 
+Requires: openlayers jquery httpd php php-pgsql php-pecl-json perl
 # BuildRoot is only needed by older rpm versions
 BuildRoot: %{_tmppath}/%{name}-root
 BuildArch: noarch
@@ -18,6 +18,16 @@ This package will install the openlayers webpage to display the tiles, using mod
 
 %prep
 %setup -n raf-www
+
+# Work around for rpm thinking getCookie.pl is required rpm.
+cat << \EOF > %{name}-req
+#!/bin/sh
+%{__perl_requires} $* |\
+sed -e '/perl(.::getCookie.pl)/d'
+EOF
+%define __perl_requires %{_builddir}/raf-www/%{name}-req
+chmod 755 %{__perl_requires}
+
 
 %build
 
