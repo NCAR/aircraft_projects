@@ -1,7 +1,7 @@
 Summary: OpenStreetMaps slippy map with OSM postGIS database and mapnik, renderd, mod_tile for rendering on demand
 Name: raf-www-map
 Version: 1 
-Release: 1
+Release: 2
 Group: Applications/Engineering
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -38,6 +38,7 @@ rm -rf $RPM_BUILD_ROOT
 #copy files to webspace
 mkdir -p $RPM_BUILD_ROOT/var/www/html/
 cp -r flight_data $RPM_BUILD_ROOT/var/www/html/
+cp flight_data/index.html $RPM_BUILD_ROOT/var/www/html/
 
 mkdir -p $RPM_BUILD_ROOT/var/www/cgi-bin/flight_data/
 mv $RPM_BUILD_ROOT/var/www/html/flight_data/cgi-bin/flight_data $RPM_BUILD_ROOT/var/www/cgi-bin/
@@ -47,12 +48,25 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%attr(0664, ads, apache) /var/www/html/flight_data/*
+%attr(0664, ads, apache) /var/www/html/index.html
+%attr(0664, ads, apache) /var/www/html/flight_data/*html
 %dir %attr(0775, ads, apache) /var/www/html/flight_data
+%attr(0664, ads, apache) /var/www/html/flight_data/js/*
+%dir %attr(0775, ads, apache) /var/www/html/flight_data/js
+%attr(0664, ads, apache) /var/www/html/flight_data/css/*
+%dir %attr(0775, ads, apache) /var/www/html/flight_data/css
+%attr(0664, ads, apache) /var/www/html/flight_data/images/*
+%dir %attr(0775, ads, apache) /var/www/html/flight_data/images
+%attr(0664, ads, apache) /var/www/html/flight_data/GE/*
+%dir %attr(0775, ads, apache) /var/www/html/flight_data/GE
+%attr(0664, ads, apache) /var/www/html/flight_data/display/*
+%dir %attr(0775, ads, apache) /var/www/html/flight_data/display
 
-%attr(0664, ads, apache) /var/www/cgi-bin/flight_data/*
+%attr(0775, ads, apache) /var/www/cgi-bin/flight_data/*
 %dir %attr(0775, ads, apache) /var/www/cgi-bin/flight_data
 
 %changelog
+* Tue Jul 6 2010 <cjw@ucar.edu> 1-2
+- Fixed some permissions, added top level index.html, fixed perl requires on getCookie.
 * Fri Sep 4 2009 <dlagreca@ucar.edu> 1-1
 - created initial package 
