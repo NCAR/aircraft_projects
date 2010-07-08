@@ -17,3 +17,14 @@ if ! ps ax | grep listen_sat.pl | grep -qv grep
 then
   nohup /home/local/Systems/scripts/listen_sat.pl > /tmp/listen_sat.log 2>&1 &
 fi
+
+if ! ps ax | grep xmlrpc2shell.py | grep -qv grep
+then
+  nohup /home/local/Systems/scripts/xmlrpc2shell.py > /tmp/xmlrpc2shell.log 2>&1 &
+fi
+
+# Open Street Maps rendering daemon.
+if ! ps ax | grep renderd | grep -qv grep
+then
+  /usr/bin/renderd &
+fi
