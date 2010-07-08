@@ -34,6 +34,11 @@
 #	filename.
 #	Updated to omit subdirs called "sent" from archive.
 #	Updated to omit subdirs called "removed" from archive.
+# Modified 7/9/2010 Janine Aquino
+#	to be usable as a module in other scripts, specifically archive.py
+#	Only used archive_files and rename functions in archive.py
+#       I am sure there are hidden vars that will need to be made global to
+#	use other functions
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -49,6 +54,7 @@ from subprocess import Popen
 from subprocess import PIPE
 
 user = "dmg"
+rpwd = ""
 
 # For bora logins, $PROJ_DIR is an environment variable set to the 
 # project working dir (currently /jnet/local/projects).'''
@@ -85,7 +91,6 @@ class archRAFdata:
 	projinfo.close()
 	fiscalyear = ""
 	calendaryear = ""
-	rpwd = ""
 	for line in lines:
 	    #Remove newline from end of string
 	    line = line.replace("\n","")
@@ -370,200 +375,202 @@ class archRAFdata:
 ##########################
 ### MAIN
 ##########################
-
 # Create an instance of the archRAFdata object
 archraf = archRAFdata()
 
 # Confirm this script  is being run as the dmg user.
 archraf.checkuser()
 
-# Usage: 
-archraf.usage()
+# Stuff below this line will only be run if the code is run directly.
+# If it is used as a module for import into another script, it won't be run.
+if __name__ == "__main__":
+    
+    # Usage: 
+    archraf.usage()
 
-# sys..argv[0] is the path and filename of this script
-# Don't currently need it for anything, so ignore it.
+    # Read the data type from the command line. It must always
+    # be the second item on the line, after calling the script
+    type = sys.argv[1]
+    print "Processing type " + type
+    
+    # sys.argv[0] is the path and filename of this script
+    # Don't currently need it for anything, so ignore it.
 
-# Read the data type from the command line. It must always
-# be the second item on the line, after calling the script
-type = sys.argv[1]
-print "Processing type " + type
-
-# Get the rest of the command line arguments off the command line
-index = 2
-pointing = "unknown"
-arg = sys.argv[index]
-if re.search("^-",arg):
-    # Assume there is only one flag on the line, else
-    # bad things will happen
-    flag = arg
-    index = index+1
-    if flag == "-p":
-        arg = sys.argv[index]
-	pointing = arg
+    # Get the rest of the command line arguments off the command line
+    index = 2
+    pointing = "unknown"
+    arg = sys.argv[index]
+    if re.search("^-",arg):
+        # Assume there is only one flag on the line, else
+        # bad things will happen
+        flag = arg
         index = index+1
-else:
-    flag = ""
-sdir = sys.argv[index]
-searchstr = sys.argv[index+1]
-location = sys.argv[index+2]
+        if flag == "-p":
+            arg = sys.argv[index]
+            pointing = arg
+            index = index+1
+    else:
+        flag = ""
+    sdir = sys.argv[index]
+    searchstr = sys.argv[index+1]
+    location = sys.argv[index+2]
 
-# Make sure this script is being run from 
-# $PROJ_DIR/<proj>/<platform>/Production/archive.
-(platform,proj_name,projdir,current_dir) = archraf.checkpath()
-
-# Get the year and rpwd from the proj.info file in the Production dir.
-(fiscalyear,calendaryear,rpwd) = archraf.proj_info(projdir)
-
-# Determine the 3-digit project number that goes with this project
-proj = archraf.projnum(dirmapfile)
-
-# Define the path files will be stored under on the MSS.
-if location == 'RAF':
-    mssroot = ' mss:/RAF/'+fiscalyear+'/'+proj+'/'
-elif location == 'ATDdata':
-    mssroot = ' mss:/ATD/DATA/'+calendaryear+'/'+proj_name+'/'+platform+'/'
-else:
-    print "Missing location"
-    raise SystemExit
-
-# Confirm we are running on bora, merlot, or shiraz since these are the big data
-# processing machines and we don't want to step on anyone elses toes.
-# Not Implemented Yet
-
-# Get the list of files to archive and store to array sfiles
-# In Ron's original scripts, the file names were rearranged before writing to the 
-# Mass Store and the new destination filenames were stored in dfiles.
-# Going forward, keep the same filenames, except for LRT and HRT netCDF files,
-# which are renamed using the rename subroutine.
-sfiles = []
-if (type == "CAMERA") & (flag != "-a") & (flag != "-m"):
-    aircraft = platform
-    print "This project took place aboard the "+aircraft+" aircraft\n"
-
-    # List all the files/dirs in the working dir (sdir)
-    for root, dirs, files in os.walk(sdir):
-	files.sort()
-	tarfiles = []
-	hoursearchstr = "999999"
-	for name in files:
-	    match = re.search(hoursearchstr,name)
-	    if not match:
-	        print "Found file "+name
-	        match = re.search(searchstr,name)
-	        if match: 
-		    (byr,bmo,bdy,bhr,bmn,bsc,hoursearchstr)=archraf.parse_date(name)
-
-	            fullname = os.path.join(root,name)
-		    print fullname
-		    # Skip sent dirs (don't archive them)
-	            match = re.search("sent",fullname)
-	            if match:
-	              continue;
-		    # Skip removed dirs (don't archive them)
-	            match = re.search("removed",fullname)
-	            if match:
-	              continue;
-
-		    # Get camera location (fwd, etc) from path
-		    # or make user enter on command line.
-		    if re.search('left',fullname):
-			pointing = 'LEFT'
-		    if re.search('right',fullname):
-			pointing = 'RIGHT'
-		    if re.search('forward',fullname):
-			pointing = 'FWD'
-		    if re.search('FWD',fullname):
-		        pointing == 'FWD'
-		    if pointing == "unknown":
-		        print "ERROR: pointing not given in path "+ \
-		        "or filename. Enter using -p on command "+ \
-		        "line."
-	                raise SystemExit
-
-	            # Return an array containing the complete path to
-		    # all the files matching searchstr in the path
-		    hoursearchstr = hoursearchstr+searchstr
-	            print "Finding files in "+root+" that match "+hoursearchstr
-	            tarfiles = archraf.findfiles(root,hoursearchstr)
-
-	            tarfiles.sort()
-		    Efile = tarfiles[len(tarfiles)-1]
-		    (eyr,emo,edy,ehr,emn,esc,hoursearchstr)=archraf.parse_date(Efile)
-		    # output tarfile name is like 
-		    # RF##.FWD.Sdate.Stime_etime.jpg.tar and tar.dir
-		    index = regex.search("[RrTtFf][Ff]",fullname)
-		    if (index == -1):
-			print "Flight number not found in image path. Please"
-			print " rename camera dirs to contain flight numbers"
-			print " e.g. RF01\n"
-	                raise SystemExit
-
-	            flightnum = string.upper(fullname[index:index+4])
-		    tarfilename=flightnum+"."+pointing+"."+\
-		        byr+bmo+bdy+"."+bhr+bmn+bsc+"_"+\
-			ehr+emn+esc+"."+searchstr
-
-		    # Create the tarball
-	            [tfile,tfilelist]=archraf.tardir(root,"",tarfilename,tarfiles)
-
-		    if tfile != "":
-            	    # Add the tar file to the array of files to archive
-	    	        sfiles.append(tfile)
-            	        # Add the tar file list to the array of files to archive
-	    	        sfiles.append(tfilelist)
+    # Make sure this script is being run from 
+    # $PROJ_DIR/<proj>/<platform>/Production/archive.
+    (platform,proj_name,projdir,current_dir) = archraf.checkpath()
+    
+    # Get the year and rpwd from the proj.info file in the Production dir.
+    (fiscalyear,calendaryear,rpwd) = archraf.proj_info(projdir)
+    
+    # Determine the 3-digit project number that goes with this project
+    proj = archraf.projnum(dirmapfile)
+    
+    # Define the path files will be stored under on the MSS.
+    if location == 'RAF':
+        mssroot = ' mss:/RAF/'+fiscalyear+'/'+proj+'/'
+    elif location == 'ATDdata':
+        mssroot = ' mss:/ATD/DATA/'+calendaryear+'/'+proj_name+'/'+platform+'/'
+    else:
+        print "Missing location"
+        raise SystemExit
+    
+    # Confirm we are running on bora, merlot, or shiraz since these are the big data
+    # processing machines and we don't want to step on anyone elses toes.
+    # Not Implemented Yet
+    
+    # Get the list of files to archive and store to array sfiles
+    # In Ron's original scripts, the file names were rearranged before writing to the 
+    # Mass Store and the new destination filenames were stored in dfiles.
+    # Going forward, keep the same filenames, except for LRT and HRT netCDF files,
+    # which are renamed using the rename subroutine.
+    sfiles = []
+    if (type == "CAMERA") & (flag != "-a") & (flag != "-m"):
+        aircraft = platform
+        print "This project took place aboard the "+aircraft+" aircraft\n"
+    
+        # List all the files/dirs in the working dir (sdir)
+        for root, dirs, files in os.walk(sdir):
+            files.sort()
+            tarfiles = []
+            hoursearchstr = "999999"
+            for name in files:
+                match = re.search(hoursearchstr,name)
+                if not match:
+                    print "Found file "+name
+                    match = re.search(searchstr,name)
+                    if match: 
+                        (byr,bmo,bdy,bhr,bmn,bsc,hoursearchstr)=archraf.parse_date(name)
+    
+    	                fullname = os.path.join(root,name)
+    		        print fullname
+    		        # Skip sent dirs (don't archive them)
+    	                match = re.search("sent",fullname)
+    	                if match:
+    	                  continue;
+    		        # Skip removed dirs (don't archive them)
+    	                match = re.search("removed",fullname)
+    	                if match:
+    	                  continue;
+    
+    		        # Get camera location (fwd, etc) from path
+    		        # or make user enter on command line.
+    		        if re.search('left',fullname):
+    			    pointing = 'LEFT'
+    		        if re.search('right',fullname):
+    			    pointing = 'RIGHT'
+    		        if re.search('forward',fullname):
+    			    pointing = 'FWD'
+    		        if re.search('FWD',fullname):
+    		            pointing == 'FWD'
+    		        if pointing == "unknown":
+    		            print "ERROR: pointing not given in path "+ \
+    		            "or filename. Enter using -p on command "+ \
+    		            "line."
+    	                    raise SystemExit
+    
+                        # Return an array containing the complete path to
+                        # all the files matching searchstr in the path
+                        hoursearchstr = hoursearchstr+searchstr
+                        print "Finding files in "+root+" that match "+hoursearchstr
+                        tarfiles = archraf.findfiles(root,hoursearchstr)
+    
+                        tarfiles.sort()
+                        Efile = tarfiles[len(tarfiles)-1]
+                        (eyr,emo,edy,ehr,emn,esc,hoursearchstr)=archraf.parse_date(Efile)
+                        # output tarfile name is like 
+                        # RF##.FWD.Sdate.Stime_etime.jpg.tar and tar.dir
+                        index = regex.search("[RrTtFf][Ff]",fullname)
+                        if (index == -1):
+                            print "Flight number not found in image path. Please"
+                            print " rename camera dirs to contain flight numbers"
+                            print " e.g. RF01\n"
+                            raise SystemExit
+    
+                        flightnum = string.upper(fullname[index:index+4])
+                        tarfilename=flightnum+"."+pointing+"."+\
+                            byr+bmo+bdy+"."+bhr+bmn+bsc+"_"+\
+                            ehr+emn+esc+"."+searchstr
+    
+                        # Create the tarball
+                        [tfile,tfilelist]=archraf.tardir(root,"",tarfilename,tarfiles)
+    
+                        if tfile != "":
+                        # Add the tar file to the array of files to archive
+                            sfiles.append(tfile)
+                            # Add the tar file list to the array of files to archive
+                            sfiles.append(tfilelist)
+            sdir = sdir + '/'
+    elif flag == "-r":
+        sfiles = archraf.findfiles(sdir,searchstr)
         sdir = sdir + '/'
-elif flag == "-r":
-    sfiles = archraf.findfiles(sdir,searchstr)
-    sdir = sdir + '/'
-elif flag == "-t":
-    # List all the files/dirs in the working dir (sdir)
-    dirfilelist = os.listdir(sdir)
-    dirfilelist.sort()
-    for file in dirfilelist:
-	# Walk through the dirpath (this will ignore paths that 
-	# point to a file and
-	# only walk through paths that point to a dir.
-	path = join(sdir,file)
-
-	# Return an array containing the complete path to all 
-	# the files matching searchstr in the path
-	print "Finding files in "+path+" that match "+searchstr
-	tarfiles = archraf.findfiles(path,searchstr)
-
-	# For clarity, the tarfile name should contain the 
-	# date (yyyymmdd) and flight number. Start with the 
-	# directory name.
-	tarfilename = file
-
-	# If the directory name does not contain a year, 
-	# add it to the tarfile name.
-	match = re.search(calendaryear,tarfilename)
-	if not match:
-	    tarfilename = file + "_" + calendaryear
-	[tfile,tfilelist]=archraf.tardir(sdir,file,tarfilename,tarfiles)
-	if tfile != "":
-            # Add the tar file to the array of files to archive
-	    sfiles.append(tfile)
-            # Add the tar file list to the array of files to archive
-	    sfiles.append(tfilelist)
-    sdir = current_dir+"/"
-else:
-    if (flag == "-m"):
-	sdir = os.getcwd()
-
-    # if flag == "-a" do regular processing
-    lines = os.listdir(sdir)
-    for line in lines:
-	match = re.search(searchstr,line)
-	if match:
-	    sfiles.append(line)
-    sdir = sdir + '/'
-
-# Sort the files to be processed so they are processed in alphabetical order
-sfiles.sort()
-
-
-#Now archive the data!
-archraf.archive_files(sdir,sfiles,flag,type,mssroot)
-
-
+    elif flag == "-t":
+        # List all the files/dirs in the working dir (sdir)
+        dirfilelist = os.listdir(sdir)
+        dirfilelist.sort()
+        for file in dirfilelist:
+            # Walk through the dirpath (this will ignore paths that 
+            # point to a file and
+            # only walk through paths that point to a dir.
+            path = join(sdir,file)
+    
+            # Return an array containing the complete path to all 
+            # the files matching searchstr in the path
+            print "Finding files in "+path+" that match "+searchstr
+            tarfiles = archraf.findfiles(path,searchstr)
+    
+            # For clarity, the tarfile name should contain the 
+            # date (yyyymmdd) and flight number. Start with the 
+            # directory name.
+            tarfilename = file
+    
+            # If the directory name does not contain a year, 
+            # add it to the tarfile name.
+            match = re.search(calendaryear,tarfilename)
+            if not match:
+                tarfilename = file + "_" + calendaryear
+            [tfile,tfilelist]=archraf.tardir(sdir,file,tarfilename,tarfiles)
+            if tfile != "":
+                # Add the tar file to the array of files to archive
+                sfiles.append(tfile)
+                # Add the tar file list to the array of files to archive
+                sfiles.append(tfilelist)
+        sdir = current_dir+"/"
+    else:
+        #if (flag == "-m"):
+        #            sdir = os.getcwd()
+    
+        # if flag == "-a" do regular processing
+        lines = os.listdir(sdir)
+        for line in lines:
+            match = re.search(searchstr,line)
+            if match:
+                sfiles.append(line)
+        sdir = sdir + '/'
+    
+    # Sort the files to be processed so they are processed in alphabetical order
+    sfiles.sort()
+    
+    
+    #Now archive the data!
+    archraf.archive_files(sdir,sfiles,flag,type,mssroot)
+    
