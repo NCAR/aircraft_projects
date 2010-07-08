@@ -33,10 +33,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,ads,apache)
 /var/www/html/control
+%config /var/www/html/control/js/config.json
 
 %changelog
 * Thu Jul 8 2010 <cjw@ucar.edu> 1-2
 - Fix some permissions
 - Strip out xmlrpc2shell; move to ensure_running script.
+- Change config.json to a config file.  This should add .rpmsave mechanism.
 * Fri Sep 4 2009 <dlagreca@ucar.edu> 1-1
 - created initial package 
