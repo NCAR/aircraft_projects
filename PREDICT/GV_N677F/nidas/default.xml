@@ -963,6 +963,32 @@
     </dsm>
 
 
+    <dsm name="dsmLWI" location="Left Wing Inboard Pod" id="81" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWI"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D019.dat"/>
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="100">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="5" type="int"/>
+                <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <linear slope="+10.0" intercept="2.0" units="W"/> <!-- Added +2 intercept to correct baseline position with 135 Wire Temp -->
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_LWO" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+
 
     <dsm name="dsmRWO" location="RWO" id="92" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
