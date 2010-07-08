@@ -29,6 +29,7 @@ fi
 
 
 %files
+%config /etc/sysctl.conf
 
 %changelog
 * Sun Feb 06 2010 Chris Webster <cjw@ucar.edu> - 1.0-1
