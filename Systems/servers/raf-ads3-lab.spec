@@ -1,7 +1,7 @@
 Summary: Metapackage for all server and satcom packages needed on lab systems.
 Name: raf-ads3-lab
 Version: 1.0
-Release: 5
+Release: 6
 License: GPL
 Group: System Environment
 
@@ -12,6 +12,7 @@ Requires: raf-lab-named
 Requires: raf-lab-ntp
 Requires: ael-local-dpkgs
 Requires: raf-ads3-sudoers
+Requires: chrony
 
 BuildArch: noarch
 
@@ -21,6 +22,8 @@ Metapackage for all server and satcom packages needed on lab systems.
 %files 
 
 %changelog
+* Tue Jul 13 2010 Gordon Maclean <maclean@ucar.edu> 1.0-6
+- Added Requires: chrony
 * Wed Nov 24 2009 John Wasinger <wasinger@ucar.edu> 1.0-5
 - Added raf-ads-user
 * Fri Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
