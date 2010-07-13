@@ -20,6 +20,7 @@ Requires: raf-ads3-sudoers
 Requires: nidas
 Requires: nidas-x86-build
 Requires: ael-local-dpkgs
+Requires: chrony
 
 BuildArch: noarch
 
