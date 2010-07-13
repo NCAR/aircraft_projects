@@ -11,7 +11,7 @@ fi
 script=`basename $0`
 
 usage() {
-    echo "$script [-i] [dpkg]"
+    echo "$script [-i] [dpkg ...]"
     echo "-i: install RPM on EOL yum repository (if accessible)"
     exit 1
 }
@@ -24,9 +24,6 @@ case $1 in
     shift
     ;;
 esac
-
-dopkg=all
-[ $# -gt 0 ] && dopkg=$1
 
 source repo_scripts/repo_funcs.sh
 
@@ -42,111 +39,124 @@ trap "{ rm -f $log; }" EXIT
 
 set -o pipefail
 
-pkg=raf-ads-user
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
-    rpmbuild -bb ${pkg}.spec | tee -a $log  || exit $?
-fi
+dopkg=all
 
-pkg=raf-gv
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+while [ "$dopkg" == all -o $# -gt 0 ]; do
 
-pkg=raf-c130
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    if [ $# -gt 0 ]; then
+        dopkg=$1
+        shift
+    fi
 
-pkg=raf-ac-firewall
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-ads-user
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
+        rpmbuild -bb ${pkg}.spec | tee -a $log  || exit $?
+    fi
 
-pkg=raf-ac-nagios
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-gv
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
 
-pkg=raf-ac-ntp
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-c130
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
 
-pkg=raf-lab-ntp
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-ac-firewall
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
 
-pkg=raf-ads3-syslog
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-ac-nagios
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
 
-pkg=raf-ads3-sysctl
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-ac-ntp
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
 
-pkg=raf-ads3-dhcp
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-lab-ntp
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
 
-pkg=raf-ads3-named
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-ads3-syslog
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
 
-pkg=raf-ads3-lab
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-ads3-sysctl
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
 
-pkg=raf-ads3-sudoers
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-ads3-dhcp
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
 
-# Mission Coordinator Web Interface RPMS
-pkg=raf-www-camera
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/camera
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-ads3-named
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
 
-pkg=raf-www-control
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/control
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-ads3-lab
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
 
-pkg=raf-www-map
-if [ $dopkg == all -o $dopkg == $pkg ];then
-    version=`get_version $pkg.spec`
-    tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/flight_data
-    rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
-fi
+    pkg=raf-ads3-sudoers
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
+
+    # Mission Coordinator Web Interface RPMS
+    pkg=raf-www-camera
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/camera
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
+
+    pkg=raf-www-control
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/control
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
+
+    pkg=raf-www-map
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-www/flight_data
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
+
+    dopkg=""
+
+done
 
 echo "RPMS:"
 egrep "^Wrote:" $log
