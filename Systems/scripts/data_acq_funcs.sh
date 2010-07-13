@@ -222,9 +222,16 @@ start_dsm_server() {
     local config=$1
     local xml=$2
 
-     set -x
+    # set -x
 
-    if sudo -E /opt/local/nidas/x86/bin/dsm_server -r -u ads $xml 2>$errfile > $txtfile; then
+    # dsm_server options:
+    #     -c: read $PROJ_DIR/$PROJECT/$AIRCRAFT/nidas/flights.xml to find
+    #	      configuration xml for current time.  If not using -c option,
+    #         you must pass the XML file name as the last argument.
+    #     -i N: set log level to N, 7=debug, 6=info, 5=notice, 4=warning, 3=error
+    #     -r: start XMLRPC thread
+    #     -u ads: switch to ads user from root after setting up process capabilities
+    if sudo -E /opt/local/nidas/x86/bin/dsm_server -l 6 -r -u ads -c 2>$errfile > $txtfile; then
 
         local pidfile=/tmp/dsm_server.pid
         local pid=""
