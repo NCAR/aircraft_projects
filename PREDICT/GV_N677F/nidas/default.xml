@@ -441,7 +441,7 @@
     <!-- UHSAS borrowed from Darrin Toohey @ CU.
         Has different housekeeping scaling factors and output rate
     -->
-    <serialSensor ID="UHSAS_CU" class="raf.UHSAS_Serial" baud="9600" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="UHSASCU" class="raf.UHSAS_Serial" baud="9600" parity="none" databits="8" stopbits="1">
 
         <parameter name="HSKP_SCALE" value="64000 12800 6400 6400 12800 6400 6400 12800 6400  6400 12800 6400" type="int"/>
 
@@ -462,10 +462,11 @@
             <variable name="UBTMP" units="V" longname="UHSAS Temperature in Canister">
                 <linear slope="178.5714" intercept="0.0" units="K"/>
             </variable>
-            <!-- UPFLW is skipped -->
-            <!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
+	    <!-- UPFLW is one of 3 variables not parsed from the housekeeping array
+            <variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
                 <linear slope="20" intercept="0.0" units="sccs"/>
-            </variable -->
+            </variable
+	    -->
             <variable name="UPRESS" units="V" longname="UHSAS Absolute Pressure in Canister">
                 <linear slope="22.222" intercept="10.556" units="kPa"/>
             </variable>
@@ -926,6 +927,7 @@
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
+
         <sensor IDREF="ACDFO3" id="130" suffix="_CL"/>
 
         <serialSensor IDREF="UHSAS" devicename="/dev/ttyS6" id="300" suffix="_RWO">
@@ -1062,7 +1064,7 @@
     </dsm>
 
     <dsm name="cvi-dsm-2" location="cvi_rack" id="20" rserialPort="30002"
-    	derivedData="sock::7071">
+    	derivedData="sock::7071" statusAddr="sock::30001">
 
         <sensor class="DSC_A2DSensor"
             devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
@@ -1222,21 +1224,13 @@
             <message separator="\n" position="end" length="0"/>
         </serialSensor>
 
-       <!-- CPC -->
-       <!--
-       <serialSensor class="DSMSerialSensor"
-            baud="9600" parity="even" databits="7" stopbits="1">
-            <message separator="\n" position="end" length="0"/>
-        </serialSensor>
-        -->
-
-       <serialSensor IDREF="UHSAS_CU" devicename="/dev/ttyS7" id="50" suffix="_CVI">
+       <serialSensor IDREF="UHSASCU" devicename="/dev/ttyS7" id="50" suffix="_CVI">
+            <parameter name="SerialNumber" type="string" value="UHSAS002"/>
             <parameter name="sendInit" value="false" type="bool"/>
        </serialSensor>
        
         <!-- input from LabView via socket -->
-        <socketSensor class="raf.CVI_LV_Input" devicename="inet::30006"
-            id="60">
+        <socketSensor class="raf.CVI_LV_Input" devicename="inet::30006" id="60">
             <!-- 0.000,0.000,0.000,0.000,0.000,0,0,0,0,0,0,0,10.000,16784.917,8.434,3.668,5.609\r\n -->
             <sample id="1" rate="1"
                 scanfFormat="%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%f,%f,%f,%f,%f">
@@ -1252,7 +1246,7 @@
                 <variable name="CVV3" units="" longname="CVI valve 3"/>
                 <variable name="CVINLET" units="" longname="CVI inlet flag, 0=CVI, 1=Total"/>
                 <variable name="CVFXFLOWS" units="korns" longname="CVI user flow index"/>
-                <!--
+                <!-- Note that this field is skipped in the scanf with %*f
                 <variable name="CVFXX" units="" longname="CVI # user connects or disconnects"/>
                 -->
                 <variable name="CVRAD" units="um" longname="CVI minimum cut radius"/>
@@ -1264,19 +1258,16 @@
             <message separator="\n" position="end" length="0"/>
         </socketSensor>
 
-
-        <!--
-        -->
         <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
+        <!-- To save data on local CF when running standalone
         <output class="RawSampleOutputStream">
             <fileset dir="/media/cf/data"
                 file="${DSM}_%Y%m%d_%H%M%S.dat"
                 length="1800">
             </fileset>
         </output>
-        <!--
         -->
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -1313,21 +1304,14 @@
                 <variable name="TDLzero"/>
                 <variable name="UHSAS_CNTS_CVI"/>
                 <variable name="USMPFLW_CVI"/>
-             <!--
-                <variable name="UPRESS"/>
-              Commented out since we're now flying the UHSAS 
-              and not the old OPC - LAS-IR ... Cindy thinks it was not used
-              with DSM - where the $&*#(&$ did this xml come from?
-                <variable name="OPCD"/>
-                <variable name="OPCC"/>
-                <variable name="OPCCO"/>
-                <variable name="OPCDF"/>
-             -->
+	        <variable name="UPRESS_CVI"/>
+                <variable name="UDIFF_CVI"/>
+                <variable name="UBTMP_CVI"/>
             </sample>
             <output class="raf.CVIOutput">
                 <socket type="client" address="cvi-pc-2" port="30005"/>
             </output>
-            <!--
+            <!-- Uncomment this output to see what the DSM is sending to the LabView PC
             <output class="raf.CVIOutput">
                 <fileset dir="/var/tmp"
                     file="cvi_%Y%m%d_%H%M%S.dat"

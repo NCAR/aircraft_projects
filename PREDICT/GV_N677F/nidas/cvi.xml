@@ -12,6 +12,41 @@
     >
 <sensorcatalog>
 
+   <serialSensor ID="UHSASCU" class="raf.UHSAS_Serial" baud="9600" parity="none" databits="8" stopbits="1">
+
+        <parameter name="HSKP_SCALE" value="64000 12800 6400 6400 12800 6400 6400 12800 6400  6400 12800 6400" type="int"/>
+
+        <sample id="1" rate="2">
+            <variable name="AUHSAS" length="100" units="count" longname="UHSAS Raw Count Histogram"/>
+            <variable name="UHSAS_CNTS" units="#/sec" longname="Total Counts"/>
+            <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
+            <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
+            <variable name="USMPFLW" units="V" longname="UHSAS Sample Flow">
+                <linear slope="0.333" intercept="0.0" units="vccs"/>
+            </variable>
+            <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
+            <variable name="UTEMP" units="V" longname="UHSAS Temperature in Canister, signal"/>
+            <variable name="USHFLW" units="V" longname="UHSAS Air Sheath Flow">
+                <poly coefs="115.42 -141.21 63.38" units="sccs"/>
+            </variable>
+            <variable name="UDIFF" units="V" longname="UHSAS Absolute Pressure in Canister, signal"/>
+            <variable name="UBTMP" units="V" longname="UHSAS Temperature in Canister">
+                <linear slope="178.5714" intercept="0.0" units="K"/>
+            </variable>
+            <!-- UPFLW is one of 3 variables not parsed from the housekeeping array
+            <variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
+                <linear slope="20" intercept="0.0" units="sccs"/>
+            </variable>
+            -->
+            <variable name="UPRESS" units="V" longname="UHSAS Absolute Pressure in Canister">
+                <linear slope="22.222" intercept="10.556" units="kPa"/>
+            </variable>
+            <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
+            <!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
+        </sample>
+        <message separator="\xff\xff\x00" position="beg" length="236"/>
+
+    </serialSensor>
 </sensorcatalog>
 <site name="GV_N677F" class="raf.Aircraft">
     <parameter name="tailNumber" value="N677F" type="string"/>
@@ -22,7 +57,7 @@
                 -->
                 <!-- gain=4,bipolar=F gives a range of 0-5V -->
     <dsm name="cvi-dsm-2" location="cvi_rack" id="20" rserialPort="30002"
-    	derivedData="sock::58800">
+    	derivedData="sock::7071" statusAddr="sock::30001">
 
         <sensor class="DSC_A2DSensor"
             devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
@@ -182,17 +217,13 @@
             <message separator="\n" position="end" length="0"/>
         </serialSensor>
 
-       <!-- CPC -->
-       <!--
-       <serialSensor class="DSMSerialSensor"
-            baud="9600" parity="even" databits="7" stopbits="1">
-            <message separator="\n" position="end" length="0"/>
-        </serialSensor>
-        -->
-
+       <serialSensor IDREF="UHSASCU" devicename="/dev/ttyS7" id="50" suffix="_CVI">
+            <parameter name="SerialNumber" type="string" value="UHSAS002"/>
+            <parameter name="sendInit" value="false" type="bool"/>
+       </serialSensor>
+       
         <!-- input from LabView via socket -->
-        <socketSensor class="raf.CVI_LV_Input" devicename="inet::30006"
-            id="60">
+        <socketSensor class="raf.CVI_LV_Input" devicename="inet::30006" id="60">
             <!-- 0.000,0.000,0.000,0.000,0.000,0,0,0,0,0,0,0,10.000,16784.917,8.434,3.668,5.609\r\n -->
             <sample id="1" rate="1"
                 scanfFormat="%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%f,%f,%f,%f,%f">
@@ -208,7 +239,7 @@
                 <variable name="CVV3" units="" longname="CVI valve 3"/>
                 <variable name="CVINLET" units="" longname="CVI inlet flag, 0=CVI, 1=Total"/>
                 <variable name="CVFXFLOWS" units="korns" longname="CVI user flow index"/>
-                <!--
+                <!-- Note that this field is skipped in the scanf with %*f
                 <variable name="CVFXX" units="" longname="CVI # user connects or disconnects"/>
                 -->
                 <variable name="CVRAD" units="um" longname="CVI minimum cut radius"/>
@@ -220,19 +251,16 @@
             <message separator="\n" position="end" length="0"/>
         </socketSensor>
 
-
-        <!--
-        -->
         <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
+        <!-- To save data on local CF when running standalone
         <output class="RawSampleOutputStream">
             <fileset dir="/media/cf/data"
                 file="${DSM}_%Y%m%d_%H%M%S.dat"
                 length="1800">
             </fileset>
         </output>
-        <!--
         -->
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -267,15 +295,16 @@
                 <variable name="TDLline"/>
                 <variable name="TDLlaser"/>
                 <variable name="TDLzero"/>
-                <variable name="OPCD"/>
-                <variable name="OPCC"/>
-                <variable name="OPCCO"/>
-                <variable name="OPCDF"/>
+                <variable name="UHSAS_CNTS_CVI"/>
+                <variable name="USMPFLW_CVI"/>
+                <variable name="UPRESS_CVI"/>
+                <variable name="UDIFF_CVI"/>
+                <variable name="UBTMP_CVI"/>
             </sample>
             <output class="raf.CVIOutput">
                 <socket type="client" address="cvi-pc-2" port="30005"/>
             </output>
-            <!--
+            <!-- Uncomment this output to see what the DSM is sending to the LabView PC
             <output class="raf.CVIOutput">
                 <fileset dir="/var/tmp"
                     file="cvi_%Y%m%d_%H%M%S.dat"
