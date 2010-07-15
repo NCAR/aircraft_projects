@@ -295,6 +295,12 @@
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
+    <sensor ID="ACDFO3" class="raf.UDPSocketSensor" devicename="inet::5555">
+        <sample id="1" rate="10" scanfFormat="O3,%f">
+            <variable name="FO3" units="ppbv" longname="Fast Response Ozone Mixing Ratio"/>
+        </sample>
+    </sensor>
+
     <serialSensor ID="Water_CN_Counter" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1"
         init_string="SM,4,1\r">
@@ -920,6 +926,7 @@
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
+        <sensor IDREF="ACDFO3" id="130" suffix="_CL"/>
 
         <serialSensor IDREF="UHSAS" devicename="/dev/ttyS6" id="300" suffix="_RWO">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
