@@ -261,6 +261,16 @@
             <variable name="EXVPERR" units="meters" longname="Expected Vertical Position Error"/>
             <variable name="EXVELERR" units="m/sec" longname="Expected Velocity Error"/>
         </sample>
+        <sample id="3" rate="100"><!--       Skipping CMIGITS Seconds of the day - seems to be faulty data 
+            <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
+-->
+            <variable name="DTHETAX" units="radians" longname="Delta Theta in X direction"/>
+            <variable name="DTHETAY" units="radians" longname="Delta Theta in Y direction"/>
+            <variable name="DTHETAZ" units="radians" longname="Delta Theta in Z direction"/>
+            <variable name="DVELX" units="m/s" longname="Delta Velocity in X direction"/>
+            <variable name="DVELY" units="m/s" longname="Delta Velocity in Y direction"/>
+            <variable name="DVELZ" units="m/s" longname="Delta Velocity in Z direction"/>
+        </sample>
         <message separator="\xff\x81" position="beg" length="0"/>
     </serialSensor>
 
@@ -491,6 +501,7 @@
         </sample>
         <message separator="\xff\xff\x00" position="beg" length="236"/>
     </serialSensor>
+
     <serialSensor ID="VCSEL" class="raf.VCSEL_Serial"
         baud="38400" parity="none" databits="8" stopbits="1">
         <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
@@ -694,6 +705,22 @@
 -->
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
+
+    <sensor ID="LAMSX" class="raf.LamsSensor">
+        <parameter name="TAS_level"  type="float" value="155.0"/>
+        <parameter name="nAVG"  type="int" value="4"/>
+        <parameter name="nSKIP" type="int" value="5"/>
+        <parameter name="nPEAK" type="int" value="2800"/>
+
+        <!-- The rate is is set to one even though sampling at 100Hz.  This allows
+             one-point-pick-off for nimbus/aeros. Change to 100 for final processing -->
+        <sample id="1" rate="1">
+            <variable name="LAMS_AVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
+        </sample>
+        <sample id="2" rate="1">
+            <variable name="LAMS_MAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
+        </sample>
+    </sensor>
 
 </sensorcatalog>
 
@@ -946,8 +973,10 @@
 
         <sensor IDREF="ACDFO3" id="130" suffix="_CL"/>
 
-        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS6" id="300" suffix="_LMO">
+        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS6" id="300" suffix="_LMO" timeout="0">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
+	    <!-- If a PC is controlling the UHSAS, then set sendInit to false and the timeout to 0. -->
+            <parameter name="sendInit" value="false" type="bool"/>
         </serialSensor>
 
         <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS7" id="320" suffix="_WCN"/>
@@ -1336,6 +1365,16 @@
             </output>
             -->
         </processor>
+    </dsm>
+
+    <dsm name="dsm301" location="lams_rack" id="1" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
+        <!-- <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/> -->
+
+        <sensor IDREF="LAMSX" devicename="/dev/lamsx0" id="900"/>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
     </dsm>
 
 </site>
