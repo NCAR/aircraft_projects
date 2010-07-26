@@ -1,7 +1,7 @@
 Summary: PPP and PPPOE configuration for Inmarsat MPDS
 Name: raf-satcom-mpds
 Version: 1.0
-Release: 6
+Release: 7
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -93,6 +93,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/pppoe-lost
 
 %changelog
+* Mon Jul 26 2010 Chris Webster <cjw@ucar.edu> 1.0-7
+- SERVICENAME has been deprecated (new ISP?).
 * Sat Jan 23 2010 Gordon Maclean <maclean@ucar.edu> 1.0-6
 - add ip-pre-up script to shutdown eth2 (raf-satcom-iridium already had it)
 * Fri Jan 6 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5
