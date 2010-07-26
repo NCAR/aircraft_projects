@@ -10,7 +10,7 @@
 Summary: DNS/named configuration for RAF aircraft server
 Name: raf-ads3-named
 Version: 1.0
-Release: 10
+Release: 11
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -148,6 +148,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/local/admin/raf-ads3-named/named.*
 
 %changelog
+* Tue Jul 26 2010 Gordon Maclean <maclean@ucar.edu> 1.0-11
+- fix backwards logic when checking for existence of /var/named/log
 * Tue Jun  1 2010 Gordon Maclean <maclean@ucar.edu> 1.0-10
 - cvi-dsm-2, cvi-pc-2
 * Thu Mar 18 2010 Gordon Maclean <maclean@ucar.edu> 1.0-9

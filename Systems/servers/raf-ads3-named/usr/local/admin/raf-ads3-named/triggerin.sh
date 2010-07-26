@@ -54,7 +54,7 @@ if [ "$perm" != "drwxrwx---" ]; then
     chmod 770 /var/named
 fi
 
-[ ! -d /var/named/log ] || mkdir /var/named/log
+[ -d /var/named/log ] || mkdir /var/named/log
 chgrp -R named /var/named/log
 chmod -R g+w /var/named/log
 

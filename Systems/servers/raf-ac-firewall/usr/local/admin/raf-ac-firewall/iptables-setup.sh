@@ -319,8 +319,9 @@ filter_icmp()
     iptables -A icmp-in -i $eif -p icmp --icmp-type 14 -s $ANYHOST -j RETURN
     iptables -A icmp-in -i $eif -p icmp --icmp-type 16 -s $ANYHOST -j RETURN
     iptables -A icmp-in -i $eif -p icmp --icmp-type 18 -s $ANYHOST -j RETURN
-    # Allow 4,8,12,13,15,17 out.
+    # Allow 3,4,8,12,13,15,17 out.
     iptables -A icmp-out -o $eif -p icmp --icmp-type echo-reply -j RETURN
+    iptables -A icmp-out -o $eif -p icmp --icmp-type 3 -d $ANYHOST -j RETURN
     iptables -A icmp-out -o $eif -p icmp --icmp-type 4 -d $ANYHOST -j RETURN
     iptables -A icmp-out -o $eif -p icmp --icmp-type 8 -d $ANYHOST -j RETURN
     iptables -A icmp-out -o $eif -p icmp --icmp-type 12 -d $ANYHOST -j RETURN

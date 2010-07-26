@@ -1,7 +1,7 @@
 Summary: Iptables configuration for RAF aircraft server
 Name: raf-ac-firewall
 Version: 1.0
-Release: 2
+Release: 3
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -83,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ac-firewall/iptables-setup.sh
 
 %changelog
+* Mon Jul 26 2010 Gordon Maclean <maclean@ucar.edu> 1.0-3
+- Allow ICMP type=3 out. Logs showed rejects of these from named to forwarding
+- nameservers. They seem harmless to enable.
 * Fri Apr 11 2008 Gordon Maclean <maclean@ucar.edu>
 - changed googleearth filtering
 * Sun Feb 29 2008 Gordon Maclean <maclean@ucar.edu>
