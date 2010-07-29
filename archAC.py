@@ -42,7 +42,7 @@
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
-import sys, getopt, regex
+import sys, getopt, re
 import os
 import string
 import re
@@ -243,9 +243,20 @@ class archRAFdata:
         dfile = ""
 
 	# Get flight number
+	# from the filename if we can otherwise from the NetCDF header	
 	p1 = Popen(["/usr/bin/ncdump","-h",path], stdout=PIPE)
 	p2 = Popen(["grep","FlightNumber"], stdin=p1.stdout, stdout=PIPE)
 	flightnum = string.upper(string.split(p2.communicate()[0],'"')[1])
+	
+	match = re.search('(\w(F|f)\d\d\w)',sfile)
+	if match:
+	     flightnum2 = match.group(0).upper()
+	     if len(flightnum) == 4:
+	          if flightnum[0:3] == flightnum2[0:3]:
+	               flightnum = flightnum2
+	          else:
+                       print "#WARNING: Ignored possible flight number in filename: " + flightnum2
+	
 	dfile = dfile+flightnum
 
 	# Get flight date
@@ -275,7 +286,7 @@ class archRAFdata:
 
     def parse_date(self,name):
 	(root, name) = os.path.split(name)
-	index = regex.search("[0-9][0-9][0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9][0-9]",name)
+	index = re.search("[0-9][0-9][0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9][0-9]",name)
 	if (index != -1):
 	    #print "match found for date format. Parsing date."
 	    year = "20"+name[index:index+2]
@@ -499,7 +510,7 @@ if __name__ == "__main__":
                         (eyr,emo,edy,ehr,emn,esc,hoursearchstr)=archraf.parse_date(Efile)
                         # output tarfile name is like 
                         # RF##.FWD.Sdate.Stime_etime.jpg.tar and tar.dir
-                        index = regex.search("[RrTtFf][Ff]",fullname)
+                        index = re.search("[RrTtFf][Ff]",fullname)
                         if (index == -1):
                             print "Flight number not found in image path. Please"
                             print " rename camera dirs to contain flight numbers"

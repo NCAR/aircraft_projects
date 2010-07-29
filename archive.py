@@ -12,7 +12,7 @@
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
-import sys, getopt, regex
+import sys, getopt, re
 import os
 import string
 import re
