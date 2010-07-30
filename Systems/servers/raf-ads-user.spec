@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 12
+Release: 13
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -53,6 +53,8 @@ echo
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Thu Jul 30 2010 Chris Webster <cjw@ucar.edu> 1.13
+- add env COIN_FULL_INDIRECT_RENDERING to avoid aeros track plot crash.
 * Thu Feb 18 2010 Chris Webster <cjw@ucar.edu> 1.12
 - Remove setl binary.  tcsh has options in prompt command to update title.
 * Thu Jan 21 2010 Chris Webster <cjw@ucar.edu> 1.11
