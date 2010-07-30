@@ -30,6 +30,7 @@ DNS/named configuration for RAF aircraft server
 Summary: DNS/named configuration for RAF aircraft server
 Group: System Environment/Daemons
 Requires: bind
+Requires: raf-ac-dhcp
 %if %{do_chroot}
 Requires: bind-chroot
 %endif
@@ -40,6 +41,7 @@ Summary: DNS/named configuration for RAF aircraft server.
 Summary: DNS/named configuration for RAF lab system
 Group: System Environment/Daemons
 Requires: bind
+Requires: raf-lab-dhcp
 %if %{do_chroot}
 Requires: bind-chroot
 %endif
