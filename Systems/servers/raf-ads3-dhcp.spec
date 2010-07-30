@@ -1,7 +1,7 @@
 Summary: DHCP configuration for server on RAF aircraft
 Name: raf-ads3-dhcp
 Version: 1.0
-Release: 16
+Release: 17
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -101,6 +101,8 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %changelog
+* Wed Jun 9 2010 Tom Baltzer <tbaltzer@ucar.edu> 1.0-17
+- Corrected errors wrt dsmRWM
 * Tue Feb 9 2010 Chris Webster <cjw@ucar.edu> 1.0-15
 - Add HSRL, move GV dsmC01 to dhcpd-dsms.
 * Tue Dec 8 2009 Gordon Maclean <maclean@ucar.edu> 1.0-13
