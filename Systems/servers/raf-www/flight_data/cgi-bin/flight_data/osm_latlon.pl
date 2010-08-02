@@ -12,23 +12,36 @@ my $dbh = DBI->connect("dbi:Pg:database=$plat_vars{dbname};host=$plat_vars{'dbho
 	or die "Error connecting to db: " . DBI->errstr;
 
 # get column names
-my $col_s = $dbh->prepare(" SELECT split_part(value,' ',1) as lon,split_part(value,' ',2) as lat,split_part(value,' ',3) as alt from global_attributes where key='coordinates';")
+my $lon_s = $dbh->prepare(" SELECT value FROM global_attributes WHERE key='longitude_coordinate';")
 	or die "Error preparing statement: " . DBI->errstr;
-$col_s->execute()
+my $lat_s = $dbh->prepare(" SELECT value FROM global_attributes WHERE key='latitude_coordinate';")
+	or die "Error preparing statement: " . DBI->errstr;
+my $alt_s = $dbh->prepare(" SELECT value FROM global_attributes WHERE key='zaxis_coordinate';")
+	or die "Error preparing statement: " . DBI->errstr;
+
+$lat_s->execute()
 	or die "Error executing statement: " . DBI->errstr;
-my $cols = $col_s->fetchrow_hashref;
+$lon_s->execute()
+	or die "Error executing statement: " . DBI->errstr;
+$alt_s->execute()
+	or die "Error executing statement: " . DBI->errstr;
+
+my $lat_n = $lat_s->fetchrow_hashref;
+my $lon_n = $lon_s->fetchrow_hashref;
+my $alt_n = $alt_s->fetchrow_hashref;
 
 # verify that column names are only words and/or spaces
-if ( $cols->{'lat'} !~ /[\s\w]+/ ||
-	 $cols->{'lon'} !~ /[\s\w]+/ ||
-	 $cols->{'alt'} !~ /[\s\w]+/ ) 
+if ( $lat_n->{'value'} !~ /[\s\w]+/ ||
+	 $lon_n->{'value'} !~ /[\s\w]+/ ||
+	 $alt_n->{'value'} !~ /[\s\w]+/ ) 
 {
 	print "invalid coordinates from global_attribues\n";
 	exit;
 }
 
 # get column values
-my $loc = $dbh->prepare("SELECT ".$cols->{'lat'}.",".$cols->{'lon'}.",".$cols->{'alt'}." FROM raf_lrt ORDER BY datetime DESC LIMIT 2")
+#my $loc = $dbh->prepare("SELECT ".$cols->{'lat'}.",".$cols->{'lon'}.",".$cols->{'alt'}." FROM raf_lrt ORDER BY datetime DESC LIMIT 2")
+my $loc = $dbh->prepare("SELECT ".$lat_n->{value}.",".$lon_n->{value}.",".$alt_n->{value}." FROM raf_lrt ORDER BY datetime DESC LIMIT 2")
 	or die "Error preparing statement: " . DBI->errstr;
 $loc->execute()
 	or die "Error executing statement: " . DBI->errstr;
@@ -73,5 +86,7 @@ else {
 
 #disconnect from db
 $loc->finish;
-$col_s->finish;
+$lat_s->finish;
+$lon_s->finish;
+$alt_s->finish;
 $dbh->disconnect;
