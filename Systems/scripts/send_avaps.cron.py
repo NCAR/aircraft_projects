@@ -17,7 +17,6 @@ import syslog
 
 # Clean up name of script for logging
 ident = sys.argv[0][sys.argv[0].rfind("/")+1:]
-syslog.openlog(ident, 0, syslog.LOG_CRON)
 
 os.chdir('/mnt/r1/dropsondes/')
 
