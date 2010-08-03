@@ -19,7 +19,7 @@ import syslog
 ident = sys.argv[0][sys.argv[0].rfind("/")+1:]
 syslog.openlog(ident, 0, syslog.LOG_CRON)
 
-os.chdir('/mnt/r2/dropsondes/')
+os.chdir('/mnt/r1/dropsondes/')
 
 # This cron script is not re-entrant, bail out if its still running.
 if os.path.isfile('BUSY'):
@@ -54,8 +54,7 @@ for file in list:
 
         ftp = ftplib.FTP('eol-rt-data.guest.ucar.edu')
         ftp.login('ads', 'blue;spruce')
-        ftp.cwd('avaps')
-        ftp.cwd('c130')
+        ftp.cwd('avaps/c130')
 
         ftp.storbinary('stor '+file_bz2, open(file_bz2, 'r'))
         syslog.syslog(file_bz2+' sent')
