@@ -157,7 +157,7 @@ controller.prototype.initialize = function() {
 		function(data, ts) {
 		for (var d in M.dsms) {	
 			var curData = data[d];
-			var timetagstatus = 2, resptext = 'no data recieved';
+			var timetagstatus = 2, resptext = 'no data received';
 			
 			if (typeof(curData) != "undefined") {
 				curData = curData.substr(0, 19).replace(/-/g, ' ');
