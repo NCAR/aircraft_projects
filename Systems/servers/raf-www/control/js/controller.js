@@ -35,7 +35,9 @@ controller.prototype.handleClickControl = function(cObj, meth) {
 }
 controller.prototype.handleMouseMove = function(e) {
 	/* Keep the toolip div just under the cursor at all times */
+	setTimeout(function(){
 	$("#tooltip").css({"top":e.pageY+23+"px", "left":e.pageX+3+"px"});
+	}, 300);
 }
 controller.prototype.save = function(){
 	/* create a save dialog on the fly */	
@@ -52,7 +54,7 @@ controller.prototype.save = function(){
 		"Save":function(){
 			$(this).dialog("title", "Saving..");
 			$(this).load("saveconfig.php", 
-				{"conf":M.serialize()},
+				{"conf":M.serialize(M.sConf)},
 				function(ret, stat) {
 					if (stat=="success") {
 						if (ret == 0) { location.reload(true);}
@@ -69,7 +71,7 @@ controller.prototype.save = function(){
 		},
 		/* Show JSON button displays the JSON text in the dialog */
 		"Show JSON":function(){
-			$(this).text(M.serialize());
+			$(this).text(M.serialize(M.sConf));
 		},
 		/* Cancel destroys the dialog */
 		"Cancel":function(){
@@ -212,7 +214,7 @@ controller.prototype.addDsm = function(dName) {
 		 
 		/* get name & tag from input boxes, unless passed in */
 		var newtag=(dName===undefined)? $("#newDsmInputT").val(): dName.tag;
-		var newhost=(dName===undefined)? $("#newDsmInputH").val(): dName.host;
+		var newhost=(dName===undefined)? $("#newDsmInputH").val(): dName.tag;
 		var newname=(dName===undefined)? $("#newDsmInputN").val(): dName.name;
 
 		if (dName !== undefined) { /* was a dynamic dsm */
@@ -274,6 +276,7 @@ controller.prototype.editDsm = function(tag, that) {
 		if (thisDsm) {
 			$("#listDiv h3").text(thisDsm.name);
 			for (var i in thisDsm.methods) {
+				if (i=="statusListenerDetails") {continue;} //don't list this method
 				$("#listDiv table").append("<tr><td>"+i
 					+ "</td><td></td><td><img src='css/play.jpg' onclick='"
 					+ "C.execDsmControl(\""+tag+"\",\""+i+"\")"
@@ -400,7 +403,14 @@ controller.prototype.execDsmControl = function(tag, cmd) {
 
 	/* if we got here, and meth is defined, get the parameters and call exec */
 	if (meth !== undefined) {
-		V.promptParams(tag, cmd);
+		var helpMeth = M.dsms[tag].methods['system.methodHelp'];
+		if ( helpMeth === undefined) {
+			V.promptParams(tag, cmd, "No Help Method, Manually specify paramters:");
+		} else {
+			helpMeth.exec(cmd, function(helpString) {
+				V.promptParams(tag, cmd, helpString);
+			});
+		}
 
 	} else {
 		/* otherwise, create the command from static conf and exec it */

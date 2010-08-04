@@ -103,7 +103,7 @@ view.prototype.prompt = function(text_in, callback, initial) {
 
 /* function displays a pop-up box with input, calling the supplied
    callback function with the user-specified data */
-view.prototype.promptParams = function(dsmtag, methname) {
+view.prototype.promptParams = function(dsmtag, methname, message) {
 	var dsmObj = M.dsms[dsmtag];
 	var method = dsmObj.methods[methname];
 
@@ -113,7 +113,8 @@ view.prototype.promptParams = function(dsmtag, methname) {
 	div.appendTo(this.dialogDiv);
 
 	$(div)
-	.append("<span class='little'>[Send No Parameters]</span>")
+	.append(message)
+	.append("<br><span class='little'>[Send No Parameters]</span>")
 	.dialog({
 		"title":text, 
 		"modal":true,

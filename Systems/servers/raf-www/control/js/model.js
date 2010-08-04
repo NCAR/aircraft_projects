@@ -116,7 +116,7 @@ model.prototype.serialize = function(_obj) {
          break;
 
       default:
-         return this.serialize(this.sConf);
+         return "undefined"; //this.serialize(this.sConf);
          break;
    }
 }
