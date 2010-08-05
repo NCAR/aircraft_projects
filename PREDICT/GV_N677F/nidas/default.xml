@@ -714,10 +714,10 @@
 
         <!-- The rate is is set to one even though sampling at 100Hz.  This allows
              one-point-pick-off for nimbus/aeros. Change to 100 for final processing -->
-        <sample id="1" rate="1">
+        <sample id="1" rate="100">
             <variable name="LAMS_AVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
         </sample>
-        <sample id="2" rate="1">
+        <sample id="2" rate="100">
             <variable name="LAMS_MAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
         </sample>
     </sensor>
@@ -928,24 +928,24 @@
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
-                <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
+                <variable name="TTFH2" units="V" longname="Total Temperature, Deiced Left, Rosemount">
                     <parameter name="channel"  value="0"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <!--<poly coefs="-90.997 25.705 0.063667" units="deg_C"/> --> <!-- Post-HIPPO-3 cal --> 
                     <poly coefs="-90.691 25.554 0.08566" units="deg_C"/>   <!-- Pre-HIPPO-3 cal --> 
                 </variable>
-                <variable name="TTHL1" units="V" longname="Total Temperature, Deiced Left">
+                <variable name="TTFH1" units="V" longname="Total Temperature, Deiced Left, Rosemount">
                     <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <!--<poly coefs="-90.772 25.67  0.069654" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
                     <poly coefs="-90.802 25.69  0.068852" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
                 </variable>
-                <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
+                <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right, HARCO">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <!--<poly coefs="-91.647 26.364 -0.020022" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
                     <poly coefs="-91.701 26.385 -0.020225" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
                 </variable>
-                <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
+                <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right, HARCO">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <!--<poly coefs="-90.874 26.076 -0.00095893" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
                     <poly coefs="-91.049 26.152 -0.0073493" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
