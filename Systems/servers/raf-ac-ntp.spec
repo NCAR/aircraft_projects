@@ -17,7 +17,7 @@ Requires: ntp
 Configuration for NTP on RAF aircraft server systems
 
 %prep
-# %setup -n %{name}
+%setup -n %{name}
 
 %build
 

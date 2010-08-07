@@ -19,7 +19,7 @@ Requires: nidas-x86-build
 Configuration for NTP on RAF ADS3 lab (non-aircraft) server systems
 
 %prep
-# %setup -n %{name}
+%setup -n %{name}
 
 %build
 
