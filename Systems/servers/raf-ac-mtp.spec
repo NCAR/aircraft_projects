@@ -1,5 +1,5 @@
 Summary: Spec file for MTP instrument
-Name: raf-mtp
+Name: raf-ac-mtp
 Version: 1 
 Release: 1
 Group: Applications/Engineering
@@ -15,7 +15,7 @@ BuildArch: noarch
 Setup for receiving MTP data from the mtp-pc.
 
 %prep
-# %setup -n raf-mtp
+# %setup -n %{name}
 
 %build
 
