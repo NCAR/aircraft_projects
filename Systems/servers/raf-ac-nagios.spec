@@ -45,6 +45,7 @@ if ! egrep -q "raf_commands" $cf; then
 fi
 sed -i 's/\/localhost.cfg/\/raf_localhost.cfg/' $cf
 
+/sbin/chkconfig -level 345 nagios on
 /etc/init.d/nagios restart
 
 %clean
