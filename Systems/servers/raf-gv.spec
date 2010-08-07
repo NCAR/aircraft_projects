@@ -21,6 +21,7 @@ Requires: nidas
 Requires: nidas-x86-build
 Requires: ael-local-dpkgs
 Requires: chrony
+Requires: raf-ac-avaps
 Requires: raf-ac-mtp
 
 BuildArch: noarch
