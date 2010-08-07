@@ -25,8 +25,8 @@ mkdir -p $RPM_BUILD_ROOT/var/www/html
 cp -r camera $RPM_BUILD_ROOT/var/www/html/
 
 %post
-mkdir /mnt/r2/camera_images
-ln -s /mnt/r2/camera_images /var/www/html/camera/camera_images
+mkdir /mnt/r1/camera_images
+ln -s /mnt/r1/camera_images /var/www/html/camera/camera_images
 phpconf=`find /etc -name "php.conf"`
 echo "SetEnv PGHOST acserver" >> $phpconf
 echo "SetEnv PGUSER ads" >> $phpconf
