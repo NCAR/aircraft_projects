@@ -100,6 +100,12 @@ while [ "$dopkg" == all -o $# -gt 0 ]; do
         rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
     fi
 
+    pkg=raf-mtp
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
+
     pkg=raf-ads3-sysctl
     if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
         version=`get_version $pkg.spec`
