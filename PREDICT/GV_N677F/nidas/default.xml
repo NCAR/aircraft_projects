@@ -389,11 +389,12 @@
             <variable name="PMGB" units="V" longname="SPP-200 Mid-Gain Baseline"/>
             <variable name="PLGB" units="V" longname="SPP-200 Low-Gain Baseline"/>
             <variable name="PFLW" units="cnts" longname="SPP-200 Flow">
-                <poly coefs="-0.0165 7.9354e-5 1.1453e-7" units="std cm3/s"/>
+                <!-- <poly coefs="-0.0165 7.9354e-5 1.1453e-7" units="std cm3/s"/> -->
+                <linear slope="2.500000e-03" intercept="0.0" units="std cm3/s"/>
             </variable>
             <variable name="PREF" units="V" longname="SPP-200 Laser Reference Voltage"/>
             <variable name="PFLWS" units="cnts" longname="SPP-200 Sheath Flow">
-                <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>
+                <!-- <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>-->
             </variable>
             <variable name="PTMP" units="deg_C" longname="SPP-200 Detector Temperature"/>
             <variable name="AS200" length="31" units="count" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT"/>
@@ -670,7 +671,9 @@
             <variable name="SampleP"   units="torr" longname="NOAA SP2 Sample P"/>
             <variable name="SampleFlow" units="vccs" longname="NOAA SP2 Sample Flow"/>
             <variable name="YAGP" units="V" longname="SP2 YAG Power"/>
-            <variable name="PCAB" units="torr" longname="SP2 Cabin Pressure"/>
+            <variable name="PCAB" units="torr" longname="SP2 Cabin Pressure">
+                <poly coefs="-4.166500e+01 1.173100e+02 -2.100000e-02" units="hPa"/>
+            </variable>
         </sample>
     </sensor>
 
@@ -780,7 +783,7 @@
                 <parameter name="numpoints" value="50" type="int"/>
                 <variable name="TCAB" units="V" longname="Cabin Temperature at ADS Rack Location">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-<!--                    <linear slope="100.0" intercept="0.0" units="deg_C"/>  -->
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>  
                 </variable>
                 <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
@@ -788,11 +791,11 @@
                 </variable>
                 <variable name="PDUMPPR" units="V" longname="Pressure of instrument exhaust duct, right">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <linear slope="103.42" intercept="0" units="hPa"/>
+                    <poly coefs="-3.246000e+01 1.121200e+02 -8.460000e-02" units="hPa"/>
                 </variable>
                 <variable name="PDUMPPL" units="V" longname="Pressure of instrument exhaust duct, left">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <linear slope="103.42" intercept="0" units="hPa"/>
+                    <poly coefs="-3.947300e+01 1.132300e+02 -1.230000e-02" units="hPa"/>
                 </variable>
             </sample>
 
@@ -847,7 +850,7 @@
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110">
 	    <sample id="1">
                 <variable name="PSF" units="hPa" longname="Raw Static Pressure, Fuselage">
-                <linear slope="1.0006" intercept="-0.4453" units="hPa"/>
+                    <linear slope="1.0014" intercept="-0.809" units="hPa"/>
                 </variable>
 	    </sample>
         </serialSensor>
@@ -855,9 +858,7 @@
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120">
 	    <sample id="1">
 	        <variable name="DPLB" units="unk" longname="Dew/Frost Point Balance, Fuselage Left"/>
-                <variable name="DPLS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left">
-                    <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
-                </variable>
+                <variable name="DPLS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left"/>
                 <variable name="DPLTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Left"/>
 	    </sample>
         </serialSensor>
@@ -865,9 +866,7 @@
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130">
 	    <sample id="1">
                 <variable name="DPRB" units="unk" longname="Dew/Frost Point Balance, Fuselage Right"/>
-                <variable name="DPRS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right">
-                    <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
-                </variable>
+                <variable name="DPRS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right"/>
                 <variable name="DPRTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Right"/>
 	    </sample>
         </serialSensor>
@@ -885,7 +884,9 @@
         <serialSensor IDREF="HoneywellPPT"
                 devicename="/dev/ttyS5" id="110">
             <sample id="1">
-                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage"/>
+                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage">
+                   <linear slope="0.9966" intercept="0.126" units="hPa"/>
+                </variable>
             </sample>
             <sample id="2">
                 <variable name="QCFTEMP" units="deg_C" longname="Temperature of QCF Probe"/>
@@ -895,7 +896,9 @@
         <serialSensor IDREF="HoneywellPPT"
                 devicename="/dev/ttyS6" id="120">
             <sample id="1">
-                <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome"/>
+                <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome">
+                    <linear slope="1.0025" intercept="0.16" units="hPa"/>
+                </variable>
             </sample>
             <sample id="2">
                 <variable name="QCRTEMP" units="deg_C" longname="Temperature of QCR Probe"/>
@@ -905,7 +908,9 @@
         <serialSensor IDREF="HoneywellPPT"
                 devicename="/dev/ttyS7" id="130">
             <sample id="1">
-                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome"/>
+                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome">
+ 		    <poly coefs="-1.280000e-01 1.002200e+00 -1.000000e-05" units="hPa"/>
+                </variable>
             </sample>
             <sample id="2">
                 <variable name="ADIFRTEMP" units="deg_C" longname="Temperature of ADIFR Probe"/>
@@ -915,7 +920,9 @@
         <serialSensor IDREF="HoneywellPPT"
                 devicename="/dev/ttyS8" id="140">
             <sample id="1">
-                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome"/>
+                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome">
+                    <linear slope="1.001400" intercept=".06" units="hPa"/>
+                </variable>
             </sample>
             <sample id="2">
                 <variable name="BDIFRTEMP" units="deg_C" longname="Temperature of BDIFR Probe"/>
@@ -931,24 +938,20 @@
                 <variable name="TTFH2" units="V" longname="Total Temperature, Deiced Left, Rosemount">
                     <parameter name="channel"  value="0"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <!--<poly coefs="-90.997 25.705 0.063667" units="deg_C"/> --> <!-- Post-HIPPO-3 cal --> 
-                    <poly coefs="-90.691 25.554 0.08566" units="deg_C"/>   <!-- Pre-HIPPO-3 cal --> 
+                    <poly coefs="-95.78 28.02 -0.29366" units="deg_C"/>   
                 </variable>
                 <variable name="TTFH1" units="V" longname="Total Temperature, Deiced Left, Rosemount">
                     <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <!--<poly coefs="-90.772 25.67  0.069654" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
-                    <poly coefs="-90.802 25.69  0.068852" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
+                    <poly coefs="-96.23 28.509 -0.31634" units="deg_C"/>  
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right, HARCO">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <!--<poly coefs="-91.647 26.364 -0.020022" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
-                    <poly coefs="-91.701 26.385 -0.020225" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
+                    <poly coefs="-89.31 26.128 -0.09022" units="deg_C"/>  
                 </variable>
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right, HARCO">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <!--<poly coefs="-90.874 26.076 -0.00095893" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
-                    <poly coefs="-91.049 26.152 -0.0073493" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
+                    <poly coefs="-89.2 25.923 -0.07941" units="deg_C"/>  
                 </variable>
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
@@ -1002,10 +1005,7 @@
 
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130" suffix="_GP">
             <sample id="1">
-                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome">
-                   <!-- Compensate for inserting Gust Probe "upside down" -->
-                   <linear slope="-1.0" intercept="0.0" units="Degrees"/>
-                </variable>
+                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome"/>
             </sample>
             <sample id="2">
                 <variable name="BDIFRTEMP" units="deg_C" longname="Temperature of BDIFR Probe"/>
@@ -1016,7 +1016,7 @@
             <sample id="1">
                 <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome">
                    <!-- Compensate for inserting Gust Probe "upside down" -->
-                   <linear slope="-1.0" intercept="0.0" units="Degrees"/>
+                   <linear slope="-1.0" intercept="0.0" units="hPa"/>
                 </variable>
             </sample>
             <sample id="2">
@@ -1191,6 +1191,7 @@
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.00032" type="float"/>
                     <parameter name="corIntercept" value="0.000164" type="float"/>
+                    <poly coefs="-8.500000e+00 3.453000e+02 -6.317000e-01"/>
                 </variable>
             </sample>
         </sensor>
