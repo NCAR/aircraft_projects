@@ -159,12 +159,12 @@ controller.prototype.initialize = function() {
 		function(data, ts) {
 		for (var d in M.dsms) {	
 			var curData = data[d];
-			var timetagstatus = 2, resptext = 'no data received';
+			var timetagstatus = 2, resptext = 'no data recieved';
 			
 			if (typeof(curData) != "undefined") {
 				curData = curData.substr(0, 19).replace(/-/g, ' ');
 				var timein = Date.parse(curData), now=new Date();
-				var criticallimit = 6000, warninglimit = 4000;
+				var criticallimit = 8000, warninglimit = 5000;
 				var timediff = -1* (timein - now.getTimezoneOffset()*60*1000 - now);
 				timetagstatus =  (timediff < warninglimit) ? 0 : 1;
 				timetagstatus = (timediff < criticallimit) ? timetagstatus : 2;
