@@ -42,6 +42,10 @@ list.sort(lambda y, x: cmp(os.path.getmtime(x),os.path.getmtime(y)))
 # Send the latest file first
 for file in list:
 
+    # Make a skewt and put in web space.
+    os.putenv('ASPENCONFIG', '/home/local/src/aspenqc');
+    os.system('/home/local/src/aspenqc/Aspen-QC -i '+file+' -g /var/www/html/skewt/'+file+'.svg');
+
     # bzip2/bunzip2 doesn't modify the creation date of the file!
     syslog.syslog('compressing '+file)
     cmd='bzip2 --best '+file
@@ -51,9 +55,9 @@ for file in list:
     try:
         syslog.syslog('opening FTP connection for '+file_bz2)
 
-        ftp = ftplib.FTP('eol-rt-data.guest.ucar.edu')
-        ftp.login('ads', 'blue;spruce')
-        ftp.cwd('avaps/c130')
+        ftp = ftplib.FTP('data.eol.ucar.edu')
+        ftp.login('anonymous', '')
+        ftp.cwd('/pub/incoming/predict/gv/')
 
         ftp.storbinary('stor '+file_bz2, open(file_bz2, 'r'))
         syslog.syslog(file_bz2+' sent')
