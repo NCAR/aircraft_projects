@@ -87,8 +87,8 @@ if [ $# == 3 ] && [ $3 == "kernel" ] ; then
     echo "\t'kernel' = '/boot/vmlinuz-2.6.16.28-arcom1-1-viper'"
     echo "\tRedBoot> alias kernel /boot/vmlinuz-2.6.16.28-arcom1-2-viper"
     echo "\tRedBoot> reset"
-    ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/linux-image-2.6.16.28-arcom1-2-viper_ncar.1_arm.deb /tmp/"
-    ssh root@$1 "dpkg -i -F depends /tmp/linux-image-2.6.16.28-arcom1-2-viper_ncar.1_arm.deb"
+    ssh root@$1 "rsync rsync://192.168.184.1/ael-dpkgs/linux-image-2.6.16.28-arcom1-2-viper_ncar.2_arm.deb /tmp/"
+    ssh root@$1 "dpkg -i -F depends /tmp/linux-image-2.6.16.28-arcom1-2-viper_ncar.2_arm.deb"
     ;;
   vulcan)
     echo "\nfor VULCAN:"
