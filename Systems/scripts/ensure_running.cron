@@ -1,30 +1,42 @@
-#!/bin/bash
+#!/bin/csh -x
 
 # Script to ensure miscellanious prcesses are running.  Run out of cron
 # periodically, say every 3-5 minutes.
 
-if ! ps ax | grep status_listener | grep -qv grep
-then
-  nohup /opt/local/nidas/x86/bin/status_listener > /tmp/status_listener.log 2>&1 &
-fi
+ps ax | grep status_listener | grep -qv grep
+if ($status) then
+  nohup /opt/local/nidas/x86/bin/status_listener >& /tmp/status_listener.log &
+endif
 
-if ! ps ax | grep acTrack2kml | grep -qv grep
-then
-  nohup /opt/local/bin/acTrack2kml -o > /tmp/acTrack2kml.log 2>&1 &
-fi
+ps ax | grep acTrack2kml | grep -qv grep
+if ($status) then
+  nohup /opt/local/bin/acTrack2kml -o >& /tmp/acTrack2kml.log &
+endif
 
-if ! ps ax | grep listen_sat.pl | grep -qv grep
-then
-  nohup /home/local/Systems/scripts/listen_sat.pl > /tmp/listen_sat.log 2>&1 &
-fi
+ps ax | grep listen_sat.pl | grep -qv grep
+if ($status) then
+  nohup /home/local/Systems/scripts/listen_sat.pl >& /tmp/listen_sat.log &
+endif
 
-if ! ps ax | grep xmlrpc2shell.py | grep -qv grep
-then
-  nohup /home/local/Systems/scripts/xmlrpc2shell.py > /tmp/xmlrpc2shell.log 2>&1 &
-fi
+ps ax | grep listen_lightning.pl | grep -qv grep
+if ($status) then
+  nohup /home/local/Systems/scripts/lightning/listen_lightning.pl >& /tmp/listen_lightning.log &
+endif
+
+ps ax | grep listen_cloud.pl | grep -qv grep
+if ($status) then
+  nohup /home/local/Systems/scripts/listen_cloud.pl >& /tmp/listen_cloud.log &
+endif
+
+ps ax | grep xmlrpc2shell.py | grep -qv grep
+if ($status) then
+  /home/local/Systems/scripts/xmlrpc2shell.py >& /tmp/xmlrpc2sh.log
+endif
+
+exit;
 
 # Open Street Maps rendering daemon.
-if ! ps ax | grep renderd | grep -qv grep
-then
-  /usr/bin/renderd &
-fi
+ps ax | grep renderd | grep -qv grep
+if ($status) then
+  nice /usr/bin/renderd &
+endif
