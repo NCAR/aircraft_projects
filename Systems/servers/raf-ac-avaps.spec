@@ -18,6 +18,10 @@ Setup for AVAPS dropsonde data collection:
   - cron entry 
   - script that cron entry runs to check for new files and ftp them out.
 
+AVAPS process works as follows.  The AVAPS computer rsync's D-files to our computer
+after a drop in /mnt/r1/dropsondes.  The cron entry to run send_avaps.cron.py runs
+and ftp's the file to the ground, runs Aspen to produce a Skewt which is placed in
+/var/www/html/skewt.
 
 %prep
 # %setup -n %{name}
@@ -25,8 +29,8 @@ Setup for AVAPS dropsonde data collection:
 %build
 
 %install
-mkdir -p ${RPM_BUILD_ROOT}/mnt/r1/dropsondes
-mkdir -p ${RPM_BUILD_ROOT}/var/www/html/skewT
+mkdir -p ${RPM_BUILD_ROOT}/mnt/r1/dropsondes/tmp
+mkdir -p ${RPM_BUILD_ROOT}/var/www/html/skewt
 
 %post
 
@@ -54,7 +58,7 @@ fi
 %files
 %defattr(-,ads,ads)
 /mnt/r1/dropsondes
-/var/www/html/skewT
+/var/www/html/skewt
 
 %changelog
 * Sat Aug 7 2010 Chris Webster <cjw@ucar.edu> - 1.0-1
