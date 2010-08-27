@@ -74,7 +74,7 @@ print OUT "</Icon>\n</IconStyle>\n</Style>\n";
 
 $dbh = DBI->connect("dbi:Pg:dbname=real-time;host=$host",'ads','',{AutoCommit => 1, RaiseError => 1, PrintError => 0});
 
-# Set up loop to move through the last 60 minutes
+# Set up loop to move through the last 6 minutes.
 for($i = 0; $i < 6; $i++) {
 
 #   $i = 1;
