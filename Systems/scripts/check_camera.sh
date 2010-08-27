@@ -10,9 +10,9 @@
 #        modified by mount point in dsmc01:/etc/fstab.
 #    camera.log must match location and format in dsmc01:/home/ads/startCamera.
 
-cameraLog="/mnt/r2/camera/FwdCam/camera.log"
+cameraLog="/mnt/r1/camera/FwdCam/camera.log"
 # directory name starts at the 38th character.
-imageDirectory="/mnt/r2/camera/FwdCam/`tail -n1 $cameraLog |cut -c 38-`"
+imageDirectory="/mnt/r1/camera/FwdCam/`tail -n1 $cameraLog |cut -c 38-`"
 
 if [ -d $imageDirectory ]; then
 
