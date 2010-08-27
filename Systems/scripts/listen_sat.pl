@@ -44,13 +44,21 @@ my $sel = IO::Select->new($fd);
 
 while (1) {
   print "waiting...";
+  alarm(2700);
 
   eval {
     $sel->can_read;
     $dbh->{RaiseError} = 1;
 
     my $notify = $dbh->func("pg_notifies");
+
+    $SIG{ALRM} = sub {
+      print "Script timed out\n";
+      exit -1;
+    };
+
     if ($notify) {
+        alarm(2700);
         my ($relname, $pid) = @$notify;
         my $row = $dbh->selectrow_hashref("SELECT now()");
         print "$relname from PID $pid at $row->{now}\n";
@@ -63,7 +71,7 @@ while (1) {
 	}
     }
   };
-  if($@) {
+  if ( $@ ) {
      print "Error $@ with the database\n";
      exit;
   }
