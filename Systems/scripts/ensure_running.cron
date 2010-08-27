@@ -23,9 +23,9 @@ if ($status) then
   nohup /home/local/Systems/scripts/lightning/listen_lightning.pl >& /tmp/listen_lightning.log &
 endif
 
-ps ax | grep listen_cloud.pl | grep -qv grep
+ps ax | grep create_symlink.sh | grep -qv grep
 if ($status) then
-  nohup /home/local/Systems/scripts/listen_cloud.pl >& /tmp/listen_cloud.log &
+  nohup /home/local/Systems/GV/camera/create_symlink.sh >& /tmp/camera_sym.log &
 endif
 
 ps ax | grep xmlrpc2shell.py | grep -qv grep
@@ -34,6 +34,8 @@ if ($status) then
 endif
 
 exit;
+
+#commented out in PREDICT since we lost the disk drive.
 
 # Open Street Maps rendering daemon.
 ps ax | grep renderd | grep -qv grep
