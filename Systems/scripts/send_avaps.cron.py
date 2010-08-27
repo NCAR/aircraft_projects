@@ -7,7 +7,7 @@
 # If the transfer fails then the file is uncompressed.
 #
 # This is set up to run out of a cron job every minute
-# */1 * * * * /home/local/Systems/scripts/send_avaps.cron.py
+# * * * * * /home/local/Systems/scripts/send_avaps.cron.py
 #
 import os
 import sys
@@ -44,6 +44,7 @@ for file in list:
 
     # Make a skewt and put in web space.
     os.putenv('ASPENCONFIG', '/home/local/src/aspenqc');
+    os.system('/bin/cp '+file+' tmp');
     os.system('/home/local/src/aspenqc/Aspen-QC -i '+file+' -g /var/www/html/skewt/'+file+'.svg');
 
     # bzip2/bunzip2 doesn't modify the creation date of the file!
@@ -79,3 +80,5 @@ for file in list:
 # remove busy flag
 os.remove('BUSY')
 syslog.closelog()
+os.chdir('tmp')
+os.system('./dwf')
