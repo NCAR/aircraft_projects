@@ -2,12 +2,31 @@
 #
 # Launches nimbus for real-time aircraft mode.
 
+echo "sending texts to Chris and Tom"
+#
+# SMS text Chris that aircraft is up.
+echo "Datasystem is up" | mail -s "GV is Online" 3038832241@txt.att.net
+#
+# SMS text Tom that aircraft is up.
+echo "GV Datasystem is up `date`" | mail -s "GV is Online" 7203631466@tmomail.net
+
+echo "setting up  vcsel  specturm stash"
+#
+#  Temporarily stash the VCSEL spectrum to /tmp/vcsel.spec.txt
+pkill data_dump
+rm /tmp/vcsel.spec.txt
+data_dump -i 4,330 | grep SPEC > /tmp/vcsel.spec.txt &
+
+
 # Make sure it exists.
 /bin/mkdir -p $XMIT_DIR
 
-# Remove AVAPS DropSonde files.
-/bin/rm -f /mnt/r2/send_to_grnd/D20*
-/bin/rm -f /tmp/avaps-rt
+# Soundings for ADELE.  Grab latest at nimbus start, presumably
+# after SATCOM is up.  cron job will also run twice a day.
+#echo "\n\n  Fetching latest soundings...."
+#pkill get_sounding
+#/home/local/Systems/scripts/get_sounding &
 
 # Fire up nimbus in real-time with transmit on.
-nimbus -rt3 -x
+#  For HIPPO, set transmit rate to once every 10 seconds.  Default is 5 seconds.
+nimbus -rt3 -x 5
