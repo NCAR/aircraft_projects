@@ -6,6 +6,7 @@ find /var/www/html/flight_data/images -name "ops*.jpg" -mmin +720 -exec rm {} \;
 find /var/www/html/skewt -name "*.svg" -mmin +1440 -exec rm {} \;
 
 # Don't allow the lock file to remain too long.
+find /mnt/r1/send_to_grnd -name "D2*" -mmin +600 -exec rm {} \;
 find /mnt/r1/dropsondes -name "BUSY" -mmin +20 -exec rm {} \;
 
 # Clean these every couple months.
