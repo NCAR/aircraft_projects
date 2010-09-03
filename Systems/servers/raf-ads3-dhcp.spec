@@ -1,7 +1,7 @@
 Summary: DHCP configuration for server on RAF aircraft
 Name: raf-ads3-dhcp
 Version: 1.0
-Release: 18
+Release: 19
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -101,6 +101,8 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %changelog
+* Fri Sep 3 2010 Gordon Maclean <maclean@ucar.edu> 1.0-19
+- Add a change to the trigger in script, deleting named .jnl files when the key changes.
 * Fri Sep 3 2010 Gordon Maclean <maclean@ucar.edu> 1.0-18
 - /etc/dhcpd-dsms.conf: addresses for dsm322,dsm325 were incorrectly on the .84 net,
 - so dhcp would not give them the reserved addresses when they booted on the .184

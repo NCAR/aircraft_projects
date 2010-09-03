@@ -97,6 +97,7 @@ if [ -e $cf -a -e ${Kf[0]} ]; then
 fi
 
 if [ ! -e $cf -o ! -e ${Kf[0]} ]; then
+    /etc/init.d/named stop
     cd /var/named
     rm -f Kraf.ucar.edu.*
     dnssec-keygen -a HMAC-MD5 -b 512 -n HOST raf.ucar.edu > /dev/null || exit 1
@@ -107,6 +108,11 @@ key raf.ucar.edu {
     secret "`awk '/^Key:/{print $2}' Kraf.ucar.edu.*.private`";
 };
 EOD
+    # If you recreate the key, nuke the named .jnl files. It might prevent the
+    # "Unable to add forward map from blah.blah to blah.blah: timed out"
+    # dhcpd error.
+    rm -rf /var/named/*.jnl
+    /etc/init.d/named start
 fi
 
 [ -e $cf ] && chown root:named $cf
