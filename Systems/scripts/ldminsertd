@@ -1,0 +1,125 @@
+#!/usr/bin/python
+
+"""
+This script uses the pyinotify module to monitor
+the creation of new files that are created in the 
+'data' folder.  When a new file is detected it
+is moved to a 'sent' folder, bzipped, then sent
+to an LDM server.
+
+To throttle back the amount of files sent this
+script sends the lastest file every N minutes.
+
+This script will only send files it 'sees' being
+created.
+"""
+
+import logging, logging.handlers
+import os, sys, commands, pyinotify
+from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
+
+
+def mtime(filename):
+    return os.stat(filename).st_mtime
+
+
+class PClose(ProcessEvent):
+    mtime_lastfile = 0
+
+    def process_IN_CLOSE(self, event):
+        file = os.path.join(event.path, event.name)
+
+        # don't send every new file... space them apart by N minutes
+        mtime_currfile = mtime(file)
+        if mtime_currfile > self.mtime_lastfile + delay*60:
+
+            bz2name = '%s/%s.bz2' % (sent, event.name)
+
+            # skip repeats
+            if os.path.isfile( bz2name ):
+                logging.critical( "skipping '%s' already sent" % bz2name )
+                return
+
+            # move it to the sent folder
+            result = commands.getoutput('mv %s %s' % (file, sent) )
+            if result != '':
+                logging.critical( result )
+                return
+
+            # compress it
+            result = commands.getoutput('bzip2 --best %s/%s' % (sent, event.name) )
+            if result != '':
+                logging.critical( result )
+                return
+
+            # insert it into the LDM queue
+            result = commands.getoutput('/usr/local/ldm/bin/pqinsert -v %s' % bz2name) )
+#           if result != '':
+#               logging.critical( result )
+#               return
+
+            self.mtime_lastfile = mtime_currfile
+
+            logging.info('sent: %s' % bz2name )
+
+        else:
+            logging.debug('skipping: %s' % file)
+
+
+def Monitor(data):
+
+    wm = WatchManager()
+    notifier = Notifier(wm, PClose())
+    wm.add_watch(data, pyinotify.IN_CLOSE_WRITE)
+
+    try:
+        while 1:
+            notifier.process_events()
+            if notifier.check_events():
+                notifier.read_events()
+    except KeyboardInterrupt:
+        notifier.stop()
+        return
+
+
+if __name__ == '__main__':
+    try:
+        data    = sys.argv[1]
+        delay   = int(sys.argv[2])
+        logfile = sys.argv[3]
+
+        # setup logging
+        logger = logging.getLogger()
+        handler = logging.handlers.RotatingFileHandler(logfile, maxBytes=8192, backupCount=10)
+        formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s")
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.DEBUG)
+
+    except IndexError:
+        print "\nUsage: %s data delay logfile" % sys.argv[0]
+        print "    data    - path to data files  (i.e. /mnt/r1/mtp)"
+        print "    delay   - time (in minutes) between LDM inserts.  Set to 0 to send all."
+        print "    logfile - logfile name (i.e. /tmp/mtp.log)"
+        print "\nThe logfile is rotated every 8192 bytes with a backup count of 10."
+        print "\nNote that a 'sent' folder (i.e. /mnt/r1/mtp-sent) is created to"
+        print "store files for the LDM client inserts.\n"
+        sys.exit(1)
+
+    else:
+        if not os.path.isdir(data):
+            logging.critical("exiting, folder: '%s' does not exist." % data)
+            sys.exit(1)
+
+        # create a folder to hold the sent files
+        sent = '%s-sent' % data
+        if not os.path.isdir(sent):
+            logging.info('creating: %s' % sent)
+            try:
+                os.mkdir(sent)
+            except:
+                logging.critical("exiting, cannot create: '%s'" % sent)
+                sys.exit(1)
+
+        # watch the data folder for new files being created
+        Monitor(data)
