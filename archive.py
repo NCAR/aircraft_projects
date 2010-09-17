@@ -24,14 +24,15 @@ def usage():
     '''
     Usage statement for this code. This is also the only documentation.
     '''
-    if len(sys.argv) < 3 or len(sys.argv) > 5:
-        print '''"Usage: archAC.py TYPE SDIR SFILES MSSDIR
+    if len(sys.argv) < 3 or len(sys.argv) > 6:
+        print '''"Usage: archAC.py TYPE SDIR SFILES MSSDIR EMAIL
         where:      
             TYPE is data type being archive (SID-2H, ADS, CAMERA)
                 (will be used a subdir name on mss)
             SDIR = source file directory
             SFILES = source file suffix (i.e.  ads)
-            MSSDIR = MSS dir data will be archived to'''
+            MSSDIR = MSS dir data will be archived to
+	    EMAIL = Where to email MSS confimations to, comma seperated if more than one e-mail (OPTIONAL)'''
         raise SystemExit
     return
 
@@ -54,7 +55,9 @@ flag = ""
 sdir = sys.argv[index]
 searchstr = sys.argv[index+1]
 location = sys.argv[index+2]
-
+email = ""
+if len(sys.argv) >= index+4:
+    email = sys.argv[index+3]
 
 # Get the list of files to archive and store to array sfiles
 sfiles = []
@@ -72,4 +75,4 @@ sfiles.sort()
 
 #Now archive the data!
 mssroot = ' mss:'+location+'/'
-archraf.archive_files(sdir,sfiles,flag,type,mssroot)
+archraf.archive_files(sdir,sfiles,flag,type,mssroot,email)

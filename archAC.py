@@ -105,10 +105,21 @@ class archRAFdata:
 	    if match:
 		calendaryear = string.split(line,'=')[1]
 	    # Retrieve read password
-	    match = re.search("rpwd",line)
-	    if match:
-		rpwd = string.split(line,'=')[1]
-		rpwd.strip()	# Remove leading and trailing spaces
+	    rpwd = ""
+	    #Never been used, switching to a new system soon so it probably will never be used
+	    #For reference if needed:
+	    #match = re.search("rpwd",line)
+	    #if match:
+		#rpwd = string.split(line,'=')[1]
+		#rpwd.strip()	# Remove leading and trailing spaces
+	    #else: #Sean Stroble crash fix
+	        #match = re.search("MSS Read Password: (.*)",line)
+		#if match:
+		     #if match.group(1).strip() == "no":
+			 #rpwd = ""
+		     #else:
+			 #rpwd = match.group(1).strip() #Sean Stroble quick experimental crash fix
+        
 	# Warn user if required params aren't in proj.info, ask user to add
 	# them, and quit.
 	if fiscalyear == "":
@@ -250,12 +261,12 @@ class archRAFdata:
 	
 	match = re.search('(\w(F|f)\d\d\w)',sfile)
 	if match:
-	     flightnum2 = match.group(0).upper()
-	     if len(flightnum) == 4:
-	          if flightnum[0:3] == flightnum2[0:3]:
-	               flightnum = flightnum2
-	          else:
-                       print "#WARNING: Ignored possible flight number in filename: " + flightnum2
+	    flightnum2 = match.group(0).upper()
+	    if len(flightnum) >= 4:
+		    if flightnum[0:3] == flightnum2[0:3]:
+		        flightnum = flightnum2
+		    else:
+		        print "#WARNING: Ignored possible flight number in filename: " + flightnum2
 	
 	dfile = dfile+flightnum
 
@@ -286,9 +297,11 @@ class archRAFdata:
 
     def parse_date(self,name):
 	(root, name) = os.path.split(name)
-	index = re.search("[0-9][0-9][0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9][0-9]",name)
-	if (index != -1):
-	    #print "match found for date format. Parsing date."
+	match = re.search("[0-9][0-9][0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9][0-9]",name)
+	if match:
+	    print "match found for date format. Parsing date."
+	    name = match.group()
+	    index = 0
 	    year = "20"+name[index:index+2]
 	    month = name[index+2:index+4]
 	    day = name[index+4:index+6]
@@ -331,7 +344,7 @@ class archRAFdata:
 	    raise SystemExit
 	return
 
-    def archive_files(self,sdir,sfiles,flag,type,mssroot):
+    def archive_files(self,sdir,sfiles,flag,type,mssroot,email = ""):
 	'''
         Now archive the data!
 	'''
@@ -362,7 +375,7 @@ class archRAFdata:
 	    #$PROJ_DIR/archives/scripts
 	    command.append('ssh -x '+ msrcpMachine + ' msput_job -pe 32767 ' + \
 		    '-pr 41113009 -wpwd ' + wpwd + \
-	            ' '+rpwd+' ' + sdir + spath+mssroot+type+'/'+sfile)
+	            ' '+rpwd+' ' + sdir + spath+mssroot+type+'/'+sfile + ' ' + email)
 
         for line in command:
 	    print line
@@ -510,14 +523,14 @@ if __name__ == "__main__":
                         (eyr,emo,edy,ehr,emn,esc,hoursearchstr)=archraf.parse_date(Efile)
                         # output tarfile name is like 
                         # RF##.FWD.Sdate.Stime_etime.jpg.tar and tar.dir
-                        index = re.search("[RrTtFf][Ff]",fullname)
-                        if (index == -1):
+                        match = re.search("[RrTtFf][Ff][0-9][0-9]",fullname)
+                        if not match:
                             print "Flight number not found in image path. Please"
                             print " rename camera dirs to contain flight numbers"
                             print " e.g. RF01\n"
                             raise SystemExit
-    
-                        flightnum = string.upper(fullname[index:index+4])
+   
+                        flightnum = string.upper(match.group())
                         tarfilename=flightnum+"."+pointing+"."+\
                             byr+bmo+bdy+"."+bhr+bmn+bsc+"_"+\
                             ehr+emn+esc+"."+searchstr
