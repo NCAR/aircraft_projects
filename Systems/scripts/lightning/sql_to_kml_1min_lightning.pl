@@ -72,7 +72,7 @@ print OUT "<href>http://acserver.raf.ucar.edu/flight_data/display/cloud30.png</h
 print OUT "</Icon>\n</IconStyle>\n</Style>\n";
 #print OUT "<visibility>1</visibility>\n<open>0</open>\n";
 
-$dbh = DBI->connect("dbi:Pg:dbname=real-time;host=$host",'ads','',{AutoCommit => 1, RaiseError => 1, PrintError => 0});
+$dbh = DBI->connect("dbi:Pg:dbname=real-time-GV;host=$host",'ads','',{AutoCommit => 1, RaiseError => 1, PrintError => 0});
 
 # Set up loop to move through the last 6 minutes.
 for($i = 0; $i < 6; $i++) {
