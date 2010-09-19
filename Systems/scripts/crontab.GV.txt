@@ -1,0 +1,16 @@
+# Always
+*/3 * * * * /home/local/Systems/scripts/ensure_running.cron > /tmp/ensure_run.log 2>&1
+*/3 * * * * /home/local/Systems/scripts/send_camera.cron > /tmp/camera_send.log 2>&1
+0 * * * * /home/local/Systems/scripts/scrubber > /tmp/scrubber.log 2>&1
+# MTP
+*/3 * * * * /home/local/Systems/scripts/send_MTP.cron > /tmp/mtp_send.log 2>&1
+# AVAPS
+* * * * * /home/local/Systems/scripts/send_avaps.cron.py > /tmp/avaps_send.log 2>&1
+# New satellite script
+*/3 * * * * /home/local/Systems/scripts/get_sat_image_cron.py > /tmp/get_sat_image.log 2>&1
+#PREDICT
+12,42 * * * * /home/local/Systems/scripts/get_cloud_top > /tmp/cloud_top.log 2>&1
+# Misc
+#0 * * * * /home/local/Systems/scripts/get_sounding
+#5,20,35,50 * * * * /home/local/Systems/scripts/get_sat_image
+
