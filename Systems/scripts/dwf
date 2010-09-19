@@ -1,0 +1,97 @@
+#!/bin/csh
+
+set out='/var/www/html/flight_data/GE/dwf500.kml'
+echo '<?xml version="1.0" encoding="UTF-8"?>' > $out
+echo '<kml xmlns="http://www.opengis.net/kml/2.2">' >> $out
+echo '<Document>' >> $out
+echo ' <name>AVAPS 500mb winds</name>' >> $out
+
+echo '  <Style id="PM2">' >> $out
+echo '   <IconStyle>' >> $out
+echo '    <scale>0.5</scale>' >> $out
+echo '    <Icon>' >> $out
+echo '     <href>http:///flight_data/display/white.png</href>' >> $out
+echo '    </Icon>' >> $out
+echo '   </IconStyle>' >> $out
+echo '  </Style>' >> $out
+
+foreach file (D*)
+  ./drop2kml 500 < $file >> $out
+end
+
+echo '</Document>' >> $out
+echo '</kml>' >> $out
+
+
+
+set out='/var/www/html/flight_data/GE/dwf700.kml'
+echo '<?xml version="1.0" encoding="UTF-8"?>' > $out
+echo '<kml xmlns="http://www.opengis.net/kml/2.2">' >> $out
+echo '<Document>' >> $out
+echo ' <name>AVAPS 700mb winds</name>' >> $out
+
+echo '  <Style id="PM2">' >> $out
+echo '   <IconStyle>' >> $out
+echo '    <scale>0.5</scale>' >> $out
+echo '    <Icon>' >> $out
+echo '     <href>http:///flight_data/display/white.png</href>' >> $out
+echo '    </Icon>' >> $out
+echo '   </IconStyle>' >> $out
+echo '  </Style>' >> $out
+
+foreach file (D*)
+  ./drop2kml 700 < $file >> $out
+end
+
+echo '</Document>' >> $out
+echo '</kml>' >> $out
+
+
+
+set out='/var/www/html/flight_data/GE/dwf850.kml'
+echo '<?xml version="1.0" encoding="UTF-8"?>' > $out
+echo '<kml xmlns="http://www.opengis.net/kml/2.2">' >> $out
+echo '<Document>' >> $out
+echo ' <name>AVAPS 850 winds</name>' >> $out
+
+echo '  <Style id="PM2">' >> $out
+echo '   <IconStyle>' >> $out
+echo '    <scale>0.5</scale>' >> $out
+echo '    <Icon>' >> $out
+echo '     <href>http:///flight_data/display/white.png</href>' >> $out
+echo '    </Icon>' >> $out
+echo '   </IconStyle>' >> $out
+echo '  </Style>' >> $out
+
+foreach file (D*)
+  ./drop2kml 850 < $file >> $out
+end
+
+echo '</Document>' >> $out
+echo '</kml>' >> $out
+
+
+
+set out='/var/www/html/flight_data/GE/dwf925.kml'
+echo '<?xml version="1.0" encoding="UTF-8"?>' > $out
+echo '<kml xmlns="http://www.opengis.net/kml/2.2">' >> $out
+echo '<Document>' >> $out
+echo ' <name>AVAPS 925 winds</name>' >> $out
+
+echo '  <Style id="PM2">' >> $out
+echo '   <IconStyle>' >> $out
+echo '    <scale>0.5</scale>' >> $out
+echo '    <Icon>' >> $out
+echo '     <href>http:///flight_data/display/white.png</href>' >> $out
+echo '    </Icon>' >> $out
+echo '   </IconStyle>' >> $out
+echo '  </Style>' >> $out
+
+foreach file (D*)
+  ./drop2kml 925 < $file >> $out
+end
+
+echo '</Document>' >> $out
+echo '</kml>' >> $out
+
+
