@@ -80,5 +80,5 @@ for file in list:
 # remove busy flag
 os.remove('BUSY')
 syslog.closelog()
-# in raf/GoogleEarth/avaps2kml directory.
-os.system('avaps2kml')
+os.chdir('tmp')
+os.system('./dwf')
