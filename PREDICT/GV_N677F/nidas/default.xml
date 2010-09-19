@@ -711,16 +711,18 @@
 
     <sensor ID="LAMSX" class="raf.LamsSensor">
         <parameter name="TAS_level"  type="float" value="155.0"/>
-        <parameter name="nAVG"  type="int" value="4"/>
+	<!-- nAVG must be a power of 2. The sample rates below should be
+             set to 400/nAVG.  For nAVG=4, rate=100. nAVG=8,rate=50. nAVG=16,rate=25 -->
+        <parameter name="nAVG"  type="int" value="16"/>
         <parameter name="nSKIP" type="int" value="5"/>
         <parameter name="nPEAK" type="int" value="2800"/>
 
         <!-- The rate is is set to one even though sampling at 100Hz.  This allows
              one-point-pick-off for nimbus/aeros. Change to 100 for final processing -->
-        <sample id="1" rate="100">
+        <sample id="1" rate="1">
             <variable name="LAMS_AVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
         </sample>
-        <sample id="2" rate="100">
+        <sample id="2" rate="1">
             <variable name="LAMS_MAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
         </sample>
     </sensor>
@@ -753,7 +755,7 @@
                 </output>
                 <output class="RawSampleOutputStream">
                     <fileset dir="/var/r2/${PROJECT}"
-                        file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
+                        file="%Y%m%d_%H%M%S_${FLIGHT}.ads.bz2"
                         length="0"/>
                 </output>
                 <output class="RawSampleOutputStream">
@@ -1007,7 +1009,7 @@
 
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130" suffix="_GP">
             <sample id="1">
-                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome"/>
+                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Gust Pod"/>
             </sample>
             <sample id="2">
                 <variable name="BDIFRTEMP" units="deg_C" longname="Temperature of BDIFR Probe"/>
@@ -1016,7 +1018,7 @@
 
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140" suffix="_GP">
             <sample id="1">
-                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome">
+                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Gust Pod">
                    <!-- Compensate for inserting Gust Probe "upside down" -->
                    <linear slope="-1.0" intercept="0.0" units="hPa"/>
                 </variable>
@@ -1028,7 +1030,7 @@
 
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS9" id="150" suffix="_GP">
             <sample id="1">
-                <variable name="QC" units="hPa" longname="Raw Dynamic Pressure, Radome"/>
+                <variable name="QC" units="hPa" longname="Raw Dynamic Pressure, Gust Pod"/>
             </sample>
             <sample id="2">
                 <variable name="QCRTEMP" units="deg_C" longname="Temperature of QCR Probe"/>
