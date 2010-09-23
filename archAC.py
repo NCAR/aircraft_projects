@@ -39,6 +39,8 @@
 #	Only used archive_files and rename functions in archive.py
 #       I am sure there are hidden vars that will need to be made global to
 #	use other functions
+# Modified 9/21/2010 Janine Aquino (Happy Fall!)
+#	to fix error in path to tarfile. Use getcwd, not sdir.
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -231,7 +233,7 @@ class archRAFdata:
 	# no files found in the path, then there is nothing to 
 	# tar so don't return anything.
 	if len(tarfiles) != 0:
-	    print "Creating tarfile for "+sdir+"/"+filedir
+	    print "Creating tarfile for "+os.getcwd()+"/"+filedir
 
 	    # Create the tarfile
 	    tar = tarfile.open(tarfilename+".tar","w")
@@ -543,7 +545,7 @@ if __name__ == "__main__":
                             sfiles.append(tfile)
                             # Add the tar file list to the array of files to archive
                             sfiles.append(tfilelist)
-            sdir = sdir + '/'
+            sdir = os.getcwd() + '/'
     elif flag == "-r":
         sfiles = archraf.findfiles(sdir,searchstr)
         sdir = sdir + '/'
