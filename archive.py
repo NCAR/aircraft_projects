@@ -1,8 +1,23 @@
 #!/usr/bin/env python
 #
 ################################################################################
-# Script to rename RAF netCDF aircraft files to contain flight, date, and time.
+# The ccompanion to this script, archAC.py, must be run from the project
+# Production/archive subdir and required that Production/proj.info exist. This 
+# was done so the user did not have to know the exact path on the mass store
+# where the files were to be stored, but merely needed to chose between
+# archiving under /RAF (by passing in 'RAF') or /ATD/DATA (by passing in
+# ATDdata).
+#
+# This script eliminates that requirement, but requires the user to call it
+# with the full mass store path where the files are to be archived, e.g.
+# '/ATD/DATA/2010/PREDICT/GV_N677F'
+#
+# Both scripts keep the same filenames, except for RAF LRT and HRT aircraft
+# netCDF files, which are renamed to contain flight, date, and time.
+#
 # Uses archAC.py libs
+#
+# Created by Janine (Goldstein) Aquino
 #
 #  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 #  *  Copyright 2010                                                         *
