@@ -324,7 +324,7 @@ class archRAFdata:
 	Usage statement for this code. This is also the only documentation.
 	'''
         if len(sys.argv) < 3 or len(sys.argv) > 7:
-	    print '''"Usage: archAC.py TYPE <flag> SDIR SFILES <RAF|ATDdata>
+	    print '''Usage: archAC.py TYPE <flag> SDIR SFILES <RAF|ATDdata> [EMAIL]
 	    where:	type is data type being archive (SID-2H, ADS, CAMERA)
 		(will be used a subdir name on mss)
 		flag is an optional argument that can be -r or -t
@@ -342,7 +342,8 @@ class archRAFdata:
 		SDIR = source file directory
 		SFILES = source file suffix (i.e. ads)
 		'RAF' -> data will be archived to /RAF (in house)
-		'ATDdata' -> data will be archived to /ATD/DATA (public access)'''
+		'ATDdata' -> data will be archived to /ATD/DATA (public access)
+		EMAIL = Who to send msput_job e-mail's too (Optional)'''
 	    raise SystemExit
 	return
 
@@ -440,6 +441,11 @@ if __name__ == "__main__":
     sdir = sys.argv[index]
     searchstr = sys.argv[index+1]
     location = sys.argv[index+2]
+    #Optional e-mail argument
+    if len(sys.argv)-1 >= index+3:
+         email = sys.argv[index+3]
+    else:
+         email = ""
 
     # Make sure this script is being run from 
     # $PROJ_DIR/<proj>/<platform>/Production/archive.
@@ -598,5 +604,5 @@ if __name__ == "__main__":
     
     
     #Now archive the data!
-    archraf.archive_files(sdir,sfiles,flag,type,mssroot)
+    archraf.archive_files(sdir,sfiles,flag,type,mssroot,email)
     
