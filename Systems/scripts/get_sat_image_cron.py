@@ -1,17 +1,23 @@
 #!/usr/bin/python
 #
 # This script attempts to get the latest satellite image from the ground.
-#  It does so by getting a listing of available files, and finding the most recent
-#  file.  It then compares the file name with the latest gotten file name stored
-#  in the db and if it's different, it pulls the file and stores its name in the DB.
+#  It does so by getting a listing of available files, and finding the most 
+#  recent file.  It then compares the file name with the latest gotten file 
+#  name stored in the db and if it's different, it pulls the file and stores 
+#  its name in the DB.  It also checks the listing of files on the plane
+#  in case the DB somehow got a name for which the file was not pulled.  Finally
+#  it compares the ground listing with the plane listing and if any files
+#  exist on the ground, but not on the plane, it pulls those.
 #
-#  NOTE:  this script assumes that latest image will be lexographically greater than all
-#         previous images.
+#  NOTE:  this script assumes that most recent image will be lexographically 
+#  greater than all other images.
 #
 # This is set up to run out of a cron job every N minutes
 # N * * * * /home/local/Systems/scripts/get_sat_image.cron.py
 #
-#  TODO:  replace all prints with syslog.syslog()
+#  TODO:  
+#         Refactor into python modules for better coding practice
+#         replace all prints with syslog.syslog()
 #	  set up to take arguments:
 #             Image type (IR, VIS, lightning, radar, etc)
 #             filename convention on ftp site (e.g. ir_image_*.jpg)
@@ -24,143 +30,164 @@ import glob
 import ftplib
 import syslog
 import time
+import datetime
 from pg import DB
 
-print "Starting get_sat_image_cron.py for getting IR imagery"
+# Initialization - change this for different file types/names/locations.
+local_image_dir  = '/var/www/html/flight_data/images/'
+image_type       = 'IR'
+busy_file        = 'BUSY_'+image_type
+ftp_site         = 'data.eol.ucar.edu'
+ftp_login        = 'anonymous'
+ftp_passwd       = ''
+ftp_dir          = '/pub/incoming/predict/mc_sat/'
+prefix           = 'ops.goes-13.'  #Assumes filename form is prefixYYYYMMDD*
+osm_file_name    = "latest_ir.jpg"
+num_imgs_to_get  = 10 # Script will backfill this many images for loops
+
+
+print "Starting get_sat_image_cron.py for getting " + image_type + " imagery"
 
 gmt=time.gmtime()
+
 year=gmt[0]
 month=gmt[1]
 yesterday=gmt[2]-1
 today=gmt[2]
-tomorrow=gmt[3]+1
+tomorrow=gmt[2]+1
+if month<10:
+    monthstr = "0"+str(month)
+else:
+    monthstr = str(month)
+if yesterday<10:
+    yesterdaystr = "0" + str(yesterday)
+else:
+    yesterdaystr = str(yesterday)
+if today<10:
+    todaystr = "0" + str(today)
+else:
+    todaystr = str(today)
+if tomorrow<10:
+    tomorrowstr = "0" + str(tomorrow)
+else:
+    tomorrowstr = str(tomorrow)
 
-#override real date stuff for now - numbers to strings in python needed.
-year='2010'
-month='09'
-yesterday='13'
-today='14'
-tomorrow='15'
+print monthstr+"/"+todaystr+"/"+str(year)+" "+str(gmt[3])+":"+str(gmt[4])
 
-os.chdir('/var/www/html/flight_data/images/')
-#os.chdir('/tmp/')
+os.chdir(local_image_dir)
 
 # This cron script is not re-entrant, bail out if its still running.
-if os.path.isfile('BUSY_IR'):
-    print 'exiting, BUSY_IR'
+if os.path.isfile(busy_file):
+    print 'exiting, ' + busy_file + ' exists.  Already running.'
     sys.exit(1)
-os.system('touch BUSY_IR')
+cmd = 'touch ' + busy_file
+os.system(cmd)
 
-cnx = DB('real-time')
-
-# Get current IR image name from database
-try:
-    # Validate that images table exists in database
-    images = cnx.query("SELECT * from images")
-except :
-    print "error accessing images table - assume it doesn't exist"
-    print "create table"
-    cnx.query("""CREATE TABLE images (type varchar(80), name varchar(80))""")
-
-# Get current IR image name from database
-try:
-    # Validate that images table exists in database
-    image = cnx.query("SELECT name from images where type = 'IR'")
-    imagelist=image.getresult()
-    imageitem=imagelist[0]
-    imagename=imageitem[0]
-
-except :
-    print "could not get latest IR image from images table"
-    imagename = ""
+#  Get the listing of image files from the directory
+listing=os.listdir('.')
 
 # Get list of current images from ftp site
-#form = "ops.goes-13."+year+month+day+"*"
 try:
     print 'opening FTP connection '
 
-    ftp = ftplib.FTP('data.eol.ucar.edu')
-    ftp.login('anonymous', '')
-    ftp.cwd('/pub/incoming/predict/mc_sat/')
+    ftp = ftplib.FTP(ftp_site)
+    ftp.login(ftp_login, ftp_passwd)
+    ftp.cwd(ftp_dir)
 
     ftplist = []
-    form="ops.goes-13." + year + month + yesterday + "*"
+    form=prefix + str(year) + monthstr + yesterdaystr + "*"
     ftp.dir(form, ftplist.append)
-    form="ops.goes-13." + year + month + today + "*"
+    form=prefix + str(year) + monthstr + todaystr + "*"
     ftp.dir(form, ftplist.append)
-    form="ops.goes-13." + year + month + tomorrow + "*"
+    form=prefix + str(year) + monthstr + tomorrowstr + "*"
     ftp.dir(form, ftplist.append)
 
 except ftplib.all_errors, e:
     print 'Error Getting ftp listing'
-    os.remove('BUSY_IR')
+    os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
 
-print "list of files"
+if len(ftplist) == 0:  # didn't get any file names, bail out
+    print "didn't find any files on ftp server with form: " +prefix+str(year)+monthstr+"{"+yesterdaystr+"|"+todaystr+"|"+tomorrowstr+"}*"
+    os.remove(busy_file)
+    ftp.quit()
+    sys.exit(1)
+
+print "Size of the ftp listing: " + str(len(ftplist))
+
 filelist = []
 for line in ftplist:
     linelist = line.split()
     filelist.append(linelist[len(linelist)-1])
 
-print filelist
 latest = filelist[len(filelist)-1]
 print "last file on ftp site is: " + latest
-print "database file is:" +  imagename
 
 # Check to see if we've got the most recent file
-if latest == imagename:
+if latest in listing:
     print "Already have file" + latest
-    os.remove('BUSY_IR')
+    os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
 
-print "Don't have most recent file"
-
 # Get the latest image 
-
 try:
-    command = "wget ftp://data.eol.ucar.edu:/pub/incoming/predict/mc_sat/"+latest
+    command = "wget ftp://"+ftp_site+":"+ftp_dir+latest
     os.system(command)
-    print 'file retrieved'
-    command = "cp "+latest+" latest_ir.jpg"
+    print 'file retrieved: '+latest
+    print 'setting it as overlay image for OSM.'
+    command = "cp "+latest+" "+osm_file_name
     os.system(command)
 
 except:
-    print "problems getting file, exiting"
-    os.remove('BUSY_IR')
+    print "problems getting file, exiting."
+    os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
 
-#try:
-#    print 'opening FTP connection for '+ latest
-#
-#    ftp = ftplib.FTP('data.eol.ucar.edu')
-#    ftp.login('anonymous', '')
-#    ftp.cwd('/pub/incoming/predict/mc_sat/')
-#
-#    file = open(latest)
-#    ftp.retrbinary("RETR " + latest, file.write)
-#    file.close
-#    print 'file retrieved'
-#
-#except ftplib.all_errors, e:
-#    print 'Error getting file:' + e
-#
-#    os.remove('BUSY_IR')
-#    ftp.quit()
-#    sys.exit(1)
+# Make sure that we're not missing any earlier images say 5 hours worth
+print 'Checking on images earlier in time.'
+got_old='false'
+i=2
+filename=filelist[len(filelist)-i]
+while i<num_imgs_to_get:
+    if filename not in listing:
+        print "Don't have earlier image:"+filename
+        try:
+            command = "wget ftp://"+ftp_site+":"+ftp_dir+filename
+            os.system(command)
+            print 'file retrieved: '+filename
+            got_old='true'
 
-# Update the entry in the images table
-try:
-    # Validate that images table exists in database
-    cnx.query("DELETE from images where type = 'IR'")
-    qstring = "INSERT INTO images VALUES ( 'IR', '"+latest+"')"
-    cnx.query(qstring)
+        except:
+            print "problems getting file, exiting"
+            os.remove(busy_file)
+            ftp.quit()
+            sys.exit(1)
+    i = i+1
+    filename=filelist[len(filelist)-i]
 
-except :
-    print "error updating images table - bummer situation!"
+# If we got an older image it's date/time will be out of sequence for 
+# time series veiwing (which is done based on date/time of file) so we need
+# to correct for that by touching the files based on time sequence.
+if got_old == 'true':
+    print 'cleaning up dates of image files'
+    listing=os.listdir('.')
+    listing.sort()
+    i = 0
+    while i < len(listing):
+        if not listing[i].__contains__(prefix):
+            listing.pop(i)
+        i = i + 1
+    i = 0
+    while i < len(listing):
+        os.system('touch '+listing[i])
+        os.system('sleep 1')
+        i = i + 1
 
-os.remove('BUSY_IR')
+
+print "Done."
+os.remove(busy_file)
 ftp.quit() 
 sys.exit(1)
