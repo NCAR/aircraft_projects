@@ -5,7 +5,7 @@
 find /var/www/html/flight_data/images -name "ops*.jpg" -mmin +720 -exec rm {} \;
 find /var/www/html/skewt -name "*.svg" -mmin +1440 -exec rm {} \;
 find /tmp/avaps-rt -name "D*" -mmin +720 -exec rm {} \;
-find /tmp -name "iostat*" -mmin +3000 -exec rm{} \;
+find /tmp -maxdepth 1 -name "iostat*" -mmin +3000 -exec rm{} \;
 #find /tmp -name "get_sat_*.log" -mmin +1440 -exec rm {} \;
 
 # Don't allow the lock files to remain too long.
