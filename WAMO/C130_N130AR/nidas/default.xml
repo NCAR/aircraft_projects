@@ -966,11 +966,11 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="TTFH1" units="V" longname="Radiometric Surface Temperature">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="-47.098 8.4341 0.1757" units="deg_C"/>
                 </variable>
                 <variable name="TTFH2" units="V" longname="Radiometric Surface Temperature">
-                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="-53.531 10.405 0.0201" units="deg_C"/>
                 </variable>
                 <variable name="XCOMR" units="V" longname="xcomr">
@@ -1121,13 +1121,13 @@
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="120"/>
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS7" id="130" suffix="_GMN"/>
 
-        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS8" id="300" suffix="_RWI" timeout="0">
+        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS8" id="300" suffix="_RWO" timeout="0">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
             <!-- If a PC is controlling the UHSAS, then set sendInit to false and the timeout to 0. -->
             <parameter name="sendInit" value="false" type="bool"/>
         </serialSensor>
 
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="500" suffix="_RWO">
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="500" suffix="_RWI">
             <parameter name="SerialNumber" type="string" value="CDP058"/>
         </serialSensor>
 
