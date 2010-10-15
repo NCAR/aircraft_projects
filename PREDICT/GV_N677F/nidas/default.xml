@@ -794,11 +794,11 @@
                 </variable>
                 <variable name="PDUMPPR" units="V" longname="Pressure of instrument exhaust duct, right">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-3.246000e+01 1.121200e+02 -8.460000e-02" units="hPa"/>
+                    <poly coefs="-2.50 103.93 0.0235" units="hPa"/>
                 </variable>
                 <variable name="PDUMPPL" units="V" longname="Pressure of instrument exhaust duct, left">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
-                    <poly coefs="-3.947300e+01 1.132300e+02 -1.230000e-02" units="hPa"/>
+                    <poly coefs="3.86 103.76 0.0555" units="hPa"/>
                 </variable>
             </sample>
 
@@ -836,7 +836,12 @@
           </sample>
           <sample id="0324" rate="50">
             <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.04" units="degree"/>
+              <linear slope="1.0" intercept="-0.16" units="degree"/>
+            </variable>
+          </sample>
+          <sample id="0325" rate="50">
+            <variable name="ROLL" units="degree"   longname="IRS Aircraft Roll Angle">
+              <linear slope="1.0" intercept="0.28" units="degree"/>
             </variable>
           </sample>
         </arincSensor>
@@ -1196,7 +1201,7 @@
                     <parameter name="bipolar" value="true" type="bool"/>
                     <parameter name="corSlope" value="1.00032" type="float"/>
                     <parameter name="corIntercept" value="0.000164" type="float"/>
-                    <poly coefs="-8.500000e+00 3.453000e+02 -6.317000e-01"/>
+                    <poly coefs="-5.48 342.47 0.0"/>
                 </variable>
             </sample>
         </sensor>
