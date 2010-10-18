@@ -22,7 +22,6 @@ Metapackage for all server and satcom packages needed on lab systems.
 %files 
 
 %changelog
-- Added not authoritative for subnet 128.117.0.0 netmask 255.255.0.0
 * Tue Jul 13 2010 Gordon Maclean <maclean@ucar.edu> 1.0-6
 - Added Requires: chrony
 * Wed Nov 24 2009 John Wasinger <wasinger@ucar.edu> 1.0-5
