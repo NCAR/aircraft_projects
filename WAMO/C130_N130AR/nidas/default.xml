@@ -610,7 +610,19 @@
     </serialSensor>
 
 
-    <serialSensor ID="COMR" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="PIC_CO2" class="DSMSerialSensor" baud="19200" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%*f %f %f %*d %*f" rate="5">
+            <variable name="CO2" units="V" longname="Carbon Dioxide Mixing Ratio">
+                <linear slope="1.0" intercept="0.0" units="ppmv"/>
+            </variable>
+            <variable name="CH4" units="V" longname="Methane Mixing Ratio">
+                <linear slope="1.0" intercept="0.0" units="ppmv"/>
+            </variable>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="COMR" class="DSMSerialSensor" baud="38400" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="%f">
             <variable name="COMR" units="V" longname="Carbon Monoxide Mixing Ratio">
                 <linear slope="400" intercept="-3.2" units="ppbv"/>
@@ -869,6 +881,9 @@
     <dsm name="dsm320" location="Fwd_FS245_1" id="20" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="320"/>
 
+	<sensor IDREF="ACDFO3" id="130" suffix="_CL"/>
+
+
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="140">
             <sample id="1">
                 <variable name="DPBB" units="unk" longname="Dew/Frost Point Balance, Fuselage Bottom"/>
@@ -895,6 +910,8 @@
             </sample>
         </serialSensor>
 
+        <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS8" id="170" suffix="_PIC"/>
+
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D002.dat"/>
             <parameter name="rate" value="500" type="int"/>
@@ -915,6 +932,12 @@
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true"  type="bool"/>
                     <poly coefs="-0.098 5.1373 8.3231e-05" units="hPa"/>
                 </variable>
+                <!--
+ 		<variable name="TTRR" units="V" longname="Total Temperature, Radome Right">
+                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <poly coefs="-68.309 27.092 -0.4413" units="deg_C"/>
+                </variable>
+                -->
                 <variable name="TTRL" units="V" longname="Total Temperature, Radome Right">
                     <parameter name="channel" value="5" type="int"/>
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
@@ -1013,7 +1036,6 @@
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                 </variable>
                 <variable name="RSTB" units="V" longname="Radiometric Surface Temperature">
-                    <parameter name="channel" value="6" type="int"/>
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <poly coefs="-47.098 8.4341 0.1757" units="deg_C"/>
                 </variable>
@@ -1022,7 +1044,6 @@
                     <poly coefs="-53.531 10.405 0.0201" units="deg_C"/>
                 </variable>
                 <variable name="TRSTB" units="V" longname="Radiometric Surface Temperature">
-                    <parameter name="channel" value="6" type="int"/>
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                 </variable>
             </sample>
