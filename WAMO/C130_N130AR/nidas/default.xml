@@ -858,6 +858,8 @@
         </arincSensor>
 
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
+
+<!--  Not working at this time.
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G">
           <sample id="0165" rate="50">
             <variable name="VSPD" units="m/s" longname="Avionics GPS Vertical Velocity">
@@ -865,7 +867,7 @@
             </variable>
           </sample>
         </arincSensor>
-
+--> 
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
             <sample id="5" rate="25">
                 <variable name="HGM232" units="feet" longname="Altitude above ground (radar altimeter)">
@@ -978,8 +980,9 @@
 
     <dsm name="dsm321" location="Video_Rack" id="21" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
-
+<!--
         <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS5" id="120" suffix="_CM3"/>
+-->
         <serialSensor IDREF="COMR" devicename="/dev/ttyS6" id="140" suffix="_AL"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
