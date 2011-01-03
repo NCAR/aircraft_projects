@@ -2,8 +2,8 @@
 
 #cd /scr/raf/local_data
 cd /scr/raf/local_productiondata
-foreach FILENAME (HIPPO3_?f??.nc)
+foreach FILENAME (HIPPO-3?f??.nc)
 echo $FILENAME
 ncReorder $FILENAME temp_h3.nc
-mv temp_h3.nc $FILENAME
+mv -f temp_h3.nc $FILENAME
 end
