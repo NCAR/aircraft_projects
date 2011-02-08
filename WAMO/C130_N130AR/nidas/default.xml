@@ -43,7 +43,7 @@
         <sample id="0313" rate="25"               ><variable name="TKAT"               units="degree_T" longname="IRS Aircraft Track Angle, True"/></sample>
         <sample id="0314" rate="25">
           <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
-            <linear slope="1.0" intercept="0.475" units="degree_T"/>
+            <linear slope="1.0" intercept="0.275" units="degree_T"/> <!-- Subtract 0.2 from offset to correct winds, 02-02-2011 PAR -->
           </variable>
         </sample>
         <sample id="0315" rate="10"               ><variable name="IWS"                units="m/s"      longname="IRS Wind Speed"/></sample>
@@ -920,11 +920,11 @@
             <sample id="1" rate="100">
                 <variable name="QCR" units="V" longname="Raw Dynamic Pressure, Radome">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <poly coefs="-2.094 17.727 -0.0041" units="hPa"/>
+                    <poly coefs="-1.594 17.727 -0.0041" units="hPa"/> <!-- Add 0.5 to offset to correct winds, 02-02-2011 PAR -->
                 </variable>
                 <variable name="QCF" units="V" longname="Raw Dynamic Pressure, Fuselage">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <poly coefs="-3.184 17.935 -0.0052" units="hPa"/>
+                    <poly coefs="-2.684 17.935 -0.0052" units="hPa"/> <!-- Add 0.5 to offset to correct winds, 02-02-2011 PAR -->
                 </variable>
                 <variable name="ADIFR" units="V" longname="Vertical Differential Pressure, Radome">
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true"  type="bool"/>
@@ -947,7 +947,7 @@
                 </variable>
                 <variable name="QCFR" units="V" longname="Raw Dynamic Pressure, Fuselage Right">
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <poly coefs="0.387 14.082 -0.0037" units="hPa"/>
+                    <poly coefs="0.887 14.082 -0.0037" units="hPa"/> <!-- Add 0.5 to offset to correct winds, 02-02-2011 PAR -->
                 </variable>
             </sample>
             <sample id="2" rate="1">
