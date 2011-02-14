@@ -4,20 +4,14 @@
 # to an in house postgres server with is database folder on a
 # local hard disk drive.
 #
-# 0 * * * * /home/local/RAF/Systems/scripts/backupCalib.cron
+# 0 5 * * mon /home/local/RAF/Systems/scripts/backupCalib.cron
 
 touch   /tmp/backupCalib.cron.log
 exec 1> /tmp/backupCalib.cron.log 2>&1
 
 echo -n "START "; date
 
-echo "backup GV's to the local database"
-pg_dump -h    hyper.guest.ucar.edu -U ads -d calibrations | psql -U ads -d calibrations
-
-echo "backup C130's to the local database"
-pg_dump -h hercules.guest.ucar.edu -U ads -d calibrations | psql -U ads -d calibrations
-
-echo "backup the local database to a directory that is regularly backed up by CIT."
-pg_dump -C -U ads -d calibrations -f /scr/raf/local_data/databases/calibrations.sql
+echo "backup merlot's calibrations database to a directory that is regularly backed up by CIT."
+pg_dump --clean -h merlot.eol.ucar.edu -U ads -d calibrations -f $DATA_DIR/databases/calibrations.sql
 
 echo -n "END   "; date
