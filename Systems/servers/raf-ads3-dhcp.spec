@@ -1,7 +1,7 @@
 Summary: DHCP configuration for server on RAF aircraft
 Name: raf-ads3-dhcp
 Version: 1.0
-Release: 20
+Release: 21
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -48,9 +48,9 @@ DHCP configuration for ADS3 data server in lab.
 
 %install
 rm -fr $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_sysconfdir}
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/dhcp
 install -d $RPM_BUILD_ROOT/usr/local/admin
-cp -r etc/* $RPM_BUILD_ROOT%{_sysconfdir}
+cp -r etc/dhcp/* $RPM_BUILD_ROOT%{_sysconfdir}/dhcp
 cp -r usr/local/admin/raf-ads3-dhcp $RPM_BUILD_ROOT/usr/local/admin
 
 %triggerin -n raf-gv-dhcp -- dhcp
@@ -70,37 +70,36 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n raf-gv-dhcp
 %defattr(-,root,root)
-%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-NCAR-README.txt
-%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-ac.conf
-%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-gv.conf
-%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-dsms.conf
-# %config(noreplace) %attr(0644,root,root) %{_sysconfdir}/dhcpd-local.conf
+%config %attr(0644,root,root) %{_sysconfdir}/dhcp/dhcpd-NCAR-README.txt
+%config %attr(0644,root,root) %{_sysconfdir}/dhcp/dhcpd-ac.conf
+%config %attr(0644,root,root) %{_sysconfdir}/dhcp/dhcpd-gv.conf
+%config %attr(0644,root,root) %{_sysconfdir}/dhcp/dhcpd-dsms.conf
 %ghost %config %attr(0640,root,named) %verify(not link) %{_sysconfdir}/raf.ucar.edu.key
 %dir /usr/local/admin/raf-ads3-dhcp
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %files -n raf-c130-dhcp
 %defattr(-,root,root)
-%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-NCAR-README.txt
-%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-ac.conf
-%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-c130.conf
-%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-dsms.conf
-# %config(noreplace) %attr(0644,root,root) %{_sysconfdir}/dhcpd-local.conf
+%config %attr(0644,root,root) %{_sysconfdir}/dhcp/dhcpd-NCAR-README.txt
+%config %attr(0644,root,root) %{_sysconfdir}/dhcp/dhcpd-ac.conf
+%config %attr(0644,root,root) %{_sysconfdir}/dhcp/dhcpd-c130.conf
+%config %attr(0644,root,root) %{_sysconfdir}/dhcp/dhcpd-dsms.conf
 %ghost %config %attr(0640,root,named) %verify(not link) %{_sysconfdir}/raf.ucar.edu.key
 %dir /usr/local/admin/raf-ads3-dhcp
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %files -n raf-lab-dhcp
 %defattr(-,root,root)
-%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-NCAR-README.txt
-%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-lab.conf
-%config %attr(0644,root,root) %{_sysconfdir}/dhcpd-dsms.conf
-# %config(noreplace) %attr(0644,root,root) %{_sysconfdir}/dhcpd-local.conf
+%config %attr(0644,root,root) %{_sysconfdir}/dhcp/dhcpd-NCAR-README.txt
+%config %attr(0644,root,root) %{_sysconfdir}/dhcp/dhcpd-lab.conf
+%config %attr(0644,root,root) %{_sysconfdir}/dhcp/dhcpd-dsms.conf
 %ghost %config %attr(0640,root,named) %verify(not link) %{_sysconfdir}/raf.ucar.edu.key
 %dir /usr/local/admin/raf-ads3-dhcp
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %changelog
+* Tue Feb 21 2011 Gordon Maclean <maclean@ucar.edu> 1.0-21
+- move config files to /etc/dhcp, which is where newer dhcp packages put them
 * Fri Sep 16 2010 Gordon Maclean <maclean@ucar.edu> 1.0-20
 - added subnet 128.117.0.0 netmask 255.255.0.0 not authoritative
 * Fri Sep 3 2010 Gordon Maclean <maclean@ucar.edu> 1.0-19

@@ -34,42 +34,48 @@ esac
 pkg=$2
 
 SYSCONFDIR=${SYSCONFDIR:-/etc}
+cf=dhcpd.conf
+# new versions of dhcp package put config file on /etc/dhcp
+if [ -f $SYSCONFDIR/dhcp/$cf ]; then
+    cf=$SYSCONFDIR/dhcp/$cf
+else
+    cf=$SYSCONFDIR/$cf
+fi
 
 # Append an include of dhcpd-ac.conf if needed.
-cf=${SYSCONFDIR}/dhcpd.conf
-if ! egrep -q '^[[:space:]]*include[[:space:]]+"${SYSCONFDIR}/dhcpd-ac.conf"' $cf; then
+if ! egrep -q '^[[:space:]]*include[[:space:]]+"'$SYSCONFDIR/dhcp/dhcpd-ac.conf\" $cf; then
     # use rpm -V to see if dhcpd.conf has been modified from the RPM
-    if rpm -V -f ${SYSCONFDIR}/dhcpd.conf | egrep -q ${SYSCONFDIR}/dhcpd.conf; then
-        dst=${SYSCONFDIR}/dhcpd.conf.rpmsave.`/bin/date +'%Y-%m-%d_%H-%M-%S.%N'`
-        if [ -e ${SYSCONFDIR}/dhcpd.conf ]; then
-            echo "Saving ${SYSCONFDIR}/dhcpd.conf as $dst"
-            mv ${SYSCONFDIR}/dhcpd.conf $dst
+    if rpm -V -f $cf | egrep -q $cf; then
+        if [ -e $cf ]; then
+            dst=${cf}.rpmsave.`/bin/date +'%Y-%m-%d_%H-%M-%S.%N'`
+            echo "Saving $cf as $dst"
+            mv $cf $dst
         fi
     fi
 
     if [ $type == ac ]; then
         cat << EOD >> $cf
 ###### start of updates from ${pkg} package.
-include "${SYSCONFDIR}/dhcpd-ac.conf";
-include "${SYSCONFDIR}/dhcpd-${achost}.conf";
-include "${SYSCONFDIR}/dhcpd-dsms.conf";
+include "$SYSCONFDIR/dhcp/dhcpd-ac.conf";
+include "$SYSCONFDIR/dhcp/dhcpd-${achost}.conf";
+include "$SYSCONFDIR/dhcp/dhcpd-dsms.conf";
 #
-# Put local, temporary changes in /etc/dhcpd-local.conf,
+# Put local, temporary changes in /etc/dhcp/dhcpd-local.conf,
 # which is not saved under Subversion and is not part
 # of an RPM.
-include "${SYSCONFDIR}/dhcpd-local.conf";
+include "$SYSCONFDIR/dhcp/dhcpd-local.conf";
 ###### end of updates from ${pkg} package.
 EOD
     else
         cat << EOD >> $cf
 ###### start of updates from ${pkg} package.
-include "${SYSCONFDIR}/dhcpd-lab.conf";
-include "${SYSCONFDIR}/dhcpd-dsms.conf";
+include "$SYSCONFDIR/dhcp/dhcpd-lab.conf";
+include "$SYSCONFDIR/dhcp/dhcpd-dsms.conf";
 #
-# Put local, temporary changes in /etc/dhcpd-local.conf,
+# Put local, temporary changes in /etc/dhcp/dhcpd-local.conf,
 # which is not saved under Subversion and is not part
 # of an RPM.
-include "${SYSCONFDIR}/dhcpd-local.conf";
+include "$SYSCONFDIR/dhcp/dhcpd-local.conf";
 ###### end of updates from ${pkg} package.
 EOD
     fi
@@ -119,8 +125,11 @@ fi
 [ -e $cf ] && chmod 0640 $cf
 
 # Create empty dhcpd-local file if it doesn't exist
-cf=${SYSCONFDIR}/dhcpd-local.conf
-[ -e $cf ] || touch $cf
+cf=${SYSCONFDIR}/dhcp/dhcpd-local.conf
+cfold=${SYSCONFDIR}/dhcpd-local.conf
+# move old one
+[ ! -e $cf -a -e $cfold ] && mv $cfold $cf
+[ -e $cf ]  touch $cf
 
 if ! { chkconfig --list dhcpd | fgrep -q "5:on"; }; then
     chkconfig --level 2345 dhcpd on
