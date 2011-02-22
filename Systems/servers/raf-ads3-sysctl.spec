@@ -1,7 +1,7 @@
 Summary: triggerin script for sysctl.conf
 Name: raf-ads3-sysctl
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -29,9 +29,10 @@ fi
 
 
 %files
-%config /etc/sysctl.conf
 
 %changelog
+* Tue Feb 21 2011 Gordon Maclean <maclean@ucar.edu> - 1.0-2
+- /etc/sysctl.conf is owned by initscripts, can't be owned by this package.
 * Sun Feb 06 2010 Chris Webster <cjw@ucar.edu> - 1.0-1
 - initial version
 - make sure ip forwarding is on
