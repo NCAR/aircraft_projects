@@ -50,7 +50,7 @@ DHCP configuration for ADS3 data server in lab.
 rm -fr $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/dhcp
 install -d $RPM_BUILD_ROOT/usr/local/admin
-cp -r etc/dhcp/* $RPM_BUILD_ROOT%{_sysconfdir}/dhcp
+cp -r etc/* $RPM_BUILD_ROOT%{_sysconfdir}
 cp -r usr/local/admin/raf-ads3-dhcp $RPM_BUILD_ROOT/usr/local/admin
 
 %triggerin -n raf-gv-dhcp -- dhcp
