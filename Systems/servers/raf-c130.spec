@@ -1,7 +1,7 @@
 Summary: Metapackage for all server and satcom packages needed on C130
 Name: raf-c130
 Version: 1.0
-Release: 10
+Release: 11
 License: GPL
 Group: System Environment
 
@@ -22,6 +22,8 @@ Requires: nidas-x86-build
 Requires: ael-local-dpkgs
 Requires: chrony
 Requires: raf-ac-avaps
+Requires: nidas-ael
+Requires: nidas-daq
 
 BuildArch: noarch
 
@@ -31,6 +33,8 @@ Metapackage for all server and satcom packages needed on C130.
 %files 
 
 %changelog
+* Wed Feb 21 2011 Gordon Maclean <maclean@ucar.edu> 1.0-11
+- Added Requires: nidas-ael (cross compiling) and nidas-daq (udev rules)
 * Tue Jul 13 2010 Gordon Maclean <maclean@ucar.edu> 1.0-10
 - Added Requires: chrony
 * Thu Jul 08 2010 Chris Webster <cjw@ucar.edu> 1.0-9
