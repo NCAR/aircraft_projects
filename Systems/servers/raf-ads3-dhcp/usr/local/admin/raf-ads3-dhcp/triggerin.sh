@@ -129,7 +129,7 @@ cf=${SYSCONFDIR}/dhcp/dhcpd-local.conf
 cfold=${SYSCONFDIR}/dhcpd-local.conf
 # move old one
 [ ! -e $cf -a -e $cfold ] && mv $cfold $cf
-[ -e $cf ]  touch $cf
+[ -e $cf ] || touch $cf
 
 if ! { chkconfig --list dhcpd | fgrep -q "5:on"; }; then
     chkconfig --level 2345 dhcpd on
