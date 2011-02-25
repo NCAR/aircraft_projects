@@ -85,6 +85,16 @@ if ! { chkconfig --list named | fgrep -q "5:on"; }; then
     chkconfig --level 2345 named on
 fi
 
+# in bind-9.3.6-16.P1.el5 the rndc key in /etc/rndc.key was called rndckey
+# in bind-9.7.0-5.P2.el6_0.1.i686 the rndc key is called rndc-key 
+# We'll do a sed on /etc/rdnc.key and change the name to rndc-key
+cf=/etc/rndc.key
+if [ -f $cf ]; then
+    grep -q rndc-key $cf || sed -i s/rndckey/rndc-key/ $cf
+fi
+
+
+
 /etc/init.d/named restart
 
 exit 0

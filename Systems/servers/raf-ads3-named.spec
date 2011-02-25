@@ -10,7 +10,7 @@
 Summary: DNS/named configuration for RAF aircraft server
 Name: raf-ads3-named
 Version: 1.0
-Release: 12
+Release: 13
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -149,6 +149,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/local/admin/raf-ads3-named/named.*
 
 %changelog
+* Fri Feb 24 2011  Gordon Maclean <maclean@ucar.edu> 1.0-13
+- In recent bind version the key in /etc/rndc.key is called rndc-key instead of rndckey
 * Fri Sep  3 2010 Gordon Maclean <maclean@ucar.edu> 1.0-12
 - removed Requires of raf-ac-dhcp.
 * Tue Jul 26 2010 Gordon Maclean <maclean@ucar.edu> 1.0-11
