@@ -847,8 +847,6 @@
             </sample>
         </serialSensor>
 
-        <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS8" id="170" suffix="_PIC"/>
-
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D002.dat"/>
             <parameter name="rate" value="500" type="int"/>
@@ -913,10 +911,6 @@
 
     <dsm name="dsm321" location="Video_Rack" id="21" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
-<!--
-        <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS5" id="120" suffix="_CM3"/>
--->
-        <serialSensor IDREF="COMR" devicename="/dev/ttyS6" id="140" suffix="_AL"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1605.dat"/>
@@ -1070,16 +1064,6 @@
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS5" id="110"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="120"/>
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS7" id="130" suffix="_GMN"/>
-
-        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS8" id="300" suffix="_RWO" timeout="0">
-            <parameter name="SerialNumber" type="string" value="UHSAS001"/>
-            <!-- If a PC is controlling the UHSAS, then set sendInit to false and the timeout to 0. -->
-            <parameter name="sendInit" value="false" type="bool"/>
-        </serialSensor>
-
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="500" suffix="_RWI">
-            <parameter name="SerialNumber" type="string" value="CDP058"/>
-        </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
             <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D016.dat"/>
