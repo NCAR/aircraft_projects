@@ -375,7 +375,7 @@
 
     <serialSensor ID="S200" class="raf.SPP200_Serial" baud="38400" parity="none" databits="8" stopbits="1">
 
-        <parameter name="calFile" type="string" value="PMSspecs"/>
+        <parameter name="calfile" type="string" value="PMSspecs"/>
 
         <parameter name="NCHANNELS" type="int" value="30"/>
         <parameter name="RANGE" type="int" value="0"/>
@@ -407,7 +407,7 @@
     <serialSensor ID="CDP" class="raf.CDP_Serial"
         baud="38400" parity="none" databits="8" stopbits="1" timeout="10"> 
 
-        <parameter name="calFile" type="string" value="PMSspecs"/>
+        <parameter name="calfile" type="string" value="PMSspecs"/>
 
         <parameter name="NCHANNELS" type="int" value="30"/>
         <parameter name="RANGE" type="int" value="0"/>
@@ -418,7 +418,7 @@
         <parameter name="ATT_ACCEPT" type="int" value="95"/>
         <parameter name="DIVISOR_FLAG" type="int" value="0"/>
         <parameter name="CT_METHOD" type="int" value="0"/>
-	<!-- New thresholds effective February 2011, no change in sample area or cell sizes. -->
+	<!-- New thresholds effective February 2011, no change in sample area. -->
         <parameter name="CHAN_THRESH" type="int" value="83 105 173 219 265 307 353 367 407 428 445 502 593 726 913 1100 1258 1396 1523 1661 1803 2008 2274 2533 2782 3017 3252 3477 3716 4025"/>
 
         <sample id="1">
@@ -775,6 +775,10 @@
     <dsm name="dsm303" location="ads_rack" id="3" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
 
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
+        <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G2"/>
+
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS5" id="140" suffix="_GMN"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="150"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="160"/>
@@ -947,29 +951,34 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="TTFH2" units="V" longname="Total Temperature, Deiced Left, Rosemount">
-                    <parameter name="channel"  value="0"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-95.78 28.02 -0.29366" units="deg_C"/>   
                 </variable>
                 <variable name="TTFH1" units="V" longname="Total Temperature, Deiced Left, Rosemount">
-                    <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-96.23 28.509 -0.31634" units="deg_C"/>  
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right, HARCO">
-                    <parameter name="channel"  value="2"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-89.31 26.128 -0.09022" units="deg_C"/>  
                 </variable>
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right, HARCO">
-                    <parameter name="channel"  value="3"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-89.2 25.923 -0.07941" units="deg_C"/>  
                 </variable>
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
-                    <parameter name="channel"  value="5"       type="int"/>
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <linear slope="10.0" intercept="-50.0" units="deg_C"/>
+                </variable>
+                <variable name="PSDPL" units="V" longname="Dewpoint cavity pressure, left">
+                    <parameter name="SerialNumber" type="string" value="414995"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <linear slope="0.01678" intercept="0.0" units="hPa"/>  
+                </variable>
+                <variable name="PSDPR" units="V" longname="Dewpoint cavity pressure, right">
+                    <parameter name="SerialNumber" type="string" value="415021"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <linear slope="0.01678" intercept="0.0" units="hPa"/>  
                 </variable>
             </sample>
             <sample id="2" rate="1">
