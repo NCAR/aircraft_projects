@@ -58,6 +58,11 @@ fi
 chgrp -R named /var/named/log
 chmod -R g+w /var/named/log
 
+# SELinux requires this
+if selinuxenabled; then
+    setsebool -P named_write_master_zones=1
+fi
+
 # Copy named.loopback, named.localhost, named.empty, named.ip6.local to /var/named
 # if they don't exist.  These were taken from caching-nameserver-9.4.2-3.fc7
 # (which is also used in fc8). Earlier distributions had other files.
