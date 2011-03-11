@@ -9,11 +9,14 @@ $TTL 86400	; 1 day
 				)
 			NS	acserver.raf.ucar.edu.
 $ORIGIN 184.168.192.in-addr.arpa.
-$TTL 3600	; 1 hour
 1			PTR	acserver.raf.ucar.edu.
+10			PTR	timeserver.raf.ucar.edu.
+$TTL 3600	; 1 hour
+; cvi pc and dsm don't do dhcp, so they need an address here
 142			PTR	cvi-dsm.raf.ucar.edu.
 143			PTR	cvi-pc.raf.ucar.edu.
 145			PTR	cvi-dsm-2.raf.ucar.edu.
 146			PTR	cvi-pc-2.raf.ucar.edu.
-$TTL 86400	; 1 day
-10			PTR	timeserver.raf.ucar.edu.
+; psi9116 is a bootp client, not dhcp. dhcpd doesn't seem to do
+; dynamic DNS with bootp clients, so we need this PTR record for psi9116
+156			PTR	pci9116.raf.ucar.edu.
