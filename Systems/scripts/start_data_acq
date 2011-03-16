@@ -4,7 +4,7 @@
 # aka a "configuration", and the nidas XML to use for the period.
 # The data acquisition period can be either a test flight (tfNN),
 # a ferry flight (ffNN),  research flight (rfNN) or a
-# "hangar" period, with any name not starting with tf,ff or rf.
+# "hangar" period, with any name not starting with tf, cf, ff or rf.
 # 
 # The user can extend the time period of an existing flight or
 # hangar data acq period, or create a new one.
@@ -62,16 +62,21 @@ fi
 allcfgs=(`get_flights`) || exit 1
 
 tfs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^tf[0-9]{2}$"`) # test flights
+cfs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^cf[0-9]{2}$"`) # calibration flights
 ffs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^ff[0-9]{2}$"`) # ferry flights
 rfs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^rf[0-9]{2}$"`) # research flights
-afs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^[tfr]f[0-9]{2}$"`) # all flights
-hfs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep -v -e "^[tfr]f[0-9]{2}$"`)   # hangar
+afs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^[ctfr]f[0-9]{2}$"`) # all flights
+hfs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep -v -e "^[ctfr]f[0-9]{2}$"`)   # hangar
 
 lastflights=()
 
 # last test flight
 ltf=`get_last ${tfs[@]}`
 lastflights=(${lastflights[@]} $ltf)
+
+# last cal flight
+lcf=`get_last ${cfs[@]}`
+lastflights=(${lastflights[@]} $lcf)
 
 # last ferry flight
 lff=`get_last ${ffs[@]}`
@@ -96,6 +101,7 @@ prevtype=xx
 if false; then
 echo "allcfgs=${allcfgs[@]}"
 echo "tfs=${tfs[@]}"
+echo "cfs=${cfs[@]}"
 echo "ffs=${ffs[@]}"
 echo "rfs=${rfs[@]}"
 echo "hfs=${hfs[@]}"
@@ -128,6 +134,7 @@ offon=(off on)
 
 if [ $topchoice == newflight ]; then
     lst=()
+
     if [ -n "$ltf" ]; then 
         ntf=`next_flight $ltf`
     else
@@ -135,6 +142,14 @@ if [ $topchoice == newflight ]; then
     fi
     oo=${offon["$prevtype" == tf]}
     lst=("${lst[@]}" $ntf "test flight: $ntf" $oo)
+
+    if [ -n "$lcf" ]; then 
+        ncf=`next_flight $lcf`
+    else
+        ncf=cf01
+    fi
+    oo=${offon["$prevtype" == tf]}
+    lst=("${lst[@]}" $ncf "calibration flight: $ncf" $oo)
 
     if [ -n "$lff" ]; then 
         nff=`next_flight $lff`
@@ -164,6 +179,9 @@ if [ $topchoice == newflight ]; then
     tf)
         prevflight=$ltf # empty string if no previous test flight
         ;;
+    cf)
+        prevflight=$lcf # empty string if no previous calibration flight
+        ;;
     ff)
         prevflight=$lff # empty string if no previous ferry flight
         ;;
@@ -181,7 +199,7 @@ elif [ $topchoice == newhang ]; then
         if [ `config_type $fname` == flight ]; then
             kdialog --caption "Bad Hangar Config" \
                 --warningcontinuecancel \
-                "hangar period names should not start with tf,ff, or rf.\n\
+                "hangar period names should not start with tf, cf, ff, or rf.\n\
                 Press continue to choose another name"
             # $?: continue=0, cancel=2
             stat=$?
@@ -395,6 +413,13 @@ export FLIGHT=$fname
 #fi
 #dsm "$xmlchoice"
 
+if [ -z $fname ]; then
+    kdialog --caption "Error: fname empty" \
+        --warningcontinuecancel "Exception: variable fname is empty.  Will not proceed.\n\
+        You can try again, or call cjw."
+    exit 1
+fi
+
 # finally!
-start_dsm_server $fname "$xmlchoice"
+start_dsm_server "$fname" "$xmlchoice"
 
