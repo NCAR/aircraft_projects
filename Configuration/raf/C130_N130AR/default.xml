@@ -1110,5 +1110,51 @@
         </output>
     </dsm>
 
+    <dsm name="dsmGustPod" location="LWO" id="83" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
+
+        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
+            <sample id="1">
+                <variable name="PS" units="hPa" longname="Raw Dynamic Pressure, Gust Pod"/>
+            </sample>
+        </serialSensor>
+
+        <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS6" id="120" suffix="_GP"/>
+
+        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130" suffix="_GP">
+            <sample id="1">
+                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Gust Pod"/>
+            </sample>
+            <sample id="2">
+                <variable name="BDIFRTEMP" units="deg_C" longname="Temperature of BDIFR Probe"/>
+            </sample>
+        </serialSensor>
+
+        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140" suffix="_GP">
+            <sample id="1">
+                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Gust Pod">
+                   <!-- Compensate for inserting Gust Probe "upside down" -->
+                   <linear slope="-1.0" intercept="0.0" units="hPa"/>
+                </variable>
+            </sample>
+            <sample id="2">
+                <variable name="ADIFRTEMP" units="deg_C" longname="Temperature of ADIFR Probe"/>
+            </sample>
+        </serialSensor>
+
+        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS9" id="150" suffix="_GP">
+            <sample id="1">
+                <variable name="QC" units="hPa" longname="Raw Dynamic Pressure, Gust Pod"/>
+            </sample>
+            <sample id="2">
+                <variable name="QCRTEMP" units="deg_C" longname="Temperature of QCR Probe"/>
+            </sample>
+        </serialSensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
 </site>
 </project>
