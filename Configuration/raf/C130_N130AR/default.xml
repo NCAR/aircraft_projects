@@ -250,7 +250,13 @@
 
     <serialSensor ID="DewPointer" class="DSMSerialSensor"
         baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="%d,%f,%*d,%*d,%d" rate="1"/>
+        <sample id="1" scanfFormat="%d,%f,%*d,%*d,%d" rate="1">
+            <variable name="DPBAL" units="unk" longname="Dew/Frost Point Balance"/>
+            <variable name="DPTEMP" units="deg_C" longname="Dew/Frost Point Temperature">
+                <linear slope="1.0" intercept="-1.5" units="deg_C"/>
+            </variable>
+            <variable name="DPTEC" units="unk" longname="Dew/Frost Point TEC"/>
+        </sample>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
@@ -292,6 +298,7 @@
 	-->
 
         <sample id="1" scanfFormat="*%*2d%*2d%f" rate="50">
+            <variable name="PRESSURE" units="hPa" longname="Raw Static Pressure"/>
 	</sample>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
