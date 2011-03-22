@@ -1,0 +1,10 @@
+#!/bin/csh
+
+#cd $DATA_DIR
+cd $PROD_DATA
+rm temp_wamo.nc
+foreach FILENAME (WAMO*.nc)
+echo $FILENAME
+ncReorder $FILENAME temp_wamo.nc
+mv -f temp_wamo.nc $FILENAME
+end
