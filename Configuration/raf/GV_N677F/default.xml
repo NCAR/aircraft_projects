@@ -538,41 +538,21 @@
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="COMR" class="DSMSerialSensor" baud="38400" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="%f">
-	    <variable name="CORAW" units="V" longname="Carbon Monoxide Raw Values"/>
-<!-- The following is for mixing ratio - used on Hippo1 and 2
-            <variable name="COMR" units="V" longname="Carbon Monoxide Mixing Ratio"/>
-                Tom - Teresa says no slope for this any more (hippo-2)
-                <linear slope="400" intercept="-3.2" units="ppbv"/>
-            </variable>
+<!--  
+      The AeroLaser instrument can provide both CO Mixing Ratio and Raw CO values
+      Unfortunately, it does not tag these values and does not guarentee delivery of the values in the same
+      order as requested.  We have chosen to offer only the Raw CO value and figure out MR
+      as a derived variable.  Look at older versions of this file in svn for info.
 -->
-<!--  Try for both?  (see prompt comments)
-        <sample id="1" scanfFormat="%f%f">
-            <variable name="COMR" units="V" longname="Carbon Monoxide Mixing Ratio"/>
-	    <variable name="CORAW" units="V" longname="Carbon Monoxide Raw Values"/>
--->
-        </sample>
-<!--  can we prompt for both Mix Ratio and Raw and get both? - too risky - can't be sure we get in the right order
-        <prompt string="CONC?\rSIG?\r" rate="5"/>
--->
-<!-- prompt for just mixing ratio - commented out for Hippo-3
-        <prompt string="CONC?\r" rate="5"/>
--->
-        <prompt string="SIG?\r" rate="5"/>
-        <message separator="\r" position="end" length="0"/>
-    </serialSensor>
-
     <serialSensor ID="CORAW" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="%f">
-            <variable name="CORAW" units="V" longname="Carbon Monoxide Raw Signal">
+            <variable name="CORAW" units="V" longname="AeroLaser Carbon Monoxide Raw Signal">
                 <linear slope="1" intercept="0" units="Hz"/>
             </variable>
         </sample>
         <prompt string="SIG?\r" rate="5"/>
         <message separator="\r" position="end" length="0"/>
     </serialSensor>
-
 
     <serialSensor ID="NOAA_CSD_O3" class="DSMSerialSensor"
         baud="9600" parity="none" databits="8" stopbits="1">
@@ -733,6 +713,18 @@
             <variable name="LAMS_MAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
         </sample>
     </sensor>
+
+    <serialSensor ID="PIC_CO2" class="DSMSerialSensor" baud="19200" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%*f %f %f %*d %*f" rate="5">
+            <variable name="CO2" units="V" longname="Picarro Carbon Dioxide Mixing Ratio">
+                <linear slope="1.0" intercept="0.0" units="ppmv"/>
+            </variable>
+            <variable name="CH4" units="V" longname="Picarro Methane Mixing Ratio">
+                <linear slope="1.0" intercept="0.0" units="ppmv"/>
+            </variable>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
 
 </sensorcatalog>
 
