@@ -10,7 +10,7 @@
 Summary: DNS/named configuration for RAF aircraft server
 Name: raf-ads3-named
 Version: 1.0
-Release: 14
+Release: 15
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -149,6 +149,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/local/admin/raf-ads3-named/named.*
 
 %changelog
+* Thu Apr  7 2011  Gordon Maclean <maclean@ucar.edu> 1.0-15
+- Fix misspelling of supersede in /etc/dhclient-eth2.conf.
 * Thu Mar 10 2011  Gordon Maclean <maclean@ucar.edu> 1.0-14
 - trigger script now does setsebool -P named_write_master_zones=1
 - if SELinux is enabled.
