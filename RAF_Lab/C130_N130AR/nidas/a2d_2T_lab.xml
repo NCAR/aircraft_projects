@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="RAF_Lab"
+    system="C130_N130AR"
+    config="${PROJ_DIR}/RAF_Lab/C130_N130AR/nidas/a2d_v16.xml"
+    version="$LastChangedRevision: 2514 $"
+    >
+
+<sensorcatalog>
+    <sensor ID="IRIG" class="raf.IRIGSensor">
+        <sample id="1">
+            <variable name="IRIG_Tdiff" units="sec"
+                    longname="IRIG-UNIX clock diff"/>
+            <variable name="IRIG_Status" units="bits"
+                    longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC"/>
+        </sample>
+    </sensor>
+</sensorcatalog>
+
+<site name="C130_N130AR" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N130AR" type="string"/>
+
+    <server statusAddr="sock:127.0.0.1:30001">
+        <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="RawSampleService">
+            <!-- input from every DSM on this aircraft that has
+                 a socket output of type RawSampleOutputStream -->
+            <input class="RawSampleInputStream">
+                <socket type="mcaccept"/>
+            </input>
+            <processor class="SampleArchiver">
+                <output class="SampleOutputStream">
+                    <fileset dir="/tmp/${PROJECT}"
+                        file="a2d_2T_%Y%m%d_%H%M%S_${FLIGHT}.ads"
+                        length="0"/>
+                </output>
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30000"/>
+                </output>
+            </processor>
+            <processor class="raf.SyncRecordGenerator">
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30001"/>
+                </output>
+            </processor>
+        </service>
+    </server>
+
+    <dsm name="bigblu" location="blue_viper" id="1" rserialPort="30002" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="big"/>
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="500">
+                <variable name="BIGBLU_CH0_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH1_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH2_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH3_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH4_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH5_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH6_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH7_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_BIGBLU" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+    <dsm name="ltlblu" location="blue_vulcan" id="2" rserialPort="30002" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="ltl"/>
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="500">
+                <variable name="LTLBLU_CH0_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="LTLBLU_CH1_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="LTLBLU_CH2_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="LTLBLU_CH3_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="LTLBLU_CH4_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="LTLBLU_CH5_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="LTLBLU_CH6_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_LTLBLU" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+    <dsm name="dsmWRD" location="viper_turtle" id="3" rserialPort="30002" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="trt"/>
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="500">
+                <variable name="TURTLE_CH0_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="TURTLE_CH1_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="TURTLE_CH2_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="TURTLE_CH3_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="TURTLE_CH4_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="TURTLE_CH5_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="TURTLE_CH6_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="TURTLE_CH7_2T" units="V" longname="_longname">
+                    <parameter name="gain"         value="2"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_TURTLE" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+</site>
+</project>
