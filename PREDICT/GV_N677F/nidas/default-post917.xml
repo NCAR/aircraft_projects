@@ -193,9 +193,7 @@
             <variable name="GGTRK" units="degree_T" longname="Reference GPS Track Angle"/>
             <variable name="GGVEW" units="m/s" longname="Reference GPS Ground Speed Vector, East Component"/>
             <variable name="GGVNS" units="m/s" longname="Reference GPS Ground Speed Vector, North Component"/>
-            <variable name="GGDAY" units="day" longname="Reference GPS Day of month (1-31)"/>
-            <variable name="GGMONTH" units="month" longname="Reference GPS Month of year (1-12)"/>
-            <variable name="GGYEAR" units="year" longname="Reference GPS 2 digit year"/>
+            <variable name="GGRepLag" units="s" longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)"/>
         </sample>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
@@ -223,9 +221,7 @@
             <variable name="GGTRK" units="degree_T" longname="Reference GPS Track Angle"/>
             <variable name="GGVEW" units="m/s" longname="Reference GPS Ground Speed Vector, East Component"/>
             <variable name="GGVNS" units="m/s" longname="Reference GPS Ground Speed Vector, North Component"/>
-            <variable name="GGDAY" units="day" longname="Reference GPS Day of month (1-31)"/>
-            <variable name="GGMONTH" units="month" longname="Reference GPS Month of year (1-12)"/>
-            <variable name="GGYEAR" units="year" longname="Reference GPS 2 digit year"/>
+            <variable name="GGRepLag" units="s" longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)"/>
         </sample>
         <message separator="\n" position="end" length="0"/> 
     </serialSensor>
@@ -1381,9 +1377,8 @@
             -->
         </processor>
     </dsm>
-
+<!--
     <dsm name="dsm301" location="lams_rack" id="1" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
-        <!-- <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/> -->
 
         <sensor IDREF="LAMSX" devicename="/dev/lamsx0" id="900"/>
 
@@ -1391,6 +1386,6 @@
             <socket type="mcrequest"/>
         </output>
     </dsm>
-
+-->
 </site>
 </project>
