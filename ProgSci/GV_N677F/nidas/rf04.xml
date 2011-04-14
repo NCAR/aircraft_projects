@@ -13,12 +13,12 @@
     >
 <sensorcatalog>
 
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="Clock" units="msec"
                     longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
     <arincSensor ID="IRS-C130" class="raf.IRS_HW_YG1854">
         <!-- Taken from the Honeywell installation manual for the -->
@@ -385,7 +385,7 @@
     </server>
 <!--
     <dsm name="dsm302" location="lab" id="2" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
 
         <serialSensor IDREF="Water_CN_Counter"
                 devicename="/dev/dsmser0" id="120">
@@ -397,7 +397,7 @@
     </dsm>
 -->
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_I2"/>
@@ -468,7 +468,7 @@
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser0" id="110">
@@ -555,7 +555,7 @@
     </dsm>
 
     <dsm name="dsm306" location="chaps_rack" id="6" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="306"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="306"/>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser0" id="110">
@@ -612,26 +612,26 @@
 		    <linear slope="108.09" intercept="-1.3596" units="hPa"/>
                 </variable>
                 <variable name="TRAKET" units="V" longname="Pressure Rake temperature of strut middle">
-                    <parameter name="gain" value="20" type="float"/>
+                    <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.10457" type="float"/>
                     <parameter name="corIntercept" value="-0.0338569" type="float"/>
                 </variable>
                 <variable name="TRAKES" units="V" longname="Pressure Rake temperature of strut base">
-                    <parameter name="gain" value="20" type="float"/>
+                    <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.10796" type="float"/>
                     <parameter name="corIntercept" value="-0.042219" type="float"/>
                 </variable>
                 <variable name="TCAB1" units="V">
-                    <parameter name="gain" value="20" type="float"/>
+                    <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09455" type="float"/>
                     <parameter name="corIntercept" value="-0.0324231" type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
                 <variable name="TCAB4" units="V">
-                    <parameter name="gain" value="20" type="float"/>
+                    <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09081" type="float"/>
                     <parameter name="corIntercept" value="-0.0229128" type="float"/>
@@ -654,7 +654,7 @@
     </dsm>
 
     <dsm name="dsm308" location="AEROSOL_rack" id="8" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
 
         <serialSensor IDREF="Water_CN_Counter" devicename="/dev/dsmser1" id="110" suffix="_WCN"/>
 
@@ -673,27 +673,27 @@
                     <parameter name="corIntercept" value="-0.15495" type="float"/>
                 </variable>
                 <variable name="TCAB2" units="V">
-                    <parameter name="gain" value="20" type="float"/>
+                    <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0893" type="float"/>
                     <parameter name="corIntercept" value="-0.018902" type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
                 <variable name="TCAB3" units="V">
-                    <parameter name="gain" value="20" type="float"/>
+                    <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0966" type="float"/>
                     <parameter name="corIntercept" value="-0.0239365" type="float"/>
                     <linear slope="100.0" intercept="0.0" units="deg_C"/>
                 </variable>
                 <variable name="PHIM1" units="V" longname="HIMIL Pressure of aerosol from inside of fixed">
-                    <parameter name="gain" value="25" type="float"/>
+                    <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09583" type="float"/>
                     <parameter name="corIntercept" value="-0.0253579" type="float"/>
                 </variable>
                 <variable name="PHIM2" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
-                    <parameter name="gain" value="25" type="float"/>
+                    <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.09428" type="float"/>
                     <parameter name="corIntercept" value="-0.0252738" type="float"/>
