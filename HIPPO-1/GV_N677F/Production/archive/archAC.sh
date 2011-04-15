@@ -71,4 +71,4 @@ set PROJECT = "HIPPO"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py NASA_AMES /net/work/Projects/HIPPO-1/aircraft/GV/GV_nav_and_state gz ATDdata
 
 
-/net/work/bin/scripts/mass_store/archAC/archAC.py.test NASA_AMES /net/work/Projects/HIPPO-1/aircraft/GV/GV_nav_and_state gz
+/net/work/bin/scripts/mass_store/archAC/archAC.py NASA_AMES /net/work/Projects/HIPPO-1/aircraft/GV/GV_nav_and_state gz stroble@ucar.edu
