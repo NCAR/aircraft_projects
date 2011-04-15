@@ -1,0 +1,141 @@
+#! /bin/csh -f
+#
+#  Archive production NIMBUS netCDF output files for project:
+#    2005-502 Progressive Science (Jorgen Jensen, et al.)
+#   using the new ATD directory path
+#
+#  File created by '/jnet/local/projects/archives/scripts/genar' Revision 15.1 on Tue Oct 2 13:48:15 MDT 2007
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo ${0}:  Only the "dmg" login is allowed to run this script.  Quitting.
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+# set msrcpMachine = "vivaldi"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   SCD Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s), if needed
+set RPWD = ""
+#
+set SDIR = /scr/productiondata
+#
+#set SFILES = ( \
+#ProgScirf01.nc \
+#ProgScirf02.nc \
+#ProgScirf03.nc \
+#ProgScirf04.nc \
+#ProgScirf05.nc \
+#ProgScirf06.nc \
+#ProgScirf07.nc \
+#ProgScirf08.nc \
+#ProgScirf09.nc \
+#ProgScirf10.nc \
+#ProgScirf11.nc \
+#ProgScirf12.nc \
+#ProgScirf13.nc \
+#ProgScirf14.nc \
+#ProgScirf15.nc \
+#)
+##
+#set DFILES = ( \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF01.20051201.162400_010100.PNI.nc \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF02.20051202.214000_055200.PNI.nc \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF03.20051207.162300_001100.PNI.nc \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF04.20051208.172000_030500.PNI.nc \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF05.20051209.181700_005400.PNI.nc \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF06.20051212.095600_180900.PNI.nc \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF07.20051213.200200_235300.PNI.nc \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF08.20051214.145700_215100.PNI.nc \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF09.20051216.151100_195500.PNI.nc \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF10.20051219.131600_203200.PNI.nc \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF11.20051220.171000_222200.PNI.nc \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF12.20051221.150200_190300.PNI.nc \
+#mss:/ATD/DATA/2005/ProgSci/GV_N677F/LRT/RF13.20051222.163500_011100.PNI.nc \
+#mss:/ATD/DATA/2006/ProgSci/GV_N677F/LRT/RF14.20060110.162700_222200.PNI.nc \
+#mss:/ATD/DATA/2006/ProgSci/GV_N677F/LRT/RF15.20060113.200700_231900.PNI.nc \
+#)
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directories:  /ATD/DATA/yyyy/ProgSci/GV_N677F/"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD $SDIR/$SFILE $DFILE
+    if ($status == 0) then
+      set d2 = $DFILE:h
+      set d1 = $d2:t
+      set d2 = $DFILE:t
+      echo "#   $d1/$d2 -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+     echo " Cannot access file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#  1st wave (done before ncReorder was run on files)
+#  15 job(s) submitted on Tue Oct  2 14:14:32 MDT 2007
+#  File(s) archived to MSS directory:  /ATD/DATA/2005/ProgSci/GV_N677F/
+#   LRT/RF01.20051201.162400_010100.PNI.nc -- OK -- Tue Oct  2 14:14:42 MDT 2007
+#   LRT/RF02.20051202.214000_055200.PNI.nc -- OK -- Tue Oct  2 14:14:52 MDT 2007
+#   LRT/RF03.20051207.162300_001100.PNI.nc -- OK -- Tue Oct  2 14:15:06 MDT 2007
+#   LRT/RF04.20051208.172000_030500.PNI.nc -- OK -- Tue Oct  2 14:15:17 MDT 2007
+#   LRT/RF05.20051209.181700_005400.PNI.nc -- OK -- Tue Oct  2 14:15:27 MDT 2007
+#   LRT/RF06.20051212.095600_180900.PNI.nc -- OK -- Tue Oct  2 14:15:39 MDT 2007
+#   LRT/RF07.20051213.200200_235300.PNI.nc -- OK -- Tue Oct  2 14:15:47 MDT 2007
+#   LRT/RF08.20051214.145700_215100.PNI.nc -- OK -- Tue Oct  2 14:15:56 MDT 2007
+#   LRT/RF09.20051216.151100_195500.PNI.nc -- OK -- Tue Oct  2 14:16:05 MDT 2007
+#   LRT/RF10.20051219.131600_203200.PNI.nc -- OK -- Tue Oct  2 14:16:15 MDT 2007
+#   LRT/RF11.20051220.171000_222200.PNI.nc -- OK -- Tue Oct  2 14:16:23 MDT 2007
+#   LRT/RF12.20051221.150200_190300.PNI.nc -- OK -- Tue Oct  2 14:16:30 MDT 2007
+#   LRT/RF13.20051222.163500_011100.PNI.nc -- OK -- Tue Oct  2 14:16:37 MDT 2007
+#  File(s) archived to MSS directory:  /ATD/DATA/2006/ProgSci/GV_N677F/
+#   LRT/RF14.20060110.162700_222200.PNI.nc -- OK -- Tue Oct  2 14:16:45 MDT 2007
+#   LRT/RF15.20060113.200700_231900.PNI.nc -- OK -- Tue Oct  2 14:16:52 MDT 2007
+#  Completed on Tue Oct  2 14:16:52 MDT 2007
+#
+#  2nd wave (done after ncReorder was run on files)
+#  15 job(s) submitted on Tue Oct  2 15:58:48 MDT 2007
+#  File(s) archived to MSS directory:  /ATD/DATA/2005/ProgSci/GV_N677F/
+#   LRT/RF01.20051201.162400_010100.PNI.nc -- OK -- Tue Oct  2 15:59:00 MDT 2007
+#   LRT/RF02.20051202.214000_055200.PNI.nc -- OK -- Tue Oct  2 15:59:09 MDT 2007
+#   LRT/RF03.20051207.162300_001100.PNI.nc -- OK -- Tue Oct  2 15:59:21 MDT 2007
+#   LRT/RF04.20051208.172000_030500.PNI.nc -- OK -- Tue Oct  2 15:59:30 MDT 2007
+#   LRT/RF05.20051209.181700_005400.PNI.nc -- OK -- Tue Oct  2 15:59:40 MDT 2007
+#   LRT/RF06.20051212.095600_180900.PNI.nc -- OK -- Tue Oct  2 15:59:51 MDT 2007
+#   LRT/RF07.20051213.200200_235300.PNI.nc -- OK -- Tue Oct  2 15:59:59 MDT 2007
+#   LRT/RF08.20051214.145700_215100.PNI.nc -- OK -- Tue Oct  2 16:00:08 MDT 2007
+#   LRT/RF09.20051216.151100_195500.PNI.nc -- OK -- Tue Oct  2 16:00:16 MDT 2007
+#   LRT/RF10.20051219.131600_203200.PNI.nc -- OK -- Tue Oct  2 16:00:24 MDT 2007
+#   LRT/RF11.20051220.171000_222200.PNI.nc -- OK -- Tue Oct  2 16:00:31 MDT 2007
+#   LRT/RF12.20051221.150200_190300.PNI.nc -- OK -- Tue Oct  2 16:00:38 MDT 2007
+#   LRT/RF13.20051222.163500_011100.PNI.nc -- OK -- Tue Oct  2 16:00:47 MDT 2007
+#  File(s) archived to MSS directory:  /ATD/DATA/2006/ProgSci/GV_N677F/
+#   LRT/RF14.20060110.162700_222200.PNI.nc -- OK -- Tue Oct  2 16:00:59 MDT 2007
+#   LRT/RF15.20060113.200700_231900.PNI.nc -- OK -- Tue Oct  2 16:01:06 MDT 2007
+#  Completed on Tue Oct  2 16:01:06 MDT 2007
+#

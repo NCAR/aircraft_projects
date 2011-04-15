@@ -474,6 +474,35 @@ set SDIR = "/scr/raf2/Raw_Data/ProgSci"               #     New location
 #irs_level_20060206_233246 \
 #)
 #
+# 21st wave (Rename misnamed bitfile for RF11)
+#movem:
+#set SFILES = ( \
+#/RAF/2005/502/ADS/Rf11_20051220_154041 \
+#)
+#set DFILES = ( \
+#/RAF/2005/502/ADS/RF11_20051220_154041 \
+#)
+#echo "#  $#SFILES Job(s) submitted on `date`"
+#set todo = $#SFILES
+#set num = 1
+#while ($num <= $todo)
+#  set SFILE = $SFILES[$num]
+#  set DFILE = $DFILES[$num]
+#  echo \
+#  msmv -wpwd RAFDMG $SFILE $DFILE
+#  set result = $status
+#  if ($result == 0) then
+#  if ($result == 0) then
+#    echo "#  msmv job for $DFILE -- OK -- `date`"
+#  else
+#    echo "#  msmv job for $DFILE -- Failed -- `date`"
+#    echo "#                $DFILE: error code $result"
+#  endif
+#  @ num ++
+#end
+#echo "#   Completed on `date`"
+#exit
+#
 # 2 th wave
 #set SFILES = ( \
 #)
@@ -725,5 +754,11 @@ exit
 #  msrcp job for ADS/irs_level_20060206_233246 -- OK -- Fri Jul  7 15:09:36 MDT 2006
 #   Completed on Fri Jul  7 15:09:36 MDT 2006
 #
+# 21st wave (Rename misnamed bitfile for RF11)
+#  1 Job(s) submitted on Wed Sep 19 12:35:53 MDT 2007
+#  msmv job for /RAF/2005/502/ADS/RF11_20051220_154041 -- OK -- Wed Sep 19 12:35:54 MDT 2007
+#   Completed on Wed Sep 19 12:35:54 MDT 2007
+#
 # 2 th wave
 #  Job(s) submitted on 
+#
