@@ -1,0 +1,1165 @@
+#! /bin/csh -f
+#
+#  Archive digital camera photo files for 2008-116 VOCALS
+#   to the CISL Mass Store System under either the /ATD/DATA path or /RAF path
+#   (archives one flight at a time via command-line argument)
+#   (Don't forget to archive the movies, too!)
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2004, 2005, 2006, 2007                                       *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Usage (by "dmg" login only):
+#    archcam.ppp -{a,r} -f fltno [-p] [-t] [-i shsmss ehemes [-m]] [-v] [-d]
+#      -a -- use /ATD/DATA/ directory path for archived MSS tar files
+#      -r -- use /RAF/ directory path for archived MSS tar files
+#      Note:  MUST choose either -a or -r for script to run
+#      -f -- flight number follows (upper or lower case OK, e.g., RF04)
+#      Note:  MUST have a flight number for script to run
+#      -p -- production mode (archive the files to the CISL Mass Store System
+#             instead of echoing their names locally)
+#      -t -- if set, create archive files with one hour's worth of data;
+#            otherwise, create archive files with a specified maximum size,
+#            presently 600MB (See internal setting MAXSIZ below.), or the
+#            maximum number of tar files that can be handled, presently 4600
+#            (See internal setting MAXTAR below.), whichever results in the
+#            shorter file.
+#      -i -- use time interval (shsmss to ehemes)
+#             Note:  This option sets the -t flag to divide the time interval
+#                    into synchronized, 1-hour segments (First and last time
+#                    segments may be less than one hour long.)
+#             WARNING:  If present, this flag and its associated times must
+#                       appear together.
+#      -m -- time interval starts after midnight (i.e., has a time rollover)
+#      -v -- verbose mode
+#      -d -- debug mode
+#
+#  Examples:  archcam.ppp -a -f RF03 -p -t                     <-- typical
+#             archcam.ppp -a -f RF03 -p -t -i shsmss ehemes
+#             archcam.ppp -a -f TF01 -t -v -d                  <-- debug
+#
+#  Notes:  1) Create a copy of, modify and run this script from a project's
+#              "Production/archive" subdirectory.  This script runs only
+#              under the "dmg" login.
+#          2) Make sure that the jpg files' directory path is defined in the
+#              project's "proj.info" file.
+#          3) All picture files have a ".jpg" extension to their names.
+#          4) Make changes to this script's code if file-naming conventions
+#              change.  As of now the conventions are different between the
+#              C-130Q and GV.  This includes (leading "/" means "search for
+#              string"):
+#              /set delim
+#              /set fdate
+#              /set ftime
+#              /set Smeta \
+#              /set Emeta  }  one section for each aircraft
+#              /set Locn  /
+#              / set OFILE
+#          5) To automate archiving all flights in one job, create a new
+#              script to run this one putting a run command for each flight
+#              on a new line.
+#             Example (production run to /ATD/DATA/ path with verbose output):
+#              #! /bin/csh -f
+#              #
+#              #  Run archcam.146 script for all INTEX-B flights
+#              #
+#              archcam.146 -a -f rf01 -p -t -v
+#                           .
+#                           .
+#                           .
+#              archcam.146 -a -f rf12 -p -t -v
+#              #
+#              # Done.
+#              exit
+#
+#  For future changes/enhancements, search for this string --> ##########
+#
+##########
+#
+#  Enhancement requirement:  design a way to pick up where I left off in
+#                            case the archiving is aborted for some reason
+#                            (One can now use start and end times, but it
+#                            doesn't automatically handle a midnight rollover
+#                            [needs a command-line argument flag])
+#  Desired enhancement:  Acquire source camera file name format for automatic
+#                         decoding (from proj.info file?) rather than having
+#                         to hard-wire it for each project (or establish a
+#                         standard file-naming convention).
+#
+##########
+#
+#  This file copied and significantly modified from file
+#    $JLOCAL/proj/125/Production/archive/archcpi.125
+#   by Ron Ruth  17 June to 13 August 2004
+#  Revised by RLR (modify for RICO's file-naming convention)        24 Feb 2005
+#  Revised by RLR (choose hourly or maximum-size tar files)         28 Feb 2005
+#  Revised by RLR (choose files by start and end time)               1 Mar 2005
+#  Revised by RLR (choose /RAF/ or /ATD/DATA/ MSS directory)         2 Mar 2005
+#  Revised by RLR (write tar file if @ last file reached)            8 Mar 2005
+#  Revised by RLR (change all "rsh" to "ssh")                       28 Oct 2005
+#  Revised by RLR (add TREX project format changes)                  8 Mar 2006
+#  Revised by RLR (change some quit code and echo messages)         14 Mar 2006
+#  Revised by RLR (allow after-midnight time interval)              20 Mar 2006
+#  Revised by RLR (fix midnight rollover argument from -a to -m)     1 Aug 2006
+#  Revised by RLR (update to use new directory paths)                1 Aug 2006
+#  Revised by RLR (process list of flights; progress to log file)    4 Aug 2006
+#  Revised by RLR (specify flight number on the command line and
+#                  use source file path info from proj.info file)   28 Aug 2006
+#  Revised by RLR (display each tar file size in its log file)      29 Aug 2006
+#  Revised by RLR (create documentation subdirectories, if needed)  29 Aug 2006
+#  Revised by RLR (use /tmp directory for all temporary files)      16 Oct 2006
+#  Revised by RLR (update to use new project directory paths)       25 Apr 2007
+#  Revised by RLR (minor changes -- added more terminal output)      8 May 2007
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#
+#      * * * * * * * * * * * * * * *
+#     *                             *
+#    *  Executable code starts here  *
+#     *                             *
+#      * * * * * * * * * * * * * * *
+#
+onintr abort
+#  Set abnormal exit flag
+@ xit = 1
+#
+#  Capture script's "began running" time
+set btime = `date`
+#
+#  Note:  RICO/MIRAGE/INTEXB/PASE: file names are of the form
+#          c130_fwd_yemoda_homise.jpg
+#           where:  ye == 2-digit year (I'd prefer a 4-digit year)
+#                   mo == month (00-12)
+#                   da == day (00-31)
+#                   ho == hour (00-23)
+#                   mi == minute (00-59)
+#                   se == second (00-59)
+#   Example:    c130_fwd_070804_202335.jpg
+#
+#  Note:  RICO/MIRAGE/INTEXB:  flight subdirectories in above path are of
+#          the form pppxf##
+#           where:  ppp == 3-digit project number
+#                     x == type of flight (f=ferry, r=research, t=test)
+#                    ## == 2-digit flight number
+#   Example:    146rf03
+#
+#  Note:  T-REX:  file names are of the form 503?fnn/yemoda-homise.jpg
+#           where:   ? == either "t" or "r" (test or research)
+#                   nn == 2-digit flight number
+#                   ye == 2-digit year (I'd prefer a 4-digit year)
+#                   mo == month (00-12)
+#                   da == day (00-31)
+#                   ho == hour (00-23) (UTC)
+#                   mi == minute (00-59)
+#                   se == second (00-59)
+#         The camera's location is not included in the file's name,
+#          therefore, it must be hard-wired.
+#
+#  Set MSS Read PassWorD if restricted access
+#   (Don't forget to add notation in file $PROJ_DIR/archives/msfiles/directory_map)
+set RPWD = ""
+#set RPWD = "-rpwd hidden from view -- see CDS/DMG support personnel for it
+#set RPWD = "-rpwd readonly"
+#
+#   File type
+set TYPE = "CAMERA"
+#
+# --------------------------------------------------------------------------
+#
+#  Maximum tar file size (bytes) if archiving by size
+@ MAXSIZ = 600000000     #  to easily fit on a 700MB CD-ROM
+#
+#  Maximum number of tar file arguments
+#   (based on current file name convention's character length)
+#   (This is probably an operating-system-dependent parameter.)
+@ MAXTAR = 4600
+#
+# --------------------------------------------------------------------------
+#
+#  Check login (only "dmg" login allowed to run this script)
+if ($?USER) then
+  set user = $USER
+else
+  set user = `whoami`
+endif
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script."
+  goto quit
+endif
+#
+#  Check current directory
+set cdir = `pwd | awk -F/ '{print $NF}'`
+if ($cdir != "archive") then
+  echo '  This script is not being run from the "archive" subdirectory.'
+  goto quit
+endif
+#
+#  Initialize
+#   Temporary file names
+set Flist = "/tmp/archcam_files.$$"
+set Tfile = "/tmp/tarit.archcam.$$"
+set Afile = "/tmp/archcam_$$.tar"
+#
+#   Reference file names
+set DirMap = "$PROJ_DIR/archives/msfiles/directory_map"
+#
+#   File name delimiter (hypen or underscore)
+set delim = "_"      #  C-130Q
+#set delim = "-"      #  GV
+#
+#   Run-time options (optional command-line arguments)
+#    Tar files in groups of one-hour increments with boundaries on the hour
+@ tartime = 0              #  Default is no (save files by size)
+#    Use start and end times on command line
+@ ti = 0                   #  Default is no (use all times available)
+#    After-midnight flag (for rollover detection)
+@ mr = 0                   #  Default is no (time interval starts < midnight)
+#    Tar file no-purge flag (keep tar file after archiving to the MSS)
+@ nopurge = 0              #  Default is no (purge tar file)
+#    Verbose flag (output progress messages as script is running)
+@ vb = 0                   #  Default is no (not verbose)
+#    Debug flag (output copious debug messages)
+@ db = 0                   #  Default is no (no debug messages)
+#    ATD directory path specified
+@ atdp = 0                 #  Default is no (not specified)
+#    RAF directory path specified
+@ rafp = 0                 #  Default is no (not specified)
+#    Production flag (created tar files are to be archived to the MSS)
+@ pd = 0                   #  Default is no (do not archive the tar files)
+#
+#  Get command-line arguments (if any)
+#echo "  $#argv arguments:  $argv"
+@ n = 0
+foreach arg ($argv)
+  @ n ++
+#  echo "  Argument is: $arg"
+  set ar = `echo $arg | sed -e "s/\-//"`
+#
+#   Flight number
+  if ($ar == "f") then
+    @ nfi = $n + 1
+    continue
+  endif
+#   Save files one hour at a time instead of by tar file size?
+  if ($ar == "t") then
+    @ tartime = 1
+    continue
+  endif
+#   Use time interval
+  if ($ar == "i") then
+    @ ti = 1
+    @ nti = $n
+    continue
+  endif
+#   After-midnight flag (for rollover detection)
+  if ($ar == "m") then
+    @ mr = 1
+    continue
+  endif
+#   Verbose?
+  if ($ar == "v") then
+    @ vb = 1
+    continue
+  endif
+#   Debug?
+  if ($ar == "d") then
+    @ db = 1
+    continue
+  endif
+#   /ATD/DATA/ directory path?
+  if ($ar == "a") then
+    @ atdp = 1
+    set char = "."
+    continue
+  endif
+#   /RAF/ directory path?
+  if ($ar == "r") then
+    @ rafp = 1
+    set char = "/"
+    continue
+  endif
+#   Production?
+  if ($ar == "p") then
+    @ pd = 1
+    continue
+  endif
+end
+#
+#  Output beginning time if verbose or debug
+if ($db || $vb) then
+  echo " $0 began running $btime"
+endif
+#
+#  Check for a data path
+if (! $rafp && ! $atdp) then
+  echo "  No MSS destination path flag chosen"
+  echo "   Must choose either -r (/RAF path) or -a (/ATD/DATA) flag"
+  echo '   See "Usage" at beginning of '$0
+  goto quit
+endif
+#
+#  Check if both data paths were chosen
+if ($rafp && $atdp) then
+  echo "  Found both -r  (/RAF path) and -a (/ATD/DATA) command-line options"
+  echo "   Must choose either -a (/ATD/DATA path) or -r (/RAF path)"
+  goto quit
+endif
+#
+#  Decode requested start and end times, if flags are set
+if ($tartime && $ti) then
+  @ nti ++
+  set RStime = $argv[$nti]
+  set RSho = `echo $RStime | sed -e 's/....$//'`
+  set RSmi = `echo $RStime | sed -e 's/..\(..\)../\1/'`
+  set RSse = `echo $RStime | sed -e 's/^....//'`
+  @ RSsec = $RSho * 3600 + $RSmi * 60 + $RSse
+  @ nti ++
+  set REtime = $argv[$nti]
+  set REho = `echo $REtime | sed -e 's/....$//'`
+  set REmi = `echo $REtime | sed -e 's/..\(..\)../\1/'`
+  set REse = `echo $REtime | sed -e 's/^....//'`
+  @ REsec = $REho * 3600 + $REmi * 60 + $REse
+#    Debug start
+  if ($db) then
+    echo " Requested start time = $RStime (${RSho}:${RSmi}:${RSse}) = $RSsec"
+    echo " Requested  end  time = $REtime (${REho}:${REmi}:${REse}) = $REsec"
+  endif
+#    Debug end
+endif
+#
+#  Get setup information for this project
+#   Project's Production subdirectory
+pushd .. >& /dev/null
+set Pdir = `pwd`
+#   Project directory
+cd ..
+set PROJDIR =  `pwd`
+#   Project number
+cd ..
+set PROJ = `pwd | awk -F/ '{print $NF}'`
+set result = $status
+if ($result != 0) then
+  echo " Cannot find a project in this directory path"
+  goto quit
+endif
+popd >& /dev/null
+#   Platform
+#    Check for project number in $PROJ
+@ projno = `echo $PROJ | grep -c '[0-9][0-9][0-9]'`
+if ($projno > 0) then
+  @ plat = $PROJ / 100
+else
+#    Get project number from directory_map file
+  @ plat = `grep -c $PROJ $DirMap`
+  if ($plat == 0) then
+    echo "  Cannot find $PROJ in file $DirMap"
+    goto quit
+  endif
+  set projno = `grep $PROJ $DirMap`
+  set projno = `echo $projno | awk '{print $1}'`
+  @ plat = $projno / 100
+endif
+switch ($plat)
+  case [1]
+    set PLATFORM = "C130_N130AR"
+    breaksw
+  case [2]
+    set PLATFORM = "KingAir_N312D"
+    breaksw
+  case [3]
+    set PLATFORM = "P3_NRL-P3"
+    breaksw
+  case [4]
+    set PLATFORM = "QueenAir_N304D"
+    breaksw
+  case [5]
+#      set PLATFORM = "Electra_N595KR"
+    set PLATFORM = "GV_N677F"
+    breaksw
+  case [6]
+    set PLATFORM = "QueenAir_N306D"
+    breaksw
+  case [7]
+    set PLATFORM = "Sabreliner_N307D"
+    breaksw
+  case [8]
+    set PLATFORM = "Electra_N308D"
+    breaksw
+  case [9]
+    set PLATFORM = "SailPlane_N9929J"
+    breaksw
+  default
+    echo "  Illegal platform detected."
+    goto quit
+endsw
+#
+#   Archive documentation directory
+set Ldir = "$Pdir/archive/Camera_Archive"
+#   Archive-progress log-file (instead of echoing to terminal)
+set Lfile = "$Ldir/Archive_Log"
+#   tar-file-directory-list file directory
+set Adir = "$Ldir/File_Lists"
+#   Project's information file
+set prfile = $Pdir/proj.info
+if (! -r $prfile) then
+  echo "  Cannot access project's $prfile"
+  goto quit
+endif
+#   Project's full name
+set PN = (`grep "Information for Project" $prfile`)
+if ($status == 0 && $#PN > 4) then
+  shift PN
+  shift PN
+  shift PN
+  shift PN
+else
+  echo "  Project Name not found in $prfile -- cannot continue"
+  goto quit
+endif
+#   Fiscal Year for directory path (if /RAF/ path)
+if ($rafp) then
+  set fy = `grep FY $prfile`
+  if ($status == 0) then
+    set YEAR = `echo $fy | sed -e "s/FY=//"`
+  else
+    echo "  Fiscal Year not found in $prfile -- cannot continue"
+    goto quit
+  endif
+endif
+if ($atdp) then
+#   Calendar Year for directory path (if /ATD/DATA/ path)
+  set YEAR = `grep CY $prfile`
+  if ($status == 0) then
+    set YEAR = `echo $YEAR | sed -e "s/CY=//"`
+  else
+    echo "  Calendar Year not found in $prfile -- cannot continue"
+    goto quit
+  endif
+#   MSS project directory (if /ATD/DATA/ path)
+  set PROJECT = (`grep "MSS Project Directory Name" $prfile`)
+  @ pdresult = $status
+  if ($pdresult == 0 && $#PROJECT > 4) then
+    shift PROJECT
+    shift PROJECT
+    shift PROJECT
+    shift PROJECT
+  else
+    echo "  MSS Project Directory Name not found in $prfile -- cannot continue"
+    goto quit
+  endif
+endif
+#
+#   Get camera file source directory from proj.info file
+set Sdir = `grep "Digital camera file source directory:" $prfile`
+if ($status == 0) then
+  set Sdir = `echo $Sdir | awk '{print $NF}'`
+else
+  echo "  Digital camera file source directory not found in $prfile -- cannot continue"
+  goto quit
+endif
+#
+#   Camera file source subdirectory (e.g., 145rf04) from command line
+set fltno = `echo $argv[$nfi] | tr '[a-z]' '[A-Z]'`
+set SSdir = "$projno`echo $fltno | tr '[A-Z]' '[a-z]'`_fwd"
+#
+#   Check source directory
+if (! -e $Sdir/$SSdir) then
+  echo "  Source file directory ($Sdir/$SSdir) not found."
+  goto quit
+endif
+#
+#   Camera file Mass Store destination subdirectory (e.g., RF04)
+set DSdir = $fltno
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+endif
+#
+if ($pd) then
+  echo " ${0}:  This is a production run."
+  echo "  Tar files from $fltno WILL be archived to the CISL Mass Store System (MSS)."
+else
+  echo " ${0}:  This is a checkout run, since the -p option is not set."
+  echo "  Tar files from $fltno WILL NOT be archived to the CISL Mass Store System (MSS)."
+endif
+#
+#
+#  Get started:
+#
+#   Check for camera archive documentation directory
+if (! -e $Ldir) then
+#    Create, if possible
+  mkdir $Ldir
+  set result = $status
+  if ($result != 0) then
+    echo "   Cannot create camera archive documentation directory ($Ldir)"
+    goto quit
+  endif
+endif
+#   Check for destination tar-file-directory-list file path
+if (! -e $Adir) then
+#    Create, if possible
+  mkdir $Adir
+  set result = $status
+  if ($result != 0) then
+    echo "   Cannot create destination tar-file-directory-list file directory ($Adir)"
+    goto quit
+  endif
+endif
+#
+if (! -w $Adir) then
+  echo "  Cannot write to archive documentation directory ($Adir)"
+  goto quit
+endif
+#
+if (! -w $Ldir) then
+  echo "  Cannot write to destination tar-file-directory-list file directory ($Adir)"
+  goto quit
+endif
+#
+#   Initialize log file (if production run)
+if ($pd) then
+#    Does log file already exist?
+  if (! -e $Lfile) then
+#     No.  Create one.
+    echo "   Camera file Mass Store archive log file for $PROJECT" >! $Lfile
+    set result = $status
+    if ($result != 0) then
+      echo "   Error $result when trying to create log file $Lfile"
+      goto quit
+    endif
+    echo " " >> $Lfile
+  else
+#     Yes.  Append to it
+    if (-w $Lfile) then
+      echo " " >> $Lfile
+      set result = $status
+      if ($result != 0) then
+        echo "   Error $result when trying to append to $Lfile"
+        goto quit
+      endif
+      echo "#  -----------------------------------------------------" >> $Lfile
+      echo " " >> $Lfile
+    else
+      echo"   Cannot write to log file $Lfile" >> $Lfile
+      goto quit
+    endif
+  endif
+  echo "#" >> $Lfile
+  echo "#  CISL Mass Store System (MSS) path for bitfiles below:" >> $Lfile
+  if ($atdp) then
+    echo "#     /ATD/DATA/$YEAR/$PROJECT/$PLATFORM/$TYPE/" >> $Lfile
+  else if ($rafp) then
+    echo "#     /RAF/$YEAR/$projno/$TYPE/" >> $Lfile
+  endif
+  echo "#" >> $Lfile
+else
+  echo "#"
+  echo "#  CISL Mass Store System (MSS) path for all bitfiles:"
+  if ($atdp) then
+    echo "#     /ATD/DATA/$YEAR/$PROJECT/$PLATFORM/$TYPE/"
+  else if ($rafp) then
+    echo "#     /RAF/$YEAR/$projno/$TYPE/"
+  endif
+endif
+#    Debug start
+if ($db) then
+  echo "  Source directory is:  $Sdir/$SSdir"
+endif
+#    Debug end
+#
+#   Get camera file list for this run
+ls $Sdir/$SSdir >! $Flist
+set result = $status
+if ($result != 0) then
+  if ($pd) then
+    echo "  Error $result when trying to get source file list from directory $Sdir/$SSdir" >> $Lfile
+  else
+    echo "  Error $result when trying to get source file list from"
+    echo "   directory $Sdir/$SSdir"
+  endif
+  goto quit
+endif
+#    Debug start
+if ($db) then
+  head $Flist
+endif
+#    Debug end
+#
+#  Initialize variables and get/set indices
+if ($pd) then
+  echo "#   Wave began for $DSdir on `date`" >> $Lfile
+else
+  echo "#   Wave began for $DSdir on `date`"
+endif
+@ nfiles = `wc -l $Flist | awk '{print $1}'` # total number of files to archive
+@ NN = 0                                     # total no. of files in directory
+@ N = 0                                      # total number of files archived
+@ n = 0                                      # number of files in tar file
+@ f = 0                                      # number of tar files
+@ new = 1                                    # flag to start new tar file
+@ firstever = 1                              # process-initialization flag
+@ firsttime = 1                              # first-time-search flag
+@ last = 0                                   # last-file-to-process flag
+set ftyp = "jpg"                             # picture file type
+set pfile                                    # previous file
+set mise                                     # minutes/seconds string
+set pmise                                    # previous minutes/seconds string
+set ho                                       # hours
+set pho                                      # previous hours
+set fdate                                    # picture file date
+set pdate                                    # previous picture file date
+@ fztotal = 0                                # size of tar file (Bytes)
+@ pfsz = 0                                   # previous picture file size (B)
+#
+if ($vb) then
+  echo "  Number of files in directory $SSdir = $nfiles"
+endif
+#
+pushd $Sdir/$SSdir >& /dev/null
+foreach file (`cat $Flist`)
+  @ NN ++
+  if ($new) then
+#  If creating a new tar script file, write boiler-plate for it
+    echo "#! /bin/csh -f" >! $Tfile
+    set result = $status
+    if ($result != 0) then
+      if ($pd) then
+        echo " Could not write temporary tar script file $Tfile" >> $Lfile
+        echo "  (return status = $result)" >> $Lfile
+      else
+        echo " Could not write temporary tar script file $Tfile"
+        echo "  (return status = $result)"
+      endif
+      goto quit
+    endif
+    echo "#" >> $Tfile
+    echo "#  Prepare tar file for MSS archive" >> $Tfile
+    echo "#  `date`" >> $Tfile
+    echo "set OFILE = $Afile" >> $Tfile
+    echo "#" >> $Tfile
+    echo "cd $Sdir/$SSdir" >> $Tfile
+    echo 'tar chvf $OFILE \' >> $Tfile
+#   Save initial file name (with date/time info)
+    if ( ($tartime) && ($f > 0) ) then
+      set Sfile = $pfile
+    else
+      set Sfile = $file
+    endif
+    @ new = 0
+  endif
+#
+#  I only archive $ftyp files (usually jpg)
+  @ typ = `echo $file | grep -c $ftyp`
+  if (! $typ) then
+   continue
+  endif
+#
+#  Get file's size
+  @ fsz = `/bin/ls -l $file | awk '{print $5}'`
+#    Debug start
+  if ($db) then
+    echo " Current file $file size = $fsz"
+  endif
+#    Debug end
+#  Get and parse date
+  set fdate = `echo $file | awk -F$delim '{print $3}'`  # C-130Q format
+#  set fdate = `echo $file | awk -F$delim '{print $1}'`  # GV format
+  set ye = `echo $fdate | sed -e 's/....$//'`
+  set ye = "20$ye"                                 #  used a 2-digit year :(
+#
+#  If I am to archive based on tar file's time stamp, parse file name
+  if ($tartime) then
+#   Parse date
+    set mo = `echo $fdate | sed -e 's/..\(..\)../\1/'`
+    set da = `echo $fdate | sed -e 's/^....//'`
+#   Get and parse time
+    set ftime = `echo $file | awk -F$delim '{print $4}'` # C-130 format
+#    set ftime = `echo $file | awk -F$delim '{print $2}'` # GV format
+    set ftime = `echo $ftime | sed -e "s/.jpg//"`
+    set ho = `echo $ftime | sed -e 's/....$//'`
+    set mi = `echo $ftime | sed -e 's/..\(..\)../\1/'`
+    set se = `echo $ftime | sed -e 's/^....//'`
+    set mise = `echo $ftime | sed -e 's/^..//'`
+
+    #  @ sec = $ho * 3600 + $mi * 60 + $se # deprecated
+##########
+# The root of the problem is that csh now (as of F10) enforces the notion that 
+# numbers that start with a 0 are octal.  Thus any date before day 100 with an 
+# 8 or a 9 in it fails with the "badly formed number" error if processed by csh.
+# So this line doesn't work for hours, minutes, or seconds equal to 08 or 09
+    #  @ sec = $ho * 3600 + $mi * 60 + $se
+# The workaround is to add 6 and then 2 or 3. (Could use many combination of 8 
+# and 9 to do this. Nothing magic about 6.
+    @ fred = $ho * 3600 + $mi * 60
+    if ($se == 08) then
+      if ($db) then
+        echo "found an eight"
+      endif
+      @ sec = $fred + 6 + 2
+    else if ($se == 09) then
+      if ($db) then
+        echo "found a nine"
+      endif
+      @ sec = $fred + 6 + 3
+    else
+      @ sec = $fred + $se
+    endif
+##########
+    if ($db) then
+      echo "sec = $sec"
+    endif
+#    Debug start
+    if ($db) then
+      echo "  file date/time info:  ${mo}/${da}/${ye} ${ho}:${mi}:${se}"
+    endif
+#    Debug end
+#
+#  Set up once-only data
+#   Set year (if /ATD/DATA/ path)
+    if ($firstever) then
+      if ($atdp) then
+        set YEAR = "$ye"
+      endif
+#   Save initial (before midnight rollover) flight day
+      if ($mr) then
+        @ mrda = $da
+      endif
+      @ firstever = 0
+    endif
+#
+#  Find start time
+    if ($firsttime) then
+#   If time interval requested, compare time with requested start time
+      if ($ti) then
+#    Check for midnight rollover flag (looking for start time on next day)
+        if ($mr) then
+          if ($da == $mrda) then
+#    Debug start
+            if ($db) then
+              echo "  Tomorrow's date not yet reached; date = $da"
+            endif
+#    Debug end
+            continue
+          endif
+        endif
+#    If I haven't reached the start time, skip to next file
+        if ($sec < $RSsec ) then
+#    Debug start
+          if ($db) then
+            echo "  Start time not reached; Stime = $RSsec, Time = $sec"
+          endif
+#    Debug end
+          continue
+        endif
+        set Sfile = $file
+#    Debug start
+        if ($db) then
+          echo "  Start time reached; Stime = $RSsec, Time = $sec"
+        endif
+#    Debug end
+      endif
+    endif
+#
+#   If very first file to archive, must write files "one in arrears"
+#    because the "end" detector is the transition from 59:59 to 00:00
+##########
+#   (I also have to test the case where the last file to be archived
+#    is either a 59:59 or 00:00 to see if it can handle all cases.)
+##########
+    if ($firsttime) then
+      @ pmise = $mise
+      set pho = $ho
+      set pdate = $fdate
+      set pfile = $file
+      @ firsttime = 0
+      continue
+    endif
+#   Increment file counters
+    @ N ++
+    @ n ++
+#   Check file for end of hour
+    if ( ($mise > $pmise) && ($ho == $pho) && ($fdate == $pdate) ) then
+      @ tarit = 0
+    else
+      @ tarit = 1
+    endif
+#
+#   Check file for the end time (if requested)
+    if ($ti) then
+#    Debug start
+      if ($db) then
+        echo  "  Checking time ($sec) for requested end time ($REsec)"
+      endif
+#    Debug end
+      if ($sec >= $REsec ) then
+        @ tarit = 1
+        @ last = 1
+#    Debug start
+        if ($db) then
+          echo  "  Requested end time ($REsec) reached ($sec)"
+        endif
+#    Debug end
+      endif
+    endif
+  else
+#
+#  Archive by size
+#   Increment file counters
+    @ N ++
+    @ n ++
+#   Check for a "full" tar file (size or # of files)
+    if ( ($fztotal < $MAXSIZ) && ($n < $MAXTAR) ) then
+      @ tarit = 0
+    else
+      @ tarit = 1
+    endif
+  endif
+#
+#  Have I reached the last file in the archive?
+  if ( (! $last) && ($NN < $nfiles) ) then
+    @ last = 0
+  else
+    @ last = 1
+    @ tarit = 1
+  endif
+#
+#  Do I archive the files
+  if ($tarit) then
+#   Yes !
+    if ($tartime) then
+      if ($last) then
+        echo "$pfile \" >> $Tfile
+        echo "$file" >> $Tfile
+        set Efile = $file
+      else
+        echo "$pfile" >> $Tfile
+        set Efile = $pfile
+      endif
+    else
+      echo "$file" >> $Tfile
+      set Efile = $file
+    endif
+    if ($vb) then
+      echo "  First file in archive:  $Sfile"
+      echo "  Last  file in archive:  $Efile"
+      echo "  $n files to archive -- Total size = $fztotal"
+    endif
+#    Debug start
+    if ($db) then
+      echo "  Pause to view tar script file:  $Tfile"
+      echo -n "   hit [r] to continue  "
+      set input = "$<"
+    endif
+#    Debug end
+#    Create tar file (using script just generated)
+    if ($vb) then
+      echo "  Creating tar file $Afile"
+    endif
+    chmod +x $Tfile
+    $Tfile >& /dev/null
+    set result = $status
+    if ($result != 0) then
+      if ($pd) then
+        echo "  Error $result when trying to create tar file $Tfile" >> $Lfile
+      else
+        echo "  Error $result when trying to create tar file $Tfile"
+      endif
+      goto quit
+    endif
+#    Get tar file size
+    set tfsz = `ls -l $Afile | awk '{print $5}'`
+    if ($vb) then
+      echo "  Tar file size (bytes) = $tfsz"
+    endif
+#
+##    Get start/end times for archive (based on file's current name format)
+##     Following code for C-130Q
+    set Smeta = `echo $Sfile | sed -e "s/.jpg//"`
+    set Smeta = `(echo $Smeta | awk -F$delim '{print $1, $2, $3, $4}')`
+    set Sdate = `echo $Smeta[3] | sed -e "s:\(..\)\(..\)\(..\):\2/\3/20\1:"`
+    set Stime = `echo $Smeta[4] | sed -e "s/\(..\)\(..\)\(..\)/\1:\2:\3/"`
+    set Emeta = `echo $Efile | sed -e "s/.jpg//"`
+    set Emeta = `(echo $Emeta | awk -F$delim '{print $1, $2, $3, $4}')`
+    set Edate = `echo $Emeta[3] | sed -e "s:\(..\)\(..\)\(..\):\2/\3/20\1:"`
+    set Etime = `echo $Emeta[4] | sed -e "s/\(..\)\(..\)\(..\)/\1:\2:\3/"`
+##    Get camera location
+    set Locn = `echo $Smeta[2] | tr '[a-z]' '[A-Z]'`
+##    End of C-130Q code
+#
+#     Following code for GV
+#    set Smeta = `echo $Sfile | sed -e "s/.jpg//"`
+#    set Smeta = `(echo $Smeta | awk -F$delim '{print $1, $2}')`
+#    set Sdate = `echo $Smeta[1] | sed -e "s:\(..\)\(..\)\(..\):\2/\3/20\1:"`
+#    set Stime = `echo $Smeta[2] | sed -e "s/\(..\)\(..\)\(..\)/\1:\2:\3/"`
+#    set Emeta = `echo $Efile | sed -e "s/.jpg//"`
+#    set Emeta = `(echo $Emeta | awk -F$delim '{print $1, $2}')`
+#    set Edate = `echo $Emeta[1] | sed -e "s:\(..\)\(..\)\(..\):\2/\3/20\1:"`
+#    set Etime = `echo $Emeta[2] | sed -e "s/\(..\)\(..\)\(..\)/\1:\2:\3/"`
+#    Get camera location
+#    set Locn = "LEFT"
+#    set Locn = "FWD"
+##    End of GV code
+#
+#    Debug start
+    if ($db) then
+      echo "  Dates/Times and camera location"
+      echo "  Start = $Sdate  $Stime"
+      echo "   End  = $Edate  $Etime"
+      echo "  Camera location = $Locn"
+    endif
+#    Debug end
+#
+#    Compose archived tar file's MSS bitfile name (using metadata)
+#     for C-130Q:
+    set OFILE = `echo ${Locn}.20${Smeta[3]}.${Smeta[4]}_${Emeta[4]}.jpg.tar`
+#     for GV:
+#    set OFILE = `echo ${Locn}.20${Smeta[1]}.${Smeta[2]}_${Emeta[2]}.jpg.tar`
+#
+#    Compose full MSS bitfile name
+#     /ATD/DATA/ path
+    if ($atdp) then
+      set bitfile = "/ATD/DATA/$YEAR/$PROJECT/$PLATFORM/$TYPE/$DSdir.$OFILE"
+    endif
+#     /RAF/ path
+    if ($rafp) then
+      set bitfile = "/RAF/$YEAR/$projno/$TYPE/$DSdir/$OFILE"
+    endif
+#    Create tar directory-list file (add header with metadata) and save it in
+#     projects's archive subdirectory
+#    Set file's full path name
+    set dfile = "$Adir/$DSdir.$OFILE.dir"
+    if ($vb) then
+      echo "  Creating tar directory file $dfile"
+    endif
+    echo " Directory list for MSS bitfile $bitfile" >! $dfile
+    set result = $status
+    if ($result != 0) then
+      if ($pd) then
+        echo "  Error $result when trying to create tar file's directory list" >> $Lfile
+        echo "  Tar file $Afile will be saved" >> $Lfile
+        echo "   If this archive needs to be redone, start with file:  $SSdir/$Sfile" >> $Lfile
+        echo "   If continuing on, then use the next file after:  $SSdir/$Efile" >> $Lfile
+      else
+        echo "  Error $result when trying to create tar file's directory list"
+        echo "  Tar file $Afile will be saved"
+        echo "   If this archive needs to be redone, start with file:  $SSdir/$Sfile"
+        echo "   If continuing on, then use the next file after:  $SSdir/$Efile"
+      endif
+      set nopurge = 1
+      goto quit
+    endif
+    echo "  C-130Q digital photos (jpg format) from project $PN" >> $dfile
+    echo " " >> $dfile
+    echo "  $TYPE $DSdir $Locn starts:  $Sdate $Stime" >> $dfile
+    echo "  $TYPE $DSdir $Locn   ends:  $Edate $Etime" >> $dfile
+    echo "  Archive created on `date`" >> $dfile
+    echo "  Tar file size (bytes) = $tfsz" >> $dfile
+    echo " " >> $dfile
+    tar tvf $Afile >> $dfile
+    if (-r $Afile) then
+#    Write tar file to MSS if in production mode ($pd == true == 1)
+      if ($pd) then
+        if ($vb) then
+          echo "  Archiving $DSdir$char$OFILE to MSS"
+        endif
+        echo "#  Job submitted on `date`" >> $Lfile
+        #ssh -x $msrcpMachine msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG \
+        msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG \
+         $RPWD $Afile mss:${bitfile}
+        set result = $status
+      else
+#    Debug start
+        if ($vb || $db) then
+          echo \
+          #ssh -x $msrcpMachine msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG \
+          msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG \
+           $RPWD $Afile mss:${bitfile}
+        endif
+#    Debug end
+        set result = 0
+      endif
+      if ($pd) then
+        if ($result == 0) then
+          echo "#  msrcp job for $DSdir$char$OFILE -- OK -- `date`" >> $Lfile
+        else
+          echo "#  msrcp job for $DSdir$char$OFILE -- Failed -- `date`" >> $Lfile
+          echo "#                $DSdir$char$OFILE -- error code $result" >> $Lfile
+        endif
+      else
+        if ($result == 0) then
+          echo "#  msrcp job for $DSdir$char$OFILE -- OK -- `date`"
+        else
+          echo "#  msrcp job for $DSdir$char$OFILE -- Failed -- `date`"
+          echo "#                $DSdir$char$OFILE -- error code $result"
+        endif
+      endif
+    else
+      if ($pd) then
+        echo "#  msrcp job for $DSdir$char$OFILE -- Failed -- `date`" >> $Lfile
+        echo "#   Cannot access tar file $Afile" >> $Lfile
+      else
+        echo "#  msrcp job for $DSdir$char$OFILE -- Failed -- `date`"
+        echo "#   Cannot access tar file $Afile"
+      endif
+    endif
+#
+#    Write tar directory-list file to MSS if in production mode ($pd==true==1)
+    if ($pd) then
+      if ($vb) then
+        echo "  Archiving tar directory file $OFILE.dir to MSS"
+      endif
+      echo "#  Job submitted on `date`" >> $Lfile
+      #ssh -x $msrcpMachine msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG \
+      msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG \
+       $RPWD $dfile mss:${bitfile}.dir
+      set result = $status
+    else
+      set result = 0
+#    Debug start
+      if ($vb || $db) then
+        echo \
+        #ssh -x $msrcpMachine msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG \
+        msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG \
+         $RPWD $dfile mss:${bitfile}.dir
+      endif
+#    Debug end
+    endif
+    if ($pd) then
+      if ($result == 0) then
+        echo "#  msrcp job for $DSdir$char$OFILE.dir -- OK -- `date`" >> $Lfile
+      else
+        echo "#  msrcp job for $DSdir$char$OFILE.dir -- Failed -- `date`" >> $Lfile
+        echo "#                $DSdir$char$OFILE.dir -- error code $result" >> $Lfile
+      endif
+    else
+      if ($result == 0) then
+        echo "#  msrcp job for $DSdir$char$OFILE.dir -- OK -- `date`"
+      else
+        echo "#  msrcp job for $DSdir$char$OFILE.dir -- Failed -- `date`"
+        echo "#                $DSdir$char$OFILE.dir -- error code $result"
+      endif
+    endif
+#    Debug start
+    if ($db || $vb) then
+      echo "   Number of files archived so far = $N"
+      echo "   Number of files in this archive = $n"
+    endif
+#    Debug end
+#    Debug start
+    if ($db) then
+      echo "   Total number of files in this directory = $nfiles"
+      echo "   List of files in this directory:  $Flist"
+    endif
+#    Debug end
+    if (! $pd) then
+      echo "  Since this is a checkout run, pause to view files:"
+      echo "   Tar script file:  $Tfile"
+      echo "   Tar file:  $Afile"
+      echo -n "   hit [r] to continue  "
+      set input = "$<"
+    endif
+#    Reset for next tar file
+    \rm $Tfile
+    \rm $Afile
+    @ f ++
+    @ n = 0
+    @ fztotal = 0
+    @ new = 1
+  endif
+#
+#   If by time, save file name and set parameters for next pass
+  if ($tartime) then
+    echo "$pfile \" >> $Tfile
+    @ fztotal = $fztotal + $pfsz
+    set pmise = $mise
+    set pho   = $ho
+    set pdate = $fdate
+    set pfile = $file
+    set pfsz = $fsz
+  else
+    echo "$file \" >> $Tfile
+    @ fztotal = $fztotal + $fsz
+  endif
+#    Debug start
+  if ($db) then
+    echo "   Total tar file size = $fztotal"
+  endif
+#    Debug end
+#
+#  Do I quit before the last known file?
+  if ($tartime && $ti && $last) then
+#   Yes!
+#    Debug start
+    if ($db) then
+      echo  "  Breaking out of foreach loop"
+    endif
+#    Debug end
+    break
+  endif
+end
+#
+#  Done.
+if ($pd) then
+  echo "#   Completed on `date`" >> $Lfile
+  echo "#   Total number of files: $N" >> $Lfile
+endif
+echo "#   Completed on `date`"
+echo "#   Total number of files: $N"
+if ($f == 1) then
+  set msg = "file"
+else
+  set msg = "files"
+endif
+if ($pd) then
+  echo "#   $f tar $msg archived to MSS" >> $Lfile
+  echo "#   $f tar $msg archived to MSS"
+else
+  echo "#   $f tar $msg NOT archived to MSS"
+endif
+@ xit = 0
+goto cleanup
+#
+quit:
+echo "  Quitting"
+abort:
+onintr -
+#  Delete tar directory file if abnormal exit
+if ($?dfile) then
+  if (-e $dfile) then
+    \rm $dfile
+  endif
+endif
+cleanup:
+if ($?Flist) then
+  if (-e $Flist) then
+    \rm $Flist
+  endif
+endif
+if ($?Tfile) then
+  if (-e $Tfile) then
+    \rm $Tfile
+  endif
+endif
+if ($?Afile) then
+  if (-e $Afile) then
+    if (! $nopurge) then
+      \rm $Afile
+    endif
+  endif
+endif
+if ($vb || $db) then
+  echo " $0 exiting `date`"
+  echo ""
+endif
+exit $xit
+#
+#  See file $Lfile for job-completion status
+#   (Status no longer put here)
+#
