@@ -8,17 +8,16 @@
     xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
     name="RAF_Lab"
     system="GV_N677F"
-    config="${PROJ_DIR}/RAF_Lab/GV_N677F/nidas/default.xml"
     version="$LastChangedRevision: 2514 $"
     >
-<sensorcatalog>
 
-    <sensor ID="IRIG" class="raf.IRIGSensor">
+<sensorcatalog>
+    <irigSensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="Clock" units="msec"
                     longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
-    </sensor>
+    </irigSensor>
 
     <arincSensor ID="IRS-C130" class="raf.IRS_HW_YG1854">
         <!-- Taken from the Honeywell installation manual for the -->
@@ -120,16 +119,16 @@
         <sample id="0323" rate="50" process="false"><variable name="flt_pth_accel" units="G" longname="flt pth accel"/></sample>
         <sample id="0324" rate="50">
           <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-            <linear slope="1.0" intercept="-0.01" units="degree"/>
+            <linear slope="1.0" intercept="0.43" units="degree"/>
           </variable>
         </sample>
         <sample id="0325" rate="50"><variable name="ROLL" units="degree"   longname="IRS Aircraft Roll Angle"/></sample>
         <sample id="0326" rate="50" process="false"><variable name="BPITCHR" units="deg/s" longname="IRS Body Pitch Rate"/></sample>
         <sample id="0327" rate="50" process="false"><variable name="BROLLR" units="deg/s" longname="IRS Body Roll Rate"/></sample>
         <sample id="0330" rate="50" process="false"><variable name="BYAWR" units="deg/s" longname="IRS Body Yaw Rate"/></sample>
-        <sample id="0331" rate="50" process="false"><variable name="BLONGA" units="G" longname="IRS Body Longitudal Acceleration"/></sample>
-        <sample id="0332" rate="50" process="false"><variable name="BLATA" units="G" longname="IRS Body Latitudal Acceleration"/></sample>
-        <sample id="0333" rate="50" process="false"><variable name="BNORMA" units="G" longname="IRS Body Normal Acceleration"/></sample>
+        <sample id="0331" rate="50"><variable name="BLONGA" units="G" longname="IRS Body Longitudal Acceleration"/></sample>
+        <sample id="0332" rate="50"><variable name="BLATA" units="G" longname="IRS Body Latitudal Acceleration"/></sample>
+        <sample id="0333" rate="50"><variable name="BNORMA" units="G" longname="IRS Body Normal Acceleration"/></sample>
         <sample id="0334" rate="25" process="false"><variable name="PHDG" units="deg" longname="IRS Platform Heading"/></sample>
         <sample id="0335" rate="50" process="false"><variable name="TKAR" units="deg/s" longname="IRS Track Angle Rate"/></sample>
         <sample id="0336" rate="50" process="false"><variable name="pitch_att_rate" units="deg/s" longname="pitch_att_rate"/></sample>
@@ -174,7 +173,7 @@
         <sample id="0207" rate="8" process="false"><variable name="max_op_speed" units="m/s" longname="ADC maximum operating speed"/></sample>
         <sample id="0212" rate="16" process="false"><variable name="altrate" units="m/s" longname="ADC Altitude Rate"/></sample>
         <sample id="0252" rate="16" process="false"><variable name="baro_corr_alt_4" units="m" longname="ADC baro corrected alt #4"/></sample>
-        <sample id="0270" rate="2" process="false"><variable name="discrete_1" units="" longname="ADC discrete #1"/></sample>
+        <sample id="0270" rate="2"><variable name="ADC_DIS_1" units="" longname="AirTrfcCtrl Sel, Overspeed, WOW"/></sample>
         <sample id="0271" rate="2" process="false"><variable name="discrete_2" units="" longname="ADC discrete #2"/></sample>
         <sample id="0350" rate="2" process="false"><variable name="maint_word_1" units="" longname="ADC maint word #1"/></sample>
         <sample id="0351" rate="2" process="false"><variable name="maint_word_2" units="" longname="ADC maint word #2"/></sample>
@@ -234,6 +233,40 @@
         <sample id="0377" rate="2" process="false"><variable name="equipment_id" units="" longname="equipment id"/></sample>
     </arincSensor>
 
+    <serialSensor ID="D_GPS" class="DSMSerialSensor" baud="115200" parity="none" databits="8" stopbits="1">
+        <message separator="\xaa\x44\x12" position="beg" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="Novatel_GPS" class="GPS_NMEA_Serial"
+        baud="38400" parity="none" databits="8" stopbits="1">
+
+        <!-- GGA record -->
+        <sample id="1" rate="5">
+            <variable name="GGSECSDAY" units="sec" longname="Reference GPS seconds of day"/>
+            <variable name="GGLAT" units="degree_N" longname="Reference GPS Latitude"/>
+            <variable name="GGLON" units="degree_E" longname="Reference GPS Longitude"/>
+            <variable name="GGQUAL" units="none" longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS"/>
+            <variable name="GGNSAT" units="number" longname="Reference GPS number of satellites tracked"/>
+            <variable name="GGHORDIL" units="none" longname="Reference GPS Horizontal dilution of position"/>
+            <variable name="GGALT" units="m" longname="Reference GPS Altitude (MSL)"/>
+            <variable name="GGEOIDHT" units="m" longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid"/>
+            <variable name="GGDAGE" units="s" longname="Time in seconds since last DGPS update"/>
+            <variable name="GGREFID" units="none" longname="DGPS station ID number"/>
+        </sample>
+        <!-- RMC record -->
+        <sample id="2" rate="5">
+            <variable name="GGSTATUS" units="none" longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)"/>
+            <variable name="GGSPD" units="m/s" longname="Reference GPS Ground Speed"/>
+            <variable name="GGTRK" units="degree_T" longname="Reference GPS Track Angle"/>
+            <variable name="GGVEW" units="m/s" longname="Reference GPS Ground Speed Vector, East Component"/>
+            <variable name="GGVNS" units="m/s" longname="Reference GPS Ground Speed Vector, North Component"/>
+            <variable name="GGDAY" units="day" longname="Reference GPS Day of month (1-31)"/>
+            <variable name="GGMONTH" units="month" longname="Reference GPS Month of year (1-12)"/>
+            <variable name="GGYEAR" units="year" longname="Reference GPS 2 digit year"/>
+        </sample>
+        <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
     <serialSensor ID="Garmin_GPS" class="GPS_NMEA_Serial"
         baud="4800" parity="none" databits="8" stopbits="1">
 
@@ -283,6 +316,19 @@
         <prompt string="#1?\r" rate="50"/>
     </serialSensor>
 
+    <serialSensor ID="Mensor_6101" class="DSMSerialSensor"
+        baud="57600" parity="none" databits="8" stopbits="1">
+	<!-- Turn off internal filtering on the Mensor:
+		#1FL ?	query the value (factory default is 90%)
+		#1FL 0	set to 0
+		#1FL ?
+		#1SAVE 	save to EEPROM
+	-->
+        <sample id="1" scanfFormat="%*1d%f"/>
+        <message separator="\n" position="end" length="0"/>
+        <prompt string="#1?\r" rate="100"/>
+    </serialSensor>
+
     <serialSensor ID="Paro_DigiQuartz_1000" class="DSMSerialSensor"
         baud="57600" parity="none" databits="8" stopbits="1">
 	<!-- initialization commands for the Paro:
@@ -302,27 +348,260 @@
     <serialSensor ID="Water_CN_Counter" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1"
         init_string="SM,4,1\r">
-        <sample id="1" rate="10" scanfFormat="D,%f,%f,%f,%f,%f,%f,%f,%f">
-	    <variable name="MCN_WCN" units="none" longname="WCN Current Operating Mode"/>
-	    <variable name="SFLCN_WCN" units="none" longname="WCN Status Flags"/>
-	    <variable name="CONCN_WCN" units="#/cm3" longname="WCN Aggregated Concentration"/>
-	    <variable name="ETCN_WCN" units="s" longname="WCN Sample Time (Elapsed Time)"/>
-	    <variable name="LTCN_WCN" units="s" longname="WCN Live Time"/>
-	    <variable name="CNTS_WCN" units="count" longname="WCN Accumulated Particle Counts"/>
-	    <variable name="PCN_WCN" units="hPa" longname="WCN Absolute Pressure"/>
-	    <variable name="RPCN_WCN" units="none" longname="WCN Raw Photometric Value"/>
+        <sample id="1" rate="10" scanfFormat="D,%f,%f,%*f,%f,%f,%f,%f,%f">
+	    <variable name="MCN" units="none" longname="WCN Current Operating Mode"/>
+	    <variable name="SFLCN" units="none" longname="WCN Status Flags"/>
+	    <!--variable name="CONCN" units="#/cm3" longname="WCN Aggregated Concentration"/-->
+	    <variable name="ETCN" units="s" longname="WCN Sample Time (Elapsed Time)"/>
+	    <variable name="LTCN" units="s" longname="WCN Live Time"/>
+	    <variable name="CNTS" units="count" longname="WCN Accumulated Particle Counts" count="true"/>
+	    <variable name="PCN" units="hPa" longname="WCN Absolute Pressure"/>
+	    <variable name="RPCN" units="none" longname="WCN Raw Photometric Value"/>
         </sample>
         <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
-	    <variable name="FSACN_WCN" units="cm3/min" longname="WCN Sample Flow Rate"/>
-	    <variable name="FTCN_WCN" units="cm3/min" longname="WCN Total Flow Rate"/>
-	    <variable name="FSHCN_WCN" units="cm3/min" longname="WCN Sheath Flow Rate"/>
-	    <variable name="PACN_WCN" units="hPa" longname="WCN Absolute Pressure"/>
-	    <variable name="TSCN_WCN" units="deg_C" longname="WCN Saturator Temperature"/>
-	    <variable name="TGCN_WCN" units="deg_C" longname="WCN Growth Tube Temperature"/>
-	    <variable name="TOCN_WCN" units="deg_C" longname="WCN Optics Temperature"/>
+	    <variable name="FCNC" units="cm3/min" longname="WCN Sample Flow Rate">
+                 <linear slope="0.001" intercept="0.0" units="vlpm"/>
+            </variable>
+	    <variable name="FTCN" units="cm3/min" longname="WCN Total Flow Rate"/>
+	    <variable name="FSHCN" units="cm3/min" longname="WCN Sheath Flow Rate"/>
+	    <variable name="PACN" units="hPa" longname="WCN Absolute Pressure"/>
+	    <variable name="TSCN" units="deg_C" longname="WCN Saturator Temperature"/>
+	    <variable name="TGCN" units="deg_C" longname="WCN Growth Tube Temperature"/>
+	    <variable name="TOCN" units="deg_C" longname="WCN Optics Temperature"/>
         </sample>
         <message separator="\r" position="end" length="0"/>
     </serialSensor>
+
+    <serialSensor ID="TDLH2O" class="DSMSerialSensor"
+        baud="115200" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="20" scanfFormat="%f %f %f %f %*f %*f %f %f %f %f %f %f %f %f">
+            <variable name="XRAWMRS" units="hPa" longname="Raw Water Mixing Ratio, TDL Short Path"/>
+            <variable name="XRAWMRL" units="hPa" longname="Raw Water Mixing Ratio, TDL Long Path"/>
+            <variable name="PCELLS" units="hPa" longname="Sample Cell Pressure, TDL Short Path"/>
+            <variable name="TCELLS" units="deg_C" longname="Sample Cell Temperature, TDL Short Path"/>
+            <variable name="PP2FS" units="V" longname="2f Signal Amplitude, TDL Short Path"/>
+            <variable name="PWRS" units="V" longname="Laser Power, TDL Short Path"/>
+            <variable name="IDXS" units="V" longname="Spectral Line Position, TDL Short Path"/>
+            <variable name="DKS" units="V" longname="Zero Level, TDL Short Path"/>
+            <variable name="PP2FL" units="V" longname="2f Signal Amplitude, TDL Long Path"/>
+            <variable name="PWRL" units="V" longname="Laser Power, TDL Long Path"/>
+            <variable name="IDXL" units="V" longname="Spectral Line Position, TDL Long Path"/>
+            <variable name="DKL" units="V" longname="Zero Level, TDL Long Path"/>
+        </sample>
+        <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="CDP" class="raf.CDP_Serial"
+        baud="38400" parity="none" databits="8" stopbits="1" timeout="10"> 
+
+        <parameter name="calFile" type="string" value="PMSspecs"/>
+
+        <parameter name="NCHANNELS" type="int" value="30"/>
+        <parameter name="RANGE" type="int" value="0"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
+        <parameter name="TRANSIT_REJ" type="int" value="1"/>
+        <parameter name="DOF_REJ" type="int" value="1"/>
+        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+        <parameter name="ATT_ACCEPT" type="int" value="95"/>
+        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
+        <parameter name="CT_METHOD" type="int" value="0"/>
+        <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
+
+        <sample id="1">
+            <variable name="CDPLSRC" units="mAmp" longname="CDP Laser Current"/>
+            <variable name="CDPLSRP" units="V" longname="CDP Laser Power Monitor"/>
+            <variable name="CDPWBTMP" units="deg_C" longname="CDP Wing Board Temperature"/>
+            <variable name="CDPLBTMP" units="deg_C" longname="CDP Laser Block Temperature"/>
+            <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
+            <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
+            <variable name="AVGTRNS" units="" longname="CDP Average Transit Time"/>
+            <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
+
+            <variable name="ACDP" length="31" units="count" longname="CDP Raw Accumulation (per cell)"/>
+        </sample>
+        <prompt string="\x1b\x02\x1d\x00" rate="10"/>
+    </serialSensor>
+
+    <serialSensor ID="UHSAS" class="raf.UHSAS_Serial" baud="115200" parity="none" databits="8" stopbits="1" timeout="10">
+
+        <parameter name="HSKP_SCALE" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000" type="int"/>
+
+        <sample id="1" rate="10">
+            <variable name="AUHSAS" length="100" units="count" longname="UHSAS Raw Count Histogram"/>
+            <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
+            <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
+            <variable name="USMPFLW" units="V" longname="UHSAS Sample Flow">
+                <linear slope="0.3543" intercept="-0.155" units="sccs"/>
+            </variable>
+            <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
+            <variable name="UTEMP" units="V" longname="UHSAS Temperature in Canister, signal"/>
+            <variable name="USHFLW" units="V" longname="UHSAS Air Sheath Flow">
+                <linear slope="4.1667" intercept="0.0" units="sccs"/>
+            </variable>
+            <variable name="UDIFF" units="V" longname="UHSAS Absolute Pressure in Canister, signal"/>
+            <variable name="UBTMP" units="V" longname="UHSAS Temperature in Canister">
+                <linear slope="173.722" intercept="0.0" units="K"/>
+            </variable>
+            <!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/-->
+            <variable name="UPRESS" units="V" longname="UHSAS Absolute Pressure in Canister">
+                <linear slope="22.222" intercept="10.556" units="kPa"/>
+            </variable>
+            <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
+            <!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
+        </sample>
+        <message separator="\xff\xff\x00" position="beg" length="234"/>
+    </serialSensor>
+
+    <serialSensor ID="VCSEL" class="raf.VCSEL_Serial"
+        baud="19200" parity="none" databits="8" stopbits="1">
+        <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
+        <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %*c %*f %f %*f %*f %f %f %f %f">
+            <variable name="STATUS" units="none" longname="VCSEL Status Code"/>
+            <variable name="AT" units="deg_K" longname="VCSEL Ambient Temperature"/>
+            <variable name="PS" units="torr" longname="VCSEL Ambient Pressure"/>
+            <variable name="LSRTMP" units="ohm" longname="VCSEL Laser Temperature"/>
+            <variable name="SETTMP" units="ohm" longname="VCSEL Set Temperature"/>
+            <variable name="TCC" units="count" longname="VCSEL Thermoelectric Cooler Current"/>
+            <variable name="CNTRCUR" units="count" longname="VCSEL Center Current"/>
+            <variable name="PKPOS" units="count" longname="VCSEL Peak Position"/>
+            <variable name="PREGAIN" units="count" longname="VCSEL Pre Gain"/>
+            <variable name="ACGAIN" units="count" longname="VCSEL AC Gain"/>
+            <variable name="LSRINT" units="count" longname="VCSEL Laser Intensity"/>
+        </sample>
+        <sample id="2" rate="25" scanfFormat="%f %*f %f %*f">
+            <variable name="CONC_H2O" units="#/cm3" longname="VCSEL Moisture Number Density"/>     <!-- molecules/cm^3 -->
+            <variable name="DP" units="deg_C" longname="VCSEL Frost Dew Point"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="COMR" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%f">
+            <variable name="COMR" units="V" longname="Carbon Monoxide Mixing Ratio"/>
+<!-- Tom - Teresa says no slope for this
+                <linear slope="400" intercept="-3.2" units="ppbv"/>
+            </variable>
+-->
+        </sample>
+        <prompt string="CONC?\r" rate="5"/>
+        <message separator="\r" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="CORAW" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%f">
+            <variable name="CORAW" units="V" longname="Carbon Monoxide Mixing Ratio">
+                <linear slope="400" intercept="-3.2" units="ppbv"/>
+            </variable>
+        </sample>
+        <prompt string="CONC?\r" rate="5"/>
+        <message separator="\r" position="end" length="0"/>
+    </serialSensor>
+
+
+    <serialSensor ID="NOAA_CSD_O3" class="DSMSerialSensor"
+        baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="NOAA-OZONE%*d,%f,%f">
+            <variable name="PS" units="hPa" longname="NOAA O3 Ambiant Pressure"/>
+            <variable name="O3MR" units="ppbv" longname="NOAA O3 Ozone Mixing Ratio"/>
+        </sample>
+        <message separator="#\r\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="CFDC" class="DSMSerialSensor"
+        baud="38400" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f">
+            <variable name="CT1" units="%" longname="CFDC Saturation Water"/>
+            <variable name="CT2" units="deg_C" longname="CFDC Aerosol Location Temperature"/>
+            <variable name="CT3" units="#/cm3" longname="CFDC Concentration"/>
+            <variable name="CT4" units="bool" longname="CFDC CVI (ON=1)"/>
+            <variable name="CT5" units="seconds" longname="CFDC MCA Live Time"/>
+            <variable name="CT6" units="hPa" longname="CFDC Pressure"/>
+            <variable name="CT7" units="none" longname="CFDC Filter"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="CCN" class="DSMSerialSensor"
+        baud="57600" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="%f, %f, %f, %f, %f, %f, %f, %f, %f">
+            <variable name="AT" units="deg_C" longname="CCN Sample Temperature"/>
+            <variable name="T1COLA" units="deg_C" longname="CCN Column A top of Column Temp"/>
+            <variable name="T3COLA" units="deg_C" longname="CCN Column A bottom of Column Temp"/>
+            <variable name="T1COLB" units="deg_C" longname="CCN Column B top of Column Temp"/>
+            <variable name="T3COLB" units="deg_C" longname="CCN Column B bottom of Column Temp"/>
+            <variable name="CCNA" units="#/cm3" longname="CCN Concentration Column A"/>
+            <variable name="CCNB" units="#/cm3" longname="CCN Concentration Column B"/>
+            <variable name="FLOWA" units="cm3/min" longname="CCN Sample Flow Column B"/>
+            <variable name="FLOWB" units="cm3/min" longname="CCN Sample Flow Column B"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+   
+     <sensor ID="Fast2DC" class="raf.TwoD64_USB">
+        <parameter name="SerialNumber" value="F2DC001" type="string"/>
+        <parameter name="RESOLUTION" value="25" type="int"/>
+        <parameter name="TAS_RATE" value="10" type="int"/>
+
+        <sample id="1" rate="10">
+            <variable name="SHDORC" units="count" longname="Fast 2DC Shadow OR Count"/>
+        </sample>
+        <sample id="2" rate="1">
+            <variable name="A1DC" length="64" units="count" longname="Fast 2DC Raw Accumulation, entire-in (per cell)"/>
+            <variable name="DT1DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
+        </sample>
+<!--
+        <sample id="3" rate="1">
+            <variable name="A2DC" length="128" units="count" longname="Fast 2DC Raw Accumulation, center-in (per cell)"/>
+            <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
+        </sample>
+-->
+    </sensor>
+
+    <sensor ID="NOAAUCATS" class="raf.UDPSocketSensor" devicename="inet::38807">
+        <sample id="1" rate="1" scanfFormat="UWV:%f">
+            <variable name="H2OMR" units="ppmv" longname="NOAA UCATS Water Vapor Mixing Ratio"/> 
+        </sample>
+        <sample id="2" rate="1" scanfFormat="UOZ:%f">
+            <variable name="O3MR" units="ppbv" longname="NOAA UCATS Ozone Mixing Ratio"/>
+        </sample>
+        <sample id="3" rate="1" scanfFormat="UMR:%f,%f">
+            <variable name="N2O" units="ppbv" longname="NOAA UCATS Nitrous Oxide"/>
+            <variable name="CH4" units="ppbv" longname="NOAA UCATS Methane"/>
+        </sample>
+    </sensor>
+
+    <sensor ID="NOAAPANTHER"  class="raf.UDPSocketSensor" devicename="inet::38808">
+        <sample id="1" rate="1" scanfFormat="PAN:%f,%f">
+            <variable name="PresLN2" units="psi" longname="NOAA PANTHER Press N2 Low"/>
+            <variable name="PresLHe" units="psi" longname="NOAA PANTHER Press He Low"/>
+        </sample>
+        <sample id="2" rate="1" scanfFormat="PMR:%f,%f,%f,%f">
+            <variable name="F11" units="pptv" longname="NOAA PANTHER CFC-11"/>
+            <variable name="N2O" units="ppbv" longname="NOAA PANTHER Nitrous Oxide"/>
+            <variable name="SF6" units="pptv" longname="NOAA PANTHER Sulfur Hexaflouride"/>
+            <variable name="CH4" units="ppbv" longname="NOAA PANTHER Methane"/>
+        </sample>
+    </sensor>
+
+    <serialSensor ID="SP2" class="DSMSerialSensor"
+        baud="57600" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="%f %f %f">
+            <variable name="CIP" units="#/cm3" longname="SP2 Concentration Incand Particles"/>
+            <variable name="YAGP" units="V" longname="SP2 YAG Power"/>
+            <variable name="FLOW" units="cc/min" longname="SP2 Sample Flow Rate"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+    <sensor ID="NOAASP2"  class="raf.UDPSocketSensor" devicename="inet::32011">  <!-- Tom: assume that numeric is port assignment -->
+        <sample id="1" rate="1" scanfFormat="NOAA_SP2,%*dT%*d,%f,%f,%f,%f">   <!-- Tom - will need actual format info -->
+<!--            <variable name="Time_s"   units="seconds" longname="NOAA SP2 Time"/-->  <!-- Tom might do %*d and skip the time - only know floating point -->
+            <variable name="BCPC" units="#/cm3" longname="NOAA SP2 Back Carbon Particle Concentration"/>
+            <variable name="SampleP"   units="torr" longname="NOAA SP2 Sample P"/>
+            <variable name="SampleFlow" units="cc/min" longname="NOAA SP2 Sample Flow"/>  <!-- Tom - unit given was vccs - used this from serial SP2 defn -->
+            <variable name="YAGP" units="V" longname="SP2 YAG Power"/>
+        </sample>
+    </sensor>
 
     <serialSensor ID="TDLH2O" class="DSMSerialSensor"
         baud="115200" parity="none" databits="8" stopbits="1">
@@ -341,8 +620,8 @@
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
-    <sensor ID="LAMS" class="raf.LamsSensor">
-        <parameter name="TAS_level"  type="int" value="80"/>
+    <lamsSensor ID="LAMS" class="raf.LamsSensor">
+        <parameter name="calm"  type="int" value="1"/>
         <parameter name="nAVG"  type="int" value="40"/>
         <parameter name="nSKIP" type="int" value="0"/>
         <parameter name="nPEAK" type="int" value="1000"/>
@@ -350,7 +629,7 @@
             <variable name="LAMSAVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
             <variable name="LAMSMAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
         </sample>
-    </sensor>
+    </lamsSensor>
 
 </sensorcatalog>
 
@@ -375,13 +654,11 @@
                     <fileset dir="/var/r1/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
-
                 </output>
                 <output class="SampleOutputStream">
                     <fileset dir="/tmp/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
-
                 </output>
                 <output class="SampleOutputStream">
                     <socket type="server" port="30000"/>
@@ -396,7 +673,7 @@
     </server>
 
     <dsm name="dsm301" location="LAMS_rack" id="1" rserialPort="30002">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
         <lamsSensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
@@ -405,7 +682,7 @@
 
 <!--
     <dsm name="dsm302" location="lab" id="2" rserialPort="30002">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="302"/>
 
         <serialSensor IDREF="Water_CN_Counter"
                 devicename="/dev/dsmser0" id="120">
@@ -416,8 +693,59 @@
         </output>
     </dsm>
 -->
+    <dsm name="dsm303" location="blue_box" id="2" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+            <sample id="1" rate="500">
+                <variable name="A0_500" units="V" longname="test 500Hz">
+                    <parameter name="gain"     value="1"   type="float"/> <parameter name="bipolar"      value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0"  type="float"/>
+                </variable>
+                <variable name="A1_500" units="V" longname="test 500Hz">
+                    <parameter name="gain"     value="1"   type="float"/> <parameter name="bipolar"      value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0"  type="float"/>
+                </variable>
+                <variable name="A2_500" units="V" longname="test 500Hz">
+                    <parameter name="gain"     value="1"   type="float"/> <parameter name="bipolar"      value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0"  type="float"/>
+                </variable>
+                <variable name="A3_500" units="V" longname="test 500Hz">
+                    <parameter name="gain"     value="1"   type="float"/> <parameter name="bipolar"      value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0"  type="float"/>
+                </variable>
+                <variable name="A4_500" units="V" longname="test 500Hz">
+                    <parameter name="gain"     value="1"   type="float"/> <parameter name="bipolar"      value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0"  type="float"/>
+                </variable>
+                <variable name="A5_500" units="V" longname="test 500Hz">
+                    <parameter name="gain"     value="1"   type="float"/> <parameter name="bipolar"      value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0"  type="float"/>
+                </variable>
+                <variable name="A6_500" units="V" longname="test 500Hz">
+                    <parameter name="gain"     value="1"   type="float"/> <parameter name="bipolar"      value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0"  type="float"/>
+                </variable>
+                <variable name="A7_500" units="V" longname="test 500Hz">
+                    <parameter name="gain"     value="1"   type="float"/> <parameter name="bipolar"      value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.0" type="float"/> <parameter name="corIntercept" value="0.0"  type="float"/>
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_1600" units="deg_C">
+                </variable>
+            </sample>
+        </sensor>
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_I2"/>
@@ -445,7 +773,12 @@
 
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/dsmser5" id="120">
         </serialSensor>
-
+        <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_007">
+            <parameter name="SerialNumber" value="001" type="string"/>
+            <sample id="1">
+                <variable name="SHADOR" units="count" longname="High Speed 2DC Shadow-or count"/>
+            </sample>
+        </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="DPL" units="V" longname="Dew/Frost Point Temperature, Fuselage Left">
@@ -478,7 +811,7 @@
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser0" id="110">
@@ -589,6 +922,218 @@
 
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+    <dsm name="dsm306" location="chaps_rack" id="6" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="306"/>
+
+        <serialSensor IDREF="TDLH2O"
+                devicename="/dev/dsmser3" id="120">
+        </serialSensor>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+            <sample id="1" rate="500">
+                <variable name="PDUMPPR" units="V" longname="Pressure of instrument exhaust duct, right">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+<!-- PDUMPPR              | 2006-03-31 21:14:30 | {-0.172594,1.04743}   +0   +5 +10 -->
+                    <parameter name="corSlope"     value="1.04743"    type="float"/>
+                    <parameter name="corIntercept" value="-0.172594"  type="float"/>
+                    <linear slope="103.42" intercept="0" units="mb"/>
+                </variable>
+                <variable name="PDUMPPL" units="V" longname="Pressure of instrument exhaust duct, left">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+<!-- PDUMPPL              | 2006-03-31 21:17:22 | {-0.416897,1.07263}   +0   +5 +10 -->
+                    <parameter name="corSlope"     value="1.07263"    type="float"/>
+                    <parameter name="corIntercept" value="-0.416897"  type="float"/>
+                    <linear slope="103.42" intercept="0" units="mb"/>
+                </variable>
+                <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+<!-- PCAB                 | 2006-03-31 21:20:31 | {-0.21372,1.05393}    +0   +5 +10 -->
+                    <parameter name="corSlope"     value="1.05393"   type="float"/>
+                    <parameter name="corIntercept" value="-0.21372"  type="float"/>
+                    <linear slope="108.09" intercept="-1.3596" units="mb"/>
+                </variable>
+                <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
+                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+<!-- PLWC                 | 2006-03-31 21:25:45 | {0.008986,1.03486}    -8   -5  -2 -->
+<!-- PLWC                 | 2006-03-31 21:27:57 | {0.00890147,1.03505}  +8   +5  +2 -->
+<!-- PLWC                 | 2006-03-31 21:32:08 | {0.0088094,1.03504}   -8   +0  +8 -->
+                    <parameter name="corSlope"     value="1.03504"    type="float"/>
+                    <parameter name="corIntercept" value="0.0088094"  type="float"/>
+                </variable>
+                <variable name="TCAB1" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+<!-- TCAB1                | 2006-03-31 21:35:04 | {-0.0352207,1.0386}   +0 +0.5  +1 -->
+                    <parameter name="corSlope"     value="1.0386"      type="float"/>
+                    <parameter name="corIntercept" value="-0.0352207"  type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
+                </variable>
+                <variable name="TCAB4" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+<!-- TCAB4                | 2006-03-31 21:37:12 | {-0.0177743,1.0251}   +0 +0.5  +1 -->
+                    <parameter name="corSlope"     value="1.0251"      type="float"/>
+                    <parameter name="corIntercept" value="-0.0177743"  type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
+                </variable>
+                <variable name="XO3" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+<!-- XO3                  | 2006-03-31 21:40:23 | {-0.162664,1.02144}   +0   +5 +10 -->
+                    <parameter name="corSlope"     value="1.02144"    type="float"/>
+                    <parameter name="corIntercept" value="-0.162664"  type="float"/>
+                    <linear slope="200.0" intercept="0.0" units="ppb"/>
+                </variable>
+                <variable name="PLWC1" units="V" longname="Raw PMS-King Liquid Water Content Output">
+                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+<!-- PLWC1                | 2006-03-31 21:46:30 | {-0.137439,1.02604}   -8   -5  -2 -->
+<!-- PLWC1                | 2006-03-31 21:48:16 | {-0.137609,1.02617}   +8   +5  +2 -->
+<!-- PLWC1                | 2006-03-31 21:51:22 | {-0.137111,1.0261}    -8   +0  +8 -->
+                    <parameter name="corSlope"     value="1.0261"     type="float"/>
+                    <parameter name="corIntercept" value="-0.137111"  type="float"/>
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_CHAPS" units="deg_C">
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="DSC_A2DSensor" devicename="/dev/rtldsc_a2d0" id="220">
+            <sample id="1" rate="500">
+                <variable name="TCAB1DIA" units="V">
+                    <parameter name="gain" value="16.0" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <linear slope="125.0" intercept="0.0" units="deg_C"/>
+                </variable>
+<!--
+                <variable name="PLWC1DIA" units="V" longname="Raw PMS-King Liquid Water Content Output">
+                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                    <linear slope="125.0" intercept="0.0" units="deg_C"/>
+                </variable>
+-->
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+
+    </dsm>
+
+    <dsm name="dsm308" location="AEROSOL_rack" id="8" rserialPort="30002">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
+
+        <serialSensor IDREF="Water_CN_Counter"
+                devicename="/dev/dsmser1" id="110">
+        </serialSensor>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+            <sample id="1" rate="500">
+                <variable name="XCOMR" units="V" longname="CO Mixing Ratio">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.02321" type="float"/>
+                    <parameter name="corIntercept" value="-0.044942" type="float"/>
+                    <linear slope="400.0" intercept="0.0" units="ppbv"/>
+                </variable>
+                <variable name="XCOCNTS" units="V" longname="Raw CO Signal">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.04357" type="float"/>
+                    <parameter name="corIntercept" value="-0.14343" type="float"/>
+                </variable>
+                <variable name="TCAB2" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.02836" type="float"/>
+                    <parameter name="corIntercept" value="-0.0172062" type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
+                </variable>
+                <variable name="TCAB3" units="V">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.03528" type="float"/>
+                    <parameter name="corIntercept" value="-0.022055" type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="deg_C"/>
+                </variable>
+                <variable name="PHIM2" units="V" longname="HIMIL Pressure of aerosol from inside of migrating">
+                    <parameter name="gain" value="2" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.03144" type="float"/>
+                    <parameter name="corIntercept" value="-0.028268" type="float"/>
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_AEROSOL" units="deg_C">
+                </variable>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+
+    </dsm>
+
+    <dsm name="dsmJDW" location="JDW" id="46" rserialPort="30002" derivedData="sock::31000">
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="JDW"/>
+
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LWI"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <sample id="1" rate="1000">
+                <variable name="PLWC2" units="V" longname="Raw PMS-King Liquid Water Content Output">
+                    <parameter name="gain" value="1" type="float"/>
+                    <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.47706" type="float"/>
+                    <parameter name="corIntercept" value="-0.344603" type="float"/>
+                    <linear slope="-10.0" intercept="0.0" units="W"/>
+                </variable>
+                <variable name="ACCX_LW" units="V" longname="Accelerometer X">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.47706" type="float"/>
+                    <parameter name="corIntercept" value="-0.344603" type="float"/>
+                    <linear slope="10.0" intercept="0.0" units="G"/>
+                </variable>
+                <variable name="ACCY_LW" units="V" longname="Accelerometer Y">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.47706" type="float"/>
+                    <parameter name="corIntercept" value="-0.344603" type="float"/>
+                    <linear slope="10.0" intercept="0.0" units="G"/>
+                </variable>
+                <variable name="ACCZ_LW" units="V" longname="Accelerometer Z">
+                    <parameter name="gain" value="4" type="float"/>
+                    <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.47706" type="float"/>
+                    <parameter name="corIntercept" value="-0.344603" type="float"/>
+                    <linear slope="10.0" intercept="0.0" units="G"/>
+                </variable>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="server" port="30000"/>
         </output>
     </dsm>
 

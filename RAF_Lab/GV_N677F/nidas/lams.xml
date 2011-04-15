@@ -30,6 +30,19 @@
         </sample>
     </sensor>
 
+    <sensor ID="LAMSX" class="raf.LamsSensor">
+        <parameter name="TAS_level"  type="float" value="155.0"/>
+        <parameter name="nAVG"  type="int" value="4"/>
+        <parameter name="nSKIP" type="int" value="0"/>
+        <parameter name="nPEAK" type="int" value="1000"/>
+        <sample id="1" rate="100">
+            <variable name="LAMS_AVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
+        </sample>
+        <sample id="2" rate="1">
+            <variable name="LAMS_MAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
+        </sample>
+    </sensor>
+
 </sensorcatalog>
 
 <site name="GV_N677F" class="raf.Aircraft">
@@ -68,8 +81,8 @@
 
     <dsm name="bigblu" location="blue_box" id="3" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/>
-        <sensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
 
+        <sensor IDREF="LAMSX" devicename="/dev/lamsx0" id="900"/>
 
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>

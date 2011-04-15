@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="RAF_Lab"
+    system="GV_N677F"
+    version="$LastChangedRevision: 2514 $"
+    >
+
+<sensorcatalog>
+    <sensor ID="IRIG" class="raf.IRIGSensor">
+        <sample id="1">
+            <variable name="IRIG_Tdiff" units="sec"
+                    longname="IRIG-UNIX clock diff"/>
+            <variable name="IRIG_Status" units="bits"
+                    longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC"/>
+        </sample>
+    </sensor>
+
+</sensorcatalog>
+
+<site name="GV_N677F" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N677F" type="string"/>
+
+    <server statusAddr="sock:127.0.0.1:30001">
+        <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="RawSampleService"
+            rawSorterLength="0.25" rawHeapMax="100M"
+            procSorterLength="1.0" procHeapMax="500M" priority="RT_FIFO:50">
+            <!-- input from every DSM on this aircraft that has
+                 a socket output of type RawSampleOutputStream -->
+            <input class="RawSampleInputStream">
+                <socket type="mcaccept" maxIdle="60"/>
+            </input>
+            <processor class="SampleArchiver">
+                <output class="RawSampleOutputStream">
+                    <fileset dir="/var/r1/${PROJECT}"
+                        file="%Y%m%d_%H%M%S_${FLIGHT}.ads.bz2"
+                        length="0"/>
+                </output>
+                <output class="RawSampleOutputStream">
+                    <socket type="server" port="30000"/>
+                </output>
+            </processor>
+            <processor class="raf.SyncRecordGenerator">
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30001"/>
+                </output>
+            </processor>
+        </service>
+    </server>
+
+    <dsm name="dsm322" location="lab" id="1" rserialPort="30002" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_322"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200" suffix="_322">
+            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D007.dat"/>
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="100">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="5" type="int"/>
+                <variable name="TTFH2" units="V" longname="Total Temperature, Deiced Left, Rosemount">
+                    <parameter name="channel"  value="0"       type="int"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="-95.78 28.02 -0.29366" units="deg_C"/>   
+                </variable>
+                <variable name="TTFH1" units="V" longname="Total Temperature, Deiced Left, Rosemount">
+                    <parameter name="channel"  value="1"       type="int"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="-96.23 28.509 -0.31634" units="deg_C"/>  
+                </variable>
+                <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right, HARCO">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="-89.31 26.128 -0.09022" units="deg_C"/>  
+                </variable>
+                <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right, HARCO">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="-89.2 25.923 -0.07941" units="deg_C"/>  
+                </variable>
+                <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <linear slope="10.0" intercept="-50.0" units="deg_C"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_ADS" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+        <output class="RawSampleOutputStream">
+            <socket type="server" port="30000"/>
+        </output>
+    </dsm>
+    <dsm name="dsm320" location="lab" id="2" rserialPort="30002" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_320"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200" suffix="_320">
+            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D007.dat"/>
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="100">
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="5" type="int"/>
+                <variable name="TTFH2" units="V" longname="Total Temperature, Deiced Left, Rosemount">
+                    <parameter name="channel"  value="0"       type="int"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="-95.78 28.02 -0.29366" units="deg_C"/>   
+                </variable>
+                <variable name="TTFH1" units="V" longname="Total Temperature, Deiced Left, Rosemount">
+                    <parameter name="channel"  value="1"       type="int"/>
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="-96.23 28.509 -0.31634" units="deg_C"/>  
+                </variable>
+                <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right, HARCO">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="-89.31 26.128 -0.09022" units="deg_C"/>  
+                </variable>
+                <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right, HARCO">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="-89.2 25.923 -0.07941" units="deg_C"/>  
+                </variable>
+                <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <linear slope="10.0" intercept="-50.0" units="deg_C"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_ADS" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+        <output class="RawSampleOutputStream">
+            <socket type="server" port="30000"/>
+        </output>
+    </dsm>
+
+</site>
+</project>
