@@ -1,0 +1,123 @@
+[GMT 04/07/06 01:02:40] SteveWilliams-ops (sfw@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 01:03:00] JimMoore-Ops (jmoore@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 01:15:02] ads-GV (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 01:15:42] chemRack-G5 (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 01:34:28] CrazyNO-G5 (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 01:34:31] Nick change: CrazyNO-G5 -> ilana-GV
+[GMT 04/07/06 01:34:56] AvapsOps (AvapsOps@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 01:35:56] Nick change: AvapsOps -> AlCooper-GV
+[GMT 04/07/06 01:40:00] laptop3-G5 (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 01:41:04] laptop4-g5 (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 01:41:59] Nick change: laptop4-g5 -> JorgenJensen-GV
+[GMT 04/07/06 01:45:48] Nick change: laptop3-G5 -> Vanda-HIAPER
+[GMT 04/07/06 01:59:32] <bruning-Jeffco> John are you up,  we were just wondering, as on the Google map you have not left Bishop yet.
+[GMT 04/07/06 01:59:59] ChrisWebster-Boulder (cjw@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 02:00:07] <wasinger> looking into in greg...
+[GMT 04/07/06 02:00:15] <ads-GV> Yes, we are having major data system isses.  We are in Trex.
+[GMT 04/07/06 02:02:01] <ChrisWebster-Boulder> Greg, you are going need to restart dsm's, dsm_server.
+[GMT 04/07/06 02:02:17] <ChrisWebster-Boulder>   most likely. 
+[GMT 04/07/06 02:03:10] <ads-GV> Okay how do I shut them down? Cntl C the window?
+[GMT 04/07/06 02:03:33] <ads-GV> Time server is in GPS has been for 20 minutes.
+[GMT 04/07/06 02:04:02] <wasinger> when you log back into rhe ads station use rf08 
+[GMT 04/07/06 02:04:37] <ads-GV> I did noty know that I could not use the same flight number.
+[GMT 04/07/06 02:04:58] <ads-GV> Okay I guess it's a boot.  See you all in 10 minutes.
+[GMT 04/07/06 02:05:06] <ChrisWebster-Boulder> The dsm's probably did not and can not recover from the free-run mode.
+[GMT 04/07/06 02:05:09] <wasinger> wait use RF07!
+[GMT 04/07/06 02:05:23] <ChrisWebster-Boulder> Verify that you are still receiving "heap" messages on the dsm_server window...
+[GMT 04/07/06 02:05:38] <wasinger> keep using     RF07
+[GMT 04/07/06 02:06:34] <wasinger> in fact do not log out of the ADS station
+[GMT 04/07/06 02:06:44] <ChrisWebster-Boulder> Greg, my last message was to you.
+[GMT 04/07/06 02:07:05] <ChrisWebster-Boulder> Sorry, JohnC, my last message was for you.
+[GMT 04/07/06 02:07:31] <ads-GV> Okay Johnios on the flight.  Lets see if we can get some kind of plan.  Becuase I'm about to shutdown and use RF08.
+[GMT 04/07/06 02:07:54] <ChrisWebster-Boulder> You don't need to reboot the server.
+[GMT 04/07/06 02:08:04] <wasinger> keep using     RF07
+[GMT 04/07/06 02:08:13] <wasinger> in fact do not log out of the ADS station
+[GMT 04/07/06 02:08:22] <ads-GV> Okay it's up now.  
+[GMT 04/07/06 02:08:39] <ChrisWebster-Boulder> ads-GV What is up?
+[GMT 04/07/06 02:08:47] <ads-GV> Shut down DSM's and DSM server and Nimbus.  All came up on restart.
+[GMT 04/07/06 02:09:10] <ads-GV> I think we are alll up now.
+[GMT 04/07/06 02:09:46] <ChrisWebster-Boulder> ok.  But please verify whether you are or are not receiving messages on teh dsm_server window?
+[GMT 04/07/06 02:10:52] <ads-GV> DSM server, wait nthreads=5 is the message now.
+[GMT 04/07/06 02:11:20] <ads-GV> It would really help if those windows had headers on them as to what they are.
+[GMT 04/07/06 02:11:29] <ChrisWebster-Boulder> that is ok.  We don't want any 'sync.... heap < ....' messages scrolling by.
+[GMT 04/07/06 02:11:34] <MarkBradford-Boulder> we are again receiving data in the ops center
+[GMT 04/07/06 02:11:57] <ads-GV> I guess if we stop for a few hours we cannot use the same flight number?
+[GMT 04/07/06 02:12:04] <ads-GV> Yeah, I thought those were bad.
+[GMT 04/07/06 02:12:23] <ads-GV> Did we get any data on climb out and up to this popint?
+[GMT 04/07/06 02:14:33] <ads-GV> Al is greatful for the work in geting the system back up for the sounding.
+[GMT 04/07/06 02:14:41] <ChrisWebster-Boulder> Debatable what kind of data we will get while you were receiving those error msgs.  Each dsm will potentially have different time tags.
+[GMT 04/07/06 02:15:15] <ads-GV> The DSM's were reporting good time back to the web page. They were all in sync.
+[GMT 04/07/06 02:16:21] <ads-GV> So if we start the DSM's in free run mode we have to restart them once we go to GPS mode?
+[GMT 04/07/06 02:17:26] <ChrisWebster-Boulder> Don't bother starting them in free-run - unless it was by accident, in which case yes restart dsm_server & dsm's.
+[GMT 04/07/06 02:19:03] <ads-GV> We had to shut down for the stop in Bishop.  It was a quick start without the 1/2 hour APU warm up. What should I have done?
+[GMT 04/07/06 02:22:50] <ads-GV> Anyone still there?
+[GMT 04/07/06 02:22:53] <ChrisWebster-Boulder> Warn the PI(s) about garbage in, garbage out....  :/
+[GMT 04/07/06 02:23:29] <ChrisWebster-Boulder> are you homeward bound?
+[GMT 04/07/06 02:24:04] <ads-GV> We are heading back. They want one sounding enroute.  I do not know ETA yet.
+[GMT 04/07/06 02:24:29] JDoyle-Ops (trex@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 02:24:38] Cafe2-Bishop (trex@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 02:24:39] <wasinger> ads-GV its allways best to pre-start the time server at least a 1/2 hour before the flight (1 hour is preferable)
+[GMT 04/07/06 02:24:56] <ads-GV> ETA is 0302Z or 2102 local.
+[GMT 04/07/06 02:25:06] Cafe2-Bishop (trex@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 02:25:36] <wasinger> ads-GV using free running shortcut will just get you in trouble
+[GMT 04/07/06 02:25:50] <ads-GV> I understand what is preferable, what do you do when we cannot do that? I had only 20 minutes from APU on to takeoff.
+[GMT 04/07/06 02:26:23] <ads-GV> Are you saying that we cannot do less then 30 minutes on APU before we can takeoff?
+[GMT 04/07/06 02:26:40] <ads-GV> Starting the sounding.
+[GMT 04/07/06 02:27:26] <ChrisWebster-Boulder> Correct, it is pointless to start the DSMs without 30 minutes power to the timeserver.
+[GMT 04/07/06 02:28:12] <ads-GV> Okay, then I will pass that on so that everyone knows we need a minimum of 30 minutes of power before any takeoff.
+[GMT 04/07/06 02:28:27] <wasinger> ummmm lose the 10+ minutes of data as you are climbing after take off as you wait for the time server and start the dsm's in flight would be my best bet given that situation
+[GMT 04/07/06 02:28:28] <ChrisWebster-Boulder> Maybe we can look into using the UPS to start up just the timeserver early.
+[GMT 04/07/06 02:30:51] <ads-GV> Might but I do not know how long it will last, but that would help I'm sure.  I did not realize that they would not recover.
+[GMT 04/07/06 02:31:36] <ads-GV> Actually they wanted the data on takeoff.
+[GMT 04/07/06 02:34:14] <ads-GV> I have made a note on the timeserver cheat sheet about this also.
+[GMT 04/07/06 02:34:21] <ChrisWebster-Boulder> It can power the whole rack for about 20+ minutes...I think that's how long Gordon got that one day before it died on him.
+[GMT 04/07/06 02:35:11] <wasinger> I'm going home now...
+[GMT 04/07/06 02:35:31] <ads-GV> 20 Minutes is what we figuar.  I would guess that we can do 30 or more for just the time server.  I guess we will need to check that out on the ground.
+[GMT 04/07/06 02:35:49] <ads-GV> Bye John.  Thanks for your help.
+[GMT 04/07/06 02:40:38] <ChrisWebster-Boulder> Let's also remove any indication that there is a 'Free-run' shortcut from the startup procedure list, or clearly mark it 'not for research purposes'.
+[GMT 04/07/06 02:41:32] chemRack-G5 (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/07/06 02:41:42] AlCooper-GV (AvapsOps@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/07/06 02:41:45] ilana-GV (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/07/06 02:41:45] Vanda-HIAPER (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/07/06 02:41:50] ads-GV (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/07/06 02:41:51] JorgenJensen-GV (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/07/06 02:42:49] bruning-Jeffco (bruning@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 02:47:03] bruning-Jeffco (bruning@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 02:47:18] bruning-Jeffco (bruning@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 02:48:25] bruning-Jeffco (bruning@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 03:19:16] wasinger_ (wasinger@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 03:19:41] Nick change: wasinger_ -> JohnWasinger-Denver
+[GMT 04/07/06 03:26:38] <ChrisWebster-Boulder> Greg did they land?
+[GMT 04/07/06 03:35:39] ChrisWebster-Boulder (cjw@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 03:43:14] BrianBillings-bishop (brian@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 03:43:39] <bruning-Jeffco> Yes they landed about 20min ago
+[GMT 04/07/06 03:43:52] bruning-Jeffco (bruning@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 03:45:20] BrianBillings-bishop (brian@rdcc.guest.ucar.edu) left &G5.
+[GMT 04/07/06 04:48:04] JohnWasinger-Denver (wasinger@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 05:04:24] MarkBradford-Boulder (mark@rdcc.guest.ucar.edu) left irc: Quit
+[GMT 04/07/06 13:40:17] MarkBradford-Boulder (mark@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 14:26:16] MarkBradford-Boulder (mark@rdcc.guest.ucar.edu) left irc: Quit
+[GMT 04/07/06 15:41:45] MarkBradford-Boulder (mark@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 16:33:34] dickdirks-ops (dirks2@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 16:38:09] ipollack (ipollack@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 16:39:06] ipollack_ (ipollack@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 16:39:57] ipollack_ (ipollack@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 16:39:57] ipollack (ipollack@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 16:44:17] ipollack (ipollack@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 16:45:42] ipollack (ipollack@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 18:01:03] Cafe1-Bishop (trex@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/07/06 18:28:54] Cafe1-Bishop (trex@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 19:34:26] ads-GV (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 19:36:28] kurt-RAF (kurt@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 19:36:42] <kurt-RAF> greg are you there?
+[GMT 04/07/06 19:37:04] <ads-GV> Yes we are here
+[GMT 04/07/06 19:37:17] <kurt-RAF> great loooks like we're up!
+[GMT 04/07/06 19:37:23] <ads-GV> did you receive this
+[GMT 04/07/06 19:37:52] <ads-GV> Are we done
+[GMT 04/07/06 19:40:58] kurt-RAF (kurt@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 19:41:13] ads-GV (ads@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 20:37:58] trex_ (trex@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/07/06 20:39:54] Cafe1-Bishop (trex@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/07/06 23:33:26] ChrisWebster-Jeffco (cjw@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/07/06 23:48:04] JeffStith-Jeffco (stith@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 00:00:00] --- Sat Apr  8 2006

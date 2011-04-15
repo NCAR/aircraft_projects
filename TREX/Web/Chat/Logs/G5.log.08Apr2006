@@ -1,0 +1,448 @@
+[GMT 04/08/06 01:21:42] MarkBradford-Boulder (mark@rdcc.guest.ucar.edu) left irc: Quit
+[GMT 04/08/06 04:03:50] MarkBradford-Boulder (mark@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 04:25:17] MarkBradford-Boulder (mark@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 10:55:50] snorman (snorman@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:08:09] laptop4-g5 (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:10:33] ads-GV (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:14:29] Errol-GV (AVAPS@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:26:26] Nick change: ads-GV -> wasinger-GV
+[GMT 04/08/06 11:35:02] <snorman> wasinger-GV: catalog is ready to go...thanks!
+[GMT 04/08/06 11:35:21] <wasinger-GV> snorman, thanks!
+[GMT 04/08/06 11:35:28] Nick change: wasinger-GV -> ads-gv
+[GMT 04/08/06 11:38:32] Errol-GV (AVAPS@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 11:38:43] laptop4-g5 (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 11:38:44] ads-gv (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 11:39:33] SteveWilliams-ops (sfw@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:46:04] laptop4-g5 (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:46:08] Errol-GV (AVAPS@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:46:59] ads-GV (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:47:26] ChrisWebster (cjw@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:47:50] JimMoore-Ops (jmoore@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:47:52] <ads-GV> snorman, switched over to satcom after ground network disconnect
+[GMT 04/08/06 11:48:05] <ChrisWebster> everything ok?
+[GMT 04/08/06 11:48:24] <ads-GV> yes
+[GMT 04/08/06 11:49:20] <ads-GV> I had to restart \MPDS... after network
+[GMT 04/08/06 11:49:42] Nick change: ads-GV -> ads-gv
+[GMT 04/08/06 11:49:58] <ChrisWebster> that's correct.
+[GMT 04/08/06 11:50:53] ads-lab (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:50:54] BrianBillings-bishop (brian@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:51:30] <ads-lab> ChrisWebster, I had to restart the MPDS
+[GMT 04/08/06 11:51:39] <ChrisWebster> though no point in starting MPDS if you have network hooked up.  Not sure what the 'default route' would be.
+[GMT 04/08/06 11:52:16] DaveR-Jeffco (dcrogers@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:53:04] <ChrisWebster> ads-lab yes when you hho up the net that becomes the default route, when you take it away you are left with no default route.
+[GMT 04/08/06 11:53:06] <ads-lab> the ground network connection was loose when I showed up...
+[GMT 04/08/06 11:53:53] <ads-lab> they were initially chatting across the MPDS connect...
+[GMT 04/08/06 11:54:35] <ads-lab> I /etc/init.d/network restarted it to get eth2 (ground up)
+[GMT 04/08/06 11:54:45] <ChrisWebster> ads-lab procedure in that case would be 'mpds-stop', hook up net.....unhook net, 'mpds-start'.
+[GMT 04/08/06 11:54:45] <ads-lab> then the catalog was loaded...
+[GMT 04/08/06 11:55:35] JimMoore-Ops (jmoore@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 11:55:52] <ads-lab> ChrisWebster, I see what you mean...
+[GMT 04/08/06 11:57:11] <ads-lab> we need to revise there start up procedure to state:
+[GMT 04/08/06 11:59:05] CrazyNO-G5 (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 11:59:26] Nick change: CrazyNO-G5 -> TCampos-GV
+[GMT 04/08/06 11:59:56] <ads-lab> 1. hook up ground cable
+[GMT 04/08/06 12:00:06] <ads-lab> 2. wait for catalog
+[GMT 04/08/06 12:00:26] <ads-lab> 3. disconnect ground cable
+[GMT 04/08/06 12:00:44] <ads-lab> 4. start MPDS
+[GMT 04/08/06 12:01:41] laptop3-G5 (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 12:01:47] <ads-lab> 5. restart xchat
+[GMT 04/08/06 12:02:10] Nick change: laptop3-G5 -> AlCooper
+[GMT 04/08/06 12:02:24] Nick change: AlCooper -> AlCooper-GV
+[GMT 04/08/06 12:04:12] Nick change: laptop4-g5 -> Vanda-HIAPER
+[GMT 04/08/06 12:05:26] <ads-lab> snorman, how big is the ground catalog?  Is this something we could load onto a portable USB device to take on board prior to flight?
+[GMT 04/08/06 12:06:17] <ads-lab> err thats just catalog (sans ground)
+[GMT 04/08/06 12:07:44] <ChrisWebster> ads-lab it's doen via 'rsync'.
+[GMT 04/08/06 12:09:22] <snorman> ads-lab: right now the ground catalog is 16G
+[GMT 04/08/06 12:10:16] <ads-lab> hmmm I've heard of people running web servers off of small linux boxes...
+[GMT 04/08/06 12:10:22] ipollack (ipollack@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 12:10:38] <ipollack> TCampos-GV, how's it going so far?
+[GMT 04/08/06 12:11:33] DaveR-Jeffco (dcrogers@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 12:11:44] <ads-lab> it would be cool if we could have one siting in the lab that we could grab and plug into a bay on the GV...
+[GMT 04/08/06 12:11:46] <TCampos-GV> Hi Ilana, just turned on NO.  Haven't checked signal quality yet...
+[GMT 04/08/06 12:12:10] <ipollack> pump and safety valve all worked fine then I take it
+[GMT 04/08/06 12:12:37] <ads-lab> say something like a dsm w/ a hard disk in it.  (just day dreaming here)
+[GMT 04/08/06 12:12:53] <snorman> ads-lab: that's certainly something to think about as I realize it's a hassle to hook it up prior to every flight..
+[GMT 04/08/06 12:13:09] Nick change: ipollack -> ilana-jeffco
+[GMT 04/08/06 12:13:53] CrazyNO-G5 (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 12:14:35] <TCampos-GV> ilana, yes they worked fine.  I think things look ok.  Are you running aeros to look at data in RT?
+[GMT 04/08/06 12:14:50] <ChrisWebster> How's the snow at Winter Park look?
+[GMT 04/08/06 12:15:00] jbj (jbj@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 12:15:03] <ilana-jeffco> setting it up just now...can you give me a status report on V&Q when you get the chance
+[GMT 04/08/06 12:15:25] Nick change: jbj -> JorgenJensen-JeffCo
+[GMT 04/08/06 12:16:15] <TCampos-GV> ilana, sure.  sRVP: 2.402+/-.002, sFCP_Sierra: 3.967, sFCP_Tylan: -0.07 (now), sNO_tylan: 0.996.
+[GMT 04/08/06 12:16:46] CrazyNO-G5 (ads@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 12:16:48] <ilana-jeffco> ChrisWebster, how do I connect to Aeros while I'm on the ground...any way I can see real time data...is there a delay?
+[GMT 04/08/06 12:16:58] JimMoore-Ops (jmoore@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 12:17:17] <JorgenJensen-JeffCo> G'day Al,
+[GMT 04/08/06 12:17:25] <JorgenJensen-JeffCo> Any instrument issues?
+[GMT 04/08/06 12:17:37] <ilana-jeffco> TCampos-GV, perfect!  can't get Aeros up yet since not sure how to connect, can you tell me what current counts are?
+[GMT 04/08/06 12:18:54] <TCampos-GV> ilana, cps: 80-90 kcps.  You've built a very nice instrument, my friend. (kudos to other AON members, too, of course.)
+[GMT 04/08/06 12:19:27] <TCampos-GV> ilana,  chris will correct me if i'm wrong but iirc, in aeros you connect to rt-ground.
+[GMT 04/08/06 12:20:19] <ilana-jeffco> TCampos-GV, excellent!  that should be about 62 ppb...and hopefully climbing with altitude
+[GMT 04/08/06 12:20:57] <TCampos-GV> ilana, yeah, it's looking good.  Just hitting 90 ppbv now.
+[GMT 04/08/06 12:21:59] <ilana-jeffco> TCampos-GV, very good you should be all set.  All you will need to do now is zero every now and again, otherwise enjoy the flight.  Hope you get a good snooze or two in there!
+[GMT 04/08/06 12:22:41] <ChrisWebster> TCampos-GV doesn't matter.
+[GMT 04/08/06 12:22:50] <ilana-jeffco> TCampos-GV, what server should I connect to while on ground?
+[GMT 04/08/06 12:22:50] <TCampos-GV> ilana, thanks, chief.  Hope you have a nice time on the ground, too.  I'm definitely napping a bit--in 10 minute snatches, of course!
+[GMT 04/08/06 12:23:08] <TCampos-GV> ilana, i think it's orion.atd.ucar.edu for the gv.
+[GMT 04/08/06 12:25:22] <ilana-jeffco> ah okay then I just tried that and O3 and CO channels looks wierd but data may not be all there yet.  Also noticed that not all data channels are displayed when selecting traces to plot and some channel names are different, so not sure if I'm just doing it wrong of if no data collection
+[GMT 04/08/06 12:26:08] <TCampos-GV> ilana, maybe orion is the machine for the c-130.  You can tell if there is a variable for xrtno, and one for noy.
+[GMT 04/08/06 12:26:48] <ilana-jeffco> yup that's what it is...know what server name I should use for GV then?
+[GMT 04/08/06 12:27:32] <TCampos-GV> no, when the c130 was in mexico, the c130 machine name was sloop.atd.ucar.edu.  Maybe try that one???
+[GMT 04/08/06 12:27:36] <ChrisWebster> sloop is the gv computer.
+[GMT 04/08/06 12:28:19] <ilana-jeffco> ah very nice, got it now...thanks guys
+[GMT 04/08/06 12:28:20] <TCampos-GV> chris, thanks for setting us straight.  I was just confused.... Sloop was also the gv machine name during MIRAGE.
+[GMT 04/08/06 12:29:55] <ilana-jeffco> TCampos-GV, things are looking great!  I see you just did a zero mode too...very nice!
+[GMT 04/08/06 12:30:14] <ilana-jeffco> TCampos-GV, really nicely following theta today
+[GMT 04/08/06 12:30:33] <TCampos-GV> ilana, thanks!  I'm on my best behavior today.  Not sure i can keep it up for 9+ hrs, though.
+[GMT 04/08/06 12:30:44] <ads-gv> Cowan are you there?
+[GMT 04/08/06 12:31:18] <ilana-jeffco> whatever you can do is great stuff...I'm just really grateful to have an actual mouse with my computer...Its the little things that get you
+[GMT 04/08/06 12:31:58] <TCampos-GV> roger that, ilana.  
+[GMT 04/08/06 12:32:00] DaveR-Jeffco (dcrogers@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 12:32:22] Nick change: DaveR-Jeffco -> DaveR-home
+[GMT 04/08/06 12:32:56] <ilana-jeffco> TCampos-GV, very good then...I think Jorgen and I are heading out to get some b'fast...I will leave my cell phone number with JCowan and the mechs if you guys need me
+[GMT 04/08/06 12:33:25] <TCampos-GV> ilana, thanks.  Have a nice breakfast!
+[GMT 04/08/06 12:34:30] <JorgenJensen-JeffCo> I'm off to breakfast too.
+[GMT 04/08/06 12:35:01] DaveR-home (dcrogers@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 12:35:11] <TCampos-GV> jorgen, have a nice one, too!
+[GMT 04/08/06 12:42:05] <ads-lab> ads-gv, I was chatting w/ Cowan here in the lab...  whats up?
+[GMT 04/08/06 12:42:52] Jcowan-Jeffco (jcowan@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 12:43:18] <Jcowan-Jeffco> Hey Ta, I'm up on chat if you need me.
+[GMT 04/08/06 12:44:21] Nick change: ads-lab -> wasinger-jeffco
+[GMT 04/08/06 12:44:45] <ads-gv>  I think TTHR2 seem didn't work right
+[GMT 04/08/06 12:45:20] <Jcowan-Jeffco> That is correct TTRH2 is not connected.  Look at TTRH3 instead.
+[GMT 04/08/06 12:45:44] <Jcowan-Jeffco> We made that change just before we left for Mexico.
+[GMT 04/08/06 12:49:06] <ads-gv> Thanks!Yes!They now make more sense to me,too bad nobody tell me.
+[GMT 04/08/06 12:49:28] <SteveWilliams-ops> John Wasinger are you flying today?
+[GMT 04/08/06 12:50:11] <ads-gv> No He didn't.
+[GMT 04/08/06 12:51:20] <SteveWilliams-ops> We're having trouble connecting to Boulder via VPN from Bishop. Does anyone know if there is a problem back there?
+[GMT 04/08/06 12:53:05] <ChrisWebster> I couldn't connect via vpn an hour ago, I'll try again now.
+[GMT 04/08/06 12:53:18] ChrisWebster (cjw@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 12:53:53] ChrisWebster (cjw@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 12:54:16] <ChrisWebster> Still can't connect vpn.
+[GMT 04/08/06 12:54:20] <SteveWilliams-ops> Thanks Chris. I wonder if it's due to the semi-annual maintenance work they are doing on the Mesa?
+[GMT 04/08/06 12:54:20] AlexReinecke-IND (iss@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 12:55:30] <wasinger-jeffco> ChrisWebster, could I ping the VPN server from jeffco somehow?
+[GMT 04/08/06 12:56:47] <wasinger-jeffco> SteveWilliams-ops, I'm in the lab today
+[GMT 04/08/06 12:57:28] <SteveWilliams-ops> John, OK... I was wondering about the VPN which Chris Webster replied back on. 
+[GMT 04/08/06 12:59:06] snorman (snorman@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 13:00:01] <SteveWilliams-ops> John, let us know if you can ping the VPN Server
+[GMT 04/08/06 13:00:45] <wasinger-jeffco> what is the VPN server's name?
+[GMT 04/08/06 13:03:23] <SteveWilliams-ops> I don't know... maybe Chris does.
+[GMT 04/08/06 13:08:41] AlexReinecke-IND (iss@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 13:13:48] <ads-gv> Cowan,Can We refresh ads interface window?The up date dsm doesn't up date.
+[GMT 04/08/06 13:14:13] <ChrisWebster> ads-gv yes, you can hit reload anytime.
+[GMT 04/08/06 13:14:51] <ChrisWebster> my vpn tries to connect to 192.43.244.230
+[GMT 04/08/06 13:15:29] <ChrisWebster>   and I can not ping it from home.
+[GMT 04/08/06 13:16:05] <wasinger-jeffco> I can't ping it from dyn84-5 either...
+[GMT 04/08/06 13:16:54] <TCampos-GV> Does anyone know if there is a lag between WI and Theta?
+[GMT 04/08/06 13:17:59] <Jcowan-Jeffco> Ta, did you get the ADS interface window to updat okay?
+[GMT 04/08/06 13:18:29] <Jcowan-Jeffco> ads-gv, Also, was it the time that was not upodateing?
+[GMT 04/08/06 13:18:34] <Jcowan-Jeffco> updating
+[GMT 04/08/06 13:19:29] <ads-gv> So Christ,Should I use action pull down menu and hit restart? yes! John the time was not up dtae from asd interface window
+[GMT 04/08/06 13:20:00] <ChrisWebster> If you want to restart a dsm.
+[GMT 04/08/06 13:20:11] <ChrisWebster> Just hit the browsers reload button.
+[GMT 04/08/06 13:20:40] <ads-gv> No I donot wanr restart any dsm.
+[GMT 04/08/06 13:20:56] <ChrisWebster> Then don't use the 'Action -> Restart' thing.
+[GMT 04/08/06 13:21:26] <wasinger-jeffco> ChrisWebster, I'll remove that 'feature'
+[GMT 04/08/06 13:22:15] <ChrisWebster> ls: No match.
+[GMT 04/08/06 13:22:15] <ChrisWebster> Xdialog: Error initializing the GUI...
+[GMT 04/08/06 13:22:15] <ChrisWebster> Do you run under X11 with GTK+ v1.2.0+ installed ?
+[GMT 04/08/06 13:23:23] <wasinger-jeffco> hmm not sure... can you still ctrl-c your connection and get though?
+[GMT 04/08/06 13:24:04] <Jcowan-Jeffco> ads-gv, Ta, did you do the reload and it looks okay?
+[GMT 04/08/06 13:24:47] <wasinger-jeffco> what is the GV's address?
+[GMT 04/08/06 13:25:00] <ChrisWebster> rafgv.dyndns.org
+[GMT 04/08/06 13:26:24] <ads-gv> Ok! I didn't.Did try browser reload button but still no help.!Other than that everything seem  work okay.
+[GMT 04/08/06 13:27:01] <Jcowan-Jeffco> ads-gv, Ta we are getting data here so the DSM's are OK.  Let me talk to JW.
+[GMT 04/08/06 13:28:00] <ChrisWebster> Most likely the status_listener needs to be restarted.  Not critical to ops, and restarting won't hurt anything.
+[GMT 04/08/06 13:31:00] <ads-gv> Okay.Don't want try to fix it when nothing really broke!
+[GMT 04/08/06 13:34:29] MarkBradford-Boulder (mark@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 13:35:32] <Jcowan-Jeffco> ads-gv, Ta, As long as an ascii list keeps updating your DSM's are running. Just make an ASCII list with TTRH1, Lat, PCAB and ConcCN and watch that they change and you can keep track of each DSM that way.
+[GMT 04/08/06 13:39:20] <ads-gv> OK,Roger that!
+[GMT 04/08/06 13:47:12] <wasinger-jeffco> ads-gv, I just killed the dsm_status... (the thing that updates the web interface) reload the web interface page then double click on the dsm_status icon
+[GMT 04/08/06 13:54:24] StephanDeWekker-REAL (real@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 13:59:29] Cafe2-Bishop (trex@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 13:59:58] <wasinger-jeffco> I removed the items in the web interface page that was causing the problems.
+[GMT 04/08/06 14:01:22] <ads-gv> John.W. I tried but still no luck!
+[GMT 04/08/06 14:01:45] <wasinger-jeffco> refresh the web interface again
+[GMT 04/08/06 14:02:50] <ChrisWebster> JohnW DO NOT change things in flight unless it is critical.  If you broke something and the satcom went down, the flight would be scrubbed.
+[GMT 04/08/06 14:03:29] <ChrisWebster>   and at $30,000 / hour out of your salary.....
+[GMT 04/08/06 14:03:51] Kristian_Horvath-Bishop (trex@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 14:08:08] <ads-gv> Christ & JohnW.Ok,I will leave it run that way without doing anything,not worth to take any risk.
+[GMT 04/08/06 14:08:55] StephanDeWekker-REAL (real@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 14:09:05] StephanDeWekker-REAL (real@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 14:10:16] StephanDeWekker-REAL (real@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 14:14:40] <Jcowan-Jeffco> Yes, we are getting data OKAY.  Just keep a close eye on the displays and look for a whole bunch of flatlines.  That will tell you a DSM has gone down.  They sould not, they have been very good up to now.
+[GMT 04/08/06 14:16:52] <ilana-jeffco> TCampos-GV, hi there, I'm back!  Looks like you are getting really awesome stuff for us today.  That one mini wave event at 13:45 looks really interesting for O3, CO, H2O and theta
+[GMT 04/08/06 14:17:46] <TCampos-GV> ilana, yeah, things are quite lovely out here.  It's very interesting to notice a lag between theta and wi during these wave events.  lag ~ 15-30 sec.
+[GMT 04/08/06 14:19:30] <ilana-jeffco> TCampos-GV, yeah true...thanks for pointing that out...what do you think it means...time delayed response in an instrument? or atmopsheric significance
+[GMT 04/08/06 14:20:08] <TCampos-GV> chris or johnW, does the 'save png' function work on aeros?
+[GMT 04/08/06 14:20:27] <TCampos-GV> chris/johnW: btw, i'm at a windows machine.
+[GMT 04/08/06 14:21:18] <TCampos-GV> ilana, initially i suspected instrument delays, but seem to have seen at least one instance of clear anti-corr w/ no lag....
+[GMT 04/08/06 14:22:33] <JorgenJensen-JeffCo> Ilana: That is atmospheric. What goes up, must come down. Updraft waves should be 90 degrees out of phase with theta fields; try to sketch on an envelope.
+[GMT 04/08/06 14:23:24] <wasinger-jeffco> TCampos-GV, Alt-PrntScrn would take a snapshot in windows...  then just paste into MS Paint.
+[GMT 04/08/06 14:23:51] <ilana-jeffco> TCampos-GV, huh...wierd...btw, jorgen and I had a very nice discussion at Cafe sole this morning.  Would like to share thoughts with you when we get a chance when you are on the ground.  He had some new insights into the RF05 spike that seem to make a bit more sense.  I am going to plot up a few things to discsuss some more, then back to you in  a bit.
+[GMT 04/08/06 14:24:05] <wasinger-jeffco> TCampos-GV, I don't recall if its Ctrl- or Alt- though...
+[GMT 04/08/06 14:24:09] <TCampos-GV> johnW:  Doh.  I actually knew that one, but thanks for reminding me in time to get a photo of this racetrack!
+[GMT 04/08/06 14:25:41] <TCampos-GV> ilana, cool.  Looking forward to catching up, especially when the topic is science!
+[GMT 04/08/06 14:27:19] <ilana-jeffco> TCampos-GV, jorgen and I just discussed WI vs. theta and conclusion is that it should be 45 degrees offset, just as it is...so all good
+[GMT 04/08/06 14:27:57] trex__ (trex@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 14:28:05] trex__ (trex@rdcc.guest.ucar.edu) left irc: Read error: Connection reset by peer
+[GMT 04/08/06 14:28:22] trex__ (trex@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 14:28:41] <TCampos-GV> ilana, check.
+[GMT 04/08/06 14:29:14] <ilana-jeffco> TCampos-GV, check what?
+[GMT 04/08/06 14:29:18] <ads-gv> john C.The liquid led of D.Roger keep blinking. I did prime grow tube once but still blinking??
+[GMT 04/08/06 14:29:20] trex__ (trex@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 14:30:11] <TCampos-GV> ilana, er ... roger that.  (Check mate???)
+[GMT 04/08/06 14:30:38] <ilana-jeffco> TCampos-GV, what?  anyway, we are reconsidering 45 vs. 90 degree offset...
+[GMT 04/08/06 14:32:44] <Jcowan-Jeffco> It might blink for a while Ta.  Give it about 5 minutes or so.
+[GMT 04/08/06 14:33:36] <Jcowan-Jeffco> Also look for a veriable that does CN status and put it in a list.  The value should be 0 if the CN is happy.
+[GMT 04/08/06 14:34:50] <Jcowan-Jeffco> ads-gv, Ta, you are also to high for the CN to work well.  I would wait until you get lower (below about say 35K) before you worry to mich about it.
+[GMT 04/08/06 14:35:09] Action: ChrisWebster is away: cell=303-229-5926
+[GMT 04/08/06 14:35:51] <ads-gv> Yes!The value show 0 now on my ascii list
+[GMT 04/08/06 14:36:39] <Jcowan-Jeffco> Okay if that is 0 then the CN is fine for now.  Did the light stop blinking?
+[GMT 04/08/06 14:37:25] <ads-gv> No!
+[GMT 04/08/06 14:40:01] <Errol-GV> -118.418754  36.268152  2252.09      
+[GMT 04/08/06 14:41:52] <ilana-jeffco> TCampos-GV, oh, I get it now...the check thing that is...I have even had coffee this morning and I'm still super slow!  Ha ha!
+[GMT 04/08/06 14:42:33] <ilana-jeffco> TCampos-GV, this is some crazy awesome data today...I am very excited about this wave activity and the O3 profile with it...very cool for our purposes!
+[GMT 04/08/06 14:42:34] <TCampos-GV> ilana, lol
+[GMT 04/08/06 14:43:02] <TCampos-GV> ilana, yes it is super satisfying.  
+[GMT 04/08/06 14:43:32] <ilana-jeffco> TCampos-GV,  the CO and h2o are right there with it too...what a great day for science for this project...I think you are the lucky charm!
+[GMT 04/08/06 14:44:26] <TCampos-GV> ilana, I am saving screen shots of the data, 1 per racetrack.  This includes time series of our parameters of interest, plus a trackplot with o3 colorbar.  We'll download them post-flight.
+[GMT 04/08/06 14:44:46] <ilana-jeffco> TCampos-GV, wow, just awesome!
+[GMT 04/08/06 14:45:25] <ilana-jeffco> TCampos-GV,  nice O3 profile there on accent...glad to see high levels again today.
+[GMT 04/08/06 14:46:14] <TCampos-GV> yeah, i'm madly changing scales to make the screenshot pretty...
+[GMT 04/08/06 14:46:59] <ilana-jeffco> TCampos-GV,  awesome, awesome, awesome! and I was gonna leave to get some more sleep, but I'm too excited to not watch the rest now.
+[GMT 04/08/06 14:48:00] <ilana-jeffco> TCampos-GV, hope you took that dramamine, looking like a wavy day up there
+[GMT 04/08/06 14:48:45] <TCampos-GV> ilana, yessirree, i'm prepared to float.  Looking forward to it somewhat, actually.  
+[GMT 04/08/06 14:49:04] <TCampos-GV> ilana, btw, thanks very much for sharing the dramamine...
+[GMT 04/08/06 14:49:20] <Jcowan-Jeffco> ads-gv, I talked with Jorgen and he agrees that the CN will not work at 40K.  You will need to be lower before it will function.
+[GMT 04/08/06 14:49:53] <ilana-jeffco> TCampos-GV, yeah, of course, no problem...we should just keep a stash on the rack or in the drawers near the microwave up there
+[GMT 04/08/06 14:50:41] <TCampos-GV> ilana, i'm not wanting to zero during this track until the wave activity diminishes.  how long is the max interval between z's?
+[GMT 04/08/06 14:51:36] <ilana-jeffco> TCampos-GV, not critical to zero all the time if getting good stuff...mostly like to have at least one zero per altitude since background will primarily be constant but change with alt. 
+[GMT 04/08/06 14:52:18] <ilana-jeffco> TCampos-GV,  sometimes I will zero only once per racetrack (on the turn) so that we get a full loop of data
+[GMT 04/08/06 14:52:52] <TCampos-GV> ilana, cool.  Will probably get a chance in the turn, thanks.
+[GMT 04/08/06 14:53:23] <TCampos-GV> ilana, o3 looking a bit like a half wave rectifier at this alt...  it's crazy!
+[GMT 04/08/06 14:53:33] <ilana-jeffco> TCampos-GV, I'm so jealous that I'm not up there with you...what an exciting flight.
+[GMT 04/08/06 14:53:48] <TCampos-GV> ilana, wish you were here, too.
+[GMT 04/08/06 14:54:09] <ilana-jeffco> TCampos-GV,  seems to be right there with theat and WI though
+[GMT 04/08/06 14:54:25] <ilana-jeffco> TCampos-GV, theat = theta...my spelling sucks
+[GMT 04/08/06 14:55:16] <TCampos-GV> ilana, check out o3-theta-co corrs from ~ 14:45-14:50
+[GMT 04/08/06 14:56:30] <ilana-jeffco> TCampos-GV,  pretty textbook for the O3/CO correlation, and still seeing that funky trend in theta/O3...nice!
+[GMT 04/08/06 14:59:49] <ilana-jeffco> TCampos-GV, oh maybe I was still on a larger time window, seeing spikes in O3 now at strat levels sitting on top of a flat corr line, and O3/theta is pretty linear in this time window
+[GMT 04/08/06 15:03:25] <ads-gv> J.C Thanks!for the CN information.
+[GMT 04/08/06 15:04:32] vinson-bishop (vinson@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 15:05:30] <ilana-jeffco> TCampos-GV, interesting that between 14:15 and 14:25 O3 and theta are corr, then between, 14:45 and 14:50 they are anti
+[GMT 04/08/06 15:06:28] <ilana-jeffco> TCampos-GV,  that's probably what you were getting at all along...I'm just slow. :)
+[GMT 04/08/06 15:07:29] <TCampos-GV> ilana, yes, the time series trace shows a second set of small amp o3 peaks growing in that are expected pos corr wi theta, and larger amp o3 peaks are anti.  (Sorry about shorthand.)
+[GMT 04/08/06 15:10:30] <TCampos-GV> ilana, interesting transition from 500->700 o3 in the turn at the eastern end.  Missed it in CO due to cal (dang).
+[GMT 04/08/06 15:15:04] <ilana-jeffco> TCampos-GV,  but O3 drop during decent right?  
+[GMT 04/08/06 15:15:19] <ilana-jeffco> TCampos-GV,  should be normal, right?
+[GMT 04/08/06 15:15:41] <ilana-jeffco> TCampos-GV,  oh, do you mean around 14:55?
+[GMT 04/08/06 15:17:27] <ilana-jeffco> TCampos-GV,  interesting that anti corr with theta is happening around the 355 K limit again
+[GMT 04/08/06 15:17:59] <TCampos-GV> ilana, yes to all.  sorry, i was taking screen photos again.  gotta stop that...
+[GMT 04/08/06 15:18:36] <ilana-jeffco> TCampos-GV,  no rush, plenty of time, especially for you guys
+[GMT 04/08/06 15:21:39] <ilana-jeffco> TCampos-GV,  seems that O3  peaks at 700 ppb around theta = 360K then has a sharp drop off about that...
+[GMT 04/08/06 15:21:58] <ilana-jeffco> TCampos-GV,  again: about = above...I need sleep
+[GMT 04/08/06 15:22:45] <TCampos-GV> ilana, yeah, as you say, high o3 like we saw thursday, but sharp v gradient...
+[GMT 04/08/06 15:23:33] <ilana-jeffco> TCampos-GV,  from RF06 O3 max was 400 ppb at theta max of 340K, then in RF05 O3 peaked near 250 ppb at both 330K and 360 K
+[GMT 04/08/06 15:24:07] <TCampos-GV> ilana, have you looked at the o3-co-wi corrs on this low (37k) leg?  o3-co anti-corr, but the wave structure is complex, probably due to the diff between strat and trop correlations between these two tracers.
+[GMT 04/08/06 15:27:09] <ilana-jeffco> TCampos-GV, hard for me to look at that corr with zeros, but will give it a try
+[GMT 04/08/06 15:28:01] <TCampos-GV> ilana, oh yeah.  sorry, i didn't realize you had that limitation.
+[GMT 04/08/06 15:30:20] <ilana-jeffco> TCampos-GV,  yeah just doesn't look right for me, but I can see in the timeseries that O3 and cO look anti, hard to tell WI corr
+[GMT 04/08/06 15:32:00] <TCampos-GV> ilana, i see.
+[GMT 04/08/06 15:33:30] <ilana-jeffco> TCampos-GV, btw: how's sFCP_sierra looking in the V&Q tab?  Are you seeing large fluctuations during wave events?
+[GMT 04/08/06 15:34:40] <ilana-jeffco> TCampos-GV,  can you physically feel the wave events?
+[GMT 04/08/06 15:35:48] <TCampos-GV> ilana, sFCP_sierra has < 100mV p-p spikes during wave events, and sometimes we can feel them, but not much in the way of turbulence.
+[GMT 04/08/06 15:36:32] <ilana-jeffco> TCampos-GV,  that's pretty small fluctuations...that is pretty good and normal...very very nice!
+[GMT 04/08/06 15:37:17] <TCampos-GV> ilana, glad the instrument is behaving nicely.  btw, have you named it yet? (the instrument, that is...)
+[GMT 04/08/06 15:37:39] <ilana-jeffco> TCampos-GV,  oh wait 100mV would be 0.1V, oh well that's not too bad, but not as good as it could be...not critical for these  measurements I don't think
+[GMT 04/08/06 15:38:07] <ilana-jeffco> TCampos-GV,  that is still normal performance for the activity you are seeing though
+[GMT 04/08/06 15:39:11] <ilana-jeffco> TCampos-GV, no names yet, but while I was going through the frustrastions of constructing the rack a few four letter words came to mind...probably not appropriate for an official name though
+[GMT 04/08/06 15:39:41] <TCampos-GV> ilana, they are probably more like 50mv p-p.  I left things on a fairly expanded scale and took a conservative estimate.
+[GMT 04/08/06 15:40:09] <ilana-jeffco> TCampos-GV,  oh good, that's more like what I was expecting...very good then
+[GMT 04/08/06 15:41:48] <TCampos-GV> ilana, whew.
+[GMT 04/08/06 15:42:16] <ilana-jeffco> TCampos-GV,  eh, the other number wasn't so bad either though...so no worries
+[GMT 04/08/06 15:44:37] <ilana-jeffco> TCampos-GV,  interesting that wave amplitude was biggest at highest altitude...is that to be expected?
+[GMT 04/08/06 15:46:03] <TCampos-GV> ilana, for our alts, that could be true.  it will be interesting to compare the amps we see w/ those of the KA.  The KA has seen bigger than us in the past, iirc.
+[GMT 04/08/06 15:47:39] <ilana-jeffco> TCampos-GV, okay
+[GMT 04/08/06 15:48:38] <ilana-jeffco> TCampos-GV, well, sounds like things are going really really well up there, I'm going to go home and get a few hours of sleep, then I'll be back 1 hour or so before landing (so around 2pm, MT)...okay?
+[GMT 04/08/06 15:49:09] <TCampos-GV> ilana, great, have a nice rest and thanks very much for hanging with us during the truly exciting part!
+[GMT 04/08/06 15:49:29] <TCampos-GV> ilana, ... and for the support of your instrument.
+[GMT 04/08/06 15:49:31] <ilana-jeffco> TCampos-GV,  yup, later T...peace out!
+[GMT 04/08/06 15:50:11] ilana-jeffco (ipollack@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 16:26:38] StephanDeWekker-REAL (real@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 16:28:59] <ads-gv> CONCN is working now even at 40,000 feets
+[GMT 04/08/06 16:32:22] <Jcowan-Jeffco> Good, it can recover and work there, but if you spend an hour or more at 40K+ it might stop again then start when you drop down again.
+[GMT 04/08/06 16:38:47] <ads-gv> You are right,It's show: 0 now.
+[GMT 04/08/06 16:58:56] <Jcowan-Jeffco> Okay, just watch it in the lower legs.  It should work then.
+[GMT 04/08/06 16:59:22] <Jcowan-Jeffco> They have about 5 flights left after this one.
+[GMT 04/08/06 17:28:32] <ads-gv> The shut door baggage comparment must be fix for the next flight,It show "open" even we has been tried to close shut several times
+[GMT 04/08/06 17:35:57] <Jcowan-Jeffco> ads-gv, Have you tried to SLAM the door shut.  You cannot baby it.  Also make sure that when you try and shut it that the small lock handle is up and not to the side.  Once the door is closed properly you should not be able to open it without turning the lock to the up position.
+[GMT 04/08/06 17:43:10] ads-gv (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 17:43:26] AlCooper-GV (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 17:44:58] StephanDeWekker-REAL (real@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 17:45:57] Vanda-HIAPER (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 17:46:18] TCampos-GV (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 17:47:04] Errol-GV (AVAPS@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 17:47:44] TCampos-GV (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 17:48:40] Errol-GV (AVAPS@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 17:49:28] Vanda-HIAPER (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 17:57:51] <Jcowan-Jeffco> GV are you there anyone?
+[GMT 04/08/06 17:59:10] <TCampos-GV> yeah, we're here, john.  what's up?
+[GMT 04/08/06 17:59:44] <Jcowan-Jeffco> Would you ask Ta if he got my message about shutting the baggage door.  He has not come back up on chat yet.
+[GMT 04/08/06 18:00:03] <TCampos-GV> sure
+[GMT 04/08/06 18:02:41] ads-GV (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 18:02:56] <TCampos-GV> ta's screen was implying that he was still connected, for some reason.
+[GMT 04/08/06 18:04:35] <ads-GV> john,areyou still there?
+[GMT 04/08/06 18:05:05] <Jcowan-Jeffco> I'm here. Did you see the message I sent you on the baggage door?
+[GMT 04/08/06 18:05:59] <ads-GV> yes!I got your message,still no luck.
+[GMT 04/08/06 18:07:28] AlCooper-GV (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 18:07:45] ads_ (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 18:08:01] <ads-GV> the internal latch SW may not funtion.
+[GMT 04/08/06 18:09:33] <Jcowan-Jeffco> Okay, I'll pass the info on to the Mechs.
+[GMT 04/08/06 18:13:03] <ads-GV> So It could send the wrong message to the cockpit monitor screen.( Still show "open")
+[GMT 04/08/06 18:19:58] <Jcowan-Jeffco> Ta, I talked with Bob B., and he said to check and see if the carpet is lifted up just a little and preventing it from closing?
+[GMT 04/08/06 18:21:22] <ads-GV> Negative!Carpet edge is fine.
+[GMT 04/08/06 18:22:10] <Jcowan-Jeffco> Does that include the carpet that goes under the spot where it closes at?
+[GMT 04/08/06 18:22:45] <ads-GV> Yes!
+[GMT 04/08/06 18:25:40] <JorgenJensen-JeffCo> Vanda-HIAPER/AlCooper: Anything I should mention at the 1 PM planning meeting
+[GMT 04/08/06 18:25:59] <JorgenJensen-JeffCo> :q
+[GMT 04/08/06 18:26:25] <Jcowan-Jeffco> Okay, then Beas says that we will have to look at it.  Does the door lock when you close it?
+[GMT 04/08/06 18:30:53] <ads-GV> Ok,I took one more closer look,The thin layer carpet between door rail just a little bit high due to get wet,I flatten it out and problem gone! Good advice Bob
+[GMT 04/08/06 18:33:58] <Jcowan-Jeffco> Good deal.  Thanks for looking Ta.
+[GMT 04/08/06 18:39:31] AlCooper-GV (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 18:39:35] Errol-GV (AVAPS@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 18:39:50] Vanda-HIAPER (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 18:39:50] ads-GV (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 18:39:52] ads_ (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 18:39:53] TCampos-GV (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 18:41:17] TCampos-GV (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 18:41:32] Errol-GV (AVAPS@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 18:44:04] Vanda-HIAPER (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:01:33] AlCooper-GV (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:03:54] ads_ (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:04:53] ads-GV (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:07:10] AnupamaMattegunta (ron@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:07:24] AnupamaMattegunta (ron@rdcc.guest.ucar.edu) left irc: Read error: Connection reset by peer
+[GMT 04/08/06 19:07:51] LauraPan-GV (LauraPan@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:10:04] dickdirks-ops (dirks2@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:10:06] dirks2_ (dirks2@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:39:27] AlCooper-GV (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 19:39:35] LauraPan-GV (LauraPan@rdcc.guest.ucar.edu) left irc: Quit: The computer fell asleep
+[GMT 04/08/06 19:39:45] ads_ (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 19:39:49] ads-GV (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 19:41:23] TCampos-GV (ads@rdcc.guest.ucar.edu) left irc: Read error: Connection reset by peer
+[GMT 04/08/06 19:41:24] Errol-GV (AVAPS@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 19:41:28] Vanda-HIAPER (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 19:41:46] <JorgenJensen-JeffCo> HIAPER: 1 PM decisuion: no HIAPER flight Sunday. Please acknowledge message, thanks.
+[GMT 04/08/06 19:41:53] Errol-GV (AVAPS@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:42:01] CrazyNO-G5 (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:42:08] AlCooper-GV (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:42:13] <JorgenJensen-JeffCo> HIAPER: 1 PM decisuion: no HIAPER flight Sunday. Please acknowledge message, thanks.
+[GMT 04/08/06 19:42:26] ads-GV (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:42:28] <Errol-GV> Got It
+[GMT 04/08/06 19:42:42] <CrazyNO-G5> G'day, jorgen.  We received your message, and thanks.
+[GMT 04/08/06 19:42:59] Nick change: CrazyNO-G5 -> Teresa-G5
+[GMT 04/08/06 19:42:59] Vanda-HIAPER (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:43:13] ads_ (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:43:40] <JorgenJensen-JeffCo> OK, good please make sure Al and Vanda know.
+[GMT 04/08/06 19:44:42] <Teresa-G5> Errol made an announcement over headset that Al acknowledged.  We'll make sure Vanda knows when she returns to her seat...
+[GMT 04/08/06 19:46:03] vinson-bishop (vinson@rdcc.guest.ucar.edu) left &G5 (Leaving).
+[GMT 04/08/06 19:48:26] StephanDeWekker-REAL (real@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 19:53:17] trex_ (trex@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 19:58:58] StephanDeWekker-REAL (real@rdcc.guest.ucar.edu) left irc: Read error: Connection reset by peer
+[GMT 04/08/06 19:59:21] StephanDeWekker-REAL (real@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 20:01:31] <Jcowan-Jeffco> ads_GV, do you have an ETA yet?
+[GMT 04/08/06 20:05:12] <Jcowan-Jeffco> Ta, do you have an ETA yet.  We have no GE or data here.
+[GMT 04/08/06 20:07:29] <ads-GV> Vanda have interview by photographer.I don't want disturb them.Al said approximately 3:15pm local time
+[GMT 04/08/06 20:07:51] <Jcowan-Jeffco> Thanks Ta, that is close enough.
+[GMT 04/08/06 20:09:14] ipollack (ipollack@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 20:09:43] <ipollack> Teresa-G5, hey there, I'm back at Jeffco...how's it going?
+[GMT 04/08/06 20:11:16] <Teresa-G5> Hi ilana, things are going well.  We did the sounding on the way home.  The trop seems to be quite high up now, so the ferry home is already in the troposphere.
+[GMT 04/08/06 20:12:08] <ipollack> Teresa-G5, okay, sounds good I guess...seems like a big difference from thursday though.  Is aeros still working...I don't think it is updating down here.
+[GMT 04/08/06 20:12:40] <Teresa-G5> yeah, we're woking.  Er, that's working.  Wish we were woking...
+[GMT 04/08/06 20:13:50] <ipollack> Teresa-G5,  kinda hard to wok in the air don't you think?  Anyway, did you hear, no flight tomorrow!
+[GMT 04/08/06 20:14:47] <Teresa-G5> yeah, we heard.  happy about that, how about you?
+[GMT 04/08/06 20:15:26] <ipollack> Teresa-G5,  of course, want to go kayaking tomorrow...supposed to be a nice and sunny day
+[GMT 04/08/06 20:16:32] <AlCooper-GV> Jcowan-Jeffco We're moving fast, pilot's display says ETA 2048 so I'd guess 2100 = 3:00  for landing might be close.
+[GMT 04/08/06 20:18:21] <Jcowan-Jeffco> AlCooper-GV, Thanks for the update.  If it gets shorter please let me know.  I do not have a google earth display here.
+[GMT 04/08/06 20:20:04] <AlCooper-GV> Jcowan-Jeffco OK, I will.
+[GMT 04/08/06 20:21:07] Action: ChrisWebster is back (gone 05:45:57)
+[GMT 04/08/06 20:21:17] <Teresa-G5> ilana, sorry, I got sidetracked for a few minutes.  I'd love to go kayaking, but...  actually I have a planning meeting tomorrow afternoon for a convection experiment that folks want to propose to fly in a few years.
+[GMT 04/08/06 20:22:23] <Teresa-G5> i'm not doing much at the meeting, but could learn a few things :-)
+[GMT 04/08/06 20:22:49] <ChrisWebster> Everything go ok?
+[GMT 04/08/06 20:23:44] <Jcowan-Jeffco> I think so Chris.  We have not gotten data from them on the ground in 4 hours but everything onboards seems okay.
+[GMT 04/08/06 20:26:09] <ipollack> Teresa-G5, okay, well next time then...so I hear that ETA for landing may be in about 40 minutes.  Let me know how NO shutdown goes.
+[GMT 04/08/06 20:27:08] <Teresa-G5> ilana, thanks very much.  i'm seriously time zone-challenged, so was just trying to calculate our eta from previous chat entries...  I'll start soon to shut down and appreciate very much your support...
+[GMT 04/08/06 20:27:11] <ChrisWebster> Looks like the new Dynamic Hostname didn't re-register at some point...after a dropout.
+[GMT 04/08/06 20:28:19] <ads-GV> John! You did got our data send down to ground station on this morning right?
+[GMT 04/08/06 20:28:44] <Jcowan-Jeffco> ChrisWebster, Okay, I just thought you would want to knwo.
+[GMT 04/08/06 20:29:11] <Jcowan-Jeffco> Ta, we had good data down here for the first 4 hours then it stopped.
+[GMT 04/08/06 20:29:13] <ChrisWebster> I do/did.  Thanks.
+[GMT 04/08/06 20:29:55] <ChrisWebster> We'll have a cheap[er] phone bill for this flight....
+[GMT 04/08/06 20:30:40] Vanda-HIAPER (ads@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 20:32:04] <ads-GV> Oh well! as long as we could get communication each other .I guess everyone Happy
+[GMT 04/08/06 20:33:40] <Jcowan-Jeffco> Yes, I think they are all happy today. If you can Ta, let me know when you are over Denver szo we can be ready for you.
+[GMT 04/08/06 20:34:51] <ChrisWebster> Are they going to put power on for file retreival, or not until Monday?
+[GMT 04/08/06 20:35:55] <ads-GV> According from Lou,We are about 80 miles from Denver
+[GMT 04/08/06 20:36:59] <ads-GV> Chris, I am not sure,nobody tell me yet!
+[GMT 04/08/06 20:37:01] <Teresa-G5> ilana, things are going smoothly; just waiting for no flow to drop...  great instruction sheet.
+[GMT 04/08/06 20:37:05] <Jcowan-Jeffco> We had not planned to put power on until Monday as far as I know.
+[GMT 04/08/06 20:37:23] <ipollack> Teresa-G5,  yeah sure...your doing awesome...I much appreciate the day off...so thanks to you!
+[GMT 04/08/06 20:37:56] <Teresa-G5> ilana, no worries.  glad i could pitch in here.
+[GMT 04/08/06 20:38:43] <JorgenJensen-JeffCo> Chris, we will have nobody here tomorrow. How much work (time) will it be to download the dataq and then convert it?
+[GMT 04/08/06 20:39:25] <ChrisWebster> 30+ minutes.
+[GMT 04/08/06 20:40:29] <JorgenJensen-JeffCo> In that case, I think that we should try to do it. I am sure Vanda will want to look at this data over the weekend. Vanda, can you confirm?
+[GMT 04/08/06 20:41:52] laptop4-g5 (ads@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 20:42:15] Nick change: laptop4-g5 -> Vanda-HIAPER
+[GMT 04/08/06 20:42:32] <JorgenJensen-JeffCo> In that case, I think that we should try to do it. I am sure Vanda will want to look at this data over the weekend. Vanda, can you confirm?
+[GMT 04/08/06 20:42:34] <Vanda-HIAPER> Jan---I just connected again. Please, repeat your question. 
+[GMT 04/08/06 20:43:00] <JorgenJensen-JeffCo> Should we convert the data today or Monday morning?
+[GMT 04/08/06 20:43:03] Errol-GV (AVAPS@rdcc.guest.ucar.edu) left irc: Read error: Connection reset by peer
+[GMT 04/08/06 20:43:06] <Vanda-HIAPER> Certainly. I would very much like to look at this data. Very nice. 
+[GMT 04/08/06 20:43:34] <JorgenJensen-JeffCo> OK, Chris. We will download and process. What do we have to do from out here?
+[GMT 04/08/06 20:47:01] <Jcowan-Jeffco> ChrisWebster, What do you need us to do so that you can get the data today?
+[GMT 04/08/06 20:48:41] <ChrisWebster> Have the plane in the hanger and powered up in 10 minutes.  :)
+[GMT 04/08/06 20:49:30] <Jcowan-Jeffco> I'll have the plane in the hanger and powered up as soon as I can. I know you need the network should I start up chat?
+[GMT 04/08/06 20:49:33] <ChrisWebster> My bike riding partner has arrived, what's eta in the hanger?
+[GMT 04/08/06 20:50:01] <Jcowan-Jeffco> I'm guess 20 Min or so to land.
+[GMT 04/08/06 20:50:13] <Jcowan-Jeffco> Maybe 30 to inside the hanger.
+[GMT 04/08/06 20:50:59] <Teresa-G5> we're over denver now, near downtown; just n of same.
+[GMT 04/08/06 20:51:28] <ChrisWebster> Jorgen how bad do you want it?  I'll need to tell my friend to go alone....
+[GMT 04/08/06 20:51:36] AlCooper-GV (ads@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 20:52:13] ipollack (ipollack@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 20:52:24] <Jcowan-Jeffco> I'm going to meet the plane.  It should be on the ground in 10 minutes.
+[GMT 04/08/06 20:52:47] <Jcowan-Jeffco> Jorgen, please let me know what the decision is.
+[GMT 04/08/06 20:53:45] <JorgenJensen-JeffCo> Hi Chris, - yes, please. Can we download it now after the plane arrives and then process it later today? Does it make a difference to your schedule?
+[GMT 04/08/06 20:54:02] <JorgenJensen-JeffCo> What can we do?
+[GMT 04/08/06 20:54:15] <JorgenJensen-JeffCo> That is us out here.
+[GMT 04/08/06 20:55:18] <JorgenJensen-JeffCo> Chris, please phone 1028 - lets discuss
+[GMT 04/08/06 20:56:01] <ChrisWebster> Jorgen, it just occured to me, without vpn, I can't get to the aircraft from home.  vpn has been down all day.
+[GMT 04/08/06 20:56:04] <ChrisWebster> calling
+[GMT 04/08/06 20:56:24] JimMoore-Ops (jmoore@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 20:56:30] Teresa-G5 (ads@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 21:02:45] ads_ (ads@rdcc.guest.ucar.edu) left irc: EOF from client
+[GMT 04/08/06 21:02:45] ads-GV (ads@rdcc.guest.ucar.edu) left irc: EOF from client
+[GMT 04/08/06 21:03:18] ChrisWebster (cjw@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 21:05:48] Vanda-HIAPER (ads@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 21:34:11] Jcowan-Jeffco (jcowan@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 21:40:12] JorgenJensen-JeffCo (jbj@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 21:44:18] dickdirks-ops (dirks2@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 21:44:25] dirks2_ (dirks2@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 21:45:45] trex_ (trex@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 21:45:54] Nick change: trex_ -> heather_bishop
+[GMT 04/08/06 22:13:13] BrianBillings-bishop (brian@rdcc.guest.ucar.edu) left irc: Quit
+[GMT 04/08/06 22:13:28] BrianBillings-bishop (brian@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 22:22:14] StephanDeWekker-REAL (real@rdcc.guest.ucar.edu) left irc: Read error: Connection reset by peer
+[GMT 04/08/06 22:22:16] lroot_ (real@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 22:42:11] sfw (sfw@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 22:43:48] SteveWilliams-ops (sfw@rdcc.guest.ucar.edu) left irc: Ping timeout
+[GMT 04/08/06 23:04:08] lroot_ (real@rdcc.guest.ucar.edu) left irc: Quit: Leaving
+[GMT 04/08/06 23:04:19] StephanDeWekker-REAL (real@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 23:40:19] sfw (sfw@rdcc.guest.ucar.edu) left irc: Read error: Connection reset by peer
+[GMT 04/08/06 23:40:21] sfw__1 (sfw@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/08/06 23:43:07] sfw__1 (sfw@rdcc.guest.ucar.edu) left irc: Read error: Connection reset by peer
+[GMT 04/08/06 23:48:56] StephanDeWekker-REAL (real@rdcc.guest.ucar.edu) left irc: Read error: Connection reset by peer
+[GMT 04/08/06 23:48:58] lroot_ (real@rdcc.guest.ucar.edu) joined &G5.
+[GMT 04/09/06 00:00:00] --- Sun Apr  9 2006
