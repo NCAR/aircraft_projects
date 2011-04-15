@@ -32,7 +32,7 @@ echo "Make sure netCDF files have been reordered before archiving!"
 ### MOVIES
 ### Don't archive preliminary movies to MSS, but do put them in codiac and
 ### make them oprderable.
-/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -m /scr/raf/Prod_Data/$PROJECT/Camera mp4 ATDdata
+/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -m /scr/raf/Prod_Data/$PROJECT/Camera 0.mp4 ATDdata
 
 ### DGPS - done
 #/net/work/bin/scripts/mass_store/archAC/archAC.py DGPS /scr/raf/Raw_Data/$PROJECT/dgps dat ATDdata

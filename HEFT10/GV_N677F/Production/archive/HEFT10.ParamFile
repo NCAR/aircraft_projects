@@ -1,0 +1,45 @@
+includeData = yes
+netcdfFile = /scr/raf/Prod_Data/HEFT10/HEFT10####.nc 
+# Times will be determined from the images in the imageDirectory
+# All other image dirs will try to match these times.
+imageDirectory = /scr/raf/Raw_Data/HEFT10/Camera/flight_number_####/heft_forward
+numCameras = 1
+# If numCameras > 1, add additional dirs and cameras here:
+#
+# For the moment, assume all cameras are the same type.
+cameraName = Flea
+
+# The outputResolution should be proportional to the scale:
+# For one image per frame, leave the ht and add 200 to the width
+# For two images, double the ht and add 50 or so padding, 
+#   and add 200 to the width
+# For three images, double the ht and width (plus padding).
+outputResolution=820x420
+outputFrameRate = 15
+# Make this wider if data overwrites labels (default = 200)
+outputWidth = 290
+mp4BitRate = 1500000
+scale = 512x384!
+endParameters
+
+CLAT_GP
+CLON_GP
+CALT_GP
+GSF_G
+CVSPD_GP
+CTHDG_GP
+SOLZE
+SOLAZ
+THETA
+ATX
+PSFC
+EDPC
+RHODT
+RHUM
+IWD_IRS2
+IWS
+IO_dSCD
+IO_dSCDsig
+CHOCHO_dSCD
+CHOCHO_dSCDsig
+endVariablesLT
