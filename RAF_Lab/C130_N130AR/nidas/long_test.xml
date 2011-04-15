@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="RAF_Lab"
+    system="C130_N130AR"
+    config="${PROJ_DIR}/RAF_Lab/C130_N130AR/nidas/long_test.xml"
+    version="$LastChangedRevision: 2514 $"
+    >
+
+<sensorcatalog>
+    <serialSensor ID="DewPointer" class="DSMSerialSensor"
+        baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%*d,%f" rate="1"/>
+        <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="Mensor_6100" class="DSMSerialSensor"
+        baud="57600" parity="none" databits="8" stopbits="1">
+        <!-- Turn off internal filtering on the Mensor:
+                #1FL ?  query the value (factory default is 90%)
+                #1FL 0  set to 0
+                #1FL ?
+                #1SAVE  save to EEPROM
+        -->
+        <sample id="1" scanfFormat="%*1d%f"/>
+        <message separator="\n" position="end" length="0"/>
+        <prompt string="#1?\r" rate="50"/>
+    </serialSensor>
+
+    <serialSensor ID="Mensor_6101" class="DSMSerialSensor"
+        baud="57600" parity="none" databits="8" stopbits="1">
+        <!-- Turn off internal filtering on the Mensor:
+                #1FL ?  query the value (factory default is 90%)
+                #1FL 0  set to 0
+                #1FL ?
+                #1SAVE  save to EEPROM
+        -->
+        <sample id="1" scanfFormat="%*1d%f"/>
+        <message separator="\n" position="end" length="0"/>
+        <prompt string="#1?\r" rate="100"/>
+    </serialSensor>
+
+    <serialSensor ID="Paro_DigiQuartz_1000" class="DSMSerialSensor"
+        baud="57600" parity="none" databits="8" stopbits="1">
+        <!-- initialization commands for the Paro:
+          unprompted mode, set rate with PI (and in sample tag)
+                If we set MD=2, don't need P4 init string
+          *9900BR=57600
+          *0100EW*0100MD=2      turn off  Model 715 output, unprompted
+          *0100EW*0100UN=2      units=millibars
+          *0100EW*0100PI=10     rate=50
+        -->
+
+        <sample id="1" scanfFormat="*%*2d%*2d%f" rate="50">
+        </sample>
+        <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="CDP" class="raf.CDP_Serial" baud="38400" parity="none" databits="8" stopbits="1">
+        <parameter name="calFile" type="string" value="PMSspecs"/>
+
+        <parameter name="NCHANNELS" type="int" value="30"/>
+        <parameter name="RANGE" type="int" value="0"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
+        <parameter name="TRANSIT_REJ" type="int" value="1"/>
+        <parameter name="DOF_REJ" type="int" value="1"/>
+        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+        <parameter name="ATT_ACCEPT" type="int" value="95"/>
+        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
+        <parameter name="CT_METHOD" type="int" value="0"/>
+        <parameter name="MAX_WIDTH" type="int" value="10000"/>
+        <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
+
+        <sample id="1" rate="10">
+            <variable name="CDPLSRC" units="mAmp" longname="CDP Laser Current"/>
+            <variable name="CDPLSRP" units="V" longname="CDP Laser Power Monitor"/>
+            <variable name="CDPWBTMP" units="deg_C" longname="CDP Wing Board Temperature"/>
+            <variable name="CDPLBTMP" units="deg_C" longname="CDP Laser Block Temperature"/>
+            <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
+            <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
+            <variable name="AVGTRNS" units="" longname="CDP Average Transit Time"/>
+            <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
+
+            <variable name="ACDP" length="31" units="count" longname="CDP Raw Accumulation (per cell)"/>
+        </sample>
+        <message separator="\xff\xff" position="end" length="154"/>
+        <prompt string="\x1b\x02\x1d\x00" rate="10"/>
+    </serialSensor>
+
+    <serialSensor ID="S200" class="raf.SPP200_Serial" baud="38400" parity="none" databits="8" stopbits="1">
+        <parameter name="calFile" type="string" value="PMSspecs"/>
+
+        <parameter name="NCHANNELS" type="int" value="30"/>
+        <parameter name="RANGE" type="int" value="0"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
+        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
+        <parameter name="CHAN_THRESH" type="int" value="692 1040 1517 2157 4096 4231 4348 4537 4825 5251 5859 6703 8192 8345 8502 8682 8872 9070 9252 9432 9544 9737 9937 10166 10471 10797 11162 11499 11852 12288"/>
+
+        <sample id="1">
+            <variable name="PHGB" units="V" longname="SPP-200 High-Gain Baseline"/>
+            <variable name="PMGB" units="V" longname="SPP-200 Mid-Gain Baseline"/>
+            <variable name="PLGB" units="V" longname="SPP-200 Low-Gain Baseline"/>
+            <variable name="PFLW" units="cnts" longname="SPP-200 Flow">
+                <poly coefs="9.00095 -0.00973 2.56232e-6" units="std cm3/s"/>
+            </variable>
+            <variable name="PREF" units="V" longname="SPP-200 Laser Reference Voltage"/>
+            <variable name="PFLWS" units="cnts" longname="SPP-200 Sheath Flow">
+                <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>
+            </variable>
+            <variable name="PTMP" units="deg_C" longname="SPP-200 Detector Temperature"/>
+            <variable name="AS200" length="30" units="count" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT"/>
+        </sample>
+        <prompt string="\x1b\x02\x1d\x00" rate="10"/>
+        <message length="154"/>
+    </serialSensor>
+
+     <sensor ID="Fast2DC" class="raf.TwoD64_USB">
+        <parameter name="SerialNumber" value="F2DC001" type="string"/>
+        <parameter name="RESOLUTION" value="25" type="int"/>
+        <parameter name="TAS_RATE" value="10" type="int"/>
+
+        <sample id="1" rate="10">
+            <variable name="SHDORC" units="count" longname="Fast 2DC Shadow OR Count"/>
+        </sample>
+        <sample id="2" rate="1">
+            <variable name="A1DC" length="64" units="count" longname="Fast 2DC Raw Accumulation, entire-in (per cell)"/>
+            <variable name="DT1DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
+        </sample>
+        <sample id="3" rate="1">
+            <variable name="A2DC" length="128" units="count" longname="Fast 2DC Raw Accumulation, center-in (per cell)"/>
+            <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
+        </sample>
+    </sensor>
+
+    <sensor ID="IRIG" class="raf.IRIGSensor">
+        <sample id="1">
+            <variable name="IRIG_Tdiff" units="sec"
+                    longname="IRIG-UNIX clock diff"/>
+            <variable name="IRIG_Status" units="bits"
+                    longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC"/>
+        </sample>
+    </sensor>
+</sensorcatalog>
+
+<server>
+    <service class="XMLConfigService">
+	<output>
+	    <socket type="mcaccept"/>
+	</output>
+    </service>
+    <service class="RawSampleService" rawSorterLength="1" procSorterLength="10">
+	<!-- input from every DSM on this aircraft that has
+	     a socket output of type RawSampleOutputStream -->
+	<input class="RawSampleInputStream">
+	    <socket type="mcaccept"/>
+	</input>
+	<processor class="SampleArchiver">
+	    <output class="RawSampleOutputStream">
+		<fileset dir="/tmp/${PROJECT}"
+		    file="a2d_1T_%Y%m%d_%H%M%S_${FLIGHT}.ads"
+		    length="0"/>
+	    </output>
+	    <output class="RawSampleOutputStream">
+		<socket type="server" port="30000"/>
+	    </output>
+	</processor>
+	<processor class="raf.SyncRecordGenerator">
+	    <output class="SampleOutputStream">
+		<socket type="server" port="30001"/>
+	    </output>
+	</processor>
+	<processor class="SampleProcessor">
+	    <output class="UDPSampleOutput">
+		<socket type="dataUDP"/>
+	    </output>
+	</processor>
+    </service>
+</server>
+
+<site name="C130_N130AR" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N130AR" type="string"/>
+
+    <dsm name="bigblu" location="blue_viper" id="1" rserialPort="30002" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="big"/>
+
+	<!--
+        <serialSensor IDREF="Mensor_6100"
+                devicename="/dev/ttyS7" id="110">
+            <sample id="1">
+                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage">
+                <linear slope="1.0014" intercept="-0.56122" units="hPa"/>
+                </variable>
+            </sample>
+        </serialSensor>
+	-->
+
+	<!--
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS5" id="730" suffix="_BB">
+            <parameter name="SerialNumber" type="string" value="CDP001"/>
+        </serialSensor>
+	-->
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="500">
+                <variable name="BIGBLU_CH0_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH1_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH2_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH3_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH4_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH5_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH6_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BIGBLU_CH7_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_BIGBLU" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+    <dsm name="ltlblu" location="blue_vulcan" id="2" rserialPort="30002">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="ltl"/>
+
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LTL"/>
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
+            <parameter name="rate" value="500" type="int"/>
+            <sample id="1" rate="500">
+                <variable name="LTLBLU_CH0_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="LTLBLU_CH1_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="LTLBLU_CH2_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="LTLBLU_CH3_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="LTLBLU_CH4_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="LTLBLU_CH5_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="LTLBLU_CH6_1T" units="V" longname="_longname" plotrange="-10 10">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_LTLBLU" units="deg_C" longname="A2D Temperature"/>
+            </sample>
+        </sensor>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+</site>
+</project>

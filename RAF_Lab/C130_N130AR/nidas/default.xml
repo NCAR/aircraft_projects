@@ -14,7 +14,10 @@
 
     <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
-            <variable name="Clock" units="msec" longname="milliseconds since 1970 Jan 01 00:00 +0"/>
+            <variable name="IRIG_Tdiff" units="sec"
+                    longname="IRIG-UNIX clock diff"/>
+            <variable name="IRIG_Status" units="bits"
+                    longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC"/>
         </sample>
     </sensor>
 
@@ -285,7 +288,7 @@
 	    <variable name="REJDOF" units="count" longname="SPP-100 Particles Rejected (Outside Depth-of-Field))"/>
 	    <variable name="REJAT" units="" longname="SPP-100 Average Transit Rejected Particles"/>
 	    <variable name="OVFLW" units="" longname="SPP-100 AtoD Converter Overflow/Overrange"/>
-	    <variable name="AS100" length="30" units="count" longname="SPP-100 (FSSP-100) Raw Accumulation (per cell) - DMT"/>
+	    <variable name="AS100" length="31" units="count" longname="SPP-100 (FSSP-100) Raw Accumulation (per cell) - DMT"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
@@ -355,16 +358,13 @@
 	<parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
 
         <sample id="1">
-            <variable name="CDPLSRC" units="mAmp" longname="CDP Laser Current"/>
-            <variable name="CDPLSRP" units="V" longname="CDP Laser Power Monitor"/>
-            <variable name="CDPWBTMP" units="deg_C" longname="CDP Wing Board Temperature"/>
-            <variable name="CDPLBTMP" units="deg_C" longname="CDP Laser Block Temperature"/>
-            <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
-            <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
-            <variable name="AVGTRNS" units="" longname="CDP Average Transit Time"/>
-            <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
-
-            <variable name="ACDP" length="31" units="count" longname="CDP Raw Accumulation (per cell)"/>
+	    <variable name="FREF" units="V" longname="CDP Laser Reference Voltage"/>
+	    <variable name="FTMP" units="deg_C" longname="CDP Housekeeping Data"/>
+	    <variable name="FRNG" units="" longname="CDP Size Range Category"/>
+	    <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
+	    <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
+	    <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
+	    <variable name="ACDP" length="30" units="count" longname="CDP Raw Accumulation (per cell)"/>
         </sample>
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
@@ -523,6 +523,7 @@
                 <socket type="mcaccept"/>
             </input>
             <processor class="SampleArchiver">
+<!--
                 <output class="SampleOutputStream">
                     <fileset dir="/var/r1/${PROJECT}"
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
@@ -538,6 +539,7 @@
                         file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
                 </output>
+-->
                 <output class="SampleOutputStream">
                     <socket type="server" port="30000"/>
                 </output>
@@ -674,7 +676,7 @@
             <socket type="mcrequest"/>
         </output>
     </dsm>
-
+<!--
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
 
@@ -684,7 +686,7 @@
                 <variable name="QCF" units="mb" longname="Raw Dynamic Pressure, Fuselage"/>
             </sample>
         </serialSensor>
-
+<!--
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser1" id="112">
             <sample id="1">
@@ -698,7 +700,7 @@
                 <variable name="ADIFR" units="mb" longname="Vertical Differential Pressure, Radome"/>
             </sample>
         </serialSensor>
-
+-->
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser3" id="116">
             <sample id="1">
@@ -708,67 +710,47 @@
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
-<!-- DUMMY                | 2007-02-21 18:22:24 | {-0.0795597,1.16099} -->
                 <variable name="DUMMY" units="V" longname="Place Holder">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.16099" type="float"/>
                     <parameter name="corIntercept" value="-0.0795597" type="float"/>
                 </variable>
-<!-- TTRL                 | 2007-02-21 18:28:59 | {-0.319817,1.20597} -->
                 <variable name="TTRL" units="V" longname="Total Temperature, Radome Left">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.20597" type="float"/>
                     <parameter name="corIntercept" value="-0.319817" type="float"/>
-<!--
                     <poly coefs="-83.8414 23.2536 0.232697" units="deg_C"/>
--->
                 </variable>
-<!-- TTHR2                | 2007-02-21 18:35:59 | {-0.270368,1.19836} -->
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.19836" type="float"/>
                     <parameter name="corIntercept" value="-0.270368" type="float"/>
-<!--
                     <poly coefs="-88.524 25.3131 0.0329609" units="deg_C"/>
--->
                 </variable>
-<!-- TTHR1                | 2007-02-21 18:40:22 | {-0.169412,1.18032} -->
                 <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.18032" type="float"/>
                     <parameter name="corIntercept" value="-0.169412" type="float"/>
-<!--
                     <poly coefs="-88.524 25.2639 0.0229139" units="deg_C"/>
--->
                 </variable>
-<!-- NOSETMP              | 2007-02-21 18:49:00 | {-0.700056,1.21949} -->
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.21949" type="float"/>
                     <parameter name="corIntercept" value="-0.700056" type="float"/>
-                    <!-- lab cal of Sept 21, 2005 confirmed that these coefs
-                        give a temp within 0.18 deg_C for -50 to 40 deg_C
-                    -->
-<!--
                     <linear slope="10.0" intercept="-50.0" units="deg_C"/>
--->
                 </variable>
-<!-- TTHR3                | 2007-02-21 18:53:46 | {-0.128805,1.16955} -->
                 <variable name="TTHR3" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.16955" type="float"/>
                     <parameter name="corIntercept" value="-0.128805" type="float"/>
-<!--
                     <poly coefs="-88.4311 25.3294 0.0316959" units="deg_C"/>
--->
                 </variable>
-<!---
                 <variable name="NOSETST1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="1" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
@@ -787,7 +769,6 @@
                     <parameter name="corSlope" value="1.0" type="float"/>
                     <parameter name="corIntercept" value="0.0" type="float"/>
                 </variable>
--->
             </sample>
         </sensor>
 
@@ -803,89 +784,23 @@
         </output>
 
     </dsm>
-
-    <dsm name="dsm311" location="blue_box" id="11" rserialPort="30002">
+-->
+    <dsm name="dsm311" location="spowart" id="11" rserialPort="30002">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
         <!--serialSensor IDREF="S200" devicename="/dev/dsmser5" id="710"/-->
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
-<!--
-    <dsm name="dsm323" location="_c130-323" id="23" rserialPort="30002">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="323"/>
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
-            <sample id="1" rate="500">
-                <variable name="C130_323_0_A0" units="V" longname="C130_323_0 Analog 0">
-                    <parameter name="gain"         value="1"     type="float"/>
-                    <parameter name="bipolar"      value="true"  type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="C130_323_0_A1" units="V" longname="C130_323_0 Analog 1">
-                    <parameter name="gain"         value="1"     type="float"/>
-                    <parameter name="bipolar"      value="true"  type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="C130_323_0_A2" units="V" longname="C130_323_0 Analog 2">
-                    <parameter name="gain"         value="1"     type="float"/>
-                    <parameter name="bipolar"      value="true"  type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="C130_323_0_A3" units="V" longname="C130_323_0 Analog 3">
-                    <parameter name="gain"         value="1"     type="float"/>
-                    <parameter name="bipolar"      value="true"  type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="C130_323_0_A4" units="V" longname="C130_323_0 Analog 4">
-                    <parameter name="gain"         value="1"     type="float"/>
-                    <parameter name="bipolar"      value="true"  type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="C130_323_0_A5" units="V" longname="C130_323_0 Analog 5">
-                    <parameter name="gain"         value="1"     type="float"/>
-                    <parameter name="bipolar"      value="true"  type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="C130_323_0_A6" units="V" longname="C130_323_0 Analog 6">
-                    <parameter name="gain"         value="1"     type="float"/>
-                    <parameter name="bipolar"      value="true"  type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="C130_323_0_A7" units="V" longname="C130_323_0 Analog 7">
-                    <parameter name="gain"         value="1"     type="float"/>
-                    <parameter name="bipolar"      value="true"  type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-            </sample>
-        </sensor>
 
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_C130_323_0" units="deg_C">
-                </variable>
-            </sample>
-        </sensor>
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
-    </dsm>
--->
-    <dsm name="dsm303" location="_blue_box" id="21" rserialPort="30002">
+    <dsm name="dsm303" location="blue_box" id="21" rserialPort="30002">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/>
         <!-- Jumper configuration on COM8 boards:
             ports 0-4 are RS232, 5-7 are RS422 -->
 
-        <serialSensor IDREF="CDP" devicename="/dev/dsmser0" id="730" suffix="_711"/>
-        <serialSensor IDREF="Garmin18_GPS" devicename="/dev/dsmser2" id="130"/>
 <!--
+        <serialSensor IDREF="Garmin18_GPS" devicename="/dev/dsmser1" id="130"/>
+        <serialSensor IDREF="CDP" devicename="/dev/dsmser0" id="730" suffix="_711"/>
         <serialSensor IDREF="S100" devicename="/dev/dsmser0" id="710" suffix="_109"/>
         <serialSensor IDREF="S200" devicename="/dev/dsmser0" id="730" suffix="_108"/>
         <serialSensor IDREF="VCSEL" devicename="/dev/dsmser2" id="110"/>
@@ -896,7 +811,9 @@
                 <variable name="MYCNTR" units="count" longname="Lab Test Counter" count="true"/>
                 <variable name="CNTS" units="count" longname="TSI CN Counter Output" count="true"/>
             </sample>
+-->
 
+<!--
             <sample id="2" rate="50">
                 <variable name="PSFD" units="hPa" longname="Raw Static Pressure, Fuselage Digital"/>
             </sample>
@@ -905,10 +822,11 @@
                 <variable name="DIG_OUT" units="binary" longname="Power to Gerber Probe"/>
             </sample>
 
+-->
+<!--
             <sample id="4" rate="1">
                 <parameter name="ProbeType" type="string" value="260X"/>
                 <parameter name="SerialNumber" type="string" value="260X06"/>
-
                 <variable name="PSTRB_06" units="count" longname="260X Total Strobes" count="true"/>
                 <variable name="P6RST_06" units="count" longname="260X Resets" count="true"/>
                 <variable name="A260X_06" units="count" longname="260X Raw Accumulation (per cell)" length="64"/>
@@ -919,240 +837,102 @@
                 </variable>
             </sample>
         </sensor>
-
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
-            <sample id="1" rate="500">
-                <variable name="AA0" units="V" longname="Test Analog 0">
-                    <parameter name="gain"         value="4"     type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="AA1" units="V" longname="Test Analog 1">
-                    <parameter name="gain"         value="4"     type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="AA2" units="V" longname="Test Analog 2">
-                    <parameter name="gain"         value="4"     type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="AA3" units="V" longname="Test Analog 3">
-                    <parameter name="gain"         value="4"     type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="AA4" units="V" longname="Test Analog 4">
-                    <parameter name="gain"         value="4"     type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="AA5" units="V" longname="Test Analog 5">
-                    <parameter name="gain"         value="4"     type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="AA6" units="V" longname="Test Analog 6">
-                    <parameter name="gain"         value="4"     type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-                <variable name="AA7" units="V" longname="Test Analog 7">
-                    <parameter name="gain"         value="4"     type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"   type="float"/>
-                    <parameter name="corIntercept" value="0.0"   type="float"/>
-                </variable>
-<!- AA0                  | 2007-02-20 20:16:00 | {-0.0816088,1.15697} ->
-                <variable name="AA0" units="V" longname="Test Analog 0">
-                    <parameter name="gain"         value="4"    type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.15697"  type="float"/>
-                    <parameter name="corIntercept" value="-0.0816088"  type="float"/>
-                </variable>
-<!- AA1                  | 2007-02-20 20:20:10 | {-0.321062,1.20409} ->
-                <variable name="AA1" units="V" longname="Test Analog 1">
-                    <parameter name="gain"         value="4"    type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.20409"  type="float"/>
-                    <parameter name="corIntercept" value="-0.321062"  type="float"/>
-                </variable>
-<!- AA2                  | 2007-02-20 20:23:36 | {-0.271599,1.1967} ->
-                <variable name="AA2" units="V" longname="Test Analog 2">
-                    <parameter name="gain"         value="4"    type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.1967"  type="float"/>
-                    <parameter name="corIntercept" value="-0.271599"  type="float"/>
-                </variable>
-<!- AA3                  | 2007-02-20 20:28:35 | {-0.170703,1.17877} ->
-                <variable name="AA3" units="V" longname="Test Analog 3">
-                    <parameter name="gain"         value="4"    type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.17877"  type="float"/>
-                    <parameter name="corIntercept" value="-0.170703"  type="float"/>
-                </variable>
-<!- AA4                  | 2007-02-20 20:32:47 | {-0.349169,1.21587} ->
-                <variable name="AA4" units="V" longname="Test Analog 4">
-                    <parameter name="gain"         value="4"    type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.21587"  type="float"/>
-                    <parameter name="corIntercept" value="-0.349169"  type="float"/>
-                </variable>
-<!- AA5                  | 2007-02-20 20:36:08 | {-0.13092,1.16821} ->
-                <variable name="AA5" units="V" longname="Test Analog 5">
-                    <parameter name="gain"         value="4"    type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.16821"  type="float"/>
-                    <parameter name="corIntercept" value="-0.13092"  type="float"/>
-                </variable>
-<!- AA6                  | 2007-02-20 20:38:37 | {-0.106787,1.16684} ->
-                <variable name="AA6" units="V" longname="Test Analog 6">
-                    <parameter name="gain"         value="4"    type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.16684"  type="float"/>
-                    <parameter name="corIntercept" value="-0.106787"  type="float"/>
-                </variable>
-<!- AA7                  | 2007-02-20 20:42:13 | {-0.206297,1.18403} ->
-                <variable name="AA7" units="V" longname="Test Analog 7">
-                    <parameter name="gain"         value="4"    type="float"/>
-                    <parameter name="bipolar"      value="false" type="bool"/>
-                    <parameter name="corSlope"     value="1.18403"  type="float"/>
-                    <parameter name="corIntercept" value="-0.206297"  type="float"/>
-                </variable>
-            </sample>
-        </sensor>
-
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_AHAPS" units="deg_C">
-                </variable>
-            </sample>
-        </sensor>
-
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d2" id="220">
-            <sample id="1" rate="500">
-                <variable name="BA0" units="V" longname="Bhaps Analog 0">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="BA1" units="V" longname="Bhaps Analog 1">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="BA2" units="V" longname="Bhaps Analog 2">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="BA3" units="V" longname="Bhaps Analog 3">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="BA4" units="V" longname="Bhaps Analog 4">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="BA5" units="V" longname="Bhaps Analog 5">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="BA6" units="V" longname="Bhaps Analog 6">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="BA7" units="V" longname="Bhaps Analog 7">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-            </sample>
-        </sensor>
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d3" id="230">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_BHAPS" units="deg_C">
-                </variable>
-            </sample>
-        </sensor>
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
-            <sample id="1" rate="500">
-                <variable name="CA0" units="V" longname="Chaps Analog 0" count="true">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="CA1" units="V" longname="Chaps Analog 1">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="CA2" units="V" longname="Chaps Analog 2">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="CA3" units="V" longname="Chaps Analog 3">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="CA4" units="V" longname="Chaps Analog 4">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="CA5" units="V" longname="Chaps Analog 5">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="CA6" units="V" longname="Chaps Analog 6">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-                <variable name="CA7" units="V" longname="Chaps Analog 7">
-                    <parameter name="gain"         value="1"    type="float"/>
-                    <parameter name="bipolar"      value="true" type="bool"/>
-                    <parameter name="corSlope"     value="1.0"  type="float"/>
-                    <parameter name="corIntercept" value="0.0"  type="float"/>
-                </variable>
-            </sample>
-        </sensor>
-        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
-            <sample id="1" rate="1">
-                <variable name="A2DTEMP_CHAPS" units="deg_C">
-                </variable>
-            </sample>
-        </sensor>
 -->
+<!--
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+            <sample id="1" rate="500">
+                <variable name="BVCAL0" units="V" longname="Test Analog 0">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BVCAL1" units="V" longname="Test Analog 1">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BVCAL2" units="V" longname="Test Analog 2">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BVCAL3" units="V" longname="Test Analog 3">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BVCAL4" units="V" longname="Test Analog 4">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BVCAL5" units="V" longname="Test Analog 5">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BVCAL6" units="V" longname="Test Analog 6">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="BVCAL7" units="V" longname="Test Analog 7">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+            </sample>
+        </sensor>
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_BLUEBOX" units="deg_C">
+                </variable>
+            </sample>
+        </sensor>
+-->    
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+    <dsm name="dsmJDW" location="turtle" id="22" rserialPort="30002">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="jdw"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
+            <sample id="1" rate="500">
+                <variable name="AVCAL0" units="V" longname="Test Analog 0">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="AVCAL1" units="V" longname="Test Analog 1">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="AVCAL2" units="V" longname="Test Analog 2">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="AVCAL3" units="V" longname="Test Analog 3">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="AVCAL4" units="V" longname="Test Analog 4">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="AVCAL5" units="V" longname="Test Analog 5">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="AVCAL6" units="V" longname="Test Analog 6">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+                <variable name="AVCAL7" units="V" longname="Test Analog 7">
+                    <parameter name="gain"         value="1"     type="float"/> <parameter name="bipolar"      value="true"  type="bool"/>
+                    <parameter name="corSlope"     value="1.0"   type="float"/> <parameter name="corIntercept" value="0.0"   type="float"/>
+                </variable>
+            </sample>
+        </sensor>
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <variable name="A2DTEMP_TURTLE" units="deg_C">
+                </variable>
+            </sample>
+        </sensor>
+
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
@@ -1200,6 +980,167 @@
             </sample>
         </sensor>
 -->
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+<!-- ########################################################################################################### -->
+<!-- ############################################### C-130 DSMs  ############################################### -->
+<!-- ########################################################################################################### -->
+
+    <dsm name="dsm320" location="Fwd_FS245_1" id="20" rserialPort="30002">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="320"/>
+<!--
+        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser0" id="130">
+            <sample id="1">
+                <variable name="DPT" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Top"/>
+            </sample>
+        </serialSensor>
+
+        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser1" id="140">
+            <sample id="1">
+                <variable name="DPB" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Bottom"/>
+            </sample>
+        </serialSensor>
+
+        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/dsmser2" id="150">
+            <sample id="1">
+                <variable name="PSFD" units="hPa" longname="Raw Static Pressure, Fuselage"/>
+            </sample>
+        </serialSensor>
+
+        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/dsmser3" id="160">
+            <sample id="1">
+                <variable name="PSFRD" units="hPa" longname="Raw Static Pressure, Fuselage"/>
+            </sample>
+        </serialSensor>
+-->
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
+            <sample id="1" rate="500">
+<!-- QCR                  | 2007-06-05 18:55:34 | {-0.384382,1.11335} -->
+                <variable name="QCR" units="V" longname="Raw Dynamic Pressure, Radome">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.11335" type="float"/> <parameter name="corIntercept" value="-0.384382" type="float"/>
+                    <poly coefs="-1.43755 17.2867 -0.0055139" units="hPa"/>
+                </variable>
+<!-- QCF                  | 2007-06-05 18:59:04 | {-0.177456,1.09378} -->
+                <variable name="QCF" units="V" longname="Raw Dynamic Pressure, Fuselage">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.09378" type="float"/> <parameter name="corIntercept" value="-0.177456" type="float"/>
+                    <poly coefs="0.539653 17.2224 -0.00387835" units="hPa"/>
+                </variable>
+<!-- ADIFR                | 2007-06-05 19:03:03 | {-0.262615,1.10833} -->
+                <variable name="ADIFR" units="V" longname="Vertical Differential Pressure, Radome">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.10833" type="float"/> <parameter name="corIntercept" value="-0.262615" type="float"/>
+                    <poly coefs="-0.196649 6.92613 0.00482566" units="hPa"/>
+                </variable>
+<!-- BDIFR                | 2007-06-05 19:13:37 | {-0.292194,1.11342} -->
+                <variable name="BDIFR" units="V" longname="Horizontal Differential Pressure, Radome">
+                    <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
+                    <parameter name="corSlope" value="1.11342" type="float"/> <parameter name="corIntercept" value="-0.292194" type="float"/>
+                    <poly coefs="-0.262339 5.13927 7.24481e-05" units="hPa"/>
+                </variable>
+<!-- TTRL                 | 2007-06-05 19:20:14 | {-0.211476,1.12466} -->
+                <variable name="TTRL" units="V" longname="Total Temperature, Radome Left">
+                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.12466" type="float"/> <parameter name="corIntercept" value="-0.211476" type="float"/>
+                    <poly coefs="-63.984 25.4729 -0.230217" units="deg_C"/>
+                </variable>
+<!-- TTRR                 | 2007-06-05 19:23:22 | {-0.069808,1.09522} -->
+                <variable name="TTRR" units="V" longname="Total Temperature, Radome Right">
+                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.09522" type="float"/> <parameter name="corIntercept" value="-0.069808" type="float"/>
+                    <poly coefs="-65.1788 25.3766 -0.208809" units="deg_C"/>
+                </variable>
+<!-- QCFR                 | 2007-06-05 19:26:55 | {-0.361665,1.10808} -->
+                <variable name="QCFR" units="V" longname="Raw Dynamic Pressure, Fuselage Right">
+                    <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
+                    <parameter name="corSlope" value="1.10808" type="float"/> <parameter name="corIntercept" value="-0.361665" type="float"/>
+                    <poly coefs="-0.482342 13.8104 -0.00412473" units="hPa"/>
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d1" id="210">
+            <sample id="1" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_A2D002" units="deg_C">
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d2" id="300">
+            <sample id="1" rate="500">
+<!-- PCAB                 | 2007-06-05 19:33:23 | {-0.423651,1.1319} -->
+                <!-- variable name="PCAB" units="V" longname="Interior Cabin Static Pressure" -->
+                <variable name="A2D004_0_1T" units="V" longname="[-10 to 10v]">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
+                    <poly coefs="-3.0 108.882 -0.0430805" units="hPa"/>
+                </variable>
+                <!-- variable name="TIMICE1" units="V" longname="Ice Stick Exposed" -->
+                <variable name="A2D004_1_2F" units="V" longname="[0 to 10v]">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
+                </variable>
+                <!-- variable name="TIMICE2" units="V" longname="Ice Stick Loaded" -->
+                <variable name="A2D004_2_2F" units="V" longname="[0 to 10v]">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
+                </variable>
+                <!-- variable name="XAERIT" units="V" longname="Temperature of Wyo heated inlet" -->
+                <variable name="A2D004_3_2F" units="V" longname="[0 to 10v]">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
+                    <linear slope="10.0" intercept="-50.0" units="deg_C"/>
+                </variable>
+                <!-- variable name="INFLOW" units="V" longname="Inlet excess flow rate" -->
+<!--
+                <variable name="A2D004_4_1T" units="V" longname="[-10 to 10v]">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+                <variable name="A2D004_4_2F" units="V" longname="[0 to 10v]">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+-->
+                <variable name="A2D004_4_2T" units="V" longname="[-5 to 5v]">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
+<!--
+                <variable name="A2D004_4_4F" units="V" longname="[0 to 5v]">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+-->
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
+                    <poly coefs="25.2 406.1 100.617" units="vlpm"/>
+                </variable>
+                <!-- variable name="INRHUM" units="V" longname="Inlet humidity" -->
+                <variable name="A2D004_5_4F" units="V" longname="[0 to 5v]">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
+                    <linear slope="100.0" intercept="0.0" units="%"/>
+                </variable>
+                <!-- variable name="INTEMP" units="V" longname="Inlet temperature, Humitter 50Y" -->
+                <variable name="A2D004_6_4F" units="V" longname="[0 to 5v]">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
+                    <linear slope="100.0" intercept="-40.0" units="deg_C"/>
+                </variable>
+                <!-- variable name="INPS2" units="V" longname="Inlet pressure, Setra sensor" -->
+                <variable name="A2D004_7_2F" units="V" longname="[0 to 10v]">
+                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <parameter name="corSlope" value="1.0"     type="float"/> <parameter name="corIntercept" value="-0.0"       type="float"/>
+                    <linear slope="103.42" intercept="0.0" units="mb"/>
+                </variable>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.A2DBoardTempSensor" devicename="/dev/dsma2d3" id="310">
+            <sample id="1" rate="1">
+                <parameter name="temperature" value="true" type="bool"/>
+                <variable name="A2DTEMP_A2D004" units="deg_C">
+                </variable>
+            </sample>
+        </sensor>
+
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
