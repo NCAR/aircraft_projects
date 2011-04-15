@@ -1,0 +1,40 @@
+includeData = yes
+netcdfFile = /scr/raf2/Prod_Data/ADELE/ADELE####.nc 
+# Times will be determined from the images in the imageDirectory
+# All other image dirs will try to match these times.
+imageDirectory = /scr/raf2/Raw_Data/ADELE/Camera/flight_number_####/forward
+numCameras = 3
+# If numCameras > 1, add additional dirs and cameras here:
+imageDir2 = /scr/raf2/Raw_Data/ADELE/Camera/flight_number_####/left
+gravity2 = SouthWest
+imageDir3 = /scr/raf2/Raw_Data/ADELE/Camera/flight_number_####/right
+gravity3 = SouthEast
+
+# For the moment, assume all cameras are the same type.
+cameraName = Flea
+
+# The outputResolution should be proportional to the scale:
+# For one image per frame, leave the ht and add 200 to the width
+# For two images, double the ht and add 50 or so padding, 
+#   and add 200 to the width
+# For three images, double the ht and width (plus padding).
+outputResolution=1100x800
+outputFrameRate = 15
+mp4BitRate = 1500000
+scale = 512x384!
+endParameters
+
+GGALT
+GGLAT
+GGLON
+ATX
+PSXC
+RHUM
+TASX
+THDG
+PITCH
+WSC
+WDC
+WIC
+endVariablesLT
+
