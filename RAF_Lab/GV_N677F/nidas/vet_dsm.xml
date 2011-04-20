@@ -46,8 +46,8 @@
             </input>
             <processor class="SampleArchiver">
                 <output class="RawSampleOutputStream">
-                    <fileset dir="/tmp/${PROJECT}"
-                        file="%Y%m%d_%H%M%S_Vet_dsms.ads.bz2"
+                    <fileset dir="/var/r1/${PROJECT}"
+                        file="%Y%m%d_%H%M%S_${FLIGHT}.ads.bz2"
                         length="0"/>
                 </output>
                 <output class="RawSampleOutputStream">
@@ -62,43 +62,45 @@
         </service>
     </server>
 
-    <dsm name="ltlblu" location="lab" id="1" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_ltlblu"/>
+    <dsm name="dsm322" location="lab" id="1" rserialPort="30002" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_322"/>
 
-<!--
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS2" id="110">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS3" id="120">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
--->
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200" suffix="_ltlblu">
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS2" id="110"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS3" id="120"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS4" id="130"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS5" id="140"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS6" id="150"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS7" id="160"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS8" id="170"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS9" id="180"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS10" id="190"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS11" id="210"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS12" id="220"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200" suffix="_322">
             <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D1600.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <variable name="CH0_1T" units="V" longname="volts">
+                    <parameter name="channel"  value="0"       type="int"/>
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                 </variable>
-                <variable name="CH1_2F" units="V" longname="volts">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                <variable name="CH1_1T" units="V" longname="volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                 </variable>
-                <variable name="CH2_2T" units="V" longname="volts">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                <variable name="CH2_1T" units="V" longname="volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                 </variable>
-                <variable name="CH3_4F" units="V" longname="volts">
-                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                <variable name="CH3_1T" units="V" longname="volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                 </variable>
-                <variable name="CH4_2T" units="V" longname="volts">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
+                <variable name="CH4_1T" units="V" longname="volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                 </variable>
-                <variable name="CH5_2F" units="V" longname="volts">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
+                <variable name="CH5_1T" units="V" longname="volts">
+                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                 </variable>
                 <variable name="CH6_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH7_1T" units="V" longname="volts">
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
                 </variable>
             </sample>
@@ -107,6 +109,7 @@
                 <variable name="A2DTEMP_ADS" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
+
 
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -116,83 +119,23 @@
         </output>
     </dsm>
 
-    <dsm name="labdsm10" location="lab" id="2" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_labdsm10"/>
-<!--
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS2" id="110">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS3" id="120">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS4" id="130">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS5" id="140">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS6" id="150">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS7" id="160">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS8" id="170">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS9" id="180">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS10" id="190">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS11" id="210">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS12" id="220">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
--->
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200" suffix="_labdsm10">
-            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D1600.dat"/>
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="100">
-                <variable name="CH0_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH1_2F" units="V" longname="volts">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                </variable>
-                <variable name="CH2_2T" units="V" longname="volts">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH3_4F" units="V" longname="volts">
-                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                </variable>
-                <variable name="CH4_2T" units="V" longname="volts">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH5_2F" units="V" longname="volts">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                </variable>
-                <variable name="CH6_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-<!--
-                <variable name="CH7_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
--->
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_ADS" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
+    <dsm name="dsm320" location="lab" id="2" rserialPort="30002" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_320"/>
 
-<!--
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300" suffix="_321_2">
-            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D1600.dat"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS2" id="110"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS3" id="120"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS4" id="130"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS5" id="140"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS6" id="150"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS7" id="160"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS8" id="170"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS9" id="180"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS10" id="190"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS11" id="210"/>
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS12" id="220"/>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200" suffix="_320">
+            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D007.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <variable name="CH0_1T" units="V" longname="volts">
@@ -226,199 +169,7 @@
                 <variable name="A2DTEMP_ADS" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
--->
 
-
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
-        <output class="RawSampleOutputStream">
-            <socket type="server" port="30000"/>
-        </output>
-    </dsm>
-
-    <dsm name="dsmWRD" location="lab" id="3" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_WRD"/>
-
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200" suffix="_WRD">
-            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D011.dat"/>
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="100">
-                <variable name="CH0_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH1_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH2_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH3_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH4_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH5_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH6_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH7_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-<!--
-                <variable name="CH0_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH1_2F" units="V" longname="volts">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                </variable>
-                <variable name="CH2_2T" units="V" longname="volts">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH3_4F" units="V" longname="volts">
-                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                </variable>
-                <variable name="CH4_2T" units="V" longname="volts">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH5_2F" units="V" longname="volts">
-                    <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"     type="bool"/>
-                </variable>
-                <variable name="CH6_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH7_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
--->
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_ADS" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
-
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
-        <output class="RawSampleOutputStream">
-            <socket type="server" port="30000"/>
-        </output>
-    </dsm>
-
-    <dsm name="dsm325" location="lab" id="4" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_325"/>
-
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS2" id="110">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS3" id="120">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS4" id="130">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS5" id="140">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS6" id="150">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS7" id="160">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS8" id="170">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS9" id="180">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS10" id="190">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS11" id="210">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS12" id="220">
-           <prompt string="HI\r" rate="1"/>
-        </serialSensor>
-
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200" suffix="_325">
-            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D006.dat"/>
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="100">
-                <variable name="CH0_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH1_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH2_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH3_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH4_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH5_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH6_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-<!--
-                <variable name="CH7_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
--->
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_ADS" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
-<!--
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300" suffix="_323_2">
-            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D1600.dat"/>
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="100">
-                <variable name="CH0_1T" units="V" longname="volts">
-                    <parameter name="channel"  value="0"       type="int"/>
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH1_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH2_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH3_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH4_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH5_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH6_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-                <variable name="CH7_1T" units="V" longname="volts">
-                    <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"      type="bool"/>
-                </variable>
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_ADS" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
--->
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
