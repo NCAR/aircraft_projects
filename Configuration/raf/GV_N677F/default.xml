@@ -716,12 +716,75 @@
 
     <serialSensor ID="PIC_CO2" class="DSMSerialSensor" baud="19200" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="%*f %f %f %*d %*f" rate="5">
-            <variable name="CO2" units="V" longname="Picarro Carbon Dioxide Mixing Ratio">
-                <linear slope="1.0" intercept="0.0" units="ppmv"/>
-            </variable>
-            <variable name="CH4" units="V" longname="Picarro Methane Mixing Ratio">
-                <linear slope="1.0" intercept="0.0" units="ppmv"/>
-            </variable>
+            <variable name="CO2" units="ppmv" longname="Picarro Carbon Dioxide Mixing Ratio"/>
+            <variable name="CH4" units="ppmv" longname="Picarro Methane Mixing Ratio"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="PIC_H2O" class="DSMSerialSensor" baud="19200" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%*f %f %f %f %*d %*f" rate="5">
+            <variable name="H2O" units="ppmv" longname="Picarro Water Mixing Ratio"/>
+            <variable name="O18" units="per mil" longname="Picarro O18 Mixing Ratio"/>
+            <variable name="2H" units="per mil" longname="Picarro Deuterium Mixing Ratio"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+    <!--
+      AMS Documentation of Serial Interface:
+      Definition         Chars         Type
+      Year                     4       Integer
+      Day of Year              3       Integer
+      Sec After Midnight       8       Integer
+      ToF Type                 1       Integer
+      Ion Type                 1       Integer
+      MS Air Beam              8       Float
+      PToF Air Beam            8       Float
+      Flow Rate                5       Float
+      Sulfate Loadings         5       Float
+      Nitrate Loadings         5       Float
+      Org <60 Loadings         5       Float
+      Chloride Loadings        5       Float
+      m/z 43 Stick Area        5       Float
+      m/z 44 Stick Area        5       Float
+      m/z 57 Stick Area        5       Float
+      User mz1 ID              4       Integer
+      Use mz1 Stick Area       5       Float
+      User mz2 ID              4       Integer
+      Use mz2 Stick Area       5       Float
+      User mz3 ID              4       Integer
+      Use mz3 Stick Area       5       Float
+      User mz4 ID              4       Integer
+      Use mz4 Stick Area       5       Float
+      User mz5 ID              4       Integer
+      Use mz5 Stick Area       5       Float
+      User mz6 ID              4       Integer
+      Use mz6 Stick Area       5       Float
+      User mz7 ID              4       Integer
+      Use mz7 Stick Area       5       Float
+      User mz8 ID              4       Integer
+      Use mz8 Stick Area       5       Float
+      User mz9 ID              4       Integer
+      Use mz9 Stick Area       5       Float
+      User mz10 ID             4       Integer
+      Use mz10 Stick Area      5       Float
+      Analog Ch0 Volts         5       Float
+      Analog Ch1 Volts         5       Float
+      Analog Ch2 Volts         5       Float
+      Analog Ch3 Volts         5       Float
+      Analog Ch4 Volts         5       Float
+      Analog Ch5 Volts         5       Float
+      Analog Ch6 Volts         5       Float
+      Analog Ch7 Volts         5       Float
+    -->
+    <serialSensor ID="AMS" class="DSMSerialSensor" baud="19200" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%*d %*d %*d %*d %*d %*f %*f %f %f %f %f %f %*f %*f %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*f %*f %*f %*f %*f %*f %*f %*f" rate="1">
+            <variable name="FLOW" units="unk" longname="AMS Flow Rate"/>
+            <variable name="SO4" units="unk" longname="AMS Sulfate Loadings"/>
+            <variable name="NO3" units="unk" longname="AMS Nitrate Loadings"/>
+            <variable name="R" units="unk" longname="AMS Organics less than 60 Loadings"/>
+            <variable name="CL" units="unk" longname="AMS Cloride Loadings"/>
         </sample>
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
