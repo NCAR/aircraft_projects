@@ -545,12 +545,17 @@
 
     <serialSensor ID="PIC_CO2" class="DSMSerialSensor" baud="19200" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="%*f %f %f %*d %*f" rate="5">
-            <variable name="CO2" units="V" longname="Picarro Carbon Dioxide Mixing Ratio">
-                <linear slope="1.0" intercept="0.0" units="ppmv"/>
-            </variable>
-            <variable name="CH4" units="V" longname="Picarro Methane Mixing Ratio">
-                <linear slope="1.0" intercept="0.0" units="ppmv"/>
-            </variable>
+            <variable name="CO2" units="V" longname="Picarro Carbon Dioxide Mixing Ratio"/>
+            <variable name="CH4" units="V" longname="Picarro Methane Mixing Ratio"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="PIC_H2O" class="DSMSerialSensor" baud="19200" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%*f %f %f %f %*d %*f" rate="5">
+            <variable name="H2O" units="V" longname="Picarro Water Mixing Ratio"/>
+            <variable name="O18" units="V" longname="Picarro O18 Mixing Ratio"/>
+            <variable name="2H" units="V" longname="Picarro Deuterium Mixing Ratio"/>
         </sample>
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
@@ -608,7 +613,6 @@
             <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
         </sample>
     </sensor>
-
 
     <serialSensor ID="VCSEL" class="DSMSerialSensor"
         baud="19200" parity="none" databits="8" stopbits="1">
