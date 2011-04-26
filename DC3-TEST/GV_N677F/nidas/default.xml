@@ -1044,7 +1044,7 @@
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
-    <serialSensor ID="CORAW" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+    <serialSensor ID="CORAW" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" scanfFormat="%f">
             <variable longname="Carbon Monoxide Raw Signal" name="CORAW" units="V">
                 <linear intercept="0" slope="1" units="Hz"/>
@@ -1155,6 +1155,20 @@
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+
+    <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="inet::55000">
+        <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+            <variable name="PS1" longname="SMPS Ambiant Pressure" units="hPa"/>
+            <variable name="PS2" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
+            <variable name="PS3" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
+            <variable name="PS4" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
+            <variable name="PS5" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
+            <variable name="PS6" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
+            <variable name="PS7" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
+            <variable name="PS8" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
+            <variable name="PS9" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
+        </sample> 
+    </sensor>
 
     <sensor ID="NOAASP2" class="raf.UDPSocketSensor" devicename="inet::32011">
         <sample id="1" rate="1" scanfFormat="NOAA_SP2,%*dT%*d,%f,%f,%f,%f,%f">
@@ -1655,6 +1669,7 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <sensor IDREF="SMPS" id="200" suffix="_SMPS"/>
       <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS5" id="300"/>
       <serialSensor IDREF="UHSAS" devicename="/dev/ttyS7" id="500" suffix="_RWOO">
         <parameter name="SerialNumber" type="string" value="UHSAS001"/>
