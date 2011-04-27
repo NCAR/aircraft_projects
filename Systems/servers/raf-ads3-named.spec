@@ -10,7 +10,7 @@
 Summary: DNS/named configuration for RAF aircraft server
 Name: raf-ads3-named
 Version: 1.0
-Release: 15
+Release: 16
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -66,6 +66,15 @@ install -d $RPM_BUILD_ROOT/usr/local/admin
 cp -r etc/* $RPM_BUILD_ROOT%{_sysconfdir}
 cp -r var/named/* $RPM_BUILD_ROOT%{bind_dir}
 cp -r usr/local/admin/raf-ads3-named $RPM_BUILD_ROOT/usr/local/admin
+
+%post
+# Just in case named ain't woik'in
+if ! grep -q acserver /etc/hosts; then
+    cat << EOD >> /etc/hosts
+192.168.84.1    acserver acserver.raf.ucar.edu
+192.168.184.10  timeserver timeserver.raf.ucar.edu
+EOD
+fi
 
 %triggerin -n raf-ac-named -- bind bind-chroot
 export SYSCONFDIR=%{_sysconfdir}
@@ -149,6 +158,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/local/admin/raf-ads3-named/named.*
 
 %changelog
+* Tue Apr 27 2011  Gordon Maclean <maclean@ucar.edu> 1.0-16
+- In %post add entries for acserver and timeserver in /etc/hosts
 * Thu Apr  7 2011  Gordon Maclean <maclean@ucar.edu> 1.0-15
 - Fix misspelling of supersede in /etc/dhclient-eth2.conf.
 * Thu Mar 10 2011  Gordon Maclean <maclean@ucar.edu> 1.0-14
