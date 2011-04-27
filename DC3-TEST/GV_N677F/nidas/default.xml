@@ -1152,38 +1152,21 @@
 
     <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="inet::55000">
         <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-            <variable longname="SMPS Ambiant Pressure" name="PS1" units="hPa"/>
-            <variable longname="SMPS Ozone Mixing Ratio" name="PS2" units="ppbv"/>
-            <variable longname="SMPS Ozone Mixing Ratio" name="PS3" units="ppbv"/>
-            <variable longname="SMPS Ozone Mixing Ratio" name="PS4" units="ppbv"/>
-            <variable longname="SMPS Ozone Mixing Ratio" name="PS5" units="ppbv"/>
-            <variable longname="SMPS Ozone Mixing Ratio" name="PS6" units="ppbv"/>
-            <variable longname="SMPS Ozone Mixing Ratio" name="PS7" units="ppbv"/>
-            <variable longname="SMPS Ozone Mixing Ratio" name="PS8" units="ppbv"/>
-            <variable longname="SMPS Ozone Mixing Ratio" name="PS9" units="ppbv"/>
+            <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
+            <variable longname="SMPS Flow Controller Temperature" name="FCTEMP" units="deg_C"/>
+            <variable longname="SMPS Flow Controaller Pressure" name="FCPRES" units="hPa"/>
+            <variable longname="SMPS DMA Voltage" name="DMAV" units="Vdc"/>
+            <variable longname="SMPS CPC Saturator Temperature" name="CPCTSAT" units="deg_C"/>
+            <variable longname="SMPS CPC Condenser Temperature" name="CPCTCON" units="deg_C"/>
+            <variable longname="SMPS Delta P Across Aerosol Orifice" name="DPAERO" units="ppbv"/>
+            <variable longname="SMPS CPC Counts" name="CPCCNT" units="count"/>
+            <variable longname="SMPS Delta Time" name="CPCTIM" units="seconds"/>
         </sample> 
     </sensor>
 
     <sensor ID="NOAASP2" class="raf.UDPSocketSensor" devicename="inet::32011">
         <sample id="1" rate="1" scanfFormat="NOAA_SP2,%*dT%*d,%f,%f,%f,%f,%f">
-
-        
-
-        
-
-        
-
-        
-
         <!--            <variable name="Time_s"   units="seconds" longname="NOAA SP2 Time"/-->  
-        
-
-        
-
-        
-
-        
-
         <!-- Tom do %*d and skip the time - only know floating point -->
             <variable longname="NOAA SP2 Back Carbon Particle Concentration" name="BCPC" units="#/cm3"/>
             <variable longname="NOAA SP2 Sample P" name="SampleP" units="torr"/>
