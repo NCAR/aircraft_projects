@@ -19,7 +19,8 @@
 
       
 
-      <!-- Taken from the Honeywell installation manual for the         -->
+      
+<!-- Taken from the Honeywell installation manual for the         -->
         
 
       
@@ -28,7 +29,8 @@
 
       
 
-      <!-- Inertial Reference Unit / Part No. HG2001GD (pages 649-651). -->
+      
+<!-- Inertial Reference Unit / Part No. HG2001GD (pages 649-651). -->
         <sample id="0007" process="false" rate="3.125">
         <variable longname="time to nav" name="time_to_nav" units="min"/>
       </sample>
@@ -70,7 +72,8 @@
   
     
   
-    <!--<sample id="0277" rate="?"     process="false"><variable name="test_word"        units=""         longname="test word"/></sample>                       not used    -->
+    
+  <!--<sample id="0277" rate="?"     process="false"><variable name="test_word"        units=""         longname="test word"/></sample>                       not used    -->
         <sample id="0300" process="false" rate="50">
         <variable longname="delta theta x" name="dtheta_x" units="radian"/>
       </sample>
@@ -218,7 +221,8 @@
 
       
 
-      <!-- Taken from the Honeywell Engineering Specification A.4.1 spec. no. -->
+      
+<!-- Taken from the Honeywell Engineering Specification A.4.1 spec. no. -->
         
 
       
@@ -227,7 +231,8 @@
 
       
 
-      <!-- EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). -->
+      
+<!-- EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). -->
         <sample id="0203" rate="16">
         <variable longname="ADC Pressure Altitude" name="PALT" units="m"/>
       </sample>
@@ -269,7 +274,8 @@
 
       
 
-      <!--sample id="0235" rate="16" process="false"><variable name="BAROCOR1" units="inHg" longname="ADC baro correction #1 inHg"/></sample -->
+      
+<!--sample id="0235" rate="16" process="false"><variable name="BAROCOR1" units="inHg" longname="ADC baro correction #1 inHg"/></sample -->
         <sample id="0236" rate="16">
         <variable longname="ADC baro correction #2 mB" name="BAROCOR2" units="hPa"/>
       </sample>
@@ -281,7 +287,8 @@
 
       
 
-      <!--sample id="0237" rate="16" process="false"><variable name="BAROCOR2" units="inHg" longname="ADC baro correction #2 inHg"/></sample -->
+      
+<!--sample id="0237" rate="16" process="false"><variable name="BAROCOR2" units="inHg" longname="ADC baro correction #2 inHg"/></sample -->
         <sample id="0242" rate="16">
         <variable longname="ADC Total Pressure" name="PT" units="hPa"/>
       </sample>
@@ -329,7 +336,8 @@
 
       
 
-      <!-- Taken from the Honeywell Installation Manual PN HG2021GB02/GD02 -->
+      
+<!-- Taken from the Honeywell Installation Manual PN HG2021GB02/GD02 -->
         
 
       
@@ -338,7 +346,8 @@
 
       
 
-      <!-- Table 207 "GNSSU ARINC 429 Output Data" (GPS)  (pages 217-219). -->
+      
+<!-- Table 207 "GNSSU ARINC 429 Output Data" (GPS)  (pages 217-219). -->
         <sample id="0060" process="false" rate="1">
         <variable longname="Measurement Status" name="measurement_Stat" units=""/>
       </sample>
@@ -484,16 +493,7 @@
     </serialSensor>
 
     <serialSensor ID="Novatel_GPS" baud="38400" class="GPS_NMEA_Serial" databits="8" parity="none" stopbits="1">
-
-        
-
-      
-
-      
-
-      
-
-      <!-- GGA record -->
+        <!-- GGA record -->
         <sample id="1" rate="5">
             <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="sec"/>
             <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
@@ -506,39 +506,20 @@
             <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
             <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
         </sample>
-        
-
-      
-
-      
-
-      
-
-      <!-- RMC record -->
+        <!-- RMC record -->
         <sample id="2" rate="5">
             <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="none"/>
             <variable longname="Reference GPS Ground Speed" name="GGSPD" units="m/s"/>
             <variable longname="Reference GPS Track Angle" name="GGTRK" units="degree_T"/>
             <variable longname="Reference GPS Ground Speed Vector, East Component" name="GGVEW" units="m/s"/>
             <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
-            <variable longname="Reference GPS Day of month (1-31)" name="GGDAY" units="day"/>
-            <variable longname="Reference GPS Month of year (1-12)" name="GGMONTH" units="month"/>
-            <variable longname="Reference GPS 2 digit year" name="GGYEAR" units="year"/>
+            <variable name="GGRepLag" units="s" longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)"/>
         </sample>
         <message length="0" position="end" separator="\n"/>
     </serialSensor>
 
     <serialSensor ID="Garmin_GPS" baud="4800" class="GPS_NMEA_Serial" databits="8" parity="none" stopbits="1">
-
-        
-
-      
-
-      
-
-      
-
-      <!-- GGA record -->
+        <!-- GGA record -->
         <sample id="1" rate="1">
             <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="sec"/>
             <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
@@ -551,24 +532,14 @@
             <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
             <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
         </sample>
-        
-
-      
-
-      
-
-      
-
-      <!-- RMC record -->
+        <!-- RMC record -->
         <sample id="2" rate="1">
             <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="none"/>
             <variable longname="Reference GPS Ground Speed" name="GGSPD" units="m/s"/>
             <variable longname="Reference GPS Track Angle" name="GGTRK" units="degree_T"/>
             <variable longname="Reference GPS Ground Speed Vector, East Component" name="GGVEW" units="m/s"/>
             <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
-            <variable longname="Reference GPS Day of month (1-31)" name="GGDAY" units="day"/>
-            <variable longname="Reference GPS Month of year (1-12)" name="GGMONTH" units="month"/>
-            <variable longname="Reference GPS 2 digit year" name="GGYEAR" units="year"/>
+            <variable name="GGRepLag" units="s" longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)"/>
         </sample>
         <message length="0" position="end" separator="\n"/> 
     </serialSensor>
@@ -583,7 +554,8 @@
         
 
         
-<!--       Skipping CMIGITS Seconds of the day - seems to be faulty data 
+
+        <!--       Skipping CMIGITS Seconds of the day - seems to be faulty data 
             <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
 -->
             <variable longname="Reference CMIGITS3 Latitude" name="CLAT" units="degree_N"/>
@@ -605,7 +577,8 @@
         
 
         
-<!--       Skipping CMIGITS Seconds of the day - seems to be faulty data 
+
+        <!--       Skipping CMIGITS Seconds of the day - seems to be faulty data 
             <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
 -->
             <variable longname="CMIGITS Mode - see manual" name="MODE" units=""/>
@@ -626,7 +599,8 @@
         
 
         
-<!--       Skipping CMIGITS Seconds of the day - seems to be faulty data 
+
+        <!--       Skipping CMIGITS Seconds of the day - seems to be faulty data 
             <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
 -->
             <variable longname="Delta Theta in X direction" name="DTHETAX" units="radians"/>
@@ -653,7 +627,8 @@
     
   
     
-  <!-- Turn off internal filtering on the Mensor:
+  
+    <!-- Turn off internal filtering on the Mensor:
 		#1FL ?	query the value (factory default is 90%)
 		#1FL 0	set to 0
 		#1FL ?
@@ -673,7 +648,8 @@
     
   
     
-  <!-- Turn off internal filtering on the Mensor:
+  
+    <!-- Turn off internal filtering on the Mensor:
 		#1FL ?	query the value (factory default is 90%)
 		#1FL 0	set to 0
 		#1FL ?
@@ -693,7 +669,8 @@
     
   
     
-  <!-- initialization commands for the Paro:
+  
+    <!-- initialization commands for the Paro:
 	  unprompted mode, set rate with PI (and in sample tag)
 	  	If we set MD=2, don't need P4 init string
 	  *9900BR=57600
@@ -725,7 +702,8 @@
   
       
   
-      <!-- variable name="CONCNI" units="#/cm3" longname="WCN Aggregated Concentration"/ -->
+      
+  <!-- variable name="CONCNI" units="#/cm3" longname="WCN Aggregated Concentration"/ -->
 	      <variable longname="WCN Sample Time (Elapsed Time)" name="ETCN" units="s"/>
 	      <variable longname="WCN Live Time" name="LTCN" units="s"/>
 	      <variable count="true" longname="WCN Accumulated Particle Counts" name="CNTS" units="count"/>
@@ -788,7 +766,8 @@
 
           
 
-          <!-- <poly coefs="-0.0165 7.9354e-5 1.1453e-7" units="std cm3/s"/> -->
+          
+<!-- <poly coefs="-0.0165 7.9354e-5 1.1453e-7" units="std cm3/s"/> -->
                 <linear intercept="0.0" slope="2.500000e-03" units="std cm3/s"/>
             </variable>
             <variable longname="SPP-200 Laser Reference Voltage" name="PREF" units="V"/>
@@ -801,7 +780,8 @@
 
           
 
-          <!-- <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>-->
+          
+<!-- <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>-->
             </variable>
             <variable longname="SPP-200 Detector Temperature" name="PTMP" units="deg_C"/>
             <variable length="31" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT" name="AS200" units="count"/>
@@ -832,7 +812,8 @@
     
   
     
-  <!-- New thresholds effective February 2011, no change in sample area. -->
+  
+    <!-- New thresholds effective February 2011, no change in sample area. -->
         <parameter name="CHAN_THRESH" type="int" value="83 105 173 219 265 307 353 367 407 428 445 502 593 726 913 1100 1258 1396 1523 1661 1803 2008 2274 2533 2782 3017 3252 3477 3716 4025"/>
 
         <sample id="1">
@@ -878,7 +859,8 @@
 
         
 
-        <!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/-->
+        
+<!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/-->
             <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="V">
                 <linear intercept="10.556" slope="22.222" units="kPa"/>
             </variable>
@@ -890,7 +872,8 @@
 
         
 
-        <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
+        
+<!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
             
 
         
@@ -899,7 +882,8 @@
 
         
 
-        <!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
+        
+<!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
         </sample>
         
 
@@ -909,7 +893,8 @@
 
       
 
-      <!-- look for ffff07 termination sequence after 220 bytes -->
+      
+<!-- look for ffff07 termination sequence after 220 bytes -->
         <message length="220" position="end" separator="\xff\xff\x07"/>
     </serialSensor>
 
@@ -921,7 +906,8 @@
 
     
 
-    <!-- UHSAS borrowed from Darrin Toohey @ CU.
+    
+<!-- UHSAS borrowed from Darrin Toohey @ CU.
         Has different housekeeping scaling factors and output rate
     -->
     <serialSensor ID="UHSASCU" baud="9600" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
@@ -953,7 +939,8 @@
   
       
   
-      <!-- UPFLW is one of 3 variables not parsed from the housekeeping array
+      
+  <!-- UPFLW is one of 3 variables not parsed from the housekeeping array
             <variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
                 <linear slope="20" intercept="0.0" units="sccs"/>
             </variable
@@ -969,7 +956,8 @@
 
         
 
-        <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
+        
+<!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
             
 
         
@@ -978,7 +966,8 @@
 
         
 
-        <!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
+        
+<!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
         </sample>
         
 
@@ -988,7 +977,8 @@
 
       
 
-      <!-- look for ffff07 termination sequence after 220 bytes -->
+      
+<!-- look for ffff07 termination sequence after 220 bytes -->
         <message length="220" position="end" separator="\xff\xff\x07"/>
     </serialSensor>
 
@@ -1001,7 +991,8 @@
 
       
 
-      <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
+      
+<!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
         <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %c %*f %f %*f %*f %f %f %f %f">
             <variable longname="VCSEL Status Code" name="STATUS" units="none"/>
             <variable longname="VCSEL Ambient Temperature" name="AT" units="deg_K"/>
@@ -1025,7 +1016,8 @@
         
 
         
-<!-- molecules/cm^3 -->
+
+        <!-- molecules/cm^3 -->
             <variable longname="VCSEL Sample Laser Intensity" name="SMPLSRINT" units="count"/>     
             <variable longname="VCSEL Frost Dew Point" name="DP" units="deg_C"/>
         </sample>
@@ -1037,7 +1029,8 @@
 
       
 
-      <!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
+      
+<!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
         <sample id="3" rate="1" scanfFormat="SPEC %98f">
             <variable length="98" longname="VCSEL Absorbption Spectrum" name="ABSPEC" units="count"/>
         </sample>
@@ -1112,7 +1105,8 @@
       
 
       
-<!--
+
+      <!--
         <sample id="3" rate="1">
             <variable name="A2DC" length="128" units="count" longname="Fast 2DC Raw Accumulation, center-in (per cell)"/>
             <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
@@ -1158,15 +1152,15 @@
 
     <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="inet::55000">
         <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-            <variable name="PS1" longname="SMPS Ambiant Pressure" units="hPa"/>
-            <variable name="PS2" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
-            <variable name="PS3" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
-            <variable name="PS4" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
-            <variable name="PS5" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
-            <variable name="PS6" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
-            <variable name="PS7" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
-            <variable name="PS8" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
-            <variable name="PS9" longname="SMPS Ozone Mixing Ratio" units="ppbv"/>
+            <variable longname="SMPS Ambiant Pressure" name="PS1" units="hPa"/>
+            <variable longname="SMPS Ozone Mixing Ratio" name="PS2" units="ppbv"/>
+            <variable longname="SMPS Ozone Mixing Ratio" name="PS3" units="ppbv"/>
+            <variable longname="SMPS Ozone Mixing Ratio" name="PS4" units="ppbv"/>
+            <variable longname="SMPS Ozone Mixing Ratio" name="PS5" units="ppbv"/>
+            <variable longname="SMPS Ozone Mixing Ratio" name="PS6" units="ppbv"/>
+            <variable longname="SMPS Ozone Mixing Ratio" name="PS7" units="ppbv"/>
+            <variable longname="SMPS Ozone Mixing Ratio" name="PS8" units="ppbv"/>
+            <variable longname="SMPS Ozone Mixing Ratio" name="PS9" units="ppbv"/>
         </sample> 
     </sensor>
 
@@ -1180,7 +1174,8 @@
         
 
         
-<!--            <variable name="Time_s"   units="seconds" longname="NOAA SP2 Time"/-->  
+
+        <!--            <variable name="Time_s"   units="seconds" longname="NOAA SP2 Time"/-->  
         
 
         
@@ -1188,7 +1183,8 @@
         
 
         
-<!-- Tom do %*d and skip the time - only know floating point -->
+
+        <!-- Tom do %*d and skip the time - only know floating point -->
             <variable longname="NOAA SP2 Back Carbon Particle Concentration" name="BCPC" units="#/cm3"/>
             <variable longname="NOAA SP2 Sample P" name="SampleP" units="torr"/>
             <variable longname="NOAA SP2 Sample Flow" name="SampleFlow" units="vccs"/>
@@ -1219,7 +1215,8 @@
       
   
       
-  <!-- Ignored
+  
+      <!-- Ignored
 	    <variable name="Igortime" units = "seconds since 1/1/1904 UTC"/> 
 	-->
             <variable longname="Methane" name="CH4" units="ppb"/>
@@ -1234,7 +1231,8 @@
       
 
       
-<!--   See if we can distinguish the two based on existence of floating point values between commas
+
+      <!--   See if we can distinguish the two based on existence of floating point values between commas
 -->
         <sample id="2" rate="1" scanfFormat="t=%*f m=%f M=%*f">
 	
@@ -1245,7 +1243,8 @@
       
   
       
-  <!-- <variable name="Igortime" units = "seconds since 1/1/1904 UTC"/> -->
+  
+      <!-- <variable name="Igortime" units = "seconds since 1/1/1904 UTC"/> -->
 	      <variable longname="Carbon Dioxide" name="CO2" units="ppb"/>
 	    </sample>
 
@@ -1256,7 +1255,8 @@
       
 
       
-<!--
+
+      <!--
 -->
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
@@ -1271,7 +1271,8 @@
     
   
     
-  <!-- nAVG must be a power of 2. The sample rates below should be
+  
+    <!-- nAVG must be a power of 2. The sample rates below should be
              set to 400/nAVG.  For nAVG=4, rate=100. nAVG=8,rate=50. nAVG=16,rate=25 -->
         <parameter name="nAVG" type="int" value="16"/>
         <parameter name="nSKIP" type="int" value="5"/>
@@ -1285,7 +1286,8 @@
 
       
 
-      <!-- The rate is is set to 100 for in-house and post-processing.  Set to 1 for
+      
+<!-- The rate is is set to 100 for in-house and post-processing.  Set to 1 for
              one-point-pick-off onboard the aircraft only. -->
         <sample id="1" rate="100">
             <variable length="512" longname="LAMS histogram averages" name="LAMS_AVG" units="Mhz"/>
@@ -1313,7 +1315,8 @@
 
     
 
-    <!--
+    
+<!--
       AMS Documentation of Serial Interface:
       Definition         Chars         Type
       Year                     4       Integer
@@ -1392,7 +1395,8 @@
 
         
 
-        <!-- input from every DSM on this aircraft that has
+        
+<!-- input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream -->
             <input class="RawSampleInputStream">
                 <socket maxIdle="60" type="mcaccept"/>
@@ -1591,41 +1595,11 @@
         </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            
-
-        
-
-        
-
-        
-
-        <!-- Several changes in A2D board were done during the project - see teh cal file for
-                 further information -->
             <calfile file="A2D011.dat" path="${PROJ_DIR}/PREDICT/GV_N677F/nidas"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH2" units="V">
-                    <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-95.78 28.02 -0.29366" units="deg_C"/>   
-                </variable>
-                <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH1" units="V">
-                    <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-96.23 28.509 -0.31634" units="deg_C"/>  
-                </variable>
-                <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
-                    <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-89.31 26.128 -0.09022" units="deg_C"/>  
-                </variable>
-                <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
-                    <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-89.2 25.923 -0.07941" units="deg_C"/>  
-                </variable>
                 <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="V">
                     <parameter name="gain" type="float" value="2"/> 
             <parameter name="bipolar" type="bool" value="false"/>
@@ -1643,7 +1617,31 @@
             <parameter name="bipolar" type="bool" value="false"/>
                     <linear intercept="0.0" slope="220.0" units="hPa"/>  
                 </variable>
-            </sample>
+            <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-89.056 25.543 -0.0346" units="deg_C"/>
+          </variable>
+          <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH2" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-100.89 31.478 -0.8083" units="deg_C"/>
+          </variable>
+          <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-101.13 31.579 -0.8081" units="deg_C"/>
+          </variable>
+          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-89.148 25.709 -0.0513" units="deg_C"/>
+          </variable>
+        </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_RAD" units="deg_C"/>
@@ -1731,6 +1729,7 @@
       </sensor>
     </dsm>
   </site>
+
 
 
 
