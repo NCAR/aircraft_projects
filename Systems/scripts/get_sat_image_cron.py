@@ -41,9 +41,12 @@ ftp_site         = 'data.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
 ftp_dir          = '/pub/incoming/predict/mc_sat/'
-prefix           = 'ops.goes-13.'  #Assumes filename form is prefixYYYYMMDD*
+#Assumes filename form is prefixYYYYMMDD*postfix.jpg
+prefix           = 'ops.goes-13.'  
+postfix		 = 'ch4_thermal-IR' 
 osm_file_name    = "latest_ir.jpg"
 num_imgs_to_get  = 10 # Script will backfill this many images for loops
+# End of Initialization section
 
 
 print "Starting get_sat_image_cron.py for getting " + image_type + " imagery"
@@ -95,11 +98,11 @@ try:
     ftp.cwd(ftp_dir)
 
     ftplist = []
-    form=prefix + str(year) + monthstr + yesterdaystr + "*"
+    form=prefix + str(year) + monthstr + yesterdaystr + "*" + postfix + ".jpg"
     ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + todaystr + "*"
+    form=prefix + str(year) + monthstr + todaystr + "*" + postfix + ".jpg"
     ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + tomorrowstr + "*"
+    form=prefix + str(year) + monthstr + tomorrowstr + "*" + postfix + ".jpg"
     ftp.dir(form, ftplist.append)
 
 except ftplib.all_errors, e:
@@ -109,7 +112,7 @@ except ftplib.all_errors, e:
     sys.exit(1)
 
 if len(ftplist) == 0:  # didn't get any file names, bail out
-    print "didn't find any files on ftp server with form: " +prefix+str(year)+monthstr+"{"+yesterdaystr+"|"+todaystr+"|"+tomorrowstr+"}*"
+    print "didn't find any files on ftp server with form: " +prefix+str(year)+monthstr+"{"+yesterdaystr+"|"+todaystr+"|"+tomorrowstr+"}*"+postfix+".jpg"
     os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
