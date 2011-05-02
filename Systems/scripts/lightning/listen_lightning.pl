@@ -27,10 +27,7 @@ $SIG{'ALRM'} = 'handler';
      exit;
   }
 
-
-#$host = "hercules.guest.ucar.edu";
 $host = "acserver";
-
 $dbattr = {RaiseError => 1, AutoCommit => 1};
 
 $dbh = DBI->connect("dbi:Pg:dbname=real-time;host=$host",'ads','',{AutoCommit => 1, RaiseError => 1, PrintError => 0});
