@@ -1,0 +1,117 @@
+#!/usr/bin/python
+
+"""
+This script uses the pyinotify module to monitor
+the creation of new files that are created in the 
+'data' folder.  When a new file is detected its
+contents are searched for a timestamp and data
+in which to export via UDP.
+
+MTP files look like this:
+
+(MTPcurrent_20101002_194732.txt shown)
+
+A 20101002 19:47:30 -00.59 00.13 -00.26 00.13 +04.37 0.04 270.99 00.38 +39.123 +0.016 -103.967 +0.044 +072727 +071776
+IWG1,20101002T194729,39.1324,-103.978,4566.43,,14127.9,,180.827,190.364,293.383,0.571414,-8.02806,318.85,318.672,-0.181879,-0.417805,-0.432257,-0.0980951,2.36793,-1.66016,-35.8046,16.3486,592.062,146.734,837.903,9.55575,324.104,1.22603,45.2423,,-22.1676,
+B 017828 019041 018564 017846 019061 018572 017874 019069 018603 017906 019095 018625 017932 019124 018637 017949 019139 018655 017968 019151 018665 017979 019164 018665 017997 019161 018691 018029 019181 018705 
+M01: 2928 2457 3023 3085 1925 2923 2434 2948
+M02: 2109 1299 2860 2691 2962 1116 4095 1805
+Pt: 2157 13804 13796 10311 13383 13327 13144 14440
+E 020541 021894 021874 018826 020158 019813 
+
+This script coverts them into a single line that looks like this:
+
+MTP,20101002T194730,017828,019041,018564
+"""
+
+import logging, logging.handlers
+import os, sys, pyinotify, re
+from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
+from socket import socket, AF_INET, SOCK_DGRAM
+
+
+reTime = re.compile("^A (........) (..):(..):(..) ")
+reVars = re.compile("^B (\d+) (\d+) (\d+) ")
+
+class PClose(ProcessEvent):
+
+    def process_IN_CLOSE(self, event):
+        if event.name.startswith('MTPcurrent_'):
+            if os.path.isfile(event.path):
+                fn = event.path
+            else:
+                fn = os.path.join(event.path, event.name)
+
+            # create UDP Data Content
+            data = None
+            file = open(fn)
+            for line in file:
+                m = reTime.match(line)
+                if m:
+                  data = "MTP," + m.group(1) + "T" + \
+                         m.group(2) + m.group(3) + m.group(4) + ","
+
+                m = reVars.match(line)
+                if m:
+                  data = data + m.group(1) + "," + m.group(2) + "," + m.group(3)
+
+            file.close()
+
+            # send UDP Data Content
+            if data:
+                udp.sendto(data, (host, port))
+                logging.info(data)
+
+
+
+def Monitor(path):
+
+    wm = WatchManager()
+    notifier = Notifier(wm, PClose())
+    wm.add_watch(path, pyinotify.IN_CLOSE_WRITE)
+
+    try:
+        while 1:
+            notifier.process_events()
+            if notifier.check_events():
+                notifier.read_events()
+    except KeyboardInterrupt:
+        notifier.stop()
+        return
+
+
+
+if __name__ == '__main__':
+    try:
+        path    = sys.argv[1]
+        host    = sys.argv[2]
+        port    = int(sys.argv[3])
+        logfile = sys.argv[4]
+
+        # setup logging
+        logger = logging.getLogger()
+        handler = logging.handlers.RotatingFileHandler(logfile, maxBytes=8192, backupCount=10)
+        formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s")
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.DEBUG)
+
+    except IndexError:
+        print "\nUsage: %s path host port logfile" % sys.argv[0]
+        print "    path    - path to data files  (i.e. /mnt/r1/mtp)"
+        print "    host    - host dsm that is configured to recv the UDP packet"
+        print "    port    - UDP socket port set in NIDAS's XML configuration"
+        print "    logfile - logfile name (i.e. /tmp/mtpudpd.log)"
+        print "\nThe logfile is rotated every 8192 bytes with a backup count of 10."
+        sys.exit(1)
+
+    else:
+        if not os.path.isdir(path):
+            logging.critical("exiting, folder: '%s' does not exist." % path)
+            sys.exit(1)
+
+        # open UDP socket
+        udp = socket(AF_INET,SOCK_DGRAM)
+
+        # watch the data folder for new files being created
+        Monitor(path)
