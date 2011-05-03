@@ -1109,23 +1109,23 @@
                 <parameter name="numpoints" type="int" value="50"/>
                 <variable longname="Cabin Temperature at ADS Rack Location" name="TCAB" units="V">
                     <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
                     <linear intercept="0.0" slope="100.0" units="deg_C"/>  
                 </variable>
                 <variable longname="Interior Cabin Static Pressure" name="PCAB" units="V">
                     <parameter name="gain" type="float" value="2"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-4.34962 108.196 -0.0150027" units="hPa"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <poly coefs="-3.09496 108.921 -0.0148848" units="hPa"/>
                 </variable>
                 <variable longname="Pressure of instrument exhaust duct, right" name="PDUMPPR" units="V">
                     <parameter name="gain" type="float" value="2"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-2.50 103.93 0.0235" units="hPa"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <poly coefs="-2.67546 103.442 0.0175" units="hPa"/>
                 </variable>
                 <variable longname="Pressure of instrument exhaust duct, left" name="PDUMPPL" units="V">
                     <parameter name="gain" type="float" value="2"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="3.86 103.76 0.0555" units="hPa"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <poly coefs="3.37414 103.292 0.052338" units="hPa"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -1179,7 +1179,7 @@
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110">
 	      <sample id="1">
                 <variable longname="Raw Static Pressure, Fuselage" name="PSF" units="hPa">
-                    <linear intercept="-0.809" slope="1.0014" units="hPa"/>
+		        <poly coefs="-0.128236 1.001 1.83244e-07" units="hPa"/>
                 </variable>
 	    </sample>
         </serialSensor>
@@ -1211,7 +1211,7 @@
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS5" id="110">
             <sample id="1">
                 <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="hPa">
-                   <linear intercept="0.126" slope="0.9966" units="hPa"/>
+		        <poly coefs="0.685697 1.00113 7.09922e-07" units="hPa"/>
                 </variable>
             </sample>
             <sample id="2">
@@ -1221,7 +1221,7 @@
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS6" id="120">
             <sample id="1">
                 <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="hPa">
-                    <linear intercept="0.16" slope="1.0025" units="hPa"/>
+		        <poly coefs="0.563559 1.00118 1.90211e-07" units="hPa"/>
                 </variable>
             </sample>
             <sample id="2">
@@ -1231,7 +1231,7 @@
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130">
             <sample id="1">
                 <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="hPa">
- 		        <poly coefs="-1.280000e-01 1.002200e+00 -1.000000e-05" units="hPa"/>
+ 		        <poly coefs="0.11455 1.03429 4.79119e-06" units="hPa"/>
                 </variable>
             </sample>
             <sample id="2">
@@ -1241,7 +1241,7 @@
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140">
             <sample id="1">
                 <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="hPa">
-                    <linear intercept=".06" slope="1.001400" units="hPa"/>
+		        <poly coefs="0.0722084 0.998595 9.33337e-06" units="hPa"/>
                 </variable>
             </sample>
             <sample id="2">
@@ -1289,13 +1289,13 @@
             <parameter name="channel" type="int" value="5"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <linear intercept="0" slope="220" units="hPa"/>
+            <poly coefs="-29.4795 232.763 0.07021" units="std cm3/s"/>
           </variable>
           <variable longname="Dewpoint cavity pressure, right" name="PSDPR" units="V">
             <parameter name="channel" type="int" value="6"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <linear intercept="0" slope="220" units="hPa"/>
+            <poly coefs="-39.4786 234.624 0.0416" units="std cm3/s"/>
           </variable>
         </sample>
             <sample id="2" rate="1">
@@ -1307,14 +1307,14 @@
             <socket type="mcrequest"/>
         </output>
     </dsm>
-    <dsm derivedData="sock::31000" id="13" location="Chem rack L5" name="dsm313" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="13" location="Chem rack L5" name="dsm313" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
       <serialSensor IDREF="CORAW" devicename="/dev/ttyS7" id="300" suffix="_AL"/>
       <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS5" id="500"/></dsm>
-    <dsm derivedData="sock::31000" id="10" location="Mission Coord rack R5" name="dsm310" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="10" location="Mission Coord rack R5" name="dsm310" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
@@ -1326,7 +1326,7 @@
         <parameter name="sendInit" type="bool" value="false"/>
       </serialSensor>
       <serialSensor IDREF="AMS" devicename="/dev/ttyS8" id="700" suffix="_AMS"/></dsm>
-    <dsm derivedData="sock::31000" id="14" location="Left wing" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="14" location="Left wing" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
@@ -1356,7 +1356,7 @@
         <parameter name="SerialNumber" type="string" value="F2DC001"/>
       </sensor>
     </dsm>
-    <dsm derivedData="sock::31000" id="91" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="91" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
