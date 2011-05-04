@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
-
-<!-- Covers flights ff01 - rf10.  FSSP109 was switched to FSSP122 on RF11. -->
-
 <project
     xmlns="http://www.eol.ucar.edu/nidas"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -24,8 +20,10 @@
     </sensor>
 
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
-        <!-- Taken from the Honeywell installation manual for the         -->
-        <!-- Inertial Reference Unit / Part No. HG2001GD (pages 649-651). -->
+        <!-- 
+         Taken from the Honeywell installation manual for the         
+         Inertial Reference Unit / Part No. HG2001GD (pages 649-651). 
+        -->
         <sample id="0007" rate="3.125" process="false"><variable name="time_to_nav" units="min" longname="time to nav"/></sample>
         <sample id="0010" rate="3.125" process="false"><variable name="pos_latitude" units="deg" longname="pos latitude"/></sample>
         <sample id="0011" rate="3.125" process="false"><variable name="pos_longitude" units="deg" longname="pos longitude"/></sample>
@@ -37,7 +35,10 @@
         <sample id="0044" rate="3.125" process="false"><variable name="true_heading" units="deg" longname="true heading"/></sample>
         <sample id="0265" rate="50" process="false"><variable name="integ_vert_accel" units="G" longname="integ_vert_accel"/></sample>
         <sample id="0270" rate="2" process="false"><variable name="irs_discretes" units="" longname="irs_discretes"/></sample>
-    <!--<sample id="0277" rate="?"     process="false"><variable name="test_word"        units=""         longname="test word"/></sample>                       not used    -->
+        <!--
+            The following sample is not used.
+        <sample id="0277" rate="?" process="false"> <variable name="test_word" units="" longname="test word"/> </sample>
+        -->
         <sample id="0300" rate="50" process="false"><variable name="dtheta_x" units="radian" longname="delta theta x"/></sample>
         <sample id="0301" rate="50" process="false"><variable name="dtheta_y" units="radian" longname="delta theta y"/></sample>
         <sample id="0302" rate="50" process="false"><variable name="dtheta_z" units="radian" longname="delta theta z"/></sample>
@@ -85,10 +86,11 @@
         <sample id="0376" rate="50"    process="false"><variable name="cross_hdg_accel" units="G" longname="cross hdg accel"/></sample>
     </arincSensor>
 
-
     <arincSensor ID="ADC-GV" class="raf.ADC_HW_EB7022597" speed="low">
-        <!-- Taken from the Honeywell Engineering Specification A.4.1 spec. no. -->
-        <!-- EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). -->
+        <!-- 
+            Taken from the Honeywell Engineering Specification A.4.1 spec. no. 
+            EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). 
+        -->
         <sample id="0203" rate="16"><variable name="PALT" units="m" longname="ADC Pressure Altitude"/></sample>
         <sample id="0204" rate="16"><variable name="BALT1" units="m" longname="ADC Baro Altitude"/></sample>
         <sample id="0205" rate="8"><variable name="MACH" units="none" longname="ADC Mach Number"/></sample>
@@ -100,9 +102,14 @@
         <sample id="0217" rate="8"><variable name="PS" units="hPa" longname="ADC Static Pressure"/></sample>
         <sample id="0220" rate="16"><variable name="BALT2" units="m" longname="ADC baro corrected alt #2"/></sample>
         <sample id="0234" rate="16"><variable name="BAROCOR1" units="hPa" longname="ADC baro correction #1 mB"/></sample>
-        <!--sample id="0235" rate="16" process="false"><variable name="BAROCOR1" units="inHg" longname="ADC baro correction #1 inHg"/></sample -->
+        <!--
+            The following sample as well as 0237 are not used.
+            <sample id="0235" rate="16" process="false"><variable name="BAROCOR1" units="inHg" longname="ADC baro correction #1 inHg"/></sample 
+        -->
         <sample id="0236" rate="16"><variable name="BAROCOR2" units="hPa" longname="ADC baro correction #2 mB"/></sample>
-        <!--sample id="0237" rate="16" process="false"><variable name="BAROCOR2" units="inHg" longname="ADC baro correction #2 inHg"/></sample -->
+        <!--
+            <sample id="0237" rate="16" process="false"><variable name="BAROCOR2" units="inHg" longname="ADC baro correction #2 inHg"/></sample 
+        -->
         <sample id="0242" rate="16"><variable name="PT" units="hPa" longname="ADC Total Pressure"/></sample>
         <sample id="0244" rate="8" process="false"><variable name="ATTACK" units="ratio" longname="ADC Angle of Attack"/></sample>
         <sample id="0207" rate="8" process="false"><variable name="max_op_speed" units="m/s" longname="ADC maximum operating speed"/></sample>
@@ -118,8 +125,10 @@
     </arincSensor>
 
     <arincSensor ID="GPS-GV" class="raf.GPS_HW_HG2021GB02" speed="high">
-        <!-- Taken from the Honeywell Installation Manual PN HG2021GB02/GD02 -->
-        <!-- Table 207 "GNSSU ARINC 429 Output Data" (GPS)  (pages 217-219). -->
+        <!-- 
+            Taken from the Honeywell Installation Manual PN HG2021GB02/GD02 
+            Table 207 "GNSSU ARINC 429 Output Data" (GPS)  (pages 217-219). 
+        -->
         <sample id="0060" rate="1" process="false"><variable name="measurement_Stat" units="" longname="Measurement Status"/></sample>
         <sample id="0061" rate="1" process="false"><variable name="Pseudo_Range" units="m" longname="Pseudo Range"/></sample>
         <sample id="0062" rate="1" process="false"><variable name="Pseudo_Rng_Fine"  units="m" longname="Pseudo Range Fine"/></sample>
@@ -174,7 +183,6 @@
 
     <serialSensor ID="Novatel_GPS" class="GPS_NMEA_Serial"
         baud="38400" parity="none" databits="8" stopbits="1">
-
         <!-- GGA record -->
         <sample id="1" rate="5">
             <variable name="GGSECSDAY" units="sec" longname="Reference GPS seconds of day"/>
@@ -202,7 +210,6 @@
 
     <serialSensor ID="Garmin_GPS" class="GPS_NMEA_Serial"
         baud="9600" parity="none" databits="8" stopbits="1">
-
         <!-- GGA record -->
         <sample id="1" rate="1">
             <variable name="GGSECSDAY" units="sec" longname="Reference GPS seconds of day"/>
@@ -232,7 +239,8 @@
         baud="38400" parity="odd" databits="8" stopbits="1">
 
         <sample id="1" rate="10">
-<!--        Skipping CMIGITS Seconds of the day - seems to be faulty data 
+<!--        
+            Skipping CMIGITS Seconds of the day - seems to be faulty data 
             <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
 -->
             <variable name="CLAT" units="degree_N" longname="Reference CMIGITS3 Latitude"/>
@@ -262,7 +270,8 @@
 
     <serialSensor ID="Mensor_6100" class="DSMSerialSensor"
         baud="57600" parity="none" databits="8" stopbits="1">
-	<!-- Turn off internal filtering on the Mensor:
+	<!-- 
+             Turn off internal filtering on the Mensor:
 		#1FL ?	query the value (factory default is 90%)
 		#1FL 0	set to 0
 		#1FL ?
@@ -275,7 +284,8 @@
 
     <serialSensor ID="Mensor_6101" class="DSMSerialSensor"
         baud="57600" parity="none" databits="8" stopbits="1">
-	<!-- Turn off internal filtering on the Mensor:
+	<!-- 
+             Turn off internal filtering on the Mensor:
 		#1FL ?	query the value (factory default is 90%)
 		#1FL 0	set to 0
 		#1FL ?
@@ -288,7 +298,8 @@
 
     <serialSensor ID="Paro_DigiQuartz_1000" class="DSMSerialSensor"
         baud="57600" parity="none" databits="8" stopbits="1">
-	<!-- initialization commands for the Paro:
+	<!-- 
+          initialization commands for the Paro:
 	  unprompted mode, set rate with PI (and in sample tag)
 	  	If we set MD=2, don't need P4 init string
 	  *9900BR=57600
@@ -318,7 +329,9 @@
         <sample id="1" rate="10" scanfFormat="D,%f,%f,%*f,%f,%f,%f,%f,%f">
 	    <variable name="MCN" units="none" longname="WCN Current Operating Mode"/>
 	    <variable name="SFLCN" units="none" longname="WCN Status Flags"/>
-	    <!--variable name="CONCN" units="#/cm3" longname="WCN Aggregated Concentration"/-->
+	    <!--
+               <variable name="CONCN" units="#/cm3" longname="WCN Aggregated Concentration"/
+            -->
 	    <variable name="ETCN" units="s" longname="WCN Sample Time (Elapsed Time)"/>
 	    <variable name="LTCN" units="s" longname="WCN Live Time"/>
 	    <variable name="CNTS" units="count" longname="WCN Accumulated Particle Counts" count="true"/>
@@ -339,10 +352,11 @@
         <message separator="\r" position="end" length="0"/>
     </serialSensor>
 
-
-    <!-- For PLOWS: a timeout of 3 seconds seems to work well.
+    <!-- 
+         For PLOWS: a timeout of 3 seconds seems to work well.
          A value of 1 seconds didn't, it wouldn't successfully
-         get through the initialization without timing out. -->
+         get through the initialization without timing out. 
+    -->
     <serialSensor ID="S100" class="raf.SPP100_Serial" baud="38400" parity="none" databits="8" stopbits="1" timeout="3.0">
 
         <parameter name="calfile" type="string" value="PMSspecs"/>
@@ -488,7 +502,8 @@
         <message separator="\xff\xff\x07" position="end" length="220"/>
     </serialSensor>
 
-    <!-- UHSAS borrowed from Darrin Toohey @ CU.
+    <!-- 
+        UHSAS borrowed from Darrin Toohey @ CU.
         Has different housekeeping scaling factors and output rate
     -->
     <serialSensor ID="UHSAS_CU" class="raf.UHSAS_Serial" baud="38400" parity="none" databits="8" stopbits="1">
@@ -512,10 +527,12 @@
             <variable name="UBTMP" units="V" longname="UHSAS Temperature in Canister">
                 <linear slope="178.5714" intercept="0.0" units="K"/>
             </variable>
-            <!-- UPFLW is skipped -->
-            <!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
-                <linear slope="20" intercept="0.0" units="sccs"/>
-            </variable -->
+            <!--
+                UPFLW is skipped
+                <variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
+                  <linear slope="20" intercept="0.0" units="sccs"/>
+                </variable 
+            -->
             <variable name="UPRESS" units="V" longname="UHSAS Absolute Pressure in Canister">
                 <linear slope="22.222" intercept="10.556" units="kPa"/>
             </variable>
@@ -537,11 +554,9 @@
         </sample>
     </sensor>
 
-
     <serialSensor ID="RDMA" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
-
 
     <serialSensor ID="PIC_CO2" class="DSMSerialSensor" baud="19200" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="%*f %f %f %*d %*f" rate="5">
@@ -744,8 +759,10 @@
         <service class="RawSampleService"
 		rawSorterLength="0.25" rawHeapMax="100M"
 		procSorterLength="1.0" procHeapMax="500M" priority="RT_FIFO:50">
-            <!-- input from every DSM on this aircraft that has
-                 a socket output of type RawSampleOutputStream -->
+            <!-- 
+                 input from every DSM on this aircraft that has
+                 a socket output of type RawSampleOutputStream 
+            -->
             <input class="RawSampleInputStream">
                 <socket type="mcaccept" maxIdle="60"/>
             </input>
@@ -888,22 +905,27 @@
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <variable name="QCR" units="V" longname="Raw Dynamic Pressure, Radome">
+                    <parameter name="channel" value="0" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="-2.094 17.727 -0.0041" units="hPa"/>
                 </variable>
                 <variable name="QCF" units="V" longname="Raw Dynamic Pressure, Fuselage">
+                    <parameter name="channel" value="1" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="-3.184 17.935 -0.0052" units="hPa"/>
                 </variable>
                 <variable name="ADIFR" units="V" longname="Vertical Differential Pressure, Radome">
+                    <parameter name="channel" value="2" type="int"/>
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true"  type="bool"/>
                     <poly coefs="1.044 6.9873 -0.0029" units="hPa"/>
                 </variable>
                 <variable name="BDIFR" units="V" longname="Horizontal Differential Pressure, Radome">
+                    <parameter name="channel" value="3" type="int"/>
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true"  type="bool"/>
                     <poly coefs="0.99 5.163 0.0001" units="hPa"/>
                 </variable>
  		<variable name="TTRR" units="V" longname="Total Temperature, Radome Right">
+                    <parameter name="channel" value="4" type="int"/>
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="-68.309 27.092 -0.4413" units="deg_C"/>
                 </variable>
@@ -913,6 +935,7 @@
                     <poly coefs="-74.434 29.429 -0.6613" units="deg_C"/>
                 </variable>
                 <variable name="QCFR" units="V" longname="Raw Dynamic Pressure, Fuselage Right">
+                    <parameter name="channel" value="6" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="0.387 14.082 -0.0037" units="hPa"/>
                 </variable>
@@ -930,6 +953,7 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
                 <variable name="PCAB" units="V" longname="Interior Cabin Static Pressure">
+                    <parameter name="channel" value="0" type="int"/>
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <poly coefs="13.024 107.73 -0.0515" units="hPa"/>
                 </variable>
@@ -955,29 +979,37 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="TTFH1" units="V" longname="Radiometric Surface Temperature">
+                    <parameter name="channel" value="0" type="int"/>
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="-93.412 28.747 -0.1131" units="deg_C"/>
                 </variable>
                 <variable name="TTFH2" units="V" longname="Radiometric Surface Temperature">
+                    <parameter name="channel" value="1" type="int"/>
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="-94.483 29.029 -0.132" units="deg_C"/>
                 </variable>
                 <variable name="XCOMR" units="V" longname="xcomr">
+                    <parameter name="channel" value="2" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                 </variable>
                 <variable name="XCOFS" units="V" longname="xcofs">
+                    <parameter name="channel" value="3" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                 </variable>
                 <variable name="XCOFCAL" units="V" longname="xcofcal">
+                    <parameter name="channel" value="4" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                 </variable>
                 <variable name="XCOCELL" units="V" longname="xcocell">
+                    <parameter name="channel" value="5" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                 </variable>
                 <variable name="XCOPIN" units="V" longname="xcopin">
+                    <parameter name="channel" value="6" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                 </variable>
                 <variable name="XUVP" units="V" longname="UV Hygrometer Pressure">
+                    <parameter name="channel" value="7" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="229.3 188.86 0.0034" units="hPa"/>
                 </variable>
@@ -995,22 +1027,27 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="XUVT" units="V" longname="UV Hygrometer Temperature">
+                    <parameter name="channel" value="0" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="70.84 -18.295" units="deg_C"/>
                 </variable>
                 <variable name="XUVI" units="V" longname="UV Hygrometer Intensity">
+                    <parameter name="channel" value="1" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="24.087 -7.0017 0.5067" units="deg_C"/>
                 </variable>
                 <variable name="RSTB" units="V" longname="Radiometric Surface Temperature">
+                    <parameter name="channel" value="2" type="int"/>
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <poly coefs="-51.588 9.8077 0.0596" units="deg_C"/>
                 </variable>
                 <variable name="RSTB1" units="V" longname="Radiometric Surface Temperature">
+                    <parameter name="channel" value="3" type="int"/>
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <poly coefs="-58.5 12.176 -0.1488" units="deg_C"/>
                 </variable>
                 <variable name="TRSTB" units="V" longname="Radiometric Surface Temperature">
+                    <parameter name="channel" value="4" type="int"/>
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                 </variable>
             </sample>
@@ -1042,14 +1079,17 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="50" type="int"/>
                 <variable name="PCN" units="V" longname="CN Counter Inlet Pressure">
+                    <parameter name="channel" value="0" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="7.25361 106.036 -0.0205082" units="hPa"/>
                 </variable>
                 <variable name="CNTEMP" units="V" longname="CN Counter Inlet Temperature">
+                    <parameter name="channel" value="1" type="int"/>
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <poly coefs="13.85 4.668 -0.0056" units="deg_C"/>
                 </variable>
                 <variable name="FCN" units="V" longname="Raw CN Counter Sample Flow Rate">
+                    <parameter name="channel" value="2" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <linear slope="0.3229" intercept="0.0" units="vlpm"/>
                 </variable>
@@ -1058,6 +1098,7 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="XICN" units="V" longname="CN Isokinetic Side Flow Rate">
+                    <parameter name="channel" value="3" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <linear slope="1.118" intercept="0.03" units="vlpm"/>
                 </variable>
@@ -1108,21 +1149,26 @@
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="PLWC" units="V" longname="Raw PMS-King Liquid Water Content Output">
+                    <parameter name="channel" value="0" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <linear slope="10.0" intercept="0.0" units="W"/>
                 </variable>
                 <variable name="RICE" units="V" longname="Raw Icing-Rate Indicator">
+                    <parameter name="channel" value="1" type="int"/>
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                 </variable>
                 <variable name="PLWC1" units="V" longname="Raw PMS-King Liquid Water Content Output">
+                    <parameter name="channel" value="2" type="int"/>
                     <parameter name="gain" value="2" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <linear slope="10.0" intercept="0.0" units="W"/>
                 </variable>
                 <variable name="RSTT" units="V" longname="Radiometric Sky/Cloud-Base Temperature">
+                    <parameter name="channel" value="3" type="int"/>
                     <parameter name="gain" value="1" type="float"/> <parameter name="bipolar" value="true" type="bool"/>
                     <poly coefs="-55.751 10.765 -0.0004" units="deg_C"/>
                 </variable>
                 <variable name="TTWH" units="V" longname="Total Temperature, Deiced Wing">
+                    <parameter name="channel" value="4" type="int"/>
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
                     <poly coefs="-68.485 28.126 -0.416" units="deg_C"/>
                 </variable>
