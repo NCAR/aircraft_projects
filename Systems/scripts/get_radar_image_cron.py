@@ -35,21 +35,21 @@ from pg import DB
 
 # Initialization - change this for different file types/names/locations.
 local_image_dir  = '/var/www/html/flight_data/images/'
-image_type       = 'IR'
+image_type       = 'vis'
 busy_file        = 'BUSY_'+image_type
-ftp_site         = 'data.eol.ucar.edu'
+ftp_site         = 'catalog1.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
-ftp_dir          = '/pub/incoming/predict/mc_sat/'
-#Assumes filename form is prefixYYYYMMDD*postfix.jpg
-prefix           = 'ops.goes-13.'  
-postfix		 = 'ch4_thermal-IR' 
-osm_file_name    = "latest_ir.jpg"
+ftp_dir          = '/pub/incoming/OSM/GV/'
+#Assumes filename form is prefixYYYYMMDD*postfix
+prefix           = 'radar.NEXRAD_comp.'
+postfix		 = '.nat_N0R_comp.gif' 
+osm_file_name    = "latest_radar.gif"
 num_imgs_to_get  = 10 # Script will backfill this many images for loops
 # End of Initialization section
 
 
-print "Starting get_sat_image_cron.py for getting " + image_type + " imagery"
+print "Starting get_vis_image_cron.py for getting " + image_type + " imagery"
 
 gmt=time.gmtime()
 
@@ -98,11 +98,11 @@ try:
     ftp.cwd(ftp_dir)
 
     ftplist = []
-    form=prefix + str(year) + monthstr + yesterdaystr + "*" + postfix + ".jpg"
+    form=prefix + str(year) + monthstr + yesterdaystr + "*" + postfix
     ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + todaystr + "*" + postfix + ".jpg"
+    form=prefix + str(year) + monthstr + todaystr + "*" + postfix
     ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + tomorrowstr + "*" + postfix + ".jpg"
+    form=prefix + str(year) + monthstr + tomorrowstr + "*" + postfix
     ftp.dir(form, ftplist.append)
 
 except ftplib.all_errors, e:
@@ -112,7 +112,7 @@ except ftplib.all_errors, e:
     sys.exit(1)
 
 if len(ftplist) == 0:  # didn't get any file names, bail out
-    print "didn't find any files on ftp server with form: " +prefix+str(year)+monthstr+"{"+yesterdaystr+"|"+todaystr+"|"+tomorrowstr+"}*"+postfix+".jpg"
+    print "didn't find any files on ftp server with form: " +prefix+str(year)+monthstr+"{"+yesterdaystr+"|"+todaystr+"|"+tomorrowstr+"}*"+postfix
     os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
