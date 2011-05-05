@@ -654,9 +654,7 @@ for eif in ${SATCOM_EXT_IFS[*]}; do
     filter_ip $eif false
 done
 
-# Over ppp1 (MPDS), clamp MSS. We'll see if we can log it
-iptables -t mangle -A FORWARD -o ppp1 -p tcp --tcp-flags SYN,RST SYN \
-    -m limit --limit 1/minute --limit-burst 5 -j LOG --log-prefix "IPTABLES CLAMP-MSS: "
+# Over ppp1 (MPDS), clamp MSS.
 iptables -t mangle -A FORWARD -o ppp1 -p tcp --tcp-flags SYN,RST SYN \
     -j TCPMSS --clamp-mss-to-pmtu
 

@@ -1,7 +1,7 @@
 Summary: Iptables configuration for RAF aircraft server
 Name: raf-ac-firewall
 Version: 1.0
-Release: 3
+Release: 4
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -83,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ac-firewall/iptables-setup.sh
 
 %changelog
+* Tue May  4 2011 Gordon Maclean <maclean@ucar.edu> 1.0-4
+- Removed entry to log CLAMP-MSS packets. Not needed, and probably
+- didn't actually log the packets whose MSS was changed anyway.
 * Mon Jul 26 2010 Gordon Maclean <maclean@ucar.edu> 1.0-3
 - Allow ICMP type=3 out. Logs showed rejects of these from named to forwarding
 - nameservers. They seem harmless to enable.
