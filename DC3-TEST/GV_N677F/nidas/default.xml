@@ -928,6 +928,13 @@
             </variable>
         </sample>
     </sensor>
+    <sensor ID="MTP" class="raf.UDPSocketSensor" devicename="inet::40000">
+        <sample id="1" rate="1" scanfFormat="MTP,%*dT%*d,%d,%d,%d">
+            <variable longname="Channel 1 Counts" name="CHN1CNT" units="count"/>
+            <variable longname="Channel 2 Counts" name="CHN2CNT" units="count"/>
+            <variable longname="Channel 3 Counts" name="CHN3CNT" units="count"/>
+        </sample> 
+    </sensor>
     <serialSensor ID="HoneywellPPT" baud="19200" class="raf.PPT_Serial" databits="8" parity="none" stopbits="1">
         <sample id="1" scanfFormat="?%*2dCP=%f">
            <prompt rate="50" string="*00P1\r"/>
@@ -1325,6 +1332,7 @@
         <parameter name="SerialNumber" type="string" value="UHSAS001"/>
         <parameter name="sendInit" type="bool" value="false"/>
       </serialSensor>
+      <sensor IDREF="MTP" id="400" suffix="_MTP"/>
       <serialSensor IDREF="AMS" devicename="/dev/ttyS8" id="700" suffix="_AMS"/></dsm>
     <dsm derivedData="sock::7071" id="14" location="Left wing" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
