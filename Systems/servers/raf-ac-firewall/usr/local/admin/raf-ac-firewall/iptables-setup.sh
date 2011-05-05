@@ -112,7 +112,17 @@ SSH_INCOMING=($ANYHOST)
 #   www.google.com is 209.85.173.{104,147,99,103}
 #   maps.google.com is the same
 #   kh.google.com is 209.85.173.{190,91,93,136)
-GOOGLE_EARTH=(209.85.173.0/24)
+# GOOGLE_EARTH=(209.85.173.0/24)
+#
+# This script is only run on RPM install, not on boot
+# or when an interface becomes active. The addresses
+# for earth.google.com change quite frequently, and are
+# likely different depending on what nameserver we're
+# forwarding to.  So this attempt to block google earth
+# traffic is not working. We're not even sure what server names
+# are used by GE. (Could we find it with an strace?)
+# So, this list of GOOGLE_EARTH IPs is empty.
+GOOGLE_EARTH=()
 
 # external vpn servers
 VPN_SVRS=(192.43.244.230 192.143.244.231)
