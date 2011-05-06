@@ -34,8 +34,7 @@ import datetime
 from pg import DB
 
 # Initialization - change this for different file types/names/locations.
-#local_image_dir  = '/var/www/html/flight_data/images/'
-local_image_dir  = '/tmp/images'
+local_image_dir  = '/var/www/html/flight_data/images/'
 image_type       = 'IR'
 busy_file        = 'BUSY_'+image_type
 ftp_site         = 'catalog1.eol.ucar.edu'
@@ -119,7 +118,6 @@ if len(ftplist) == 0:  # didn't get any file names, bail out
     sys.exit(1)
 
 print "Size of the ftp listing: " + str(len(ftplist))
-print ftplist
 filelist = []
 for line in ftplist:
     linelist = line.split()
