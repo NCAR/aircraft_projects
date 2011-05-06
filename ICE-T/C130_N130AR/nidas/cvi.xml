@@ -48,17 +48,7 @@
         <message separator="\xff\xff\x07" position="end" length="220"/>
     </serialSensor>
 
-    <serialSensor ID="PIC_H2O" class="DSMSerialSensor" baud="19200" 
-           parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="%*f %f %f %f %*d %*f" rate="5">
-            <variable name="H2O" units="ppmv" longname="Picarro Water Mixing Ratio"/>
-            <variable name="O18" units="per mil" longname="Picarro O18 Mixing Ratio"/>
-            <variable name="2H" units="per mil" longname="Picarro Deuterium Mixing Ratio"/>
-        </sample>
-        <message separator="\r\n" position="end" length="0"/>
-    </serialSensor>
-
-    <!-- CVI TDL original - on ICE-T a second instrument was introduced -->
+    <!-- CVI TDL original - on ICE-T a second instrument TDL_CVI2 was introduced -->
     <serialSensor ID="TDL_CVI1" class="DSMSerialSensor" baud="9600" 
            parity="none" databits="8" stopbits="1" >
          <!-- 5.89   825.55   27.54   5299  18015    290    117\r\n -->
@@ -70,9 +60,40 @@
              <variable name="TDLline" units="cnts"/>
              <variable name="TDLlaser" units="cnts"/>
              <variable name="TDLzero" units="cnts"/>
+             <!-- The following is a dummy variable that allows swapping between the two TDLs
+                  without having to modify the interface with LABView
+             -->
+             <variable name="TTENC" units="degC" longname="TDL Enclosure Temperature"/>
          </sample>
          <message separator="\n" position="end" length="0"/>
      </serialSensor>
+
+    <serialSensor ID="TDL_CVI2" class="DSMSerialSensor" baud="115200" 
+           parity="none" databits="8" stopbits="1" >
+         <!--   1.872 1003.75  45.08  28.36  43.82   5154   9965 274  -4118 0.960\r\n -->
+         <sample id="1" scanfFormat="%f%f%f%f%f%d%d%d%d%f">
+             <variable name="H2OR" units="g/m^3" longname="TDL Water Concentration"/>
+             <variable name="PDLR" units="mb" longname="TDL Sample cell pressure"/>
+             <variable name="TTDLR" units="degC" longname="TDL Sample cell Temperature"/>
+             <variable name="TTENC" units="degC" longname="TDL Enclosure Temperature"/>
+             <variable name="THTSK" units="degC" longname="TDL TEC heatsink temperature"/>
+             <variable name="TDLsignal" units="cnts" longname="TDL Peak-to-peak raw 2f amplitude"/>
+             <variable name="TDLlaser" units="cnts" longname="TDL Raw laser pwr at line center"/>
+             <variable name="TDLline" units="cnts" longname="TDL H2O line position in spectrum"/>
+             <variable name="TDLzero" units="cnts" longname="TDL zero level"/>
+             <variable name="LCTV" units="V" longname="TDL line center Trans value"/>
+         </sample>
+         <message separator="\r\n" position="end" length="0"/>
+     </serialSensor>
+
+    <serialSensor ID="PIC_H2O" class="DSMSerialSensor" baud="19200" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%*f %f %f %f %*d %*f" rate="5">
+            <variable name="H2O" units="V" longname="Picarro Water Mixing Ratio"/>
+            <variable name="O18" units="V" longname="Picarro O18 Mixing Ratio"/>
+            <variable name="2H" units="V" longname="Picarro Deuterium Mixing Ratio"/>
+        </sample>
+        <message separator="\r\n" position="end" length="0"/>
+    </serialSensor>
 
 </sensorcatalog>
 <site name="GV_N677F" class="raf.Aircraft">
@@ -228,7 +249,7 @@
             </sample>
         </sensor>
        <!-- TDL -->
-       <serialSensor IDREF="TDL_CVI1" devicename="/dev/ttyS5" id="40"/>
+       <serialSensor IDREF="TDL_CVI2" devicename="/dev/ttyS5" id="40"/>
 
        <serialSensor IDREF="UHSASCU" devicename="/dev/ttyS7" id="50" suffix="_CVI">
             <parameter name="SerialNumber" type="string" value="UHSAS002"/>
@@ -308,6 +329,7 @@
                 <variable name="TDLline"/>
                 <variable name="TDLlaser"/>
                 <variable name="TDLzero"/>
+             <variable name="TTENC"/> 
                 <variable name="UHSAS_CNTS_CVI"/>
                 <variable name="USMPFLW_CVI"/>
                 <variable name="UPRESS_CVI"/>
