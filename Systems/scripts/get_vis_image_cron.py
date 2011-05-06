@@ -176,17 +176,11 @@ while i<num_imgs_to_get:
 # to correct for that by touching the files based on time sequence.
 if got_old == 'true':
     print 'cleaning up dates of image files'
-    listing=os.listdir('.')
-    listing.sort()
+    listing=glob.glob(prefix+'*')
     i = 0
     while i < len(listing):
-        if not listing[i].__contains__(prefix):
-            listing.pop(i)
-        i = i + 1
-    i = 0
-    while i < len(listing):
-        os.system('touch '+listing[i])
-        os.system('sleep 1')
+        dt = listing[i].split('.')
+        os.system('touch -t '+dt[2]+' '+listing[i])
         i = i + 1
 
 
