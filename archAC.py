@@ -41,6 +41,10 @@
 #	use other functions
 # Modified 9/21/2010 Janine Aquino (Happy Fall!)
 #	to fix error in path to tarfile. Use getcwd, not sdir.
+# Modified 2/15/2011 Sean Stroble
+#	Update to use new /EOL directory structure
+# Modified 4/13/2011 Sean Stroble
+#       Switch to HPSS
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -50,10 +54,14 @@ import string
 import re
 import time
 import tarfile
+import subprocess
+import smtplib
+#import email.MIMEText
+from email.MIMEText import MIMEText
 from datetime import datetime
 from os.path import join
-from subprocess import Popen
-from subprocess import PIPE
+#from subprocess import subprocess.Popen
+#from subprocess import subprocess.PIPE
 
 user = "dmg"
 rpwd = ""
@@ -62,9 +70,19 @@ rpwd = ""
 # project working dir (currently /jnet/local/projects).'''
 # File that contains map between project and Mass Store directories where
 # production data is archived.
-dirmapfile = os.environ['PROJ_DIR']+"/archives/msfiles/directory_map"
+dirmapfile = "/scr/raf/Prod_Data/archives/msfiles/directory_map"
 
 class archRAFdata:
+
+    def sendMail(self, subject, body):
+	msg = MIMEText(body)
+	msg['subject'] = subject
+	msg['from'] = "stroble@ucar.edu"
+	msg['to'] = "stroble@ucar.edu"
+
+	s = smtplib.SMTP("ndir.ucar.edu")
+	s.sendmail("stroble@ucar.edu", ["stroble@ucar.edu"], msg.as_string())
+	s.quit()
 
     def setMSSenv(self):
         # Set some constants here so can easily find and change them
@@ -257,11 +275,11 @@ class archRAFdata:
 
 	# Get flight number
 	# from the filename if we can otherwise from the NetCDF header	
-	p1 = Popen(["/usr/bin/ncdump","-h",path], stdout=PIPE)
-	p2 = Popen(["grep","FlightNumber"], stdin=p1.stdout, stdout=PIPE)
+	p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
+	p2 = subprocess.Popen(["grep","FlightNumber"], stdin=p1.stdout, stdout=subprocess.PIPE)
 	flightnum = string.upper(string.split(p2.communicate()[0],'"')[1])
 	
-	match = re.search('(\w(F|f)\d\d\w)',sfile)
+	match = re.search('(\w(F|f)\d\d\w\d?)',sfile)
 	if match:
 	    flightnum2 = match.group(0).upper()
 	    if len(flightnum) >= 4:
@@ -273,15 +291,15 @@ class archRAFdata:
 	dfile = dfile+flightnum
 
 	# Get flight date
-	p1 = Popen(["/usr/bin/ncdump","-h",path], stdout=PIPE)
-	p2 = Popen(["grep","FlightDate"], stdin=p1.stdout, stdout=PIPE)
+	p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
+	p2 = subprocess.Popen(["grep","FlightDate"], stdin=p1.stdout, stdout=subprocess.PIPE)
 	flightdate = string.upper(string.split(p2.communicate()[0],'"')[1])
 	dates = string.split(flightdate,'/')
 	dfile = dfile+'.'+dates[2]+dates[0]+dates[1]
 
 	# Get Time Interval
-	p1 = Popen(["/usr/bin/ncdump","-h",path], stdout=PIPE)
-	p2 = Popen(["grep","TimeInterval"], stdin=p1.stdout, stdout=PIPE)
+	p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
+	p2 = subprocess.Popen(["grep","TimeInterval"], stdin=p1.stdout, stdout=subprocess.PIPE)
 	timeinterval = string.upper(string.split(p2.communicate()[0],'"')[1])
 	timeinterval = string.replace(timeinterval,'-','_')
 	timeinterval = string.replace(timeinterval,':','')
@@ -290,8 +308,8 @@ class archRAFdata:
 	#params = ["FlightNumber","FlightDate","TimeInterval"]
 	#for param in params:
 	    # Dump the header of the file
-	#    p1 = Popen(["/usr/bin/ncdump","-h",path], stdout=PIPE)
-	#    p2 = Popen(["grep",param], stdin=p1.stdout, stdout=PIPE)
+	#    p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
+	#    p2 = subprocess.Popen(["grep",param], stdin=p1.stdout, stdout=subprocess.PIPE)
 	#    dfile = dfile + string.upper(string.split(p2.communicate()[0],'"')[1]) + '.'
 	#    print dfile
 
@@ -376,9 +394,10 @@ class archRAFdata:
 
 	    #msput_job is a script written by Ron Ruth and located in
 	    #$PROJ_DIR/archives/scripts
-	    command.append('ssh -x '+ msrcpMachine + ' msput_job -pe 32767 ' + \
-		    '-pr 41113009 -wpwd ' + wpwd + \
-	            ' '+rpwd+' ' + sdir + spath+mssroot+type+'/'+sfile + ' ' + email)
+	    command.append('/opt/local/bin/hsi put -P ' + sdir + spath + ' :' + mssroot + type + '/' + sfile) 
+	    #command.append('ssh -x '+ msrcpMachine + ' msput_job -pe 32767 ' + \
+	#	    '-pr 41113009 -wpwd ' + wpwd + \
+	#            ' '+rpwd+' ' + sdir + spath+mssroot+type+'/'+sfile + ' ' + email)
 
         for line in command:
 	    print line
@@ -387,14 +406,19 @@ class archRAFdata:
 		"yes == enter, no == anything else: ")
         if process == "":
             for line in command:
-	        result = os.system(line)
+		p = subprocess.Popen(line,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+		output, errors = p.communicate();
+		result = p.returncode
+		#result = os.system(line)
                 path_components = string.split(line,'/')
 	        sfile = path_components[len(path_components)-1]
 	        if result == 0:
-	            print "#  msrcp job for "+type+"/"+sfile+" -- OK -- "+ archraf.today()
+	            print "#  hsi job for "+type+"/"+sfile+" -- OK -- "+ archraf.today()
 	        else:
-	            print "#  msrcp job for "+type+"/"+sfile+" -- Failed -- "+ archraf.today()
-	            print "#                "+type+"/"+sfile+": error code "+str(result)
+	            print "#  hsi job for "+type+"/"+sfile+" -- Failed -- "+ archraf.today()
+	            print "#                "+type+"/"+sfile+": error code " + str(result)
+		    archraf.sendMail("hsi job for "+type+"/"+sfile+" -- Failed -- " + archraf.today(), "\nSTDOUT:\n" + output + "\n\nSTDERR:\n" + errors)
+
 
 
         print "#   Successful completion on "+archraf.today()+"\n"
@@ -440,7 +464,13 @@ if __name__ == "__main__":
         flag = ""
     sdir = sys.argv[index]
     searchstr = sys.argv[index+1]
-    location = sys.argv[index+2]
+    #location is now optional
+    if len(sys.argv)-1 >= index+2:
+    	location = sys.argv[index+2]
+	if location != "EOL":
+		print "\033[1;4;33mWarning: "+sys.argv[index+2]+" is depreciated!\033[0m\n"
+    else:
+	location = ""
     #Optional e-mail argument
     if len(sys.argv)-1 >= index+3:
          email = sys.argv[index+3]
@@ -454,17 +484,15 @@ if __name__ == "__main__":
     # Get the year and rpwd from the proj.info file in the Production dir.
     (fiscalyear,calendaryear,rpwd) = archraf.proj_info(projdir)
     
-    # Determine the 3-digit project number that goes with this project
-    proj = archraf.projnum(dirmapfile)
-    
     # Define the path files will be stored under on the MSS.
     if location == 'RAF':
-        mssroot = ' mss:/RAF/'+fiscalyear+'/'+proj+'/'
+        # Determine the 3-digit project number that goes with this project
+        proj = archraf.projnum(dirmapfile)
+        mssroot = ' /RAF/'+fiscalyear+'/'+proj+'/'
     elif location == 'ATDdata':
-        mssroot = ' mss:/ATD/DATA/'+calendaryear+'/'+proj_name+'/'+platform+'/'
+        mssroot = ' /ATD/DATA/'+calendaryear+'/'+proj_name+'/'+platform+'/'
     else:
-        print "Missing location"
-        raise SystemExit
+	mssroot = ' /EOL/'+calendaryear+'/'+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
     
     # Confirm we are running on bora, merlot, or shiraz since these are the big data
     # processing machines and we don't want to step on anyone elses toes.
