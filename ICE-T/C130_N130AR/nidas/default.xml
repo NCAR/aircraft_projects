@@ -11,7 +11,10 @@
     </sensor>
 
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
-<!-- 
+
+      
+
+      <!-- 
          Taken from the Honeywell installation manual for the         
          Inertial Reference Unit / Part No. HG2001GD (pages 649-651). 
         -->
@@ -48,7 +51,9 @@
         <sample id="0270" process="false" rate="2">
         <variable longname="irs_discretes" name="irs_discretes" units=""/>
       </sample>
-<!--
+      
+
+      <!--
             The following sample is not used.
         <sample id="0277" rate="?" process="false"> <variable name="test_word" units="" longname="test word"/> </sample>
         -->
@@ -190,7 +195,9 @@
     </arincSensor>
 
     <arincSensor ID="ADC-GV" class="raf.ADC_HW_EB7022597" speed="low">
-<!-- 
+      
+
+      <!-- 
             Taken from the Honeywell Engineering Specification A.4.1 spec. no. 
             EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). 
         -->
@@ -227,14 +234,18 @@
         <sample id="0234" rate="16">
         <variable longname="ADC baro correction #1 mB" name="BAROCOR1" units="hPa"/>
       </sample>
-<!--
+      
+
+      <!--
             The following sample as well as 0237 are not used.
             <sample id="0235" rate="16" process="false"><variable name="BAROCOR1" units="inHg" longname="ADC baro correction #1 inHg"/></sample 
         -->
         <sample id="0236" rate="16">
         <variable longname="ADC baro correction #2 mB" name="BAROCOR2" units="hPa"/>
       </sample>
-<!--
+      
+
+      <!--
             <sample id="0237" rate="16" process="false"><variable name="BAROCOR2" units="inHg" longname="ADC baro correction #2 inHg"/></sample 
         -->
         <sample id="0242" rate="16">
@@ -276,7 +287,9 @@
     </arincSensor>
 
     <arincSensor ID="GPS-GV" class="raf.GPS_HW_HG2021GB02" speed="high">
-<!-- 
+      
+
+      <!-- 
             Taken from the Honeywell Installation Manual PN HG2021GB02/GD02 
             Table 207 "GNSSU ARINC 429 Output Data" (GPS)  (pages 217-219). 
         -->
@@ -425,7 +438,9 @@
     </serialSensor>
 
     <serialSensor ID="Novatel_GPS" baud="38400" class="GPS_NMEA_Serial" databits="8" parity="none" stopbits="1">
-<!-- 
+      
+
+      <!-- 
         GGA record 
 -->
         <sample id="1" rate="5">
@@ -440,7 +455,9 @@
             <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
             <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
         </sample>
-<!-- 
+      
+
+      <!-- 
         RMC record 
 -->
         <sample id="2" rate="5">
@@ -455,7 +472,9 @@
     </serialSensor>
 
     <serialSensor ID="Garmin_GPS" baud="9600" class="GPS_NMEA_Serial" databits="8" parity="none" stopbits="1">
-<!-- 
+      
+
+      <!-- 
         GGA record 
 -->
         <sample id="1" rate="1">
@@ -470,7 +489,9 @@
             <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
             <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
         </sample>
-<!-- 
+      
+
+      <!-- 
         RMC record 
 -->
         <sample id="2" rate="1">
@@ -487,7 +508,9 @@
     <serialSensor ID="CMIGITS3" baud="38400" class="raf.CMIGITS3_Serial" databits="8" parity="odd" stopbits="1">
 
         <sample id="1" rate="10">
-        <!--        
+
+        
+<!--        
             Skipping CMIGITS Seconds of the day - seems to be faulty data 
             <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
 -->
@@ -516,7 +539,9 @@
     </serialSensor>
 
     <serialSensor ID="Mensor_6100" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-    <!-- 
+  
+    
+  <!-- 
              Turn off internal filtering on the Mensor:
 		#1FL ?	query the value (factory default is 90%)
 		#1FL 0	set to 0
@@ -529,7 +554,9 @@
     </serialSensor>
 
     <serialSensor ID="Mensor_6101" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-    <!-- 
+  
+    
+  <!-- 
              Turn off internal filtering on the Mensor:
 		#1FL ?	query the value (factory default is 90%)
 		#1FL 0	set to 0
@@ -542,7 +569,9 @@
     </serialSensor>
 
     <serialSensor ID="Paro_DigiQuartz_1000" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-    <!-- 
+  
+    
+  <!-- 
           initialization commands for the Paro:
 	  unprompted mode, set rate with PI (and in sample tag)
 	  	If we set MD=2, don't need P4 init string
@@ -570,7 +599,9 @@
         <sample id="1" rate="10" scanfFormat="D,%f,%f,%*f,%f,%f,%f,%f,%f">
 	      <variable longname="WCN Current Operating Mode" name="MCN" units="none"/>
 	      <variable longname="WCN Status Flags" name="SFLCN" units="none"/>
-  <!--
+      
+  
+      <!--
                <variable name="CONCN" units="#/cm3" longname="WCN Aggregated Concentration"/
             -->
 	      <variable longname="WCN Sample Time (Elapsed Time)" name="ETCN" units="s"/>
@@ -592,7 +623,9 @@
         </sample>
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
-<!-- 
+    
+
+    <!-- 
          For PLOWS: a timeout of 3 seconds seems to work well.
          A value of 1 seconds didn't, it wouldn't successfully
          get through the initialization without timing out. 
@@ -692,7 +725,9 @@
         <parameter name="ATT_ACCEPT" type="int" value="95"/>
         <parameter name="DIVISOR_FLAG" type="int" value="0"/>
         <parameter name="CT_METHOD" type="int" value="0"/>
-<!-- 
+      
+
+      <!-- 
         New thresholds effective February 2011, no change in sample area. 
 -->
         <parameter name="CHAN_THRESH" type="int" value="83 105 173 219 265 307 353 367 407 428 445 502 593 726 913 1100 1258 1396 1523 1661 1803 2008 2274 2533 2782 3017 3252 3477 3716 4025"/>
@@ -733,24 +768,33 @@
             <variable longname="UHSAS Temperature in Canister" name="UBTMP" units="V">
                 <linear intercept="0.0" slope="173.722" units="K"/>
             </variable>
-<!--
+        
+
+        <!--
             <variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/>
 -->
             <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="V">
                 <linear intercept="10.556" slope="22.222" units="kPa"/>
             </variable>
-<!--
+
+        
+
+        <!--
             <variable name="UAUX" units="V" longname="UHSAS Auxilary"/>
             <variable name="UFLOW" units="sccm" longname="UHSAS Flow"/>
 -->
         </sample>
-        
-<!-- 
+
+      
+
+      <!-- 
         look for ffff07 termination sequence after 220 bytes 
 -->
         <message length="220" position="end" separator="\xff\xff\x07"/>
     </serialSensor>
-<!-- 
+    
+
+    <!-- 
         UHSAS borrowed from Darrin Toohey @ CU.
         Has different housekeeping scaling factors and output rate
     -->
@@ -775,7 +819,9 @@
             <variable longname="UHSAS Temperature in Canister" name="UBTMP" units="V">
                 <linear intercept="0.0" slope="178.5714" units="K"/>
             </variable>
-<!--
+        
+
+        <!--
                 UPFLW is skipped
                 <variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
                   <linear slope="20" intercept="0.0" units="sccs"/>
@@ -784,12 +830,16 @@
             <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="V">
                 <linear intercept="10.556" slope="22.222" units="kPa"/>
             </variable>
-<!--
+        
+
+        <!--
             <variable name="UAUX" units="V" longname="UHSAS Auxilary"/>
             <variable name="UFLOW" units="sccm" longname="UHSAS Flow"/>
 -->
         </sample>
-<!-- 
+      
+
+      <!-- 
         look for ffff07 termination sequence after 220 bytes 
 -->
         <message length="220" position="end" separator="\xff\xff\x07"/>
@@ -826,7 +876,9 @@
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-    <!--  
+
+    
+<!--  
       The AeroLaser instrument can provide both CO Mixing Ratio and Raw CO values
       Unfortunately, it does not tag these values and does not guarentee delivery of the values in the same
       order as requested.  We have chosen to offer only the Raw CO value and figure out MR
@@ -880,7 +932,9 @@
     </sensor>
 
     <serialSensor ID="VCSEL" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-<!-- 
+      
+
+      <!-- 
         VCSEL serial records have the form:
         SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n 
 -->
@@ -893,7 +947,9 @@
             <variable longname="VCSEL Thermoelectric Cooler Current" name="TCC" units="count"/>
         </sample>
         <sample id="2" rate="25" scanfFormat="%f %f %f %f">
-<!-- 
+        
+
+        <!-- 
             Units on the next two variables are molecules/cm^3 
 -->
             <variable longname="VCSEL Moisture Number Density" name="CONC_H2O" units="#/cm3"/>     
@@ -957,7 +1013,9 @@
 
     <serialSensor ID="OphirIII" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%*d %c %f %f %f %f %f %f %f %f %f">
-<!-- 
+        
+
+        <!-- 
             <variable name="OGAIN" units="count" longname="Ophir-III Gain"/>
             -->
             <variable longname="Ophir-III Black Body Code" name="OBBCOD" units="flag"/>
@@ -1006,7 +1064,9 @@
             </output>
         </service>
         <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.25">
-<!-- 
+        
+
+        <!-- 
                  input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream 
             -->
@@ -1020,7 +1080,9 @@
                 <output class="RawSampleOutputStream">
                     <fileset dir="/var/r2/${PROJECT}" file="%Y%m%d_%H%M%S_${FLIGHT}.ads" length="0"/>
                 </output>
-        <!--
+  
+        
+  <!--
                 Setup for outputing raw data to the compact flash on a dsm
                 <output class="RawSampleOutputStream">
                     <fileset dir="/media/disk/projects/${PROJECT}"
@@ -1040,7 +1102,9 @@
         </service>
     </server>
 
-<!-- 
+    
+
+    <!-- 
          ########################################################################################################### 
          ############################################### C-130 DSMs  ############################################### 
          ########################################################################################################### 
@@ -1146,7 +1210,7 @@
         </serialSensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D004.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="100">
                 <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="V">
@@ -1173,25 +1237,22 @@
             <parameter name="bipolar" type="bool" value="true"/>
                     <poly coefs="0.99 5.163 0.0001" units="hPa"/>
                 </variable>
- 		      <variable longname="Total Temperature, Radome Right" name="TTRR" units="V">
-                    <parameter name="channel" type="int" value="4"/>
-                    <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-68.309 27.092 -0.4413" units="deg_C"/>
-                </variable>
-                <variable longname="Total Temperature, Radome Right" name="TTRL" units="V">
-                    <parameter name="channel" type="int" value="5"/>
-                    <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-74.434 29.429 -0.6613" units="deg_C"/>
-                </variable>
+ 		      
+                
                 <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="V">
                     <parameter name="channel" type="int" value="6"/>
                     <parameter name="gain" type="float" value="2"/> 
             <parameter name="bipolar" type="bool" value="false"/>
                     <poly coefs="0.387 14.082 -0.0037" units="hPa"/>
                 </variable>
-            </sample>
+            <variable longname="Total Temperature, Radome Right" name="TTRL" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-74.434 29.429 -0.6613" units="deg_C"/>
+          </variable>
+          
+        </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_FWDFS0" units="deg_C"/>
@@ -1199,7 +1260,7 @@
         </sensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
-            <calfile file="A2D004.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="10">
                 <parameter name="filter" type="string" value="boxcar"/>
@@ -1234,52 +1295,74 @@
                 <variable longname="Radiometric Surface Temperature" name="TTFH1" units="V">
                     <parameter name="channel" type="int" value="0"/>
                     <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
                     <poly coefs="-93.412 28.747 -0.1131" units="deg_C"/>
                 </variable>
                 <variable longname="Radiometric Surface Temperature" name="TTFH2" units="V">
                     <parameter name="channel" type="int" value="1"/>
                     <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
                     <poly coefs="-94.483 29.029 -0.132" units="deg_C"/>
                 </variable>
+                
+
+          
+<!--
                 <variable longname="xcomr" name="XCOMR" units="V">
                     <parameter name="channel" type="int" value="2"/>
                     <parameter name="gain" type="float" value="2"/> 
             <parameter name="bipolar" type="bool" value="false"/>
                 </variable>
-                <variable longname="xcofs" name="XCOFS" units="V">
-                    <parameter name="channel" type="int" value="3"/>
-                    <parameter name="gain" type="float" value="2"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                </variable>
-                <variable longname="xcofcal" name="XCOFCAL" units="V">
-                    <parameter name="channel" type="int" value="4"/>
-                    <parameter name="gain" type="float" value="2"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                </variable>
-                <variable longname="xcocell" name="XCOCELL" units="V">
+-->
+                
+                
+                <variable longname="UV Hygrometer Pressure" name="XUVP" units="V">
                     <parameter name="channel" type="int" value="5"/>
                     <parameter name="gain" type="float" value="2"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <poly coefs="229.3 188.86 0.0034" units="hPa"/>
                 </variable>
-                <variable longname="xcopin" name="XCOPIN" units="V">
+                <variable longname="UV Hygrometer Temperature" name="XUVT" units="V">
                     <parameter name="channel" type="int" value="6"/>
                     <parameter name="gain" type="float" value="2"/> 
             <parameter name="bipolar" type="bool" value="false"/>
+                    <poly coefs="70.84 -18.295" units="deg_C"/>
                 </variable>
-                <variable longname="UV Hygrometer Pressure" name="XUVP" units="V">
-                    <parameter name="channel" type="int" value="7"/>
-                    <parameter name="gain" type="float" value="2"/> 
+                
+            <variable longname="UV Hygrometer Intensity" name="XUVI" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="229.3 188.86 0.0034" units="hPa"/>
-                </variable>
-            </sample>
+            <poly coefs="0 -1 0" units="deg_C"/>
+          </variable>
+        </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_VID0" units="deg_C"/>
             </sample>
-        </sensor>
+        <sample id="3" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Radiometric Surface Temperature" name="TRSTB" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly coefs="0 1 0" units="deg_C"/>
+          </variable>
+          <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly coefs="-51.588 9.8077 0.0596" units="deg_C"/>
+          </variable>
+          <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly coefs="-58.5 12.176 -0.1488" units="deg_C"/>
+          </variable>
+        </sample>
+      </sensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
             <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
@@ -1287,41 +1370,28 @@
             <sample id="1" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="UV Hygrometer Temperature" name="XUVT" units="V">
-                    <parameter name="channel" type="int" value="0"/>
-                    <parameter name="gain" type="float" value="2"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="70.84 -18.295" units="deg_C"/>
-                </variable>
-                <variable longname="UV Hygrometer Intensity" name="XUVI" units="V">
+                <variable longname="Radiometric Sky/Cloud-Base Temperature" name="RSTT" units="V">
                     <parameter name="channel" type="int" value="1"/>
-                    <parameter name="gain" type="float" value="2"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="24.087 -7.0017 0.5067" units="deg_C"/>
-                </variable>
-                <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
-                    <parameter name="channel" type="int" value="2"/>
                     <parameter name="gain" type="float" value="1"/> 
-            <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="-51.588 9.8077 0.0596" units="deg_C"/>
-                </variable>
-                <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
-                    <parameter name="channel" type="int" value="3"/>
-                    <parameter name="gain" type="float" value="1"/> 
-            <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="-58.5 12.176 -0.1488" units="deg_C"/>
-                </variable>
-                <variable longname="Radiometric Surface Temperature" name="TRSTB" units="V">
-                    <parameter name="channel" type="int" value="4"/>
-                    <parameter name="gain" type="float" value="1"/> 
-            <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <poly coefs="-55.751 10.765 -0.0004" units="deg_C"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_VID1" units="deg_C"/>
             </sample>
-        </sensor>
+        <sample id="3" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Anderson Impactor Flow" name="XFIMP" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="Vdc"/>
+          </variable>
+        </sample>
+      </sensor>
 
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -1338,8 +1408,45 @@
             </sample>
         </sensor>
 
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="220">
             <calfile file="A2D1607.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <parameter name="rate" type="int" value="500"/>
+            <sample id="1" rate="100">
+                <parameter name="filter" type="string" value="boxcar"/>
+                <parameter name="numpoints" type="int" value="50"/>
+                
+                
+                
+                
+            <variable longname="xcofs" name="XCOFS" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="xcofcal" name="XCOFCAL" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="xcocell" name="XCOCELL" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="xcopin" name="XCOPIN" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+        </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" type="bool" value="true"/>
+                <variable longname="A2D Temperature" name="A2DTEMP_AFTL1" units="deg_C"/>
+            </sample>
+        </sensor>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="200">
+            <calfile file="A2D1609.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="10">
                 <parameter name="filter" type="string" value="boxcar"/>
@@ -1362,47 +1469,30 @@
             <parameter name="bipolar" type="bool" value="true"/>
                     <linear intercept="0.0" slope="0.3229" units="vlpm"/>
                 </variable>
-            </sample>
-            <sample id="3" rate="100">
-                <parameter name="filter" type="string" value="boxcar"/>
-                <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="CN Isokinetic Side Flow Rate" name="XICN" units="V">
-                    <parameter name="channel" type="int" value="3"/>
-                    <parameter name="gain" type="float" value="2"/> 
+            <variable longname="CN Isokinetic Side Flow Rate" name="XICN" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="true"/>
-                    <linear intercept="0.03" slope="1.118" units="vlpm"/>
-                </variable>
-            </sample>
+            <linear intercept="0.03" slope="1.118" units="vlpm"/>
+          </variable>
+        </sample>
+            
             <sample id="4" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_AFTL0" units="deg_C"/>
             </sample>
         </sensor>
-      <!--
-        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="220">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1609.dat"/>
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="10">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="50" type="int"/>
-                <variable name="THIML1" units="V" longname="HIMIL Tip Temperature">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <poly coefs="0 100 0" units="deg_C"/>
-                </variable>
-                <variable name="THIML2" units="V" longname="HIMIL Tip Temperature">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <poly coefs="0 100 0" units="deg_C"/>
-                </variable>
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_AFTL1" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
--->
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
+      <serialSensor IDREF="CORAW" devicename="/dev/ttyS5" id="420" suffix="_CL"/>
+      <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="620" suffix="_LWI">
+        <parameter name="SerialNumber" type="string" value="CDP058"/>
+      </serialSensor>
+      <serialSensor IDREF="S100" devicename="/dev/ttyS11" id="820" suffix="_LWO">
+        <parameter name="SerialNumber" type="string" value="FSSP109"/>
+      </serialSensor>
+      <sensor IDREF="ACDFO3" devicename="inet::20000" id="1020" suffix="_ACD"/>
     </dsm>
 
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
@@ -1429,85 +1519,173 @@
                     <parameter name="gain" type="float" value="1"/> 
             <parameter name="bipolar" type="bool" value="true"/>
                 </variable>
-                <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC1" units="V">
-                    <parameter name="channel" type="int" value="2"/>
-                    <parameter name="gain" type="float" value="2"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <linear intercept="0.0" slope="10.0" units="W"/>
-                </variable>
-                <variable longname="Radiometric Sky/Cloud-Base Temperature" name="RSTT" units="V">
-                    <parameter name="channel" type="int" value="3"/>
-                    <parameter name="gain" type="float" value="1"/> 
-            <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="-55.751 10.765 -0.0004" units="deg_C"/>
-                </variable>
-                <variable longname="Total Temperature, Deiced Wing" name="TTWH" units="V">
-                    <parameter name="channel" type="int" value="4"/>
-                    <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-68.485 28.126 -0.416" units="deg_C"/>
-                </variable>
+                
+                
             </sample>
             <sample id="3" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_AFTR0" units="deg_C"/>
             </sample>
-        </sensor>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Wyoming Inlet Flow" name="INFLOW" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="25.2 406.1 100.617" units="slpm"/>
+          </variable>
+          <variable longname="Anderson Streaker Flow" name="XFSTR" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="Vdc"/>
+          </variable>
+          <variable longname="GNI Slide Exposure Status" name="GNI1" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="Vdc"/>
+          </variable>
+        </sample>
+      </sensor>
 
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
+      <serialSensor IDREF="CFDC" devicename="/dev/ttyS8" id="400" suffix="_CFDC"/>
+      <serialSensor IDREF="S200" devicename="/dev/ttyS10" id="600" suffix="_RWO">
+        <parameter name="SerialNumber" type="string" value="PCAS108"/>
+      </serialSensor>
     </dsm>
 
-    <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmGustPod" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
+    
 
-        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
-            <sample id="1">
-                <variable longname="Raw Dynamic Pressure, Gust Pod" name="PS" units="hPa"/>
-            </sample>
-        </serialSensor>
-
-        <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS6" id="120" suffix="_GP"/>
-
-        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130" suffix="_GP">
-            <sample id="1">
-                <variable longname="Horizontal Differential Pressure, Gust Pod" name="BDIFR" units="hPa"/>
-            </sample>
-            <sample id="2">
-                <variable longname="Temperature of BDIFR Probe" name="BDIFRTEMP" units="deg_C"/>
-            </sample>
-        </serialSensor>
-
-        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140" suffix="_GP">
-            <sample id="1">
-                <variable longname="Vertical Differential Pressure, Gust Pod" name="ADIFR" units="hPa">
-                   
-<!-- 
-                   Compensate for inserting Gust Probe "upside down" 
--->
-                   <linear intercept="0.0" slope="-1.0" units="hPa"/>
-                </variable>
-            </sample>
-            <sample id="2">
-                <variable longname="Temperature of ADIFR Probe" name="ADIFRTEMP" units="deg_C"/>
-            </sample>
-        </serialSensor>
-
-        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS9" id="150" suffix="_GP">
-            <sample id="1">
-                <variable longname="Raw Dynamic Pressure, Gust Pod" name="QC" units="hPa"/>
-            </sample>
-            <sample id="2">
-                <variable longname="Temperature of QCR Probe" name="QCRTEMP" units="deg_C"/>
-            </sample>
-        </serialSensor>
-
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
+    <dsm derivedData="sock::7071" id="22" location="Left_Pod" name="dsm322" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_322"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <serialSensor IDREF="S300" devicename="/dev/ttyS5" id="300" suffix="_LPO">
+        <parameter name="SerialNumber" type="string" value="FSSP305"/>
+      </serialSensor>
+      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="500" suffix="_LPC">
+        <parameter name="SerialNumber" type="string" value="F2DC003"/>
+      </sensor>
     </dsm>
-
+    <dsm derivedData="sock::7071" id="25" location="Right_Pod" name="dsm325" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_325"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <serialSensor IDREF="OphirIII" devicename="/dev/ttyS10" id="300"/>
+      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="500" suffix="_RPO">
+        <parameter name="SerialNumber" type="string" value="2DP10"/>
+      </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="6" location="Clarkson_Rack" name="dsm306" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_306"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D1711.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_Clarkson0" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="MFM_CLB" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="" name="STMFM_CLB" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="" name="MFM_CLS" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="" name="MFMB_CLS" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="" name="RH_CLB" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="" name="T_CLB" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="" name="P_CLB" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="" name="STHRT_CLB" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+        </sample>
+      </sensor>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="500">
+        <calfile file="A2D009.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_Clarkson1" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="HRT_CLB" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="" name="HRT_CLH" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="" name="CLUHSAS_P" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="" name="PLATEP_CLB" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="" name="CLDMA_FDP" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="" name="HIMILHRT_CLB" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
   </site>
+
+
+
 
 </project>
