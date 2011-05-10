@@ -614,6 +614,25 @@
 -->
     </sensor>
 
+    <sensor ID="Fast2DP" class="raf.TwoD64_USB">
+        <parameter name="TAS_RATE" type="int" value="10"/>
+        <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
+
+        <sample id="1" rate="10">
+            <variable longname="Fast 2DP Shadow OR Count" name="SHDORP" units="count"/>
+        </sample>
+        <sample id="2" rate="1">
+            <variable length="64" longname="Fast 2DP Raw Accumulation, entire-in (per cell)" name="A1DP" units="count"/>
+            <variable longname="Fast 2DP Probe Dead Time" name="DT1DP" units="msec"/>
+        </sample>
+<!--
+        <sample id="3" rate="1">
+            <variable length="128" longname="Fast 2DP Raw Accumulation, center-in (per cell)" name="A2DP" units="count"/>
+            <variable longname="Fast 2DP Probe Dead Time" name="DT2DP" units="msec"/>
+        </sample>
+-->
+    </sensor>
+
     <sensor ID="NOAAUCATS" class="raf.UDPSocketSensor" devicename="inet::38807">
         <sample id="1" rate="1" scanfFormat="UWV:%f">
             <variable name="H2OMR" units="ppmv" longname="NOAA UCATS Water Vapor Mixing Ratio"/> 
