@@ -35,7 +35,7 @@ from pg import DB
 
 # Initialization - change this for different file types/names/locations.
 local_image_dir  = '/var/www/html/flight_data/images/'
-image_type       = 'vis'
+image_type       = 'radar'
 busy_file        = 'BUSY_'+image_type
 ftp_site         = 'catalog1.eol.ucar.edu'
 ftp_login        = 'anonymous'
@@ -49,7 +49,7 @@ num_imgs_to_get  = 10 # Script will backfill this many images for loops
 # End of Initialization section
 
 
-print "Starting get_vis_image_cron.py for getting " + image_type + " imagery"
+print "Starting get_radar_image_cron.py for getting " + image_type + " imagery"
 
 gmt=time.gmtime()
 
