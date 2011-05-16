@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 14
+Release: 15
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -39,6 +39,31 @@ cp home/ads/bin/*                    ${RPM_BUILD_ROOT}/home/ads/bin
 %attr(0775,ads,ads) /home/ads/bin/svn-ask-username.sh
 %attr(0755,ads,ads) /home/ads/bin/foldertab
 
+%pre
+# Add an ads user and ads and eol groups to system
+
+adduser=false
+addeolgroup=false
+addadsgroup=false
+grep -q ^ads /etc/passwd || adduser=true
+grep -q ^eol /etc/group || addeolgroup=true
+grep -q ^ads /etc/group || addadsgroup=true
+
+# check if NIS is running. If so, check if user and group are known to NIS
+if which ypwhich > /dev/null 2>&1 && ypwhich > /dev/null 2>&1; then
+    ypmatch ads passwd > /dev/null 2>&1 && adduser=false
+    ypmatch eol group > /dev/null 2>&1 && addeolgroup=false
+    ypmatch ads group > /dev/null 2>&1 && addadsgroup=false
+fi
+
+$addeolgroup && /usr/sbin/groupadd -g 1342 -o eol
+$addadsgroup && /usr/sbin/groupadd -g 1318 -o ads
+$adduser && /usr/sbin/useradd  -u 12900 -N -g ads -G eol -s /bin/csh -c "ADS operator" -K PASS_MAX_DAYS=-1 ads || :
+
+if ! grep eol /etc/group | grep -q ads; then
+    ypmatch eol group > /dev/null 2>&1 || usermod -G eol ads
+fi
+
 %post
 chown -R ads:ads /home/ads/bin
 
@@ -53,6 +78,10 @@ echo
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Mon May 16 2011 Gordon Maclean <maclean@ucar.edu> 1.15
+- In %pre step add ads user and ads,eol groups if necessary.
+- nidas-bin package installs files writeable by eol group, so we'll want
+- ads to belong to eol group.
 * Thu Jul 30 2010 Chris Webster <cjw@ucar.edu> 1.13
 - add env COIN_FULL_INDIRECT_RENDERING to avoid aeros track plot crash.
 * Thu Feb 18 2010 Chris Webster <cjw@ucar.edu> 1.12
