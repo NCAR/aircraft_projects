@@ -38,13 +38,13 @@ my $fd = $dbh->func("getfd");
 my $sel = IO::Select->new($fd);
 
 while (1) {
-    print "waiting...";
+#    print "waiting...";
     $sel->can_read;
     my $notify = $dbh->func("pg_notifies");
     if ($notify) {
         my ($relname, $pid) = @$notify;
         my $row = $dbh->selectrow_hashref("SELECT now()");
-        print "$relname from PID $pid at $row->{now}\n";
+#        print "$relname from PID $pid at $row->{now}\n";
 	system("/home/local/Systems/scripts/lightning/sql_to_kml_1min_lightning.pl");
     }
 }
