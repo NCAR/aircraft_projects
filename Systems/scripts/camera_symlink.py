@@ -32,7 +32,7 @@ def check_flight_number():
     print "Checking for flight number"
     global t
     global data
-    db = pg.connect('real-time-GV')
+    db = pg.connect('real-time')
     pgq = db.query("SELECT value from global_attributes where key='FlightNumber'")
     if pgq.ntuples() > 0:
         camera_dir = os.path.join(data, "flight_number_")
@@ -66,10 +66,8 @@ def Monitor(data):
 if __name__ == '__main__':
 
     data    = "/mnt/r1/camera_images/"
-    data    = "/tmp/camera_images/"
     logfile = "/tmp/camera_symlink.log"
     sym_link="/var/www/html/flight_data/images/latest_forward"
-    sym_link="latest_forward"
 
     wm = WatchManager()
 
