@@ -7,10 +7,9 @@ echo "Going into auto-check mode, checking every 1 second."
 
 last=`ls -t $IMAGE_DIR | head -n 1`
 
-for ((i = 0; ; i++));do
+for ((i = 0; ; i++)); do
 
-  let mod=$i%300
-  if [ $mod -eq 0 ]
+  if [ -z $FLIGHT_NUM ] || [ $(($i % 300)) -eq 0 ];
   then
     echo "Checking for flight number change"
     FLIGHT_NUM=`psql -c "SELECT value from global_attributes where key='FlightNumber' " -h acserver.raf.ucar.edu -d real-time -U ads -t | tr -d " " | head -1`
@@ -19,8 +18,7 @@ for ((i = 0; ; i++));do
 
   curr=`ls -t $IMAGE_DIR | head -n 1`
 
-  rm -vf "$SYM_LINK" > /dev/null
-  ln -s "$IMAGE_DIR/$curr" "$SYM_LINK"
+  ln -sf "$IMAGE_DIR/$curr" "$SYM_LINK"
 
   if [ $(($i % 30)) -eq 0 ]; then
 
