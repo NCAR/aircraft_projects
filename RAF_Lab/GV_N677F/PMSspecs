@@ -17,13 +17,13 @@ NAME	Cloud Droplet Probe (CDP).
 #
 # Setup stuff is now in the XML file.
 #
-#include "../../Configuration/raf/cdp016.default"
+#include "cdp016.default"
 #
 FIRST_BIN	1
 LAST_BIN	31
 #
-DOF		1.38
-BEAM_DIAM	0.13
+DOF		1.2
+BEAM_DIAM	0.2
 DENS		1.0
 PLWFAC		1.0e-6
 DBZFAC		1.0e6
@@ -37,13 +37,13 @@ NAME    Cloud Droplet Probe (CDP).
 #
 # Setup stuff is now in the XML file.
 #
-#include "../../Configuration/raf/cdp058.default"
+#include "cdp058.default"
 #
 FIRST_BIN       1
 LAST_BIN        31
 #
-DOF             1.38
-BEAM_DIAM       0.13
+DOF             1.2
+BEAM_DIAM       0.2
 DENS            1.0
 PLWFAC          1.0e-6
 DBZFAC          1.0e6
@@ -83,7 +83,7 @@ NAME	RAF FSSP-100 with DMT electronics.
 #
 # Setup stuff.
 #
-#include "../../Configuration/raf/s100.default"
+#include "s100.default"
 #
 FIRST_BIN	1
 LAST_BIN	31
@@ -130,7 +130,7 @@ NAME	RAF FSSP-100 with DMT electronics.
 #
 # Setup stuff.
 #
-#include "../../Configuration/raf/s100.default"
+#include "s100.default"
 #
 FIRST_BIN       1
 LAST_BIN        31
@@ -152,7 +152,7 @@ NAME	DLR FSSP-100 with DMT electronics.
 #
 # Setup stuff.
 #
-#include "../../Configuration/raf/s100.default"
+#include "s100.default"
 #
 FIRST_BIN       1
 LAST_BIN        31
@@ -172,7 +172,7 @@ NAME	RAF FSSP-300 with DMT electronics.
 #
 # Setup stuff.
 #
-#include "../../Configuration/raf/s300.default"
+#include "s300.default"
 #
 FIRST_BIN	1
 LAST_BIN	31
@@ -222,7 +222,7 @@ START	PCAS108
 TYPE    S200
 NAME	RAF PCASP with DMT electronics.
 #
-#include "../../Configuration/raf/s200.default"
+#include "s200.default"
 #
 FIRST_BIN       1
 LAST_BIN        31
@@ -302,11 +302,11 @@ END
 # ------------------------------------------------------------------------
 START   F2DC002
 TYPE    2D-C
-EAW     0.64
+EAW     1.2
 #
-MIN_RANGE       5
-MAX_RANGE       645
-RANGE_STEP      10.0
+MIN_RANGE       9.5
+MAX_RANGE       1225.5
+RANGE_STEP      19.0
 #
 FIRST_BIN       5
 LAST_BIN        64
@@ -334,6 +334,26 @@ LAST_BIN        64
 NDIODES         64
 RESPONSE_TIME   0.4
 ARM_DISTANCE    61.0
+DENS            1.0
+PLWFAC          1.0e-9
+DBZFAC          1.0e3
+END
+#
+# ------------------------------------------------------------------------
+START   F2DP001
+TYPE    2D-P
+EAW     12.8
+#
+MIN_RANGE       100
+MAX_RANGE       12900
+RANGE_STEP      200.0
+#
+FIRST_BIN       2
+LAST_BIN        64
+#
+NDIODES         64
+RESPONSE_TIME   0.4
+ARM_DISTANCE    261.0
 DENS            1.0
 PLWFAC          1.0e-9
 DBZFAC          1.0e3
