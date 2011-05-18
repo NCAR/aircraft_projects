@@ -470,6 +470,46 @@
         <message separator="\xff\xff\x07" position="end" length="220"/>
     </serialSensor>
 
+<!-- CVI TDL original - on ICE-T a second instrument TDL_CVI2 was introduced -->
+    <serialSensor ID="TDL_CVI1" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+
+<!-- 5.89   825.55   27.54   5299  18015    290    117\r\n -->
+         <sample id="1" rate="1" scanfFormat="%f%f%f%f%f%f%f">
+             <variable name="H2OR" units="g/m^3"/>
+             <variable name="PDLR" units="mb"/>
+             <variable name="TTDLR" units="degC"/>
+             <variable name="TDLsignal" units="cnts"/>
+             <variable name="TDLline" units="cnts"/>
+             <variable name="TDLlaser" units="cnts"/>
+             <variable name="TDLzero" units="cnts"/>
+
+<!-- The following are dummy variables that allow swapping from TDL_CVI1 and TDL_CVI2
+                  without having to modify the interface with LABView
+             -->
+             <variable longname="TDL TEC heatsink temperature" name="TTDLtec" units="degC"/>
+             <variable longname="TDL Enclosure Temperature" name="TTDLencl" units="degC"/>
+             <variable longname="TDL Enclosure Temperature" name="TDLtrans" units="degC"/>
+         </sample>
+         <message length="0" position="end" separator="\n"/>
+     </serialSensor>
+    <serialSensor ID="TDL_CVI2" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+
+<!--   1.872 1003.75  45.08  28.36  43.82   5154   9965 274  -4118 0.960\r\n -->
+         <sample id="1" rate="3" scanfFormat="%f%f%f%f%f%d%d%d%d%f">
+             <variable longname="TDL Water Concentration" name="H2OR" units="g/m^3"/>
+             <variable longname="TDL Sample cell pressure" name="PDLR" units="mb"/>
+             <variable longname="TDL Sample cell Temperature" name="TTDLR" units="degC"/>
+             <variable longname="TDL Enclosure Temperature" name="TTENC" units="degC"/>
+             <variable longname="TDL TEC heatsink temperature" name="THTSK" units="degC"/>
+             <variable longname="TDL Peak-to-peak raw 2f amplitude" name="TDLsignal" units="cnts"/>
+             <variable longname="TDL Raw laser pwr at line center" name="TDLlaser" units="cnts"/>
+             <variable longname="TDL H2O line position in spectrum" name="TDLline" units="cnts"/>
+             <variable longname="TDL zero level" name="TDLzero" units="cnts"/>
+             <variable longname="TDL line center Trans value" name="LCTV" units="V"/>
+         </sample>
+         <message length="0" position="end" separator="\r\n"/>
+     </serialSensor>
+
     <!-- UHSAS borrowed from Darrin Toohey @ CU.
         Has different housekeeping scaling factors and output rate
     -->
