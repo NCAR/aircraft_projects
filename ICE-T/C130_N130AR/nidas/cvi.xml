@@ -54,10 +54,12 @@
              <variable name="TDLlaser" units="cnts"/>
              <variable name="TDLzero" units="cnts"/>
 
-<!-- The following is a dummy variable that allows swapping between the two TDLs
+<!-- The following are dummy variables that allow swapping from TDL_CVI1 and TDL_CVI2
                   without having to modify the interface with LABView
              -->
-             <variable longname="TDL Enclosure Temperature" name="TTENC" units="degC"/>
+             <variable longname="TDL TEC heatsink temperature" name="TTDLtec" units="degC"/>
+             <variable longname="TDL Enclosure Temperature" name="TTDLencl" units="degC"/>
+             <variable longname="TDL Enclosure Temperature" name="TDLtrans" units="degC"/>
          </sample>
          <message length="0" position="end" separator="\n"/>
      </serialSensor>
@@ -68,13 +70,13 @@
              <variable longname="TDL Water Concentration" name="H2OR" units="g/m^3"/>
              <variable longname="TDL Sample cell pressure" name="PDLR" units="mb"/>
              <variable longname="TDL Sample cell Temperature" name="TTDLR" units="degC"/>
-             <variable longname="TDL Enclosure Temperature" name="TTENC" units="degC"/>
-             <variable longname="TDL TEC heatsink temperature" name="THTSK" units="degC"/>
+             <variable longname="TDL Enclosure Temperature" name="TTDLencl" units="degC"/>
+             <variable longname="TDL TEC heatsink temperature" name="TTDLtec" units="degC"/>
              <variable longname="TDL Peak-to-peak raw 2f amplitude" name="TDLsignal" units="cnts"/>
              <variable longname="TDL Raw laser pwr at line center" name="TDLlaser" units="cnts"/>
              <variable longname="TDL H2O line position in spectrum" name="TDLline" units="cnts"/>
              <variable longname="TDL zero level" name="TDLzero" units="cnts"/>
-             <variable longname="TDL line center Trans value" name="LCTV" units="V"/>
+             <variable longname="TDL line center Trans value" name="TDLtrans" units="V"/>
          </sample>
          <message length="0" position="end" separator="\r\n"/>
      </serialSensor>
@@ -320,11 +322,13 @@
                 <variable name="H2OR"/>
                 <variable name="PDLR"/>
                 <variable name="TTDLR"/>
+                <variable name="TTDLencl"/>
+                <variable name="TTDLtec"/>
                 <variable name="TDLsignal"/>
-                <variable name="TDLline"/>
                 <variable name="TDLlaser"/>
+                <variable name="TDLline"/>
                 <variable name="TDLzero"/>
-             <variable name="TTENC"/> 
+                <variable name="TDLtrans"/> 
                 <variable name="UHSAS_CNTS_CVI"/>
                 <variable name="USMPFLW_CVI"/>
                 <variable name="UPRESS_CVI"/>
