@@ -1548,42 +1548,42 @@
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="" name="MFM_CLB" units="V">
+          <variable longname="Clarkson  BASE freestream-side inlet CN Flow" name="MFM_CLB" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="" name="STMFM_CLB" units="V">
+          <variable longname="Clarkson BASE strut-side inlet CN flow" name="STMFM_CLB" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="" name="MFM_CLS" units="V">
+          <variable longname="Clarkson SMAI CN flow" name="MFM_CLS" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="" name="MFMB_CLS" units="V">
+          <variable longname="Clarkson SMAI CN Bypass flow" name="MFMB_CLS" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="" name="RH_CLB" units="V">
+          <variable longname="Clarkson BASE flow RH" name="RH_CLB" units="V">
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="" name="T_CLB" units="V">
+          <variable longname="Clarkson BASE flow Temperature" name="T_CLB" units="V">
             <parameter name="channel" type="int" value="5"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="" name="P_CLB" units="V">
+          <variable longname="Clarkson BASE flow temperature" name="P_CLB" units="V">
             <parameter name="channel" type="int" value="6"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="" name="STHRT_CLB" units="V">
+          <variable longname="Clarkson BASE strut-side inlet temperature" name="STHRT_CLB" units="V">
             <parameter name="channel" type="int" value="7"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
@@ -1600,38 +1600,42 @@
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="" name="HRT_CLB" units="V">
+          <variable longname="Clarkson BASE  freestream-side inlet temperature" name="HRT_CLB" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="" name="HRT_CLH" units="V">
+          <variable longname="Clarkson BASE HiCAS inlet temperature" name="HRT_CLH" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="" name="CLUHSAS_P" units="V">
+          <variable longname="Clarkson UHSAS exhaust absolute pressure" name="P_CLUHSAS" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="" name="PLATEP_CLB" units="V">
+          <variable longname="Clarkson BASE belly plate absolute static pressure" name="PLATEP_CLB" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="" name="CLDMA_FDP" units="V">
+          <variable longname="Clarkson DMA aerosol poly flow" name="FDP_CLDMA" units="V">
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="" name="HIMILHRT_CLB" units="V">
+          <variable longname="Clarkson BASE blunt-body temperature" name="HIMILHRT_CLB" units="V">
             <parameter name="channel" type="int" value="5"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
         </sample>
       </sensor>
+      <serialSensor IDREF="Butanol_CN_Counter" devicename="/dev/ttyS5" id="700" suffix="_3010"/>
+      <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS8" id="900" suffix="_CLH"/>
+      <serialSensor IDREF="Butanol_CN_Counter" devicename="/dev/ttyS6" id="1100" suffix="_3022"/>
+      <serialSensor IDREF="Butanol_CN_Counter" devicename="/dev/ttyS7" id="1300" suffix="_3760a"/>
     </dsm>
     <dsm derivedData="sock::7071" id="30" location="cvi_rack" name="cvi-dsm-2" rserialPort="30002" statusAddr="sock::30001">
         <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
