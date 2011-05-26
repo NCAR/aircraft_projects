@@ -89,5 +89,5 @@ sfiles.sort()
 
 
 #Now archive the data!
-mssroot = location+'/'
+mssroot = ' '+location+'/'
 archraf.archive_files(sdir,sfiles,flag,type,mssroot,email)

@@ -45,6 +45,10 @@
 #	Update to use new /EOL directory structure
 # Modified 4/13/2011 Sean Stroble
 #       Switch to HPSS
+# Modified 5/26/2011 Sean Stroble
+#	Added renameKML which will add the timeinterval to the filename of KML 
+#	files similar to LRT and HRT files. renameKML will also watch out for 
+#	already renamed KML files to avoid adding the timeinterval twice.
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -269,6 +273,31 @@ class archRAFdata:
 	else:
 	    return ["",""]
 
+    def renameKML(self,sdir,sfile):
+        path = sdir + sfile
+
+	#Some older KML files were renamed locally before this update
+	#We dont want to add the timeinterval twice so watch for these files
+	match = re.search('\d{8}.\d{6}.\d{6}', sfile)
+	if match:
+	    return sfile
+
+	#Use grep to select the dates from the KML file
+	p1 = subprocess.Popen(["grep","<when>",path], stdout=subprocess.PIPE)
+	data = string.split(p1.communicate()[0], "\n")
+
+	#Extract the begin date and time and fix the formatting
+	match = re.search('(\d\d\d\d-\d\d-\d\d)T(\d\d:\d\d:\d\d)Z', data[0])
+	timeinterval = string.replace(match.group(1),"-","") + "." + string.replace(match.group(2),":","")
+
+	#Extract the end time and fix the formatting
+	match = re.search('(\d\d\d\d-\d\d-\d\d)T(\d\d:\d\d:\d\d)Z', data[-2])
+	timeinterval = timeinterval + "_" + string.replace(match.group(2),":","")
+
+	#add the time interval infront of .kml
+	return string.replace(sfile, ".kml", "." + timeinterval + ".kml")
+
+
     def rename(self,sdir,sfile):
 	path = sdir + sfile
         dfile = ""
@@ -383,12 +412,15 @@ class archRAFdata:
 	        sfile = path_components[len(path_components)-1]
 
 
-	    match = re.search("LRT",type)
+	    match = re.search("(LRT|lrt)",type)
 	    if match:
 	        sfile = archraf.rename(sdir,sfile)
-	    match = re.search("HRT",type)
+	    match = re.search("(HRT|hrt)",type)
 	    if match:
 	        sfile = archraf.rename(sdir,sfile)
+	    match = re.search("(KML|kml)",type)
+	    if match:
+	        sfile = archraf.renameKML(sdir,sfile)
 
             (msrcpMachine,wpwd)=archraf.setMSSenv()
 
