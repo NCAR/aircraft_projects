@@ -1,7 +1,7 @@
 Summary: Web-based live camera image viewer (for use with capture program)
 Name: raf-www-camera
 Version: 1
-Release: 1
+Release: 2
 Group: Applications/Web
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 /var/www/html/camera/*
 
 %changelog
+* Mon Aug 31 2009 <dlagreca@ucar.edu> 0.1-2
+- Update for JQuery upgrade.
+
 * Mon Aug 31 2009 <dlagreca@ucar.edu> 0.1-1
 - detached jquery library from this package, now requires jquery
 
