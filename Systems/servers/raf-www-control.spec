@@ -1,7 +1,7 @@
 Summary: Control Page for AC services 
 Name: raf-www-control 
 Version: 1 
-Release: 2
+Release: 3
 Group: Applications/Engineering
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -36,6 +36,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /var/www/html/control/js/config.json
 
 %changelog
+* Thu May 31 2011 <cjw@ucar.edu> 1-3
+- Support JQuery 1.5.1 and JQuery-ui 1.8.13.
 * Thu Jul 8 2010 <cjw@ucar.edu> 1-2
 - Fix some permissions
 - Strip out xmlrpc2shell; move to ensure_running script.
