@@ -92,7 +92,7 @@ function acMap() {
 		this.getIconUpdate();
 		setInterval(this.getIconUpdate, 10000);
 
-		// update the camera image every 5 minutes
+		// update the camera image every 5 seconds
 		this.updateCamImage(true);
 		setInterval(this.updateCamImage, 5000);
 	}
