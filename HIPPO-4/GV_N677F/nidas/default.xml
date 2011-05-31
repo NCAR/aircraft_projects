@@ -6,7 +6,7 @@
     xmlns="http://www.eol.ucar.edu/nidas"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
-    name="HIPPO-3"
+    name="HIPPO-4"
     system="GV_N677F"
     version="$LastChangedRevision: 2514 $"
     >
@@ -525,7 +525,8 @@
         <sample id="1" rate="1" scanfFormat="PAN:%f,%f,%f">
             <variable name="PresLN2" units="psi" longname="NOAA PANTHER Press N2 Low"/>
             <variable name="PresLHe" units="psi" longname="NOAA PANTHER Press He Low"/>
-            <variable name="H2OMR" units="ppmv" longname="NOAA PANTHER Water Vapor Mixing Ratio"/> 
+<!--  There is no H2O variable in PANTHER data stream for HIPPO-4. PR, 5/27/11
+            <variable name="H2OMR" units="ppmv" longname="NOAA PANTHER Water Vapor Mixing Ratio"/> -->
         </sample>
         <sample id="2" rate="1" scanfFormat="PMR:%f,%f,%f,%f">
             <variable name="F11" units="pptv" longname="NOAA PANTHER CFC-11"/>
@@ -671,7 +672,10 @@
             </sample>
         </sensor>
         <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
+            <socket type="mcrequest" block="false"/>
+        </output>
+        <output class="RawSampleOutputStream">
+            <socket type="server" port="30000"/>
         </output>
     </dsm>
 
@@ -980,7 +984,7 @@
         </sensor>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D019.dat"/>
+            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1705.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
