@@ -1,7 +1,7 @@
 Summary: DHCP configuration for server on RAF aircraft
 Name: raf-ads3-dhcp
 Version: 1.0
-Release: 23
+Release: 24
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -98,6 +98,8 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %changelog
+* Tue May 31 2011 Chris Webster <cjw@ucar.edu> 1.0-24
+- GV new motherboards.
 * Tue Apr 5 2011 Chris Webster <cjw@ucar.edu> 1.0-22
 - Add fixed IP addresses for CAMS instrument.
 * Tue Feb 21 2011 Gordon Maclean <maclean@ucar.edu> 1.0-21
