@@ -31,7 +31,7 @@ class PClose(ProcessEvent):
 
         # don't send every new file... space them apart by N minutes
         mtime_currfile = mtime(file)
-        if mtime_currfile > self.mtime_lastfile + delay*60:
+        if mtime_currfile > (self.mtime_lastfile + delay*60):
 
             bz2name = '%s/%s.bz2' % (sent, event.name)
 
@@ -53,10 +53,9 @@ class PClose(ProcessEvent):
                 return
 
             # insert it into the LDM queue
-            result = commands.getoutput('/usr/local/ldm/bin/pqinsert -v %s' % bz2name) )
-#           if result != '':
-#               logging.critical( result )
-#               return
+            result = commands.getoutput('/usr/local/ldm/bin/pqinsert -v %s' % bz2name)
+            if result != '':
+                logging.info( result )
 
             self.mtime_lastfile = mtime_currfile
 
@@ -120,6 +119,8 @@ if __name__ == '__main__':
             except:
                 logging.critical("exiting, cannot create: '%s'" % sent)
                 sys.exit(1)
+
+        logging.info('sent folder: %s' % sent)
 
         # watch the data folder for new files being created
         Monitor(data)
