@@ -44,9 +44,8 @@ class PClose(ProcessEvent):
             sentfile = os.path.join(sent, event.name)
 
             # embed the timestamp from file name into image and compress it
-            result = commands.getoutput('convert %s -sharpen 0.0x1.0 -scale 33% \
-                    -gravity northwest -fill \'grey80\' -undercolor \'grey20\' \
-                    -font "Helvetica-Bold" -pointsize 18 -annotate 0 \'%s\' %s' \
+            result = commands.getoutput('convert %s -background white \
+                    -font courier -pointsize 18 label:\'%s\' -append %s' \
                     % (file, timestamp, sentfile))
 
             if result != '':
