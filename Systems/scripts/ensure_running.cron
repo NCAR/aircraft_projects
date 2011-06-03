@@ -18,17 +18,23 @@ endif
 #  nohup /home/local/Systems/scripts/listen_sat.pl >& /tmp/listen_sat.log &
 #endif
 
-# start up a service to insert MTP files into the LDM client
-# note:  more than one ldminsertd can be run at once so match the process to its logfile name.
-#ps ax | grep mtpldmd | grep -qv grep
-#if ($status) then
-#  /home/local/Systems/scripts/ldminsertd /mnt/r1/mtp 3 /tmp/mtpldmd.log &
-#endif
+if ($AIRCRAFT == "C130_N130AR") then
+endif
 
-# start up a service to send via UDP values from new MTP files to a DSM
-ps ax | grep mtpudpd | grep -qv grep
-if ($status) then
-  /home/local/Systems/scripts/mtpudpd /mnt/r1/mtp dsm310 40000 /tmp/mtpudpd.log &
+if ($AIRCRAFT == "GV_N677F") then
+
+  # start up a service to insert MTP files into the LDM client
+  # note:  more than one ldminsertd can be run at once so match the process to its logfile name.
+  #ps ax | grep mtpldmd | grep -qv grep
+  #if ($status) then
+  #  /home/local/Systems/scripts/ldminsertd /mnt/r1/mtp 3 /tmp/mtpldmd.log &
+  #endif
+  
+  # start up a service to send via UDP values from new MTP files to a DSM
+  ps ax | grep mtpudpd | grep -qv grep
+  if ($status) then
+    /home/local/Systems/scripts/mtpudpd /mnt/r1/mtp dsm310 40000 /tmp/mtpudpd.log &
+  endif
 endif
 
 ps ax | grep listen_lightning.pl | grep -qv grep
