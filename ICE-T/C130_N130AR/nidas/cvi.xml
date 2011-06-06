@@ -84,12 +84,12 @@
         <sample id="1" rate="5" scanfFormat="%*f %f %f %f %*f %*f">
             <variable longname="Picarro Water Mixing Ratio" name="H2O" units="V"/>
             <variable longname="Picarro O18 Mixing Ratio" name="O18" units="V"/>
-            <variable longname="Picarro Deuterium Mixing Ratio" name="2H" units="V"/>
+            <variable longname="Picarro Deuterium Mixing Ratio" name="DEUT" units="V"/>
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
   </sensorcatalog>
-  <site class="raf.Aircraft" name="GV_N677F">
+  <site class="raf.Aircraft" name="C130_N130AR">
     <parameter name="tailNumber" type="string" value="N130AR"/>
 
 <!--
@@ -244,12 +244,15 @@
             </sample>
         </sensor>
 
-<!-- TDL -->
+<!-- TDL Note:  Should a swap from the new TDL to the old TDL occur, one need only
+     uncomment out the TDL_CVI1 line and comment the TDL_CVI2 line -->
+       <!-- <serialSensor IDREF="TDL_CVI1" devicename="/dev/ttyS5" id="40"/> -->
        <serialSensor IDREF="TDL_CVI2" devicename="/dev/ttyS5" id="40"/>
        <serialSensor IDREF="UHSASCU" devicename="/dev/ttyS7" id="50" suffix="_CVI">
             <parameter name="SerialNumber" type="string" value="UHSAS002"/>
             <parameter name="sendInit" type="bool" value="false"/>
        </serialSensor>
+       <serialSensor IDREF="PIC_H2O" devicename="/dev/ttyS8" id="70" suffix="_CVI"/>
 
 <!-- input from LabView via socket -->
         <socketSensor class="raf.CVI_LV_Input" devicename="inet::30006" id="60">
@@ -339,7 +342,7 @@
                 <socket address="cvi-pc-2" block="false" port="30005" type="client"/>
             </output>
             <output class="raf.CVIOutput">
-                <socket address="acserver" block="false" port="30007" type="client"/>
+                <socket block="false" port="30007" type="server"/>
             </output>
 
 <!-- Uncomment this output to see what the DSM is sending to the LabView PC
