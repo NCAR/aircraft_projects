@@ -557,6 +557,14 @@
         </sample>
     </sensor>
 
+    <sensor ID="MTP" class="raf.UDPSocketSensor" devicename="inet::40000">
+        <sample id="1" rate="1" scanfFormat="MTP,%*dT%*d,%d,%d,%d">
+            <variable longname="Channel 1 Counts" name="CHN1CNT" units="count"/>
+            <variable longname="Channel 2 Counts" name="CHN2CNT" units="count"/>
+            <variable longname="Channel 3 Counts" name="CHN3CNT" units="count"/>
+        </sample> 
+    </sensor>
+
     <serialSensor ID="HoneywellPPT" class="raf.PPT_Serial"
         baud="19200" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="?%*2dCP=%f">
@@ -841,6 +849,8 @@
    
     <dsm name="dsm310" location="Chem Rack R-1" id="10" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
+
+        <sensor IDREF="MTP" id="400" suffix="_MTP"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="120" suffix="_VXL"/>
 
