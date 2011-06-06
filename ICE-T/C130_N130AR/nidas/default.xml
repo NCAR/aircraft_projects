@@ -803,7 +803,7 @@
         <sample id="1" rate="5" scanfFormat="%*f %f %f %f %*f %*f">
             <variable longname="Picarro Water Mixing Ratio" name="H2O" units="V"/>
             <variable longname="Picarro O18 Mixing Ratio" name="O18" units="V"/>
-            <variable longname="Picarro Deuterium Mixing Ratio" name="2H" units="V"/>
+            <variable longname="Picarro Deuterium Mixing Ratio" name="DEUT" units="V"/>
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
@@ -1332,24 +1332,14 @@
           </variable>
         </sample>
       </sensor>
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
-            <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
-            <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="100">
-                <parameter name="filter" type="string" value="boxcar"/>
-                <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="Radiometric Sky/Cloud-Base Temperature" name="RSTT" units="V">
-                    <parameter name="channel" type="int" value="1"/>
-                    <parameter name="gain" type="float" value="1"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="-55.751 10.765 -0.0004" units="deg_C"/>
-                </variable>
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_VID1" units="deg_C"/>
-            </sample>
-        <sample id="3" rate="10">
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
+        <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2D Temperature" name="A2DTEMP_VID1" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
           <variable longname="Anderson Impactor Flow" name="XFIMP" units="V">
@@ -1443,14 +1433,14 @@
             <socket type="mcrequest"/>
         </output>
       <serialSensor IDREF="CORAW" devicename="/dev/ttyS5" id="420" suffix="_CL"/>
-      <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="620" suffix="_LWI">
-        <parameter name="SerialNumber" type="string" value="CDP016"/>
+      <serialSensor IDREF="CDP" devicename="/dev/ttyS12" id="620" suffix="_LWI">
+        <parameter name="SerialNumber" type="string" value="CDP058"/>
       </serialSensor>
       <serialSensor IDREF="S100" devicename="/dev/ttyS11" id="820" suffix="_LWO">
         <parameter name="SerialNumber" type="string" value="FSSP109"/>
       </serialSensor>
       <sensor IDREF="ACDFO3" devicename="inet::20000" id="1020" suffix="_ACD"/>
-    </dsm>
+      <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS6" id="1220" suffix="_PIC"/></dsm>
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS5" id="110"/>
@@ -1465,13 +1455,19 @@
                 <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
                     <parameter name="channel" type="int" value="0"/>
                     <parameter name="gain" type="float" value="2"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
                     <linear intercept="0.0" slope="10.0" units="W"/>
                 </variable>
                 <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
                     <parameter name="channel" type="int" value="1"/>
                     <parameter name="gain" type="float" value="1"/> 
-            <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                </variable>
+                <variable longname="Radiometric Sky/Cloud-Base Temperature" name="RSTT" units="V">
+                    <parameter name="channel" type="int" value="2"/>
+                    <parameter name="gain" type="float" value="1"/> 
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <poly coefs="-55.751 10.765 -0.0004" units="deg_C"/>
                 </variable>
             </sample>
             <sample id="3" rate="1">
@@ -1809,6 +1805,7 @@
             <parameter name="SerialNumber" type="string" value="UHSAS002"/>
             <parameter name="sendInit" type="bool" value="false"/>
        </serialSensor>
+       <serialSensor IDREF="PIC_H2O" devicename="/dev/ttyS8" id="70" suffix="_CVI"/>
 
 <!-- input from LabView via socket -->
         <socketSensor class="raf.CVI_LV_Input" devicename="inet::30006" id="60">
