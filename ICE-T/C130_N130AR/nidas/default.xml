@@ -1632,7 +1632,7 @@
       <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS6" id="900" suffix="_CLHWCN"/>
       <serialSensor IDREF="Butanol_CN_Counter" devicename="/dev/ttyS5" id="1100" suffix="_CLBSI3022"/>
       <serialSensor IDREF="Butanol_CN_Counter" devicename="/dev/ttyS7" id="1300" suffix="_CLSMAI3760a"/>
-      <socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="1500" timeout="600">
+      <socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="1500" timeout="10">
         <sample id="1" rate="10">
           <variable length="1" longname="Pressure Scanner dynamic pressure, port 0" name="PSCAN_0" units="hPa"/>
           <variable length="1" longname="Pressure Scanner dynamic pressure, port 1" name="PSCAN_1" units="hPa"/>
@@ -1801,11 +1801,11 @@
 
 <!-- TDL -->
        <serialSensor IDREF="TDL_CVI2" devicename="/dev/ttyS5" id="40"/>
-       <serialSensor IDREF="UHSASCU" devicename="/dev/ttyS7" id="50" suffix="_CVI">
+       <serialSensor IDREF="UHSASCU" devicename="/dev/ttyS7" id="50" suffix="_CVIU">
             <parameter name="SerialNumber" type="string" value="UHSAS002"/>
             <parameter name="sendInit" type="bool" value="false"/>
        </serialSensor>
-       <serialSensor IDREF="PIC_H2O" devicename="/dev/ttyS8" id="70" suffix="_CVI"/>
+       <serialSensor IDREF="PIC_H2O" devicename="/dev/ttyS8" id="70" suffix="_CVIP"/>
 
 <!-- input from LabView via socket -->
         <socketSensor class="raf.CVI_LV_Input" devicename="inet::30006" id="60">
@@ -1885,11 +1885,12 @@
                 <variable name="TTDLencl"/>
                 <variable name="TTDLtec"/>
                 <variable name="TDLtrans"/> 
-                <variable name="UHSAS_CNTS_CVI"/>
-                <variable name="USMPFLW_CVI"/>
-                <variable name="UPRESS_CVI"/>
-                <variable name="UDIFF_CVI"/>
-                <variable name="UBTMP_CVI"/>
+                <variable name="UHSAS_CNTS_CVIU"/>
+                <variable name="USMPFLW_CVIU"/>
+                <variable name="UPRESS_CVIU"/>
+                <variable name="UDIFF_CVIU"/>
+                <variable name="UBTMP_CVIU"/>
+                <variable name="H2O_CVIP"/>
             </sample>
             <output class="raf.CVIOutput">
                 <socket address="cvi-pc-2" block="false" port="30005" type="client"/>
