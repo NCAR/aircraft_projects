@@ -339,7 +339,7 @@
         <parameter name="ATT_ACCEPT" type="int" value="95"/>
         <parameter name="DIVISOR_FLAG" type="int" value="0"/>
         <parameter name="CT_METHOD" type="int" value="0"/>
-        <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
+        <parameter name="CHAN_THRESH" type="int" value="83 105 173 219 265 307 353 367 407 428 445 502 593 726 913 1100 1258 1396 1523 1661 1803 2008 2274 2533 2782 3017 3252 3477 3716 4025"/>
 
         <sample id="1">
             <variable name="CDPLSRC" units="mAmp" longname="CDP Laser Current"/>
@@ -356,8 +356,80 @@
         <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
 
-    <serialSensor ID="UHSAS" class="raf.UHSAS_Serial" baud="115200" parity="none" databits="8" stopbits="1" timeout="10">
+    <serialSensor ID="S100" baud="38400" class="raf.SPP100_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
+        <parameter name="calfile" type="string" value="PMSspecs"/>
+        <parameter name="NCHANNELS" type="int" value="30"/>
+        <parameter name="RANGE" type="int" value="0"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
+        <parameter name="TRANSIT_REJ" type="int" value="1"/>
+        <parameter name="DOF_REJ" type="int" value="1"/>
+        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+        <parameter name="ATT_ACCEPT" type="int" value="95"/>
+        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
+        <parameter name="CT_METHOD" type="int" value="0"/>
+        <parameter name="CHAN_THRESH" type="int" value="0 23 77 121 170 205 265 342 427 520 627 731 842 950 1084 1225 1374 1531 1695 1866 2032 2220 2416 2620 2830 3048 3258 3461 3668 4096"/>
+        <sample id="1">
+            <variable longname="SPP-100 Laser Reference Voltage" name="FREF" units="V"/>
+            <variable longname="SPP-100 Housekeeping Data" name="FTMP" units="deg_C"/>
+            <variable longname="SPP-100 Size Range Category" name="FRNG" units=""/>
+            <variable longname="SPP-100 Particles Rejected (Outside Depth-of-Field))" name="REJDOF" units="count"/>
+            <variable longname="SPP-100 Average Transit Rejected Particles" name="REJAT" units="">
+                <linear intercept="0.0" slope="0.1" units=""/>
+            </variable>
+            <variable longname="SPP-100 AtoD Converter Overflow/Overrange" name="OVFLW" units=""/>
+            <variable length="31" longname="SPP-100 Raw Accumulation (per cell) - DMT" name="AS100" units="count"/>
+            <variable longname="SPP-100 Time between last sample and this sample" name="DELTAT" units="msec"/>
+        </sample>
+        <prompt rate="10" string="\x1b\x02\x1d\x00"/>
+    </serialSensor>
 
+    <serialSensor ID="S200" baud="38400" class="raf.SPP200_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
+        <parameter name="calfile" type="string" value="PMSspecs"/>
+        <parameter name="NCHANNELS" type="int" value="30"/>
+        <parameter name="RANGE" type="int" value="0"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
+        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
+        <parameter name="CHAN_THRESH" type="int" value="692 1040 1517 2157 4096 4231 4348 4537 4825 5251 5859 6703 8192 8345 8502 8682 8872 9070 9252 9432 9544 9737 9937 10166 10471 10797 11162 11499 11852 12288"/>
+        <sample id="1">
+            <variable longname="SPP-200 High-Gain Baseline" name="PHGB" units="V"/>
+            <variable longname="SPP-200 Mid-Gain Baseline" name="PMGB" units="V"/>
+            <variable longname="SPP-200 Low-Gain Baseline" name="PLGB" units="V"/>
+            <variable longname="SPP-200 Flow" name="PFLW" units="cnts">
+                <poly coefs="-0.0165 7.9354e-5 1.1453e-7" units="std cm3/s"/>
+            </variable>
+            <variable longname="SPP-200 Laser Reference Voltage" name="PREF" units="V"/>
+            <variable longname="SPP-200 Sheath Flow" name="PFLWS" units="cnts">
+                <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>
+            </variable>
+            <variable longname="SPP-200 Detector Temperature" name="PTMP" units="deg_C"/>
+            <variable length="31" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT" name="AS200" units="count"/>
+            <variable longname="SPP-200 Time between last sample and this sample" name="DELTAT" units="msec"/>
+        </sample>
+        <prompt rate="10" string="\x1b\x02\x1d\x00"/>
+        <message length="154"/>
+    </serialSensor>
+
+    <serialSensor ID="S300" baud="38400" class="raf.SPP300_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
+        <parameter name="calfile" type="string" value="PMSspecs"/>
+        <parameter name="NCHANNELS" type="int" value="30"/>
+        <parameter name="RANGE" type="int" value="1"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
+        <parameter name="DOF_REJ" type="int" value="1"/>
+        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
+        <parameter name="CHAN_THRESH" type="int" value="38 92 194 376 678 1155 1880 2942 4096 4140 4238 4384 4590 4699 4807 4928 5027 5124 5255 5446 5673 5912 6164 6429 6754 7027 7310 7601 7901 8192"/>
+        <sample id="1">
+            <variable longname="SPP-300 Laser Reference Voltage" name="FREF3" units="V"/>
+            <variable longname="SPP-300 Housekeeping Data" name="FTMP3" units="deg_C"/>
+            <variable length="31" longname="SPP-300 (FSSP-300) Raw Accumulation (per cell) - DMT" name="AS300" units="count"/>
+            <variable longname="SPP-300 Time between last sample and this sample" name="DELTAT" units="msec"/>
+        </sample>
+        <prompt rate="10" string="\x1b\x02\x1d\x00"/>
+        <message length="156"/>
+    </serialSensor>
+
+    <serialSensor ID="UHSAS" class="raf.UHSAS_Serial" baud="115200" parity="none" databits="8" stopbits="1" timeout="10">
         <parameter name="HSKP_SCALE" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000" type="int"/>
 
         <sample id="1" rate="10">
