@@ -13,14 +13,14 @@
     >
 
 <sensorcatalog>
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="IRIG_Tdiff" units="sec"
                     longname="IRIG-UNIX clock diff"/>
             <variable name="IRIG_Status" units="bits"
                     longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
         <!-- Taken from the Honeywell installation manual for the         -->
@@ -647,14 +647,14 @@
     </server>
 
     <dsm name="ltlblu" location="LWO" id="46" rserialPort="30002" derivedData="sock::31000">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LWO"/>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
