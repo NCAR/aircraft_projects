@@ -1474,28 +1474,6 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_AFTR0" units="deg_C"/>
             </sample>
-        <sample id="2" rate="10">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="Wyoming Inlet Flow" name="INFLOW" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="25.2 406.1 100.617" units="slpm"/>
-          </variable>
-          <variable longname="Anderson Streaker Flow" name="XFSTR" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="0 1 0" units="Vdc"/>
-          </variable>
-          <variable longname="GNI Slide Exposure Status" name="GNI1" units="V">
-            <parameter name="channel" type="int" value="7"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="0 1 0" units="Vdc"/>
-          </variable>
-        </sample>
       </sensor>
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -1504,13 +1482,43 @@
       <serialSensor IDREF="S200" devicename="/dev/ttyS10" id="600" suffix="_RWO">
         <parameter name="SerialNumber" type="string" value="PCAS108"/>
       </serialSensor>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="800">
+        <calfile file="A2D001.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_AFTR1" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Wyoming Inlet Flow" name="INFLOW" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="25.2 406.1 100.617" units="slpm"/>
+          </variable>
+          <variable longname="Anderson Streaker Flow" name="XFSTR" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="Vdc"/>
+          </variable>
+          <variable longname="GNI Slide Exposure Status" name="GNI1" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="Vdc"/>
+          </variable>
+        </sample>
+      </sensor>
     </dsm>
     <dsm derivedData="sock::7071" id="22" location="Left_Pod" name="dsm322" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_322"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <serialSensor IDREF="S300" devicename="/dev/ttyS5" id="300" suffix="_LPO">
+      <serialSensor IDREF="S300" devicename="/dev/ttyS6" id="300" suffix="_LPO">
         <parameter name="SerialNumber" type="string" value="FSSP305"/>
       </serialSensor>
       <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="500" suffix="_LPC">
