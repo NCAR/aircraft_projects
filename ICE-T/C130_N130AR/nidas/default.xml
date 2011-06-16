@@ -1193,18 +1193,6 @@
             <calfile file="A2D004.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="100">
-                <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="V">
-                    <parameter name="channel" type="int" value="2"/>
-                    <parameter name="gain" type="float" value="1"/> 
-            <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="1.044 6.9873 -0.0029" units="hPa"/>
-                </variable>
-                <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="V">
-                    <parameter name="channel" type="int" value="3"/>
-                    <parameter name="gain" type="float" value="1"/> 
-            <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="0.99 5.163 0.0001" units="hPa"/>
-                </variable>
  		      
           <variable longname="Total Temperature, Radome Left" name="TTRL" units="V">
             <parameter name="channel" type="int" value="4"/>
@@ -1212,23 +1200,35 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-74.434 29.429 -0.6613" units="deg_C"/>
           </variable>
+          <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly coefs="-0.016 6.934 0.005" units="hPa"/>
+          </variable>
+          <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly coefs="-0.032 5.138 0.0001" units="hPa"/>
+          </variable>
           <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-1.594 17.727 -0.0041" units="hPa"/>
+            <poly coefs="-1.626 17.305 -0.005" units="hPa"/>
           </variable>
           <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="V">
             <parameter name="channel" type="int" value="6"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="0.887 14.082 -0.0037" units="hPa"/>
+            <poly coefs="-0.828 13.798 -0.0046" units="hPa"/>
           </variable>
           <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-2.68 17.935 -0.0052" units="hPa"/>
+            <poly coefs="0.39 17.232 -0.0039" units="hPa"/>
           </variable>
         </sample>
             <sample id="2" rate="1">
