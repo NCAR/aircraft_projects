@@ -18,7 +18,7 @@ import logging, logging.handlers
 import os, sys, commands, pyinotify
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
 
-reTime = re.compile("uwyo_lidar_(....)(..)(..)(..)(..)(..)\.jpg")
+reTime = re.compile("QCL(UP|DN)(....)(..)(..)(..)(..)\.jpg")
 
 def mtime(filename):
     return os.stat(filename).st_mtime
@@ -36,8 +36,9 @@ class PClose(ProcessEvent):
             # extract timestamp from file name
             m = reTime.match(event.name)
             if m:
-                timestamp = m.group(1) + "-" + m.group(2) + "-" + m.group(3) + " " + \
-                            m.group(4) + ":" + m.group(5) + ":" + m.group(6)
+                timestamp = m.group(1) + " " + \
+                            m.group(2) + "-" + m.group(3) + "-" + m.group(4) + " " + \
+                            m.group(5) + ":" + m.group(6)
             else:
                 return
                      
