@@ -1,55 +1,33 @@
 #!/usr/bin/python
 
 """
-Create a sym_link of the latest recorded camera image into
-/var/www/html/flight_data/images
-
-This script will only send files it 'sees' being
-created.
+Create a symbolic link to the latest recorded camera image in
+/var/www/html/flight_data/images/
 """
 
-import logging, logging.handlers
-import os, sys, commands, pyinotify, threading, time, pg
-from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
-from threading import Event, Thread
+# A watched directory will watch for new files and new directories.
+# Any new directory detected will, in turn, be watched is the same
+# manor as the the initial directory is.
 
+import logging, logging.handlers
+import os, sys, commands, pyinotify, re
+from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
 
 class PClose(ProcessEvent):
 
     def process_IN_CLOSE(self, event):
-        if event.name.endswith('.jpg'):
-            if os.path.isfile(event.path):
-                fn = event.path
-            else:
-                fn = os.path.join(event.path, event.name)
+        if event.dir: return
 
+        m = reLatest.match(event.pathname)
+        if m:
             if os.path.islink(sym_link):
                 os.remove(sym_link)
-            os.symlink(fn, sym_link)
-
-
-def check_flight_number():
-    print "Checking for flight number"
-    global t
-    global data
-    db = pg.connect('real-time')
-    pgq = db.query("SELECT value from global_attributes where key='FlightNumber'")
-    if pgq.ntuples() > 0:
-        camera_dir = os.path.join(data, "flight_number_")
-        flight_num = pgq.getresult()[0]
-        camera_dir = camera_dir + ''.join(flight_num)
-        if (os.path.isdir(camera_dir)):
-            global wm
-            wm.rm_watch(data, rec=True)
-            wm.add_watch(camera_dir, pyinotify.IN_CLOSE_WRITE)
-            print "Monitoring directory: %s" % camera_dir
-    db.close()
-    t = threading.Timer(15.0, check_flight_number).start()
+            os.symlink(event.pathname, sym_link)
 
 
 def Monitor(data):
 
-    global wm
+    wm = WatchManager()
     notifier = Notifier(wm, PClose())
     wm.add_watch(data, pyinotify.IN_CLOSE_WRITE)
 
@@ -65,11 +43,15 @@ def Monitor(data):
 
 if __name__ == '__main__':
 
-    data    = "/mnt/r1/camera_images/"
-    logfile = "/tmp/camera_symlink.log"
-    sym_link="/var/www/html/flight_data/images/latest_forward"
+    data     = "/mnt/r1/camera_images/"
+    logfile  = "/tmp/camera_symlink.log"
+    sym_link = "/var/www/html/flight_data/images/latest_forward.jpg"
 
-    wm = WatchManager()
+    # This regexp defines a constrained path to prevent falsly linking
+    # to any rogue .jpg(s) that are created in the watched directory.
+    # regexp hint:       any number of non...   /'s            .'s
+    #                                         /----\         /----\
+    reLatest = re.compile(data+"flight_number_[^\/]*/forward/[^\.]*\.jpg")
 
     # setup logging
     logger = logging.getLogger()
@@ -80,15 +62,11 @@ if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)
 
     if not os.path.isdir(data):
-        print "Folder '%s' does not exist, holding." % data
         logging.critical("Folder '%s' does not exist, holding." % data)
 
-    # Set up periodic timmer to check for new flight number.
-    t = threading.Timer(1.0, check_flight_number)
-    t.start()
-
+    # hang until 'data' folder is created
     while (not os.path.isdir(data)):
         time.sleep(1)
 
     # watch the data folder for new files being created
-    wm = Monitor(data)
+    Monitor(data)
