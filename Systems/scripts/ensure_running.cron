@@ -48,9 +48,9 @@ if ($status) then
   nohup /home/local/Systems/scripts/lightning/listen_lightning.pl >& /tmp/listen_lightning.log &
 endif
 
-ps ax | grep create_symlink.sh | grep -qv grep
+ps ax | grep camera_symlink.py | grep -qv grep
 if ($status) then
-  nohup /home/local/Systems/scripts/create_symlink.sh >& /tmp/camera_sym.log &
+  /home/local/Systems/scripts/camera_symlink.py &
 endif
 
 ps ax | grep xmlrpc2shell.py | grep -qv grep
