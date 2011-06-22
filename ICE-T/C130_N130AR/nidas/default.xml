@@ -747,7 +747,7 @@
         UHSAS borrowed from Darrin Toohey @ CU.
         Has different housekeeping scaling factors and output rate
     -->
-    <serialSensor ID="UHSAS_CU" baud="38400" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
+     <serialSensor ID="UHSASCU" baud="9600" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
         <parameter name="HSKP_SCALE" type="int" value="64000 12800 6400 6400 12800 6400 6400 12800 6400  6400 12800 6400"/>
         <sample id="1" rate="2">
             <variable length="100" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
@@ -767,25 +767,21 @@
                 <linear intercept="0.0" slope="178.5714" units="K"/>
             </variable>
 
-<!--
-                UPFLW is skipped
-                <variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
-                  <linear slope="20" intercept="0.0" units="sccs"/>
-                </variable 
+<!-- UPFLW is one of 3 variables not parsed from the housekeeping array
+            <variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
+                <linear slope="20" intercept="0.0" units="sccs"/>
+            </variable>
             -->
             <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="V">
                 <linear intercept="10.556" slope="22.222" units="kPa"/>
             </variable>
 
-<!--
-            <variable name="UAUX" units="V" longname="UHSAS Auxilary"/>
-            <variable name="UFLOW" units="sccm" longname="UHSAS Flow"/>
--->
+<!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
+
+<!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
         </sample>
 
-<!-- 
-        look for ffff07 termination sequence after 220 bytes 
--->
+<!-- look for ffff07 termination sequence after 220 bytes -->
         <message length="220" position="end" separator="\xff\xff\x07"/>
     </serialSensor>
     <sensor ID="TwoDP" class="raf.TwoD32_USB">
@@ -984,43 +980,6 @@
          </sample>
          <message length="0" position="end" separator="\r\n"/>
      </serialSensor>
-     <serialSensor ID="UHSASCU" baud="9600" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
-        <parameter name="HSKP_SCALE" type="int" value="64000 12800 6400 6400 12800 6400 6400 12800 6400  6400 12800 6400"/>
-        <sample id="1" rate="2">
-            <variable length="100" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
-            <variable longname="Total Counts" name="UHSAS_CNTS" units="#/sec"/>
-            <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
-            <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
-            <variable longname="UHSAS Sample Flow" name="USMPFLW" units="V">
-                <linear intercept="0.0" slope="0.333" units="vccs"/>
-            </variable>
-            <variable longname="UHSAS Reference Intensity" name="UREF" units="V"/>
-            <variable longname="UHSAS Temperature in Canister, signal" name="UTEMP" units="V"/>
-            <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="V">
-                <poly coefs="115.42 -141.21 63.38" units="sccs"/>
-            </variable>
-            <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
-            <variable longname="UHSAS Temperature in Canister" name="UBTMP" units="V">
-                <linear intercept="0.0" slope="178.5714" units="K"/>
-            </variable>
-
-<!-- UPFLW is one of 3 variables not parsed from the housekeeping array
-            <variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
-                <linear slope="20" intercept="0.0" units="sccs"/>
-            </variable>
-            -->
-            <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="V">
-                <linear intercept="10.556" slope="22.222" units="kPa"/>
-            </variable>
-
-<!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
-
-<!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
-        </sample>
-
-<!-- look for ffff07 termination sequence after 220 bytes -->
-        <message length="220" position="end" separator="\xff\xff\x07"/>
-    </serialSensor>
     <serialSensor ID="OphirIII" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%*d %c %f %f %f %f %f %f %f %f %f">
 
@@ -1188,54 +1147,60 @@
                     <poly coefs="-0.11361 0.999666 4.46795e-07"/>
                 </variable>
             </sample>
-        </serialSensor>
+        <sample id="1" rate="50">
+                <variable longname="Raw Static Pressure, Fuselage" name="PSFD" units="hPa">
+                <poly coefs="-0.569 1.0008 0" units="hPa"/></variable>
+            </sample></serialSensor>
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS8" id="160">
             <sample id="1">
                 <variable longname="Raw Static Pressure, Fuselage" name="PSFRD" units="hPa">
                     <poly coefs="-0.168825 1.00007 1.18961e-08"/>
                 </variable>
             </sample>
-        </serialSensor>
+        <sample id="1" rate="50">
+                <variable longname="Raw Static Pressure, Fuselage" name="PSFRD" units="hPa">
+                <poly coefs="-0.421 1.0005 0" units="hPa"/></variable>
+            </sample></serialSensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D004.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="100">
  		      
-          <variable longname="Total Temperature, Radome Left" name="TTRL" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-74.434 29.429 -0.6613" units="deg_C"/>
-          </variable>
           <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <poly coefs="-0.016 6.934 0.005" units="hPa"/>
+            <poly coefs="0.028 7.0199 0.0091" units="hPa"/>
           </variable>
           <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <poly coefs="-0.032 5.138 0.0001" units="hPa"/>
-          </variable>
-          <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="V">
-            <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-1.626 17.305 -0.005" units="hPa"/>
-          </variable>
-          <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="V">
-            <parameter name="channel" type="int" value="6"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-0.828 13.798 -0.0046" units="hPa"/>
+            <poly coefs="0.001 5.179 0.0006" units="hPa"/>
           </variable>
           <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="0.39 17.232 -0.0039" units="hPa"/>
+            <poly coefs="1.042 17.377 -0.006" units="hPa"/>
+          </variable>
+          <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-0.206 13.916 -0.0026" units="hPa"/>
+          </variable>
+          <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-1.163 17.415 -0.0023" units="hPa"/>
+          </variable>
+          <variable longname="Total Temperature, Radome Left" name="TTRL" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-67.954 27.09 -0.4603" units="deg_C"/>
           </variable>
         </sample>
             <sample id="2" rate="1">
@@ -1246,21 +1211,21 @@
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
             <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="10">
-                <parameter name="filter" type="string" value="boxcar"/>
-                <parameter name="numpoints" type="int" value="50"/>
-                <variable longname="Interior Cabin Static Pressure" name="PCAB" units="V">
-                    <parameter name="channel" type="int" value="0"/>
-                    <parameter name="gain" type="float" value="1"/> 
-            <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="13.024 107.73 -0.0515" units="hPa"/>
-                </variable>
-            </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_FWDFS1" units="deg_C"/>
             </sample>
-        </sensor>
+        <sample id="1" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Interior Cabin Static Pressure" name="PCAB" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly coefs="12.024 107.73 -0.0515" units="hPa"/>
+          </variable>
+        </sample>
+      </sensor>
         <output class="RawSampleOutputStream">
             <socket block="false" type="mcrequest"/>
         </output>
@@ -1273,18 +1238,6 @@
             <sample id="1" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="Radiometric Surface Temperature" name="TTFH1" units="V">
-                    <parameter name="channel" type="int" value="0"/>
-                    <parameter name="gain" type="float" value="4"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-93.412 28.747 -0.1131" units="deg_C"/>
-                </variable>
-                <variable longname="Radiometric Surface Temperature" name="TTFH2" units="V">
-                    <parameter name="channel" type="int" value="1"/>
-                    <parameter name="gain" type="float" value="4"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-94.483 29.029 -0.132" units="deg_C"/>
-                </variable>
 
 <!--
                 <variable longname="xcomr" name="XCOMR" units="V">
@@ -1293,12 +1246,6 @@
             <parameter name="bipolar" type="bool" value="false"/>
                 </variable>
 -->
-                <variable longname="UV Hygrometer Pressure" name="XUVP" units="V">
-                    <parameter name="channel" type="int" value="5"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="229.3 188.86 0.0034" units="hPa"/>
-                </variable>
                 <variable longname="UV Hygrometer Temperature" name="XUVT" units="V">
                     <parameter name="channel" type="int" value="6"/>
                     <parameter name="gain" type="float" value="2"/> 
@@ -1310,6 +1257,24 @@
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="0 -1 0" units="deg_C"/>
+          </variable>
+          <variable longname="UV Hygrometer Pressure" name="XUVP" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="199.3 188.86 0.0034" units="hPa"/>
+          </variable>
+          <variable longname="Radiometric Surface Temperature" name="TTFH1" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-93.032 28.854 -0.0988" units="deg_C"/>
+          </variable>
+          <variable longname="Radiometric Surface Temperature" name="TTFH2" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-93.418 28.699 -0.0911" units="deg_C"/>
           </variable>
         </sample>
             <sample id="2" rate="1">
@@ -1325,17 +1290,17 @@
             <parameter name="bipolar" type="bool" value="true"/>
             <poly coefs="0 1 0" units="deg_C"/>
           </variable>
-          <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly coefs="-51.588 9.8077 0.0596" units="deg_C"/>
-          </variable>
           <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly coefs="-58.5 12.176 -0.1488" units="deg_C"/>
+          </variable>
+          <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly coefs="-46.563 8.131 0.1631" units="deg_C"/>
           </variable>
         </sample>
       </sensor>
@@ -1670,17 +1635,16 @@
       </socketSensor>
     </dsm>
     <dsm derivedData="sock::7071" id="35" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock::30001">
-
       <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::41003" id="1600">
+
 <!--
         <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
             <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
         </sample>
 -->
       </sensor>
-
       <sensor ID="GHUHSAS" class="raf.UDPSocketSensor" devicename="inet::30033" id="1700" suffix="_GH">
-        <parameter name="SerialNumber" type="string" value="UHSAS001"/>
+        <parameter name="SerialNumber" type="string" value="UHSAS003"/>
         <parameter name="sendInit" type="bool" value="false"/>
         <sample id="1" rate="5" scanfFormat="UHSAS,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
@@ -1692,13 +1656,14 @@
             <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="sccm"/>
             <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
             <variable longname="UHSAS Temperature in Canister" name="UBTMP" units="K"/>
-            <variable longname="UHSAS Purge Flow" name="UPRGFLW" units="sccm"/>-->
+            <variable longname="UHSAS Purge Flow" name="UPRGFLW" units="sccm"/>--&gt;
+
 <!--
             <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="kPa"/>
             <variable longname="UHSAS Auxilliary" name="UAUX" units="V"/>
 -->
             <variable longname="UHSAS Flow" name="UFLW" units="sccm"/>
-            <variable length="99" longname="UHSAS Raw Count Histogram" name="GHUHSAS" units="count"/>
+            <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
         </sample>
       </sensor>
       <output class="RawSampleOutputStream">
@@ -1789,7 +1754,74 @@
                     <parameter name="corIntercept" type="float" value="0.000164"/>
                 </variable>
             </sample>
-        </sensor>
+        <sample id="1" rate="10">
+                <variable name="CVF1" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00046"/>
+                    <parameter name="corIntercept" type="float" value="-0.0002648"/>
+                </variable>
+                <variable name="CVFX0" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00043"/>
+                    <parameter name="corIntercept" type="float" value="-0.0000626"/>
+                </variable>
+                <variable name="CVFX1" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00037"/>
+                    <parameter name="corIntercept" type="float" value="0.000027"/>
+                </variable>
+                <variable name="CVFX2" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00036"/>
+                    <parameter name="corIntercept" type="float" value="0.0000307"/>
+                </variable>
+                <variable name="CVFX3" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00247"/>
+                    <parameter name="corIntercept" type="float" value="-0.006609"/>
+                </variable>
+                <variable name="CVFX4" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00035"/>
+                    <parameter name="corIntercept" type="float" value="0.0001242"/>
+                </variable>
+                <variable name="CVFX5" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="CVFX6" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="CVFX7" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="CVFX8" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable longname="CVI Sample Pressure" name="CVPCN" units="mb">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00032"/>
+                    <parameter name="corIntercept" type="float" value="0.000164"/>
+                <poly coefs="-5.817 342.05 -0.0354" units="mb"/></variable>
+            </sample></sensor>
         <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d1" id="20" latency="0.25">
             <parameter name="rate" type="int" value="50"/>
             <sample id="1" rate="50">
