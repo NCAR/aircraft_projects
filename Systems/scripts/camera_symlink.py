@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     data     = "/mnt/r1/camera_images/"
     logfile  = "/tmp/camera_symlink.log"
-    sym_link = "/var/www/html/flight_data/images/latest_forward"
+    sym_link = "/var/www/html/flight_data/images/latest_forward.jpg"
 
     # This regexp defines a constrained path to prevent falsly linking
     # to any rogue .jpg(s) that are created in the watched directory.
