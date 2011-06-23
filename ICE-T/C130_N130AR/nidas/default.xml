@@ -1401,6 +1401,11 @@
             <parameter name="bipolar" type="bool" value="true"/>
             <linear intercept="0.03" slope="1.118" units="vlpm"/>
           </variable>
+                <variable longname="CO RAW value" name="CORAW" units="V">
+                    <parameter name="channel" type="int" value="4"/>
+                    <parameter name="gain" type="float" value="1"/> 
+                    <parameter name="bipolar" type="bool" value="true"/>
+                </variable>
         </sample>
             <sample id="4" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
@@ -1410,7 +1415,9 @@
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
+      <!--
       <serialSensor IDREF="CORAW" devicename="/dev/ttyS5" id="420" suffix="_AL"/>
+      -->
       <serialSensor IDREF="CDP" devicename="/dev/ttyS12" id="620" suffix="_LWI">
         <parameter name="SerialNumber" type="string" value="CDP058"/>
       </serialSensor>
