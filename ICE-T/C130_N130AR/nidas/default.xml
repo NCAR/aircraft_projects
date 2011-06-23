@@ -1320,6 +1320,12 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="0 1 0" units="Vdc"/>
           </variable>
+          <variable longname="ASU Streaker Flow to CVI" name="XFCVSTR" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="Vdc"/>
+          </variable>
         </sample>
       </sensor>
         <output class="RawSampleOutputStream">
@@ -1646,6 +1652,9 @@
       <sensor ID="GHUHSAS" class="raf.UDPSocketSensor" devicename="inet::30033" id="1700" suffix="_GH">
         <parameter name="SerialNumber" type="string" value="UHSAS003"/>
         <parameter name="sendInit" type="bool" value="false"/>
+<!--
+        <sample id="1" rate="5" scanfFormat="UHSAS,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%98{f,}">
+-->
         <sample id="1" rate="5" scanfFormat="UHSAS,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
             <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
