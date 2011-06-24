@@ -15,10 +15,10 @@ created.
 """
 
 import logging, logging.handlers
-import os, sys, commands, pyinotify
+import os, sys, commands, pyinotify, re
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
 
-reTime = re.compile("WCL(UP|DN)(....)(..)(..)(..)(..)\.jpg")
+reTime = re.compile("WCL(UP|DN)_(....)(..)(..)(..)([^\.]*)\.jpg")
 
 def mtime(filename):
     return os.stat(filename).st_mtime
