@@ -40,7 +40,7 @@ busy_file        = 'BUSY_'+image_type
 ftp_site         = 'catalog1.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
-ftp_dir          = '/pub/incoming/OSM/GV/'
+ftp_dir          = '/pub/incoming/OSM/C130/'
 #Assumes filename form is prefixYYYYMMDD*postfix
 prefix           = 'radar.NEXRAD_comp.'
 postfix		 = '.nat_N0R_comp.gif' 
