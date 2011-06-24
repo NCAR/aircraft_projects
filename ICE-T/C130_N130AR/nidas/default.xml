@@ -1415,17 +1415,18 @@
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-      <!--
+
+<!--
       <serialSensor IDREF="CORAW" devicename="/dev/ttyS5" id="420" suffix="_AL"/>
       -->
       <serialSensor IDREF="CDP" devicename="/dev/ttyS12" id="620" suffix="_LWI">
         <parameter name="SerialNumber" type="string" value="CDP058"/>
       </serialSensor>
       <serialSensor IDREF="S100" devicename="/dev/ttyS11" id="820" suffix="_LWO">
-        <parameter name="SerialNumber" type="string" value="FSSP109"/>
+        <parameter name="SerialNumber" type="string" value="FSSP122"/>
       </serialSensor>
-      <sensor IDREF="ACDFO3" devicename="inet::20000" id="1020" suffix="_ACD"/>
-      <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS6" id="1220" suffix="_PIC"/></dsm>
+      <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS6" id="1220" suffix="_PIC"/>
+    </dsm>
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS5" id="110"/>
@@ -1494,6 +1495,12 @@
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="0 1 0" units="Vdc"/>
+          </variable>
+          <variable longname="Wyoming Inlet Temperature" name="XWYOT" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="deg_C"/>
           </variable>
         </sample>
       </sensor>
@@ -1648,6 +1655,7 @@
       </socketSensor>
     </dsm>
     <dsm derivedData="sock::7071" id="35" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="ACDFO3" devicename="inet::20000" id="1000" suffix="_ACD"/>
       <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::41003" id="1600">
 
 <!--
@@ -1659,6 +1667,7 @@
       <sensor ID="GHUHSAS" class="raf.UDPSocketSensor" devicename="inet::30033" id="1700" suffix="_GH">
         <parameter name="SerialNumber" type="string" value="UHSAS003"/>
         <parameter name="sendInit" type="bool" value="false"/>
+
 <!--
         <sample id="1" rate="5" scanfFormat="UHSAS,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%98{f,}">
 -->
