@@ -40,7 +40,7 @@ busy_file        = 'BUSY_'+image_type
 ftp_site         = 'catalog1.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
-ftp_dir          = '/pub/incoming/OSM/GV/'
+ftp_dir          = '/pub/incoming/OSM/C130/'
 #Assumes filename form is prefixYYYYMMDD*postfix
 prefix           = 'ops.goes-13.'  
 postfix		 = '.4km_ch4_thermal-IR.jpg' 
@@ -148,7 +148,7 @@ except:
     ftp.quit()
     sys.exit(1)
 
-# Make sure that we're not missing any earlier images say 5 hours worth
+# Make sure that we're not missing any earlier images say 10 images worth
 print 'Checking on images earlier in time.'
 got_old='false'
 i=2
