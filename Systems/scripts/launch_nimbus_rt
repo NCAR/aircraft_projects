@@ -2,20 +2,20 @@
 #
 # Launches nimbus for real-time aircraft mode.
 
-echo "sending texts to Chris and Tom"
+#echo "sending texts to Chris and Tom"
 #
 # SMS text Chris that aircraft is up.
-echo "Datasystem is up" | mail -s "GV is Online" 3038832241@txt.att.net
+#echo "Datasystem is up" | mail -s "C130 is Online" 3038832241@txt.att.net
 #
 # SMS text Tom that aircraft is up.
-echo "GV Datasystem is up `date`" | mail -s "GV is Online" 7203631466@tmomail.net
+echo "C130 Datasystem is up `date`" | mail -s "C130 is Online" 7203631466@tmomail.net
 
-echo "setting up  vcsel  specturm stash"
+#echo "setting up vcsel specturm stash"
 #
 #  Temporarily stash the VCSEL spectrum to /tmp/vcsel.spec.txt
-pkill data_dump
-rm /tmp/vcsel.spec.txt
-data_dump -i 4,330 | grep SPEC > /tmp/vcsel.spec.txt &
+#pkill data_dump
+#rm /tmp/vcsel.spec.txt
+#data_dump -i 4,330 | grep SPEC > /tmp/vcsel.spec.txt &
 
 
 # Make sure it exists.
@@ -37,4 +37,4 @@ psql -c "DELETE FROM lightning; VACUUM full lightning;"
 
 # Fire up nimbus in real-time with transmit on.
 #  For HIPPO, set transmit rate to once every 10 seconds.  Default is 5 seconds.
-nimbus -rt3 -x 5
+gnome-terminal --title NIMBUS -x nimbus -rt3 -x 5

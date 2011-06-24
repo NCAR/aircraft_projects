@@ -2,6 +2,10 @@
 
 # Script to ensure miscellanious prcesses are running.  Run out of cron
 # periodically, say every 3-5 minutes.
+ps ax | grep dsm | grep -v grep | grep -qv dsm_server
+if ($status) then
+  nohup /opt/local/nidas/x86/bin/dsm >& /tmp/dsm.log &
+endif
 
 ps ax | grep status_listener | grep -qv grep
 if ($status) then
@@ -21,10 +25,10 @@ endif
 if ($AIRCRAFT == "C130_N130AR") then
 
   # Start daemon to transfer Wyoming Cloud Lidar images to the ground via LDM.
-# ps ax | grep uwyo_lidar | grep -qv grep
-# if ($status) then
-#   /home/local/Systems/scripts/uwyo_lidar /mnt/r1/uwyo_lidar 2 /tmp/uwyo_lidar.log &
-# endif
+  ps ax | grep uwyo_lidar | grep -qv grep
+  if ($status) then
+    /home/local/Systems/scripts/uwyo_lidar /mnt/r1/uwyo_lidar 2 /tmp/uwyo_lidar.log &
+  endif
 endif
 
 if ($AIRCRAFT == "GV_N677F") then
@@ -53,14 +57,11 @@ if ($status) then
   /home/local/Systems/scripts/camera_symlink.py &
 endif
 
+
 ps ax | grep xmlrpc2shell.py | grep -qv grep
 if ($status) then
   /home/local/Systems/scripts/xmlrpc2shell.py >& /tmp/xmlrpc2sh.log
 endif
-
-exit;
-
-#commented out in PREDICT since we lost the disk drive.
 
 # Open Street Maps rendering daemon.
 ps ax | grep renderd | grep -qv grep
