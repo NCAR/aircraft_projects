@@ -15,11 +15,13 @@ from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
 
 class PClose(ProcessEvent):
 
-    def process_IN_CLOSE(self, event):
+    def process_IN_CREATE(self, event):
+#       logging.info("saw:   %s" % event.pathname)
         if event.dir: return
 
         m = reLatest.match(event.pathname)
         if m:
+#           logging.info("match: %s" % event.pathname)
             if os.path.islink(sym_link):
                 os.remove(sym_link)
             os.symlink(event.pathname, sym_link)
@@ -29,7 +31,7 @@ def Monitor(data):
 
     wm = WatchManager()
     notifier = Notifier(wm, PClose())
-    wm.add_watch(data, pyinotify.IN_CLOSE_WRITE)
+    wm.add_watch(data, pyinotify.IN_CREATE, auto_add=True, rec=True)
 
     try:
         while 1:
@@ -43,7 +45,7 @@ def Monitor(data):
 
 if __name__ == '__main__':
 
-    data     = "/mnt/r1/camera_images/"
+    data     = "/mnt/r2/camera_images/"
     logfile  = "/tmp/camera_symlink.log"
     sym_link = "/var/www/html/flight_data/images/latest_forward.jpg"
 
