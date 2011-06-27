@@ -9,25 +9,6 @@
 # TYPE for DMT modified probes is; FSSP -> S100, PCAS -> S200, F300 -> S300
 #
 # START	SerialNumber
-# ------------------------------------------------------------------------
-#
-START	CDP016
-TYPE	CDP
-NAME	Cloud Droplet Probe (CDP).
-#
-# Setup stuff is now in the XML file.
-#
-#include "cdp016.default"
-#
-FIRST_BIN	1
-LAST_BIN	30
-#
-DOF		1.2
-BEAM_DIAM	0.2
-DENS		1.0
-PLWFAC		1.0e-6
-DBZFAC		1.0e6
-END
 #
 # ------------------------------------------------------------------------
 #
@@ -129,26 +110,6 @@ END
 #
 # ------------------------------------------------------------------------
 #
-START	FSSP109
-TYPE	S100
-NAME	RAF FSSP-100 with DMT electronics.
-#
-# Setup stuff.
-#
-#include "s109.default"
-#
-FIRST_BIN	1
-LAST_BIN	30
-#
-DOF		2.83
-BEAM_DIAM	0.175
-DENS		1.0
-PLWFAC		1.0e-6
-DBZFAC		1.0e6
-END
-#
-# ------------------------------------------------------------------------
-#
 START	FSSP105
 TYPE	FSSP
 #
@@ -204,13 +165,15 @@ NAME	DLR FSSP-100 with DMT electronics.
 #
 # Setup stuff.
 #
-#include "s109.default"
+#include "../../Configuration/raf/s100.default"
 #
 FIRST_BIN       1
 LAST_BIN        31
 #
-DOF             2.28
-BEAM_DIAM       0.21
+#DOF             2.28
+#BEAM_DIAM       0.21
+DOF		2.55
+BEAM_DIAM	0.19
 DENS            1.0
 PLWFAC          1.0e-6
 DBZFAC          1.0e6
@@ -228,7 +191,7 @@ NAME	RAF FSSP-300 with DMT electronics.
 #
 FIRST_BIN	2
 LAST_BIN	31
-SAMPLE_AREA	0.15
+SAMPLE_AREA	0.09
 END
 #
 # ------------------------------------------------------------------------
