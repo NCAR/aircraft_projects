@@ -13,15 +13,20 @@ import logging, logging.handlers
 import os, sys, commands, pyinotify, re
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
 
-class PClose(ProcessEvent):
+mask = pyinotify.IN_CREATE | pyinotify.IN_CLOSE_WRITE
 
-    def process_IN_CREATE(self, event):
-#       logging.info("saw:   %s" % event.pathname)
+class transferNotifier(pyinotify.ProcessEvent):
+
+#   def process_IN_CREATE(self, event):
+#       logging.info("IN_CREATE saw:   %s" % event.pathname)
+
+    def process_IN_CLOSE(self, event):
+#       logging.info("IN_CLOSE  saw:   %s" % event.pathname)
         if event.dir: return
 
         m = reLatest.match(event.pathname)
         if m:
-#           logging.info("match: %s" % event.pathname)
+#           logging.info("IN_CLOSE  match: %s" % event.pathname)
             if os.path.islink(sym_link):
                 os.remove(sym_link)
             os.symlink(event.pathname, sym_link)
@@ -29,9 +34,9 @@ class PClose(ProcessEvent):
 
 def Monitor(data):
 
-    wm = WatchManager()
-    notifier = Notifier(wm, PClose())
-    wm.add_watch(data, pyinotify.IN_CREATE, auto_add=True, rec=True)
+    wm = pyinotify.WatchManager()
+    notifier = pyinotify.Notifier(wm, transferNotifier())
+    wm.add_watch(data, mask, rec=True, auto_add=True)
 
     try:
         while 1:
