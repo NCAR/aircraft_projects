@@ -15,7 +15,7 @@ created.
 """
 
 import logging, logging.handlers
-import os, sys, commands, pyinotify, re
+import os, sys, commands, pyinotify, re, string, time
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
 
 reTime = re.compile("WCL(UP|DN)_(....)(..)(..)(..)([^\.]*)\.jpg")
@@ -27,43 +27,54 @@ class PClose(ProcessEvent):
     mtime_lastfile = 0
 
     def process_IN_CLOSE(self, event):
+
         file = os.path.join(event.path, event.name)
+
+        # extract timestamp from file name
+        m = reTime.match(event.name)
+        if not m:
+            return
+
+        filename = event.name
+
+        # fix a zero padding issue on the minute field
+        minute = string.zfill( string.atoi(m.group(6)), 2)
+        if minute != m.group(6):
+            filename = "WCL" + m.group(1) + "_" + m.group(2) + m.group(3) + \
+                               m.group(4) + m.group(5) + minute + ".jpg"
+            os.rename(file, os.path.join(event.path, filename) )
+            logging.info("renamed %s to %s" % (file, os.path.join(event.path, filename) ) )
+            file = os.path.join(event.path, filename)
 
         # don't send every new file... space them apart by N minutes
         mtime_currfile = mtime(file)
-        if mtime_currfile > (self.mtime_lastfile + delay*60):
-
-            # extract timestamp from file name
-            m = reTime.match(event.name)
-            if m:
-                timestamp = m.group(1) + " " + \
-                            m.group(2) + "-" + m.group(3) + "-" + m.group(4) + " " + \
-                            m.group(5) + ":" + m.group(6)
-            else:
-                return
-                     
-            sentfile = os.path.join(sent, event.name)
-
-            # embed the timestamp from file name into image and compress it
-            result = commands.getoutput('convert %s -background white \
-                    -font courier -pointsize 18 label:\'%s\' -append %s' \
-                    % (file, timestamp, sentfile))
-
-            if result != '':
-                logging.critical( result )
-                return
-
-            # insert it into the LDM queue
-            result = commands.getoutput('/usr/local/ldm/bin/pqinsert -v %s' % sentfile)
-            if result != '':
-                logging.info( result )
-
-            self.mtime_lastfile = mtime_currfile
-
-            logging.info('sent: %s' % sentfile )
-
-        else:
+        if not mtime_currfile > (self.mtime_lastfile + delay*60):
             logging.debug('skipping: %s' % file)
+            return
+
+        timestamp = m.group(1) + " " + \
+                    m.group(2) + "-" + m.group(3) + "-" + m.group(4) + " " + \
+                    m.group(5) + ":" + minute
+                 
+        sentfile = os.path.join(sent, filename)
+
+        # embed the timestamp from file name into image and compress it
+        result = commands.getoutput('convert %s -background white \
+                -font courier -pointsize 18 label:\'%s\' -append %s' \
+                % (file, timestamp, sentfile))
+
+        if result != '':
+            logging.critical( result )
+            return
+
+        # insert it into the LDM queue
+#       result = commands.getoutput('/usr/local/ldm/bin/pqinsert -v %s' % sentfile)
+#       if result != '':
+#           logging.info( result )
+
+        self.mtime_lastfile = mtime_currfile
+
+        logging.info('sent: %s' % sentfile )
 
 
 def Monitor(data):
@@ -108,8 +119,11 @@ if __name__ == '__main__':
 
     else:
         if not os.path.isdir(data):
-            logging.critical("exiting, folder: '%s' does not exist." % data)
-            sys.exit(1)
+            logging.critical("Folder '%s' does not exist, holding." % data)
+
+        # hang until 'data' folder is created
+        while (not os.path.isdir(data)):
+            time.sleep(1)
 
         # create a folder to hold the sent files
         sent = '%s-sent' % data
