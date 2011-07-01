@@ -113,7 +113,7 @@
         <sample id="0325" rate="50">
         <variable longname="IRS Aircraft Roll Angle" name="ROLL" units="degree"/>
       </sample>
-        <sample id="0326"  rate="50">
+        <sample id="0326" rate="50">
         <variable longname="IRS Body Pitch Rate" name="BPITCHR" units="deg/s"/>
       </sample>
         <sample id="0327" rate="50">
@@ -675,7 +675,7 @@
         <prompt rate="10" string="\x1b\x02\x1d\x00"/>
         <message length="156"/>
     </serialSensor>
-    <serialSensor ID="CDP" baud="38400" class="raf.CDP_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
+    <serialSensor ID="CDP" baud="57600" class="raf.CDP_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
         <parameter name="calfile" type="string" value="PMSspecs"/>
         <parameter name="NCHANNELS" type="int" value="30"/>
         <parameter name="RANGE" type="int" value="0"/>
@@ -1465,7 +1465,7 @@
             <socket type="mcrequest"/>
         </output>
       <serialSensor IDREF="CFDC" devicename="/dev/ttyS8" id="400" suffix="_CFDC"/>
-      <serialSensor IDREF="S200" devicename="/dev/ttyS10" id="600" suffix="_RWO">
+      <serialSensor IDREF="S200" devicename="/dev/ttyS11" id="600" suffix="_RWO">
         <parameter name="SerialNumber" type="string" value="PCAS108"/>
       </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="800">
@@ -1490,17 +1490,17 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="0 1 0" units="Vdc"/>
           </variable>
-          <variable longname="Wyoming Inlet Temperature" name="XWYOT" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <linear slope="10.0" intercept="-50.0" units="deg_C"/>
-          </variable>
           <variable longname="GNI Slide Exposure Status" name="GNI1" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="0 1 0" units="Vdc"/>
+          </variable>
+          <variable longname="Wyoming Inlet Temperature" name="XWYOT" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <linear intercept="-50" slope="-10" units="deg_C"/>
           </variable>
         </sample>
       </sensor>
@@ -1510,10 +1510,10 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <serialSensor IDREF="S300" devicename="/dev/ttyS6" id="300" suffix="_LPO">
+      <serialSensor IDREF="S300" devicename="/dev/ttyS6" id="300" suffix="_LPC">
         <parameter name="SerialNumber" type="string" value="FSSP305"/>
       </serialSensor>
-      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="500" suffix="_LPC">
+      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="500" suffix="_LPO">
         <parameter name="SerialNumber" type="string" value="F2DC001"/>
         <parameter name="RESOLUTION" type="int" value="25"/>
       </sensor>
@@ -1677,14 +1677,14 @@
             <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
             <variable longname="UHSAS Sample Flow" name="USMPFLW" units="sccm"/>
             <variable longname="UHSAS Reference Intensity" name="UREF" units="V"/>
-            <variable longname="UHSAS Temperature in Canister, signal" name="UTEMP" units="V"/>
+            <variable longname="UHSAS Laser Temperature" name="ULSRTEMP" units="V"/>
             <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="sccm"/>
+            <variable longname="UHSAS Temperature in Canister" name="UTMP" units="K"/>
             <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
-            <variable longname="UHSAS Temperature in Canister" name="UBTMP" units="K"/>
-            <variable longname="UHSAS Purge Flow" name="UPRGFLW" units="sccm"/>--&gt;
+            <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="kPa"/>
 
 <!--
-            <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="kPa"/>
+            <variable longname="UHSAS Purge Flow" name="UPRGFLW" units="sccm"/>
             <variable longname="UHSAS Auxilliary" name="UAUX" units="V"/>
 -->
             <variable longname="UHSAS Flow" name="UFLW" units="sccm"/>
