@@ -1657,7 +1657,6 @@
     <dsm derivedData="sock::7071" id="35" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="ACDFO3" devicename="inet::20000" id="1000" suffix="_ACD"/>
       <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::41003" id="1600">
-
 <!--
         <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
             <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
@@ -1691,6 +1690,14 @@
             <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
         </sample>
       </sensor>
+      <sensor ID="SP2" class="raf.UDPSocketSensor" devicename="inet::30034" id="1800" suffix="_SP2">
+        <sample id="1" rate="1" scanfFormat="%*f %f %f %f">
+            <variable longname="SP2 Sample Flow Rate" name="FS2" units="vccm"/>
+            <variable longname="SP2 Black Carbon" name="BC" units="#/cc"/>
+            <variable longname="SP2 Non-Black Carbon" name="NBC" units="#/cc"/>
+        </sample>
+      </sensor>
+
       <output class="RawSampleOutputStream">
           <socket type="mcrequest"/>
       </output>
