@@ -1162,7 +1162,7 @@
                 <poly coefs="-0.421 1.0005 0" units="hPa"/></variable>
             </sample></serialSensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D004.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D003.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="100">
  		      
@@ -1654,15 +1654,15 @@
         <message length="52" position="beg" separator="\x01"/>
       </socketSensor>
     </dsm>
-    <dsm derivedData="sock::7071" id="35" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="35" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="ACDFO3" devicename="inet::20000" id="1000" suffix="_ACD"/>
-      <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::41003" id="1600">
 <!--
+      <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::41003" id="1600">
         <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
             <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
         </sample>
--->
       </sensor>
+-->
       <sensor ID="GHUHSAS" class="raf.UDPSocketSensor" devicename="inet::30033" id="1700" suffix="_GH">
         <parameter name="SerialNumber" type="string" value="UHSAS003"/>
         <parameter name="sendInit" type="bool" value="false"/>
@@ -1670,7 +1670,7 @@
 <!--
         <sample id="1" rate="5" scanfFormat="UHSAS,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%98{f,}">
 -->
-        <sample id="1" rate="5" scanfFormat="UHSAS,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <sample id="1" rate="5" scanfFormat="UHSAS,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
             <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
             <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
@@ -1679,15 +1679,15 @@
             <variable longname="UHSAS Laser Temperature" name="ULSRTEMP" units="V"/>
             <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="sccm"/>
             <variable longname="UHSAS Temperature in Canister" name="UTMP" units="K"/>
-            <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
+            <variable longname="UHSAS Purge Flow" name="UPRGFLW" units="sccm"/>
             <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="kPa"/>
 
 <!--
-            <variable longname="UHSAS Purge Flow" name="UPRGFLW" units="sccm"/>
-            <variable longname="UHSAS Auxilliary" name="UAUX" units="V"/>
+            <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
 -->
             <variable longname="UHSAS Flow" name="UFLW" units="sccm"/>
-            <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
+            <variable longname="UHSAS Auxilliary" name="UAUX" units="V"/>
+            <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
         </sample>
       </sensor>
       <sensor ID="SP2" class="raf.UDPSocketSensor" devicename="inet::30034" id="1800" suffix="_SP2">
