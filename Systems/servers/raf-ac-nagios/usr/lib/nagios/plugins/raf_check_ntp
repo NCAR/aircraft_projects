@@ -5,7 +5,7 @@
 msec_offset=`ntpq -p $1 | grep timeserver | cut -c62-70`
 
 if [ -z $msec_offset ]; then
-  echo "UNKNOWN: No response."
+  echo "UNKNOWN: No response for host $1"
   exit 3
 fi
 
@@ -14,13 +14,13 @@ offset=$(echo "scale=3; $msec_offset/1000" | bc)	# seconds
 msec_offset=${msec_offset%.*}
 
 if [[ $msec_offset -le -1000 || $msec_offset -ge 1000 ]]; then
-  echo "CRITICAL: Offset is $offset seconds."
+  echo "CRITICAL: Offset is $offset seconds for host $1"
   rc=2
 elif [[ $msec_offset -le -500 || $msec_offset -ge 500 ]]; then
-  echo "WARNING: Offset is $offset seconds."
+  echo "WARNING: Offset is $offset seconds for host $1"
   rc=1
 else
-  echo "NTP OK: Offset is $offset seconds."
+  echo "NTP OK: Offset is $offset seconds for host $1"
   rc=0
 fi
 
