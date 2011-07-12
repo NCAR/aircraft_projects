@@ -1585,6 +1585,17 @@
         </output>
     </dsm>
 
+    <dsm derivedData="sock::7071" id="35" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock::30001">
+
+      <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::41003" id="1600">
+        <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
+            <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
+        </sample>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
   </site>
 
 </project>
