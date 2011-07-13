@@ -1419,9 +1419,6 @@
 <!--
       <serialSensor IDREF="CORAW" devicename="/dev/ttyS5" id="420" suffix="_AL"/>
       -->
-      <serialSensor IDREF="CDP" devicename="/dev/ttyS12" id="620" suffix="_LWI">
-        <parameter name="SerialNumber" type="string" value="CDP058"/>
-      </serialSensor>
       <serialSensor IDREF="S100" devicename="/dev/ttyS11" id="820" suffix="_LWO">
         <parameter name="SerialNumber" type="string" value="FSSP122"/>
       </serialSensor>
@@ -1438,24 +1435,24 @@
             <sample id="1" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
-                    <parameter name="channel" type="int" value="0"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <linear intercept="0.0" slope="10.0" units="W"/>
-                </variable>
-                <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
-                    <parameter name="channel" type="int" value="1"/>
-                    <parameter name="gain" type="float" value="1"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                </variable>
                 <variable longname="Radiometric Sky/Cloud-Base Temperature" name="RSTT" units="V">
                     <parameter name="channel" type="int" value="2"/>
                     <parameter name="gain" type="float" value="1"/> 
                     <parameter name="bipolar" type="bool" value="true"/>
                     <poly coefs="-55.751 10.765 -0.0004" units="deg_C"/>
                 </variable>
-            </sample>
+            <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <linear intercept="0" slope="10" units="W"/>
+          </variable>
+          <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+          </variable>
+        </sample>
             <sample id="3" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_AFTR0" units="deg_C"/>
@@ -1467,6 +1464,9 @@
       <serialSensor IDREF="CFDC" devicename="/dev/ttyS8" id="400" suffix="_CFDC"/>
       <serialSensor IDREF="S200" devicename="/dev/ttyS11" id="600" suffix="_RWO">
         <parameter name="SerialNumber" type="string" value="PCAS108"/>
+      </serialSensor>
+      <serialSensor IDREF="CDP" devicename="/dev/ttyS12" id="1000" suffix="_LWI">
+        <parameter name="SerialNumber" type="string" value="CDP016"/>
       </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="800">
         <calfile file="A2D017.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
@@ -1657,7 +1657,8 @@
     <dsm id="35" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="ACDFO3" devicename="inet::20000" id="1000" suffix="_ACD"/>
       <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::41003" id="1600">
-        <!--
+
+<!--
            *******   DO NOT uncomment this  ************
            Does not work!  Character Sensor scanf does not support %s - 
         <sample id="1" rate="1" scanfFormat="PARCEL,%*fT%*f,%s">
@@ -1699,7 +1700,6 @@
             <variable longname="SP2 Non-Black Carbon" name="NBC" units="#/cc"/>
         </sample>
       </sensor>
-
       <output class="RawSampleOutputStream">
           <socket type="mcrequest"/>
       </output>
