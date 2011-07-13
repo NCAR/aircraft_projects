@@ -1,0 +1,153 @@
+#
+# Temperature blending time constants.
+#
+AT_TAU  300.0
+TT_TAU  300.0
+
+#
+# Recovery factory over-ride.  Remove this line to go back to default
+# in the code.
+#
+RECFRH[2]	0.985, 0.985
+RECFB	0.995
+
+#
+# Altitude cut-off (Meters).
+#
+PSURF_ALT_MAX   7000
+
+#
+# Greg Kok's cal coe's
+#
+O3FSM_CAL	8.54
+XNOYM_CAL[2]	-20.0, 5.2
+XNOM_CAL[2]	-10.0, 43.0
+XNO2C_CAL	958.0
+
+#
+# LI-COR 6262 CO2
+#
+C2T	309.45
+CO2_CAL	0.15207, 1.032e-5, 7.2522e-9, -9.8728e-13, 6.5812e-17
+
+H2T	314.65
+H2O_CAL	7.1352e-3, 3.6484e-6, -3.8355e-11
+
+#
+# Ophir radiometer 
+#
+MAXCNT		62500
+THERM_BIAS	5.0
+THERM_RZ	36.4
+THERM_COEFF	-2700.0
+DFLT_GAIN	-4.4913167e-5
+DFLT_OFFSET	31515.0
+# Digital signal coefficients
+A1              -5.6558e-5
+A2              2.0565e-6
+
+#
+# King Probe wire temperatures - PMS version
+#
+TWIRE_PMS	130.0
+TWIRE_PMS1	135.0
+
+TWIRE_TASFAC	1.0
+TWIRE_TASFAC1	1.0
+
+TWIRE_DIAM	0.1805
+TWIRE_DIAM1	0.1805
+CLOUD_CONC_THRESHOLD	0.05
+#
+# King Probe wire temperature - RAF version
+#
+TWIRE_RAF	155.0
+
+#
+# Lyman-Alpha constants - unit 1
+#
+XC_1	0.50
+THRSH_1	900.0
+CX_1[4]	7.44, 0.85648, 0.0, 0.0
+
+#
+# Lyman-Alpha constants - unit 2
+#
+XC_2	0.50
+THRSH_2	900.0
+CX_2[4]	8.1, 0.8951, 0.0, 0.0
+
+#
+# CVI
+#
+CVTBL	7.62
+CVTBR	0.3
+CVOFF	0.0
+CVDIV	1.0
+
+#
+# CN Counter
+#
+DIV	1		# counter card prescale factor
+
+#
+# Flux run length for averaging (in seconds).
+#
+FLUX_RUN	120
+
+#
+# DNI/DEI start lat and lon
+#
+DENI_START_LAT	0.0
+DENI_START_LON	0.0
+
+#
+# Start lat and lon for fixed position item.  (amlib/user/raz.c)
+#
+RAZ_START_LAT	28.5
+RAZ_START_LON	-80.5
+
+#
+#  Radiation attitude angle corrections
+#
+#   (Values of zero will signal amlib/std/radc.c to use internal defaults.)
+RAD_PITCH_MAX	 6.0	# Maximum Pitch to allow correction (deg)
+RAD_PITCH_MIN	-6.0	# Minimum Pitch to allow correction (deg)
+RAD_ROLL_MAX	 6.0	# Maximum Roll to allow correction (deg)
+RAD_ROLL_MIN	-6.0	# Minimum Roll to allow correction (deg)
+#
+#  SWT radiation fractions for XSWTC 
+#   (Values of zero will signal amlib/std/radc.c to use internal defaults.)
+SWDIFF	0.34	# Short wave diffuse radiation fraction
+SWDIRF	0.66	# Short wave direct radiation fraction
+
+#
+#  Parcel Tracking
+#
+#    Interval for Averaging winds - Lagrangian method only
+#
+PRCLTRK_INTRVL	10
+#
+#    Magnetic/True north declination - Dead Reckoning method only
+#
+DECLINATION	3.25		# Patrick AirForce Base
+#
+#    Circles.  # minutes for 3 different circle sizes
+#
+CIRCLES		40, 50, 60
+#
+#
+#  Constants for GPS corrections used in the AMLIB function "gpsc.c"
+#    R. L. Ruth, as of 1 February 2K
+#
+#  Default values used in the function when the settings below are
+#   commented out or omitted:
+#    GPS_ROLL_MAX    40.0
+#    GPS_TAUP        100.
+#    GPS_UPFCTR      0.999444
+#    GPS_FCTRF       0.997
+#
+#GPS_ROLL_MAX   24.0
+GPS_ROLL_MAX   40.0
+GPS_TAUP       600.
+GPS_TAU		120.
