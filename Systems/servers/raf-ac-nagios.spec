@@ -1,7 +1,7 @@
 Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
-Release: 4
+Release: 5
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -58,6 +58,8 @@ rm -rf %{buildroot}
 %{_libdir}/nagios/plugins/raf_*
 
 %changelog
+* Mon Jul 18 2011 Chris Webster <cjw@ucar.edu> - 1.0-5
+- Display satcom IP address in raf_check_ppp
 * Fri Feb 01 2010 Chris Webster <cjw@ucar.edu> - 1.0-4
 - check_ppp should check ppp1, not eth3.
 - Add raf_check_proc, check for a local process.  Needed because default check_proc can't find something run under python, because python is the process.
