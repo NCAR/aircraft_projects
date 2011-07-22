@@ -48,7 +48,7 @@ def Server(url, *args, **kwargs):
 	if 'timeout' in kwargs:
 		 del kwargs['timeout']
 	kwargs['transport'] = t
-	server = xmlrpclib.Server(url, *args, **kwargs)
+	server = xmlrpclib.ServerProxy(url, *args, **kwargs)
 	return server
 	
 if __name__ == "__main__":
