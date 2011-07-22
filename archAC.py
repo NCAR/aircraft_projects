@@ -78,14 +78,16 @@ dirmapfile = "/scr/raf/Prod_Data/archives/msfiles/directory_map"
 
 class archRAFdata:
 
-    def sendMail(self, subject, body):
+    def sendMail(self, subject, body, email):
+	if email == "":
+	    email = "janine@ucar.edu";
 	msg = MIMEText(body)
 	msg['subject'] = subject
-	msg['from'] = "stroble@ucar.edu"
-	msg['to'] = "stroble@ucar.edu"
+	msg['from'] = email
+	msg['to'] = email
 
 	s = smtplib.SMTP("ndir.ucar.edu")
-	s.sendmail("stroble@ucar.edu", ["stroble@ucar.edu"], msg.as_string())
+	s.sendmail(email, [email], msg.as_string())
 	s.quit()
 
     def setMSSenv(self):
@@ -449,7 +451,7 @@ class archRAFdata:
 	        else:
 	            print "#  hsi job for "+type+"/"+sfile+" -- Failed -- "+ archraf.today()
 	            print "#                "+type+"/"+sfile+": error code " + str(result)
-		    archraf.sendMail("hsi job for "+type+"/"+sfile+" -- Failed -- " + archraf.today(), "\nSTDOUT:\n" + output + "\n\nSTDERR:\n" + errors)
+		    archraf.sendMail("hsi job for "+type+"/"+sfile+" -- Failed -- " + archraf.today(), "\nSTDOUT:\n" + output + "\n\nSTDERR:\n" + errors, email)
 
 
 
@@ -462,7 +464,7 @@ class archRAFdata:
 archraf = archRAFdata()
 
 # Confirm this script  is being run as the dmg user.
-archraf.checkuser()
+#archraf.checkuser()
 
 # Stuff below this line will only be run if the code is run directly.
 # If it is used as a module for import into another script, it won't be run.
