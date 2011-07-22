@@ -10,7 +10,7 @@ Packager: Chris Webster <cjw@ucar.edu>
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
-Requires: nagios nagios-plugins
+Requires: nagios nagios-plugins python
 Source: %{name}-%{version}.tar.gz
 
 %description
