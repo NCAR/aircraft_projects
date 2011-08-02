@@ -5,10 +5,10 @@
 
 	//open nagios status file
 	$statusdat = file_get_contents('/var/log/nagios/status.dat');
-	
+
 	//regex parse out description, state, and output into $out array
 	preg_match_all('/service \{[.\S\s][^\}]+service_description=(.*)\n[.\S\s][^\}]+current_state=(.*)\n[.\S\s][^\}]+plugin_output=(.*)\n/', $statusdat, $out);
-	
+
 	//reformat array to make more sense
 	for ($i=0; $i<count($out[1]); $i++) {
 		//only send items with Warning or critical status
