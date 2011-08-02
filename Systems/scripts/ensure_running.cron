@@ -7,9 +7,11 @@ if ($status) then
   nohup /opt/local/nidas/x86/bin/dsm >& /tmp/dsm.log &
 endif
 
+# status_listener runs in daemon mode (background) by default.
+# Use -d option to run in foreground, with debug messages.
 ps ax | grep status_listener | grep -qv grep
 if ($status) then
-  nohup /opt/local/nidas/x86/bin/status_listener >& /tmp/status_listener.log &
+  /opt/local/nidas/x86/bin/status_listener
 endif
 
 ps ax | grep acTrack2kml | grep -qv grep
