@@ -640,6 +640,24 @@
         </service>
     </server>
 
+
+    <dsm id="99" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
+
+        <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::41003" id="1600">
+        <!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
+          <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
+              <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
+          </sample>
+        -->
+        </sensor>
+
+        <sensor IDREF="MTP" id="400" suffix="_MTP"/>
+
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
 
@@ -849,8 +867,6 @@
    
     <dsm name="dsm310" location="Chem Rack R-1" id="10" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
-
-        <sensor IDREF="MTP" id="400" suffix="_MTP"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="120" suffix="_VXL"/>
 
