@@ -16,7 +16,7 @@ echo "Make sure netCDF files have been reordered before archiving!"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
 
 ###LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc ATDdata
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT .nc EOL janine@ucar.edu
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT/ordered rf26.nc ATDdata
 
 ###KML
@@ -24,7 +24,7 @@ echo "Make sure netCDF files have been reordered before archiving!"
 
 ### PMS2D
 #/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D rf02.2d ATDdata
-#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d.gz ATDdata
+#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d EOL
 
 ### CAMERA - This line creates hour tarballs of static camera images and
 ### puts them on the mss. 
@@ -49,4 +49,9 @@ echo "Make sure netCDF files have been reordered before archiving!"
 ### SID2H
 #/net/work/bin/scripts/mass_store/archAC/archAC.py SID2H -t /scr/raf/Raw_Data/$PROJECT/sid2h srd RAF
 
+###CVI
+#/net/work/bin/scripts/mass_store/archAC/archAC.py hidden/cvi /scr/raf/Prod_Data/$PROJECT/cvi/orig txt EOL janine@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py hidden/cvi /scr/raf/Prod_Data/$PROJECT/cvi/nc nc EOL janine@ucar.edu
+
 ### VCSEL
+
