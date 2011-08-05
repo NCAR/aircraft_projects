@@ -18,6 +18,7 @@ Provides the 'ads' user cshrc files.
 %install
 rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}/home/ads/bin
+mkdir -p ${RPM_BUILD_ROOT}/home/ads/Desktop
 
 cp home/ads/System.cshrc             ${RPM_BUILD_ROOT}/home/ads/.System.cshrc
 cp home/ads/Jeffco_only.cshrc        ${RPM_BUILD_ROOT}/home/ads/.Jeffco_only.cshrc
@@ -26,6 +27,7 @@ cp home/ads/my_defaults              ${RPM_BUILD_ROOT}/home/ads/.my_defaults
 cp home/ads/ads3_environment.csh     ${RPM_BUILD_ROOT}/home/ads/ads3_environment.csh
 cp home/ads/login                    ${RPM_BUILD_ROOT}/home/ads/.login
 cp home/ads/bin/*                    ${RPM_BUILD_ROOT}/home/ads/bin
+cp home/ads/Desktop/*                ${RPM_BUILD_ROOT}/home/ads/Desktop
 
 %files
 %defattr(-,ads,ads)
@@ -78,6 +80,8 @@ echo
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Fri Aug 5 2011 Chris Webster <cjw@ucar.edu> 1.15
+- Add Desktop and some icons.
 * Mon May 16 2011 Gordon Maclean <maclean@ucar.edu> 1.15
 - In %pre step add ads user and ads,eol groups if necessary.
 - nidas-bin package installs files writeable by eol group, so we'll want
