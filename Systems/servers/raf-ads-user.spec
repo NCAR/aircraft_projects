@@ -40,6 +40,13 @@ cp home/ads/Desktop/*                ${RPM_BUILD_ROOT}/home/ads/Desktop
 %attr(0775,ads,ads) /home/ads/bin/swcreate
 %attr(0775,ads,ads) /home/ads/bin/svn-ask-username.sh
 %attr(0755,ads,ads) /home/ads/bin/foldertab
+%attr(0755,ads,ads) /home/ads/Desktop/ConfigEditor.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/aeros.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/nimbus.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/start_data_acq.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/start_mpds.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/stop_data_acq.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/stop_mpds.desktop
 
 %pre
 # Add an ads user and ads and eol groups to system
