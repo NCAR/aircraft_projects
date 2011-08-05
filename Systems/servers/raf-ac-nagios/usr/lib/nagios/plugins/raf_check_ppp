@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# Nagios displays the first line of output from scripts.  This was
-# our original line.  But getting the aircraft IP address seems
-# more appropriate.
-/bin/netstat -I=ppp1 | tail -n 1
+#/bin/netstat -I=ppp1 | tail -n 1
+ifconfig ppp1|grep addr | sed 's/Mask:.*$//'
 
 #in current Dell poweredge configuration eth3 is the satcom link
-/bin/ping -I ppp1 -c 3 -W 15 -q www.ucar.edu | grep ppp
-exit $status
+/bin/ping -I ppp1 -c 3 -W 15 -q www.ucar.edu
+exit $?
