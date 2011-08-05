@@ -30,7 +30,7 @@ echo "/mnt/r1 192.168.0.0/16(rw,sync,root_squash,anonuid=12900,anongid=1318)" >>
 
 %files
 %defattr(-,ads,ads)
-/mnt/r1/camera_images
+%dir %attr(0775,ads,ads) /mnt/r1/camera_images
 
 %changelog
 * Fri Aug 5 2011 Chris Webster <cjw@ucar.edu> - 1.0-1
