@@ -67,6 +67,12 @@ while [ "$dopkg" == all -o $# -gt 0 ]; do
         rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
     fi
 
+    pkg=raf-ac-nfs
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
+
     pkg=raf-ac-firewall
     if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
         version=`get_version $pkg.spec`
