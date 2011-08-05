@@ -2,9 +2,9 @@
 
 echo "Shutting down mpds connection ..."
 
-sudo pppoe-stop
+ifdown mpds
 
-# ifdown ppp0
+ifdown eth3
 
 sudo pkill -INT -f "pppd plugin"
 # sudo pkill ddclient

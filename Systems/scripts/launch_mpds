@@ -5,8 +5,10 @@
 #sudo pkill ddclient
 
 #ifdown eth2
-# sudo ifconfig eth3 down
-# sudo ifconfig eth3 up
+
+# Reset eth3.  ifdown mpds does not seem to fully kill the connection.
+ifdown eth3
+ifup eth3
 
 # sudo /usr/sbin/adsl-start
 
