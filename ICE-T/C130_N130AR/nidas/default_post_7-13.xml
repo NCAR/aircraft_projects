@@ -675,35 +675,35 @@
         <prompt rate="10" string="\x1b\x02\x1d\x00"/>
         <message length="156"/>
     </serialSensor>
-    <serialSensor ID="CDP" baud="57600" class="raf.CDP_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
-        <parameter name="calfile" type="string" value="PMSspecs"/>
+    <serialSensor ID="CDP" class="raf.CDP_Serial"
+        baud="38400" parity="none" databits="8" stopbits="1" timeout="10"> 
+
+        <parameter name="calFile" type="string" value="PMSspecs"/>
+
         <parameter name="NCHANNELS" type="int" value="30"/>
         <parameter name="RANGE" type="int" value="0"/>
-        <parameter name="THRESHOLD" type="int" value="60"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
         <parameter name="TRANSIT_REJ" type="int" value="1"/>
         <parameter name="DOF_REJ" type="int" value="1"/>
         <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
         <parameter name="ATT_ACCEPT" type="int" value="95"/>
         <parameter name="DIVISOR_FLAG" type="int" value="0"/>
         <parameter name="CT_METHOD" type="int" value="0"/>
+        <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
 
-<!-- 
-        New thresholds effective February 2011, no change in sample area. 
--->
-        <parameter name="CHAN_THRESH" type="int" value="83 105 173 219 265 307 353 367 407 428 445 502 593 726 913 1100 1258 1396 1523 1661 1803 2008 2274 2533 2782 3017 3252 3477 3716 4025"/>
         <sample id="1">
-            <variable longname="CDP Laser Current" name="CDPLSRC" units="mAmp"/>
-            <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
-            <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="deg_C"/>
-            <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="deg_C"/>
-            <variable longname="CDP Particles Rejected (Outside Depth-of-Field))" name="REJDOF" units="count"/>
-            <variable longname="CDP Average Transit Rejected Particles" name="REJAT" units=""/>
-            <variable longname="CDP Average Transit Time" name="AVGTRNS" units=""/>
-            <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units=""/>
-            <variable length="31" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
-            <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
+            <variable name="CDPLSRC" units="mAmp" longname="CDP Laser Current"/>
+            <variable name="CDPLSRP" units="V" longname="CDP Laser Power Monitor"/>
+            <variable name="CDPWBTMP" units="deg_C" longname="CDP Wing Board Temperature"/>
+            <variable name="CDPLBTMP" units="deg_C" longname="CDP Laser Block Temperature"/>
+            <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
+            <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
+            <variable name="AVGTRNS" units="" longname="CDP Average Transit Time"/>
+            <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
+
+            <variable name="ACDP" length="31" units="count" longname="CDP Raw Accumulation (per cell)"/>
         </sample>
-        <prompt rate="10" string="\x1b\x02\x1d\x00"/>
+        <prompt string="\x1b\x02\x1d\x00" rate="10"/>
     </serialSensor>
     <serialSensor ID="UHSAS" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
         <parameter name="HSKP_SCALE" type="int" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000"/>
@@ -1430,7 +1430,7 @@
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="120"/>
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS7" id="130" suffix="_GMN"/>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D016.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D1709.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
@@ -1465,7 +1465,7 @@
       <serialSensor IDREF="S200" devicename="/dev/ttyS11" id="600" suffix="_RWO">
         <parameter name="SerialNumber" type="string" value="PCAS108"/>
       </serialSensor>
-      <serialSensor IDREF="CDP" devicename="/dev/ttyS12" id="1000" suffix="_LWI">
+      <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="1000" suffix="_LWI">
         <parameter name="SerialNumber" type="string" value="CDP016"/>
       </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="800">
@@ -1651,7 +1651,7 @@
           <variable length="1" longname="Pressure Scanner dynamic pressure, port 14" name="PSCAN_14" units="hPa"/>
           <variable length="1" longname="Pressure Scanner dynamic pressure, port 15" name="PSCAN_15" units="hPa"/>
         </sample>
-        <message length="52" position="beg" separator="\x01"/>
+        <message length="70" position="beg" separator="\x01"/>
       </socketSensor>
     </dsm>
     <dsm id="35" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
