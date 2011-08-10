@@ -10,7 +10,7 @@ Create a symbolic link to the latest recorded camera image in
 # manor as the the initial directory is.
 
 import logging, logging.handlers
-import os, sys, commands, pyinotify, re
+import os, sys, commands, pyinotify, re, time
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
 
 mask = pyinotify.IN_CREATE | pyinotify.IN_CLOSE_WRITE
