@@ -119,7 +119,7 @@ function acMap() {
 	this.updateCamImage = function(first) {
 		var camdom = document.getElementById("cam");
 		if ($("#cameraBox").hasClass("above") || first) {
-			camdom.src = "/flight_data/images/latest_forward?" + Math.random();
+			camdom.src = "/flight_data/images/latest_forward.jpg?" + Math.random();
 		}
 	}
 
