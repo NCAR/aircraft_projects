@@ -16,9 +16,9 @@ if ( $q->url(-base=>1) =~ /(localhost)|(acserver)|(hyper)|(hercules)/i
 	#you appear to be on a plane
 	$plat_vars{'platform'}="acserver";
 	$plat_vars{'openlayers'}="/OpenLayers/OpenLayers.js";
-	$plat_vars{'jquery'}="/jQuery/js/jquery-1.3.2.min.js";
-	$plat_vars{'jqueryui'}="/jQuery/js/jquery-ui-1.7.2.custom.min.js";
-	$plat_vars{'jquerycss'}="/jQuery/css/smoothness/jquery-ui-1.7.2.custom.css";
+	$plat_vars{'jquery'}="/jQuery/js/jquery-1.5.1.min.js";
+	$plat_vars{'jqueryui'}="/jQuery/js/jquery-ui-1.8.13.custom.min.js";
+	$plat_vars{'jquerycss'}="/jQuery/css/smoothness/jquery-ui-1.8.13.custom.css";
 	$plat_vars{'docs_path'}="../../html/flight_data/";
 	$plat_vars{'href_path'}=$plat_vars{'base_path'};
 	$plat_vars{'dbname'}="real-time";
@@ -57,9 +57,9 @@ else {
 		}
 	}
 	$plat_vars{'openlayers'}="http://openlayers.org/api/OpenLayers.js";
-	$plat_vars{'jquery'}="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js";
-	$plat_vars{'jqueryui'}="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js";
-	$plat_vars{'jquerycss'}="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/black-tie/jquery-ui.css";
+	$plat_vars{'jquery'}="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js";
+	$plat_vars{'jqueryui'}="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js";
+	$plat_vars{'jquerycss'}="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/black-tie/jquery-ui.css";
 	$plat_vars{'href_path'}=$plat_vars{'base_path'}.$plat_vars{'platform'}."/";
 	$plat_vars{'docs_path'}="../../docs/flight_data/".$plat_vars{'platform'}."/";
 	$plat_vars{'dbname'}="real-time-".$plat_vars{'platform'};
