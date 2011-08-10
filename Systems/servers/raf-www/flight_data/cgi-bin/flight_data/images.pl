@@ -57,7 +57,7 @@ foreach my $keys (sort{$files{$a} <=> $files{$b}} keys %files) {
 }	
 
 my $message="";
-if ($i == 0) { $message = "<br/>No Images Found matching: $name";}
+if ($i == 0) { $message = "<br/>No Images Found matching: $name in directory $dir";}
 
 my $numimgs;
 if ($i <= 1) { $numimgs = 0; }
