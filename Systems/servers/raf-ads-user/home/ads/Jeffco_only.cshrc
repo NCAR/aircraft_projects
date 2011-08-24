@@ -33,17 +33,13 @@ if (!($?DATA_DIR)) then
    setenv DATA_DIR /home/data
 endif
 
-if (!($?PROD_DATA)) then
-   setenv PROD_DATA /scr/productiondata
-endif
-
 ################################################################################
 # 3rd party software environment variables                                     #
 ################################################################################
 
 # University Hawaii GMT package, used by ncplot geo-pol map.
 
-setenv GMTHOME		$LOCAL/GMT
+setenv GMT_SHAREDIR	/usr/share/GMT
 
 setenv XAPPLRESDIR	/usr/share/X11/app-defaults
 
