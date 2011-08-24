@@ -25,6 +25,8 @@ Requires: raf-ac-avaps
 Requires: raf-ac-nfs
 Requires: nidas-ael
 Requires: nidas-daq
+Requires: GMT
+Requires: GMT-coastlines-all
 
 BuildArch: noarch
 
@@ -35,7 +37,7 @@ Metapackage for all server and satcom packages needed on C130.
 
 %changelog
 * Fri Aug 5 2011 Chris Webster <cjw@ucar.edu> 1.0-11
-- Add raf-ac-nfs package.
+- Add raf-ac-nfs package.  Added GMT.
 * Wed Feb 21 2011 Gordon Maclean <maclean@ucar.edu> 1.0-11
 - Added Requires: nidas-ael (cross compiling) and nidas-daq (udev rules)
 * Tue Jul 13 2010 Gordon Maclean <maclean@ucar.edu> 1.0-10
