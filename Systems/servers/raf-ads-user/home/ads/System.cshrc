@@ -20,6 +20,8 @@ setenv LANG	C
 #
 # Linux
 #
+# This is for support of Motif applications.
+# See: http://ubuntuforums.org/showthread.php?t=82087
 setenv XKEYSYMDB /usr/share/X11/XKeysymDB
 
 set path=( /usr/kerberos/bin /bin /usr/bin /usr/X11R6/bin \
