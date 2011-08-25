@@ -1,23 +1,25 @@
+SHELL=/bin/csh
+
 # Always
-*/1 * * * * /home/local/Systems/scripts/ensure_running.cron > /tmp/ensure_run.log 2>&1
-*/1 * * * * /home/local/Systems/scripts/send_camera.cron > /tmp/camera_send.log 2>&1
-0 * * * * /home/local/Systems/scripts/scrubber > /tmp/scrubber.log 2>&1
+*/1 * * * * /home/local/Systems/scripts/ensure_running.cron >& /tmp/ensure_run.log
+*/1 * * * * /home/local/Systems/scripts/send_camera.cron >& /tmp/camera_send.log
+0 * * * * /home/local/Systems/scripts/scrubber >& /tmp/scrubber.log
 #
 # New satellite script
-02,12,22,32,42,52 * * * * /home/local/Systems/scripts/get_radar_image_cron.py >> /tmp/get_sat_image.log 2>&1
-04,14,24,34,44,54 * * * * /home/local/Systems/scripts/get_ir_image_cron.py >> /tmp/get_sat_image.log 2>&1
-06,16,26,36,46,56 * * * * /home/local/Systems/scripts/get_vis_image_cron.py >> /tmp/get_sat_image.log 2>&1
+02,12,22,32,42,52 * * * * /home/local/Systems/scripts/get_radar_image_cron.py >>& /tmp/get_sat_image.log
+04,14,24,34,44,54 * * * * /home/local/Systems/scripts/get_ir_image_cron.py >>& /tmp/get_sat_image.log
+06,16,26,36,46,56 * * * * /home/local/Systems/scripts/get_vis_image_cron.py >>& /tmp/get_sat_image.log
 #
 # DC-3
-#*/5 * * * * /home/local/Systems/scripts/get_smart_rad_cron > /dev/null 2>&1
-#08,18,28,38,48,58 * * * * /home/local/Systems/scripts/get_chill_image_cron.py >> /tmp/get_sat_image.log 2>&1
+#*/5 * * * * /home/local/Systems/scripts/get_smart_rad_cron >& /dev/null
+#08,18,28,38,48,58 * * * * /home/local/Systems/scripts/get_chill_image_cron.py >>& /tmp/get_sat_image.log
 #
 # Misc
-*/1 * * * * /home/local/Systems/scripts/iostat.csh  >> /tmp/iostat.out 2>&1
+*/1 * * * * /home/local/Systems/scripts/iostat.csh >>& /tmp/iostat.out
 #
 #0 * * * * /home/local/Systems/scripts/get_sounding
-#12,42 * * * * /home/local/Systems/scripts/get_cloud_top > /tmp/cloud_top.log 2>&1
+#12,42 * * * * /home/local/Systems/scripts/get_cloud_top >& /tmp/cloud_top.log
 #5,20,35,50 * * * * /home/local/Systems/scripts/get_sat_image
 #
 # AVAPS
-#* * * * * /home/local/Systems/scripts/send_avaps.cron.py > /tmp/avaps_send.log 2>&1
+#* * * * * /home/local/Systems/scripts/send_avaps.cron.py >& /tmp/avaps_send.log
