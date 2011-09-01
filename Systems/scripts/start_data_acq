@@ -207,6 +207,20 @@ elif [ $topchoice == newhang ]; then
             [ $stat -eq 2 ] && exit 1
         fi
 
+        temp=`expr index "$fname" './'`
+echo "temp = '$temp'"
+        if [ $temp -gt 0 ]; then
+            kdialog --caption "Bad Hangar Config" \
+                --warningcontinuecancel \
+                "hangar period names should not contain dots or slashes.\n\
+                Press continue to choose another name"
+            # $?: continue=0, cancel=2
+            stat=$?
+            [ $stat -eq 0 ] && continue
+            [ $stat -eq 2 ] && exit 1
+        fi
+
+
         existing=false
         for c in ${hfs[@]}; do
             [ $fname == $c ] && existing=true
@@ -265,12 +279,15 @@ else
     exit 1
 fi
 
-if [ -z $lastconfig ]; then
-    kdialog --caption "Error: lastconfig variable is empty." \
-        --warningcontinuecancel "Error: lastconfig variable is empty, something wrong, not proceeding.\n\
-	This is most likely what causes the flights.xml mess up.  Call Chris"
-    exit 1
-fi
+# Can't use the following conditional - when project is starting, lastconfig
+#  will always be zero sized string 
+#
+#if [ -z $lastconfig ]; then
+#    kdialog --caption "Error: lastconfig variable is empty." \
+#        --warningcontinuecancel "Error: lastconfig variable is empty, something wrong, not proceeding.\n\
+#	This is most likely what causes the flights.xml mess up.  Call Chris"
+#    exit 1
+#fi
 
 if [ -z $fname ]; then
     kdialog --caption "Error: fname variable is empty." \
