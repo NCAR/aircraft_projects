@@ -1,0 +1,10 @@
+#!/bin/csh
+
+cd ${DATA_DIR}
+#cd /scr/raf/local_productiondata
+
+foreach FILENAME (ICE-T?f??.nc)
+  echo $FILENAME
+  ncReorder $FILENAME temp1.nc
+  mv -f temp1.nc $FILENAME
+end
