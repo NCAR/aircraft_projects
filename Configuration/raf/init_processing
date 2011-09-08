@@ -1,0 +1,79 @@
+#!//bin/csh
+
+if ($#argv == 0) then
+  echo "Usage:\n init_processing proj_name\n"
+
+  echo 'Prerequisites: ads files have been copied into RAW_DATA_DIR/proj_name and extract2d has been run (i.e. all .2d files exist in $RAW_DATA_DIR/proj/PMS2D/)'
+  exit
+endif
+
+set proj=$argv[1]
+
+cat > run_all << EOFRA
+#!/bin/csh
+
+./run_nimbus
+./reorder_all
+./run_proc2d
+EOFRA
+
+
+cat > run_nimbus << "EOFRN"
+#!/bin/csh
+
+foreach setup_file ( setup_?f?? )
+  nimbus -b $setup_file
+end
+"EOFRN"
+
+
+# ncReorder script.
+#
+set files=${proj}'?f??.nc'
+
+cat > reorder_all << "EOFREO"
+#!/bin/csh
+
+cd ${DATA_DIR}
+#cd /scr/raf/local_productiondata
+
+"EOFREO"
+
+echo "foreach file ( $files )" >> reorder_all
+
+cat >> reorder_all << "EOFREO2"
+  echo $file
+  ncReorder $file temp1.nc
+  mv -f temp1.nc $file
+end
+"EOFREO2"
+
+
+# nimbus setup_* files.
+#
+foreach file (${RAW_DATA_DIR}/$proj/*[rf]f*.ads)
+  set bfname=`basename $file`
+  set flight=`echo $bfname | cut -b 17-20`
+  echo "if="$file > setup_$flight
+  echo "of="${DATA_DIR}/${proj}${flight}.nc >> setup_$flight
+end
+
+
+# Fast 2D processing script.
+#
+cat > run_proc2d << EOF2D
+#!/bin/csh
+
+setenv DAT ${DATA_DIR}
+#setenv DAT /scr/raf/local_productiondata/
+
+EOF2D
+
+foreach file (${RAW_DATA_DIR}/${proj}/PMS2D/*2d)
+  set bfname=`basename $file`
+  set flight=`echo $bfname | cut -b 17-20`
+  echo 'procf2dc ${RAW_DATA_DIR}/'${proj}/PMS2D/${bfname} '-o ${DAT}/'${proj}${flight}.nc >> run_proc2d
+end
+
+
+chmod +x run_all run_nimbus reorder_all run_proc2d
