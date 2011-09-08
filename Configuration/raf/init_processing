@@ -1,4 +1,21 @@
-#!//bin/csh
+#!/bin/csh
+
+# This is script is intended to create final processing scripts and nimbus setup
+# for batch processing.  Current incarnation does research and ferry flights.
+# Scripts will most likely need tweaking to get exact results, but this provides
+# a useful first pass.
+#
+# Make sure all the ads files you want are downloaded, and unwanted ads files have
+# been removed (e.g. superfluous ground ads files).  Also make sure extract2d has
+# been run and the all the desired 2d files are in place.  Be sure to merge 2d files
+# if multiple files exist for one flight.
+#
+# Usage:
+# cd ICE-T/C130_N130AR/Production
+# init_processing ICE-T
+#
+# Edit run_proc2d to add/remove 2d processing lines.
+#
 
 if ($#argv == 0) then
   echo "Usage:\n init_processing proj_name\n"
