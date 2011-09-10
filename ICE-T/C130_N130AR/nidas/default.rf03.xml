@@ -773,7 +773,7 @@
             </variable>
             -->
             <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="V">
-                <linear intercept="0.0" slope="250.0" units="hPa"/>
+                <linear intercept="105.56.0" slope="222.222" units="hPa"/>
             </variable>
 
 <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
@@ -1074,7 +1074,7 @@
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
             <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
-              <linear intercept="0.0" slope="1.0" units="degree_T"/>
+              <linear intercept="-0.6" slope="1.0" units="degree_T"/>
             </variable>
           </sample>
           <sample id="0324" rate="50">
@@ -1084,13 +1084,7 @@
           </sample>
         </arincSensor>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G">
-          <sample id="0165" rate="50">
-            <variable longname="Avionics GPS Vertical Velocity" name="VSPD" units="m/s">
-              <linear intercept="-0.06" slope="1.02" units="m/s"/>
-            </variable>
-          </sample>
-        </arincSensor>
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G"/>
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
             <sample id="5" rate="25">
                 <variable longname="Altitude above ground (radar altimeter)" name="HGM232" units="feet">
@@ -1116,13 +1110,7 @@
           </sample>
         </arincSensor>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G2">
-          <sample id="0165" rate="50">
-            <variable longname="Avionics GPS Vertical Velocity" name="VSPD" units="m/s">
-              <linear intercept="-0.06" slope="1.02" units="m/s"/>
-            </variable>
-          </sample>
-        </arincSensor>
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G2"/>
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130">
             <sample id="1">
                 <variable longname="Dew/Frost Point Balance, Fuselage Top" name="DPTB" units="unk"/>
@@ -1222,7 +1210,7 @@
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <poly coefs="12.024 107.73 -0.0515" units="hPa"/>
+            <poly coefs="15.024 107.73 -0.0515" units="hPa"/>
           </variable>
         </sample>
       </sensor>
@@ -1294,13 +1282,13 @@
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <poly coefs="-58.5 12.176 -0.1488" units="deg_C"/>
+            <poly coefs="-62.207 11.422 0.0" units="deg_C"/>
           </variable>
           <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <poly coefs="-46.563 8.131 0.1631" units="deg_C"/>
+            <poly coefs="-59.26 11.067 0.0" units="deg_C"/>
           </variable>
         </sample>
       </sensor>
