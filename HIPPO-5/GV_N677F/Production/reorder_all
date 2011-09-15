@@ -1,0 +1,10 @@
+#!/bin/csh
+
+cd ${DATA_DIR}
+#cd /scr/raf/local_productiondata
+
+foreach file ( HIPPO-5?f??.nc )
+  echo $file
+  ncReorder $file temp1.nc
+  mv -f temp1.nc $file
+end
