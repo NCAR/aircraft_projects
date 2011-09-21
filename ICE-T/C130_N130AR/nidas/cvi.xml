@@ -151,35 +151,36 @@
                     <parameter name="corSlope" type="float" value="1.00035"/>
                     <parameter name="corIntercept" type="float" value="0.0001242"/>
                 </variable>
-                <variable name="CVFX5" units="V">
+                <variable name="CVFX5" units="V" longname="CVI User Flow">
                     <parameter name="gain" type="float" value="1"/>
                     <parameter name="bipolar" type="bool" value="true"/>
                     <parameter name="corSlope" type="float" value="1.0"/>
                     <parameter name="corIntercept" type="float" value="0.0"/>
                 </variable>
-                <variable name="CVFX6" units="V">
+                <variable name="CVFX6" units="V" longname="CVI User Flow">
                     <parameter name="gain" type="float" value="1"/>
                     <parameter name="bipolar" type="bool" value="true"/>
                     <parameter name="corSlope" type="float" value="1.0"/>
                     <parameter name="corIntercept" type="float" value="0.0"/>
                 </variable>
-                <variable name="CVFX7" units="V">
+                <variable name="CVFX7" units="V" longname="CVI User Flow">
                     <parameter name="gain" type="float" value="1"/>
                     <parameter name="bipolar" type="bool" value="true"/>
                     <parameter name="corSlope" type="float" value="1.0"/>
                     <parameter name="corIntercept" type="float" value="0.0"/>
                 </variable>
-                <variable name="CVFX8" units="V">
+                <variable name="CVFX8" units="V" longname="CVI User Flow">
                     <parameter name="gain" type="float" value="1"/>
                     <parameter name="bipolar" type="bool" value="true"/>
                     <parameter name="corSlope" type="float" value="1.0"/>
                     <parameter name="corIntercept" type="float" value="0.0"/>
                 </variable>
-                <variable name="CVPCN" units="V">
+                <variable name="CVPCN" units="V" longname="CVI Sample Pressure">
                     <parameter name="gain" type="float" value="1"/>
                     <parameter name="bipolar" type="bool" value="true"/>
                     <parameter name="corSlope" type="float" value="1.00032"/>
                     <parameter name="corIntercept" type="float" value="0.000164"/>
+                    <poly coefs="-5.817 342.05 -0.0354" units="mb"/>
                 </variable>
             </sample>
         </sensor>
@@ -206,25 +207,25 @@
                 -->
 
 <!-- gain=16,bipolar=F gives a range of 0-1.25V -->
-                <variable minValue="0.05" name="CVTT" units="V">
+                <variable minValue="0.05" name="CVTT" units="V" longname="CVI Temperature Tip">
                     <parameter name="gain" type="float" value="16"/>
                     <parameter name="bipolar" type="bool" value="false"/>
                     <parameter name="corSlope" type="float" value="1.00466"/>
                     <parameter name="corIntercept" type="float" value="0.0001349"/>
                 </variable>
-                <variable minValue="0.05" name="CVTP" units="V">
+                <variable minValue="0.05" name="CVTP" units="V" longname="CVI Temperature at Probe">
                     <parameter name="gain" type="float" value="16"/>
                     <parameter name="bipolar" type="bool" value="false"/>
                     <parameter name="corSlope" type="float" value="1.00499"/>
                     <parameter name="corIntercept" type="float" value="0.0000984"/>
                 </variable>
-                <variable minValue="0.05" name="CVTS" units="V">
+                <variable minValue="0.05" name="CVTS" units="V" longname="CVI Temperature Sample Line">
                     <parameter name="gain" type="float" value="16"/>
                     <parameter name="bipolar" type="bool" value="false"/>
                     <parameter name="corSlope" type="float" value="1.00178"/>
                     <parameter name="corIntercept" type="float" value="0.000859"/>
                 </variable>
-                <variable minValue="0.05" name="CVTCN" units="V">
+                <variable minValue="0.05" name="CVTCN" units="V" longname="CVI Temperature by CNC">
                     <parameter name="gain" type="float" value="16"/>
                     <parameter name="bipolar" type="bool" value="false"/>
                     <parameter name="corSlope" type="float" value="1.00166"/>
@@ -270,7 +271,7 @@
                 <variable longname="CVI valve 2" name="CVV2" units=""/>
                 <variable longname="CVI valve 3" name="CVV3" units=""/>
                 <variable longname="CVI inlet flag, 0=CVI, 1=Total" name="CVINLET" units=""/>
-                <variable longname="CVI user flow index" name="CVFXFLOWS" units="korns"/>
+                <variable longname="CVI user flow index" name="CVFXFLOWS" units="count"/>
 
 <!-- Note that this field is skipped in the scanf with %*f
                 <variable name="CVFXX" units="" longname="CVI # user connects or disconnects"/>
