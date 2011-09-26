@@ -26,6 +26,7 @@ Master package for UCAR RAF satcom network configuration
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT
 cp -r etc $RPM_BUILD_ROOT
+cp -r sbin $RPM_BUILD_ROOT
 
 %post
 
