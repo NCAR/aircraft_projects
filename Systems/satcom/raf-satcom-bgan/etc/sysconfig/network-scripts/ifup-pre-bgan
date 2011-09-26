@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# /sbin/ifup looks for the script /sbin/ifup-pre-local, 
+# and if it finds it, runs it before bringing up the device,
+# passing the same argument, like "bgan" that was passed to ifup.
+#
+# raf-satcom RPM contains /sbin/ifup-pre-local.  If passed an argument
+# "bgan", ifup-pre-local checks for the existence this script,
+# /etc/sysconfig/network-scripts/ifup-pre-bgan, and if executable
+# sources it.
+
+# Reset ethernet device.  Is this necessary with bgan?  It is with mpds.
+# ifdown $ETH
+# ifup $ETH
+

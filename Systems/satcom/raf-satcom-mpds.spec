@@ -1,7 +1,7 @@
 Summary: PPP and PPPOE configuration for Inmarsat MPDS
 Name: raf-satcom-mpds
 Version: 1.0
-Release: 7
+Release: 8
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -82,6 +82,7 @@ rm -rf $RPM_BUILD_ROOT
 # files to be left alone, and newly installed files to become .rpmnew
 %defattr(-,root,root)
 %config /etc/sysconfig/network-scripts/ifcfg-mpds
+%config /etc/sysconfig/network-scripts/ifup-pre-mpds
 %config /etc/sysconfig/networking/devices/ifcfg-mpds
 %config /etc/sysconfig/networking/profiles/default/ifcfg-mpds
 %config /etc/sysconfig/network-scripts/ifcfg-eth3
@@ -93,6 +94,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/pppoe-lost
 
 %changelog
+* Mon Sep 26 2011 Gordon Maclean <maclean@ucar.edu> 1.0-8
+- Added /etc/sysconfig/network-scripts/ifup-pre-mpds
 * Mon Jul 26 2010 Chris Webster <cjw@ucar.edu> 1.0-7
 - SERVICENAME has been deprecated (new ISP?).
 * Sat Jan 23 2010 Gordon Maclean <maclean@ucar.edu> 1.0-6

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# /sbin/ifup looks for the script /sbin/ifup-pre-local, 
+# and if it finds it, runs it before bringing up the device,
+# passing the same argument, like "mpds" that was passed to ifup.
+#
+# raf-satcom RPM contains /sbin/ifup-pre-local.  If passed an argument
+# "mpds", ifup-pre-local checks for the existence this script,
+# /etc/sysconfig/network-scripts/ifup-pre-mpds, and if executable
+# sources it.
+
+# Reset ethernet device. ETH is defined in ifcfg-mpds.
+ifdown $ETH
+ifup $ETH
+

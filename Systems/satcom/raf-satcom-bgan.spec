@@ -1,7 +1,7 @@
 Summary: PPP and PPPOE configuration for Inmarsat BGAN
 Name: raf-satcom-bgan
 Version: 1.0
-Release: 2
+Release: 3
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -86,6 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 # files to be left alone, and newly installed files to become .rpmnew
 %defattr(-,root,root)
 %config /etc/sysconfig/network-scripts/ifcfg-bgan
+%config /etc/sysconfig/network-scripts/ifup-pre-bgan
 %config /etc/sysconfig/networking/devices/ifcfg-bgan
 %config /etc/sysconfig/networking/profiles/default/ifcfg-bgan
 %config /etc/sysconfig/network-scripts/ifcfg-eth3
@@ -97,6 +98,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/pppoe-lost
 
 %changelog
+* Mon Sep 26 2011 Gordon Maclean <maclean@ucar.edu> 1.0-3
+- Added /etc/sysconfig/network-scripts/ifup-pre-bgan
 * Tue Mar 2 2010 Gordon Maclean <maclean@ucar.edu> 1.0-2
 - removed Obsoletes: raf-satcom-mpds. If B obsoletes A, and A is installed,
 - yum will see a dependency there and yum update will install B. So yum update

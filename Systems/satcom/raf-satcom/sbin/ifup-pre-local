@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# /sbin/ifup runs this script
+#   /sbin/ifup-pre-local ${CONFIG} $2
+
+# CONFIG is what was passed to ifup, like mpds, bgan, eth0, etc
+CONFIG=$1
+
+# ignore $2
+
+# Look for and source /etc/sysconfig/network-scripts/ifup-pre-${CONFIG}
+if [ -x /etc/sysconfig/network-scripts/ifup-pre-${CONFIG} ]; then
+    source /etc/sysconfig/network-scripts/ifup-pre-${CONFIG} || exit 1
+fi
+
+exit 0
