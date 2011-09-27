@@ -1,0 +1,95 @@
+#!/bin/csh
+
+echo "This script is intended to create an initial project directory and copy"
+echo "files for processing."
+echo "Scripts will most likely need tweaking to get exact results, but"
+echo "this provides a useful first pass."
+echo
+echo "Usage:"
+echo "init_project ICEBRIDGE"
+echo
+echo -n "Proceed (y/N) ? "
+set proceed = $<
+
+if ($proceed != "y") then
+  exit(1)
+endif
+
+if ($#argv == 0) then
+  echo "Usage:\n init_project proj_name\n"
+  exit
+endif
+
+echo "\nChoose platform:"
+echo "  1. NCAR C130"
+echo "  2. NCAR GV"
+echo "  3. NRL P3"
+echo "  4. Lab system"
+echo -n "Enter (1-4) ? "
+set platform = $<
+
+switch ($platform)
+  case [1]:
+    set platform = 'C130_N130AR'
+    breaksw
+  case [2]:
+    set platform = 'GV_N677F'
+    breaksw
+  case [3]:
+    set platform = 'P3_NRL-P3'
+    breaksw
+  case [4]:
+    set platform = 'Lab_N600'
+    breaksw
+  default:
+    echo "Invalid choice."
+    exit
+endsw
+
+set proj=$argv[1]
+
+cd $PROJ_DIR
+
+if (-d $PROJ_DIR/$proj/$platform) then
+  echo -n "\nDirectory $PROJ_DIR/$proj/$platform already exists, erase and start over (y/N)? "
+  set proceed = $<
+  if ($proceed != "y") then
+    exit(1)
+  endif
+  /bin/rm -vrf $PROJ_DIR/$proj/$platform
+endif
+
+
+echo "\nCreating directories."
+/bin/mkdir -vp $PROJ_DIR/$proj
+/bin/chmod -v g+s $proj
+/bin/chgrp -v proj $proj
+
+if ($status != 0) then
+  echo "mkdir $PROJ_DIR/$proj/$platform failed, exiting."
+  exit
+endif
+
+/bin/mkdir -vp -m g+s $PROJ_DIR/$proj/$platform/nidas
+/bin/mkdir -vp -m g+s $PROJ_DIR/$proj/$platform/Production
+
+echo "\nCopying files."
+echo $proj > $proj/$platform/ProjectName
+
+/bin/cp -v /opt/local/nidas/share/xml/nidas.xsd $proj/$platform/nidas
+/bin/cp -v Configuration/raf/Categories $proj/$platform
+/bin/cp -v Configuration/raf/Despike $proj/$platform
+/bin/cp -v Configuration/raf/PMSspecs $proj/$platform
+/bin/cp -v Configuration/raf/StandardNames $proj/$platform
+/bin/cp -v Configuration/raf/VarDB $proj/$platform
+/bin/cp -v Configuration/raf/ascii_parms $proj/$platform
+/bin/cp -v Configuration/raf/groundvars $proj/$platform
+/bin/cp -v Configuration/raf/landmarks $proj/$platform
+/bin/cp -v Configuration/raf/$platform/* $proj/$platform
+/bin/mv -v $proj/$platform/default.xml $proj/$platform/nidas
+/bin/cp -v Configuration/raf/FlightGroups $proj/$platform/Production
+
+echo "\nSetting group write permissions."
+/bin/chmod -vR g+w,o-w $PROJ_DIR/$proj
+
+echo "\nMake sure this gets added to subversion (svn add $PROJ_DIR/$proj)."
