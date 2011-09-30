@@ -8,7 +8,7 @@ ABORT 'BUSY'
 TIMEOUT 3
 SAY "....Resetting modem\n"
 ''			AT
-'OK\r\n-+++\c-OK\r\n'	ATZE0
+''			ATZE0
 #
 # explicitly enable hardware handshaking
 'OK\r\n'		AT&C1&D2&K3
@@ -38,8 +38,8 @@ SAY "....Resetting modem\n"
 # 70,0,1=4800bps,V.110
 # 71,0,1=9600bps,V.110
 #
-#'OK\r\n'	 	AT+CBST=71,0,1
-'OK\r\n'	 	AT+CBST=7,0,1
+'OK\r\n'	 	AT+CBST=71,0,1
+#'OK\r\n'	 	AT+CBST=7,0,1
 #
 # Set V.43bis data compression
 #   0,0=none, 1,0=transmit, 2,0=receive, 3,0=both
@@ -57,12 +57,13 @@ SAY "Checking signal quality (0-5 bars)...\n"
 #
 TIMEOUT 120
 #
-# Level 3 RAS numbers
-# Local:        720-259-1189
-# Toll free:    866-450-6664
+# 008816000025 is the latest Iridium direct phone number.
+# 008816000023 is the phone number for Iridium's older dial in system.
+# On linux, the ...23 phone number worked when the ...25 phone number didn't.
+# Iridium systems are geared toward Windows systems.
 #
-# 'OK\r\n'		ATTD0018664506664
-'OK\r\n'		ATTD0017202591189
+'OK\r\n'                ATTD008816000023
+#'OK\r\n'                ATTD008816000025
 SAY "....Dialing, timeout=120\n"
 CONNECT		 	''
 SAY "\n....Connected\n"
