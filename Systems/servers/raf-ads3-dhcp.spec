@@ -1,7 +1,7 @@
 Summary: DHCP configuration for server on RAF aircraft
 Name: raf-ads3-dhcp
 Version: 1.0
-Release: 24
+Release: 25
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -98,6 +98,8 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %changelog
+* Tue Oct 4 2011 Chris Webster <cjw@ucar.edu> 1.0-25
+- dsm311 on C130.  GV LWO new motherboard.
 * Tue May 31 2011 Chris Webster <cjw@ucar.edu> 1.0-24
 - GV new motherboards.
 * Tue Apr 5 2011 Chris Webster <cjw@ucar.edu> 1.0-22
