@@ -1198,44 +1198,34 @@
             <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="100">
+                <parameter name="filter" type="string" value="boxcar"/>
+                <parameter name="numpoints" type="int" value="5"/>
                 <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="V">
-                    <parameter name="channel" type="int" value="0"/>
                     <parameter name="gain" type="float" value="2"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
                     <poly coefs="-2.094 17.727 -0.0041" units="hPa"/>
                 </variable>
                 <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="V">
-                    <parameter name="channel" type="int" value="1"/>
                     <parameter name="gain" type="float" value="2"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
                     <poly coefs="-3.184 17.935 -0.0052" units="hPa"/>
                 </variable>
                 <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="V">
-                    <parameter name="channel" type="int" value="2"/>
                     <parameter name="gain" type="float" value="1"/> 
                     <parameter name="bipolar" type="bool" value="true"/>
                     <poly coefs="1.044 6.9873 -0.0029" units="hPa"/>
                 </variable>
                 <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="V">
-                    <parameter name="channel" type="int" value="3"/>
                     <parameter name="gain" type="float" value="1"/> 
                     <parameter name="bipolar" type="bool" value="true"/>
                     <poly coefs="0.99 5.163 0.0001" units="hPa"/>
                 </variable>
-                <variable longname="Total Temperature, Radome Right" name="TTRR" units="V">
-                    <parameter name="channel" type="int" value="4"/>
-                    <parameter name="gain" type="float" value="4"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-68.309 27.092 -0.4413" units="deg_C"/>
-                </variable>
                 <variable longname="Total Temperature, Radome Left" name="TTRL" units="V">
-                    <parameter name="channel" type="int" value="5"/>
                     <parameter name="gain" type="float" value="4"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
                     <poly coefs="-74.434 29.429 -0.6613" units="deg_C"/>
                 </variable>
                 <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="V">
-                    <parameter name="channel" type="int" value="6"/>
                     <parameter name="gain" type="float" value="2"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
                     <poly coefs="0.387 14.082 -0.0037" units="hPa"/>
@@ -1516,9 +1506,24 @@
     <dsm derivedData="sock::7071" id="22" location="LPOD1" name="dsm322" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="322"/>
 
-        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LPI">
-            <parameter name="SerialNumber" value="F2DC003" type="string"/>
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LPC">
+            <parameter name="SerialNumber" value="F2DC001" type="string"/>
             <parameter name="RESOLUTION" value="25" type="int"/>
+        </sensor>
+
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <calfile file="A2D013.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <parameter name="rate" type="int" value="500"/>
+            <sample id="1" rate="500">
+                <variable longname="1-PPS Signal" name="PPS_LPOD1" units="V">
+                    <parameter name="gain" type="float" value="2"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                </variable>
+            </sample>
+            <sample id="2" rate="1">
+                <parameter name="temperature" type="bool" value="true"/>
+                <variable longname="A2D Temperature" name="A2DTEMP_LPOD1" units="deg_C"/>
+            </sample>
         </sensor>
 
         <output class="RawSampleOutputStream">
@@ -1529,9 +1534,9 @@
     <dsm derivedData="sock::7071" id="11" location="LPOD2" name="dsm311" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
 
-        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LPC">
-            <parameter name="SerialNumber" value="F2DC002" type="string"/>
-            <parameter name="RESOLUTION" value="10" type="int"/>
+        <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LPI">
+            <parameter name="SerialNumber" value="F2DC003" type="string"/>
+            <parameter name="RESOLUTION" value="25" type="int"/>
         </sensor>
 
         <output class="RawSampleOutputStream">
