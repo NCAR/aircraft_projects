@@ -57,8 +57,11 @@ set files=${proj}'?f??.nc'
 cat > reorder_all << "EOFREO"
 #!/bin/csh
 
-cd ${DATA_DIR}
-#cd /scr/raf/local_productiondata
+if ($uid == 20000) then
+  cd /scr/raf/local_productiondata
+else
+  cd ${DATA_DIR}
+endif
 
 "EOFREO"
 
@@ -87,8 +90,11 @@ end
 cat > run_proc2d << EOF2D
 #!/bin/csh
 
-setenv DAT ${DATA_DIR}
-#setenv DAT /scr/raf/local_productiondata/
+if ($uid == 20000) then
+  setenv DAT /scr/raf/local_productiondata/
+else
+  setenv DAT ${DATA_DIR}
+endif
 
 EOF2D
 
