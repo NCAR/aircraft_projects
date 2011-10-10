@@ -1146,7 +1146,13 @@
     </server>
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3">
+          <sample id="0324" rate="50">
+            <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
+              <linear intercept="0.38" slope="1.0" units="degree"/>
+            </variable>
+          </sample>
+        </arincSensor>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G2"/>
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS5" id="140" suffix="_GMN"/>
@@ -1198,7 +1204,7 @@
           </sample>
           <sample id="0324" rate="50">
             <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
-              <linear intercept="0.3" slope="1.0" units="degree"/>
+              <linear intercept="0.4" slope="1.0" units="degree"/>
             </variable>
           </sample>
         </arincSensor>
@@ -1210,7 +1216,7 @@
           </sample>
           <sample id="0324" rate="50">
             <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
-              <linear intercept="-0.16" slope="1.0" units="degree"/>
+              <linear intercept="0.2" slope="1.0" units="degree"/>
             </variable>
           </sample>
           <sample id="0325" rate="50">
@@ -1305,23 +1311,23 @@
                 <parameter name="numpoints" type="int" value="5"/>
                 <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH2" units="V">
                     <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-95.78 28.02 -0.29366" units="deg_C"/>   
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <poly coefs="-99.251 29.869 -0.4873" units="deg_C"/>   
                 </variable>
                 <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH1" units="V">
                     <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-96.23 28.509 -0.31634" units="deg_C"/>  
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <poly coefs="-101.3 30.254 -0.4678" units="deg_C"/>  
                 </variable>
                 <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
                     <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-89.31 26.128 -0.09022" units="deg_C"/>  
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <poly coefs="-91.787 26.82 -0.0967" units="deg_C"/>  
                 </variable>
                 <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
                     <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-89.2 25.923 -0.07941" units="deg_C"/>  
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <poly coefs="-91.125 26.524 -0.0881" units="deg_C"/>  
                 </variable>
                 <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="V">
                     <parameter name="gain" type="float" value="2"/> 
