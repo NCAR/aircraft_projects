@@ -1184,14 +1184,14 @@
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS7" id="150">
             <sample id="1">
                 <variable longname="Raw Static Pressure, Fuselage" name="PSFD" units="hPa">
-                    <poly coefs="-0.11361 0.999666 4.46795e-07"/>
+                    <poly coefs="-1.5318 1.0011 -5.3772e-08"/>
                 </variable>
             </sample>
         </serialSensor>
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS8" id="160">
             <sample id="1">
                 <variable longname="Raw Static Pressure, Fuselage" name="PSFRD" units="hPa">
-                    <poly coefs="-0.168825 1.00007 1.18961e-08"/>
+                    <poly coefs="-1.4379 1.001 -1.7901e-07"/>
                 </variable>
             </sample>
         </serialSensor>
@@ -1204,32 +1204,32 @@
                 <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="V">
                     <parameter name="gain" type="float" value="2"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-2.094 17.727 -0.0041" units="hPa"/>
+                    <poly coefs="-1.06321 17.31 0.0046631" units="hPa"/>
                 </variable>
                 <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="V">
                     <parameter name="gain" type="float" value="2"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-3.184 17.935 -0.0052" units="hPa"/>
+                    <poly coefs="1.06971 17.2107 0.009156" units="hPa"/>
                 </variable>
                 <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="V">
                     <parameter name="gain" type="float" value="1"/> 
                     <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="1.044 6.9873 -0.0029" units="hPa"/>
+                    <poly coefs="-0.04396 6.98319 0.000945383" units="hPa"/>
                 </variable>
                 <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="V">
                     <parameter name="gain" type="float" value="1"/> 
                     <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="0.99 5.163 0.0001" units="hPa"/>
+                    <poly coefs="-0.07166 5.15959 0.00137372" units="hPa"/>
                 </variable>
                 <variable longname="Total Temperature, Radome Left" name="TTRL" units="V">
                     <parameter name="gain" type="float" value="4"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-74.434 29.429 -0.6613" units="deg_C"/>
+                    <poly coefs="-64.732 24.4525 -0.00629" units="deg_C"/>
                 </variable>
                 <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="V">
                     <parameter name="gain" type="float" value="2"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="0.387 14.082 -0.0037" units="hPa"/>
+                    <poly coefs="-0.4317 13.8444 -0.00391" units="hPa"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -1246,7 +1246,7 @@
                 <variable longname="Interior Cabin Static Pressure" name="PCAB" units="V">
                     <parameter name="gain" type="float" value="1"/> 
                     <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="13.024 107.73 -0.0515" units="hPa"/>
+                    <poly coefs="-2.802 109.206 -0.02093" units="hPa"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
@@ -1271,22 +1271,22 @@
                 <variable longname="Total Temperature, Deiced Fuselage" name="TTFH1" units="V">
                     <parameter name="gain" type="float" value="4"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-93.412 28.747 -0.1131" units="deg_C"/>
+                    <poly coefs="-92.721 28.685 -0.080337" units="deg_C"/>
                 </variable>
                 <variable longname="Total Temperature, Deiced Fuselage" name="TTFH2" units="V">
                     <parameter name="gain" type="float" value="4"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-94.483 29.029 -0.132" units="deg_C"/>
+                    <poly coefs="-93.542 28.749 -0.087033" units="deg_C"/>
                 </variable>
                 <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
                     <parameter name="gain" type="float" value="1"/> 
                     <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="-59.26 11.067 0.0" units="deg_C"/>
+                    <poly coefs="-55.999 9.779 0.11396" units="deg_C"/>
                 </variable>
                 <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
                     <parameter name="gain" type="float" value="1"/> 
                     <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="-62.207 11.422 0.0" units="deg_C"/>
+                    <poly coefs="-60.29 10.815 0.046668" units="deg_C"/>
                 </variable>
                 <variable longname="RSTB Sensor Head Temperature" name="TRSTB" units="V">
                     <parameter name="gain" type="float" value="1"/> 
@@ -1321,19 +1321,19 @@
             <sample id="1" rate="10">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="50"/>
-                <variable longname="Pyrgeometer Irradiance, Top" name="TRAD1" units="V">
+                <variable longname="Pyrgeometer Raw Infrared Irradiance, Top" name="IRT" units="V">
                     <parameter name="gain" type="float" value="2"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
                 </variable>
-                <variable longname="Pyrgeometer Housing Temperature, Top" name="TRAD2" units="V">
+                <variable longname="Pyrgeometer Housing Temperature, Top" name="IRTHT" units="V">
                     <parameter name="gain" type="float" value="2"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
                 </variable>
-                <variable longname="Pyrgeometer Irradiance, Bottom" name="BRAD1" units="V">
+                <variable longname="Pyrgeometer Raw Infrared Irradiance, Bottom" name="IRB" units="V">
                     <parameter name="gain" type="float" value="2"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
                 </variable>
-                <variable longname="Pyrgeometer Housing Temperature, Bottom" name="BRAD2" units="V">
+                <variable longname="Pyrgeometer Housing Temperature, Bottom" name="IRBHT" units="V">
                     <parameter name="gain" type="float" value="2"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
                 </variable>
@@ -1465,7 +1465,7 @@
                 <variable longname="Radiometric Sky/Cloud-Base Temperature" name="RSTT" units="V">
                     <parameter name="gain" type="float" value="1"/>
                     <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="-55.751 10.765 -0.0004" units="deg_C"/>
+                    <poly coefs="-49.112 8.9724 0.12102" units="deg_C"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
