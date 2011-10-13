@@ -1182,8 +1182,8 @@
         </arincSensor>
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130">
             <sample id="1">
-                <variable longname="Dew/Frost Point Balance, Fuselage Top" name="DPTB" units="unk"/>
-                <variable longname="Dew/Frost Point Temperature, Fuselage Top" name="DPT" units="deg_C">
+                <variable longname="Raw Dew/Frost Point Balance, Fuselage Top" name="DPTB" units="unk"/>
+                <variable longname="Raw Dew/Frost Point Temperature, Fuselage Top" name="DPT" units="deg_C">
                     <linear intercept="-1.5" slope="1.0" units="deg_C"/>
                 </variable>
                 <variable longname="Dew/Frost Point TEC, Fuselage Top" name="DPTTEC" units="unk"/>
@@ -1191,8 +1191,8 @@
         </serialSensor>
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="140">
             <sample id="1">
-                <variable longname="Dew/Frost Point Balance, Fuselage Bottom" name="DPBB" units="unk"/>
-                <variable longname="Dew/Frost Point Temperature, Fuselage Bottom" name="DPB" units="deg_C">
+                <variable longname="Raw Dew/Frost Point Balance, Fuselage Bottom" name="DPBB" units="unk"/>
+                <variable longname="Raw Dew/Frost Point Temperature, Fuselage Bottom" name="DPB" units="deg_C">
                     <linear intercept="-1.5" slope="1.0" units="deg_C"/>
                 </variable>
                 <variable longname="Dew/Frost Point TEC, Fuselage Bottom" name="DPBTEC" units="unk"/>
@@ -1353,6 +1353,22 @@
                 <variable longname="Pyrgeometer Housing Temperature, Bottom" name="IRBHT" units="V">
                     <parameter name="gain" type="float" value="2"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
+                </variable>
+                <variable name="THIML1" units="V" longname="HIMIL Tip Temperature">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="0 100 0" units="deg_C"/>
+                </variable>
+                <variable name="THIML2" units="V" longname="HIMIL Tip Temperature">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="0 100 0" units="deg_C"/>
+                </variable>
+                <variable name="THIML3" units="V" longname="HIMIL Tip Temperature">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="0 100 0" units="deg_C"/>
+                </variable>
+                <variable name="THIML4" units="V" longname="HIMIL Tip Temperature">
+                    <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
+                    <poly coefs="0 100 0" units="deg_C"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
