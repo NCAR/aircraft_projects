@@ -57,13 +57,13 @@ remotename iridium
 # is responsible for the link to a given peer system.
 #  This is a privileged option.
 #  This is set by ifup-ppp
-# linkname iridium
+linkname iridium
 
 # ipparam string: Provides an extra parameter to the ip-up, ip-pre-up
 # and  ip-down scripts. If this option is given, the string supplied
 # is given as the 6th parameter to those scripts.
 #  This is set by ifup-ppp
-# ipparam iridium
+ipparam iridium
 
 # connect script
 # Usually there is something which needs to be done to pre-
@@ -114,7 +114,9 @@ nodetach
 # noauth Do not require the peer  to  authenticate  itself.   This
 # option is privileged.
 # We don't need the remote system to authenticate, so use noauth.
-noauth
+# Note: in order to force local and remote IP address, it is necessary
+#  to unset both noauth and auth
+#noauth
 
 # Set the MRU [Maximum Receive Unit] value to n. Pppd  will
 # ask  the  peer  to  send packets of no more than n bytes.
@@ -128,8 +130,8 @@ noauth
 # UKansas report on Greenland Iridium system reported that
 # round-trip-time/byte reached a minimum floor of 7.5 msec/byte
 # at about mtu,mru=800 bytes, and didn't improve with higher values.
-# mru 296
-mru 800
+mru 296
+#mru 800
 
 # Set the MTU [Maximum Transmit Unit] value to  n.   Unless
 # the  peer  requests  a smaller value via MRU negotiation,
@@ -138,8 +140,8 @@ mru 800
 # work interface.  Note that for the IPv6 protocol, the MTU
 # must be at least 1280.
 # If MTU is set in the config file it overrides this value.
-# mtu 296
-mtu 800
+mtu 296
+#mtu 800
 
 # default-asyncmap
 # Disable asyncmap negotiation, forcing all control  characters  to
@@ -232,8 +234,10 @@ bsdcomp 0
 # direction.   Use  nodeflate  or deflate 0 to disable Deflate com-
 # pression entirely.  (Note: pppd requests Deflate  compression  in
 # preference to BSD-Compress if the peer can do either.)
-deflate 15,15
+#  - nodeflate set to match NASA provisioning
+#deflate 15,15
 # deflate 0
+nodeflate
 
 # noccp  Disable  CCP  (Compression  Control  Protocol) negotiation.  This
 # option should only be required if the peer is buggy and gets con-
@@ -277,7 +281,9 @@ connect-delay 20000
 # echo-reply.   This  option   can   be   used   with   the
 # lcp-echo-failure  option  to  detect  that the peer is no
 # longer connected.
-lcp-echo-interval 30
+#  - Set to 60 to match NASA provisioning
+#lcp-echo-interval 30
+lcp-echo-interval 60
 
 # lcp-echo-failure n: If this option is given, pppd will presume
 # the peer to be dead if n LCP echo-requests are sent without
@@ -288,7 +294,9 @@ lcp-echo-interval 30
 # physical  connection has been broken (e.g., the modem has
 # hung up) in situations where no  hardware  modem  control
 # lines are available.
-lcp-echo-failure 6
+#  - Set to 4 to match NASA provisioning
+#lcp-echo-failure 6
+lcp-echo-failure 4
 
 # lcp-max-configure n
 # Set the maximum number of LCP configure-request transmis-
@@ -307,7 +315,9 @@ lcp-max-terminate 5
 # lcp-restart n: Set the LCP restart interval
 # (retransmission timeout) to n seconds (default 3).
 # pppd code says: Set time in seconds between LCP retransmissions
-lcp-restart 20
+#  - Set to 10 to match NASA provisioining
+#lcp-restart 20
+lcp-restart 10
 
 # holdoff n: Specifies  how  many seconds to wait before
 # re-initiating the link after it terminates.  This option only
@@ -319,7 +329,9 @@ holdoff 5
 # ipcp-accept-local: With this option, pppd will accept the
 # peers idea of our local IP address, even if the local IP
 # address was specified in an option.
-ipcp-accept-local
+# - During ICEBRIDGE, this did not seem to work - our peer insisted
+#   on setting local side of the IP config to one of our addresses
+#ipcp-accept-local
 
 # ipcp-accept-remote: With this option, pppd will accept the
 # peers idea of its (remote) IP address, even if the remote
@@ -384,3 +396,10 @@ noproxyarp
 # /var/run/ppp/resolv.conf file containing one or two name-
 # server lines with the address(es) supplied by the peer.
 
+#  try forcing the local IP address 
+#   This ip paring is for the NASA configuration
+#   it is aparant that we must identify the correct pairing and force
+#   it here for whomever we set up with.
+#   It would seem that one must turn off both auth and noauth
+#   to get this to work.
+10.2.2.2:10.2.2.1

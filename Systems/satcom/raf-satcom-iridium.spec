@@ -1,7 +1,7 @@
 Summary: Configuration for PPP over Iridium
 Name: raf-satcom-iridium
 Version: 1.0
-Release: 4
+Release: 5
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/peers/iridium-direct.chat
 
 %changelog
+* Tue Oct 11 2011 Tom Baltzer <tbaltzer@ucar.edu> 1.0-5
+- made mods to allow connectivity with NASA modem bank and ppp
+- as well as new interface (ttyUSB0)
 * Fri Jan 6 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
 - changed post script to a trigger script so that we can patchup pap-secrets
 - if ppp package messes with it.

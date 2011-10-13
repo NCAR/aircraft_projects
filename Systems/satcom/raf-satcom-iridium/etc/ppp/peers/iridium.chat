@@ -26,8 +26,8 @@ SAY "....Resetting modem\n"
 'OK\r\n'		AT+CGMR
 #
 # Select service type
-# Use V.22 or V.32 for connections to UCAR RAS
-# V.110 for iridium direct.
+# None (default) for NASA provisioning 
+# V.110 9600 for iridium provisioning
 #
 # 4,0,1=2400bps,V.22bis
 # 6,0,1=4800bps,V.32
@@ -38,12 +38,13 @@ SAY "....Resetting modem\n"
 # 70,0,1=4800bps,V.110
 # 71,0,1=9600bps,V.110
 #
-'OK\r\n'	 	AT+CBST=71,0,1
+#'OK\r\n'	 	AT+CBST=71,0,1
+#'OK\r\n'	 	AT+CBST=68,0,1
 #'OK\r\n'	 	AT+CBST=7,0,1
 #
 # Set V.43bis data compression
 #   0,0=none, 1,0=transmit, 2,0=receive, 3,0=both
-'OK\r\n'	 	AT+DS=3,0
+#'OK\r\n'	 	AT+DS=3,0
 #
 # request service report (ASYNC,SYNC,REL ASYNC, REL SYNC) on connect
 'OK\r\n'	 	AT+CR=1
@@ -57,14 +58,30 @@ SAY "Checking signal quality (0-5 bars)...\n"
 #
 TIMEOUT 120
 #
+#  NetZero number in Dever (trying out alternate ISPs)
+#'OK\r\n'		ATTD0013033500050
+#
 # 008816000025 is the latest Iridium direct phone number.
 # 008816000023 is the phone number for Iridium's older dial in system.
+# 008816000022 is the phone number that requires username/password
+#	- during ICEBRIDGE, this was working the best in pap-secrets
 # On linux, the ...23 phone number worked when the ...25 phone number didn't.
 # Iridium systems are geared toward Windows systems.
 #
-'OK\r\n'                ATTD008816000023
+#'OK\r\n'		ATTD008816000023
 #'OK\r\n'                ATTD008816000025
+#'OK\r\n'		ATTD008816000022
+#
+#  NASA has provided a setup for use in the ICEBRIDGE project
+#
+'OK\r\n'		ATTD0016506047424
+
+
 SAY "....Dialing, timeout=120\n"
-CONNECT		 	''
+CONNECT		 "\c"	
+#SAY "\n... Trying Login \n"
+#ogin:-BREAK-ogin:ncarppp
+#word:cHAchaw4
+#multilink: /usr/sbin/pppd
 SAY "\n....Connected\n"
 SAY "\n....Entering ppp\n"
