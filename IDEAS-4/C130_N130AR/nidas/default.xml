@@ -1042,6 +1042,20 @@
         </sample>
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
+
+    <serialSensor ID="ITR" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+        <sample id="1" rate="10" scanfFormat="%f %f %f %f %f %f %f">
+            <variable longname="ITR Voltage 1" name="XITRV1" units="count"/>
+            <variable longname="ITR Voltage 2" name="XITRV2" units="count"/>
+            <variable longname="ITR Detector Temperature" name="XITRDET" units="count"/>
+            <variable longname="ITR RTD 1 Temperature" name="XITRT1" units="count"/>
+            <variable longname="ITR RTD 2 Temperature" name="XITRT2" units="count"/>
+            <variable longname="ITR RTD 3 Temperature" name="XITRT3" units="count"/>
+            <variable longname="ITR Motor Speed" name="XITRMOT" units="count"/>
+        </sample>
+        <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
+
   </sensorcatalog>
 
   <site class="raf.Aircraft" name="C130_N130AR">
@@ -1595,6 +1609,8 @@
     <dsm derivedData="sock::7071" id="25" location="RPOD1" name="dsm325" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="325"/>
 
+        <serialSensor IDREF="ITR" devicename="/dev/ttyS5" id="200"/>
+        <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS6" id="250"/>
         <serialSensor IDREF="OphirIII" devicename="/dev/ttyS10" id="300"/>
 
         <output class="RawSampleOutputStream">
