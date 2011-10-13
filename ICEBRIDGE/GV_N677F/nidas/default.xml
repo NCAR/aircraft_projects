@@ -516,7 +516,7 @@
     <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%d,%f,%*d,%*d,%d">
             <variable longname="Dew/Frost Point Balance" name="DPBAL" units="unk"/>
-            <variable longname="Dew/Frost Point Temperature" name="DPTEMP" units="deg_C">
+            <variable longname="Raw Dew/Frost Point Temperature" name="DPTEMP" units="deg_C">
                 <linear intercept="-1.5" slope="1.0" units="deg_C"/>
             </variable>
             <variable longname="Dew/Frost Point TEC" name="DPTEC" units="unk"/>
@@ -1243,14 +1243,14 @@
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120">
 	      <sample id="1">
 	        <variable longname="Dew/Frost Point Balance, Fuselage Left" name="DPLB" units="unk"/>
-                <variable longname="Dew/Frost Point Temperature, Fuselage Left" name="DPLS" units="deg_C"/>
+                <variable longname="Raw Dew/Frost Point Temperature, Fuselage Left" name="DPLS" units="deg_C"/>
                 <variable longname="Dew/Frost Point TEC, Fuselage Left" name="DPLTEC" units="unk"/>
 	    </sample>
         </serialSensor>
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130">
 	      <sample id="1">
                 <variable longname="Dew/Frost Point Balance, Fuselage Right" name="DPRB" units="unk"/>
-                <variable longname="Dew/Frost Point Temperature, Fuselage Right" name="DPRS" units="deg_C"/>
+                <variable longname="Raw Dew/Frost Point Temperature, Fuselage Right" name="DPRS" units="deg_C"/>
                 <variable longname="Dew/Frost Point TEC, Fuselage Right" name="DPRTEC" units="unk"/>
 	    </sample>
         </serialSensor>
@@ -1334,13 +1334,13 @@
             <parameter name="bipolar" type="bool" value="false"/>
                     <linear intercept="-50.0" slope="10.0" units="deg_C"/>
                 </variable>
-                <variable longname="Dewpoint cavity pressure, left" name="PSDPL" units="V">
+                <variable longname="Dewpoint Cavity Pressure, Left" name="PSDPL" units="V">
                     <parameter name="SerialNumber" type="string" value="414995"/>
                     <parameter name="gain" type="float" value="4"/> 
             <parameter name="bipolar" type="bool" value="false"/>
                     <linear intercept="0.0" slope="220.0" units="hPa"/>  
                 </variable>
-                <variable longname="Dewpoint cavity pressure, right" name="PSDPR" units="V">
+                <variable longname="Dewpoint Cavity Pressure, Right" name="PSDPR" units="V">
                     <parameter name="SerialNumber" type="string" value="415021"/>
                     <parameter name="gain" type="float" value="4"/> 
             <parameter name="bipolar" type="bool" value="false"/>

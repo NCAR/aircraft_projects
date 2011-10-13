@@ -735,7 +735,7 @@
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120">
 	    <sample id="1">
 	        <variable name="DPLB" units="unk" longname="Dew/Frost Point Balance, Fuselage Left"/>
-                <variable name="DPLS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left">
+                <variable name="DPLS" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Left">
                     <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
                 </variable>
                 <variable name="DPLTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Left"/>
@@ -745,7 +745,7 @@
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130">
 	    <sample id="1">
                 <variable name="DPRB" units="unk" longname="Dew/Frost Point Balance, Fuselage Right"/>
-                <variable name="DPRS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right">
+                <variable name="DPRS" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Right">
                     <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
                 </variable>
                 <variable name="DPRTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Right"/>
@@ -808,11 +808,11 @@
                 <parameter name="numpoints" value="5" type="int"/>
                 <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <poly coefs="-90.691 25.554 0.08566" units="deg_C"/>   <!-- Pre-HIPPO-3 cal --> 
+			<poly coefs="-105.05 31.313 -0.48734" units="deg_C"/>  <!-- Post-HIPPO-5 cal -->
                 </variable>
                 <variable name="TTHL1" units="V" longname="Total Temperature, Deiced Left">
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <poly coefs="-90.802 25.69  0.068852" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
+                    <poly coefs="-107.47 31.871 -0.49869" units="deg_C"/>  <!-- Post-HIPPO-5 cal -->
                 </variable>
                 <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>

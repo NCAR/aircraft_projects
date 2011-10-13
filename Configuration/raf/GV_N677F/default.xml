@@ -273,7 +273,7 @@
     <serialSensor ID="DewPointer" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
         <sample id="1" scanfFormat="%d,%f,%*d,%*d,%d" rate="1">
             <variable name="DPBAL" units="unk" longname="Dew/Frost Point Balance"/>
-            <variable name="DPTEMP" units="deg_C" longname="Dew/Frost Point Temperature">
+            <variable name="DPTEMP" units="deg_C" longname="Raw Dew/Frost Point Temperature">
                 <linear slope="1.0" intercept="-1.5" units="deg_C"/>
             </variable>
             <variable name="DPTEC" units="unk" longname="Dew/Frost Point TEC"/>
@@ -392,8 +392,7 @@
             <variable name="PMGB" units="V" longname="SPP-200 Mid-Gain Baseline"/>
             <variable name="PLGB" units="V" longname="SPP-200 Low-Gain Baseline"/>
             <variable name="PFLW" units="cnts" longname="SPP-200 Flow">
-                <!-- <poly coefs="-0.0165 7.9354e-5 1.1453e-7" units="std cm3/s"/> -->
-                <linear slope="2.500000e-03" intercept="0.0" units="std cm3/s"/>
+                <poly coefs="7.51885 -8.46821e-03 2.30130e-06" units="std cm3/s"/>
             </variable>
             <variable name="PREF" units="V" longname="SPP-200 Laser Reference Voltage"/>
             <variable name="PFLWS" units="cnts" longname="SPP-200 Sheath Flow">
@@ -571,7 +570,7 @@
             </variable
 	    -->
             <variable name="UPRESS" units="V" longname="UHSAS Absolute Pressure in Canister">
-                <linear slope="22.222" intercept="10.556" units="kPa"/>
+                <linear intercept="0.0" slope="250.0" units="hPa"/>
             </variable>
             <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
             <!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
@@ -1038,7 +1037,7 @@
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120">
 	    <sample id="1">
 	        <variable name="DPLB" units="unk" longname="Dew/Frost Point Balance, Fuselage Left"/>
-                <variable name="DPLS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left"/>
+                <variable name="DPLS" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Left"/>
                 <variable name="DPLTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Left"/>
 	    </sample>
         </serialSensor>
@@ -1046,7 +1045,7 @@
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130">
 	    <sample id="1">
                 <variable name="DPRB" units="unk" longname="Dew/Frost Point Balance, Fuselage Right"/>
-                <variable name="DPRS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right"/>
+                <variable name="DPRS" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Right"/>
                 <variable name="DPRTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Right"/>
 	    </sample>
         </serialSensor>
