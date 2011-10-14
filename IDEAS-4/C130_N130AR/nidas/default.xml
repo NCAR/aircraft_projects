@@ -1043,6 +1043,21 @@
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
 
+    <serialSensor ID="CR2HYGROMETER" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+        <sample id="1" rate="10" scanfFormat="%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="Cryogenic Hygrometer Mixing Ratio" name="MR" units="ppmv"/>
+            <variable longname="Cryogenic Hygrometer Mirror Temperature" name="MIRRORT" units="deg_C"/>
+            <variable longname="Cryogenic Hygrometer Status Flag (1 is good)" name="STATUS" units="none"/>
+            <variable longname="Cryogenic Hygrometer Pressure" name="P" units="hPa"/>
+            <variable longname="Cryogenic Hygrometer Coldfinger Temperature" name="CFT" units="deg_C"/>
+            <variable longname="Cryogenic Hygrometer Balance" name="BAL" units="none"/>
+            <variable longname="Cryogenic Hygrometer PWM" name="PWM" units="none"/>
+            <variable longname="Cryogenic Hygrometer Mirror Needs Cleaning Flag" name="CLEAN" units="bool"/>
+            <variable longname="Cryogenic Hygrometer Board Temperature" name="BRDT" units="deg_C"/>
+        </sample>
+        <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
+
     <serialSensor ID="ITR" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="10" scanfFormat="%f %f %f %f %f %f %f">
             <variable longname="ITR Voltage 1" name="XITRV1" units="count"/>
@@ -1110,7 +1125,10 @@
 -->
     <dsm id="99" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
 
-        <sensor ID="LAMS1" class="raf.UDPSocketSensor" devicename="inet::41001" id="1500">
+        <sensor ID="LAMS1" class="raf.LamsNetSensor" devicename="inet::41001" id="1500">
+            <sample id="1" rate="100">
+                <variable name="LAMS_AVG"  length="512" units="Mhz" longname="LAMS Histogram Averages"/>
+            </sample>
         </sensor>
 
         <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::41003" id="1600">
@@ -1478,6 +1496,7 @@
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS5" id="110"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="120"/>
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS7" id="140" suffix="_GMN"/>
+        <serialSensor IDREF="CR2HYGROMETER" devicename="/dev/ttyS8" id="160" suffix="_CR2"/>
 
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
