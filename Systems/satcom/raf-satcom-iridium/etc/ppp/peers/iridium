@@ -1,7 +1,7 @@
 # 
 # These pppd parameters are used for the iridium connection because
 # of the "call" parameter that is used to start pppd:
-# pppd call iridium /dev/ttyUSB0
+#pppd call iridium /dev/ttyUSB0
 #
 # pppd will also read options from
 # /etc/ppp/options and /etc/ppp/options.ttyUSB0
@@ -36,7 +36,7 @@ unit 0
 
 # ifup-ppp passes this in the runstring to pppd, based on the value
 # of DEFROUTE in the config file, so don't specify it here.
-# defaultroute
+#defaultroute
 
 # user name
 # Sets the name used for authenticating the local system to
@@ -114,8 +114,6 @@ nodetach
 # noauth Do not require the peer  to  authenticate  itself.   This
 # option is privileged.
 # We don't need the remote system to authenticate, so use noauth.
-# Note: in order to force local and remote IP address, it is necessary
-#  to unset both noauth and auth
 #noauth
 
 # Set the MRU [Maximum Receive Unit] value to n. Pppd  will
@@ -234,7 +232,6 @@ bsdcomp 0
 # direction.   Use  nodeflate  or deflate 0 to disable Deflate com-
 # pression entirely.  (Note: pppd requests Deflate  compression  in
 # preference to BSD-Compress if the peer can do either.)
-#  - nodeflate set to match NASA provisioning
 #deflate 15,15
 # deflate 0
 nodeflate
@@ -281,7 +278,6 @@ connect-delay 20000
 # echo-reply.   This  option   can   be   used   with   the
 # lcp-echo-failure  option  to  detect  that the peer is no
 # longer connected.
-#  - Set to 60 to match NASA provisioning
 #lcp-echo-interval 30
 lcp-echo-interval 60
 
@@ -294,7 +290,6 @@ lcp-echo-interval 60
 # physical  connection has been broken (e.g., the modem has
 # hung up) in situations where no  hardware  modem  control
 # lines are available.
-#  - Set to 4 to match NASA provisioning
 #lcp-echo-failure 6
 lcp-echo-failure 4
 
@@ -315,7 +310,6 @@ lcp-max-terminate 5
 # lcp-restart n: Set the LCP restart interval
 # (retransmission timeout) to n seconds (default 3).
 # pppd code says: Set time in seconds between LCP retransmissions
-#  - Set to 10 to match NASA provisioining
 #lcp-restart 20
 lcp-restart 10
 
@@ -329,8 +323,6 @@ holdoff 5
 # ipcp-accept-local: With this option, pppd will accept the
 # peers idea of our local IP address, even if the local IP
 # address was specified in an option.
-# - During ICEBRIDGE, this did not seem to work - our peer insisted
-#   on setting local side of the IP config to one of our addresses
 #ipcp-accept-local
 
 # ipcp-accept-remote: With this option, pppd will accept the
@@ -403,3 +395,5 @@ noproxyarp
 #   It would seem that one must turn off both auth and noauth
 #   to get this to work.
 10.2.2.2:10.2.2.1
+#  For iridium provisioning use the following
+#192.168.13.1:192.168.13.254

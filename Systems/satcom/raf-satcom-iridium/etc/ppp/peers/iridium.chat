@@ -26,8 +26,8 @@ SAY "....Resetting modem\n"
 'OK\r\n'		AT+CGMR
 #
 # Select service type
-# None (default) for NASA provisioning 
-# V.110 9600 for iridium provisioning
+# Use V.22 or V.32 for connections to UCAR RAS
+# V.110 for iridium direct.
 #
 # 4,0,1=2400bps,V.22bis
 # 6,0,1=4800bps,V.32
@@ -63,8 +63,8 @@ TIMEOUT 120
 #
 # 008816000025 is the latest Iridium direct phone number.
 # 008816000023 is the phone number for Iridium's older dial in system.
-# 008816000022 is the phone number that requires username/password
-#	- during ICEBRIDGE, this was working the best in pap-secrets
+# 008816000022 is a number that requires username/password defined in papsecrets
+#  and was working best for ICEBRIDGE Oct 2011
 # On linux, the ...23 phone number worked when the ...25 phone number didn't.
 # Iridium systems are geared toward Windows systems.
 #
