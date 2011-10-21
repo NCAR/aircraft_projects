@@ -1060,13 +1060,13 @@
 
     <serialSensor ID="ITR" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="10" scanfFormat="%f %f %f %f %f %f %f">
-            <variable longname="ITR Voltage 1" name="XITRV1" units="count"/>
-            <variable longname="ITR Voltage 2" name="XITRV2" units="count"/>
-            <variable longname="ITR Detector Temperature" name="XITRDET" units="count"/>
-            <variable longname="ITR RTD 1 Temperature" name="XITRT1" units="count"/>
-            <variable longname="ITR RTD 2 Temperature" name="XITRT2" units="count"/>
-            <variable longname="ITR RTD 3 Temperature" name="XITRT3" units="count"/>
-            <variable longname="ITR Motor Speed" name="XITRMOT" units="count"/>
+            <variable longname="ITR Voltage 1" name="XITRV1" units="A/D count"/>
+            <variable longname="ITR Voltage 2" name="XITRV2" units="A/D count"/>
+            <variable longname="ITR Detector Temperature" name="XITRDET" units="A/D count"/>
+            <variable longname="ITR RTD 1 Counts" name="XITRC1" units="A/D count"/>
+            <variable longname="ITR RTD 2 Counts" name="XITRC2" units="A/D count"/>
+            <variable longname="ITR RTD 3 Counts" name="XITRC3" units="A/D count"/>
+            <variable longname="ITR Motor Speed" name="XITRMOT" units="RPM"/>
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
@@ -1370,7 +1370,7 @@
                 <variable longname="UV Hygrometer Intensity" name="XUVI" units="V">
                     <parameter name="gain" type="float" value="2"/> 
                     <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="24.087 -7.0017 0.5067" units="deg_C"/>
+                    <poly coefs="38.0 -11.0 0.0" units="deg_C"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
