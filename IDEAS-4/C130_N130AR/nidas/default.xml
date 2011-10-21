@@ -1141,6 +1141,31 @@
         -->
         </sensor>
 
+        <socketSensor ID="JAVAD_GPS" class="GPS_NMEA_NetSensor" devicename="inet::41002" id="1400" suffix="_JVD">
+            <!-- GGA record -->
+            <sample id="1" rate="1">
+                <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="sec"/>
+                <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
+                <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
+                <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS" name="GGQUAL" units="none"/>
+                <variable longname="Reference GPS number of satellites tracked" name="GGNSAT" units="number"/>
+                <variable longname="Reference GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
+                <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
+                <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
+                <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
+                <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
+            </sample>
+            <!-- RMC record -->
+            <sample id="2" rate="1">
+                <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="none"/>
+                <variable longname="Reference GPS Ground Speed" name="GGSPD" units="m/s"/>
+                <variable longname="Reference GPS Track Angle" name="GGTRK" units="degree_T"/>
+                <variable longname="Reference GPS Ground Speed Vector, East Component" name="GGVEW" units="m/s"/>
+                <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
+                <variable longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)" name="GGRepLag" units="s"/>
+            </sample>
+            <message length="0" position="end" separator="\r\n"/>
+        </socketSensor>
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
