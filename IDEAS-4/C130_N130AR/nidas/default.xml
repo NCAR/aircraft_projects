@@ -825,9 +825,9 @@
     </serialSensor>
     <serialSensor ID="PIC_H2O" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="5" scanfFormat="%*f %f %f %f %*d %*f">
-            <variable longname="Picarro Water Mixing Ratio" name="H2O" units="V"/>
-            <variable longname="Picarro O18 Mixing Ratio" name="O18" units="V"/>
-            <variable longname="Picarro Deuterium Mixing Ratio" name="2H" units="V"/>
+            <variable longname="Picarro Water Mixing Ratio" name="MRH2O" units="V"/>
+            <variable longname="Picarro O18 Mixing Ratio" name="MRO18" units="V"/>
+            <variable longname="Picarro Deuterium Mixing Ratio" name="MR2H" units="V"/>
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
@@ -1640,7 +1640,9 @@
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D013.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="500">
+            <sample id="1" rate="100">
+                <parameter name="filter" type="string" value="boxcar"/>
+                <parameter name="numpoints" type="int" value="5"/>
                 <variable longname="1-PPS Signal" name="PPS_LPOD1" units="V">
                     <parameter name="gain" type="float" value="2"/>
                     <parameter name="bipolar" type="bool" value="false"/>
