@@ -633,18 +633,17 @@
         <message separator="#\r\n" position="end" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="CFDC" class="DSMSerialSensor"
-        baud="38400" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f">
-            <variable name="CT1" units="%" longname="CFDC Saturation Water"/>
-            <variable name="CT2" units="deg_C" longname="CFDC Aerosol Location Temperature"/>
-            <variable name="CT3" units="#/cm3" longname="CFDC Concentration"/>
-            <variable name="CT4" units="bool" longname="CFDC CVI (ON=1)"/>
-            <variable name="CT5" units="seconds" longname="CFDC MCA Live Time"/>
-            <variable name="CT6" units="hPa" longname="CFDC Pressure"/>
-            <variable name="CT7" units="none" longname="CFDC Filter"/>
+    <serialSensor ID="CFDC" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
+            <variable longname="CFDC Saturation Water" name="CT1" units="%"/>
+            <variable longname="CFDC Aerosol Location Temperature" name="CT2" units="deg_C"/>
+            <variable longname="CFDC Concentration" name="CT3" units="#/cm3"/>
+            <variable longname="CFDC MCA Live Time" name="CT5" units="seconds"/>
+            <variable longname="CFDC Pressure" name="CT6" units="hPa"/>
+            <variable longname="CFDC Filter (ON=1)" name="CT7" units="bool"/>
+            <variable longname="CFDC MSP (ON=1)" name="CT4" units="bool"/>
         </sample>
-        <message separator="\r\n" position="end" length="0"/>
+        <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
     <serialSensor ID="CCN" class="DSMSerialSensor"
