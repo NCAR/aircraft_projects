@@ -1,7 +1,7 @@
 Summary: Iptables configuration for RAF aircraft server
 Name: raf-ac-firewall
 Version: 1.0
-Release: 5
+Release: 6
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -68,6 +68,11 @@ sed -i -c '/^[[:space:]]*IPTABLES_MODULES=/{
 s/IPTABLES_MODULES="[^"]*/& ip_conntrack ip_conntrack_ftp/
 }' $cf
 
+sed -i -c '/^[[:space:]]*IPTABLES_MODULES=/{
+/iptable_nat/b
+s/IPTABLES_MODULES="[^"]*/& iptable_nat/
+}' $cf
+
 if ! { chkconfig --list iptables | fgrep -q "5:on"; }; then
     chkconfig --level 2345 iptables on
 fi
@@ -83,6 +88,9 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ac-firewall/iptables-setup.sh
 
 %changelog
+* Wed Oct 26 2011 Gordon Maclean <maclean@ucar.edu> 1.0-6
+- Simplified VPN rules, allowing protocol esp, and udp ports
+- isakmp,ipsec-nat-t, and 10000. Added tun+ as a SAFE_EXT_ISF
 * Thu May  5 2011 Gordon Maclean <maclean@ucar.edu> 1.0-5
 - Removed IP addresses for GOOGLE_EARTH. Trying to block those accesses isn't working.
 * Wed May  4 2011 Gordon Maclean <maclean@ucar.edu> 1.0-4

@@ -44,6 +44,7 @@
 modprobe ip_tables
 modprobe ip_conntrack
 modprobe ip_conntrack_ftp
+modprobe iptable_nat
 
 # x.x.x.x/N
 #	N is bits in netmask
@@ -61,8 +62,8 @@ forward=$(</proc/sys/net/ipv4/ip_forward)
 
 # External interface connected through UCAR guest network.
 # This is already firewalled, we just have to do FORWARDING.
-# If VPN is up then cipsec0 is trusted.
-SAFE_EXT_IFS=(eth2 cipsec+)
+# If VPN is up then cipsec0 or tun0 is also trusted.
+SAFE_EXT_IFS=(eth2 cipsec+ tun+)
 
 # Unsafe, external interfaces which are not firewalled for us. We
 # want to do firewalling, but don't need to limit traffic
@@ -120,12 +121,12 @@ SSH_INCOMING=($ANYHOST)
 # likely different depending on what nameserver we're
 # forwarding to.  So this attempt to block google earth
 # traffic is not working. We're not even sure what server names
-# are used by GE. (Could we find it with an strace?)
+# are used by GE. (We'd have to try tcpdump or strace?)
 # So, this list of GOOGLE_EARTH IPs is empty.
 GOOGLE_EARTH=()
 
-# external vpn servers
-VPN_SVRS=(192.43.244.230 192.143.244.231)
+# EOL vpn servers
+VPN_SVRS=(192.43.244.230)
 
 # external hosts that can establish incoming postgres connections
 POSTGRES_IN=($UCAR_128)
@@ -366,7 +367,6 @@ for eif in ${UNSAFE_EXT_IFS[*]}; do
     filter_icmp $eif
 done
 
-
 filter_ip()
 {
     local eif=$1        # interface
@@ -554,39 +554,25 @@ filter_ip()
     done
 
     # VPN
-    # from Cisco VPN Client user guide:
-    # If you are running a Linux firewall (for example, ipchains or iptables),
-    # be sure that the following types of traffic are allowed to pass through:
-    # UDP port 50
-    # UDP port 10000 (or any other port number being used for IPSec/UDP)
-    # IP protocol 50 (ESP
-    # TCP port configured for IPSec/TCP
-    # NAT-T port 4500 
-    #
-    # Protocol 50 is listed as IPv6-Crypt in linux /etc/protocols, but
-    #	iana.org says 50 is ESP.
-    # VPN also seems to need port 29747 for some reason.
-    #
+    #   allow protocol 50 (ESP), UDP ports 10000 and isakmp(500)
+    #   port 4500 is IPsec NAT-Traversal
     for host in ${VPN_SVRS[*]}; do
-	iptables -A OUTPUT -o $eif -d $host -p udp --dport isakmp -m state --state NEW -j ACCEPT
-	iptables -A OUTPUT -o $eif -d $host -p udp --dport 4500 -m state --state NEW -j ACCEPT
-	iptables -A OUTPUT -o $eif -d $host -p udp --dport 10000 -m state --state NEW -j ACCEPT
-	iptables -A OUTPUT -o $eif -d $host -p udp --dport 29747 -m state --state NEW -j ACCEPT
-	iptables -A OUTPUT -o $eif -d $host -p 50 -j ACCEPT
-	iptables -A INPUT -i $eif -d $host -p 50 -j ACCEPT
+	iptables -A OUTPUT -o $eif -d $host -p esp -j ACCEPT
+	iptables -A OUTPUT -o $eif -d $host -p udp -m multiport --dports isakmp,ipsec-nat-t,10000 -j ACCEPT
+
+	iptables -A INPUT -i $eif -s $host -p esp -j ACCEPT
+	iptables -A INPUT -i $eif -s $host -p udp -m multiport --sports isakmp,ipsec-nat-t,10000 -j ACCEPT
+
 	if [ $forward -eq 1 ]; then
-	    iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DISP -d $host -p udp --dport isakmp -m state --state NEW -j ACCEPT
-	    iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DATA -d $host -p udp --dport isakmp -m state --state NEW -j ACCEPT
-	    iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DISP -d $host -p udp --dport 4500 -m state --state NEW -j ACCEPT
-	    iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DATA -d $host -p udp --dport 4500 -m state --state NEW -j ACCEPT
-	    iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DISP -d $host -p udp --dport 10000 -m state --state NEW -j ACCEPT
-	    iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DATA -d $host -p udp --dport 10000 -m state --state NEW -j ACCEPT
-	    iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DISP -d $host -p udp --dport 29747 -m state --state NEW -j ACCEPT
-	    iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DATA -d $host -p udp --dport 29747 -m state --state NEW -j ACCEPT
-	    iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DISP -d $host -p 50 -j ACCEPT
-	    iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DATA -d $host -p 50 -j ACCEPT
-	    iptables -A FORWARD -i $eif -s $PRIV_HOSTS_DISP -d $host -p 50 -j ACCEPT
-	    iptables -A FORWARD -i $eif -s $PRIV_HOSTS_DATA -d $host -p 50 -j ACCEPT
+            iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DISP -d $host -p esp -j ACCEPT
+            iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DISP -d $host -p udp -m multiport --dports isakmp,ipsec-nat-t,10000 -j ACCEPT
+            iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DATA -d $host -p esp -j ACCEPT
+            iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DATA -d $host -p udp -m multiport --dports isakmp,ipsec-nat-t,10000 -j ACCEPT
+
+            iptables -A FORWARD -i $eif -d $PRIV_HOSTS_DISP -s $host -p esp -j ACCEPT
+            iptables -A FORWARD -i $eif -d $PRIV_HOSTS_DISP -s $host -p udp -m multiport --sports isakmp,ipsec-nat-t,10000 -j ACCEPT
+            iptables -A FORWARD -i $eif -d $PRIV_HOSTS_DATA -s $host -p esp -j ACCEPT
+            iptables -A FORWARD -i $eif -d $PRIV_HOSTS_DATA -s $host -p udp -m multiport --sports isakmp,ipsec-nat-t,10000 -j ACCEPT
 	fi
     done
 
@@ -649,6 +635,7 @@ filter_ip()
     # 	--to 192.168.84.99:22
 }
 
+# setup rules for cheap, i.e. non-satcom, but exposed interfaces
 for eif in ${CHEAP_EXT_IFS[*]}; do
     filter_ip $eif true
 done
@@ -660,6 +647,7 @@ for iif in ${SAFE_EXT_IFS[*]}; do
     fi
 done
 
+# setup rules for expensive satcom exposed interfaces
 for eif in ${SATCOM_EXT_IFS[*]}; do
     filter_ip $eif false
 done
@@ -677,5 +665,8 @@ fi
 
 # THE END
 echo "# Generated by $0 from raf-ac-firewall package on `date`"
+echo "# Note running this script changes the firewall temporarily, until the next boot."
+echo "# To make the changes permanent, redirect the output to /etc/sysconfig/iptables"
+echo "# by doing: $0 > /etc/sysconfig/iptables"
 iptables-save
 

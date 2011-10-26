@@ -109,14 +109,12 @@ s/^([^[:space:]]+)/\1;local5.none/
 
 if ! egrep -q "^local5" $cf; then
 cat >> $cf << EOD
-local5.*			/var/log/ads3_debug.log
 local5.info			/var/log/ads3.log
-kern.debug			/var/log/ads3_kernel.log
+kern.info			/var/log/ads3_kernel.log
 EOD
 fi
 
 chmod +r /var/log/messages
-touch /var/log/ads3_debug.log
 touch /var/log/ads3.log
 touch /var/log/ads3_kernel.log
 if [ -x /etc/init.d/syslog ]; then
@@ -139,6 +137,8 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %attr(0755,root,root) /etc/logrotate.d/ads3
 
 %changelog
+* Wed Oct 26 2011 Gordon Maclean <maclean@ucar.edu> 1.0-6
+- Removed  debug output to /var/log/ads3_debug.log and /var/log/ads3_kernel_debug.log
 * Tue Feb 9 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5
 - sed 4.2 (Fedora) doesn't have -c option
 * Fri Jan 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
