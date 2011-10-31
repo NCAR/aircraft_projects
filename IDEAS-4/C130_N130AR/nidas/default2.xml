@@ -1164,10 +1164,6 @@
                 <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
                 <variable longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)" name="GGRepLag" units="s"/>
             </sample>
-            <!-- HDT record -->
-            <sample id="3" rate="1">
-                <variable longname="True Heading Angle" name="THDG" units="degree_T"/>
-            </sample>
             <message length="0" position="end" separator="\r\n"/>
         </socketSensor>
         <output class="RawSampleOutputStream">
@@ -1542,19 +1538,22 @@
             <sample id="1" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <linear intercept="0.0" slope="10.0" units="W"/>
-                </variable>
                 <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
                     <parameter name="gain" type="float" value="1"/> 
                     <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="channel" type="int" value="1"/>
                 </variable>
                 <variable longname="Radiometric Sky/Cloud-Base Temperature" name="RSTT" units="V">
                     <parameter name="gain" type="float" value="1"/>
                     <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="channel" type="int" value="2"/>
                     <poly coefs="-49.112 8.9724 0.12102" units="deg_C"/>
+                </variable>
+                <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
+                    <parameter name="gain" type="float" value="2"/> 
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="channel" type="int" value="3"/>
+                    <linear intercept="0.0" slope="10.0" units="W"/>
                 </variable>
             </sample>
             <sample id="2" rate="1">
