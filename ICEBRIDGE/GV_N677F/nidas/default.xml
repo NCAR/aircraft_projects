@@ -1158,6 +1158,10 @@
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS5" id="140" suffix="_GMN"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="150"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="160"/>
+<!--
+        NOTE: a mistake was made prior to the project.  The actual serial number of this A2D board is 1608. Since
+        pre-cals were done with 1709 indicated, we're leaving 1709 as the S/N for this board. Caveat Emptor. 
+-->
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D1709.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
             <parameter name="rate" type="int" value="500"/>
