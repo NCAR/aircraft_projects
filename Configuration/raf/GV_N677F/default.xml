@@ -878,6 +878,18 @@
         </sample>
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
+    <serialSensor ID="ITR" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+        <sample id="1" rate="10" scanfFormat="%f %f %f %f %f %f %f">
+            <variable longname="ITR Voltage 1" name="XITRV1" units="A/D count"/>
+            <variable longname="ITR Voltage 2" name="XITRV2" units="A/D count"/>
+            <variable longname="ITR Detector Temperature" name="XITRDET" units="A/D count"/>
+            <variable longname="ITR RTD 1 Counts" name="XITRC1" units="A/D count"/>
+            <variable longname="ITR RTD 2 Counts" name="XITRC2" units="A/D count"/>
+            <variable longname="ITR RTD 3 Counts" name="XITRC3" units="A/D count"/>
+            <variable longname="ITR Motor Speed" name="XITRMOT" units="RPM"/>
+        </sample>
+        <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
 
 </sensorcatalog>
 
@@ -949,7 +961,7 @@
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="160"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D1709.dat"/>
+            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D1608.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="10">
                 <parameter name="filter" value="boxcar" type="string"/>
