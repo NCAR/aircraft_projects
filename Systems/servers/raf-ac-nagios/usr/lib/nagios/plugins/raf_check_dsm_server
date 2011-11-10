@@ -7,46 +7,50 @@ import sys
 
 class TimeoutHTTPConnection(httplib.HTTPConnection):
 
-   def connect(self):
-       httplib.HTTPConnection.connect(self)
-       self.sock.settimeout(self.timeout)
+    def connect(self):
+        httplib.HTTPConnection.connect(self)
+        self.sock.settimeout(self.timeout)
 
 class TimeoutHTTP(httplib.HTTP):
-   _connection_class = TimeoutHTTPConnection
+    _connection_class = TimeoutHTTPConnection
 
-   def set_timeout(self, timeout):
-       self._conn.timeout = timeout
+    def set_timeout(self, timeout):
+        self._conn.timeout = timeout
 
 class TimeoutTransport(xmlrpclib.Transport):
 
-   def make_connection(self, host):
-       conn = TimeoutHTTP(host)
-       conn.set_timeout(self.timeout)
-       return conn
+    def make_connection(self, host):
+        conn = TimeoutHTTP(host)
+        conn.set_timeout(self.timeout)
+        return conn
 
 def Server(url, *args, **kwargs):
-   t = TimeoutTransport()
-   t.timeout = kwargs.get('timeout', 20)
-   if 'timeout' in kwargs:
-       del kwargs['timeout']
-   kwargs['transport'] = t
-   server = xmlrpclib.Server(url, *args, **kwargs)
-   return server
+    t = TimeoutTransport()
+    t.timeout = kwargs.get('timeout', 20)
+    if 'timeout' in kwargs:
+        del kwargs['timeout']
+    kwargs['transport'] = t
+    server = xmlrpclib.ServerProxy(url, *args, **kwargs)
+    return server
 
-servString = "http://%s:%s" % (sys.argv[1],sys.argv[2])
+if __name__ == "__main__":
+    #build server string to create xmlrpc handle
+    servString = "http://%s:%s" % (sys.argv[1],sys.argv[2])
 
-try:
-   dsmServ = Server(servString)
-   dsmList = dsmServ.GetDsmList()
-except: 
-   print "DSM-Server CRITICAL; Could not connect to DSM-Server: " + servString
-   sys.exit(2)
+    #attempt to contact dsmserver via xmlrpc
+    try:
+        dsmServ = Server(servString)
+        dsmList = dsmServ.GetDsmList()
+    except:
+        #failed to connect to dsm server via xmlrpc
+        print "DSM-Server CRITICAL; Could not connect to DSM-Server: " + servString
+        sys.exit(2)
 
-	
-if (dsmList != ""):
-   print "DSM-Server OK; DSM list is non-empty"
-   sys.exit(0)
-else :
-   print "DSM-Server WARNING; Connected to server, but retrieved empty DSM list"
-   sys.exit(1)
 
+    #check to see if dsm list is empty
+    if (dsmList == ""):
+        print "DSM-Server WARNING; Connected to server, but retrieved empty DSM list"
+        sys.exit(1)
+    else :
+        print "DSM-Server OK; DSM list is non-empty"
+        sys.exit(0)
