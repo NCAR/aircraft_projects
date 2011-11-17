@@ -1075,9 +1075,11 @@
     </serialSensor>
     <serialSensor ID="HoneywellPPT" baud="19200" class="raf.PPT_Serial" databits="8" parity="none" stopbits="1">
         <sample id="1" scanfFormat="?%*2dCP=%f">
+           <variable name="PA" units="hPa" longname="Raw Dynamic Pressure"/>
            <prompt rate="50" string="*00P1\r"/>
         </sample>
         <sample id="2" scanfFormat="?%*2dCT=%f">
+           <variable name="PATEMP" units="deg_C" longname="Temperature of Honeywell Pressure Probe"/>
            <prompt rate="1" string="*00T1\r"/>
         </sample>
         <message length="0" position="end" separator="\r"/>
