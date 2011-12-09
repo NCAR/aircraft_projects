@@ -25,10 +25,12 @@ Configuration and additional plugins for RAF aircraft servers.
 
 %install
 rm -rf %{buildroot}
+install -d %{buildroot}%{_sysconfdir}/init.d
 install -d %{buildroot}%{_sysconfdir}/nagios
 install -d %{buildroot}%{_libdir}/nagios/plugins
 cp usr/lib/nagios/plugins/* %{buildroot}%{_libdir}/nagios/plugins
 
+cp etc/init.d/raf_nagios_init %{buildroot}%{_sysconfdir}/init.d
 cp etc/nagios/raf_commands.cfg %{buildroot}%{_sysconfdir}/nagios
 cp etc/nagios/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios
 
