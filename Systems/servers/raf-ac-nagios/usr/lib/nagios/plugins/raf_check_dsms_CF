@@ -5,6 +5,7 @@ import httplib
 import sys
 import os
 import re
+import string
 from threading import Thread
 
 class testit(Thread):
@@ -72,8 +73,11 @@ if __name__ == "__main__":
         sys.exit(1)
 
     #set up some vars
-    num_responses = 0
     pinglist = []
+    respList = []
+    grepList = {}
+    badList = []
+    goodList = []
 
     #ping each dsm!
     for dsmname in dsmList.iterkeys() :
@@ -81,26 +85,70 @@ if __name__ == "__main__":
         pinglist.append(current)
         current.start()
 
-    #read back responses, parse into status for nagios
+    #read back responses from pings
     for pingle in pinglist:
         pingle.join()
         #print "Status from ",pingle.ip,"is",report[pingle.status]
         if (pingle.status == 2) :
-            num_responses += 1
+            respList.append(pingle.ip)
 
-    #return status (exit val), message (text before the '|'), and performance data (text after the '|') to nagios
-    if (num_responses == len(dsmList)) :
-        print "PING DSMs OK; all dsms responded to ping| %ddsms;%d;0;0;%d;" % (num_responses, len(dsmList)-1, len(dsmList) )
+
+    #determine where to start watching the log file from
+    #this file is deleted before nagios starts by /etc/init.d/raf_nagios_init
+    if not os.path.isfile("/tmp/ads3_debug.log.len"):
+        os.system("wc -l /var/log/ads3_debug.log | sed 's/ .*//' > /tmp/ads3_debug.log.len")
+    q = open("/tmp/ads3_debug.log.len")
+    skiplines = q.readline().strip()
+
+    #wait for DSMs to boot
+    if (len(respList) == 0) :
+        print "waiting for DSMs to boot..."
+        sys.exit(1)
+
+    #create regexp to match active dsms
+    regexp = "\(" + "\|".join( respList ) + "\)"
+
+    #extract state of each compact flash card
+    p = os.popen("tail -n +%s /var/log/ads3_debug.log | grep '%s' | grep ' CF: '" % (skiplines, regexp) )
+
+    regexp = ".*" + string.replace(regexp, "\\", "") + " CF: (card missing|.*/media/cf)"
+    regexp = re.compile(regexp)
+    while 1:
+      line = p.readline().strip()
+      if not line: break
+      m = regexp.match(line)
+      if m:
+          grepList[m.group(1)] = m.group(2)
+
+    #build up a set of bad cards
+    if grepList:
+        for host, state in grepList.iteritems() :
+            if "card missing" in state:
+                badList.append(host)
+            else:
+                goodList.append(host)
+
+    badS = " has"
+    if (len(badList) > 1) :
+        badS = "s have"
+
+    goodS = " has"
+    if (len(goodList) > 1) :
+        goodS = "s have"
+
+    #return a status message
+    if (len(goodList) == len(dsmList)) :
+        print "all dsms responded with functional Compact Flash cards"
         sys.exit(0)
-    elif (num_responses == 0) :
-        print "PING DSMs CRITICAL; no dsms responded to ping| %ddsms;%d;0;0;%d;" % (num_responses, len(dsmList)-1, len(dsmList) )
 
+    elif len(badList) :
+        print "the following dsm%s a broken Compact Flash card: %s" % (badS, ", ".join(badList) )
         sys.exit(2)
 
-    else :
-        plural = ""
-        if (num_responses > 1) :
-            plural = "s"
+    elif len(goodList) :
+        print "Compact Flash cards OK so far... the following dsm%s reported: %s" % (goodS, ", ".join(goodList) )
+        sys.exit(1)
 
-        print "PING DSMs WARNING; %d dsm%s of %d in list responded to ping| %ddsms;%d;0;0;%d;" % (num_responses, plural, len(dsmList), num_responses, len(dsmList)-1, len(dsmList) )
+    else :
+        print "waiting for DSMs to report..."
         sys.exit(1)

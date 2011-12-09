@@ -1,7 +1,7 @@
 Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
-Release: 5
+Release: 6
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -45,7 +45,8 @@ if ! egrep -q "raf_commands" $cf; then
 fi
 sed -i 's/\/localhost.cfg/\/raf_localhost.cfg/' $cf
 
-/sbin/chkconfig -level 345 nagios on
+/sbin/chkconfig --level 345 nagios on
+/sbin/chkconfig --add raf_nagios_init
 /etc/init.d/nagios restart
 
 %clean
@@ -53,11 +54,15 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
+%{_sysconfdir}/init.d/raf_nagios_init
 %{_sysconfdir}/nagios/raf_commands.cfg
 %{_sysconfdir}/nagios/raf_localhost.cfg
 %{_libdir}/nagios/plugins/raf_*
 
 %changelog
+* Wed Nov 30 2011 John Wasinger <wasinger@ucar.edu> - 1.0-6
+- Added raf_nagios_init.
+- Detect missing compact flash cards in DSMs.
 * Mon Jul 18 2011 Chris Webster <cjw@ucar.edu> - 1.0-5
 - Display satcom IP address in raf_check_ppp
 * Fri Feb 01 2010 Chris Webster <cjw@ucar.edu> - 1.0-4

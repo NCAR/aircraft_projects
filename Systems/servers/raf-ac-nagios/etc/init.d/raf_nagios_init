@@ -1,0 +1,22 @@
+#!/bin/sh                                                                                                                                                                                            
+# Initialization and shutdown commands for nagios.
+#
+# chkconfig: 2345 98 02
+# description: These commands will be run before and after the nagios daemon.
+#
+
+case "$1" in
+    start)
+        rm -f /tmp/ads3_debug.log.len
+        ;;
+        
+    stop)
+        ;;
+        
+    *)  
+        echo $"Usage: $0 {start|stop}"
+        exit 1
+        
+esac        
+
+exit 0
