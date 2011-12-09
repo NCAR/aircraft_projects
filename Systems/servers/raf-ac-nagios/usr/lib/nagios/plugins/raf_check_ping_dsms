@@ -62,20 +62,20 @@ if __name__ == "__main__":
         dsmServ = Server(servString)
         dsmList = dsmServ.GetDsmList()
     except:
-        #failed to connect to dsm server via xmlrpc
+        #failed to connect to DSM server via xmlrpc
         print "DSM-Server CRITICAL; Could not connect to DSM-Server: " + servString
         sys.exit(2)
 
-    #check to see if dsm list is empty
+    #check to see if DSM list is empty
     if (dsmList == ""):
         print "DSM-Server WARNING; Connected to server, but retrieved empty DSM list"
         sys.exit(1)
 
     #set up some vars
-    num_responses = 0
     pinglist = []
+    respList = []
 
-    #ping each dsm!
+    #ping each DSM!
     for dsmname in dsmList.iterkeys() :
         current = testit(dsmname)
         pinglist.append(current)
@@ -86,15 +86,17 @@ if __name__ == "__main__":
         pingle.join()
         #print "Status from ",pingle.ip,"is",report[pingle.status]
         if (pingle.status == 2) :
-            num_responses += 1
+            respList.append(pingle.ip)
+
+    num_responses = len(respList)
 
     #return status (exit val), message (text before the '|'), and performance data (text after the '|') to nagios
     if (num_responses == len(dsmList)) :
-        print "PING DSMs OK; all dsms responded to ping| %ddsms;%d;0;0;%d;" % (num_responses, len(dsmList)-1, len(dsmList) )
+        print "PING DSMs OK; all DSMs responded to ping| %ddsms;%d;0;0;%d;" % (num_responses, len(dsmList)-1, len(dsmList) )
         sys.exit(0)
 
     elif (num_responses == 0) :
-        print "PING DSMs CRITICAL; no dsms responded to ping| %ddsms;%d;0;0;%d;" % (num_responses, len(dsmList)-1, len(dsmList) )
+        print "PING DSMs CRITICAL; no DSMs responded to ping| %ddsms;%d;0;0;%d;" % (num_responses, len(dsmList)-1, len(dsmList) )
         sys.exit(2)
 
     else :
@@ -102,5 +104,5 @@ if __name__ == "__main__":
         if (num_responses > 1) :
             plural = "s"
 
-        print "PING DSMs WARNING; %d dsm%s of %d in list responded to ping| %ddsms;%d;0;0;%d;" % (num_responses, plural, len(dsmList), num_responses, len(dsmList)-1, len(dsmList) )
+        print "PING DSMs WARNING; the following DSM%s responded (%s of %s): %s" % (plural, num_responses, len(dsmList), ", ".join(respList) )
         sys.exit(1)

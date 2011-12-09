@@ -1,7 +1,7 @@
 Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
-Release: 6
+Release: 7
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -62,6 +62,8 @@ rm -rf %{buildroot}
 %{_libdir}/nagios/plugins/raf_*
 
 %changelog
+* Fri Dec 09 2011 John Wasinger <wasinger@ucar.edu> - 1.0-7
+- Now mentions DSM names that responded to pings.
 * Wed Nov 30 2011 John Wasinger <wasinger@ucar.edu> - 1.0-6
 - Added raf_nagios_init.
 - Detect missing compact flash cards in DSMs.
