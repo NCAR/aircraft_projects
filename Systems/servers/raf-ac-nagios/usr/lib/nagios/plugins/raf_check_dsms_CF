@@ -92,6 +92,7 @@ if __name__ == "__main__":
         if (pingle.status == 2) :
             respList.append(pingle.ip)
 
+    num_responses = len(respList)
 
     #determine where to start watching the log file from
     #this file is deleted before nagios starts by /etc/init.d/raf_nagios_init
@@ -101,9 +102,9 @@ if __name__ == "__main__":
     skiplines = q.readline().strip()
 
     #wait for DSMs to boot
-    if (len(respList) == 0) :
-        print "waiting for DSMs to boot..."
-        sys.exit(1)
+    if (num_responses == 0) :
+        print "PING DSMs CRITICAL; no dsms responded to ping| %ddsms;%d;0;0;%d;" % (num_responses, len(dsmList)-1, len(dsmList) )
+        sys.exit(2)
 
     #create regexp to match active DSMs
     regexp = "\(" + "\|".join( respList ) + "\)"
@@ -150,5 +151,9 @@ if __name__ == "__main__":
         sys.exit(1)
 
     else :
-        print "waiting for DSMs to report..."
+        plural = ""
+        if (num_responses > 1) :
+            plural = "s"
+
+        print "PING DSMs WARNING; %d dsm%s of %d in list responded to ping| %ddsms;%d;0;0;%d;" % (num_responses, plural, len(dsmList), num_responses, len(dsmList)-1, len(dsmList) )
         sys.exit(1)

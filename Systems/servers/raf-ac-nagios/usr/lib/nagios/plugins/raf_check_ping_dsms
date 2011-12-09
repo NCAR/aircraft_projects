@@ -81,7 +81,7 @@ if __name__ == "__main__":
         pinglist.append(current)
         current.start()
 
-    #read back responses, parse into status for nagios
+    #read back responses from pings
     for pingle in pinglist:
         pingle.join()
         #print "Status from ",pingle.ip,"is",report[pingle.status]
@@ -92,9 +92,9 @@ if __name__ == "__main__":
     if (num_responses == len(dsmList)) :
         print "PING DSMs OK; all dsms responded to ping| %ddsms;%d;0;0;%d;" % (num_responses, len(dsmList)-1, len(dsmList) )
         sys.exit(0)
+
     elif (num_responses == 0) :
         print "PING DSMs CRITICAL; no dsms responded to ping| %ddsms;%d;0;0;%d;" % (num_responses, len(dsmList)-1, len(dsmList) )
-
         sys.exit(2)
 
     else :
