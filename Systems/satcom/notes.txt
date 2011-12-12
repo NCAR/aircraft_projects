@@ -289,7 +289,7 @@ ifup iridium
     So the critical options in ifcfg-iridium:
         TYPE=Modem
         DEVICE=ppp0
-        MODEMPORT=/dev/ttyS*
+        MODEMPORT=/dev/ttyS* or /dev/ttyUSB*
         DEFROUTE=yes
         PEERDNS=no
         DEMAND=no
@@ -357,3 +357,13 @@ ifup iridium
 ifdown-ppp:
     kills pppd (/var/run/ppp-iridium.pid)
     kills ppp-watch (/var/run/pppwatch-iridium.pid)
+
+Switching from one iridium provider to another:
+Must edit /etc/ppp/pap-secrets and make sure that correct client/secret is 
+set up.
+
+That client must be defined as PAPNAME in /etc/sysconfig/network-scripts/ifcfg-iridium.
+
+Correct addressing for the giving provisioning must be configured in /etc/ppp/peers/iridium  note: you might try fooling around with ipcp-accept-local an dipcp-accept-remote parameters in this file to get the ip to be set by the provisioning ppp server - in RHEL6 I have not been successful Oct 2011.
+
+Must put the correct phone number to dial in /etc/ppp/peers/iridium.chat.

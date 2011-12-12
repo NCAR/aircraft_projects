@@ -1,3 +1,10 @@
+# This configuration is set up to work with ground provisioning provided by
+#  NASA.  Contact David VanGilst (d.vangilst@nserc.und.edu) to resolve
+#  any problems.  There are also elements for Iridium direct and 
+#  NetZero provisioning, neither of which were a complete solution but
+#  could be persued should the NASA provisioning be lost.
+#   see additional notes in /etc/ppp/peers/iridium.chat file and
+#   in /etc/ppp/pap-secrets file.
 # 
 # These pppd parameters are used for the iridium connection because
 # of the "call" parameter that is used to start pppd:
@@ -48,7 +55,7 @@ unit 0
 # Set the assumed name of the remote system for authentica-
 # tion purposes to name.
 # This is matched against the second field in pap-secrets
-remotename iridium
+#remotename iridium
 
 # linkname name: Sets the logical name of the link to name.
 # Pppd will  create  a file  named  ppp-name.pid  in /var/run
@@ -114,7 +121,7 @@ nodetach
 # noauth Do not require the peer  to  authenticate  itself.   This
 # option is privileged.
 # We don't need the remote system to authenticate, so use noauth.
-#noauth
+noauth
 
 # Set the MRU [Maximum Receive Unit] value to n. Pppd  will
 # ask  the  peer  to  send packets of no more than n bytes.
@@ -169,7 +176,7 @@ mtu 296
 # Do "asyncmap 08000000" to escape ESC=dec27, if one sets the modem
 # command escape character (default '+') to ESC with ATS2=27
 # asyncmap 08000000
-asyncmap 0
+#asyncmap 0
 
 # escape xx,yy,...
 # Specifies  that  certain  characters should be escaped on
@@ -277,7 +284,7 @@ connect-delay 20000
 # the peer should respond to the echo-request by sending an
 # echo-reply.   This  option   can   be   used   with   the
 # lcp-echo-failure  option  to  detect  that the peer is no
-# longer connected.
+# longer connected.  60 used to match NASA provisioning.
 #lcp-echo-interval 30
 lcp-echo-interval 60
 
@@ -289,7 +296,7 @@ lcp-echo-interval 60
 # option can be used to enable pppd to terminate after  the
 # physical  connection has been broken (e.g., the modem has
 # hung up) in situations where no  hardware  modem  control
-# lines are available.
+# lines are available. 4 used to match NASA provisioning.
 #lcp-echo-failure 6
 lcp-echo-failure 4
 
@@ -310,7 +317,8 @@ lcp-max-terminate 5
 # lcp-restart n: Set the LCP restart interval
 # (retransmission timeout) to n seconds (default 3).
 # pppd code says: Set time in seconds between LCP retransmissions
-#lcp-restart 20
+#  10 used to match NASA provisioning.
+#lcp-restart 20 
 lcp-restart 10
 
 # holdoff n: Specifies  how  many seconds to wait before
@@ -320,15 +328,43 @@ lcp-restart 10
 # because it was idle.
 holdoff 5
 
+# noipdefault : Disables the default behaviour when no local IP address is 
+# spec-ified,  which is to determine (if possible) the local IP address from 
+# the hostname.  With this option, the peer will have to supply  the  local  
+# IP  address  during IPCP negotiation (unless it specified explicitly on the 
+# command line or in an options file).
+#  - Thought that this was default, and it appears that prior to RHEL 6 it was
+#     however, at RHEL 6 it is not.  When not set, acserver defaults to a 
+#     194.168.{184/84}.1 address.  The peer on ground accepts it, but won't
+#     connect it to the internet.
+noipdefault
+
 # ipcp-accept-local: With this option, pppd will accept the
 # peers idea of our local IP address, even if the local IP
 # address was specified in an option.
-#ipcp-accept-local
+ipcp-accept-local
 
 # ipcp-accept-remote: With this option, pppd will accept the
 # peers idea of its (remote) IP address, even if the remote
 # IP address was specified in an option.
 ipcp-accept-remote
+
+# Kept for record - these addresses are for NASA provisioning.
+#10.2.2.2:10.2.2.1
+#  For iridium provisioning use the following
+#192.168.13.90:192.168.13.254
+
+#  require-mppe: Require  the  use of MPPE (Microsoft Point to Point 
+#  Encryption).  This option disables all other compression types.   This  
+#  option enables  both  40-bit and 128-bit encryption.  In order for MPPE to 
+#  successfully come up, you must have authenticated with either MS-CHAP  or  
+#  MS-CHAPv2.  This option is presently only supported under Linux, and only 
+#  if your  kernel  has  been  configured  to include MPPE support.
+#  
+#   Iridium provisioning may require mppe to be used for complete IP forwarding
+#    - requires kernel modification to support
+#    DON'T USE FOR NASA PROVISIONING
+#require-mppe
 
 # ipcp-max-configure n: Set the maximum number of IPCP 
 # configure-request  transmissions to n (default 10).
@@ -387,13 +423,3 @@ noproxyarp
 # set   to   1.    In   addition,   pppd   will  create  an
 # /var/run/ppp/resolv.conf file containing one or two name-
 # server lines with the address(es) supplied by the peer.
-
-#  try forcing the local IP address 
-#   This ip paring is for the NASA configuration
-#   it is aparant that we must identify the correct pairing and force
-#   it here for whomever we set up with.
-#   It would seem that one must turn off both auth and noauth
-#   to get this to work.
-10.2.2.2:10.2.2.1
-#  For iridium provisioning use the following
-#192.168.13.1:192.168.13.254

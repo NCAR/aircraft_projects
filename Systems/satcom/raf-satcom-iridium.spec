@@ -1,7 +1,7 @@
 Summary: Configuration for PPP over Iridium
 Name: raf-satcom-iridium
 Version: 1.0
-Release: 5
+Release: 6
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
