@@ -1260,7 +1260,7 @@
           <variable longname="Dew/Frost Point TEC, Fuselage Right" name="DPRTEC" units="unk"/>
 	</sample>
       </serialSensor>
-      <serialSensor IDREF="VCSEL" devicename="/dev/ttyS10" id="330" suffix="_VXL"/>
+      <serialSensor IDREF="VCSEL" devicename="/dev/ttyS8" id="330" suffix="_VXL"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -1313,42 +1313,47 @@
         <sample id="1" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH2" units="V">
-            <parameter name="gain" type="float" value="4"/> 
+          <variable longname="Dewpoint cavity pressure, right" name="PSDPR" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-95.78 28.02 -0.29366" units="deg_C"/>   
-          </variable>
-          <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH1" units="V">
-            <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-96.23 28.509 -0.31634" units="deg_C"/>  
-          </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
-            <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-89.31 26.128 -0.09022" units="deg_C"/>  
-          </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
-            <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-89.2 25.923 -0.07941" units="deg_C"/>  
-          </variable>
-          <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="V">
-            <parameter name="gain" type="float" value="2"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-            <linear intercept="-50.0" slope="10.0" units="deg_C"/>
+            <linear intercept="0" slope="220" units="hPa"/>
           </variable>
           <variable longname="Dewpoint cavity pressure, left" name="PSDPL" units="V">
-            <parameter name="SerialNumber" type="string" value="414995"/>
-            <parameter name="gain" type="float" value="4"/> 
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <linear intercept="0.0" slope="220.0" units="hPa"/>  
+            <linear intercept="0" slope="220" units="hPa"/>
           </variable>
-          <variable longname="Dewpoint cavity pressure, right" name="PSDPR" units="V">
-            <parameter name="SerialNumber" type="string" value="415021"/>
-            <parameter name="gain" type="float" value="4"/> 
+          <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <linear intercept="0.0" slope="220.0" units="hPa"/>  
+            <linear intercept="-50" slope="10" units="deg_C"/>
+          </variable>
+          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-89.2 25.923 -0.07941" units="deg_C"/>
+          </variable>
+          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-89.31 26.128 -0.09022" units="deg_C"/>
+          </variable>
+          <variable longname="Total Temperature, Radome Left" name="TTRL" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <linear intercept="0" slope="1" units="deg_C"/>
+          </variable>
+          <variable longname="Dewpoint Cavity Pressure, Left" name="PDPL" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <linear intercept="0" slope="220" units="hPa"/>
           </variable>
         </sample>
         <sample id="2" rate="1">
