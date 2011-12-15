@@ -1190,10 +1190,25 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="3.86 103.76 0.0555" units="hPa"/>
           </variable>
+          <variable longname="Cabin Temperature Forward Bottom" name="TCABFWDB" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <linear intercept="0" slope="100" units="deg_C"/>
+          </variable>
         </sample>
         <sample id="2" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2D Temperature" name="A2DTEMP_ADS" units="deg_C"/>
+        </sample>
+        <sample id="3" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="RSTB Sensor Head Temperature" name="TRSTB" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+          </variable>
         </sample>
       </sensor>
       <output class="RawSampleOutputStream">
@@ -1264,6 +1279,12 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <serialSensor IDREF="UHSAS" devicename="/dev/ttyS9" id="4200" suffix="_RWOO">
+        <parameter name="SerialNumber" type="string" value="UHSAS001"/>
+      </serialSensor>
+      <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS10" id="4400" suffix="_DB"/>
+      <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS11" id="4600"/>
+      <serialSensor IDREF="CORAW" devicename="/dev/ttyS12" id="4800"/>
     </dsm>
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
@@ -1365,45 +1386,128 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
-    <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmGustPod" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
-      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
-        <sample id="1">
-          <variable longname="Raw Dynamic Pressure, Gust Pod" name="PS" units="hPa"/>
-        </sample>
-      </serialSensor>
-      <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS6" id="120" suffix="_GP"/>
-      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130" suffix="_GP">
-        <sample id="1">
-          <variable longname="Horizontal Differential Pressure, Gust Pod" name="BDIFR" units="hPa"/>
-        </sample>
-        <sample id="2">
-          <variable longname="Temperature of BDIFR Probe" name="BDIFRTEMP" units="deg_C"/>
-        </sample>
-      </serialSensor>
-      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140" suffix="_GP">
-        <sample id="1">
-          <variable longname="Vertical Differential Pressure, Gust Pod" name="ADIFR" units="hPa">
-
-<!-- Compensate for inserting Gust Probe "upside down" -->
-            <linear intercept="0.0" slope="-1.0" units="hPa"/>
-          </variable>
-        </sample>
-        <sample id="2">
-          <variable longname="Temperature of ADIFR Probe" name="ADIFRTEMP" units="deg_C"/>
-        </sample>
-      </serialSensor>
-      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS9" id="150" suffix="_GP">
-        <sample id="1">
-          <variable longname="Raw Dynamic Pressure, Gust Pod" name="QC" units="hPa"/>
-        </sample>
-        <sample id="2">
-          <variable longname="Temperature of QCR Probe" name="QCRTEMP" units="deg_C"/>
-        </sample>
-      </serialSensor>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <serialSensor IDREF="CDP016" devicename="0" id="300" suffix="_LWOI"/>
+      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="500" suffix="_LWOO">
+        <parameter name="SerialNumber" type="string" value="F2DC003"/>
+      </sensor>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="700">
+        <calfile file="A2D1705.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP__LWO" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LWOO" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_LWOO" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LWOO" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <linear intercept="2" slope="10" units="W"/>
+          </variable>
+          <variable longname="1-PPS Signal - at wing DSM" name="PPS_LWO" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="84" location="LWI" name="dsmLWI" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWI"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D019.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP__LWI" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="1-PPS Signal - at wing DSM" name="PPS_LWI" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="85" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D004.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP__RWO" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="86" location="L5 AMAX-DOAS" name="dsm313" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <serialSensor IDREF="NOAA_CSD_O3" devicename="/dev/ttyS5" id="300" suffix="_CSD"/>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="500">
+        <calfile file="A2D1601.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP__313" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="1-PPS Signal - cabin side" name="PPS_LWOC" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+          </variable>
+          <variable longname="1-PPS Signal - cabin side" name="PPS_LWIC" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+        </sample>
+      </sensor>
     </dsm>
   </site>
 </project>
