@@ -1084,7 +1084,13 @@
           </sample>
         </arincSensor>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G"/>
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G">
+          <sample id="0165" rate="1">
+            <variable longname="Avionics GPS Vertical Velocity" name="VSPD" units="m/s">
+                <poly coefs="0.126 0.9654 0" units="m/s"/>
+            </variable>
+          </sample>
+        </arincSensor>
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
             <sample id="5" rate="25">
                 <variable longname="Altitude above ground (radar altimeter)" name="HGM232" units="feet">
@@ -1119,6 +1125,12 @@
                 </variable>
                 <variable longname="Dew/Frost Point TEC, Fuselage Top" name="DPTTEC" units="unk"/>
             </sample>
+        <sample id="1" rate="1">
+                <variable longname="Dew/Frost Point Balance, Fuselage Top" name="DPTB" units="unk"/>
+                <variable longname="Dew/Frost Point Temperature, Fuselage Top" name="DPT" units="deg_C">
+                <poly coefs="0 1 0" units="deg_C"/></variable>
+                <variable longname="Dew/Frost Point TEC, Fuselage Top" name="DPTTEC" units="unk"/>
+            </sample>
         </serialSensor>
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="140">
             <sample id="1">
@@ -1126,6 +1138,12 @@
                 <variable longname="Dew/Frost Point Temperature, Fuselage Bottom" name="DPB" units="deg_C">
                     <linear intercept="-1.5" slope="1.0" units="deg_C"/>
                 </variable>
+                <variable longname="Dew/Frost Point TEC, Fuselage Bottom" name="DPBTEC" units="unk"/>
+            </sample>
+        <sample id="1" rate="1">
+                <variable longname="Dew/Frost Point Balance, Fuselage Bottom" name="DPBB" units="unk"/>
+                <variable longname="Dew/Frost Point Temperature, Fuselage Bottom" name="DPB" units="deg_C">
+                <poly coefs="0 1 0" units="deg_C"/></variable>
                 <variable longname="Dew/Frost Point TEC, Fuselage Bottom" name="DPBTEC" units="unk"/>
             </sample>
         </serialSensor>
