@@ -515,9 +515,9 @@
     </serialSensor>
     <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="%d,%f,%*d,%*d,%d">
-        <variable longname="Dew/Frost Point Balance" name="DPBAL" units="unk"/>
-        <variable longname="Raw Dew/Frost Point Temperature" name="DPTEMP" units="deg_C"/>
-        <variable longname="Dew/Frost Point TEC" name="DPTEC" units="unk"/>
+        <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+        <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
+        <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
@@ -1260,20 +1260,8 @@
           </variable>
 	</sample>
       </serialSensor>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120">
-        <sample id="1">
-          <variable longname="Dew/Frost Point Balance, Fuselage Left" name="DPLB" units="unk"/>
-          <variable longname="Raw Dew/Frost Point Temperature, Fuselage Left" name="DPL" units="deg_C"/>
-          <variable longname="Dew/Frost Point TEC, Fuselage Left" name="DPLTEC" units="unk"/>
-        </sample>
-      </serialSensor>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130">
-        <sample id="1">
-          <variable longname="Dew/Frost Point Balance, Fuselage Right" name="DPRB" units="unk"/>
-          <variable longname="Raw Dew/Frost Point Temperature, Fuselage Right" name="DPR" units="deg_C"/>
-          <variable longname="Dew/Frost Point TEC, Fuselage Right" name="DPRTEC" units="unk"/>
-	</sample>
-      </serialSensor>
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130" suffix="_DPR"/>
       <serialSensor IDREF="VCSEL" devicename="/dev/ttyS8" id="330" suffix="_VXL"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
@@ -1333,13 +1321,13 @@
         <sample id="1" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Dewpoint cavity pressure, right" name="PDPR" units="V">
+          <variable longname="Dewpoint cavity pressure, right" name="CAVP_DPR" units="V">
             <parameter name="channel" type="int" value="6"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <linear intercept="0" slope="220" units="hPa"/>
           </variable>
-          <variable longname="Dewpoint cavity pressure, left" name="PDPL" units="V">
+          <variable longname="Dewpoint cavity pressure, left" name="CAVP_DPL" units="V">
             <parameter name="channel" type="int" value="5"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
