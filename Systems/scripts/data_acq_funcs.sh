@@ -245,11 +245,11 @@ start_dsm_server() {
 
         totalflight=$((12 * 3600))
         kdialog --caption "dsm_server" \
-            --progressbar "dsm_server, pid=$pid, config=$config. Progress is % of 12 hour flight. Press X or Cancel to shut down" $totalflight > /tmp/dsm_server.dcopRef
+            --progressbar "dsm_server, pid=$pid, config=$config. Progress is % of 12 hour flight. Press X or Cancel to shut down" $totalflight > /tmp/dsm_server.dlgRef
             # --geometry +10-10 \
-        local dcopRef=$(</tmp/dsm_server.dcopRef)
-        qdbus $dcopRef org.kde.kdialog.ProgressDialog.showCancelButton true > /dev/null
-        qdbus $dcopRef Set "" value 0 > /dev/null
+        local dlgRef=$(</tmp/dsm_server.dlgRef)
+        qdbus $dlgRef org.kde.kdialog.ProgressDialog.showCancelButton true > /dev/null
+        qdbus $dlgRef Set "" value 0 > /dev/null
         # wait until canceled or process id disappears
         local seconds=0
         local nsec=2
@@ -257,15 +257,15 @@ start_dsm_server() {
             sleep $nsec
             # qdbus fails if stop_dsm_server closes the progressbar
             # In which case we exit
-            res=`qdbus $dcopRef org.kde.kdialog.ProgressDialog.wasCancelled 2>/dev/null` || exit 1
+            res=`qdbus $dlgRef org.kde.kdialog.ProgressDialog.wasCancelled 2>/dev/null` || exit 1
             if [ $res == "true" ]; then
                 stop_dsm_server
                 terminate_last_config
                 break
             fi
             if [ ! -d /proc/"$pid" ];then
-                qdbus $dcopRef org.kde.kdialog.ProgressDialog.close 2> /dev/null
-                rm -f /tmp/dsm_server.dcopRef
+                qdbus $dlgRef org.kde.kdialog.ProgressDialog.close 2> /dev/null
+                rm -f /tmp/dsm_server.dlgRef
                 kdialog --caption "dsm_server Has Quit" \
                     --error "dsm_server, pid=$pid is not running"
                 terminate_last_config
@@ -273,7 +273,7 @@ start_dsm_server() {
             fi
             seconds=$(($seconds + $nsec))
             if [ $(( $seconds % 60)) -eq 0 ]; then
-                qdbus $dcopRef Set "" value $seconds > /dev/null
+                qdbus $dlgRef Set "" value $seconds > /dev/null
             fi
         done
     else
@@ -294,10 +294,10 @@ stop_dsm_server() {
         stat=$?
         [ $stat -ne 0 ] && exit 1
 
-        if [ -f /tmp/dsm_server.dcopRef ]; then
-            local dcopRef=$(</tmp/dsm_server.dcopRef)
-            qdbus $dcopRef org.kde.kdialog.ProgressDialog.close 2> /dev/null
-            rm -f /tmp/dsm_server.dcopRef
+        if [ -f /tmp/dsm_server.dlgRef ]; then
+            local dlgRef=$(</tmp/dsm_server.dlgRef)
+            qdbus $dlgRef org.kde.kdialog.ProgressDialog.close 2> /dev/null
+            rm -f /tmp/dsm_server.dlgRef
         fi
         ntry=0
         while [ -f $pidfile -a $ntry -lt 5 ]; do
