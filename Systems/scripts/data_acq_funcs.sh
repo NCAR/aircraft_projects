@@ -22,13 +22,6 @@ create_err_files() {
     trap "{ rm -f $errfile $txtfile; };" EXIT
 }
 
-start_dcopserver() {
-    if [ ! -f $HOME/.DCOPserver_`hostname`__0 ]; then
-        # echo "dcopserver not running"
-        dcopserver
-    fi
-}
-
 check_env_vars() {
     # Check required environment variables.
     if [ -z "$LOCAL" -o -z "$PROJECT" -o -z "$AIRCRAFT" ]; then
@@ -255,23 +248,23 @@ start_dsm_server() {
             --progressbar "dsm_server, pid=$pid, config=$config. Progress is % of 12 hour flight. Press X or Cancel to shut down" $totalflight > /tmp/dsm_server.dcopRef
             # --geometry +10-10 \
         local dcopRef=$(</tmp/dsm_server.dcopRef)
-        dcop $dcopRef showCancelButton true
-        dcop $dcopRef setProgress 0
+        qdbus $dcopRef org.kde.kdialog.ProgressDialog.showCancelButton true > /dev/null
+        qdbus $dcopRef Set "" value 0 > /dev/null
         # wait until canceled or process id disappears
         local seconds=0
         local nsec=2
         while true; do
             sleep $nsec
-            # dcop fails if stop_dsm_server closes the progressbar
+            # qdbus fails if stop_dsm_server closes the progressbar
             # In which case we exit
-            res=`dcop $dcopRef wasCancelled 2>/dev/null` || exit 1
+            res=`qdbus $dcopRef org.kde.kdialog.ProgressDialog.wasCancelled 2>/dev/null` || exit 1
             if [ $res == "true" ]; then
                 stop_dsm_server
                 terminate_last_config
                 break
             fi
             if [ ! -d /proc/"$pid" ];then
-                dcop $dcopRef close 2> /dev/null
+                qdbus $dcopRef org.kde.kdialog.ProgressDialog.close 2> /dev/null
                 rm -f /tmp/dsm_server.dcopRef
                 kdialog --caption "dsm_server Has Quit" \
                     --error "dsm_server, pid=$pid is not running"
@@ -280,7 +273,7 @@ start_dsm_server() {
             fi
             seconds=$(($seconds + $nsec))
             if [ $(( $seconds % 60)) -eq 0 ]; then
-                dcop $dcopRef setProgress $seconds
+                qdbus $dcopRef Set "" value $seconds > /dev/null
             fi
         done
     else
@@ -303,7 +296,7 @@ stop_dsm_server() {
 
         if [ -f /tmp/dsm_server.dcopRef ]; then
             local dcopRef=$(</tmp/dsm_server.dcopRef)
-            dcop $dcopRef close 2> /dev/null
+            qdbus $dcopRef org.kde.kdialog.ProgressDialog.close 2> /dev/null
             rm -f /tmp/dsm_server.dcopRef
         fi
         ntry=0
