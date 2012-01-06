@@ -515,11 +515,9 @@
     </serialSensor>
     <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="%d,%f,%*d,%*d,%d">
-        <variable longname="Dew/Frost Point Balance" name="DPBAL" units="unk"/>
-        <variable longname="Raw Dew/Frost Point Temperature" name="DPTEMP" units="deg_C">
-          <linear intercept="-1.5" slope="1.0" units="deg_C"/>
-        </variable>
-        <variable longname="Dew/Frost Point TEC" name="DPTEC" units="unk"/>
+        <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+        <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
+        <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
@@ -1246,20 +1244,8 @@
           </variable>
 	</sample>
       </serialSensor>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120">
-        <sample id="1">
-          <variable longname="Dew/Frost Point Balance, Fuselage Left" name="DPLB" units="unk"/>
-          <variable longname="Raw Dew/Frost Point Temperature, Fuselage Left" name="DPL" units="deg_C"/>
-          <variable longname="Dew/Frost Point TEC, Fuselage Left" name="DPLTEC" units="unk"/>
-        </sample>
-      </serialSensor>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130">
-        <sample id="1">
-          <variable longname="Dew/Frost Point Balance, Fuselage Right" name="DPRB" units="unk"/>
-          <variable longname="Raw Dew/Frost Point Temperature, Fuselage Right" name="DPR" units="deg_C"/>
-          <variable longname="Dew/Frost Point TEC, Fuselage Right" name="DPRTEC" units="unk"/>
-	</sample>
-      </serialSensor>
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130" suffix-"_DPR"/>
       <serialSensor IDREF="VCSEL" devicename="/dev/ttyS10" id="330" suffix="_VXL"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
