@@ -245,7 +245,7 @@ start_dsm_server() {
 
         totalflight=$((12 * 3600))
         kdialog --caption "dsm_server" \
-            --progressbar "dsm_server, pid=$pid, config=$config. Progress is % of 12 hour flight. Press Cancel to shut down (X button does nothing)" $totalflight > /tmp/dsm_server.dlgRef
+            --progressbar "pid=$pid, config=$config. Progress is % of 12 hour flight. Press Cancel to shut down (X button does nothing)" $totalflight > /tmp/dsm_server.dlgRef
             # --geometry +10-10 \
         local dlgRef=$(</tmp/dsm_server.dlgRef)
         qdbus $dlgRef org.kde.kdialog.ProgressDialog.showCancelButton true > /dev/null
