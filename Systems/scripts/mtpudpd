@@ -48,7 +48,7 @@ MTPP, yyyymmddThhmmss, alt1, temp1, alt2, temp2 ...
 import logging, logging.handlers
 import os, sys, pyinotify, re
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
-from socket import socket, AF_INET, SOCK_DGRAM, IPPROTO_IP, IP_MULTICAST_TTL
+from socket import socket, AF_INET, SOCK_DGRAM, IPPROTO_IP, IP_MULTICAST_TTL, SOL_SOCKET, SO_BROADCAST, SO_REUSEADDR
 
 
 reTime = re.compile("^A (........) (..):(..):(..) ")
@@ -106,9 +106,9 @@ class PClose(ProcessEvent):
 
             file.close()
 
-            # send UDP Data Content to next higher port number
+            # broadcast UDP Data Content to next higher port number
             if data:
-                udp.sendto(data, (host, port+1))
+                udp_bcast.sendto(data, (bcast_host, port+1))
                 logging.info(data)
 
 
@@ -158,12 +158,17 @@ if __name__ == '__main__':
             logging.critical("exiting, folder: '%s' does not exist." % path)
             sys.exit(1)
 
-        # open UDP socket
+        # open UDP socket for raw data
         udp = socket(AF_INET,SOCK_DGRAM)
-        #udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-        # Multicast code 
+        # Multicast mode
         udp.setsockopt(IPPROTO_IP, IP_MULTICAST_TTL, 20) 
+
+        # open UDP socket for profile data
+        bcast_host = ''
+        udp_bcast = socket(AF_INET,SOCK_DGRAM)
+        udp_bcast.setsockopt(SOL_SOCKET,SO_REUSEADDR,1)
+        udp_bcast.setsockopt(SOL_SOCKET,SO_BROADCAST, 1)
+        udp_bcast.bind((bcast_host,port+1))
  
         # watch the data folder for new files being created
         Monitor(path)
