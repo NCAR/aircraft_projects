@@ -5,9 +5,11 @@ This script uses the pyinotify module to monitor
 the creation of new files that are created in the 
 'data' folder.  When a new file is detected its
 contents are searched for a timestamp and data
-in which to export via UDP.
+in which to export via UDP.  There are two different file 
+types that this script works with, Raw MTP data and 
+MTP profile data.
 
-MTP files look like this:
+Raw MTP files look like this:
 
 (MTPcurrent_20101002_194732.txt shown)
 
@@ -19,23 +21,47 @@ M02: 2109 1299 2860 2691 2962 1116 4095 1805
 Pt: 2157 13804 13796 10311 13383 13327 13144 14440
 E 020541 021894 021874 018826 020158 019813 
 
-This script converts them into a single line that looks like this:
+This script takes date info form the "A" line and 
+spectral values from the "B" line and converts them into a single UDP line that looks like this:
 
 MTP,20101002T194730,017828,019041,018564
+
+and ships them UDP multicast to the port number specified on the command line
+
+
+MTP profile files look like this:
+Filename is of the form (ATP_yyyymmdd_hhmmss.txt) and contains a number of rows of the form:
+
+index  altitude temperature
+
+where: index is a count of the number of altitude/temperature pairs
+       altitude is in km
+       temperature is in deg_K
+
+The script takes the date from the filename and the complete set of altitude/temperature pairs 
+and sends them multicast to one + the port number specified on the command line in a form that looks like this:
+
+MTPP, yyyymmddThhmmss, alt1, temp1, alt2, temp2 ...
+
 """
 
 import logging, logging.handlers
 import os, sys, pyinotify, re
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
-from socket import socket, AF_INET, SOCK_DGRAM
+from socket import socket, AF_INET, SOCK_DGRAM, IPPROTO_IP, IP_MULTICAST_TTL
 
 
 reTime = re.compile("^A (........) (..):(..):(..) ")
 reVars = re.compile("^B (\d+) (\d+) (\d+) ")
+reProfTime = re.compile("ATP_(........)_(..)(..)(..).txt")
+reProfElmt = re.compile("(\d+)  (\d+.\d+)  (\d+.\d+)")
 
 class PClose(ProcessEvent):
 
     def process_IN_CLOSE(self, event):
+
+        data = None
+
         if event.name.startswith('MTPcurrent_'):
             if os.path.isfile(event.path):
                 fn = event.path
@@ -43,7 +69,6 @@ class PClose(ProcessEvent):
                 fn = os.path.join(event.path, event.name)
 
             # create UDP Data Content
-            data = None
             file = open(fn)
             for line in file:
                 m = reTime.match(line)
@@ -57,11 +82,34 @@ class PClose(ProcessEvent):
 
             file.close()
 
-            # send UDP Data Content
+            # send UDP Data Content if any has been generated
             if data:
                 udp.sendto(data, (host, port))
                 logging.info(data)
 
+        if event.name.startswith('ATP_'):
+            if os.path.isfile(event.path):
+                fn = event.path
+            else:
+                fn = os.path.join(event.path, event.name)
+
+            # create UDP Data Content
+            m = reProfTime.match(event.name)
+            if m:
+                data = "MTPP," + m.group(1) + "T" + \
+                	m.group(2) + m.group(3) + m.group(4)
+            file = open(fn)
+            for line in file:
+                m = reProfElmt.match(line)
+                if m:
+                    data = data + "," + m.group(2) + "," + m.group(3)
+
+            file.close()
+
+            # send UDP Data Content to next higher port number
+            if data:
+                udp.sendto(data, (host, port+1))
+                logging.info(data)
 
 
 def Monitor(path):
@@ -112,6 +160,10 @@ if __name__ == '__main__':
 
         # open UDP socket
         udp = socket(AF_INET,SOCK_DGRAM)
+        #udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
+        # Multicast code 
+        udp.setsockopt(IPPROTO_IP, IP_MULTICAST_TTL, 20) 
+ 
         # watch the data folder for new files being created
         Monitor(path)
