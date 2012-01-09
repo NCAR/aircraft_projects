@@ -74,6 +74,5 @@ alias flights   'cd $PROJ_DIR/$PROJECT/$AIRCRAFT/flights/'
 alias dumpiwg   'sudo tcpdump -i eth0 -A -s 1024 udp and dst port 7071'
 
 set cdpath = ($PROJ_DIR/$PROJECT/$AIRCRAFT)
-alias nerrt     'tail --lines=+0 --follow=name /var/log/ads3.log | grep -e WARN -e ERROR -e CRIT -e AL
-ERT -e EMERG | grep -v -e "read: timeout" -e "timeout #"'
+alias nerrt     'tail --lines=+0 --follow=name /var/log/ads3.log | grep --line-buffered -e WARN -e ERROR -e CRIT -e ALERT -e EMERG'
 
