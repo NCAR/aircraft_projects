@@ -565,6 +565,13 @@
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
     </sensor>
+    <sensor ID="MTP" class="raf.UDPSocketSensor" devicename="inet::40000">
+        <sample id="1" rate="1" scanfFormat="MTP,%*dT%*d,%d,%d,%d">
+            <variable longname="Channel 1 Counts" name="CHN1CNT" units="count"/>
+            <variable longname="Channel 2 Counts" name="CHN2CNT" units="count"/>
+            <variable longname="Channel 3 Counts" name="CHN3CNT" units="count"/>
+        </sample> 
+    </sensor>
     <serialSensor ID="Water_CN_Counter" baud="115200" class="DSMSerialSensor" databits="8" init_string="SM,4,1\r" parity="none" stopbits="1">
       <sample id="1" rate="10" scanfFormat="D,%f,%f,%*f,%f,%f,%f,%f,%f">
         <variable longname="WCN Current Operating Mode" name="MCN" units="none"/>
@@ -844,16 +851,25 @@
       Unfortunately, it does not tag these values and does not guarentee delivery of the values in the same
       order as requested.  We have chosen to offer only the Raw CO value and figure out MR
       as a derived variable.  Look at older versions of this file in svn for info.
+      There are two AeroLaser instruments, one purchased in 2000 and the other in 2005
 -->
-    <serialSensor ID="CORAW" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+    <serialSensor ID="CO_2000" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_AL">
       <sample id="1" scanfFormat="%f">
-        <variable longname="AeroLaser Carbon Monoxide Raw Signal" name="CORAW" units="V">
+        <variable longname="AeroLaser (older) Carbon Monoxide Raw Signal" name="CORAW" units="V">
           <linear intercept="0" slope="1" units="Hz"/>
         </variable>
       </sample>
       <prompt rate="5" string="SIG?\r"/>
       <message length="0" position="end" separator="\r"/>
     </serialSensor>
+    <serialSensor ID="CO_2005" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_AL">
+      <sample id="1" scanfFormat="%f">
+        <variable longname="Aerolaser (newer) Carbon Monoxide Raw Signal" name="CORAW" units="V"/>
+      </sample>
+      <prompt rate="5" string="SIG?\r"/>
+      <message length="0" position="end" separator="\r"/>
+    </serialSensor>
+
     <serialSensor ID="NOAA_CSD_O3" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="NOAA-OZONE%*d,%f,%f">
         <variable longname="NOAA O3 Ambiant Pressure" name="PS" units="hPa"/>
@@ -1022,14 +1038,14 @@
         <variable length="512" longname="LAMS histogram maximums" name="LAMS_MAX" units="Mhz"/>
       </sample>
     </sensor>
-    <serialSensor ID="PIC_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+    <serialSensor ID="PIC_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %*d %*f">
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
         <variable longname="Picarro Methane Mixing Ratio" name="CH4" units="ppmv"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-    <serialSensor ID="PIC_H2O" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+    <serialSensor ID="PIC_H2O" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %f %*d %*f">
         <variable longname="Picarro Water Mixing Ratio" name="H2O" units="ppmv"/>
         <variable longname="Picarro O18 Mixing Ratio" name="O18" units="per mil"/>
@@ -1153,7 +1169,7 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-    </dsm>
+      <sensor IDREF="MTP" id="1800" suffix="_MTP"/></dsm>
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
@@ -1270,7 +1286,7 @@
       </serialSensor>
       <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS10" id="4400" suffix="_DB"/>
       <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS11" id="4600"/>
-      <serialSensor IDREF="CORAW" devicename="/dev/ttyS12" id="4800"/>
+      <serialSensor IDREF="CO_2005" devicename="/dev/ttyS12" id="4800"/>
     </dsm>
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
@@ -1354,7 +1370,7 @@
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <linear intercept="0" slope="1" units="deg_C"/>
+            <poly coefs="-81.717 21.041 0.259" units="deg_C"/>
           </variable>
         </sample>
         <sample id="2" rate="1">
