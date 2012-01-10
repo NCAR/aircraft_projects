@@ -508,9 +508,9 @@
     </serialSensor>
     <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%d,%f,%*d,%*d,%d">
-            <variable longname="Dew/Frost Point Balance" name="DPBAL" units="unk"/>
-            <variable longname="Raw Dew/Frost Point Temperature" name="DPTEMP" units="deg_C"/>
-            <variable longname="Dew/Frost Point TEC" name="DPTEC" units="unk"/>
+            <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+            <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
+            <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
         </sample>
         <message length="0" position="end" separator="\n"/>
     </serialSensor>
@@ -579,7 +579,7 @@
         </sample>
         <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
 	      <variable longname="WCN Sample Flow Rate" name="FCNC" units="cm3/min">
-                 <linear intercept="0.0" slope="0.1" units="vlpm"/>
+                 <linear intercept="0.0" slope="0.001" units="vlpm"/>
             </variable>
 	      <variable longname="WCN Total Flow Rate" name="FTCN" units="cm3/min"/>
 	      <variable longname="WCN Sheath Flow Rate" name="FSHCN" units="cm3/min"/>
@@ -1228,20 +1228,10 @@
             </variable>
           </sample>
         </arincSensor>
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130">
-            <sample id="1">
-                <variable longname="Dew/Frost Point Balance, Fuselage Top" name="DPTB" units="unk"/>
-                <variable longname="Raw Dew/Frost Point Temperature, Fuselage Top" name="DPT" units="deg_C"/>
-                <variable longname="Dew/Frost Point TEC, Fuselage Top" name="DPTTEC" units="unk"/>
-            </sample>
-        </serialSensor>
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="140">
-            <sample id="1">
-                <variable longname="Dew/Frost Point Balance, Fuselage Bottom" name="DPBB" units="unk"/>
-                <variable longname="Raw Dew/Frost Point Temperature, Fuselage Bottom" name="DPB" units="deg_C"/>
-                <variable longname="Dew/Frost Point TEC, Fuselage Bottom" name="DPBTEC" units="unk"/>
-            </sample>
-        </serialSensor>
+
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130" suffix="_DPT"/>
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="140" suffix="_DPB"/>
+
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS7" id="150">
             <sample id="1">
                 <variable longname="Raw Static Pressure, Fuselage" name="PSFD" units="hPa">
