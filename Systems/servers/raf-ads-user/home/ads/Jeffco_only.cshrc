@@ -38,7 +38,6 @@ endif
 ################################################################################
 
 # University Hawaii GMT package, used by ncplot geo-pol map.
-
 setenv GMT_SHAREDIR	/usr/share/GMT
 
 setenv XAPPLRESDIR	/usr/share/X11/app-defaults

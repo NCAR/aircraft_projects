@@ -45,8 +45,10 @@ cp home/ads/Desktop/*                ${RPM_BUILD_ROOT}/home/ads/Desktop
 %attr(0755,ads,ads) /home/ads/Desktop/nimbus.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_data_acq.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_mpds.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/start_iridium.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/stop_data_acq.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/stop_mpds.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/stop_iridium.desktop
 
 %pre
 # Add an ads user and ads and eol groups to system
@@ -79,14 +81,16 @@ chown -R ads:ads /home/ads/bin
 echo
 echo "  Make sure ads uid is 12900, and ads gid is 1318 !!"
 echo
-echo "  If your installing this on an aircraft then fix the AIRCRAFT"
-echo "  variable in ~/ads3_environment.csh !!!"
+echo "  If your installing this on an aircraft then fix the AIRCRAFT and PROJECT"
+echo "  variables in ~/ads3_environment.csh !!!"
 echo
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Thu Jan 12 2012 Tom Baltzer <tbaltzer@ucar.edu> 1.15
+- Iridium icon added, clean up some elements
 * Fri Aug 5 2011 Chris Webster <cjw@ucar.edu> 1.15
 - Add Desktop and some icons.
 * Mon May 16 2011 Gordon Maclean <maclean@ucar.edu> 1.15
