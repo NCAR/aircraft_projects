@@ -1,0 +1,20 @@
+#!/bin/sh
+
+echo "Shutting down iridium connection ..."
+
+ifdown iridium
+
+ifdown eth3
+
+sudo pkill -INT -f "pppd plugin"
+sudo pkill ddclient
+sudo pkill pppd
+
+#  Put an ending date/time stamp into the iridium log file
+date >> /var/log/pppd_iridium.log
+
+# ifdown ppp0
+ifup eth2
+
+echo "done"
+sleep 5

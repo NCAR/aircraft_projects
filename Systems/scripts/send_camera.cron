@@ -8,6 +8,7 @@
 #set -x
 
 key=`echo $AIRCRAFT | cut -d _ -f 1`_camera_
+#key=GV_camera_
 
 # change into the current flight's folder
 flight=`ls -td /mnt/r1/camera_images/flight_number_* | grep -v tar | head -n1`
@@ -41,4 +42,4 @@ convert $file -sharpen 0.0x1.0 -scale 33% \
         ../sent/$key$file
 
 # insert it into the LDM queue
-/usr/local/ldm/bin/pqinsert -v ../sent/$key$file
+/home/ldm/bin/pqinsert -v ../sent/$key$file
