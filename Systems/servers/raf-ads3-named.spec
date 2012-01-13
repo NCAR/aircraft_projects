@@ -10,7 +10,7 @@
 Summary: DNS/named configuration for RAF aircraft server
 Name: raf-ads3-named
 Version: 1.0
-Release: 16
+Release: 17
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -74,6 +74,18 @@ if ! grep -q acserver /etc/hosts; then
 192.168.84.1    acserver acserver.raf.ucar.edu
 192.168.184.10  timeserver timeserver.raf.ucar.edu
 EOD
+fi
+# generate rndc.key
+/sbin/ldconfig
+/sbin/chkconfig --add named
+if [ "$1" -eq 1 ]; then
+  if [ ! -e /etc/rndc.key ]; then
+    /usr/sbin/rndc-confgen -a > /dev/null 2>&1
+  fi
+  [ -x /sbin/restorecon ] && /sbin/restorecon /etc/rndc.* /etc/named.* /dev/null 2>&1 ;
+  # rndc.key has to have correct perms and ownership, CVE-2007-6283
+  [ -e /etc/rndc.key ] && chown root:named /etc/rndc.key
+  [ -e /etc/rndc.key ] && chmod 0640 /etc/rndc.key
 fi
 
 %triggerin -n raf-ac-named -- bind bind-chroot
@@ -158,6 +170,10 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/local/admin/raf-ads3-named/named.*
 
 %changelog
+* Thu Jan 12 2012  John Wasinger <wasinger@ucar.edu> 1.0-17
+- In %post create /etc/rndc.key if missing.  Its creation was dropped
+- in bind-9.7.3 which is used by Scientific Linux 6.
+- (see http://www.mail-archive.com/scientific-linux-users@listserv.fnal.gov/msg08479.html)
 * Tue Apr 27 2011  Gordon Maclean <maclean@ucar.edu> 1.0-16
 - In %post add entries for acserver and timeserver in /etc/hosts
 * Thu Apr  7 2011  Gordon Maclean <maclean@ucar.edu> 1.0-15
