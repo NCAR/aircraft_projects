@@ -10,11 +10,11 @@ fi
 
 script=`basename $0`
 
-usage() {
+if [ $1 = "-h" -o $1 = "--help" ]; then
     echo "$script [-i] [dpkg ...]"
     echo "-i: install RPM on EOL yum repository (if accessible)"
     exit 1
-}
+fi
 
 doinstall=false
 
@@ -44,6 +44,7 @@ dopkg=all
 while [ "$dopkg" == all -o $# -gt 0 ]; do
 
     if [ $# -gt 0 ]; then
+        echo "only building: $1"
         dopkg=$1
         shift
     fi
