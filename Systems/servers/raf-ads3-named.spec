@@ -10,7 +10,7 @@
 Summary: DNS/named configuration for RAF aircraft server
 Name: raf-ads3-named
 Version: 1.0
-Release: 17
+Release: 18
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -75,18 +75,6 @@ if ! grep -q acserver /etc/hosts; then
 192.168.184.10  timeserver timeserver.raf.ucar.edu
 EOD
 fi
-# generate rndc.key
-/sbin/ldconfig
-/sbin/chkconfig --add named
-if [ "$1" -eq 1 ]; then
-  if [ ! -e /etc/rndc.key ]; then
-    /usr/sbin/rndc-confgen -a > /dev/null 2>&1
-  fi
-  [ -x /sbin/restorecon ] && /sbin/restorecon /etc/rndc.* /etc/named.* /dev/null 2>&1 ;
-  # rndc.key has to have correct perms and ownership, CVE-2007-6283
-  [ -e /etc/rndc.key ] && chown root:named /etc/rndc.key
-  [ -e /etc/rndc.key ] && chmod 0640 /etc/rndc.key
-fi
 
 %triggerin -n raf-ac-named -- bind bind-chroot
 export SYSCONFDIR=%{_sysconfdir}
@@ -100,6 +88,10 @@ export DO_CHROOT=%{do_chroot}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(0640,root,named,0750)
+%ghost %config(noreplace) %{_sysconfdir}/rndc.key
 
 %files -n raf-ac-named
 %defattr(0640,root,named,0750)
@@ -170,6 +162,9 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/local/admin/raf-ads3-named/named.*
 
 %changelog
+* Fri Jan 13 2012  John Wasinger <wasinger@ucar.edu> 1.0-18
+- Moved creation of /etc/rndc.key into 'triggerin.sh' script.
+- Designated /etc/rndc.key as a 'ghost' file.
 * Thu Jan 12 2012  John Wasinger <wasinger@ucar.edu> 1.0-17
 - In %post create /etc/rndc.key if missing.  Its creation was dropped
 - in bind-9.7.3 which is used by Scientific Linux 6.

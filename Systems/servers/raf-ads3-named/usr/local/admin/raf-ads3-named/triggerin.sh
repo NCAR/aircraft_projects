@@ -90,6 +90,15 @@ if ! { chkconfig --list named | fgrep -q "5:on"; }; then
     chkconfig --level 2345 named on
 fi
 
+# generate rndc.key
+if [ ! -e /etc/rndc.key ]; then
+  /usr/sbin/rndc-confgen -a > /dev/null 2>&1
+fi
+[ -x /sbin/restorecon ] && /sbin/restorecon /etc/rndc.* /etc/named.* /dev/null 2>&1 ;
+# rndc.key has to have correct perms and ownership, CVE-2007-6283
+[ -e /etc/rndc.key ] && chown root:named /etc/rndc.key
+[ -e /etc/rndc.key ] && chmod 0640 /etc/rndc.key
+
 # in bind-9.3.6-16.P1.el5 the rndc key in /etc/rndc.key was called rndckey
 # in bind-9.7.0-5.P2.el6_0.1.i686 the rndc key is called rndc-key 
 # We'll do a sed on /etc/rdnc.key and change the name to rndc-key
