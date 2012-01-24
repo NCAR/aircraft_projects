@@ -124,26 +124,28 @@ function autoscaler() {
 	var auto = $("#autoScale").attr('checked');
 	var sideways = $("#sideways").attr('checked');
 	var ccams = $(".camCheck:checked").size();
-	var menuWidth = 275;
+	var menuWidth = 250;
 
 	if (auto) {
-
-		if(sideways){
-			if ((document.documentElement.clientWidth - menuWidth) < (document.documentElement.clientHeight * ccams )) {
-				scale = (document.documentElement.clientWidth / ccams ) - (menuWidth/ccams);
+		if(sideways) {
+			if (ccams > 2) {	// added for 2x2 layout
+				ccams = 2;
+			}
+			if ((document.documentElement.clientWidth - menuWidth) < (document.documentElement.clientHeight * ccams)) {
+				scale = (document.documentElement.clientWidth - menuWidth) / ccams;
 			} else {
-				scale = (document.documentElement.clientHeight );
+				scale = (document.documentElement.clientHeight);
 			}
 		} else {
 			if (((document.documentElement.clientWidth - menuWidth) * ccams) < (document.documentElement.clientHeight)) {
 				scale = (document.documentElement.clientWidth ) - menuWidth;
 			} else {
-				scale = (document.documentElement.clientHeight / ccams );
+				scale = (document.documentElement.clientHeight / ccams);
 			}
 		}
+
 		$("img.cam").attr("width", scale);
 		$("img.grid").attr("width", scale);
-
 	} else {
 		$("img.cam").removeAttr("width");
 		for (i=1; i<=$(".camCheck").size(); i=i+1){
@@ -168,10 +170,13 @@ function buildImageTable(sideways) {
 	var table_contents="";
 	if(sideways){
 		table_contents = "<tr>";
-		for (i=1; i<=$(".camCheck").size(); i=i+1){
+		for (i = 1; i <= $(".camCheck").size(); i = i + 1){
 			table_contents = table_contents 
 				+ '<td><img class="grid" src="grid.png" style="display:none;" /><img id="cam' + i
 				+ '" class="cam" src="nothere.jpg" /></td> \n';
+			if ((i % 2) == 0) {
+				table_contents = table_contents + '</tr><tr>';	// for 2x2 grid
+			}
 		}
 		table_contents = table_contents + '</tr>';
 
