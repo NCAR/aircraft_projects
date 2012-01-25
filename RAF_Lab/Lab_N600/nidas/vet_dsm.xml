@@ -7,7 +7,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
     name="RAF_Lab"
-    system="GV_N677F"
+    system="Lab_N600"
     version="$LastChangedRevision: 2514 $"
     >
 
@@ -27,8 +27,8 @@
 
 </sensorcatalog>
 
-<site name="GV_N677F" class="raf.Aircraft">
-    <parameter name="tailNumber" value="N677F" type="string"/>
+<site name="Lab_N600" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N600" type="string"/>
 
     <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
@@ -62,9 +62,10 @@
         </service>
     </server>
 
-    <dsm name="dsm322" location="lab" id="1" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_322"/>
+    <dsm name="dsmTestVul" location="lab" id="1" rserialPort="30002" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_VUL"/>
 
+        <serialSensor IDREF="DUMMY" devicename="/dev/ttyS1" id="105"/>
         <serialSensor IDREF="DUMMY" devicename="/dev/ttyS2" id="110"/>
         <serialSensor IDREF="DUMMY" devicename="/dev/ttyS3" id="120"/>
         <serialSensor IDREF="DUMMY" devicename="/dev/ttyS4" id="130"/>
@@ -77,8 +78,8 @@
         <serialSensor IDREF="DUMMY" devicename="/dev/ttyS11" id="210"/>
         <serialSensor IDREF="DUMMY" devicename="/dev/ttyS12" id="220"/>
 
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200" suffix="_322">
-            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D1600.dat"/>
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="240" suffix="_VUL">
+            <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D008.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
                 <variable name="CH0_1T" units="V" longname="volts">
@@ -106,7 +107,7 @@
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_ADS" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
@@ -119,8 +120,8 @@
         </output>
     </dsm>
 
-    <dsm name="dsm320" location="lab" id="2" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_320"/>
+    <dsm name="dsmTestVip" location="lab" id="2" rserialPort="30002" statusAddr="sock::30001">
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_VIP"/>
 
         <serialSensor IDREF="DUMMY" devicename="/dev/ttyS2" id="110"/>
         <serialSensor IDREF="DUMMY" devicename="/dev/ttyS3" id="120"/>
@@ -134,7 +135,7 @@
         <serialSensor IDREF="DUMMY" devicename="/dev/ttyS11" id="210"/>
         <serialSensor IDREF="DUMMY" devicename="/dev/ttyS12" id="220"/>
 
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200" suffix="_320">
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200" suffix="_VIP">
             <calfile path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/" file="A2D007.dat"/>
             <parameter name="rate" value="500" type="int"/>
             <sample id="1" rate="100">
@@ -166,7 +167,7 @@
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_ADS" units="deg_C" longname="A2D Temperature"/>
+                <variable name="A2DTEMP" units="deg_C" longname="A2D Temperature"/>
             </sample>
         </sensor>
 
