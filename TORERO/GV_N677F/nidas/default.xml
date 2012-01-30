@@ -1180,7 +1180,7 @@
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="160"/>
       <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS8" id="4200"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-        <calfile file="A2D1608.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <calfile file="dsm303cals.dat" path="${PROJ_DIR}/TORERO/GV_N677F/nidas/"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
@@ -1241,7 +1241,7 @@
         </sample>
         <sample id="0324" rate="50">
           <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
-            <linear intercept="0.31" slope="1.0" units="degree"/>
+            <linear intercept="0.45" slope="1.0" units="degree"/>
           </variable>
         </sample>
       </arincSensor>
@@ -1309,7 +1309,7 @@
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130">
         <sample id="1">
           <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="hPa">
-            <poly coefs="0 1 0" units="hPa"/>
+            <poly coefs="0 1.0 0" units="hPa"/>
           </variable>
         </sample>
         <sample id="2">
