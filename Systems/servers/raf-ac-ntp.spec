@@ -1,7 +1,7 @@
 Summary: Configuration for NTP on RAF aircraft server systems
 Name: raf-ac-ntp
 Version: 1.0
-Release: 2
+Release: 3
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -38,7 +38,6 @@ a###### start %{name}-%{version} ######
 # After syncing, require ntpd to poll the timeserver at least every 2^6=64 seconds.
 # The default maxpoll is 2^10=1024 secs.
 aserver timeserver minpoll 4 maxpoll 6
-aserver tardis.ntp.ucar.edu
 arestrict 192.168.0.0 mask 255.255.0.0 nomodify notrap
 a###### end %{name}-%{version} ######
 }' $cf
@@ -68,6 +67,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 
 %changelog
+* Tue Jan 31 2012 Tom Baltzer <tbaltzer@ucar.edu>
+- remove tardis.ucar.edu - don't want to use it on the planes.
 * Mon Mar 2 2010 Chris Webster <cjw@ucar.edu>
 - Up version number for mod Gordon did to set minpoll and maxpoll
 * Sun Feb 29 2008 Gordon Maclean <maclean@ucar.edu>
