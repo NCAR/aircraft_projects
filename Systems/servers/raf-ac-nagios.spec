@@ -1,7 +1,7 @@
 Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
-Release: 7
+Release: 8
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -27,8 +27,8 @@ Configuration and additional plugins for RAF aircraft servers.
 rm -rf %{buildroot}
 install -d %{buildroot}%{_sysconfdir}/init.d
 install -d %{buildroot}%{_sysconfdir}/nagios
-install -d %{buildroot}%{_libdir}/nagios/plugins
-cp usr/lib/nagios/plugins/* %{buildroot}%{_libdir}/nagios/plugins
+install -d %{buildroot}/usr/lib/nagios/plugins
+cp usr/lib/nagios/plugins/* %{buildroot}/usr/lib/nagios/plugins
 
 cp etc/init.d/raf_nagios_init %{buildroot}%{_sysconfdir}/init.d
 cp etc/nagios/raf_commands.cfg %{buildroot}%{_sysconfdir}/nagios
@@ -59,9 +59,13 @@ rm -rf %{buildroot}
 %{_sysconfdir}/init.d/raf_nagios_init
 %{_sysconfdir}/nagios/raf_commands.cfg
 %{_sysconfdir}/nagios/raf_localhost.cfg
-%{_libdir}/nagios/plugins/raf_*
+/usr/lib/nagios/plugins/raf_*
 
 %changelog
+* Thu Feb 09 2012 John Wasinger <wasinger@ucar.edu> - 1.0-8
+- Fixed broken path for 64 bit systems.
+- Nagios on these systems defined '$USER1$' as /usr/lib64.
+- 'noarch' defaults '%{_libdir}' to '/usr/lib'.
 * Fri Dec 09 2011 John Wasinger <wasinger@ucar.edu> - 1.0-7
 - Now mentions DSM names that responded to pings.
 * Wed Nov 30 2011 John Wasinger <wasinger@ucar.edu> - 1.0-6
