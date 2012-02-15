@@ -1,7 +1,7 @@
 Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
-Release: 8
+Release: 9
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -27,12 +27,13 @@ Configuration and additional plugins for RAF aircraft servers.
 rm -rf %{buildroot}
 install -d %{buildroot}%{_sysconfdir}/init.d
 install -d %{buildroot}%{_sysconfdir}/nagios
+install -d %{buildroot}%{_sysconfdir}/nagios/objects
 install -d %{buildroot}/usr/lib/nagios/plugins
-cp usr/lib/nagios/plugins/* %{buildroot}/usr/lib/nagios/plugins
 
-cp etc/init.d/raf_nagios_init %{buildroot}%{_sysconfdir}/init.d
-cp etc/nagios/raf_commands.cfg %{buildroot}%{_sysconfdir}/nagios
-cp etc/nagios/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios
+cp etc/init.d/raf_nagios_init           %{buildroot}%{_sysconfdir}/init.d
+cp etc/nagios/objects/raf_commands.cfg  %{buildroot}%{_sysconfdir}/nagios/objects
+cp etc/nagios/objects/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios/objects
+cp usr/lib/nagios/plugins/*             %{buildroot}/usr/lib/nagios/plugins
 
 %triggerin -- nagios
 # allow all access to nagios.
@@ -43,7 +44,7 @@ sed -i 's/use_authentication=1/use_authentication=0/g' $cf
 # commands.cfg in fc11 will move into nagios/objects
 cf=/etc/nagios/nagios.cfg
 if ! egrep -q "raf_commands" $cf; then
-  sed -i 's/commands.cfg/commands.cfg\ncfg_file=\/etc\/nagios\/raf_commands.cfg/' $cf
+  sed -i 's/commands.cfg/commands.cfg\ncfg_file=\/etc\/nagios\/objects\/raf_commands.cfg/' $cf
 fi
 sed -i 's/\/localhost.cfg/\/raf_localhost.cfg/' $cf
 
@@ -57,11 +58,14 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root)
 %{_sysconfdir}/init.d/raf_nagios_init
-%{_sysconfdir}/nagios/raf_commands.cfg
-%{_sysconfdir}/nagios/raf_localhost.cfg
+%{_sysconfdir}/nagios/objects/raf_commands.cfg
+%{_sysconfdir}/nagios/objects/raf_localhost.cfg
 /usr/lib/nagios/plugins/raf_*
 
 %changelog
+* Tue Feb 14 2012 John Wasinger <wasinger@ucar.edu> - 1.0-9
+- Updated to support nagios 3.
+- Removed 'check_ssh', it is already defined in objects/commands.cfg.
 * Thu Feb 09 2012 John Wasinger <wasinger@ucar.edu> - 1.0-8
 - Fixed broken path for 64 bit systems.
 - Nagios on these systems defined '$USER1$' as /usr/lib64.
