@@ -1,7 +1,7 @@
 Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
-Release: 9
+Release: 10
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -27,13 +27,12 @@ Configuration and additional plugins for RAF aircraft servers.
 rm -rf %{buildroot}
 install -d %{buildroot}%{_sysconfdir}/init.d
 install -d %{buildroot}%{_sysconfdir}/nagios
-install -d %{buildroot}%{_sysconfdir}/nagios/objects
 install -d %{buildroot}/usr/lib/nagios/plugins
 
-cp etc/init.d/raf_nagios_init           %{buildroot}%{_sysconfdir}/init.d
-cp etc/nagios/objects/raf_commands.cfg  %{buildroot}%{_sysconfdir}/nagios/objects
-cp etc/nagios/objects/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios/objects
-cp usr/lib/nagios/plugins/*             %{buildroot}/usr/lib/nagios/plugins
+cp etc/init.d/raf_nagios_init   %{buildroot}%{_sysconfdir}/init.d
+cp etc/nagios/raf_commands.cfg  %{buildroot}%{_sysconfdir}/nagios
+cp etc/nagios/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios
+cp usr/lib/nagios/plugins/raf_* %{buildroot}/usr/lib/nagios/plugins
 
 %triggerin -- nagios
 # allow all access to nagios.
@@ -43,10 +42,12 @@ sed -i 's/use_authentication=1/use_authentication=0/g' $cf
 %post
 # commands.cfg in fc11 will move into nagios/objects
 cf=/etc/nagios/nagios.cfg
-if ! egrep -q "raf_commands" $cf; then
-  sed -i 's/commands.cfg/commands.cfg\ncfg_file=\/etc\/nagios\/objects\/raf_commands.cfg/' $cf
+if ! egrep -q "/raf_commands.cfg" $cf; then
+  sed -i 's/commands.cfg/commands.cfg\ncfg_file=\/etc\/nagios\/raf_commands.cfg/' $cf
 fi
-sed -i 's/\/localhost.cfg/\/raf_localhost.cfg/' $cf
+if ! egrep -q "/raf_localhost.cfg" $cf; then
+  sed -i 's/localhost.cfg/localhost.cfg\ncfg_file=\/etc\/nagios\/raf_localhost.cfg/' $cf
+fi
 
 /sbin/chkconfig --level 345 nagios on
 /sbin/chkconfig --add raf_nagios_init
@@ -58,11 +59,18 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root)
 %{_sysconfdir}/init.d/raf_nagios_init
-%{_sysconfdir}/nagios/objects/raf_commands.cfg
-%{_sysconfdir}/nagios/objects/raf_localhost.cfg
+%{_sysconfdir}/nagios/raf_commands.cfg
+%{_sysconfdir}/nagios/raf_localhost.cfg
 /usr/lib/nagios/plugins/raf_*
 
 %changelog
+* Wed Feb 15 2012 John Wasinger <wasinger@ucar.edu> - 1.0-10
+- Reverted back to rev 8 folder layout (still supports nagios 2 and 3).
+- Created 'aircraft-server' and 'aircraft-services' templates.
+- Nagios'es original localhost.cfg left unaltered.
+- Like raf_commands.cfg, raf_localhost.cfg adds to nagios'es base definitions.
+- 'check_ssh' still removed.  Currently unused.  Introduced natively in nagios 3.
+- REINSTALL OF NAGIOS REQUIRED TO FIX /localhost.cfg ALTERATIONS.
 * Tue Feb 14 2012 John Wasinger <wasinger@ucar.edu> - 1.0-9
 - Updated to support nagios 3.
 - Removed 'check_ssh', it is already defined in objects/commands.cfg.
