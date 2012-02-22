@@ -41,6 +41,9 @@
 #
 # set -x
 
+# quit immediately on error, otherwise error messages tend to be missed
+set -e
+
 modprobe ip_tables
 modprobe ip_conntrack
 modprobe ip_conntrack_ftp
