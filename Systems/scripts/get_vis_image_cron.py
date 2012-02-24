@@ -40,7 +40,7 @@ busy_file        = 'BUSY_'+image_type
 ftp_site         = 'catalog1.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
-ftp_dir          = '/pub/incoming/OSM/C130/'
+ftp_dir          = '/pub/incoming/OSM/' + os.environ['AIRCRAFT'] + '/'
 #Assumes filename form is prefixYYYYMMDD*postfix
 prefix           = 'ops.goes-13.'  
 postfix		 = '.1km_ch1_vis.jpg' 
