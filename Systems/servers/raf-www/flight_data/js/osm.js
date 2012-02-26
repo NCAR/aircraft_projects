@@ -455,7 +455,7 @@ function acSelector(vecList) {
 					e.geometry.getBounds().getCenterLonLat(),
 					new OpenLayers.Size(100,100),
 					'<b>'+aName+'</b><p>'+aDes+'</p>',
-					null, false);
+					null, true);
 				map.addPopup(e.popup);
 			},
 			onUnselect: function(e) {
