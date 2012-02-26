@@ -88,11 +88,12 @@ function acMap() {
 		//add timestamp
 		//this.addTimestampOverlay();
 
-		// update icon now and every 10 seconds
+		// Update icon now and every 10 seconds
 		this.getIconUpdate();
 		setInterval(this.getIconUpdate, 10000);
 
-		// update the camera image every 5 seconds
+		// Update the camera image every 5 seconds onboard.
+		// Use 30 seconds for ground based install.
 		this.updateCamImage(true);
 		setInterval(this.updateCamImage, 5000);
 	}
@@ -160,9 +161,6 @@ function acMap() {
 
 	}
 	this.addTimestampOverlay = function() {
-		if (cookieJar.getCookie("platform") != "C130") {
-			return
-		}
 		var timediv = document.createElement('div');
 		timediv.style.opacity = .7;
 		timediv.style.filter = "alpha(opacity=70)";
@@ -174,10 +172,12 @@ function acMap() {
 		timediv.style.zIndex = "750";
 
 		var timestamp1 = document.createElement('img');
-		timestamp1.src = "/flight_data/C130/images/sat_label.jpg";
+		timestamp1.src = "/flight_data/" + cookieJar.getCookie("platform") 
+                                + "/images/sat_label.jpg?";
 		timestamp1.style.marginLeft = "5px"; 
 		var timestamp2 = document.createElement('img');
-		timestamp2.src = "/flight_data/C130/images/radar_label.jpg";
+		timestamp2.src = "/flight_data/" + cookieJar.getCookie("platform") 
+                                + "/images/radar_label.jpg?";
 		timestamp2.style.marginLeft = "5px"; 
 
 		timediv.appendChild(timestamp1);
