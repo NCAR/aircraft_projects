@@ -183,7 +183,7 @@ function acMap() {
 		timediv.appendChild(timestamp1);
 		timediv.appendChild(timestamp2);
 		
-		document.getElementById("debug").appendChild(timediv);
+		document.getElementById("sat_label").appendChild(timediv);
 
 		setInterval(function(){
 			timestamp1.src = timestamp1.src.split("?",1) + "?" + Math.random();
