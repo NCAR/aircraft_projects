@@ -86,7 +86,7 @@ function acMap() {
 		}
 
 		//add timestamp
-		//this.addTimestampOverlay();
+		this.addTimestampOverlay();
 
 		// Update icon now and every 10 seconds
 		this.getIconUpdate();
@@ -173,11 +173,11 @@ function acMap() {
 
 		var timestamp1 = document.createElement('img');
 		timestamp1.src = "/flight_data/" + cookieJar.getCookie("platform") 
-                                + "/images/sat_label.jpg?";
+				+ "/images/sat_label.jpg?";
 		timestamp1.style.marginLeft = "5px"; 
 		var timestamp2 = document.createElement('img');
 		timestamp2.src = "/flight_data/" + cookieJar.getCookie("platform") 
-                                + "/images/radar_label.jpg?";
+				+ "/images/radar_label.jpg?";
 		timestamp2.style.marginLeft = "5px"; 
 
 		timediv.appendChild(timestamp1);
@@ -407,15 +407,16 @@ function acPlaneLayer() {
 
 acBaseMap.prototype = new OpenLayers.Layer.OSM();
 function acBaseMap() {
-        OpenLayers.Layer.OSM.call(this,
-                "OpenStreetMap",
-                "/osm/tiles2/${z}/${x}/${y}.png",
-                {
-                        displayOutsideMaxExtent: false,
-                        displayInLayerSwitcher: false,
-                        sphericalMercator: true
-                }
-        );
+	OpenLayers.Layer.OSM.call(this,
+		"OpenStreetMap",
+		"/osm/tiles2/${z}/${x}/${y}.png",
+		{
+			displayOutsideMaxExtent: false,
+			displayInLayerSwitcher: false,
+			sphericalMercator: true,
+			wrapDateLine: true
+		}
+	);
 }
 
 acHover.prototype = new OpenLayers.Control.SelectFeature();
@@ -471,9 +472,9 @@ function acSelector(vecList) {
 
 function xMeasure_t() {
 
-	//create point for tracking distance, angle
-	this.planeLoc = new OpenLayers.Geometry.Point(-81.644, 28.035).transform(llProj,smProj);
-	this.xLoc = new OpenLayers.Geometry.Point(cookieJar.cookieOr("xLoc_x",-9984743.889400965),cookieJar.cookieOr("xLoc_y",4962640.215298362));
+	//create point for tracking distance, angle.  Default location is Jeffco.
+	this.planeLoc = new OpenLayers.Geometry.Point(-105.1, 39.9).transform(llProj,smProj);
+	this.xLoc = new OpenLayers.Geometry.Point(cookieJar.cookieOr("xLoc_x",-11701700.0),cookieJar.cookieOr("xLoc_y",4853000.0));
 	this.cursorLoc = new OpenLayers.Geometry.Point(0,0);
 
 	//create structions for for dragging the X
