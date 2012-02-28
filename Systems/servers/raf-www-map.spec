@@ -1,11 +1,11 @@
 Summary: OpenStreetMaps slippy map with OSM postGIS database and mapnik, renderd, mod_tile for rendering on demand
 Name: raf-www-map
 Version: 1 
-Release: 2
+Release: 3
 Group: Applications/Engineering
 Source: %{name}-%{version}.tar.gz
 License: none
-Distribution: RHEL 5.3 Linux
+Distribution: RHEL 6.1 Linux
 Requires: openlayers jquery httpd php php-pgsql php-pecl-json perl perl-DBD-Pg
 # BuildRoot is only needed by older rpm versions
 BuildRoot: %{_tmppath}/%{name}-root
@@ -66,6 +66,11 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(0775, ads, apache) /var/www/cgi-bin/flight_data
 
 %changelog
+* Tue Feb 28 2012 <cjw@ucar.edu> 1-3
+- Fixed image timestamp labels not being on top.
+- Add 'x' to popup balloons.
+- Horizontal camera display changed to 2x2 grid.
+- URI updates for latest jQuery. (Spring 2011)
 * Tue Jul 6 2010 <cjw@ucar.edu> 1-2
 - Fixed some permissions, added top level index.html, fixed perl requires on getCookie.
 * Fri Sep 4 2009 <dlagreca@ucar.edu> 1-1
