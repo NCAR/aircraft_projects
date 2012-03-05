@@ -1,7 +1,7 @@
 Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
-Release: 10
+Release: 11
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -64,6 +64,8 @@ rm -rf %{buildroot}
 /usr/lib/nagios/plugins/raf_*
 
 %changelog
+* Mon Mar 05 2012 John Wasinger <wasinger@ucar.edu> - 1.0-11
+- Omit non ARCOM based DSMs from the list when checking CF cards.
 * Wed Feb 15 2012 John Wasinger <wasinger@ucar.edu> - 1.0-10
 - Reverted back to rev 8 folder layout (still supports nagios 2 and 3).
 - Created 'aircraft-server' and 'aircraft-services' templates.

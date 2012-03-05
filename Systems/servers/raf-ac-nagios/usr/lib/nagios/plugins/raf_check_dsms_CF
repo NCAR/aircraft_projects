@@ -72,6 +72,10 @@ if __name__ == "__main__":
         print "DSM-Server WARNING; Connected to server, but retrieved empty DSM list"
         sys.exit(1)
 
+    #omit non ARCOM based DSMs from the list.
+    if dsmList.has_key('acserver'):  del dsmList['acserver']
+    if dsmList.has_key('localhost'): del dsmList['localhost']
+
     #set up some vars
     pinglist = []
     respList = []
