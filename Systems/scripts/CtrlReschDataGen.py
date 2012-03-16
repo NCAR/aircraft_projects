@@ -4,91 +4,132 @@
 """
 Control Research Data Generation
 
-Two toggle buttons are created to append '(NO|YES)CALIB' and
-'(NO|YES)RESCH' flags to the end of the IWG1 stream broadcast
-on the aircraft.  This is done by setting 
+Two toggle buttons are created to transmit via UDP to dsm_server
+the following two messages:
 
-Instruments shall use these flags to restrict calibration and
-gathering of research data.
+  NOCAL,20120312T143258,1
+  NOREC,20120312T143258,1
+
+...where the last value of 1 or 0 indicates the state of button.
+
+NIMBUS shall include these as values in the IWG1 stream.
+
+Instruments watching the IWG1 stream shall use these flags to
+restrict calibration and recording of research data.
 """
 
 import sys
-from PyQt4 import QtGui
-from PyQt4.QtSql import *
+from PyQt4.QtCore import (Qt, QObject, QTimer, QDateTime, SIGNAL)
+from PyQt4.QtGui import (QWidget, QLabel, QPushButton, QLineEdit, QGridLayout, QApplication)
+from PyQt4.QtNetwork import (QHostAddress, QUdpSocket)
 
-class CtrlReschDataGen(QtGui.QWidget):
+DATETIME_FORMAT_VIEW = "yyyy-MM-dd H:mm:ss"
+DATETIME_FORMAT_DATA = "yyyyMMddTHmmss"
+PORT = 41004
+
+class CtrlReschDataGen(QWidget):
 
     def __init__(self):
+#       print("__init__: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
         super(CtrlReschDataGen, self).__init__()
-
-        # connect to the aircraft's real-time database
-        self.db = QSqlDatabase("QPSQL7")
-
-        self.db.setHostName("acserver")
-        self.db.setUserName("ads")
-        self.db.setDatabaseName("real-time")
-
-        if not self.db.open():
-            QMessageBox.warning(None, "open 'real-time'",
-                QString("Database Error: %1").arg(self.db.lasterror().text()))
-            sys.exit(1)
-
-        self.query = QSqlQuery(self.db)
 
         self.initUI()
 
-    def __del__(self):
-#       super(CtrlReschDataGen, self).__del__() # bug in PyQt4?  the examples never do this
-        self.query.finish()
-        self.db.close()
+        self.udpSocket = QUdpSocket()
+
+        self.timer = QTimer()
+        QObject.connect(self.timer, SIGNAL("timeout()"), self.broadcastDatagram)
+        self.timer.start(1000)
+
+    # send state to NIDAS every second via a UDP socket
+    def broadcastDatagram(self):
+        datetime = QDateTime.currentDateTime().toString("yyyyMMddTHmmss")
+        NOCAL = "NOCAL,%s," % datetime
+        NOREC = "NOREC,%s," % datetime
+
+        if self.DoNotCalibrate.isChecked(): NOCAL = NOCAL + "1"
+        else:                               NOCAL = NOCAL + "0"
+#       print("NOCAL: %s" % NOCAL)
+        self.udpSocket.writeDatagram(NOCAL, QHostAddress("192.168.184.1"), PORT)
+
+        if self.DoNotRecord.isChecked(): NOREC = NOREC + "1"
+        else:                            NOREC = NOREC + "0"
+#       print("NOREC: %s" % NOREC)
+        self.udpSocket.writeDatagram(NOREC, QHostAddress("192.168.184.1"), PORT)
+
+    # prevent operator from leaving while actively enforcing
+    def closeEvent(self, event):
+        if self.DoNotCalibrate.isChecked() or self.DoNotRecord.isChecked():
+            event.ignore()
+            print('\a') # beep
 
     def initUI(self):
-        self.setGeometry(300, 300, 350, 50)
+#       print("initUI: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
         self.setWindowTitle('Control Research Data Generation')
+        startLabel    = QLabel("Start:")
+        stopLabel     = QLabel("Stop:")
 
-        # setup NoCalib
-        noCalib = QtGui.QPushButton('No Calibration', self)
-        noCalib.move(10, 10)
-        noCalib.setCheckable(True)
-        noCalib.clicked[bool].connect(self.setNoCalib)
+        # setup DoNotCalibrate
+        self.DoNotCalibrate = QPushButton('Do Not Calibrate', self)
+        self.DoNotCalibrate.setCheckable(True)
+        self.DoNotCalibrate.setChecked(False)
+        self.DoNotCalibrate.clicked[bool].connect(self.setDoNotCalibrate)
 
-        self.query.exec_("SELECT value from global_attributes WHERE key='NoCalib'")
-        if self.query.next():
-            if unicode(self.query.value(0).toString()) == 'TRUE':
-                noCalib.setChecked(True)
+        self.DoNotCalibrateStart = QLineEdit()
+        self.DoNotCalibrateStart.setReadOnly(True)
+
+        self.DoNotCalibrateStop = QLineEdit()
+        self.DoNotCalibrateStop.setReadOnly(True)
+
+        # setup DoNotRecord
+        self.DoNotRecord = QPushButton('Do Not Record', self)
+        self.DoNotRecord.setCheckable(True)
+        self.DoNotRecord.setChecked(False)
+        self.DoNotRecord.clicked[bool].connect(self.setDoNotRecord)
+
+        self.DoNotRecordStart = QLineEdit()
+        self.DoNotRecordStart.setReadOnly(True)
+
+        self.DoNotRecordStop = QLineEdit()
+        self.DoNotRecordStop.setReadOnly(True)
+
+        # layout in a grid
+        layout = QGridLayout()
+        layout.addWidget(self.DoNotCalibrate,      0, 1)
+        layout.addWidget(self.DoNotRecord,         0, 2)
+        layout.addWidget(startLabel,               1, 0)
+        layout.addWidget(self.DoNotCalibrateStart, 1, 1)
+        layout.addWidget(self.DoNotRecordStart,    1, 2)
+        layout.addWidget(stopLabel,                2, 0)
+        layout.addWidget(self.DoNotCalibrateStop,  2, 1)
+        layout.addWidget(self.DoNotRecordStop,     2, 2)
+        self.setLayout(layout)
+
+    def setDoNotCalibrate(self, pressed):
+#       print("setDoNotCalibrate: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
+        if pressed:
+            StartTime = QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW)
         else:
-            self.query.exec_("INSERT INTO global_attributes VALUES ('NoCalib', 'FALSE')")
+            StartTime = ''
 
-        # setup NoResch
-        noResch = QtGui.QPushButton('No Research', self)
-        noResch.move(210, 10)
-        noResch.setCheckable(True)
-        noResch.clicked[bool].connect(self.setNoResch)
+        self.DoNotCalibrateStart.setText(StartTime)
 
-        self.query.exec_("SELECT value from global_attributes WHERE key='NoResch'")
-        if self.query.next():
-            if unicode(self.query.value(0).toString()) == 'TRUE':
-                noResch.setChecked(True)
+    def setDoNotRecord(self, pressed):
+#       print("setDoNotRecord: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
+        if pressed:
+            StartTime = QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW)
         else:
-            self.query.exec_("INSERT INTO global_attributes VALUES ('NoResch', 'FALSE')")
+            StartTime = ''
 
-        self.show()
-
-    def setNoCalib(self, pressed):
-        if pressed: val = 'TRUE'
-        else:       val = 'FALSE'
-        self.query.exec_("UPDATE global_attributes SET value='%s' WHERE key='NoCalib'" % val)
-
-    def setNoResch(self, pressed):
-        if pressed: val = 'TRUE'
-        else:       val = 'FALSE'
-        self.query.exec_("UPDATE global_attributes SET value='%s' WHERE key='NoResch'" % val)
+        self.DoNotRecordStart.setText(StartTime)
 
 
 def main():
-
-    app = QtGui.QApplication(sys.argv)
+#   print("main: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
+    app = QApplication(sys.argv)
     crdg = CtrlReschDataGen()
+    crdg.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint | Qt.WindowStaysOnTopHint)
+    crdg.show()
     sys.exit(app.exec_())
 
 
