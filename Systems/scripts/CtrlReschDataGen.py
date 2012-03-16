@@ -43,6 +43,7 @@ class CtrlReschDataGen(QWidget):
 
     # send state to NIDAS every second via a UDP socket
     def broadcastDatagram(self):
+        self.broadcasting = True
         datetime = QDateTime.currentDateTime().toString("yyyyMMddTHmmss")
         NOCAL = "NOCAL,%s," % datetime
         NOREC = "NOREC,%s," % datetime
@@ -56,9 +57,11 @@ class CtrlReschDataGen(QWidget):
         else:                            NOREC = NOREC + "0"
 #       print("NOREC: %s" % NOREC)
         self.udpSocket.writeDatagram(NOREC, QHostAddress("192.168.184.1"), PORT)
+        self.broadcasting = False
 
     # prevent operator from leaving while actively enforcing
     def closeEvent(self, event):
+        if self.broadcasting: return
         if self.DoNotCalibrate.isChecked() or self.DoNotRecord.isChecked():
             event.ignore()
             print('\a') # beep
