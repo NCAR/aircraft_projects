@@ -20,12 +20,15 @@ restrict calibration and recording of research data.
 
 import sys
 from PyQt4.QtCore import (Qt, QObject, QTimer, QDateTime, SIGNAL)
-from PyQt4.QtGui import (QWidget, QLabel, QPushButton, QLineEdit, QGridLayout, QApplication)
+from PyQt4.QtGui import (QWidget, QLabel, QPushButton, QLineEdit, QGridLayout,
+                         QApplication, QMessageBox)
 from PyQt4.QtNetwork import (QHostAddress, QUdpSocket)
 
 DATETIME_FORMAT_VIEW = "yyyy-MM-dd H:mm:ss"
 DATETIME_FORMAT_DATA = "yyyyMMddTHmmss"
 PORT = 41004
+NOCALMINUTES = 15
+NORECMINUTES = 15
 
 class CtrlReschDataGen(QWidget):
 
@@ -37,9 +40,36 @@ class CtrlReschDataGen(QWidget):
 
         self.udpSocket = QUdpSocket()
 
+        self.DoNotCalibrateStopTime = QDateTime()
+        self.DoNotRecordWarnTime = QDateTime()
+
         self.timer = QTimer()
-        QObject.connect(self.timer, SIGNAL("timeout()"), self.sendDatagrams)
+        QObject.connect(self.timer, SIGNAL("timeout()"), self.timeout)
         self.timer.start(1000)
+
+    def timeout(self):
+        currentDateTime = QDateTime.currentDateTime()
+
+        if self.DoNotCalibrateStopTime.isValid():
+            if currentDateTime >= self.DoNotCalibrateStopTime:
+                self.DoNotCalibrate.setChecked(False)
+
+        if self.DoNotRecordWarnTime.isValid():
+            if currentDateTime >= self.DoNotRecordWarnTime:
+                self.DoNotRecordWarnTime = currentDateTime.addSecs(NORECMINUTES * 60)
+
+                message = ("Time is: %s\n\nDo Not Record's been active for the past %d minutes" %
+                  (QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW), NORECMINUTES))
+
+                # spawn a non blocking message box, these will just keep piling up until closed
+                box = QMessageBox(QMessageBox.Warning,  "Time to Disable?",
+                  message, QMessageBox.Ok, self, (Qt.Dialog |
+                  Qt.MSWindowsFixedSizeDialogHint | Qt.WindowStaysOnTopHint))
+
+                box.setWindowModality(Qt.NonModal);
+                box.show();
+
+        self.sendDatagrams()
 
     # send state to NIDAS every second via a UDP socket
     def sendDatagrams(self):
@@ -92,9 +122,6 @@ class CtrlReschDataGen(QWidget):
         self.DoNotRecordStart = QLineEdit()
         self.DoNotRecordStart.setReadOnly(True)
 
-        self.DoNotRecordStop = QLineEdit()
-        self.DoNotRecordStop.setReadOnly(True)
-
         # layout in a grid
         layout = QGridLayout()
         layout.addWidget(self.DoNotCalibrate,      0, 1)
@@ -104,26 +131,38 @@ class CtrlReschDataGen(QWidget):
         layout.addWidget(self.DoNotRecordStart,    1, 2)
         layout.addWidget(stopLabel,                2, 0)
         layout.addWidget(self.DoNotCalibrateStop,  2, 1)
-        layout.addWidget(self.DoNotRecordStop,     2, 2)
         self.setLayout(layout)
 
     def setDoNotCalibrate(self, pressed):
 #       print("setDoNotCalibrate: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
         if pressed:
-            StartTime = QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW)
+            StartTime = QDateTime.currentDateTime()
         else:
-            StartTime = ''
+            StartTime = QDateTime()
+            StopTime = QDateTime()
 
-        self.DoNotCalibrateStart.setText(StartTime)
+        if StartTime.isValid():
+            StopTime = StartTime.addSecs(NOCALMINUTES * 60)
+            self.DoNotCalibrateStopTime = StopTime
+
+        # displaying invalid times clears the display
+        self.DoNotCalibrateStart.setText(StartTime.toString(DATETIME_FORMAT_VIEW))
+        self.DoNotCalibrateStop.setText(StopTime.toString(DATETIME_FORMAT_VIEW))
 
     def setDoNotRecord(self, pressed):
 #       print("setDoNotRecord: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
         if pressed:
-            StartTime = QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW)
+            StartTime = QDateTime.currentDateTime()
         else:
-            StartTime = ''
+            StartTime = QDateTime()
 
-        self.DoNotRecordStart.setText(StartTime)
+        if StartTime.isValid():
+            self.DoNotRecordWarnTime = StartTime.addSecs(NORECMINUTES * 60)
+        else:
+            self.DoNotRecordWarnTime = QDateTime()
+
+        # displaying invalid times clears the display
+        self.DoNotRecordStart.setText(StartTime.toString(DATETIME_FORMAT_VIEW))
 
 
 def main():
