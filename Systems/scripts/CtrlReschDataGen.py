@@ -27,6 +27,7 @@ from PyQt4.QtNetwork import (QHostAddress, QUdpSocket)
 DATETIME_FORMAT_VIEW = "yyyy-MM-dd H:mm:ss"
 DATETIME_FORMAT_DATA = "yyyyMMddTHmmss"
 PORT = 41004
+NOCAL_STEP = 1
 NOCALMINUTES = 15
 NORECMINUTES = 15
 
@@ -47,12 +48,27 @@ class CtrlReschDataGen(QWidget):
         QObject.connect(self.timer, SIGNAL("timeout()"), self.timeout)
         self.timer.start(1000)
 
+    def showRemainingTime(self, currentDateTime):
+        if currentDateTime.isValid():
+            secsTo = currentDateTime.secsTo(self.DoNotCalibrateStopTime)
+            hwrsTo = secsTo / 3600
+            secsTo = secsTo - (hwrsTo * 3600)
+            minsTo = secsTo / 60
+            secsTo = secsTo - (minsTo * 60)
+            self.DoNotCalibrateRemain.setText( ("%02d:%02d:%02d" % (hwrsTo, minsTo, secsTo)) )
+        else:
+            self.DoNotCalibrateRemain.setText( "" )
+
     def timeout(self):
         currentDateTime = QDateTime.currentDateTime()
 
         if self.DoNotCalibrateStopTime.isValid():
+            self.showRemainingTime(currentDateTime)
             if currentDateTime >= self.DoNotCalibrateStopTime:
+                self.DoNotCalibrateStopTime = QDateTime()
                 self.DoNotCalibrate.setChecked(False)
+                self.LessTime.setEnabled(False)
+                self.MoreTime.setEnabled(False)
 
         if self.DoNotRecordWarnTime.isValid():
             if currentDateTime >= self.DoNotRecordWarnTime:
@@ -73,7 +89,7 @@ class CtrlReschDataGen(QWidget):
 
     # send state to NIDAS every second via a UDP socket
     def sendDatagrams(self):
-        datetime = QDateTime.currentDateTime().toString("yyyyMMddTHmmss")
+        datetime = QDateTime.currentDateTime().toString(DATETIME_FORMAT_DATA)
         NOCAL = "NOCAL,%s," % datetime
         NOREC = "NOREC,%s," % datetime
 
@@ -95,11 +111,23 @@ class CtrlReschDataGen(QWidget):
         else:
             self.sendDatagrams()
 
+    def addLessTime(self):
+#       print("addLessTime: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
+        self.DoNotCalibrateStopTime = self.DoNotCalibrateStopTime.addSecs(-NOCAL_STEP * 60)
+        currentDateTime = QDateTime.currentDateTime()
+        self.showRemainingTime(currentDateTime)
+
+    def addMoreTime(self):
+#       print("addMoreTime: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
+        self.DoNotCalibrateStopTime = self.DoNotCalibrateStopTime.addSecs(NOCAL_STEP * 60)
+        currentDateTime = QDateTime.currentDateTime()
+        self.showRemainingTime(currentDateTime)
+
     def initUI(self):
 #       print("initUI: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
         self.setWindowTitle('Control Research Data Generation')
         startLabel    = QLabel("Start:")
-        stopLabel     = QLabel("Stop:")
+        RemainLabel   = QLabel("Remain:")
 
         # setup DoNotCalibrate
         self.DoNotCalibrate = QPushButton('Do Not Calibrate', self)
@@ -110,8 +138,20 @@ class CtrlReschDataGen(QWidget):
         self.DoNotCalibrateStart = QLineEdit()
         self.DoNotCalibrateStart.setReadOnly(True)
 
-        self.DoNotCalibrateStop = QLineEdit()
-        self.DoNotCalibrateStop.setReadOnly(True)
+        self.DoNotCalibrateRemain = QLineEdit()
+        self.DoNotCalibrateRemain.setReadOnly(True)
+
+        self.LessTime = QPushButton('<', self)
+        self.MoreTime = QPushButton('>', self)
+
+        self.LessTime.setEnabled(False)
+        self.MoreTime.setEnabled(False)
+
+        self.LessTime.setMaximumWidth(20)
+        self.MoreTime.setMaximumWidth(20)
+
+        QObject.connect(self.LessTime, SIGNAL("clicked()"), self.addLessTime)
+        QObject.connect(self.MoreTime, SIGNAL("clicked()"), self.addMoreTime)
 
         # setup DoNotRecord
         self.DoNotRecord = QPushButton('Do Not Record', self)
@@ -124,30 +164,37 @@ class CtrlReschDataGen(QWidget):
 
         # layout in a grid
         layout = QGridLayout()
-        layout.addWidget(self.DoNotCalibrate,      0, 1)
-        layout.addWidget(self.DoNotRecord,         0, 2)
-        layout.addWidget(startLabel,               1, 0)
-        layout.addWidget(self.DoNotCalibrateStart, 1, 1)
-        layout.addWidget(self.DoNotRecordStart,    1, 2)
-        layout.addWidget(stopLabel,                2, 0)
-        layout.addWidget(self.DoNotCalibrateStop,  2, 1)
+        layout.addWidget(self.DoNotCalibrate,       0, 1, 1, 3)
+        layout.addWidget(self.DoNotRecord,          0, 4)
+        layout.addWidget(startLabel,                1, 0)
+        layout.addWidget(self.DoNotCalibrateStart,  1, 1, 1, 3)
+        layout.addWidget(self.DoNotRecordStart,     1, 4)
+        layout.addWidget(RemainLabel,               2, 0)
+        layout.addWidget(self.LessTime,             2, 1, 1, 1)
+        layout.addWidget(self.DoNotCalibrateRemain, 2, 2, 1, 1)
+        layout.addWidget(self.MoreTime,             2, 3, 1, 1)
         self.setLayout(layout)
 
     def setDoNotCalibrate(self, pressed):
 #       print("setDoNotCalibrate: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
         if pressed:
             StartTime = QDateTime.currentDateTime()
+            self.LessTime.setEnabled(True)
+            self.MoreTime.setEnabled(True)
         else:
             StartTime = QDateTime()
-            StopTime = QDateTime()
+            self.LessTime.setEnabled(False)
+            self.MoreTime.setEnabled(False)
 
         if StartTime.isValid():
-            StopTime = StartTime.addSecs(NOCALMINUTES * 60)
-            self.DoNotCalibrateStopTime = StopTime
+            self.DoNotCalibrateStartTime = StartTime
+            self.DoNotCalibrateStopTime = StartTime.addSecs(NOCALMINUTES * 60)
+        else:
+            self.DoNotCalibrateStopTime = QDateTime()
 
         # displaying invalid times clears the display
         self.DoNotCalibrateStart.setText(StartTime.toString(DATETIME_FORMAT_VIEW))
-        self.DoNotCalibrateStop.setText(StopTime.toString(DATETIME_FORMAT_VIEW))
+        self.showRemainingTime(StartTime)
 
     def setDoNotRecord(self, pressed):
 #       print("setDoNotRecord: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
