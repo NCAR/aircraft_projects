@@ -65,10 +65,13 @@ class CtrlReschDataGen(QWidget):
         if self.DoNotCalibrateStopTime.isValid():
             self.showRemainingTime(currentDateTime)
             if currentDateTime >= self.DoNotCalibrateStopTime:
+                StartTime = QDateTime()
                 self.DoNotCalibrateStopTime = QDateTime()
                 self.DoNotCalibrate.setChecked(False)
                 self.LessTime.setEnabled(False)
                 self.MoreTime.setEnabled(False)
+                self.DoNotCalibrateStart.setText(StartTime.toString(DATETIME_FORMAT_VIEW))
+                self.showRemainingTime(StartTime)
 
         if self.DoNotRecordWarnTime.isValid():
             if currentDateTime >= self.DoNotRecordWarnTime:
@@ -85,11 +88,11 @@ class CtrlReschDataGen(QWidget):
                 box.setWindowModality(Qt.NonModal);
                 box.show();
 
-        self.sendDatagrams()
+        self.sendDatagrams(currentDateTime)
 
     # send state to NIDAS every second via a UDP socket
-    def sendDatagrams(self):
-        datetime = QDateTime.currentDateTime().toString(DATETIME_FORMAT_DATA)
+    def sendDatagrams(self, currentDateTime):
+        datetime = currentDateTime.toString(DATETIME_FORMAT_DATA)
         NOCAL = "NOCAL,%s," % datetime
         NOREC = "NOREC,%s," % datetime
 
@@ -116,6 +119,15 @@ class CtrlReschDataGen(QWidget):
         self.DoNotCalibrateStopTime = self.DoNotCalibrateStopTime.addSecs(-NOCAL_STEP * 60)
         currentDateTime = QDateTime.currentDateTime()
         self.showRemainingTime(currentDateTime)
+
+        if currentDateTime >= self.DoNotCalibrateStopTime:
+            StartTime = QDateTime()
+            self.DoNotCalibrateStopTime = QDateTime()
+            self.DoNotCalibrate.setChecked(False)
+            self.LessTime.setEnabled(False)
+            self.MoreTime.setEnabled(False)
+            self.DoNotCalibrateStart.setText(StartTime.toString(DATETIME_FORMAT_VIEW))
+            self.showRemainingTime(StartTime)
 
     def addMoreTime(self):
 #       print("addMoreTime: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
