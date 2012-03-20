@@ -25,7 +25,7 @@
 <site name="Lab_N600" class="raf.Aircraft">
     <parameter name="tailNumber" value="N600" type="string"/>
 
-    <server>
+    <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
             <output>
                 <socket type="mcaccept"/>
@@ -55,7 +55,7 @@
         </service>
     </server>
 
-    <dsm name="bigblu" location="blue_viper" id="1" rserialPort="30002">
+    <dsm name="bigblu" location="blue_viper" id="1" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="big"/>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
@@ -105,7 +105,7 @@
         </output>
     </dsm>
 
-    <dsm name="ltlblu" location="blue_vulcan" id="2" rserialPort="30002">
+    <dsm name="ltlblu" location="blue_vulcan" id="2" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="ltl"/>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">
@@ -151,7 +151,7 @@
         </output>
     </dsm>
 
-    <dsm name="dsmSpareViperGV" location="viper_turtle" id="3" rserialPort="30002">
+    <dsm name="dsmSpareViperGV" location="viper_turtle" id="3" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="trt"/>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d0" id="200">

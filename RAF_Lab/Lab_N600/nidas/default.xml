@@ -616,7 +616,7 @@
 <site name="Lab_N600" class="raf.Aircraft">
     <parameter name="tailNumber" value="N600" type="string"/>
 
-    <server>
+    <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
             <output>
                 <socket type="mcaccept"/>
@@ -646,7 +646,7 @@
         </service>
     </server>
 
-    <dsm name="ltlblu" location="LWO" id="46" rserialPort="30002" derivedData="sock::31000">
+    <dsm name="ltlblu" location="LWO" id="46" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::31000">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LWO"/>

@@ -25,7 +25,7 @@
 <site name="Lab_N600" class="raf.Aircraft">
     <parameter name="tailNumber" value="N600" type="string"/>
 
-    <server>
+    <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
             <output>
                 <socket type="mcaccept"/>
@@ -58,9 +58,9 @@
     </server>
 
 <!--
-    <dsm name="dsm325" location="Wing_POD_R" id="1" rserialPort="30002">
+    <dsm name="dsm325" location="Wing_POD_R" id="1" rserialPort="30002" statusAddr="sock::30001">
 -->
-    <dsm name="dsm303" location="bluebox" id="1" rserialPort="30002">
+    <dsm name="dsm303" location="bluebox" id="1" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="325"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
