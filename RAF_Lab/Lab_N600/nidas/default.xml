@@ -646,6 +646,20 @@
         </service>
     </server>
 
+    <dsm name="acserver" location="acserver" id="45" rserialPort="30002" statusAddr="sock::30001">
+      <sensor ID="CTRLRESRCH" class="raf.UDPSocketSensor" devicename="inet::41004" id="1000">
+        <sample id="1" rate="1" scanfFormat="NOCAL,%*dT%*d,%d">
+            <variable longname="Do Not Calibrate" name="NOCAL" units="bool"/>
+        </sample>
+        <sample id="2" rate="1" scanfFormat="NOREC,%*dT%*d,%d">
+            <variable longname="Do Not Record" name="NOREC" units="bool"/>
+        </sample>
+      </sensor>
+      <output class="RawSampleOutputStream">
+          <socket type="mcrequest"/>
+      </output>
+    </dsm>
+
     <dsm name="ltlblu" location="LWO" id="46" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::31000">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
