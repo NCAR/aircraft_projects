@@ -112,7 +112,7 @@ class CtrlReschDataGen(QWidget):
             event.ignore()
             print('\a') # beep
         else:
-            self.sendDatagrams()
+            self.sendDatagrams(QDateTime.currentDateTime())
 
     def addLessTime(self):
 #       print("addLessTime: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
