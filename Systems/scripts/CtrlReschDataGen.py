@@ -120,7 +120,7 @@ class CtrlReschDataGen(QWidget):
             event.ignore()
             print('\a') # beep
         else:
-            for i in range(0,2):
+            for i in range(2):
                 self.sendDatagrams(QDateTime.currentDateTime())
             event.accept()
 
