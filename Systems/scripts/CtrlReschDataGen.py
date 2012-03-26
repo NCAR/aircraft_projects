@@ -71,6 +71,8 @@ class CtrlReschDataGen(QWidget):
     def timeout(self):
         currentDateTime = QDateTime.currentDateTime()
 
+        self.CurrentTime.setText(currentDateTime.toString(DATETIME_FORMAT_VIEW))
+
         if self.DoNotCalibrateStopTime.isValid():
             self.showRemainingTime(currentDateTime)
             if currentDateTime >= self.DoNotCalibrateStopTime:
@@ -170,6 +172,10 @@ class CtrlReschDataGen(QWidget):
         self.DoNotRecordStart = QLineEdit()
         self.DoNotRecordStart.setReadOnly(True)
 
+        self.CurrentTime = QLineEdit()
+        self.CurrentTime.setReadOnly(True)
+        self.CurrentTime.setDisabled(True)
+
         # layout in a grid
         layout = QGridLayout()
         layout.addWidget(self.DoNotCalibrate,      0, 1)
@@ -179,6 +185,7 @@ class CtrlReschDataGen(QWidget):
         layout.addWidget(self.DoNotRecordStart,    1, 2)
         layout.addWidget(RemainLabel,              2, 0)
         layout.addWidget(self.remainingTime,       2, 1)
+        layout.addWidget(self.CurrentTime,         2, 2)
         self.setLayout(layout)
 
     def setDoNotCalibrate(self, pressed):
