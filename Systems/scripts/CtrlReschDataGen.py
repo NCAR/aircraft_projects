@@ -27,7 +27,7 @@ from PyQt4.QtNetwork import (QHostAddress, QUdpSocket)
 TIME_FORMAT_VIEW     = "hh:mm:ss"
 DATETIME_FORMAT_VIEW = "yyyy-MM-dd hh:mm:ss"
 DATETIME_FORMAT_DATA = "yyyyMMddTHmmss"
-PORT = 41004
+PORT = 41005
 NOCAL_STEP = 1
 NOCALMINUTES = 15
 NORECMINUTES = 15
