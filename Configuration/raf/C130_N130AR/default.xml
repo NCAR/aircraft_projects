@@ -894,32 +894,6 @@
         </sample>
 -->
     </sensor>
-    <serialSensor ID="VCSEL" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-
-<!-- 
-        VCSEL serial records have the form:
-        SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n 
--->
-        <sample id="1" rate="1" scanfFormat="SWS %f %*f %f %f %f %f %f %*c %*f %*f %*f %*f %*f %*f %*f %*f">
-            <variable longname="VCSEL Timestamp" name="VTIME" units="second"/>
-            <variable longname="VCSEL Ambient Temperature" name="AT" units="deg_K"/>
-            <variable longname="VCSEL Ambient Pressure" name="PS" units="torr"/>
-            <variable longname="VCSEL Laser Temperature" name="LSRTMP" units="ohm"/>
-            <variable longname="VCSEL Set Temperature" name="SETTMP" units="ohm"/>
-            <variable longname="VCSEL Thermoelectric Cooler Current" name="TCC" units="count"/>
-        </sample>
-        <sample id="2" rate="25" scanfFormat="%f %f %f %f">
-
-<!-- 
-            Units on the next two variables are molecules/cm^3 
--->
-            <variable longname="VCSEL Moisture Number Density" name="CONC_H2O" units="#/cm3"/>     
-            <variable longname="VCSEL Std Dev H2O" name="STDV_H20" units="#/cm3"/>                 
-            <variable longname="VCSEL Frost Dew Point" name="DP" units="deg_C"/>
-            <variable longname="VCSEL Number of Good Scans" name="NGOOD" units="none"/>
-        </sample>
-        <message length="0" position="end" separator="\r\n"/>
-    </serialSensor>
     <serialSensor ID="CFDC" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
             <variable longname="CFDC Saturation Water" name="CT1" units="%"/>
