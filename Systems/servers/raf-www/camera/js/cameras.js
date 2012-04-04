@@ -1,3 +1,7 @@
+/*
+ * COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
+ */
+
 var capturePHP="/camera/capture.php"; //path from webroot to capture.php (update this manuall if it changes)
 var camServer="http://192.168.84.204"; //camserver (gets updated from db automatically)
 

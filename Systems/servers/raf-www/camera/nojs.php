@@ -1,4 +1,6 @@
 <?php
+	// COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
+
 	//write out errors 
 	//ini_set('display_errors', '1');
 

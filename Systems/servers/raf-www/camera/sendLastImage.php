@@ -1,4 +1,6 @@
 <?php
+	// COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
+
 	/* Set the time (in seconds) that must elapse before
 	   this script will allow a new image to be sent to 
 	   the ground :                                     */

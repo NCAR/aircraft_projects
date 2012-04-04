@@ -1,4 +1,9 @@
-//acMap is sub-class of OpenLayers.Map
+/*
+ * acMap is sub-class of OpenLayers.Map
+ *
+ * COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
+ */
+
 acMap.prototype = new OpenLayers.Map();
 function acMap() {
 

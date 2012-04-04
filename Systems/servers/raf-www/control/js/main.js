@@ -1,5 +1,8 @@
-/* These global variables will be pointers to the 
-   Model, View and Controller singletons */
+/*
+ * COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
+ *
+ * These global variables will be pointers to the Model, View and Controller singletons
+ */
 var M,V,C;
 
 

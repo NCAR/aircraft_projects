@@ -1,3 +1,6 @@
+/*
+ * COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
+ */
 function model() {
 
 	/* create empty nagios and dsm lists */

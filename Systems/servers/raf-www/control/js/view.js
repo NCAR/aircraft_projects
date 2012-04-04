@@ -1,3 +1,6 @@
+/*
+ * COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
+ */
 function view() {
 	this.table = new viewTable("#viewTable");
 

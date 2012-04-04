@@ -1,4 +1,5 @@
 <?php
+	// COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
 
 	//include utils file for xmlrpc functions
 	include_once('utils.php');

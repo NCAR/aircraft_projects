@@ -1,4 +1,5 @@
 <?php
+	// COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
 
 	if ( isset($_POST['conf']) ) {
 		$bytes = file_put_contents("js/config.json", $_POST['conf']);

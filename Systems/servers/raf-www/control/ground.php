@@ -1,4 +1,6 @@
 <?php
+	// COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
+
 //ini_set('display_errors','1');
 
 //include utils file for xmlrpc functions

@@ -1,8 +1,10 @@
 <?php
+	// COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
+
 	//display errors
 	ini_set('display_errors','1');
 
-    //make sure that browsers do not cache this page
+	//make sure that browsers do not cache this page
 	if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)) {
 	  # This is for Internet Explorer, the browser that doesn't listen to HTTP standards.
 	  header('Cache-Control: no-cache');

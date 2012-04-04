@@ -1,4 +1,6 @@
 <?php
+	// COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
+
 	//don't let browswer cache this page
 	if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)) { header('Cache-Control: no-cache'); header('Expires: -1'); }
 	else { header('Cache-Control: no-cache, must-revalidate'); header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); }

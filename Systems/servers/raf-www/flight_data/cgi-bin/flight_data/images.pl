@@ -1,4 +1,7 @@
 #!/usr/bin/perl -T
+#
+# COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
+#
 
 use strict;
 use File::stat;
