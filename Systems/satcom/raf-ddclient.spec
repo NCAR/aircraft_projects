@@ -1,7 +1,7 @@
 Summary: ddclient perl script and supporting scripts for running ddclient from pppd
 Name: raf-ddclient
 Version: 1.0
-Release: 5
+Release: 6
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -75,6 +75,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/run_ddclient.sh
 
 %changelog
+* Thu Apr  5 2012 Chris Webster <cjw@ucar.edu> 1.0-6
+- New DynDNS account.
 * Sat Jan 23 2010 Gordon Maclean <maclean@ucar.edu> 1.0-5
 - New version of run_ddclient.sh which uses checkip.dyndns.org to get IP.
 * Tue Apr 15 2008 Gordon Maclean <maclean@ucar.edu>
