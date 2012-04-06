@@ -959,6 +959,19 @@
         <variable longname="NOAA PANTHER Methane" name="CH4" units="ppbv"/>
       </sample>
     </sensor>
+    <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="inet::55000">
+        <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
+            <variable longname="SMPS Flow Controller Temperature" name="FCTEMP" units="deg_C"/>
+            <variable longname="SMPS Flow Controller Pressure" name="FCPRES" units="hPa"/>
+            <variable longname="SMPS DMA Voltage" name="DMAV" units="Vdc"/>
+            <variable longname="SMPS CPC Saturator Temperature" name="CPCTSAT" units="deg_C"/>
+            <variable longname="SMPS CPC Condenser Temperature" name="CPCTCON" units="deg_C"/>
+            <variable longname="SMPS Delta P Across Aerosol Orifice" name="DPAERO" units="ppbv"/>
+            <variable longname="SMPS CPC Counts" name="CPCCNT" units="count"/>
+            <variable longname="SMPS Delta Time" name="CPCTIM" units="seconds"/>
+        </sample> 
+    </sensor>
     <serialSensor ID="SP2" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="%f %f %f">
         <variable longname="SP2 Concentration Incand Particles" name="CIP" units="#/cm3"/>
@@ -1160,6 +1173,7 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <sensor IDREF="SMPS" devicename="inet::55000" id="1800"/>
     </dsm>
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
@@ -1170,7 +1184,7 @@
       <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="150"/>
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="160"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-        <calfile file="A2D1608.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <calfile file="A2D1601.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
@@ -1207,10 +1221,16 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="0 1 0" units="V"/>
           </variable>
+          <variable longname="Pyrgeometer Housing Temperature, Top" name="IRTHT" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="deg_C"/>
+          </variable>
         </sample>
         <sample id="2" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2D Temperature" name="A2DTEMP_ADS" units="deg_C"/>
+          <variable longname="A2D Temperature" name="A2DTEMP__ADS" units="deg_C"/>
         </sample>
       </sensor>
       <output class="RawSampleOutputStream">
@@ -1307,42 +1327,51 @@
         </sample>
       </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-        <calfile file="A2D011.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <calfile file="A2D1704.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
-            <parameter name="gain" type="float" value="4"/> 
+          <variable longname="Dewpoint cavity pressure, right" name="PSDPR" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-89.31 26.128 -0.09022" units="deg_C"/>  
-          </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
-            <parameter name="gain" type="float" value="4"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-89.2 25.923 -0.07941" units="deg_C"/>  
-          </variable>
-          <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="V">
-            <parameter name="gain" type="float" value="2"/> 
-            <parameter name="bipolar" type="bool" value="false"/>
-            <linear intercept="-50.0" slope="10.0" units="deg_C"/>
+            <linear intercept="0" slope="220" units="hPa"/>
           </variable>
           <variable longname="Dewpoint cavity pressure, left" name="PSDPL" units="V">
-            <parameter name="SerialNumber" type="string" value="414995"/>
-            <parameter name="gain" type="float" value="4"/> 
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <linear intercept="0.0" slope="220.0" units="hPa"/>  
+            <linear intercept="0" slope="220" units="hPa"/>
           </variable>
-          <variable longname="Dewpoint cavity pressure, right" name="PSDPR" units="V">
-            <parameter name="SerialNumber" type="string" value="415021"/>
-            <parameter name="gain" type="float" value="4"/> 
+          <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <linear intercept="0.0" slope="220.0" units="hPa"/>  
+            <linear intercept="-50" slope="10" units="deg_C"/>
+          </variable>
+          <variable longname="Total Temperature, Radome Left" name="TTRL" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-81.781 21.082 0.2515" units="deg_C"/>
+          </variable>
+          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-79.383 21.175 0.2708" units="deg_C"/>
+          </variable>
+          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-78.632 21.153 0.2543" units="deg_C"/>
           </variable>
         </sample>
         <sample id="2" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2D Temperature" name="A2DTEMP_RAD" units="deg_C"/>
+          <variable longname="A2D Temperature" name="A2DTEMP__RAD" units="deg_C"/>
         </sample>
       </sensor>
       <output class="RawSampleOutputStream">
@@ -1395,11 +1424,21 @@
         <socket type="mcrequest"/>
       </output>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
-        <calfile file="A2D001.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <calfile file="A2D019.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP__LWO" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="1-PPS Signal" name="PPS_LWO" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="V"/>
+          </variable>
         </sample>
       </sensor>
     </dsm>
@@ -1408,30 +1447,86 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="300">
+      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="300" suffix="_LWIO">
         <parameter name="SerialNumber" type="string" value="F2DC001"/>
       </sensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="500">
-        <calfile file="A2D001.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <calfile file="A2D1710.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP__LWI" units="deg_C"/>
         </sample>
+        <sample id="2" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="1-PPS Signal" name="PPS_LWI" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="V"/>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LWIO" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="V"/>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_LWIO" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="V"/>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LWIO" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="V"/>
+          </variable>
+        </sample>
       </sensor>
+      <serialSensor IDREF="CDP058" devicename="/dev/ttyS1" id="700" suffix="_LWII"/>
     </dsm>
-    <dsm derivedData="sock::7071" id="13" location="L4" name="dsm313" rserialPort="30002" statusAddr="sock::30001">
-      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
+    <dsm derivedData="sock::7071" id="10" location="L4" name="dsm310" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
       <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS6" id="300"/>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="500">
-        <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+      <serialSensor IDREF="CO_2005" devicename="/dev/ttyS5" id="700" suffix="_AL"/>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="900">
+        <calfile file="A2D014.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP__313" units="deg_C"/>
+          <variable longname="A2DTemperature" name="A2DTEMP__310" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Pyrgeometer Dome Temperature, Bottom" name="IRBHT" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="deg_C"/>
+          </variable>
+          <variable longname="Pyrgeometer Raw Infrared Irradiance, Bottom" name="IRB" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="V"/>
+          </variable>
+        </sample>
+        <sample id="3" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="1-PPS Signal" name="PPS_LWIC" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="0 1 0" units="V"/>
+          </variable>
         </sample>
       </sensor>
     </dsm>
