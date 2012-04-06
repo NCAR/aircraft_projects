@@ -934,6 +934,13 @@
       </sample>
 -->
     </sensor>
+    <sensor ID="MTP" class="raf.UDPSocketSensor" devicename="inet::40000">
+        <sample id="1" rate="1" scanfFormat="MTP,%*dT%*d,%d,%d,%d">
+            <variable longname="Channel 1 Counts" name="CHN1CNT" units="count"/>
+            <variable longname="Channel 2 Counts" name="CHN2CNT" units="count"/>
+            <variable longname="Channel 3 Counts" name="CHN3CNT" units="count"/>
+        </sample> 
+    </sensor>
     <sensor ID="NOAAUCATS" class="raf.UDPSocketSensor" devicename="inet::38807">
       <sample id="1" rate="1" scanfFormat="UWV:%f">
         <variable longname="NOAA UCATS Water Vapor Mixing Ratio" name="H2OMR" units="ppmv"/> 
@@ -957,6 +964,46 @@
         <variable longname="NOAA PANTHER Nitrous Oxide" name="N2O" units="ppbv"/>
         <variable longname="NOAA PANTHER Sulfur Hexaflouride" name="SF6" units="pptv"/>
         <variable longname="NOAA PANTHER Methane" name="CH4" units="ppbv"/>
+      </sample>
+    </sensor>
+    <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="inet::55000">
+        <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
+            <variable longname="SMPS Flow Controller Temperature" name="FCTEMP" units="deg_C"/>
+            <variable longname="SMPS Flow Controller Pressure" name="FCPRES" units="hPa"/>
+            <variable longname="SMPS DMA Voltage" name="DMAV" units="Vdc"/>
+            <variable longname="SMPS CPC Saturator Temperature" name="CPCTSAT" units="deg_C"/>
+            <variable longname="SMPS CPC Condenser Temperature" name="CPCTCON" units="deg_C"/>
+            <variable longname="SMPS Delta P Across Aerosol Orifice" name="DPAERO" units="ppbv"/>
+            <variable longname="SMPS CPC Counts" name="CPCCNT" units="count"/>
+            <variable longname="SMPS Delta Time" name="CPCTIM" units="seconds"/>
+        </sample> 
+    </sensor>
+    <sensor ID="GHUHSAS" class="raf.UDPSocketSensor" devicename="inet::30033" id="1700" suffix="_GH">
+      <parameter name="SerialNumber" type="string" value="UHSAS003"/>
+      <parameter name="sendInit" type="bool" value="false"/>
+
+<!--
+        <sample id="1" rate="5" scanfFormat="UHSAS,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%98{f,}">
+-->
+      <sample id="1" rate="5" scanfFormat="UHSAS,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
+        <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
+        <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
+        <variable longname="UHSAS Sample Flow" name="USMPFLW" units="sccm"/>
+        <variable longname="UHSAS Reference Intensity" name="UREF" units="V"/>
+        <variable longname="UHSAS Laser Temperature" name="ULSRTEMP" units="V"/>
+        <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="sccm"/>
+        <variable longname="UHSAS Temperature in Canister" name="UTMP" units="K"/>
+        <variable longname="UHSAS Purge Flow" name="UPRGFLW" units="sccm"/>
+        <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="kPa"/>
+
+<!--
+            <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
+-->
+        <variable longname="UHSAS Flow" name="UFLW" units="sccm"/>
+        <variable longname="UHSAS Auxilliary" name="UAUX" units="V"/>
+        <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
     </sensor>
     <serialSensor ID="SP2" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
