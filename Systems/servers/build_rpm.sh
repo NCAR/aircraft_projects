@@ -7,10 +7,17 @@ if grep -q Fedora /etc/redhat-release; then
     echo "rpmbuild --version = " `rpmbuild --version`
     exit 1
 fi
+if ! grep -q "release 5" /etc/redhat-release; then
+    echo "Error: noarch RPMs built on RHEL6 seem to be incompatible with RHEL5"
+    echo "Until this is resolved, do this build on a RHEL5 system."
+    echo "/etc/redhat-release = $(</etc/redhat-release)"
+    echo "rpmbuild --version = " `rpmbuild --version`
+    exit 1
+fi
 
 script=`basename $0`
 
-if [ $1 = "-h" -o $1 = "--help" ]; then
+if [ "$1" = "-h" -o "$1" = "--help" ]; then
     echo "$script [-i] [dpkg ...]"
     echo "-i: install RPM on EOL yum repository (if accessible)"
     exit 1
@@ -37,7 +44,10 @@ rroot=`get_eol_repo_root`
 log=/tmp/$script.$$
 trap "{ rm -f $log; }" EXIT
 
+# set pipefail shell option so that
+# rpmbuild | tee || exit $? will exit if rpmbuild fails
 set -o pipefail
+
 
 dopkg=all
 

@@ -1,7 +1,7 @@
 Summary: Package containing updates for /etc/sudoers file for ADS3 data acquisition
 Name: raf-ads3-sudoers
 Version: 1.0
-Release: 2
+Release: 3
 License: GPL
 Group: System Administration
 Url: http://www.eol.ucar.edu/
@@ -52,8 +52,12 @@ if ! fgrep -q dsm_server $tmpsudo; then
 cat << \EOD >> $tmpsudo
 ads ALL=NOPASSWD: STORAGE,NETWORKING
 ads ALL=NOPASSWD: /usr/sbin/tcpdump
-ads ALL=NOPASSWD: SETENV: /opt/local/nidas/x86/bin/dsm_server
+ads ALL=NOPASSWD: SETENV: /opt/nidas/bin/dsm_server
 EOD
+fi
+
+if fgrep -q /opt/local/nidas/x86 $tmpsudo; then
+    sed -i s,/opt/local/nidas/x86,/opt/nidas,g $tmpsudo
 fi
 
 visudo -c -f $tmpsudo && cp $tmpsudo /etc/sudoers
@@ -65,18 +69,20 @@ rm -f $tmpsudo
 #     chkconfig --list ads3
 # fi
 
-# provide write access to /opt/local/ael-dpkgs
+# provide write access to /opt/ael-dpkgs
 if egrep -q "^ads" /etc/passwd; then
-    chown -R ads /opt/local/ael-dpkgs
+    chown -R ads /opt/ael-dpkgs
 fi
 if egrep -q "^eol" /etc/group; then
-    chgrp -R eol /opt/local/ael-dpkgs
-    chmod -R g+sw /opt/local/ael-dpkgs
+    chgrp -R eol /opt/ael-dpkgs
+    chmod -R g+sw /opt/ael-dpkgs
 fi
 
 %files
 
 %changelog
+* Thu Apr  7 2012 Gordon Maclean <maclean@ucar.edu> 1.0-3
+- Updates for moves of nidas and ael-dpkgs from /opt/local to /opt.
 * Thu Mar 18 2010 Gordon Maclean <maclean@ucar.edu> 1.0-2
 - sed -ir should be sed -i -r
 * Fri Nov 6 2009 Gordon Maclean <maclean@ucar.edu> 1.0-1

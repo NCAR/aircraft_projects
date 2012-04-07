@@ -1,7 +1,7 @@
 Summary: Metapackage for all server and satcom packages needed on C130
 Name: raf-c130
 Version: 1.0
-Release: 11
+Release: 12
 License: GPL
 Group: System Environment
 
@@ -17,14 +17,13 @@ Requires: raf-c130-ddclient
 Requires: raf-satcom
 Requires: raf-satcom-bgan
 Requires: raf-ads3-sudoers
-Requires: nidas
-Requires: nidas-x86-build
+Requires: nidas-buildeol
+Requires: nidas-ael
+Requires: nidas-daq
 Requires: ael-local-dpkgs
 Requires: chrony
 Requires: raf-ac-avaps
 Requires: raf-ac-nfs
-Requires: nidas-ael
-Requires: nidas-daq
 Requires: GMT
 Requires: GMT-coastlines-all
 
@@ -36,6 +35,8 @@ Metapackage for all server and satcom packages needed on C130.
 %files 
 
 %changelog
+* Sat Apr  7 2012 Gordon Maclean <maclean@ucar.edu> 1.0-12
+- Updated Requires for new nidas packages.
 * Fri Aug 5 2011 Chris Webster <cjw@ucar.edu> 1.0-11
 - Add raf-ac-nfs package.  Added GMT.
 * Wed Feb 21 2011 Gordon Maclean <maclean@ucar.edu> 1.0-11

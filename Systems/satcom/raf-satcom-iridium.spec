@@ -87,6 +87,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ppp/options.ttyS0
 %config /etc/ppp/options.ttyACM0
 %config /etc/ppp/options.ttyACM1
+%config /etc/ppp/options.ttyUSB0
+
 %attr(0755,root,root) /etc/ppp/ip-up.iridium
 %attr(0755,root,root) /etc/ppp/ip-pre-up.iridium
 %config /etc/ppp/peers/iridium
