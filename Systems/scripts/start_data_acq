@@ -23,7 +23,7 @@
 #
 # This script uses kdialog to look almost GUI-like!
 # 
-#set -x
+# set -x
 
 # source the functions, should be in the same directory as this script
 here=${0%/*}
@@ -206,6 +206,7 @@ elif [ $topchoice == newhang ]; then
 
         temp=`expr index "$fname" './'`
 echo "temp = '$temp'"
+echo "fname = '$fname'"
         if [ $temp -gt 0 ]; then
             kdialog --caption "Bad Hangar Config" \
                 --warningcontinuecancel \
@@ -385,6 +386,7 @@ if $addconfig; then
     # set end time to 00:00 at least 14 hours in future
     tend=$(($tnow + 38 * 3600))
     tend=$(($tend - ($tend % (24 * 3600))))
+echo "calling proj_configs -a $fname $xmlchoice $tnow $tend flights.xml 2> $errfile"
     if ! proj_configs -a $fname $xmlchoice $tnow $tend flights.xml 2> $errfile; then
         kdialog --caption "Add Configuration Error" \
             --warningcontinuecancel "`head -5 $errfile`"
@@ -414,12 +416,12 @@ export FLIGHT=$fname
 
 # Start local dsm process
 # Shutdown any existing process
-#if [ -f /tmp/dsm.pid ]; then
-#    pkill -TERM $(</tmp/dsm.pid)
+#if [ -f /var/run/nidas/dsm.pid ]; then
+#    pkill -TERM $(</var/run/nidas/dsm.pid)
 #    for (( i = 0; i < 10; i++ )); do
-#        pgrep $(</tmp/dsm.pid) || break;
+#        pgrep $(</var/run/nidas/dsm.pid) || break;
 #        sleep 5
-#	pkill -TERM $(</tmp/dsm.pid)
+#	pkill -TERM $(</var/run/nidas/dsm.pid)
 #    done
 #fi
 #dsm "$xmlchoice"

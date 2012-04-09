@@ -224,9 +224,9 @@ start_dsm_server() {
     #     -i N: set log level to N, 7=debug, 6=info, 5=notice, 4=warning, 3=error
     #     -r: start XMLRPC thread
     #     -u ads: switch to ads user from root after setting up process capabilities
-    if sudo -E /opt/local/nidas/x86/bin/dsm_server -l 6 -r -u ads -c 2>$errfile > $txtfile; then
+    if sudo -E dsm_server -l 6 -r -u ads -c 2>$errfile > $txtfile; then
 
-        local pidfile=/tmp/dsm_server.pid
+        local pidfile=/var/run/nidas/dsm_server.pid
         local pid=""
         local ntry=10
         while [ $ntry -gt 0 ]; do
@@ -284,7 +284,7 @@ start_dsm_server() {
 }
 
 stop_dsm_server() {
-    local pidfile=/tmp/dsm_server.pid
+    local pidfile=/var/run/nidas/dsm_server.pid
 
     if [ -f $pidfile ]; then
         local pid=$(<$pidfile)
@@ -319,7 +319,7 @@ stop_dsm_server() {
 }
 
 check_dsm_server() {
-    local pidfile=/tmp/dsm_server.pid
+    local pidfile=/var/run/nidas/dsm_server.pid
     if [ -f $pidfile ]; then
         local pid=$(<$pidfile)
         if [ -n "$pid" -a -d /proc/"$pid" ];then

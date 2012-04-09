@@ -1,5 +1,7 @@
 #!/bin/csh -x
 
+set path = ($path /opt/nidas/bin)
+
 # Script to ensure miscellanious prcesses are running.  Run out of cron
 # periodically, say every 3-5 minutes.
 
@@ -7,14 +9,14 @@
 #    (e.g. parcel track packets)
 ps ax | grep dsm | grep -v grep | grep -qv dsm_server
 if ($status) then
-  nohup /opt/local/nidas/x86/bin/dsm >& /tmp/dsm.log &
+  nohup dsm >& /tmp/dsm.log &
 endif
 
 # status_listener runs in daemon mode (background) by default.
 # Use -d option to run in foreground, with debug messages.
 ps ax | grep status_listener | grep -qv grep
 if ($status) then
-  /opt/local/nidas/x86/bin/status_listener
+  status_listener
 endif
 
 ps ax | grep acTrack2kml | grep -qv grep
