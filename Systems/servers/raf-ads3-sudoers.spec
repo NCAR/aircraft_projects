@@ -41,11 +41,18 @@ fi
 # Remove requiretty requirement for ads account so that we can
 # do sudo from bootup scripts.
 if egrep -q "^Defaults[[:space:]]+requiretty" $tmpsudo; then
-    if ! egrep -q '^Defaults[[:space:]]*:[[:space:]]*ads[[:space:]]*!requiretty/' $tmpsudo; then
+    if ! egrep -q '^Defaults[[:space:]]*:[[:space:]]*ads[[:space:]]*!requiretty' $tmpsudo; then
         sed -i '
 /^Defaults[[:space:]]*requiretty/a\
 Defaults:ads !requiretty' $tmpsudo
     fi
+fi
+
+# Add /opt/nidas/bin to secure_path
+if egrep -q "^Defaults[[:space:]]+secure_path" $tmpsudo; then
+    if ! egrep '^Defaults[[:space:]]+secure_path' $tmpsudo | egrep -q /opt/nidas/bin; then
+       sed -i -r 's,(^Defaults[[:space:]]+secure_path[[:space:]]*=[[:space:]]*[^[:space:]]+),\1:/opt/nidas/bin,' $tmpsudo
+       fi
 fi
 
 if ! fgrep -q dsm_server $tmpsudo; then
