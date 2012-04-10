@@ -650,12 +650,16 @@
 <!-- 
         New thresholds effective February 2011, no change in sample area. 
 -->
-      <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
+        <parameter name="CHAN_THRESH" type="int" value="91 111 159 190 215 243 254 272 301 355 382 488 636 751 846 959 1070 1297 1452 1665 1851 2016 2230 2513 2771 3003 3220 3424 3660 4095"/>
       <sample id="1">
         <variable longname="CDP Laser Current" name="CDPLSRC" units="mAmp"/>
         <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
         <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="deg_C"/>
         <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="deg_C"/>
+        <variable longname="CDP Size Baseline" name="CDPSBLINE" units="Vdc"/>
+        <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="Vdc"/>
+        <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="Vdc"/>
+        <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="deg_C"/>
         <variable longname="CDP Particles Rejected (Outside Depth-of-Field))" name="REJDOF" units="count"/>
         <variable longname="CDP Average Transit Rejected Particles" name="REJAT" units=""/>
         <variable longname="CDP Average Transit Time" name="AVGTRNS" units=""/>
@@ -665,7 +669,7 @@
       </sample>
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
     </serialSensor>
-    <serialSensor ID="CDP058" baud="57600" class="raf.CDP_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
+    <serialSensor ID="CDP058" baud="38400" class="raf.CDP_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
       <parameter name="SerialNumber" type="string" value="CDP058"/>
       <parameter name="calfile" type="string" value="PMSspecs"/>
       <parameter name="NCHANNELS" type="int" value="30"/>
@@ -685,6 +689,10 @@
         <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
         <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="deg_C"/>
         <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="deg_C"/>
+        <variable longname="CDP Size Baseline" name="CDPSBLINE" units="Vdc"/>
+        <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="Vdc"/>
+        <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="Vdc"/>
+        <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="deg_C"/>
         <variable longname="CDP Particles Rejected (Outside Depth-of-Field))" name="REJDOF" units="count"/>
         <variable longname="CDP Average Transit Rejected Particles" name="REJAT" units=""/>
         <variable longname="CDP Average Transit Time" name="AVGTRNS" units=""/>
@@ -1288,7 +1296,7 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <serialSensor IDREF="UHSAS" devicename="/dev/ttyS12" id="4200">
+      <serialSensor IDREF="UHSAS" devicename="/dev/ttyS12" id="4200" suffix="_LWOI">
         <parameter name="SerialNumber" type="string" value="UHSAS001"/>
       </serialSensor>
     </dsm>
@@ -1378,7 +1386,7 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
-    <dsm derivedData="sock::7071" id="83" location="RWO" name="dsmGustPod" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="83" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
       <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
         <sample id="1">
