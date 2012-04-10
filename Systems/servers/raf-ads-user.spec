@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 16
+Release: 17
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -28,6 +28,17 @@ cp home/ads/ads3_environment.csh     ${RPM_BUILD_ROOT}/home/ads/ads3_environment
 cp home/ads/login                    ${RPM_BUILD_ROOT}/home/ads/.login
 cp home/ads/bin/*                    ${RPM_BUILD_ROOT}/home/ads/bin
 cp home/ads/Desktop/*                ${RPM_BUILD_ROOT}/home/ads/Desktop
+
+%trigger -- nidas-daq
+# set contents of /var/lib/nidas/DaqUser to "ads", and set ownership of /var/run/nidas
+if [ ! grep -q ads %{_sharedstatedir}/nidas/DaqUser ]; then
+    echo "ads" > %{_sharedstatedir}/nidas/DaqUser
+fi
+chown -R ads %{_localstatedir}/run/nidas
+group=`id -gn ads`
+if [ -n "$group" ]; then
+    chgrp -R $group %{_localstatedir}/run/nidas
+fi
 
 %files
 %defattr(-,ads,ads)
@@ -89,6 +100,10 @@ echo
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Tue Apr 10 2012 Gordon Maclean <maclean@ucar.edu> 1.17
+- Update nidas path to /opt/nidas/bin.
+- Added trigger script to update ownership of /var/run/nidas and
+- /var/lib/nidas/DaqUser when nidas-daq is updated.
 * Thu Jan 12 2012 Tom Baltzer <tbaltzer@ucar.edu> 1.15
 - Iridium icon added, clean up some elements
 * Fri Aug 5 2011 Chris Webster <cjw@ucar.edu> 1.15
