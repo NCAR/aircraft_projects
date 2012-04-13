@@ -1,0 +1,13 @@
+#!/bin/csh
+
+if ($uid == 20000) then
+  setenv DAT /scr/raf/local_productiondata/
+else
+  setenv DAT ${DATA_DIR}
+endif
+
+procf2dc ${RAW_DATA_DIR}/IDEAS-4/PMS2D/20111021_174907_rf02.2d -o ${DAT}/IDEAS-4rf02.nc
+procf2dc ${RAW_DATA_DIR}/IDEAS-4/PMS2D/20111025_152254_rf03.2d -o ${DAT}/IDEAS-4rf03.nc
+procf2dc ${RAW_DATA_DIR}/IDEAS-4/PMS2D/20111101_203821_rf04.2d -o ${DAT}/IDEAS-4rf04.nc
+procf2dc ${RAW_DATA_DIR}/IDEAS-4/PMS2D/20111107_185314_rf05.2d -o ${DAT}/IDEAS-4rf05.nc
+procf2dc ${RAW_DATA_DIR}/IDEAS-4/PMS2D/20111115_185349_rf07.2d -o ${DAT}/IDEAS-4rf07.nc
