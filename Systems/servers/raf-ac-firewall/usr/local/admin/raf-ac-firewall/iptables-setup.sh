@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This file is part of the raf-ac-firewall package.
 # Suggestion: don't edit this file, instead change the RPM source
@@ -38,16 +38,27 @@
 #
 # In general we try to log blocked packets before doing a DROP, or REJECT,
 # so that we have a change to figure out what is going on.
-#
+
 # set -x
 
-# quit immediately on error, otherwise error messages tend to be missed
+# quit immediately on error, otherwise error messages tend to be missed                 
 set -e
+# but return firewall to open state on error (in case one is testing from off site)
+trap "{ /etc/init.d/iptables stop; }" ERR
 
-modprobe ip_tables
-modprobe ip_conntrack
-modprobe ip_conntrack_ftp
-modprobe iptable_nat
+# load iptables modules listed in /etc/sysconfig/iptables-config.
+# This as stolen from /etc/init.d/iptables
+IPTABLES=iptables
+IPTABLES_MODULES=""
+IPTABLES_CONFIG=/etc/sysconfig/${IPTABLES}-config
+# Load firewall configuration.
+[ -f "$IPTABLES_CONFIG" ] && . "$IPTABLES_CONFIG"
+# Load additional modules (helpers)
+if [ -n "$IPTABLES_MODULES" ]; then
+    for mod in $IPTABLES_MODULES; do
+        modprobe $mod > /dev/null 2>&1
+    done
+fi
 
 # x.x.x.x/N
 #	N is bits in netmask
@@ -63,19 +74,27 @@ forward=$(</proc/sys/net/ipv4/ip_forward)
 
 # External interfaces connected to the big-bad internet
 
-# External interface connected through UCAR guest network.
-# This is already firewalled, we just have to do FORWARDING.
-# If VPN is up then cipsec0 or tun0 is also trusted.
-SAFE_EXT_IFS=(eth2 cipsec+ tun+)
+# Safe external interfaces which do not need firewalling
+# or traffic limits.  VPN is an example. If VPN is brought
+# up over satcom, we'll assume the user knows to limit usage.
+# This can also be the interfaces which are connected to the ucar guest
+# network (eth2). One could instead put eth2 on CHEAP_UNSAFE_EXT_IFS
+# and then it will get the filters that are applied to SATCOM_EXT_IFS.
+SAFE_EXT_IFS=(cipsec+ tun+ eth2)
 
-# Unsafe, external interfaces which are not firewalled for us. We
-# want to do firewalling, but don't need to limit traffic
-CHEAP_EXT_IFS=()
+# Unsafe, cheap (per byte) external interfaces. These are not
+# firewalled for us. We want to do firewalling, but don't need
+# to limit traffic.
+CHEAP_UNSAFE_EXT_IFS=()
 
 # Slow and expensive external interfaces.
+# eth3 is here in case one activates Inmarsat ISDN
 SATCOM_EXT_IFS=(ppp+ eth3)
 
-UNSAFE_EXT_IFS=(${CHEAP_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]})
+UNSAFE_EXT_IFS=(${CHEAP_UNSAFE_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]})
+
+# All external (WAN) interfaces
+EXT_IFS=(${CHEAP_UNSAFE_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]} ${SAFE_EXT_IFS[*]})
 
 # Internal trusted interfaces. Forwarding is done between first two
 INT_IFS=(eth0 eth1)
@@ -91,6 +110,13 @@ UCAR_128=128.117.0.0/16
 # 192.168.84.0/27 = 192.168.84.0-31
 PRIV_HOSTS_DISP=192.168.84.0/26
 PRIV_HOSTS_DATA=192.168.184.0/26
+
+# Add udp ports to forward from external interfaces 
+# (both UNSAFE_EXT_IFS and SAFE_EXT_IFS) to machines on
+# the internal interfaces (INT_IFS)
+UDP_PORT_FORWARDS=(\
+    47007 192.168.84.11 \
+)
 
 # external hosts that we can ssh to
 SSH_OUTGOING=($ANYHOST)
@@ -211,11 +237,12 @@ done
 if [ $forward -eq 1 -a ${#INT_IFS[*]} -ge 2 ]; then
     iptables -A FORWARD -i ${INT_IFS[0]} -o ${INT_IFS[1]} -j ACCEPT
     iptables -A FORWARD -i ${INT_IFS[1]} -o ${INT_IFS[0]} -j ACCEPT
-    for iif in ${SAFE_EXT_IFS[*]}; do
-        iptables -A FORWARD -i ${INT_IFS[0]} -o $iif -j ACCEPT
-        iptables -A FORWARD -i $iif -o ${INT_IFS[0]} -j ACCEPT
-        iptables -A FORWARD -i ${INT_IFS[1]} -o $iif -j ACCEPT
-        iptables -A FORWARD -i $iif -o ${INT_IFS[1]} -j ACCEPT
+    # forward to internal interfaces from safe external
+    for eif in ${SAFE_EXT_IFS[*]}; do
+        for iif in ${INT_IFS[*]}; do
+            iptables -A FORWARD -i $iif -o $eif -j ACCEPT
+            iptables -A FORWARD -i $eif -o $iif -j ACCEPT
+        done
     done
 fi
 
@@ -638,21 +665,39 @@ filter_ip()
     # 	--to 192.168.84.99:22
 }
 
-# setup rules for cheap, i.e. non-satcom, but exposed interfaces
-for eif in ${CHEAP_EXT_IFS[*]}; do
+# setup rules for cheap, i.e. non-satcom, but unsafe interfaces
+for eif in ${CHEAP_UNSAFE_EXT_IFS[*]}; do
     filter_ip $eif true
-done
-
-for iif in ${SAFE_EXT_IFS[*]}; do
-    # MASQUERADE is a form of SNAT (source NAT)
-    if [ $forward -eq 1 ]; then
-	iptables -t nat -A POSTROUTING -o $iif -j MASQUERADE
-    fi
 done
 
 # setup rules for expensive satcom exposed interfaces
 for eif in ${SATCOM_EXT_IFS[*]}; do
     filter_ip $eif false
+done
+
+for eif in ${SAFE_EXT_IFS[*]}; do
+    # MASQUERADE is a form of SNAT (source NAT)
+    if [ $forward -eq 1 ]; then
+	iptables -t nat -A POSTROUTING -o $eif -j MASQUERADE
+    fi
+done
+
+# port forwarding of all udp packets coming in on external interfaces
+# cheap and expensive, unsafe and safe.
+for eif in ${EXT_IFS[*]}; do
+    for (( i = 0; i < ${#UDP_PORT_FORWARDS[*]}; )); do
+        port=${UDP_PORT_FORWARDS[$i]}
+	# mystery, this let command seems to result in an error exit.
+        # let i++
+        i=$(( $i+1 ))
+        ip=${UDP_PORT_FORWARDS[$i]}
+        i=$(( $i+1 ))
+        iptables -t nat -A PREROUTING -i $eif -p udp --dport $port -j DNAT --to $ip
+        # then must open the forward filter to internal interfaces
+        for iif in ${INT_IFS[*]}; do
+            iptables -A FORWARD -i $eif -o $iif -p udp --dport $port -j ACCEPT
+        done
+    done
 done
 
 # Over ppp1 (MPDS), clamp MSS.

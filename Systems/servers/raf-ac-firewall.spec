@@ -1,7 +1,7 @@
 Summary: Iptables configuration for RAF aircraft server
 Name: raf-ac-firewall
 Version: 1.0
-Release: 6
+Release: 7
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -88,6 +88,10 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ac-firewall/iptables-setup.sh
 
 %changelog
+* Fri Apr 20 2012 Gordon Maclean <maclean@ucar.edu> 1.0-7
+- Added support for udp port forwarding.
+- In iptables-setup.sh, exit on error, clearing out firewall.
+- Use piece of /etc/init.d/iptables to load modules.
 * Wed Oct 26 2011 Gordon Maclean <maclean@ucar.edu> 1.0-6
 - Simplified VPN rules, allowing protocol esp, and udp ports
 - isakmp,ipsec-nat-t, and 10000. Added tun+ as a SAFE_EXT_ISF
