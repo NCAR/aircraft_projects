@@ -934,16 +934,20 @@
       </sample>
     </sensor>
     <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="inet::55000">
-        <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
-            <variable longname="SMPS Flow Controller Temperature" name="FCTEMP" units="deg_C"/>
-            <variable longname="SMPS Flow Controller Pressure" name="FCPRES" units="hPa"/>
-            <variable longname="SMPS DMA Voltage" name="DMAV" units="Vdc"/>
+            <variable longname="SMPS DMA Temperature" name="DMAT" units="deg_C"/>
+            <variable longname="SMPS Flow Controller Pressure" name="FCPRES" units="Pa"/>
+            <variable longname="SMPS DMA Voltage" name="DMAV" units="V"/>
+            <variable longname="SMPS CPC QAE" name="CPCQAE" units="cc/sec"/>
+            <variable longname="SMPS DMA QAE" name="DMAQAE" units="L/min"/>
+            <variable longname="SMPS DP1 Pressure Difference" name="DP1" units="Pa"/>
+            <variable longname="SMPS DP2 Pressure Difference" name="DP2" units="Pa"/>
+            <variable longname="SMPS CPC Counts" name="CPCCNT" units="count"/>
+            <variable longname="SMPS Time Since Last Call" name="TSLC" units="sec"/>
             <variable longname="SMPS CPC Saturator Temperature" name="CPCTSAT" units="deg_C"/>
             <variable longname="SMPS CPC Condenser Temperature" name="CPCTCON" units="deg_C"/>
-            <variable longname="SMPS Delta P Across Aerosol Orifice" name="DPAERO" units="ppbv"/>
-            <variable longname="SMPS CPC Counts" name="CPCCNT" units="count"/>
-            <variable longname="SMPS Delta Time" name="CPCTIM" units="seconds"/>
+            <variable longname="SMPS DMA Q Excess" name="DMAQEX" units="L/min"/>
         </sample> 
     </sensor>
     <serialSensor ID="SP2" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
