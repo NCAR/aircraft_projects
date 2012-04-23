@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <bzlib.h>
 #include <map>
+#include <QtCore/QTimerEvent>
 
 
 using namespace std;
@@ -76,17 +77,16 @@ execute(const char* sql_str)
 /* -------------------------------------------------------------------- */
 void udp2sql::newUDPConnection()
 {
-  _udp = new QSocketDevice(QSocketDevice::Datagram);
+  _udp = new QUdpSocket();
   QHostAddress	host;
 
   host.setAddress("0.0.0.0");	// Inhouse
 //host.setAddress("12.47.179.48");	// Reachback.
 
-  _udp->setAddressReusable(true);
-  cerr << "conn = " << _udp->bind(host, port) << endl;
-
-  _notify = new QSocketNotifier(_udp->socket(), QSocketNotifier::Read);
-  QObject::connect(_notify, SIGNAL(activated(int)), this, SLOT(newData()));
+  cerr << "conn = " << _udp->bind(host, port, QUdpSocket::ReuseAddressHint)
+       << "\n";
+ 
+  connect(_udp, SIGNAL(readyRead()), this, SLOT(readPendingDatagrams()));
 }
 
 /* -------------------------------------------------------------------- */
@@ -95,7 +95,6 @@ void udp2sql::timerEvent(QTimerEvent *)
   cerr << "Resetting connection\n";
 //PQfinish(_conn);
 //newPostgresConnection();
-//  delete _notify;
 //  delete _udp;
 //  _timer_id = 0;
 }
@@ -137,6 +136,13 @@ namespace
 
 
 
+void udp2sql::readPendingDatagrams()
+{
+  while (_udp->hasPendingDatagrams())
+  {
+    newData();
+  }
+}
 
 
 /* -------------------------------------------------------------------- */
@@ -151,8 +157,12 @@ void udp2sql::newData()
   if (_timer_id)
     killTimer(_timer_id);
 
-  int nBytes = _udp->readBlock(udp_str, 65000);
-  if (nBytes < 1) return;
+  int nBytes = _udp->readDatagram(udp_str, 65000);
+  if (nBytes < 1) 
+  {
+    cerr << "readDatagram() returned " << nBytes << "\n";
+    return;
+  }
 
   // Decompress the stream recv'd from the platform.  Using one less than
   // buffer size, plus zeroing the memory in the memset above, ensures that

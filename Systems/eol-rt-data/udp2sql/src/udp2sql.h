@@ -3,8 +3,8 @@
 #include <libpq-fe.h>
 
 #include <qhostaddress.h>
-#include <qsocketdevice.h>
-#include <qsocketnotifier.h>
+#include <QtCore/QTimerEvent>
+#include <QtNetwork/QUdpSocket>
 #include <sys/time.h>
 
 #include <map>
@@ -31,6 +31,7 @@ public:
 
 protected slots:
   void	newData();
+  void	readPendingDatagrams();
   void	timerEvent(QTimerEvent *);
 
 protected:
@@ -42,8 +43,7 @@ protected:
   void  handleSoundingMessage(string platform, char* buffer);
   void  handleAircraftMessage(string aircraft, char* buffer);
 
-  QSocketDevice * _udp;
-  QSocketNotifier * _notify;
+  QUdpSocket * _udp;
 
   // If a watchdog timer is desired.
   int _timer_id;
