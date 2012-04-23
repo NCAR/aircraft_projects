@@ -109,10 +109,6 @@ namespace
   init_passwords()
   {
     passwords["test1"] = "this will never work";
-    passwords["ncar1"] = "ntltpresent";
-    passwords["ncar2"] = "awpnboils";
-    passwords["nssl1"] = "neveriamyears";
-    passwords["nssl2"] = "twdwtmwy";
   }
 
 
