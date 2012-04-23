@@ -13,5 +13,10 @@ HEADERS = Split("""
 udp2sql.h
 """)
 
-env.Program("udp2sql", SOURCES)
+app = env.Program('udp2sql', SOURCES)
 
+EXECPATH = '/opt/local/bin/'
+
+env.Install(EXECPATH, app)
+
+env.Alias('install', EXECPATH)
