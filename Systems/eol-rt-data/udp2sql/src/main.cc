@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
   SSL_library_init();
-  QCoreApplication app(argc, argv, false);
+  QCoreApplication app(argc, argv);
 
   udp2sql reader;
   if (argc > 1)
