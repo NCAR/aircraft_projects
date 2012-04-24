@@ -565,6 +565,14 @@
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
     </sensor>
+    <sensor ID="NONOYO3" class="raf.UDPSocketSensor" devicename="inet::5555">
+        <sample id="1" rate="1" scanfFormat="NONOyO3,%f,%f,%f,%f">
+            <variable longname="NO Mixing Ratio" name="NO" units="pptv"/> 
+            <variable longname="NOY Mixing Ratio" name="NOY" units="pptv"/> 
+            <variable longname="O3 Mixing Ratio" name="O3MR" units="ppbv"/> 
+            <variable longname="NOY to O3 Ratio" name="NOYO3" units="pptv/ppbv"/> 
+        </sample>
+    </sensor>
     <serialSensor ID="Water_CN_Counter" baud="115200" class="DSMSerialSensor" databits="8" init_string="SM,4,1\r" parity="none" stopbits="1">
       <sample id="1" rate="10" scanfFormat="D,%f,%f,%*f,%f,%f,%f,%f,%f">
         <variable longname="WCN Current Operating Mode" name="MCN" units="none"/>
@@ -973,6 +981,89 @@
         </variable>
       </sample>
     </sensor>
+    <sensor ID="GTCIMS" class="raf.UDPSocketSensor" devicename="inet::39900" suffix="_GTCIMS">
+        <sample id="1" rate="1" scanfFormat="GTCIMS,%*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%*f">
+
+<!--        <variable longname="GTCIMS time at start of mass sequence" name="UST0" units="sec since 1/1/1970"/>
+-->
+            <variable longname="GTCIMS duration of mass sequence" name="DT" units="sec"/>
+
+<!--        <variable longname="GTCIMS Year" name="YR" units=""/>
+            <variable longname="GTCIMS Month" name="MO" units=""/>
+            <variable longname="GTCIMS Day of Month" name="DM" units=""/>
+            <variable longname="GTCIMS Hour" name="HR" units=""/>
+            <variable longname="GTCIMS Minute" name="MN" units=""/>
+            <variable longname="GTCIMS Second" name="SC" units=""/>
+            <variable longname="GTCIMS # of measurement state flags" name="NC" units=""/>
+            <variable longname="GTCIMS # of masses in sequence" name="NH" units=""/>
+            <variable longname="GTCIMS # of Analog Channels" name="NA" units=""/>
+-->
+            <variable longname="GTCIMS Measurement State flag #1" name="CB" units=""/>
+            <variable longname="GTCIMS Measurement State flag #2" name="C1" units=""/>
+            <variable longname="GTCIMS Measurement State flag #3" name="C2" units=""/>
+            <variable longname="GTCIMS Measurement State flag #4" name="C3" units=""/>
+            <variable longname="GTCIMS ion rate at mass #1" name="HZ062" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #1" name="MAMU062" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #1" name="MS062" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #2" name="HZ082" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #2" name="MAMU082" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #2" name="MS082" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #3" name="HZ098" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #3" name="MAMU098" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #3" name="MS098" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #4" name="HZ102" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #4" name="MAMU102" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #4" name="MS102" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #5" name="HZ104" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #5" name="MAMU104" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #5" name="MS104" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #6" name="HZ148" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #6" name="MAMU148" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #6" name="MS148" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #7" name="HZ162" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #7" name="MAMU162" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #7" name="MS162" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #8" name="HZ164" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #8" name="MAMU164" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #8" name="MS164" units="msec"/>
+            <variable longname="GTCIMS Analog level #1" name="A01" units="mV"/>
+            <variable longname="GTCIMS Analog level #2" name="A02" units="mV"/>
+            <variable longname="GTCIMS Analog level #3" name="A03" units="mV"/>
+            <variable longname="GTCIMS Analog level #4" name="A04" units="mV"/>
+            <variable longname="GTCIMS Analog level #5" name="A05" units="mV"/>
+            <variable longname="GTCIMS Analog level #6" name="A06" units="mV"/>
+            <variable longname="GTCIMS Analog level #7" name="A07" units="mV"/>
+            <variable longname="GTCIMS Analog level #8" name="A08" units="mV"/>
+            <variable longname="GTCIMS Analog level #9" name="A09" units="mV"/>
+            <variable longname="GTCIMS Analog level #10" name="A10" units="mV"/>
+            <variable longname="GTCIMS Analog level #11" name="A11" units="mV"/>
+            <variable longname="GTCIMS Analog level #12" name="A12" units="mV"/>
+            <variable longname="GTCIMS Analog level #13" name="A13" units="mV"/>
+            <variable longname="GTCIMS Analog level #14" name="A14" units="mV"/>
+            <variable longname="GTCIMS Analog level #15" name="A15" units="mV"/>
+            <variable longname="GTCIMS Analog level #16" name="A16" units="mV"/>
+            <variable longname="GTCIMS Analog level #17" name="A17" units="mV"/>
+            <variable longname="GTCIMS Analog level #18" name="A18" units="mV"/>
+            <variable longname="GTCIMS Analog level #19" name="A19" units="mV"/>
+            <variable longname="GTCIMS Analog level #20" name="A20" units="mV"/>
+            <variable longname="GTCIMS Analog level #21" name="A21" units="mV"/>
+            <variable longname="GTCIMS Analog level #22" name="A22" units="mV"/>
+            <variable longname="GTCIMS Analog level #23" name="A23" units="mV"/>
+            <variable longname="GTCIMS Analog level #24" name="A24" units="mV"/>
+            <variable longname="GTCIMS Analog level #25" name="A25" units="mV"/>
+            <variable longname="GTCIMS Analog level #26" name="A26" units="mV"/>
+            <variable longname="GTCIMS Analog level #27" name="A27" units="mV"/>
+            <variable longname="GTCIMS Analog level #28" name="A28" units="mV"/>
+            <variable longname="GTCIMS Analog level #29" name="A29" units="mV"/>
+            <variable longname="GTCIMS Analog level #30" name="A30" units="mV"/>
+            <variable longname="GTCIMS Analog level #31" name="A31" units="mV"/>
+            <variable longname="GTCIMS Analog level #32" name="A32" units="mV"/>
+
+<!--        <variable longname="GTCIMS Pressure Altitude from IWG1" name="AUX01" units="feet"/>
+            <variable longname="GTCIMS Ambient Temp from IWG1" name="AUX02" units="degK"/>
+-->
+        </sample>
+    </sensor>
     <serialSensor ID="HoneywellPPT" baud="19200" class="raf.PPT_Serial" databits="8" parity="none" stopbits="1">
       <sample id="1" scanfFormat="?%*2dCP=%f">
         <variable longname="Raw Dynamic Pressure" name="PA" units="hPa"/>
@@ -1152,6 +1243,8 @@
         <socket type="mcrequest"/>
       </output>
       <sensor IDREF="SMPS" devicename="inet::55000" id="1800"/>
+      <sensor IDREF="GTCIMS" devicename="inet::39900" id="2000" suffix="_GTC"/>
+      <sensor IDREF="NONOYO3" devicename="inet::5555" id="2200"/>
     </dsm>
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
