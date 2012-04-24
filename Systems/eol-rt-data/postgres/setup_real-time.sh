@@ -106,7 +106,7 @@ ALTER TABLE public.variable_list OWNER TO ads;
 INSERT INTO variable_list VALUES ('GGLAT',       'degree_N', '', 'Reference GPS Latitude',                             '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('GGLON',       'degree_E', '', 'Reference GPS Longitude',                            '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('GGALT',       'm',        '', 'Reference GPS Altitude (MSL)',                       '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
-INSERT INTO variable_list VALUES ('NAVAIL',      'm',        '', 'WGS 84 Geoid Altitude',                              '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
+INSERT INTO variable_list VALUES ('WGSALT',      'm',        '', 'WGS 84 Geoid Altitude',                              '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('PALTF',       'feet',     '', 'NACA Pressure Altitude',                             '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('HGM232',      'feet',     '', 'Radar Altimeter Altitude',                           '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('GSF',         'm/s',      '', 'IRS Aircraft Ground Speed',                          '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
