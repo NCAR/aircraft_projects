@@ -165,7 +165,9 @@ void udp2sql::newData()
   // buffer will be null-terminated no matter what bunzip does to it.
   unsigned int bufLen = sizeof(buffer_space) - 1;
   int ret = BZ2_bzBuffToBuffDecompress(buffer, &bufLen, udp_str, nBytes, 0, 0);
-  if (ret < 0) {
+  if (ret == BZ_DATA_ERROR_MAGIC)
+    memcpy(buffer, udp_str, nBytes);
+  else if (ret < 0) {
     typedef struct {     // copied from bzlib.c
       FILE*     handle;
       char      buf[BZ_MAX_UNUSED];
@@ -182,7 +184,8 @@ void udp2sql::newData()
 	 << BZ2_bzerror(&b, &errnum) << endl;
     return;
   }
-  cerr << "\ndecompressed " << nBytes << " -> " << bufLen << endl;
+  else
+    cerr << "\ndecompressed " << nBytes << " -> " << bufLen << endl;
   cerr << buffer << endl;
 
   // Now see if this message has a digest.
@@ -259,6 +262,8 @@ void udp2sql::newData()
   if      (strncmp(buffer, "C130", 4) == 0) platform = "C130";
   else if (strncmp(buffer, "GV", 2) == 0)   platform = "GV";
   else if (strncmp(buffer, "P3", 2) == 0)   platform = "P3";
+  else if (strncmp(buffer, "DC8", 3) == 0)   platform = "DC8";
+  else if (strncmp(buffer, "IWG1", 4) == 0)   platform = "DC8";
   else if (strncmp(buffer, "GAUS:", 5) == 0) platform = "GAUS";
   else return;
 
@@ -315,13 +320,14 @@ handleAircraftMessage(string aircraft, char* buffer)
 
   if (newPostgresConnection(aircraft))
   {
-    // create postgres statement
+    // create postgres statements
     sprintf(sql_str, "INSERT INTO raf_lrt VALUES ('%s',%s);", timestamp, vars);
     cerr << strlen(sql_str) << ": " << sql_str << endl;
     execute(sql_str);
     sprintf(sql_str, 
 	    "UPDATE global_attributes SET value='%s.999' WHERE key='EndTime';",
 	    timestamp);
+    cerr << strlen(sql_str) << ": " << sql_str << endl;
     execute(sql_str);
     closePostgresConnection();
   }
