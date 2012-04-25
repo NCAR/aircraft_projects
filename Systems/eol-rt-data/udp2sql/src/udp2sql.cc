@@ -260,7 +260,7 @@ void udp2sql::newData()
   if      (strncmp(buffer, "C130", 4) == 0) platform = "C130";
   else if (strncmp(buffer, "GV", 2) == 0)   platform = "GV";
   else if (strncmp(buffer, "P3", 2) == 0)   platform = "P3";
-  else if (strncmp(buffer, "DC8", 3) == 0)   platform = "DC8";
+  else if (strncmp(buffer, "DC-8", 4) == 0)   platform = "DC8";
   else if (strncmp(buffer, "IWG1", 4) == 0)   platform = "DC8";
   else if (strncmp(buffer, "GAUS:", 5) == 0) platform = "GAUS";
   else return;
