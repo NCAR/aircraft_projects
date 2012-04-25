@@ -9,6 +9,11 @@
         <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
       </sample>
     </sensor>
+    <arincSensor ID="LSZ-GV" class="raf.LSZ_HW_EB7032239" speed="low">
+      <sample id="0001" rate="1">
+        <variable longname="Lightning Preamble / mode" name="LSZMODE" units="none"/>
+      </sample>
+    </arincSensor>
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
 
 <!-- Taken from the Honeywell installation manual for the         -->
@@ -1309,6 +1314,13 @@
       </output>
       <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS8" id="4200"/>
     </dsm>
+    <dsm derivedData="sock::7071" id="13" location="cabin_test" name="dsm313" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_TEST"/>
+      <arincSensor IDREF="LSZ-GV" devicename="/dev/arinc0" id="1000"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+    </dsm>
     <dsm derivedData="sock::7071" id="4" location="cabin_mpdb" name="dsm304" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
@@ -1537,20 +1549,20 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="0 1 0" units="V"/>
           </variable>
-          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LWIO" units="V">
-            <parameter name="channel" type="int" value="2"/>
+          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LWIO" units="V">
+            <parameter name="channel" type="int" value="5"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="0 1 0" units="V"/>
           </variable>
           <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_LWIO" units="V">
-            <parameter name="channel" type="int" value="3"/>
+            <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="0 1 0" units="V"/>
           </variable>
-          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LWIO" units="V">
-            <parameter name="channel" type="int" value="4"/>
+          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LWIO" units="V">
+            <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="0 1 0" units="V"/>
@@ -1566,7 +1578,7 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS6" id="300"/>
+      <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS6" id="300" suffix="_PIC"/>
       <serialSensor IDREF="CO_2005" devicename="/dev/ttyS5" id="700" suffix="_AL"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="900">
         <calfile file="A2D014.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
