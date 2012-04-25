@@ -567,7 +567,7 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
-    <sensor ID="ACDFO3" class="raf.UDPSocketSensor" devicename="inet::5555">
+    <sensor ID="ACDFO3" class="raf.UDPSocketSensor" devicename="inet::30106">
       <sample id="1" rate="10" scanfFormat="O3,%f">
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
@@ -915,14 +915,14 @@
       </sample>
 -->
     </sensor>
-    <sensor ID="MTP" class="raf.UDPSocketSensor" devicename="inet::40000">
+    <sensor ID="MTP" class="raf.UDPSocketSensor" devicename="inet::30101">
         <sample id="1" rate="1" scanfFormat="MTP,%*dT%*d,%d,%d,%d">
             <variable longname="Channel 1 Counts" name="CHN1CNT" units="count"/>
             <variable longname="Channel 2 Counts" name="CHN2CNT" units="count"/>
             <variable longname="Channel 3 Counts" name="CHN3CNT" units="count"/>
         </sample> 
     </sensor>
-    <sensor ID="NOAAUCATS" class="raf.UDPSocketSensor" devicename="inet::38807">
+    <sensor ID="NOAAUCATS" class="raf.UDPSocketSensor" devicename="inet::30102">
       <sample id="1" rate="1" scanfFormat="UWV:%f">
         <variable longname="NOAA UCATS Water Vapor Mixing Ratio" name="H2OMR" units="ppmv"/> 
       </sample>
@@ -934,7 +934,7 @@
         <variable longname="NOAA UCATS Methane" name="CH4" units="ppbv"/>
       </sample>
     </sensor>
-    <sensor ID="NOAAPANTHER" class="raf.UDPSocketSensor" devicename="inet::28808">
+    <sensor ID="NOAAPANTHER" class="raf.UDPSocketSensor" devicename="inet::30103">
       <sample id="1" rate="1" scanfFormat="PAN:%f,%f,%f">
         <variable longname="NOAA PANTHER Press N2 Low" name="PresLN2" units="psi"/>
         <variable longname="NOAA PANTHER Press He Low" name="PresLHe" units="psi"/>
@@ -947,7 +947,7 @@
         <variable longname="NOAA PANTHER Methane" name="CH4" units="ppbv"/>
       </sample>
     </sensor>
-    <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="inet::55000">
+    <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="inet::30104">
         <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
             <variable longname="SMPS Flow Controller Temperature" name="FCTEMP" units="deg_C"/>
@@ -995,7 +995,7 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-    <sensor ID="NOAASP2" class="raf.UDPSocketSensor" devicename="inet::32011">
+    <sensor ID="NOAASP2" class="raf.UDPSocketSensor" devicename="inet::30105">
       <sample id="1" rate="1" scanfFormat="NOAA_SP2,%*dT%*d,%f,%f,%f,%f,%f">
 
 <!-- Do %*d and skip the time - only know floating point -->
@@ -1177,7 +1177,7 @@
       </service>
     </server>
     <dsm id="19" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
-      <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::41003" id="1600">
+      <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::30100" id="1600">
 
 <!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
         <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
