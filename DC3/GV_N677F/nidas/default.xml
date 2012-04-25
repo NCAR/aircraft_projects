@@ -570,12 +570,12 @@
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
     </sensor>
-    <sensor ID="NONOYO3" class="raf.UDPSocketSensor" devicename="inet::5555">
-        <sample id="1" rate="1" scanfFormat="NONOyO3,%f,%f,%f,%f">
+    <sensor ID="NONOYO3" class="raf.UDPSocketSensor" devicename="inet::30107">
+        <sample id="1" rate="1" scanfFormat="NONO2O3,%f,%f,%f,%f">
             <variable longname="NO Mixing Ratio" name="NO" units="pptv"/> 
-            <variable longname="NOY Mixing Ratio" name="NOY" units="pptv"/> 
+            <variable longname="NO2 Mixing Ratio" name="NO2" units="pptv"/> 
             <variable longname="O3 Mixing Ratio" name="O3MR" units="ppbv"/> 
-            <variable longname="NOY to O3 Ratio" name="NOYO3" units="pptv/ppbv"/> 
+            <variable longname="NOx Mixing Ratio" name="NOXMR" units="pptv"/> 
         </sample>
     </sensor>
     <serialSensor ID="Water_CN_Counter" baud="115200" class="DSMSerialSensor" databits="8" init_string="SM,4,1\r" parity="none" stopbits="1">
@@ -946,7 +946,7 @@
         <variable longname="NOAA PANTHER Methane" name="CH4" units="ppbv"/>
       </sample>
     </sensor>
-    <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="inet::55000">
+    <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="inet::30104">
         <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
             <variable longname="SMPS DMA Temperature" name="DMAT" units="deg_C"/>
@@ -1247,9 +1247,9 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor IDREF="SMPS" devicename="inet::55000" id="1800"/>
-      <sensor IDREF="GTCIMS" devicename="inet::39900" id="2000" suffix="_GTC"/>
-      <sensor IDREF="NONOYO3" devicename="inet::5555" id="2200"/>
+      <sensor IDREF="SMPS" devicename="inet::30104" id="1800" suffix="_SMPS"/>
+      <sensor IDREF="GTCIMS" devicename="inet::39900" id="2000" suffix="_GCIM"/>
+      <sensor IDREF="NONOYO3" devicename="inet::30107" id="2200"/>
     </dsm>
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
