@@ -324,14 +324,14 @@ handleAircraftMessage(string aircraft, char* buffer)
     len = varsStr.length();
     varsStr.replace(", ",",");
   }
-  // instert nulls for all missing values
+  // instert NANs for all missing values
   len = 0;
   while (len != varsStr.length()) {
     len = varsStr.length();
-    varsStr.replace(",,",",null,");
+    varsStr.replace(",,",",-32767,");
   }
   if (varsStr.endsWith(","))
-    varsStr.append("null");
+    varsStr.append("-32767");
 
   if (newPostgresConnection(aircraft))
   {
