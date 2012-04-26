@@ -574,8 +574,8 @@
         <sample id="1" rate="1" scanfFormat="NONO2O3,%f,%f,%f,%f">
             <variable longname="NO Mixing Ratio" name="NO" units="pptv"/> 
             <variable longname="NO2 Mixing Ratio" name="NO2" units="pptv"/> 
-            <variable longname="O3 Mixing Ratio" name="O3MR" units="ppbv"/> 
-            <variable longname="NOx Mixing Ratio" name="NOXMR" units="pptv"/> 
+            <variable longname="O3 Mixing Ratio" name="F03" units="ppbv"/> 
+            <variable longname="NOx Mixing Ratio" name="NOX" units="pptv"/> 
         </sample>
     </sensor>
     <serialSensor ID="Water_CN_Counter" baud="115200" class="DSMSerialSensor" databits="8" init_string="SM,4,1\r" parity="none" stopbits="1">
@@ -1249,11 +1249,12 @@
       </output>
       <sensor IDREF="SMPS" devicename="inet::30104" id="1800" suffix="_SMPS"/>
       <sensor IDREF="GTCIMS" devicename="inet::39900" id="2000" suffix="_GCIM"/>
-      <sensor IDREF="NONOYO3" devicename="inet::30107" id="2200"/>
+      <sensor IDREF="NONOYO3" devicename="inet::30107" id="2200" suffix="_ACD"/>
     </dsm>
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
+      <arincSensor IDREF="LSZ-GV" devicename="/dev/arinc1" id="2000"/>
       <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
       <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G2"/>
       <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS5" id="140" suffix="_GMN"/>
@@ -1313,13 +1314,6 @@
         <socket type="mcrequest"/>
       </output>
       <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS8" id="4200"/>
-    </dsm>
-    <dsm derivedData="sock::7071" id="13" location="cabin_test" name="dsm313" rserialPort="30002" statusAddr="sock::30001">
-      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_TEST"/>
-      <arincSensor IDREF="LSZ-GV" devicename="/dev/arinc0" id="1000"/>
-      <output class="RawSampleOutputStream">
-        <socket type="mcrequest"/>
-      </output>
     </dsm>
     <dsm derivedData="sock::7071" id="4" location="cabin_mpdb" name="dsm304" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
