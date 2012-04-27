@@ -621,7 +621,9 @@
         <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %c %*f %f %*f %*f %f %f %f %f">
             <variable longname="VCSEL Status Code" name="STATUS" units="none"/>
             <variable longname="VCSEL Ambient Temperature" name="AT" units="deg_K"/>
-            <variable longname="VCSEL Ambient Pressure" name="PS" units="torr"/>
+            <variable longname="VCSEL Ambient Pressure" name="PS" units="torr">
+                <linear slope="1.333223" intercept="0.0" units="hPa"/>
+            </variable>
             <variable longname="VCSEL Laser Temperature" name="LSRTMP" units="ohm"/>
             <variable longname="VCSEL Set Temperature" name="SETTMP" units="ohm"/>
             <variable longname="VCSEL Thermoelectric Cooler Current" name="TCC" units="count"/>
@@ -633,10 +635,10 @@
             <variable longname="VCSEL Averaged Laser Intensity" name="LSRINT" units="count"/>
         </sample>
         <sample id="2" rate="25" scanfFormat="%f %f %f %*f">
-            <variable longname="VCSEL Moisture Number Density, Uncalibrated" name="RAWCONC" units="#/cm3"/>     
+            <variable longname="VCSEL Moisture Number Density, Uncalibrated" name="RAWCONC" units="#/cm3"/>
 
 <!-- molecules/cm^3 -->
-            <variable longname="VCSEL Sample Laser Intensity" name="SMPLSRINT" units="count"/>     
+            <variable longname="VCSEL Sample Laser Intensity" name="SMPLSRINT" units="mV"/>
             <variable longname="VCSEL Frost Dew Point" name="DPV" units="deg_C"/>
         </sample>
 
@@ -1018,10 +1020,8 @@
                 <variable longname="Temperature of ADIFR Probe" name="ADIFRTEMP" units="deg_C"/>
             </sample>
         <sample id="1" rate="50">
-                <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="hPa">
-            <poly coefs="0.0 0.9 0.0" units="hPa"/>
-          </variable>
-            </sample>
+            <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="hPa"/>
+        </sample>
       </serialSensor>
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140">
             <sample id="1">
@@ -1042,31 +1042,31 @@
             <sample id="1" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="Total Temperature, Deiced Left" name="TTHL2" units="V">
+                <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH2" units="V">
                     <parameter name="gain" type="float" value="4"/> 
             <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-90.691 25.554 0.08566" units="deg_C"/>   
+                    <poly coefs="-105.05 31.313 -0.48734" units="deg_C"/>   
 
 <!-- Pre-HIPPO-3 cal --> 
                 </variable>
-                <variable longname="Total Temperature, Deiced Left" name="TTHL1" units="V">
+                <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH1" units="V">
                     <parameter name="gain" type="float" value="4"/> 
             <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-90.802 25.69  0.068852" units="deg_C"/>  
+                    <poly coefs="-107.47 31.871 -0.49859" units="deg_C"/>  
 
 <!-- Pre-HIPPO-3 cal -->
                 </variable>
-                <variable longname="Total Temperature, Deiced Right" name="TTHR2" units="V">
+                <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
                     <parameter name="gain" type="float" value="4"/> 
             <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-89.148 25.709 -0.0513" units="deg_C"/>  
+                    <poly coefs="-94.888 27.679 -0.13747" units="deg_C"/>  
 
 <!-- DC3-TEST Cal -->
                 </variable>
-                <variable longname="Total Temperature, Deiced Right" name="TTHR1" units="V">
+                <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
                     <parameter name="gain" type="float" value="4"/> 
             <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-89.056 25.543 -0.0346" units="deg_C"/>  
+                    <poly coefs="-93.881 27.222 -0.11129" units="deg_C"/>  
 
 <!-- DC3-TEST Cal -->
                 </variable>
