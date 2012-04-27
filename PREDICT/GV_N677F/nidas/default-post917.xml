@@ -505,7 +505,9 @@
         <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %c %*f %f %*f %*f %f %f %f %f">
             <variable name="STATUS" units="none" longname="VCSEL Status Code"/>
             <variable name="AT" units="deg_K" longname="VCSEL Ambient Temperature"/>
-            <variable name="PS" units="torr" longname="VCSEL Ambient Pressure"/>
+            <variable name="PS" units="torr" longname="VCSEL Ambient Pressure">
+                <linear slope="1.333223" intercept="0.0" units="hPa"/>
+            </variable>
             <variable name="LSRTMP" units="ohm" longname="VCSEL Laser Temperature"/>
             <variable name="SETTMP" units="ohm" longname="VCSEL Set Temperature"/>
             <variable name="TCC" units="count" longname="VCSEL Thermoelectric Cooler Current"/>
@@ -517,9 +519,9 @@
             <variable name="LSRINT" units="count" longname="VCSEL Averaged Laser Intensity"/>
         </sample>
         <sample id="2" rate="25" scanfFormat="%f %f %f %*f">
-            <variable name="CONC_H2O" units="#/cm3" longname="VCSEL Moisture Number Density"/>     <!-- molecules/cm^3 -->
-            <variable name="SMPLSRINT" units="count" longname="VCSEL Sample Laser Intensity"/>     
-            <variable name="DP" units="deg_C" longname="VCSEL Frost Dew Point"/>
+            <variable name="RAWCONC" units="#/cm3" longname="VCSEL Moisture Number Density"/>     <!-- molecules/cm^3 -->
+            <variable name="SMPLSRINT" units="mV" longname="VCSEL Sample Laser Intensity"/>
+            <variable name="DPV" units="deg_C" longname="VCSEL Frost Dew Point"/>
         </sample>
         <!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
         <sample id="3" rate="1" scanfFormat="SPEC %98f">
