@@ -1,0 +1,12 @@
+#! /bin/csh -f
+#perl /net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/HIPPO-3/Camera/flight_number_rf01/forward/" "-s:60" "-t:5i"
+#perl /net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/HIPPO-3/Camera/flight_number_rf02/forward/" "-s:60" "-t:5i"
+perl /net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/HIPPO-3/Camera/flight_number_rf03/forward/" "-s:60" "-t:5i"
+perl /net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/HIPPO-3/Camera/flight_number_rf04/forward/" "-s:60" "-t:5i"
+perl /net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/HIPPO-3/Camera/flight_number_rf05/forward/" "-s:60" "-t:5i"
+perl /net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/HIPPO-3/Camera/flight_number_rf06/forward/" "-s:60" "-t:5i"
+perl /net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/HIPPO-3/Camera/flight_number_rf07/forward/" "-s:60" "-t:5i"
+perl /net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/HIPPO-3/Camera/flight_number_rf08/forward/" "-s:60" "-t:5i"
+perl /net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/HIPPO-3/Camera/flight_number_rf09/forward/" "-s:60" "-t:5i"
+perl /net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/HIPPO-3/Camera/flight_number_rf10/forward/" "-s:60" "-t:5i"
+perl /net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/HIPPO-3/Camera/flight_number_rf11/forward/" "-s:60" "-t:5i"
