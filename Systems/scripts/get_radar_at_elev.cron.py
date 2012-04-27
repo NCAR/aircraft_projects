@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# This script attempts to get the latest lightning image(s) from the ground.
+# This script attempts to get the latest radar image(s) from the ground.
 #  Lightning data will be grouped according to the region of the 
 #  detector network and images will be generated for elevation ranges.
 #  Therefore we will need to determine the elevation of the aircraft from 
@@ -64,24 +64,22 @@ except:
 #  *******************  Modify The Following *********************
 location         = 'Al' # AL or OK 
 local_image_dir  = '/var/www/html/flight_data/images/'
-image_type       = 'lghtng'
+image_type       = 'radar_at_level'
 busy_file        = local_image_dir+'BUSY_'+image_type
 ftp_site         = 'catalog1.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
 ftp_dir          = '/pub/incoming/OSM/'+aircraft+'/'
-#Assumes filename form is prefix.YYYYMMDDHHMM.midfix_ALTSTRING.postfix
-prefix           = 'research.' + location + '_' + "LMA."
-midfix           = '10minute_'
-postfix		 = '.png' 
-compositpostfix  = 'composite.png'
-osm_file_name    = "latest_ltng_at_elev.gif"
+#Assumes filename form is prefix.YYYYMMDDHHMM.ALTSTRING_postfix
+prefix           = 'radar.NEXRAD_3D_mosaic_map.'
+postfix		 = '_CAPPI.png' 
+osm_file_name    = "latest_radar_at_elev.png"
 min_of_imgs	 = 10 # Script will backfill this many minutes for loops
 num_imgs_to_get  = 10 # Script will backfill this many images for loops
 
 # End of Initialization section
 
-print "Starting get_lghtng_at_elev_cron.py for getting " + image_type + " imagery"
+print "Starting get_radar_at_elev_cron.py for getting " + image_type + " imagery"
 
 # This cron script is not re-entrant, bail out if its still running.
 if os.path.isfile(busy_file):
@@ -158,7 +156,7 @@ os.chdir(local_image_dir)
 listing=os.listdir('.')
 
 # Get list of current images from ftp site
-#  TODO: use ftp.nlist to reduce size of listing significantly
+#  TODO: use ftp.nlst to reduce size of listing significantly
 try:
     print 'opening FTP connection '
 
@@ -168,12 +166,16 @@ try:
 
     ftplist = []
     for ts in timestr:
-        form=prefix + ts + midfix + altstr + postfix
+        form=prefix + ts + altstr + postfix
         print "looking for files on ftp server: " + form
-        ftp.dir(form, ftplist.append)
-        form=prefix + ts + midfix + altstr + compositpostfix
-        print "looking for files on ftp server: " + form
-        ftp.dir(form, ftplist.append)
+        templist = ftp.nlst(form)
+        if len(templist) > 0:
+            for i in templist:
+                print i
+                ftplist.append(i)
+
+    print "ftplist:"
+    print ftplist
 
 except ftplib.all_errors, e:
     print 'Error Getting ftp listing'
@@ -185,20 +187,20 @@ if len(ftplist) == 0:  # didn't get any file names, bail out
     print "didn't find any files on ftp server with forms: " 
     print prefix+"+"
     print timestr
-    print "+"+midfix+altstr+postfix+" OR"
-    print "+"+midfix+altstr+compositpostfix
+    print "+"+altstr+postfix+" OR"
     os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
 
 print "Size of the ftp listing: " + str(len(ftplist))
+#print ftplist
 
-filelist = []
-for line in ftplist:
-    linelist = line.it()
-    filelist.append(linelist[len(linelist)-1])
+#filelist = []
+#for line in ftplist:
+#    linelist = line.it()
+#    filelist.append(linelist[len(linelist)-1])
 
-latest = filelist[len(filelist)-1]
+latest = ftplist[len(ftplist)-1]
 print "last file on ftp site is: " + latest
 
 # Check to see if we've got the most recent file
@@ -227,8 +229,8 @@ except:
 print 'Checking on images earlier in time.'
 got_old='false'
 i=2
-filename=filelist[len(filelist)-i]
-while i<num_imgs_to_get:
+filename=ftplist[len(ftplist)-i]
+while i<num_imgs_to_get and i<len(ftplist):
     if filename not in listing:
         print "Don't have earlier image:"+filename
         try:
@@ -243,7 +245,7 @@ while i<num_imgs_to_get:
             ftp.quit()
             sys.exit(1)
     i = i+1
-    filename=filelist[len(filelist)-i]
+    filename=ftplist[len(ftplist)-i]
 
 # If we got an older image it's date/time will be out of sequence for 
 # time series veiwing (which is done based on date/time of file) so we need
