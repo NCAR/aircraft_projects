@@ -800,7 +800,9 @@
       <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %c %*f %f %*f %*f %f %f %f %f">
         <variable longname="VCSEL Status Code" name="STATUS" units="none"/>
         <variable longname="VCSEL Ambient Temperature" name="AT" units="deg_K"/>
-        <variable longname="VCSEL Ambient Pressure" name="PS" units="torr"/>
+        <variable longname="VCSEL Ambient Pressure" name="PS" units="torr">
+            <linear slope="1.333223" intercept="0.0" units="hPa"/>
+        </variable>
         <variable longname="VCSEL Laser Temperature" name="LSRTMP" units="ohm"/>
         <variable longname="VCSEL Set Temperature" name="SETTMP" units="ohm"/>
         <variable longname="VCSEL Thermoelectric Cooler Current" name="TCC" units="count"/>
@@ -986,7 +988,7 @@
         </variable>
       </sample>
     </sensor>
-    <sensor ID="GTCIMS" class="raf.UDPSocketSensor" devicename="inet::39900" suffix="_GTCIMS">
+    <sensor ID="GTCIMS" class="raf.UDPSocketSensor" devicename="inet::30110" suffix="_GTCIMS">
         <sample id="1" rate="1" scanfFormat="GTCIMS,%*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%*f">
 
 <!--        <variable longname="GTCIMS time at start of mass sequence" name="UST0" units="sec since 1/1/1970"/>
@@ -1248,7 +1250,7 @@
         <socket type="mcrequest"/>
       </output>
       <sensor IDREF="SMPS" devicename="inet::30104" id="1800" suffix="_SMPS"/>
-      <sensor IDREF="GTCIMS" devicename="inet::39900" id="2000" suffix="_GCIM"/>
+      <sensor IDREF="GTCIMS" devicename="inet::30110" id="2000" suffix="_GCIM"/>
       <sensor IDREF="NONOYO3" devicename="inet::30107" id="2200" suffix="_ACD"/>
     </dsm>
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
