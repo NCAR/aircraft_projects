@@ -61,7 +61,7 @@ INSERT INTO global_attributes VALUES ('ProjectName', 'ProjectName');
 INSERT INTO global_attributes VALUES ('DataRate', '1');
 INSERT INTO global_attributes VALUES ('latitude_coordinate', 'GGLAT');
 INSERT INTO global_attributes VALUES ('longitude_coordinate', 'GGLON');
-INSERT INTO global_attributes VALUES ('zaxis_coordinate', 'GGALT');
+INSERT INTO global_attributes VALUES ('zaxis_coordinate', 'PALTF');
 INSERT INTO global_attributes VALUES ('time_coordinate', 'datetime');
 INSERT INTO global_attributes VALUES ('landmarks', '39.9088 -105.117 jeffco');
 INSERT INTO global_attributes VALUES ('EndTime', '');
