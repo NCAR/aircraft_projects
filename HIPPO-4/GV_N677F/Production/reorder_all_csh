@@ -1,8 +1,12 @@
 #!/bin/csh
+set user = `whoami`
+if ($user == 'nimbus') then
+        cd /scr/raf/local_productiondata
+else
+        cd ${DATA_DIR}
+endif
 
-cd /scr/raf/local_data
-#cd /scr/raf/local_productiondata
-foreach FILENAME (HIPPO-4?f??_med.nc)
+foreach FILENAME (HIPPO-4?f??.nc)
   echo $FILENAME
   ncReorder $FILENAME temp_h4.nc
   mv -f temp_h4.nc $FILENAME
