@@ -4,22 +4,19 @@
 #  Lightning data will be grouped according to the region of the 
 #  detector network and images will be generated for elevation ranges.
 #  Therefore we will need to determine the elevation of the aircraft from 
-#  the database, and we must know the region (which will be encoded in the
-#  filename we're ftping from the ground).  
+#  the database,  the region will also be in the database (matching component of filename)
+#  and frequency of acquisition will also be in the database (0 = don't, 5 = get them all and 
+#  15 means only every 15 minutes) 
 # 
 #  It does so by getting a listing of available files, and finding the most 
 #  recent file.  It then compares the file name with the latest gotten file 
-#  name stored in the db and if it's different, it pulls the file and stores 
-#  its name in the DB.  It also checks the listing of files on the plane
-#  in case the DB somehow got a name for which the file was not pulled.  Finally
-#  it compares the ground listing with the plane listing and if any files
-#  exist on the ground, but not on the plane, it pulls those.
+#  name in the directory and if it's different, it pulls the file.
 #
 #  NOTE:  this script assumes that most recent image will be lexographically 
-#  greater than all other images.
+#  greater than all other images of the same basic naming convention.
 #
 # This is set up to run out of a cron job every N minutes
-# N * * * * /home/local/Systems/scripts/get_sat_image.cron.py
+# N * * * * /home/local/Systems/scripts/get_ltng_at_elev_cron.py
 #
 #  TODO:  
 #         Refactor into python modules for better coding practice
@@ -62,22 +59,24 @@ except:
 
 # Initialization 
 #  *******************  Modify The Following *********************
-location         = 'Al' # AL or OK 
-local_image_dir  = '/var/www/html/flight_data/images/'
-image_type       = 'lghtng'
-busy_file        = local_image_dir+'BUSY_'+image_type
-ftp_site         = 'catalog1.eol.ucar.edu'
-ftp_login        = 'anonymous'
-ftp_passwd       = ''
-ftp_dir          = '/pub/incoming/OSM/'+aircraft+'/'
+location            = 'Al' # AL or OK 
+local_image_dir     = '/var/www/html/flight_data/images/'
+image_type          = 'lghtng'
+busy_file           = local_image_dir+'BUSY_'+image_type
+ftp_site            = 'catalog1.eol.ucar.edu'
+ftp_login           = 'anonymous'
+ftp_passwd          = ''
+ftp_dir             = '/pub/incoming/OSM/'+aircraft+'/'
 #Assumes filename form is prefix.YYYYMMDDHHMM.midfix_ALTSTRING.postfix
-prefix           = 'research.' + location + '_' + "LMA."
-midfix           = '10minute_'
-postfix		 = '.png' 
-compositpostfix  = 'composite.png'
-osm_file_name    = "latest_ltng_at_elev.gif"
-min_of_imgs	 = 10 # Script will backfill this many minutes for loops
-num_imgs_to_get  = 10 # Script will backfill this many images for loops
+prefix              = 'research.' + location + '_' + "LMA."
+midfix              = '10minute_'
+postfix		    = '.png' 
+compositpostfix     = 'composite.png'
+levelpostfix        = 'kft.png'
+osm_file_name_level = "latest_ltng_at_elev.png"
+osm_file_name_comp  = "latest_ltng_composit.png"
+min_of_imgs	    = 10 # Script will backfill this many minutes for loops
+num_imgs_to_get     = 10 # Script will backfill this many images for loops
 
 # End of Initialization section
 
@@ -204,67 +203,96 @@ print "Size of the ftp listing: " + str(len(ftplist))
 #    linelist = line.it()
 #    filelist.append(linelist[len(linelist)-1])
 
-latest = ftplist[len(ftplist)-1]
-print "last file on ftp site is: " + latest
+for filename in filelist:
+    if filename.find('composite') != -1:
+        latestcomp = filename
+    if filename.find('kft') != -1:
+        latestlevel = filename
 
-# Check to see if we've got the most recent file
-if latest in listing:
-    print "Already have file" + latest
-    os.remove(busy_file)
-    ftp.quit()
-    sys.exit(1)
+print "last composite file on ftp site is: " + latestcomp
+print "last flight level file on ftp site is: " + latestlevel
 
-# Get the latest image 
-try:
-    command = "wget ftp://"+ftp_site+":"+ftp_dir+latest
-    os.system(command)
-    print 'file retrieved: '+latest
-    print 'setting it as overlay image for OSM.'
-    command = "cp "+latest+" "+osm_file_name
-    os.system(command)
+# Check to see if we've got the most recent composite file
+if latestcomp in listing:
+    print "Already have file" + latestcomp
 
-except:
-    print "problems getting file, exiting."
-    os.remove(busy_file)
-    ftp.quit()
-    sys.exit(1)
+else:
+    # Get the latest composite image
+    try:
+        command = "wget ftp://"+ftp_site+":"+ftp_dir+latestcomp
+        os.system(command)
+        print 'file retrieved: '+latestcomp
+        print 'setting it as overlay image for OSM.'
+        command = "cp "+latestcomp+" "+osm_file_name_comp
+        os.system(command)
+    
+    except:
+        print "problems getting file, exiting."
+        os.remove(busy_file)
+        ftp.quit()
+        sys.exit(1)
 
+# Check to see if we have the most recent at level file
+if latestlevel in listing:
+    print "Already have file" + latestlevel
+
+else:
+    # Get the latest at flight level image
+    try:
+        command = "wget ftp://"+ftp_site+":"+ftp_dir+latestlevel
+        os.system(command)
+        print 'file retrieved: '+latestlevel
+        print 'setting it as overlay image for OSM.'
+        command = "cp "+latestlevel+" "+osm_file_name_level
+        os.system(command)
+
+    except:
+        print "problems getting file, exiting."
+        os.remove(busy_file)
+        ftp.quit()
+        sys.exit(1)
+
+
+# *****************************************************************
+#        NO BACKFILL of DATA for frequent Flight level types!
+#******************************************************************
+#
 # Make sure we've got the num_imgs_to_get most recent images
-print 'Checking on images earlier in time.'
-got_old='false'
-i=2
-filename=ftplist[len(ftplist)-i]
-while i<num_imgs_to_get:
-    if filename not in listing:
-        print "Don't have earlier image:"+filename
-        try:
-            command = "wget ftp://"+ftp_site+":"+ftp_dir+filename
-            os.system(command)
-            print 'file retrieved: '+filename
-            got_old='true'
-
-        except:
-            print "problems getting file, exiting"
-            os.remove(busy_file)
-            ftp.quit()
-            sys.exit(1)
-    i = i+1
-    filename=ftplist[len(ftplist)-i]
-
+#print 'Checking on images earlier in time.'
+#got_old='false'
+#i=2
+#filename=filelist[len(filelist)-i]
+#while i<num_imgs_to_get:
+#    if filename not in listing:
+#        print "Don't have earlier image:"+filename
+#        try:
+#            command = "wget ftp://"+ftp_site+":"+ftp_dir+filename
+#            os.system(command)
+#            print 'file retrieved: '+filename
+#            got_old='true'
+#
+#        except:
+#            print "problems getting file, exiting"
+#            os.remove(busy_file)
+#            ftp.quit()
+#            sys.exit(1)
+#    i = i+1
+#    filename=filelist[len(filelist)-i]
+#
 # If we got an older image it's date/time will be out of sequence for 
 # time series veiwing (which is done based on date/time of file) so we need
 # to correct for that by touching the files based on time sequence.
-if got_old == 'true':
-    print 'cleaning up dates of image files'
-    listing=glob.glob(prefix+'*')
-    i = 0
-    while i < len(listing):
-        dt = listing[i].split('.')
-        os.system('touch -t '+dt[2]+' '+listing[i])
-        i = i + 1
+#if got_old == 'true':
+#    print 'cleaning up dates of image files'
+#    listing=glob.glob(prefix+'*')
+#    i = 0
+#    while i < len(listing):
+#        dt = listing[i].split('.')
+#        os.system('touch -t '+dt[2]+' '+listing[i])
+#        i = i + 1
 
 
 print "Done."
-os.remove(busy_file)
 ftp.quit() 
+os.remove(busy_file)
 sys.exit(1)

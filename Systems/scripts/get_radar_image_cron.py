@@ -33,6 +33,14 @@ import time
 import datetime
 from pg import DB
 
+# Get information from AIRCRAFT environment variable
+try:
+    aircraft = os.environ['AIRCRAFT']
+except:
+    print "AIRCRAFT envirnment variable not defined - exit!"
+    sys.exit()
+plane,tail = aircraft.split("_",1)
+
 # Initialization - change this for different file types/names/locations.
 local_image_dir  = '/var/www/html/flight_data/images/'
 image_type       = 'radar'
@@ -40,7 +48,8 @@ busy_file        = 'BUSY_'+image_type
 ftp_site         = 'catalog1.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
-ftp_dir          = '/pub/incoming/OSM/' + os.environ['AIRCRAFT'] + '/'
+#ftp_dir          = '/pub/incoming/OSM/C130/'
+ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
 #Assumes filename form is prefixYYYYMMDD*postfix
 prefix           = 'radar.NEXRAD_comp.'
 postfix		 = '.nat_N0R_comp.gif' 
