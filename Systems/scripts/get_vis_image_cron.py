@@ -31,7 +31,7 @@ import ftplib
 import syslog
 import time
 import datetime
-from pg import DB
+import pg
 
 # Get information from AIRCRAFT environment variable
 try:
@@ -51,9 +51,9 @@ ftp_login        = 'anonymous'
 ftp_passwd       = ''
 #ftp_dir          = '/pub/incoming/OSM/C130/'
 ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
-#Assumes filename form is prefixYYYYMMDD*postfix
+#Assumes filename form is prefixYYYYMMDD*.region_postfix where region is drawn from DB
 prefix           = 'ops.goes-13.'  
-postfix		 = '.1km_ch1_vis.jpg' 
+postfix		 = '1km_ch1_vis.jpg' 
 osm_file_name    = "latest_vis.jpg"
 num_imgs_to_get  = 10 # Script will backfill this many images for loops
 # End of Initialization section
@@ -61,6 +61,14 @@ num_imgs_to_get  = 10 # Script will backfill this many images for loops
 
 print "Starting get_vis_image_cron.py for getting " + image_type + " imagery"
 
+# This cron script is not re-entrant, bail out if its still running.
+if os.path.isfile(busy_file):
+    print 'exiting, ' + busy_file + ' exists.  Already running.'
+    sys.exit(1)
+cmd = 'touch ' + busy_file
+os.system(cmd)
+
+# Set up time strings
 gmt=time.gmtime()
 
 year=gmt[0]
@@ -89,12 +97,12 @@ print monthstr+"/"+todaystr+"/"+str(year)+" "+str(gmt[3])+":"+str(gmt[4])
 
 os.chdir(local_image_dir)
 
-# This cron script is not re-entrant, bail out if its still running.
-if os.path.isfile(busy_file):
-    print 'exiting, ' + busy_file + ' exists.  Already running.'
-    sys.exit(1)
-cmd = 'touch ' + busy_file
-os.system(cmd)
+# Get Region information from the database
+con = pg.connect(dbname=database, host=dbhost, user='ads')
+querres = con.query("select value from global_attributes where key='Region'")
+regionlst = querres.getresult()
+region = (fultimlst[0])[0]
+pg.close()
 
 #  Get the listing of image files from the directory
 listing=os.listdir('.')
@@ -108,11 +116,11 @@ try:
     ftp.cwd(ftp_dir)
 
     ftplist = []
-    form=prefix + str(year) + monthstr + yesterdaystr + "*" + postfix
+    form=prefix + str(year) + monthstr + yesterdaystr + "*" + region + "." + postfix
     ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + todaystr + "*" + postfix
+    form=prefix + str(year) + monthstr + todaystr + "*" + region + "." + postfix
     ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + tomorrowstr + "*" + postfix
+    form=prefix + str(year) + monthstr + tomorrowstr + "*" + region + "." + postfix
     ftp.dir(form, ftplist.append)
 
 except ftplib.all_errors, e:
