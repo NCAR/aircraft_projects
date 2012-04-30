@@ -21,8 +21,10 @@ restrict calibration and recording of research data.
 import sys
 from PyQt4.QtCore import (Qt, QObject, QTimer, QTime, QDateTime, SIGNAL)
 from PyQt4.QtGui import (QWidget, QLabel, QPushButton, QLineEdit, QTimeEdit, QGridLayout,
-                         QApplication, QMessageBox)
+                         QApplication, QMessageBox, QGroupBox, QHBoxLayout, QRadioButton)
 from PyQt4.QtNetwork import (QHostAddress, QUdpSocket)
+
+from PyQt4.QtSql import *
 
 TIME_FORMAT_VIEW     = "hh:mm:ss"
 DATETIME_FORMAT_VIEW = "yyyy-MM-dd hh:mm:ss"
@@ -40,6 +42,20 @@ class CtrlReschDataGen(QWidget):
 
         self.updatingRemainingTime = False
 
+        # connect to the aircraft's real-time database
+        self.db = QSqlDatabase("QPSQL7")
+
+        self.db.setHostName("acserver")
+        self.db.setUserName("ads")
+        self.db.setDatabaseName("real-time")
+
+        if not self.db.open():
+            QMessageBox.warning(None, "open 'real-time'",
+                QString("Database Error: %1").arg(self.db.lasterror().text()))
+            sys.exit(1)
+
+        self.query = QSqlQuery(self.db)
+
         self.initUI()
 
         self.udpSocket = QUdpSocket()
@@ -50,6 +66,11 @@ class CtrlReschDataGen(QWidget):
         self.timer = QTimer()
         QObject.connect(self.timer, SIGNAL("timeout()"), self.timeout)
         self.timer.start(1000)
+
+    def __del__(self):
+#       super(CtrlReschDataGen, self).__del__() # bug in PyQt4?  the examples never do this
+        self.query.finish()
+        self.db.close()
 
     def showRemainingTime(self, currentDateTime):
         self.updatingRemainingTime = True
@@ -142,6 +163,41 @@ class CtrlReschDataGen(QWidget):
 #           print("Change seen: %02d:%02d:%02d" % (hwrs, mins, secs))
             self.DoNotCalibrateStopTime = self.DoNotCalibrateStopTime.addSecs( hwrs * 3600 + mins * 60 + secs )
 
+    def RadioButtonSelected(self):
+#       print("RadioButtonSelected: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
+        for i in range(0, len(self.rbs)):
+            widget = self.rbs[i]
+            if (widget!=0) and (type(widget) is QRadioButton):
+                if widget.isChecked():
+                    key = widget.parent().objectName()
+                    value = widget.text()
+#                   print "radio button: %s %s is checked" % (key, value)
+                    self.query.exec_("UPDATE global_attributes SET value = '%s' WHERE key='%s'" % (value, key))
+
+    def horizontalRadioGroup(self, title, key, default, values):
+
+        # use current setting in database for default
+        self.query.exec_("SELECT value from global_attributes WHERE key='%s'" % key)
+        if self.query.next():
+            default = unicode(self.query.value(0).toString())
+        else:
+            print("horizontalRadioGroup INSERT: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
+            self.query.exec_("INSERT INTO global_attributes VALUES ('%s', '%s')" % (key, default))
+
+        groupBox = QGroupBox(title)
+        groupBox.setObjectName(key)
+        hbox = QHBoxLayout()
+        for val in values:
+            rb = QRadioButton(val)
+            hbox.addWidget(rb)
+            if (val == default):
+              rb.setChecked(True)
+            self.rbs.append(rb)
+            QObject.connect(rb, SIGNAL("toggled(bool)"), self.RadioButtonSelected)
+
+        groupBox.setLayout(hbox)
+        return groupBox
+
     def initUI(self):
 #       print("initUI: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
         self.setWindowTitle('Control Research Data Generation')
@@ -176,6 +232,12 @@ class CtrlReschDataGen(QWidget):
         self.CurrentTime.setReadOnly(True)
         self.CurrentTime.setDisabled(True)
 
+        # setup radio buttons
+        self.rbs = []
+        self.region    = self.horizontalRadioGroup("Region:", "region", "CO", ("CO", "KS", "OK"))
+        self.cappi     = self.horizontalRadioGroup("CAPPI:", "cappi", "off", ("off", "5 min", "15 min"))
+        self.lightning = self.horizontalRadioGroup("LMA lightning:", "lightning", "off", ("off", "5 min", "15 min"))
+
         # layout in a grid
         layout = QGridLayout()
         layout.addWidget(self.DoNotCalibrate,      0, 1)
@@ -186,6 +248,9 @@ class CtrlReschDataGen(QWidget):
         layout.addWidget(RemainLabel,              2, 0)
         layout.addWidget(self.remainingTime,       2, 1)
         layout.addWidget(self.CurrentTime,         2, 2)
+        layout.addWidget(self.region,              3, 0, 1, 3)
+        layout.addWidget(self.cappi,               4, 0, 1, 3)
+        layout.addWidget(self.lightning,           5, 0, 1, 3)
         self.setLayout(layout)
 
     def setDoNotCalibrate(self, pressed):
