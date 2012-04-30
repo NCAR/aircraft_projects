@@ -170,10 +170,16 @@ try:
     for ts in timestr:
         form=prefix + ts + midfix + altstr + postfix
         print "looking for files on ftp server: " + form
-        ftp.dir(form, ftplist.append)
+        templist = ftp.nlst(form)
+        if len(templist) > 0:
+            for i in templist:
+                ftplist.append(i)
         form=prefix + ts + midfix + altstr + compositpostfix
         print "looking for files on ftp server: " + form
-        ftp.dir(form, ftplist.append)
+        templist = ftp.nlst(form)
+        if len(templist) > 0:
+            for i in templist:
+                ftplist.append(i)
 
 except ftplib.all_errors, e:
     print 'Error Getting ftp listing'
@@ -193,12 +199,12 @@ if len(ftplist) == 0:  # didn't get any file names, bail out
 
 print "Size of the ftp listing: " + str(len(ftplist))
 
-filelist = []
-for line in ftplist:
-    linelist = line.it()
-    filelist.append(linelist[len(linelist)-1])
+#filelist = []
+#for line in ftplist:
+#    linelist = line.it()
+#    filelist.append(linelist[len(linelist)-1])
 
-latest = filelist[len(filelist)-1]
+latest = ftplist[len(ftplist)-1]
 print "last file on ftp site is: " + latest
 
 # Check to see if we've got the most recent file
@@ -227,7 +233,7 @@ except:
 print 'Checking on images earlier in time.'
 got_old='false'
 i=2
-filename=filelist[len(filelist)-i]
+filename=ftplist[len(ftplist)-i]
 while i<num_imgs_to_get:
     if filename not in listing:
         print "Don't have earlier image:"+filename
@@ -243,7 +249,7 @@ while i<num_imgs_to_get:
             ftp.quit()
             sys.exit(1)
     i = i+1
-    filename=filelist[len(filelist)-i]
+    filename=ftplist[len(ftplist)-i]
 
 # If we got an older image it's date/time will be out of sequence for 
 # time series veiwing (which is done based on date/time of file) so we need
