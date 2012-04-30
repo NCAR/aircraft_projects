@@ -55,11 +55,15 @@ try:
 except:
     dbhost = "localhost"
 
-# TODO - get location from a file
+# Get Region information from the database
+con = pg.connect(dbname=database, host=dbhost, user='ads')
+querres = con.query("select value from global_attributes where key='Region'")
+regionlst = querres.getresult()
+region = (fultimlst[0])[0]
+pg.close()
 
 # Initialization 
 #  *******************  Modify The Following *********************
-location            = 'Al' # AL or OK 
 local_image_dir     = '/var/www/html/flight_data/images/'
 image_type          = 'lghtng'
 busy_file           = local_image_dir+'BUSY_'+image_type
@@ -68,7 +72,7 @@ ftp_login           = 'anonymous'
 ftp_passwd          = ''
 ftp_dir             = '/pub/incoming/OSM/'+aircraft+'/'
 #Assumes filename form is prefix.YYYYMMDDHHMM.midfix_ALTSTRING.postfix
-prefix              = 'research.' + location + '_' + "LMA."
+prefix              = 'research.' + region + '_' + "LMA."
 midfix              = '10minute_'
 postfix		    = '.png' 
 compositpostfix     = 'composite.png'
