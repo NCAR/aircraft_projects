@@ -34,11 +34,11 @@ NOCAL_STEP = 1
 NOCALMINUTES = 15
 NORECMINUTES = 15
 
-class CtrlReschDataGen(QWidget):
+class MissionControl(QWidget):
 
     def __init__(self):
 #       print("__init__: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
-        super(CtrlReschDataGen, self).__init__()
+        super(MissionControl, self).__init__()
 
         self.updatingRemainingTime = False
 
@@ -68,7 +68,7 @@ class CtrlReschDataGen(QWidget):
         self.timer.start(1000)
 
     def __del__(self):
-#       super(CtrlReschDataGen, self).__del__() # bug in PyQt4?  the examples never do this
+#       super(MissionControl, self).__del__() # bug in PyQt4?  the examples never do this
         self.query.finish()
         self.db.close()
 
@@ -291,9 +291,9 @@ class CtrlReschDataGen(QWidget):
 def main():
 #   print("main: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
     app = QApplication(sys.argv)
-    crdg = CtrlReschDataGen()
-    crdg.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint | Qt.WindowStaysOnTopHint)
-    crdg.show()
+    mc = MissionControl()
+    mc.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint | Qt.WindowStaysOnTopHint)
+    mc.show()
     sys.exit(app.exec_())
 
 
