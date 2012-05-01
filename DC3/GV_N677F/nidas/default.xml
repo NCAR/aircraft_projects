@@ -565,7 +565,10 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
-    <sensor ID="ACDFO3" class="raf.UDPSocketSensor" devicename="inet::5555">
+<!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
+      the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
+-->
+    <sensor ID="ACDFO3" class="raf.UDPSocketSensor" devicename="inet::30107">
       <sample id="1" rate="10" scanfFormat="O3,%f">
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
@@ -574,8 +577,34 @@
         <sample id="1" rate="1" scanfFormat="NONO2O3,%f,%f,%f,%f">
             <variable longname="NO Mixing Ratio" name="NO" units="pptv"/> 
             <variable longname="NO2 Mixing Ratio" name="NO2" units="pptv"/> 
-            <variable longname="O3 Mixing Ratio" name="F03" units="ppbv"/> 
+            <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/> 
             <variable longname="NOx Mixing Ratio" name="NOX" units="pptv"/> 
+        </sample>
+    </sensor>
+    <sensor ID="HARP" class="raf.UDPSocketSensor" devicename="inet::30108">
+        <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%d,%d">
+            <variable longname="UVN 310 nm Counts" name="UVN310" units="count"/> 
+            <variable longname="UVN 400 nm Counts" name="UVN400" units="count"/> 
+        </sample>
+        <sample id="2" rate="1" scanfFormat="HRP_AFZ,%*dT%*d,%d,%d">
+            <variable longname="UVZ 310 nm Counts" name="UVZ310" units="count"/> 
+            <variable longname="UVZ 400 nm Counts" name="UVZ400" units="count"/> 
+        </sample>
+        <sample id="3" rate="1" scanfFormat="HRP_VISN,%*dT%*d,%d,%d">
+            <variable longname="VISN 500 nm Counts" name="VISN500" units="count"/> 
+            <variable longname="VISN 900 nm Counts" name="VISN900" units="count"/> 
+        </sample>
+        <sample id="4" rate="1" scanfFormat="HRP_VISZ,%*dT%*d,%d,%d">
+            <variable longname="UVN 500 nm Counts" name="VISZ500" units="count"/> 
+            <variable longname="UVN 900 nm Counts" name="VISZ900" units="count"/> 
+        </sample>
+        <sample id="5" rate="1" scanfFormat="HRP_NIRN,%*dT%*d,%d,%d">
+            <variable longname="NIRN 1200 nm Counts" name="NIRN1200" units="count"/> 
+            <variable longname="NIRN 2000 nm Counts" name="NIRN2000" units="count"/> 
+        </sample>
+        <sample id="6" rate="1" scanfFormat="HRP_NIRZ,%*dT%*d,%d,%d">
+            <variable longname="NIRZ 1200 nm Counts" name="NIRZ1200" units="count"/> 
+            <variable longname="NIRZ 2000 nm Counts" name="NIRZ2000" units="count"/> 
         </sample>
     </sensor>
     <serialSensor ID="Water_CN_Counter" baud="115200" class="DSMSerialSensor" databits="8" init_string="SM,4,1\r" parity="none" stopbits="1">
@@ -1258,8 +1287,9 @@
         <socket type="mcrequest"/>
       </output>
       <sensor IDREF="SMPS" devicename="inet::30104" id="1800" suffix="_SMPS"/>
-      <sensor IDREF="GTCIMS" devicename="inet::30110" id="2000" suffix="_GCIM"/>
+      <sensor IDREF="GTCIMS" devicename="inet::39900" id="2000" suffix="_GCIM"/>
       <sensor IDREF="NONOYO3" devicename="inet::30107" id="2200" suffix="_ACD"/>
+      <sensor IDREF="HARP" devicename="inet::30108" id="2300" suffix="_HRP"/>
     </dsm>
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
