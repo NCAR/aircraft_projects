@@ -1238,6 +1238,14 @@
       </service>
     </server>
     <dsm id="19" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
+      <sensor ID="CTRLRESRCH" class="raf.UDPSocketSensor" devicename="inet::41005" id="1000">
+        <sample id="1" rate="1" scanfFormat="NOCAL,%*dT%*d,%d">
+          <variable longname="Do Not Calibrate" name="NOCAL" units="bool"/>
+        </sample>
+        <sample id="2" rate="1" scanfFormat="NOREC,%*dT%*d,%d">
+          <variable longname="Do Not Record" name="NOREC" units="bool"/>
+        </sample>
+      </sensor>
       <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::30100" id="1600">
 
 <!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
