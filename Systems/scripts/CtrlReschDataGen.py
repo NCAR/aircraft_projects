@@ -234,9 +234,9 @@ class CtrlReschDataGen(QWidget):
 
         # setup radio buttons
         self.rbs = []
-        self.region    = self.horizontalRadioGroup("Region:", "region", "CO", ("CO", "KS", "OK"))
+        self.region    = self.horizontalRadioGroup("Region:", "region", "CO", ("CO", "AL", "OK"))
         self.cappi     = self.horizontalRadioGroup("CAPPI:", "cappi", "off", ("off", "5 min", "15 min"))
-        self.lightning = self.horizontalRadioGroup("LMA lightning:", "lightning", "off", ("off", "5 min", "15 min"))
+        self.lightning = self.horizontalRadioGroup("LMA lightning:", "lightning", "off", ("off", "2 min", "12 min"))
 
         # layout in a grid
         layout = QGridLayout()
