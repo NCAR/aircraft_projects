@@ -11,7 +11,7 @@ find /tmp -maxdepth 1 -name "iostat*" -mmin +3000 -exec rm{} \;
 
 # Don't allow the lock files to remain too long.
 find /mnt/r1/dropsondes -name "BUSY" -mmin +20 -exec rm {} \;
-find /var/www/html/flight_data/images/ -name "BUSY_IR" -mmin +10 -exec rm {} \;
+find /var/www/html/flight_data/images/ -name "*BUSY*" -mmin +10 -exec rm {} \;
 
 # Clean these every couple months.
 find /mnt/r1/dropsondes -name "D*" -mmin +80000 -exec rm {} \;
