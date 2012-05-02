@@ -93,8 +93,20 @@ if os.path.isfile(busy_file):
 cmd = 'touch ' + busy_file
 os.system(cmd)
 
-# Get Pressure Altitude from the database
+#Do our other DB stuff
 con = pg.connect(dbname=database, host=dbhost, user='ads')
+
+# Get delay indication from the database if not off, then check time of most recent image
+#  and if enough time has passed, continue, else quit.
+querres = con.query("select value from global_attributes where key='cappi'")
+cappilst = querres.getresult()
+cappi = (cappilst[0])[0]
+if cappi == 'off':
+    print "MC has turned cappi acquisition off"
+    con.close()
+    sys.exit(1)
+
+# Get Pressure Altitude from the database
 querres = con.query("select value from global_attributes where key='EndTime'")
 fultimlst = querres.getresult()
 fultim = (fultimlst[0])[0]
@@ -104,6 +116,9 @@ querres = con.query(querstr)
 paltflst = querres.getresult()
 paltfstr = (paltflst[0])[0]
 paltf = float(paltfstr)
+
+#Done with our DB stuff
+con.close()
 
 # Create portion of filename based on paltf 
 # note: assumes that files are at 06,12,18,24,30,36,42 and 48 K ft
