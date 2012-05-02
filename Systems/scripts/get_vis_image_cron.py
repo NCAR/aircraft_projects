@@ -42,6 +42,16 @@ except:
 
 plane,tail = aircraft.split("_",1)
 
+try: 
+    database = os.environ['PGDATABASE']
+except:
+    database = "real-time"
+
+try: 
+    dbhost = os.environ['PGHOST']
+except:
+    dbhost = "localhost"
+
 # Initialization - change this for different file types/names/locations.
 local_image_dir  = '/var/www/html/flight_data/images/'
 image_type       = 'vis'
@@ -54,16 +64,18 @@ ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
 #Assumes filename form is prefixYYYYMMDD*.region_postfix where region is drawn from DB
 prefix           = 'ops.goes-13.'  
 postfix		 = '1km_ch1_vis.jpg' 
-osm_file_name    = "latest_vis.jpg"
+osm_label            = 'sat_vis_label.jpg'
+#osm_file_name    = "latest_vis.jpg"  # NOTE: defined once we have region name
 num_imgs_to_get  = 10 # Script will backfill this many images for loops
 # End of Initialization section
 
-
 print "Starting get_vis_image_cron.py for getting " + image_type + " imagery"
+
+os.chdir(local_image_dir)
 
 # This cron script is not re-entrant, bail out if its still running.
 if os.path.isfile(busy_file):
-    print 'exiting, ' + busy_file + ' exists.  Already running.'
+    print 'exiting, ' + local_image_dir + busy_file + ' exists.  Already running.'
     sys.exit(1)
 cmd = 'touch ' + busy_file
 os.system(cmd)
@@ -95,14 +107,17 @@ else:
 
 print monthstr+"/"+todaystr+"/"+str(year)+" "+str(gmt[3])+":"+str(gmt[4])
 
-os.chdir(local_image_dir)
 
 # Get Region information from the database
 con = pg.connect(dbname=database, host=dbhost, user='ads')
-querres = con.query("select value from global_attributes where key='Region'")
+querres = con.query("select value from global_attributes where key='region'")
 regionlst = querres.getresult()
-region = (fultimlst[0])[0]
-pg.close()
+region = (regionlst[0])[0]
+con.close()
+
+#  Define the latest filename and label filename
+osm_file_name = "latest_" + region + "_vis.jpg"
+label_name = "sat_vis_label_" + region + ".jpg"
 
 #  Get the listing of image files from the directory
 listing=os.listdir('.')
@@ -116,11 +131,14 @@ try:
     ftp.cwd(ftp_dir)
 
     ftplist = []
-    form=prefix + str(year) + monthstr + yesterdaystr + "*" + region + "." + postfix
+    form=prefix + str(year) + monthstr + yesterdaystr + "*" + region + "_" + postfix
+    print "form1 = "+form
     ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + todaystr + "*" + region + "." + postfix
+    form=prefix + str(year) + monthstr + todaystr + "*" + region + "_" + postfix
+    print "form1 = "+form
     ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + tomorrowstr + "*" + region + "." + postfix
+    form=prefix + str(year) + monthstr + tomorrowstr + "*" + region + "_" + postfix
+    print "form1 = "+form
     ftp.dir(form, ftplist.append)
 
 except ftplib.all_errors, e:
@@ -152,13 +170,20 @@ if latest in listing:
     ftp.quit()
     sys.exit(1)
 
-# Get the latest image 
+# Get the latest image and label
 try:
     command = "wget ftp://"+ftp_site+":"+ftp_dir+latest
     os.system(command)
     print 'file retrieved: '+latest
     print 'setting it as overlay image for OSM.'
     command = "cp "+latest+" "+osm_file_name
+    os.system(command)
+    command = "wget ftp://"+ftp_site+":"+ftp_dir+label_name
+    os.system(command)
+    print 'obtained image label: '+label_name
+    command = "rm " + osm_label
+    os.system(command)
+    command = "ln -s " + label_name + " " + osm_label
     os.system(command)
 
 except:

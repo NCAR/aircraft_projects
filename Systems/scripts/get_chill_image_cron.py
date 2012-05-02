@@ -48,8 +48,6 @@ try:
 except:
     dbhost = "localhost"
 
-# TODO - get location from a file
-
 # Initialization 
 #  *******************  Modify The Following *********************
 local_image_dir  = '/var/www/html/flight_data/images/'
@@ -63,6 +61,7 @@ ftp_dir          = '/pub/incoming/OSM/'+aircraft+'/'
 prefix           = 'research.CHILL.'
 postfix		 = '.DBZ.png' 
 osm_file_name    = "latest_chill_radar.png"
+min_of_imgs      = 10
 
 # End of Initialization section
 
@@ -70,14 +69,17 @@ print "Starting get_radar_at_elev_cron.py for getting " + image_type + " imagery
 
 # Get Region information from the database
 con = pg.connect(dbname=database, host=dbhost, user='ads')
-querres = con.query("select value from global_attributes where key='Region'")
+querres = con.query("select value from global_attributes where key='region'")
 regionlst = querres.getresult()
-region = (fultimlst[0])[0]
-pg.close()
+region = (regionlst[0])[0]
+con.close()
 
 # Only get data if the region is Colorado
 if region != 'CO':
      sys.exit(1)
+
+# Change directory to the right place
+os.chdir(local_image_dir)
 
 # This cron script is not re-entrant, bail out if its still running.
 if os.path.isfile(busy_file):
@@ -115,7 +117,6 @@ for x in timesecs:
         hourstr = str(hour)
     timestr.append(str(year)+monthstr+daystr+hourstr+str(min_ten)+"*")
 
-os.chdir(local_image_dir)
 
 #  Get the listing of image files from the directory
 listing=os.listdir('.')
@@ -150,7 +151,10 @@ except ftplib.all_errors, e:
 
 if len(ftplist) == 0:  # didn't get any file names, bail out
     print "didn't find any files on ftp server with form: " 
-    print prefix+timestr++postfix
+    print prefix + "+"
+    print timestr 
+    print "+" + postfix
+ 
     os.remove(busy_file)
     ftp.quit()
     sys.exit(1)

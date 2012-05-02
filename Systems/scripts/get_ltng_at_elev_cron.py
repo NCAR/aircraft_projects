@@ -57,10 +57,10 @@ except:
 
 # Get Region information from the database
 con = pg.connect(dbname=database, host=dbhost, user='ads')
-querres = con.query("select value from global_attributes where key='Region'")
+querres = con.query("select value from global_attributes where key='region'")
 regionlst = querres.getresult()
-region = (fultimlst[0])[0]
-pg.close()
+region = (regionlst[0])[0]
+con.close()
 
 # Initialization 
 #  *******************  Modify The Following *********************
@@ -77,8 +77,8 @@ midfix              = '10minute_'
 postfix		    = '.png' 
 compositpostfix     = 'composite.png'
 levelpostfix        = 'kft.png'
-osm_file_name_level = "latest_ltng_at_elev.png"
-osm_file_name_comp  = "latest_ltng_composit.png"
+osm_file_name_level = "LMA_"+region+"_COMP.png"
+osm_file_name_comp  = "LMA_"+region+"_FLTLEV.png"
 min_of_imgs	    = 10 # Script will backfill this many minutes for loops
 num_imgs_to_get     = 10 # Script will backfill this many images for loops
 
@@ -177,7 +177,7 @@ try:
         if len(templist) > 0:
             for i in templist:
                 ftplist.append(i)
-        form=prefix + ts + midfix + altstr + compositpostfix
+        form=prefix + ts + midfix + compositpostfix
         print "looking for files on ftp server: " + form
         templist = ftp.nlst(form)
         if len(templist) > 0:
@@ -207,55 +207,59 @@ print "Size of the ftp listing: " + str(len(ftplist))
 #    linelist = line.it()
 #    filelist.append(linelist[len(linelist)-1])
 
-for filename in filelist:
+latestcomp = ""
+latestlevel = ""
+for filename in ftplist:
     if filename.find('composite') != -1:
         latestcomp = filename
     if filename.find('kft') != -1:
         latestlevel = filename
 
-print "last composite file on ftp site is: " + latestcomp
-print "last flight level file on ftp site is: " + latestlevel
 
 # Check to see if we've got the most recent composite file
-if latestcomp in listing:
-    print "Already have file" + latestcomp
+if latestcomp != "":
+    print "last composite file on ftp site is: " + latestcomp
+    if latestcomp in listing:
+        print "Already have file" + latestcomp
 
-else:
-    # Get the latest composite image
-    try:
-        command = "wget ftp://"+ftp_site+":"+ftp_dir+latestcomp
-        os.system(command)
-        print 'file retrieved: '+latestcomp
-        print 'setting it as overlay image for OSM.'
-        command = "cp "+latestcomp+" "+osm_file_name_comp
-        os.system(command)
+    else:
+        # Get the latest composite image
+        try:
+            command = "wget ftp://"+ftp_site+":"+ftp_dir+latestcomp
+            os.system(command)
+            print 'file retrieved: '+latestcomp
+            print 'setting it as overlay image for OSM.'
+            command = "cp "+latestcomp+" "+osm_file_name_comp
+            os.system(command)
+        
+        except:
+            print "problems getting file, exiting."
+            os.remove(busy_file)
+            ftp.quit()
+            sys.exit(1)
     
-    except:
-        print "problems getting file, exiting."
-        os.remove(busy_file)
-        ftp.quit()
-        sys.exit(1)
-
 # Check to see if we have the most recent at level file
-if latestlevel in listing:
-    print "Already have file" + latestlevel
-
-else:
-    # Get the latest at flight level image
-    try:
-        command = "wget ftp://"+ftp_site+":"+ftp_dir+latestlevel
-        os.system(command)
-        print 'file retrieved: '+latestlevel
-        print 'setting it as overlay image for OSM.'
-        command = "cp "+latestlevel+" "+osm_file_name_level
-        os.system(command)
-
-    except:
-        print "problems getting file, exiting."
-        os.remove(busy_file)
-        ftp.quit()
-        sys.exit(1)
-
+if latestlevel != "":
+    print "last flight level file on ftp site is: " + latestlevel
+    if latestlevel in listing:
+        print "Already have file" + latestlevel
+    
+    else:
+        # Get the latest at flight level image
+        try:
+            command = "wget ftp://"+ftp_site+":"+ftp_dir+latestlevel
+            os.system(command)
+            print 'file retrieved: '+latestlevel
+            print 'setting it as overlay image for OSM.'
+            command = "cp "+latestlevel+" "+osm_file_name_level
+            os.system(command)
+    
+        except:
+            print "problems getting file, exiting."
+            os.remove(busy_file)
+            ftp.quit()
+            sys.exit(1)
+    
 
 # *****************************************************************
 #        NO BACKFILL of DATA for frequent Flight level types!
