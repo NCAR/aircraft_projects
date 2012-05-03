@@ -585,27 +585,27 @@
     </sensor>
     <sensor ID="HARP" class="raf.UDPSocketSensor" devicename="inet::30108">
         <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%d,%d">
-            <variable longname="UVN 310 nm Counts" name="UVN310" units="count"/> 
-            <variable longname="UVN 400 nm Counts" name="UVN400" units="count"/> 
+            <variable longname="UVN 315 nm Counts" name="UVN315" units="count"/> 
+            <variable longname="UVN 382 nm Counts" name="UVN382" units="count"/> 
         </sample>
         <sample id="2" rate="1" scanfFormat="HRP_AFZ,%*dT%*d,%d,%d">
-            <variable longname="UVZ 310 nm Counts" name="UVZ310" units="count"/> 
-            <variable longname="UVZ 400 nm Counts" name="UVZ400" units="count"/> 
+            <variable longname="UVZ 315 nm Counts" name="UVZ315" units="count"/> 
+            <variable longname="UVZ 382 nm Counts" name="UVZ382" units="count"/> 
         </sample>
         <sample id="3" rate="1" scanfFormat="HRP_VISN,%*dT%*d,%d,%d">
-            <variable longname="VISN 500 nm Counts" name="VISN500" units="count"/> 
-            <variable longname="VISN 900 nm Counts" name="VISN900" units="count"/> 
+            <variable longname="VISN 550 nm Counts" name="VISN550" units="count"/> 
+            <variable longname="VISN 860 nm Counts" name="VISN860" units="count"/> 
         </sample>
         <sample id="4" rate="1" scanfFormat="HRP_VISZ,%*dT%*d,%d,%d">
-            <variable longname="UVN 500 nm Counts" name="VISZ500" units="count"/> 
-            <variable longname="UVN 900 nm Counts" name="VISZ900" units="count"/> 
+            <variable longname="UVN 550 nm Counts" name="VISZ550" units="count"/> 
+            <variable longname="UVN 860 nm Counts" name="VISZ860" units="count"/> 
         </sample>
         <sample id="5" rate="1" scanfFormat="HRP_NIRN,%*dT%*d,%d,%d">
-            <variable longname="NIRN 1200 nm Counts" name="NIRN1200" units="count"/> 
+            <variable longname="NIRN 1500 nm Counts" name="NIRN1500" units="count"/> 
             <variable longname="NIRN 2000 nm Counts" name="NIRN2000" units="count"/> 
         </sample>
         <sample id="6" rate="1" scanfFormat="HRP_NIRZ,%*dT%*d,%d,%d">
-            <variable longname="NIRZ 1200 nm Counts" name="NIRZ1200" units="count"/> 
+            <variable longname="NIRZ 1500 nm Counts" name="NIRZ1500" units="count"/> 
             <variable longname="NIRZ 2000 nm Counts" name="NIRZ2000" units="count"/> 
         </sample>
     </sensor>
@@ -1020,7 +1020,8 @@
       </sample>
     </sensor>
     <sensor ID="GTCIMS" class="raf.UDPSocketSensor" devicename="inet::30110" suffix="_GTCIMS">
-        <sample id="1" rate="1" scanfFormat="GTCIMS,%*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%*f">
+        <sample id="1" rate="1" scanfFormat="GTCIMS,
+%*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%*f">
 
 <!--        <variable longname="GTCIMS time at start of mass sequence" name="UST0" units="sec since 1/1/1970"/>
 -->
@@ -1040,12 +1041,12 @@
             <variable longname="GTCIMS Measurement State flag #2" name="C1" units=""/>
             <variable longname="GTCIMS Measurement State flag #3" name="C2" units=""/>
             <variable longname="GTCIMS Measurement State flag #4" name="C3" units=""/>
-            <variable longname="GTCIMS ion rate at mass #1" name="HZ062" units="Hz"/>
-            <variable longname="GTCIMS m/z ration for mass #1" name="MAMU062" units="milliu"/>
-            <variable longname="GTCIMS counting time at mass #1" name="MS062" units="msec"/>
-            <variable longname="GTCIMS ion rate at mass #2" name="HZ082" units="Hz"/>
-            <variable longname="GTCIMS m/z ration for mass #2" name="MAMU082" units="milliu"/>
-            <variable longname="GTCIMS counting time at mass #2" name="MS082" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #1" name="HZ082" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #1" name="MAMU082" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #1" name="MS082" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #2" name="HZ083" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #2" name="MAMU083" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #2" name="MS083" units="msec"/>
             <variable longname="GTCIMS ion rate at mass #3" name="HZ098" units="Hz"/>
             <variable longname="GTCIMS m/z ration for mass #3" name="MAMU098" units="milliu"/>
             <variable longname="GTCIMS counting time at mass #3" name="MS098" units="msec"/>
@@ -1055,15 +1056,33 @@
             <variable longname="GTCIMS ion rate at mass #5" name="HZ104" units="Hz"/>
             <variable longname="GTCIMS m/z ration for mass #5" name="MAMU104" units="milliu"/>
             <variable longname="GTCIMS counting time at mass #5" name="MS104" units="msec"/>
-            <variable longname="GTCIMS ion rate at mass #6" name="HZ148" units="Hz"/>
-            <variable longname="GTCIMS m/z ration for mass #6" name="MAMU148" units="milliu"/>
-            <variable longname="GTCIMS counting time at mass #6" name="MS148" units="msec"/>
-            <variable longname="GTCIMS ion rate at mass #7" name="HZ162" units="Hz"/>
-            <variable longname="GTCIMS m/z ration for mass #7" name="MAMU162" units="milliu"/>
-            <variable longname="GTCIMS counting time at mass #7" name="MS162" units="msec"/>
-            <variable longname="GTCIMS ion rate at mass #8" name="HZ164" units="Hz"/>
-            <variable longname="GTCIMS m/z ration for mass #8" name="MAMU164" units="milliu"/>
-            <variable longname="GTCIMS counting time at mass #8" name="MS164" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #6" name="HZ112" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #6" name="MAMU112" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #6" name="MS112" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #7" name="HZ148" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #7" name="MAMU148" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #7" name="MS148" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #8" name="HZ162" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #8" name="MAMU162" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #8" name="MS162" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #9" name="HZ062" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #9" name="MAMU062" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #9" name="MS062" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #10" name="HZ085" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #10" name="MAMU085" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #10" name="MS085" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #11" name="HZ097" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #11" name="MAMU097" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #11" name="MS097" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #12" name="HZ114" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #12" name="MAMU114" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #12" name="MS114" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #13" name="HZ150" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #13" name="MAMU150" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #13" name="MS150" units="msec"/>
+            <variable longname="GTCIMS ion rate at mass #14" name="HZ164" units="Hz"/>
+            <variable longname="GTCIMS m/z ration for mass #14" name="MAMU164" units="milliu"/>
+            <variable longname="GTCIMS counting time at mass #14" name="MS164" units="msec"/>
             <variable longname="GTCIMS Analog level #1" name="A01" units="mV"/>
             <variable longname="GTCIMS Analog level #2" name="A02" units="mV"/>
             <variable longname="GTCIMS Analog level #3" name="A03" units="mV"/>
@@ -1099,6 +1118,99 @@
 
 <!--        <variable longname="GTCIMS Pressure Altitude from IWG1" name="AUX01" units="feet"/>
             <variable longname="GTCIMS Ambient Temp from IWG1" name="AUX02" units="degK"/>
+-->
+        </sample>
+    </sensor>
+    <sensor ID="PCIMS" class="raf.UDPSocketSensor" devicename="inet::30111" suffix="_PCIMS">
+        <sample id="1" rate="1" scanfFormat="PCIMS,
+%*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%*f">
+
+<!--        <variable longname="PCIMS time at start of mass sequence" name="UST0" units="sec since 1/1/1970"/>
+-->
+            <variable longname="PCIMS duration of mass sequence" name="DT" units="sec"/>
+
+<!--        <variable longname="PCIMS Year" name="YR" units=""/>
+            <variable longname="PCIMS Month" name="MO" units=""/>
+            <variable longname="PCIMS Day of Month" name="DM" units=""/>
+            <variable longname="PCIMS Hour" name="HR" units=""/>
+            <variable longname="PCIMS Minute" name="MN" units=""/>
+            <variable longname="PCIMS Second" name="SC" units=""/>
+            <variable longname="PCIMS # of measurement state flags" name="NC" units=""/>
+            <variable longname="PCIMS # of masses in sequence" name="NH" units=""/>
+            <variable longname="PCIMS # of Analog Channels" name="NA" units=""/>
+-->
+            <variable longname="PCIMS Measurement State flag #1" name="CB" units=""/>
+            <variable longname="PCIMS Measurement State flag #2" name="CU" units=""/>
+            <variable longname="PCIMS Measurement State flag #3" name="C3" units=""/>
+            <variable longname="PCIMS Measurement State flag #4" name="C4" units=""/>
+            <variable longname="PCIMS ion rate at mass #1" name="HZ080" units="Hz"/>
+            <variable longname="PCIMS m/z ration for mass #1" name="AMU080" units="milliu"/>
+            <variable longname="PCIMS counting time at mass #1" name="DWL080" units="msec"/>
+            <variable longname="PCIMS ion rate at mass #2" name="HZ110" units="Hz"/>
+            <variable longname="PCIMS m/z ration for mass #2" name="AMU110" units="milliu"/>
+            <variable longname="PCIMS counting time at mass #2" name="DWL110" units="msec"/>
+            <variable longname="PCIMS ion rate at mass #3" name="HZ154" units="Hz"/>
+            <variable longname="PCIMS m/z ration for mass #3" name="AMU154" units="milliu"/>
+            <variable longname="PCIMS counting time at mass #3" name="DWL154" units="msec"/>
+            <variable longname="PCIMS ion rate at mass #4" name="HZ161" units="Hz"/>
+            <variable longname="PCIMS m/z ration for mass #4" name="AMU161" units="milliu"/>
+            <variable longname="PCIMS counting time at mass #4" name="DWL161" units="msec"/>
+            <variable longname="PCIMS ion rate at mass #5" name="HZ173" units="Hz"/>
+            <variable longname="PCIMS m/z ration for mass #5" name="AMU173" units="milliu"/>
+            <variable longname="PCIMS counting time at mass #5" name="DWL173" units="msec"/>
+            <variable longname="PCIMS ion rate at mass #6" name="HZ175" units="Hz"/>
+            <variable longname="PCIMS m/z ration for mass #6" name="AMU175" units="milliu"/>
+            <variable longname="PCIMS counting time at mass #6" name="DWL175" units="msec"/>
+            <variable longname="PCIMS ion rate at mass #7" name="HZ187" units="Hz"/>
+            <variable longname="PCIMS m/z ration for mass #7" name="AMU187" units="milliu"/>
+            <variable longname="PCIMS counting time at mass #7" name="DWL187" units="msec"/>
+            <variable longname="PCIMS ion rate at mass #8" name="HZ145" units="Hz"/>
+            <variable longname="PCIMS m/z ration for mass #8" name="AMU145" units="milliu"/>
+            <variable longname="PCIMS counting time at mass #8" name="DWL145" units="msec"/>
+            <variable longname="PCIMS ion rate at mass #9" name="HZ076" units="Hz"/>
+            <variable longname="PCIMS m/z ration for mass #9" name="AMU076" units="milliu"/>
+            <variable longname="PCIMS counting time at mass #9" name="DWL076" units="msec"/>
+            <variable longname="PCIMS ion rate at mass #10" name="HZ110B" units="Hz"/>
+            <variable longname="PCIMS m/z ration for mass #10" name="AMU110B" units="milliu"/>
+            <variable longname="PCIMS counting time at mass #10" name="DWL110B" units="msec"/>
+            <variable longname="PCIMS ion rate at mass #11" name="HZ190" units="Hz"/>
+            <variable longname="PCIMS m/z ration for mass #11" name="AMU190" units="milliu"/>
+            <variable longname="PCIMS counting time at mass #11" name="DWL190" units="msec"/>
+            <variable longname="PCIMS Analog level #1" name="A01" units="mV"/>
+            <variable longname="PCIMS Analog level #2" name="A02" units="mV"/>
+            <variable longname="PCIMS Analog level #3" name="A03" units="mV"/>
+            <variable longname="PCIMS Analog level #4" name="A04" units="mV"/>
+            <variable longname="PCIMS Analog level #5" name="A05" units="mV"/>
+            <variable longname="PCIMS Analog level #6" name="A06" units="mV"/>
+            <variable longname="PCIMS Analog level #7" name="A07" units="mV"/>
+            <variable longname="PCIMS Analog level #8" name="A08" units="mV"/>
+            <variable longname="PCIMS Analog level #9" name="A09" units="mV"/>
+            <variable longname="PCIMS Analog level #10" name="A10" units="mV"/>
+            <variable longname="PCIMS Analog level #11" name="A11" units="mV"/>
+            <variable longname="PCIMS Analog level #12" name="A12" units="mV"/>
+            <variable longname="PCIMS Analog level #13" name="A13" units="mV"/>
+            <variable longname="PCIMS Analog level #14" name="A14" units="mV"/>
+            <variable longname="PCIMS Analog level #15" name="A15" units="mV"/>
+            <variable longname="PCIMS Analog level #16" name="A16" units="mV"/>
+            <variable longname="PCIMS Analog level #17" name="A17" units="mV"/>
+            <variable longname="PCIMS Analog level #18" name="A18" units="mV"/>
+            <variable longname="PCIMS Analog level #19" name="A19" units="mV"/>
+            <variable longname="PCIMS Analog level #20" name="A20" units="mV"/>
+            <variable longname="PCIMS Analog level #21" name="A21" units="mV"/>
+            <variable longname="PCIMS Analog level #22" name="A22" units="mV"/>
+            <variable longname="PCIMS Analog level #23" name="A23" units="mV"/>
+            <variable longname="PCIMS Analog level #24" name="A24" units="mV"/>
+            <variable longname="PCIMS Analog level #25" name="A25" units="mV"/>
+            <variable longname="PCIMS Analog level #26" name="A26" units="mV"/>
+            <variable longname="PCIMS Analog level #27" name="A27" units="mV"/>
+            <variable longname="PCIMS Analog level #28" name="A28" units="mV"/>
+            <variable longname="PCIMS Analog level #29" name="A29" units="mV"/>
+            <variable longname="PCIMS Analog level #30" name="A30" units="mV"/>
+            <variable longname="PCIMS Analog level #31" name="A31" units="mV"/>
+            <variable longname="PCIMS Analog level #32" name="A32" units="mV"/>
+
+<!--        <variable longname="PCIMS Pressure Altitude from IWG1" name="AUX01" units="feet"/>
+            <variable longname="PCIMS Ambient Temp from IWG1" name="AUX02" units="degK"/>
 -->
         </sample>
     </sensor>
@@ -1242,6 +1354,9 @@
         <output>
           <socket type="mcaccept"/>
         </output>
+        <output>
+          <socket type="mcaccept"/>
+        </output>
       </service>
       <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.25">
 
@@ -1290,8 +1405,9 @@
       </output>
       <sensor IDREF="SMPS" devicename="inet::30104" id="1800" suffix="_SMPS"/>
       <sensor IDREF="GTCIMS" devicename="inet::30110" id="2000" suffix="_GCIM"/>
-      <sensor IDREF="NONOYO3" devicename="inet::30107" id="2200" suffix="_ACD"/>
-      <sensor IDREF="HARP" devicename="inet::30108" id="2300" suffix="_HRP"/>
+      <sensor IDREF="PCIMS" devicename="inet::30111" id="2200" suffix="_PCIM"/>
+      <sensor IDREF="NONOYO3" devicename="inet::30107" id="2400" suffix="_ACD"/>
+      <sensor IDREF="HARP" devicename="inet::30108" id="2600" suffix="_HRP"/>
     </dsm>
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
