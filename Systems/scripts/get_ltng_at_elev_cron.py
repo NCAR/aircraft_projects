@@ -59,8 +59,19 @@ except:
 con = pg.connect(dbname=database, host=dbhost, user='ads')
 querres = con.query("select value from global_attributes where key='region'")
 regionlst = querres.getresult()
+if len(regionlst) == 0:
+    print "Database has not been initialized by MC for region."
+    print "Must Exit!"
+    # TODO need a nagios call here to alert operator 
+    con.close()
+    sys.exit(1)
 region = (regionlst[0])[0]
 con.close()
+
+if region=='off':
+    print "Mission Coordinator has left region selection to off."
+    print "Exiting"
+    sys.exit(1)
 
 # Initialization 
 #  *******************  Modify The Following *********************
@@ -100,10 +111,19 @@ con = pg.connect(dbname=database, host=dbhost, user='ads')
 #  and if enough time has passed, continue, else quit.
 querres = con.query("select value from global_attributes where key='cappi'")
 cappilst = querres.getresult()
+if len(cappilst) == 0:
+    print "Database has not been initialized by MC for CAPPI."
+    print "Must Exit!"
+    # TODO need a nagios call here to alert operator 
+    con.close()
+    os.remove(busy_file)
+    sys.exit(1)
+    
 cappi = (cappilst[0])[0]
 if cappi == 'off':
     print "MC has turned cappi acquisition off"
     con.close()
+    os.remove(busy_file)
     sys.exit(1)
 
 # Get Pressure Altitude from the database

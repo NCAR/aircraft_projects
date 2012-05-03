@@ -97,12 +97,31 @@ if len(cappilst) == 0:
     print "Must Exit!"
     # TODO need a nagios call here to alert operator 
     con.close()
+    os.remove(busy_file)
     sys.exit(1)
 cappi = (cappilst[0])[0]
 if cappi == 'off':
     print "MC has turned cappi acquisition off"
     con.close()
+    os.remove(busy_file)
     sys.exit(1)
+# There is no CAPPI imagery over Colorado - why bother?
+querres = con.query("select value from global_attributes where key='region'")
+regionlst = querres.getresult()
+if len(regionlst) == 0:
+    print "Database has not been initialized by MC for region."
+    print "Must Exit!"
+    # TODO need a nagios call here to alert operator 
+    con.close()
+    sys.exit(1)
+region = (regionlst[0])[0]
+con.close()
+
+if region=='CO':
+    print "Mission Coordinator has selected CO region which has no useful CAPPI data."
+    print "Exiting"
+    sys.exit(1)
+
 
 # Get Pressure Altitude from the database
 querres = con.query("select value from global_attributes where key='EndTime'")
@@ -205,7 +224,7 @@ if len(ftplist) == 0:  # didn't get any file names, bail out
     print "didn't find any files on ftp server with forms: " 
     print prefix+"+"
     print timestr
-    print "+"+altstr+postfix+" OR"
+    print "+"+altstr+postfix
     os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
@@ -243,40 +262,43 @@ except:
     ftp.quit()
     sys.exit(1)
 
+#***********************************************************************
+# CAPPI images are huge!  Don't backfill!
+#**********************************************************************
 # Make sure we've got the num_imgs_to_get most recent images
-print 'Checking on images earlier in time.'
-got_old='false'
-i=2
-filename=ftplist[len(ftplist)-i]
-while i<num_imgs_to_get and i<len(ftplist):
-    if filename not in listing:
-        print "Don't have earlier image:"+filename
-        try:
-            command = "wget ftp://"+ftp_site+":"+ftp_dir+filename
-            os.system(command)
-            print 'file retrieved: '+filename
-            got_old='true'
-
-        except:
-            print "problems getting file, exiting"
-            os.remove(busy_file)
-            ftp.quit()
-            sys.exit(1)
-    i = i+1
-    filename=ftplist[len(ftplist)-i]
+#print 'Checking on images earlier in time.'
+#got_old='false'
+#i=2
+#filename=ftplist[len(ftplist)-i]
+#while i<num_imgs_to_get and i<len(ftplist):
+#    if filename not in listing:
+#        print "Don't have earlier image:"+filename
+#        try:
+#            command = "wget ftp://"+ftp_site+":"+ftp_dir+filename
+#            os.system(command)
+#            print 'file retrieved: '+filename
+#            got_old='true'
+#
+#        except:
+#            print "problems getting file, exiting"
+#            os.remove(busy_file)
+#            ftp.quit()
+#            sys.exit(1)
+#    i = i+1
+#    filename=ftplist[len(ftplist)-i]
 
 # If we got an older image it's date/time will be out of sequence for 
 # time series veiwing (which is done based on date/time of file) so we need
 # to correct for that by touching the files based on time sequence.
-if got_old == 'true':
-    print 'cleaning up dates of image files'
-    listing=glob.glob(prefix+'*')
-    i = 0
-    while i < len(listing):
-        dt = listing[i].split('.')
-        os.system('touch -t '+dt[2]+' '+listing[i])
-        i = i + 1
-
+#if got_old == 'true':
+#    print 'cleaning up dates of image files'
+#    listing=glob.glob(prefix+'*')
+#    i = 0
+#    while i < len(listing):
+#        dt = listing[i].split('.')
+#        os.system('touch -t '+dt[2]+' '+listing[i])
+#        i = i + 1
+#
 
 print "Done."
 os.remove(busy_file)

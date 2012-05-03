@@ -65,12 +65,19 @@ min_of_imgs      = 10
 
 # End of Initialization section
 
-print "Starting get_radar_at_elev_cron.py for getting " + image_type + " imagery"
+print "Starting get_chill_image.py for getting " + image_type + " imagery"
 
 # Get Region information from the database
 con = pg.connect(dbname=database, host=dbhost, user='ads')
 querres = con.query("select value from global_attributes where key='region'")
 regionlst = querres.getresult()
+if len(regionlst) == 0:
+    print "Database has not been initialized by MC for region, etc."
+    print "Must Exit!"
+    # TODO need a nagios call here to alert operator 
+    con.close()
+    os.remove(busy_file)
+    sys.exit(1)
 region = (regionlst[0])[0]
 con.close()
 

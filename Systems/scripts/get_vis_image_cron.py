@@ -112,8 +112,20 @@ print monthstr+"/"+todaystr+"/"+str(year)+" "+str(gmt[3])+":"+str(gmt[4])
 con = pg.connect(dbname=database, host=dbhost, user='ads')
 querres = con.query("select value from global_attributes where key='region'")
 regionlst = querres.getresult()
+if len(regionlst) == 0:
+    print "Database has not been initialized by MC for region, etc."
+    print "Must Exit!"
+    # TODO need a nagios call here to alert operator 
+    con.close()
+    os.remove(busy_file)
+    sys.exit(1)
 region = (regionlst[0])[0]
 con.close()
+
+if region=='off':
+    print "Mission Coordinator has left region selection to off."
+    print "Exiting"
+    sys.exit(1)
 
 #  Define the latest filename and label filename
 osm_file_name = "latest_" + region + "_vis.jpg"
@@ -178,7 +190,7 @@ try:
     print 'setting it as overlay image for OSM.'
     command = "cp "+latest+" "+osm_file_name
     os.system(command)
-    command = "wget ftp://"+ftp_site+":"+ftp_dir+label_name
+    command = "wget ftp://"+ftp_site+":"+ftp_dir+label_name + " -O " + label_name
     os.system(command)
     print 'obtained image label: '+label_name
     command = "rm " + osm_label
