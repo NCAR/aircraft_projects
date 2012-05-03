@@ -1,7 +1,7 @@
 Summary: PPP and PPPOE configuration for Inmarsat BGAN
 Name: raf-satcom-bgan
 Version: 1.0
-Release: 3
+Release: 4
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -98,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/pppoe-lost
 
 %changelog
+* Thu May  3 2012 Gordon Maclean <maclean@ucar.edu> 1.0-4
+- Updated /etc/ppp/ip-up.bgan to turn off multicast, "ip link set $1 multicast off",
+- after ppp is up.
 * Mon Sep 26 2011 Gordon Maclean <maclean@ucar.edu> 1.0-3
 - Added /etc/sysconfig/network-scripts/ifup-pre-bgan
 * Tue Mar 2 2010 Gordon Maclean <maclean@ucar.edu> 1.0-2

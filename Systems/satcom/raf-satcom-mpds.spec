@@ -1,7 +1,7 @@
 Summary: PPP and PPPOE configuration for Inmarsat MPDS
 Name: raf-satcom-mpds
 Version: 1.0
-Release: 8
+Release: 9
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -94,6 +94,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/pppoe-lost
 
 %changelog
+* Thu May  3 2012 Gordon Maclean <maclean@ucar.edu> 1.0-9
+- Updated /etc/ppp/ip-up.mpds to turn off multicast, "ip link set $1 multicast off",
+- after ppp is up.
 * Mon Sep 26 2011 Gordon Maclean <maclean@ucar.edu> 1.0-8
 - Added /etc/sysconfig/network-scripts/ifup-pre-mpds
 * Mon Jul 26 2010 Chris Webster <cjw@ucar.edu> 1.0-7

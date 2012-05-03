@@ -16,6 +16,9 @@
 
 PATH=$PATH:/etc/ppp
 
+# turn off multicast on PPP link
+ip link set $1 multicast off
+
 # Run ddclient
 if ! which run_ddclient.sh > /dev/null; then
     logger -t ppp "cannot find run_ddclient.sh, is it in /etc/ppp"
