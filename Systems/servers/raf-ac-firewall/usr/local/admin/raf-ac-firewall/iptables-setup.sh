@@ -122,7 +122,7 @@ UDP_PORT_FORWARDS=(\
     # from    port  tohost        toport
     $ANYHOST 33500 192.168.84.151 31100 # John Ortega's system \
     $ANYHOST 33501 127.0.0.1      31101 #  acserver \
-    $UCAR_128 33502 192.168.84.11  31102 # testing to adslap1
+    $UCAR_128 33502 192.168.84.11  31102 # testing to adslap1 \
 )
 
 # external hosts that we can ssh to
@@ -689,7 +689,7 @@ for eif in ${SAFE_EXT_IFS[*]}; do
     fi
 done
 
-# port forwarding of all udp packets coming in on external interfaces
+# port forwarding of udp packets coming in on external interfaces:
 # cheap and expensive, unsafe and safe.
 for (( i = 0; i < ${#UDP_PORT_FORWARDS[*]}; )); do
     # mystery: incrementing with "let i++" results in an error exit
@@ -697,16 +697,16 @@ for (( i = 0; i < ${#UDP_PORT_FORWARDS[*]}; )); do
     i=$(( $i+1 ))
     port=${UDP_PORT_FORWARDS[$i]}
     i=$(( $i+1 ))
-    ip=${UDP_PORT_FORWARDS[$i]}
+    toaddr=${UDP_PORT_FORWARDS[$i]}
     i=$(( $i+1 ))
     toport=${UDP_PORT_FORWARDS[$i]}
     i=$(( $i+1 ))
     for eif in ${EXT_IFS[*]}; do
-        # if dest is localhost, use REDIRECT target, otherwise DNAT
-	if [ $ip == 127.0.0.1 ]; then
+        # if toaddr is localhost, use REDIRECT target, otherwise DNAT
+	if [ $toaddr == 127.0.0.1 ]; then
 	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j REDIRECT --to-ports $toport
         else
-	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j DNAT --to $ip:$toport
+	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j DNAT --to $toaddr:$toport
             # then must open the forward filter to internal interfaces
             for iif in ${INT_IFS[*]}; do
                     iptables -A FORWARD -i $eif -o $iif -p udp --dport $port -j ACCEPT
