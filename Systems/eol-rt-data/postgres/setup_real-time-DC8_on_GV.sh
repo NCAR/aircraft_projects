@@ -129,7 +129,7 @@ CREATE TABLE raf_lrt (
     dpxc double precision,
     wsc double precision,
     wdc double precision,
-    wic double precision,
+    wic double precision
 );
 
 ALTER TABLE raf_lrt OWNER TO ads;
