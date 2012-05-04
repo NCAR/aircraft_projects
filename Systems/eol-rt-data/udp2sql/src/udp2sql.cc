@@ -407,6 +407,11 @@ handleAircraftMessage(string aircraft, char* buffer)
     varList.takeFirst();
     QString datetime = varList.takeFirst();
 
+    // ignore messages that are missing datetime values
+    if (datetime == "-32767") {
+      cout << "DROPPED missing datetime" << endl;
+      return;
+    }
     // trim off the microsecond field from the datetime
     cout << datetime.toStdString() << " -> ";
     datetime.replace(QRegExp("\\.[0-9]+$"), "");
