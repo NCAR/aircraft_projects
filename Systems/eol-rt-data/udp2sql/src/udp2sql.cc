@@ -409,7 +409,7 @@ handleAircraftMessage(string aircraft, char* buffer)
 
     // trim off the microsecond field from the datetime
     cout << datetime.toStdString() << " -> ";
-    datetime.replace(QRegExp(".[0-9]+$"), "");
+    datetime.replace(QRegExp("\\.[0-9]+$"), "");
     len = 0;
     while (len != datetime.length()) {
       len = datetime.length();
