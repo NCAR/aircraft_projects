@@ -410,6 +410,7 @@ handleAircraftMessage(string aircraft, char* buffer)
     // ignore messages that are missing datetime values
     if (datetime == "-32767") {
       cout << "DROPPED missing datetime" << endl;
+      closePostgresConnection();
       return;
     }
     // trim off the microsecond field from the datetime
@@ -522,7 +523,7 @@ reBroadcastMessage(string dest, char* buffer)
   n_u::Inet4SocketAddress * _to;
 
   _socket = new n_u::DatagramSocket;
-  _to = new n_u::Inet4SocketAddress(n_u::Inet4Address::getByName(dest), 31101); //port);
+  _to = new n_u::Inet4SocketAddress(n_u::Inet4Address::getByName(dest), 33501); //port);
 
   // compress the stream before sending it
   char compressed[32000];
