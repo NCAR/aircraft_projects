@@ -114,8 +114,14 @@ PRIV_HOSTS_DATA=192.168.184.0/26
 # Add udp ports to forward from external interfaces 
 # (both UNSAFE_EXT_IFS and SAFE_EXT_IFS) to machines on
 # the internal interfaces (INT_IFS)
+# UDP ports are often blocked by firewalls. According to David Mitchell,
+# the UCAR firewall allows outbound UDP to ports 33434-33524, since those are
+# typically used by traceroute. One should then forward those to ports
+# under 32768, so they're not in the dynamic range.
 UDP_PORT_FORWARDS=(\
-    47007 192.168.84.11 \
+    # from    port  tohost        toport
+    $ANYHOST 33500 192.168.84.151 31100 \
+    $ANYHOST 33501 192.168.84.1   31101 \
 )
 
 # external hosts that we can ssh to
@@ -684,15 +690,18 @@ done
 
 # port forwarding of all udp packets coming in on external interfaces
 # cheap and expensive, unsafe and safe.
-for eif in ${EXT_IFS[*]}; do
-    for (( i = 0; i < ${#UDP_PORT_FORWARDS[*]}; )); do
-        port=${UDP_PORT_FORWARDS[$i]}
-	# mystery, this let command seems to result in an error exit.
-        # let i++
-        i=$(( $i+1 ))
-        ip=${UDP_PORT_FORWARDS[$i]}
-        i=$(( $i+1 ))
-        iptables -t nat -A PREROUTING -i $eif -p udp --dport $port -j DNAT --to $ip
+for (( i = 0; i < ${#UDP_PORT_FORWARDS[*]}; )); do
+    # mystery: incrementing with "let i++" results in an error exit
+    from=${UDP_PORT_FORWARDS[$i]}
+    i=$(( $i+1 ))
+    port=${UDP_PORT_FORWARDS[$i]}
+    i=$(( $i+1 ))
+    ip=${UDP_PORT_FORWARDS[$i]}
+    i=$(( $i+1 ))
+    toport=${UDP_PORT_FORWARDS[$i]}
+    i=$(( $i+1 ))
+    for eif in ${EXT_IFS[*]}; do
+        iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j DNAT --to $ip:$toport
         # then must open the forward filter to internal interfaces
         for iif in ${INT_IFS[*]}; do
             iptables -A FORWARD -i $eif -o $iif -p udp --dport $port -j ACCEPT
