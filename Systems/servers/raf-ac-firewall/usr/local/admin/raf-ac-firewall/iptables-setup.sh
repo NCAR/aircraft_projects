@@ -120,8 +120,9 @@ PRIV_HOSTS_DATA=192.168.184.0/26
 # under 32768, so they're not in the dynamic range.
 UDP_PORT_FORWARDS=(\
     # from    port  tohost        toport
-    $ANYHOST 33500 192.168.84.151 31100 \
-    $ANYHOST 33501 192.168.84.1   31101 \
+    $ANYHOST 33500 192.168.84.151 31100 # John Ortega's system \
+    $ANYHOST 33501 127.0.0.1      31101 #  acserver \
+    $UCAR_128 33502 192.168.84.11  31102 # testing to adslap1
 )
 
 # external hosts that we can ssh to
@@ -701,11 +702,16 @@ for (( i = 0; i < ${#UDP_PORT_FORWARDS[*]}; )); do
     toport=${UDP_PORT_FORWARDS[$i]}
     i=$(( $i+1 ))
     for eif in ${EXT_IFS[*]}; do
-        iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j DNAT --to $ip:$toport
-        # then must open the forward filter to internal interfaces
-        for iif in ${INT_IFS[*]}; do
-            iptables -A FORWARD -i $eif -o $iif -p udp --dport $port -j ACCEPT
-        done
+        # if dest is localhost, use REDIRECT target, otherwise DNAT
+	if [ $ip == 127.0.0.1 ]; then
+	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j REDIRECT --to-ports $toport
+        else
+	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j DNAT --to $ip:$toport
+            # then must open the forward filter to internal interfaces
+            for iif in ${INT_IFS[*]}; do
+                    iptables -A FORWARD -i $eif -o $iif -p udp --dport $port -j ACCEPT
+            done
+        fi
     done
 done
 
