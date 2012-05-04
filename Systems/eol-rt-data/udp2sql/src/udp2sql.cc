@@ -250,9 +250,6 @@ void udp2sql::newData()
          << BZ2_bzerror(&b, &errnum) << endl;
     return;
   }
-  else
-    cout << "\ndecompressed " << nBytes << " -> " << bufLen << endl;
-
   // Now see if this message has a digest.
   if (strncmp(buffer, "DIGEST:", 7) == 0)
   {
@@ -330,6 +327,12 @@ void udp2sql::newData()
   else if (strncmp(buffer, "DC8", 3) == 0)   platform = "DC8";
   else if (strncmp(buffer, "GAUS:", 5) == 0) platform = "GAUS";
   else return;
+
+  // report on transferred amounts
+  if (ret == BZ_OK)
+    cout << "\n" << platform << " decompressed " << nBytes << " -> " << bufLen << endl;
+  else
+    cout << "\n" << platform << " received " << nBytes << endl;
 
   if (platform == "GAUS")
   {
