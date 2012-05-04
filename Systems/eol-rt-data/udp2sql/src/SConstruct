@@ -1,9 +1,9 @@
 # -*- python -*-
 
-env = Environment(tools = ["default", "qt4"])
+env = Environment(tools = ["default", "qt4", "nidas"])
 
 env.EnableQt4Modules(['QtNetwork'])
-env.AppendUnique(LIBS = ["ssl", "pq", "bz2", "crypto"])
+env.AppendUnique(LIBS = ["ssl", "pq", "bz2", "crypto", "nidas_util"])
 
 SOURCES = Split("""
 main.cc

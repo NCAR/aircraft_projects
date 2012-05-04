@@ -42,6 +42,7 @@ protected:
 
   void  handleSoundingMessage(string platform, char* buffer);
   void  handleAircraftMessage(string aircraft, char* buffer);
+  void  reBroadcastMessage(string dest, char* buffer);
 
   QUdpSocket * _udp;
 
@@ -50,6 +51,7 @@ protected:
 
   PGconn * _conn;
 
+  int _count;
   // Special qualifier to add to connection string, such as to specify
   // host=<host> and port=<port>.  The user and database will always
   // be specified explicitly, and this string will be appended.

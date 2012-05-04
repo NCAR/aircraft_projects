@@ -7,9 +7,14 @@
 #include <bzlib.h>
 #include <map>
 #include <QtCore/QTimerEvent>
+#include <QtCore/QStringList>
 
+#include <nidas/util/Socket.h>
+#include <nidas/util/Inet4Address.h>
 
 using namespace std;
+
+namespace n_u = nidas::util;
 
 static const int port = 31007;
 
@@ -17,11 +22,73 @@ static const int port = 31007;
 #include <openssl/ripemd.h>
 
 
+enum DC8VARS {
+    DC8,
+    DATETIME,
+    GGLAT,
+    GGLON,
+    GGALT,
+    WGSALT,
+    PALTF,
+    HGM232,
+    GSF,
+    TASX,
+    IAS,
+    MACH_A,
+    VSPD,
+    THDG,
+    TKAT,
+    DRFTA,
+    PITCH,
+    ROLL,
+    SSLIP,
+    ATTACK,
+    ATX,
+    DPXC,
+    TTX,
+    PSXC,
+    QCXC,
+    PCAB,
+    WSC,
+    WDC,
+    WIC,
+    SOLZE,
+    SOLAR_EL_AC,
+    SOLAZ,
+    SOLAR_AZ_AC,
+    VNS_MMS,
+    VEW_MMS,
+    VUP_MMS,
+    COLDCN,
+    HOTCN,
+    DRYSCATTERING,
+    CO,
+    CH4,
+    WVPPM,
+    C02,
+    NO,
+    NOY,
+    O3,
+    SP2_INCPARTICLECOUNT,
+    HSP2_INCPARTICLECOUNT,
+    SO4,
+    NO3,
+    NH4,
+    TOTAL_ORGANIC,
+    CHLORIDE,
+    MZ43,
+    MZ44,
+    MZ57,
+    MZ60
+};
+
+
 /* -------------------------------------------------------------------- */
 udp2sql::udp2sql()
 {
   _conn = 0;
   _timer_id = 0;
+  _count = 0;
   newUDPConnection();
 //  newPostgresConnection();
 }
@@ -257,11 +324,10 @@ void udp2sql::newData()
   // Filter out messages from un-expected sources, and pass the
   // uncompressed message to the platform handler.
   string platform;
-  if      (strncmp(buffer, "C130", 4) == 0) platform = "C130";
-  else if (strncmp(buffer, "GV", 2) == 0)   platform = "GV";
-  else if (strncmp(buffer, "P3", 2) == 0)   platform = "P3";
-  else if (strncmp(buffer, "DC-8", 4) == 0)   platform = "DC8";
-  else if (strncmp(buffer, "IWG1", 4) == 0)   platform = "DC8";
+  if      (strncmp(buffer, "C130", 4) == 0)  platform = "C130";
+  else if (strncmp(buffer, "GV", 2) == 0)    platform = "GV";
+  else if (strncmp(buffer, "P3", 2) == 0)    platform = "P3";
+  else if (strncmp(buffer, "DC8", 3) == 0)   platform = "DC8";
   else if (strncmp(buffer, "GAUS:", 5) == 0) platform = "GAUS";
   else return;
 
@@ -297,26 +363,11 @@ void
 udp2sql::
 handleAircraftMessage(string aircraft, char* buffer)
 {
-  char* p;
-  char timestamp[1000];
-  char sql_str[65000];
-  char vars[65000];
-
-  memset(sql_str, 0, 65000);
-  memset(vars, 0, 65000);
-
-  // break the stream into two usable substrings
-  p = strtok(buffer, ",");
-  p = strtok(NULL, ",");
-  strcpy(timestamp, p);
-  p = strtok(NULL, "");
-  strcpy(vars, p);
-
-  QString varsStr(vars);
+  QString varsStr(buffer);
 
   // trim off '\r' and '\n' characters if present
-  varsStr.replace("\r","");
-  varsStr.replace("\n","");
+//varsStr.replace("\r","");
+//varsStr.replace("\n","");
 
   // remove all spaces
   int len = 0;
@@ -324,27 +375,178 @@ handleAircraftMessage(string aircraft, char* buffer)
     len = varsStr.length();
     varsStr.replace(", ",",");
   }
-  // instert NANs for all missing values
-  len = 0;
-  while (len != varsStr.length()) {
-    len = varsStr.length();
-    varsStr.replace(",,",",-32767,");
-  }
-  if (varsStr.endsWith(","))
-    varsStr.append("-32767");
+  // save a copy for re-broadcast later
+  QString varsStrCopy(varsStr);
 
+  // update database entries
   if (newPostgresConnection(aircraft))
   {
+    // instert NANs for all missing values
+    len = 0;
+    while (len != varsStr.length()) {
+      len = varsStr.length();
+      varsStr.replace(",,",",-32767,");
+    }
+    if (varsStr.endsWith(","))
+      varsStr.append("-32767");
+
+    // break the buffer into usable substrings
+    QStringList varList = varsStr.split(",");
+
+    // correct +/- 180 to 0..360 on wind direction
+    if (strncmp(aircraft.c_str(), "DC8", 3) == 0)
+    {
+      QString windDirectionStr = varList[WDC];
+      double windDirection = varList[WDC].toFloat() + 180.0;
+      varList[WDC] = QString::number(windDirection, 'g', 1);
+    }
+    // remove the preceeding "IWG1,datetime,"
+    varList.takeFirst();
+    QString datetime = varList.takeFirst();
+
+    // trim off the microsecond field from the datetime
+    cout << datetime.toStdString() << " -> ";
+    datetime.replace(QRegExp(".[0-9]+$"), "");
+    len = 0;
+    while (len != datetime.length()) {
+      len = datetime.length();
+      datetime.replace("-","");
+      datetime.replace(":","");
+    }
+    cout << datetime.toStdString() << endl;
+
+    QString sql_str;
     // create postgres statements
-    sprintf(sql_str, "INSERT INTO raf_lrt VALUES ('%s',%s);", timestamp, varsStr.toStdString().c_str());
-    cout << sql_str << endl;
-    execute(sql_str);
-    sprintf(sql_str, 
-	    "UPDATE global_attributes SET value='%s.999' WHERE key='EndTime';",
-	    timestamp);
-//  cout << sql_str << endl;
-    execute(sql_str);
+    sql_str = "INSERT INTO raf_lrt VALUES ('" + datetime + "'," + varList.join(",") + ");";
+    cout << sql_str.toStdString() << endl;
+    execute(sql_str.toStdString().c_str());
+    sql_str = "UPDATE global_attributes SET value='" + datetime + ".999' WHERE key='EndTime';",
+    cout << sql_str.toStdString() << endl;
+    execute(sql_str.toStdString().c_str());
     closePostgresConnection();
   }
+  // re-broadcast message to other aircraft
+  if (strncmp(aircraft.c_str(), "DC8", 3) == 0) {
+  
+    // send every 20 seconds
+    if (_count++ % 20) return;
+
+    // break the buffer into usable substrings
+    QStringList varListCopy = varsStrCopy.split(",");
+
+    // prune un-needed variables
+    varListCopy.removeAt(MZ60);
+    varListCopy.removeAt(MZ57);
+    varListCopy.removeAt(MZ44);
+    varListCopy.removeAt(MZ43);
+    varListCopy.removeAt(CHLORIDE);
+    varListCopy.removeAt(TOTAL_ORGANIC);
+    varListCopy.removeAt(NH4);
+    varListCopy.removeAt(NO3);
+    varListCopy.removeAt(SO4);
+    varListCopy.removeAt(HSP2_INCPARTICLECOUNT);
+    varListCopy.removeAt(SP2_INCPARTICLECOUNT);
+    varListCopy.removeAt(O3);
+    varListCopy.removeAt(NOY);
+    varListCopy.removeAt(NO);
+    varListCopy.removeAt(C02);
+    varListCopy.removeAt(WVPPM);
+    varListCopy.removeAt(CH4);
+    varListCopy.removeAt(CO);
+    varListCopy.removeAt(DRYSCATTERING);
+    varListCopy.removeAt(HOTCN);
+    varListCopy.removeAt(COLDCN);
+    varListCopy.removeAt(VUP_MMS);
+    varListCopy.removeAt(VEW_MMS);
+    varListCopy.removeAt(VNS_MMS);
+    varListCopy.removeAt(SOLAR_AZ_AC);
+    varListCopy.removeAt(SOLAZ);
+    varListCopy.removeAt(SOLAR_EL_AC);
+    varListCopy.removeAt(SOLZE);
+//  varListCopy.removeAt(WIC);
+//  varListCopy.removeAt(WDC);
+//  varListCopy.removeAt(WSC);
+    varListCopy.removeAt(PCAB);
+    varListCopy.removeAt(QCXC);
+    varListCopy.removeAt(PSXC);
+    varListCopy.removeAt(TTX);
+//  varListCopy.removeAt(DPXC);
+//  varListCopy.removeAt(ATX);
+    varListCopy.removeAt(ATTACK);
+    varListCopy.removeAt(SSLIP);
+    varListCopy.removeAt(ROLL);
+    varListCopy.removeAt(PITCH);
+    varListCopy.removeAt(DRFTA);
+    varListCopy.removeAt(TKAT);
+    varListCopy.removeAt(THDG);
+    varListCopy.removeAt(VSPD);
+    varListCopy.removeAt(MACH_A);
+    varListCopy.removeAt(IAS);
+//  varListCopy.removeAt(TASX);
+    varListCopy.removeAt(GSF);
+    varListCopy.removeAt(HGM232);
+    varListCopy.removeAt(PALTF);
+    varListCopy.removeAt(WGSALT);
+//  varListCopy.removeAt(GGALT);
+//  varListCopy.removeAt(GGLON);
+//  varListCopy.removeAt(GGLAT);
+//  varListCopy.removeAt(DATETIME);
+//  varListCopy.removeAt(DC8);
+
+    QString trimmed = varListCopy.join(",");
+    
+    char temp[65000];
+    memcpy(temp, trimmed.toStdString().c_str(), trimmed.length() );
+    reBroadcastMessage("hyper.raf-guest.ucar.edu", temp);
+//  reBroadcastMessage("rafgv.dyndns.org", trimmed.toStdString().c_str());
+  }
+
   //  _timer_id = startTimer(360000);
+}
+
+
+
+void
+udp2sql::
+reBroadcastMessage(string dest, char* buffer)
+{
+  n_u::DatagramSocket * _socket;
+  n_u::Inet4SocketAddress * _to;
+
+  _socket = new n_u::DatagramSocket;
+  _to = new n_u::Inet4SocketAddress(n_u::Inet4Address::getByName(dest), 31101); //port);
+
+  // compress the stream before sending it
+  char compressed[32000];
+  memset(compressed, 0, 32000);
+  unsigned int bufLen = sizeof(compressed);
+  int ret = BZ2_bzBuffToBuffCompress( compressed, &bufLen, buffer,
+                                      sizeof(buffer),9,0,0);
+  if (ret < 0) {
+    typedef struct {     // copied from bzlib.c
+      FILE*     handle;
+      char      buf[BZ_MAX_UNUSED];
+      int       bufN;
+      bool      writing;
+      bz_stream strm;
+      int       lastErr;
+      bool      initialisedOk;
+    } bzFile;
+    bzFile b;
+    b.lastErr = ret;
+    int errnum;
+    char msg[100];
+    sprintf(msg, "Failed to compress the ground feed stream: %s\n", BZ2_bzerror(&b, &errnum) );
+    cout << msg;
+    return;
+  }
+  try {
+    _socket->sendto(compressed, bufLen, 0, *_to);
+  }
+  catch (const n_u::IOException& e) {
+    fprintf(stderr, "nimbus::GroundFeed: %s\n", e.what());
+  }
+
+  printf("\ncompressed %d -> %d\n", sizeof(buffer), bufLen);
+  printf("rebroadcasting to %s: %s\n", dest.c_str(), buffer);
 }
