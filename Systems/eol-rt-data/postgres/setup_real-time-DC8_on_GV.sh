@@ -99,7 +99,7 @@ ALTER TABLE variable_list OWNER TO ads;
 
 INSERT INTO variable_list VALUES ('GGLAT',                 'degree_N', '', 'Reference GPS Latitude',                             '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('GGLON',                 'degree_E', '', 'Reference GPS Longitude',                            '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
-INSERT INTO variable_list VALUES ('GGALT',                 'm',        '', 'Reference GPS Altitude (MSL)',                       '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
+INSERT INTO variable_list VALUES ('PALTF',                 'feet',     '', 'NACA Pressure Altitude',                             '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('TASX',                  'm/s',      '', 'Aircraft True Airspeed Reference',                   '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('ATX',                   'deg_C',    '', 'Ambient Temperature, Reference',                     '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('DPXC',                  'deg_C',    '', 'Dew Point',                                          '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
@@ -123,7 +123,7 @@ CREATE TABLE raf_lrt (
     datetime timestamp without time zone NOT NULL,
     gglat double precision,
     gglon double precision,
-    ggalt double precision,
+    paltf double precision,
     tasx double precision,
     atx double precision,
     dpxc double precision,
