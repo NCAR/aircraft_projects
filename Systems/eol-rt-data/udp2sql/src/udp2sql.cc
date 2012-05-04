@@ -505,6 +505,7 @@ handleAircraftMessage(string aircraft, char* buffer)
     QString trimmed = varListCopy.join(",");
     
     char temp[65000];
+    memset(temp, 0, 65000);
     memcpy(temp, trimmed.toStdString().c_str(), trimmed.length() );
     reBroadcastMessage("hyper.raf-guest.ucar.edu", temp);
 //  reBroadcastMessage("rafgv.dyndns.org", trimmed.toStdString().c_str());
@@ -530,7 +531,7 @@ reBroadcastMessage(string dest, char* buffer)
   memset(compressed, 0, 32000);
   unsigned int bufLen = sizeof(compressed);
   int ret = BZ2_bzBuffToBuffCompress( compressed, &bufLen, buffer,
-                                      sizeof(buffer),9,0,0);
+                                      strlen(buffer),9,0,0);
   if (ret < 0) {
     typedef struct {     // copied from bzlib.c
       FILE*     handle;
@@ -550,12 +551,13 @@ reBroadcastMessage(string dest, char* buffer)
     return;
   }
   try {
-    _socket->sendto(compressed, bufLen, 0, *_to);
+//  _socket->sendto(compressed, bufLen, 0, *_to);
+    _socket->sendto(buffer, strlen(buffer), 0, *_to);
   }
   catch (const n_u::IOException& e) {
     fprintf(stderr, "nimbus::GroundFeed: %s\n", e.what());
   }
 
-  printf("\ncompressed %d -> %d\n", sizeof(buffer), bufLen);
+  printf("\ncompressed %d -> %d\n", strlen(buffer), bufLen);
   printf("rebroadcasting to %s: %s\n", dest.c_str(), buffer);
 }
