@@ -414,7 +414,6 @@ handleAircraftMessage(string aircraft, char* buffer)
       return;
     }
     // trim off the microsecond field from the datetime
-    cout << datetime.toStdString() << " -> ";
     datetime.replace(QRegExp("\\.[0-9]+$"), "");
     len = 0;
     while (len != datetime.length()) {
@@ -422,8 +421,6 @@ handleAircraftMessage(string aircraft, char* buffer)
       datetime.replace("-","");
       datetime.replace(":","");
     }
-    cout << datetime.toStdString() << endl;
-
     QString sql_str;
     // create postgres statements
     sql_str = "INSERT INTO raf_lrt VALUES ('" + datetime + "'," + varList.join(",") + ");";
@@ -494,9 +491,9 @@ handleAircraftMessage(string aircraft, char* buffer)
 //  varListCopy.removeAt(TASX);
     varListCopy.removeAt(GSF);
     varListCopy.removeAt(HGM232);
-    varListCopy.removeAt(PALTF);
+//  varListCopy.removeAt(PALTF);
     varListCopy.removeAt(WGSALT);
-//  varListCopy.removeAt(GGALT);
+    varListCopy.removeAt(GGALT);
 //  varListCopy.removeAt(GGLON);
 //  varListCopy.removeAt(GGLAT);
 //  varListCopy.removeAt(DATETIME);
@@ -507,8 +504,8 @@ handleAircraftMessage(string aircraft, char* buffer)
     char temp[65000];
     memset(temp, 0, 65000);
     memcpy(temp, trimmed.toStdString().c_str(), trimmed.length() );
-    reBroadcastMessage("hyper.raf-guest.ucar.edu", temp);
-//  reBroadcastMessage("rafgv.dyndns.org", trimmed.toStdString().c_str());
+//  reBroadcastMessage("hyper.raf-guest.ucar.edu", temp);
+    reBroadcastMessage("rafgv.dyndns.org", temp);
   }
 
   //  _timer_id = startTimer(360000);
@@ -558,6 +555,6 @@ reBroadcastMessage(string dest, char* buffer)
     fprintf(stderr, "nimbus::GroundFeed: %s\n", e.what());
   }
 
-  printf("\ncompressed %d -> %d\n", strlen(buffer), bufLen);
+//printf("\ncompressed %d -> %d\n", strlen(buffer), bufLen);
   printf("rebroadcasting to %s: %s\n", dest.c_str(), buffer);
 }
