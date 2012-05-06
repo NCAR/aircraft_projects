@@ -38,7 +38,7 @@ protected:
   void  newUDPConnection();
   bool  newPostgresConnection(string platform);
   void  closePostgresConnection();
-  void  execute(const char* sql_str);
+  int   execute(const char* sql_str);
 
   void  handleSoundingMessage(string platform, char* buffer);
   void  handleAircraftMessage(string aircraft, char* buffer);

@@ -129,7 +129,7 @@ closePostgresConnection()
 }
 
 
-void
+int
 udp2sql::
 execute(const char* sql_str)
 {
@@ -137,6 +137,7 @@ execute(const char* sql_str)
   res = PQexec(_conn, sql_str);
   cout << PQerrorMessage(_conn);
   PQclear(res);
+  return ( strlen(PQerrorMessage(_conn)) > 0 );
 }
 
 
@@ -425,7 +426,13 @@ handleAircraftMessage(string aircraft, char* buffer)
     // create postgres statements
     sql_str = "INSERT INTO raf_lrt VALUES ('" + datetime + "'," + varList.join(",") + ");";
     cout << sql_str.toStdString() << endl;
-    execute(sql_str.toStdString().c_str());
+
+    // bail out on failed insert commands like these:
+    // ERROR:  duplicate key violates unique constraint "raf_lrt_pkey"
+    if (execute(sql_str.toStdString().c_str())) {
+      closePostgresConnection();
+      return;
+    }
     sql_str = "UPDATE global_attributes SET value='" + datetime + ".999' WHERE key='EndTime';",
     cout << sql_str.toStdString() << endl;
     execute(sql_str.toStdString().c_str());
@@ -520,9 +527,14 @@ reBroadcastMessage(string dest, char* buffer)
   n_u::DatagramSocket * _socket;
   n_u::Inet4SocketAddress * _to;
 
-  _socket = new n_u::DatagramSocket;
-  _to = new n_u::Inet4SocketAddress(n_u::Inet4Address::getByName(dest), 33501); //port);
-
+  try {
+    _socket = new n_u::DatagramSocket;
+    _to = new n_u::Inet4SocketAddress(n_u::Inet4Address::getByName(dest), 33501); //port);
+  }
+  catch (const n_u::UnknownHostException& e) {
+    cout << "reBroadcastMessage:UnknownHostException: " << e.what() << endl;
+    return;
+  }
   // compress the stream before sending it
   char compressed[32000];
   memset(compressed, 0, 32000);
@@ -552,9 +564,8 @@ reBroadcastMessage(string dest, char* buffer)
     _socket->sendto(buffer, strlen(buffer), 0, *_to);
   }
   catch (const n_u::IOException& e) {
-    fprintf(stderr, "nimbus::GroundFeed: %s\n", e.what());
+    cout << "reBroadcastMessage:IOException: " << e.what() << endl;
+    return;
   }
-
-//printf("\ncompressed %d -> %d\n", strlen(buffer), bufLen);
-  printf("rebroadcasting to %s: %s\n", dest.c_str(), buffer);
+  cout << "rebroadcasted to " << dest.c_str() << ": " << buffer << endl;
 }
