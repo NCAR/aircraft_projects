@@ -26,6 +26,8 @@
 #             filename convention on ftp site (e.g. ir_image_*.jpg)
 #             "latest" name on acserver (e.g. latest_ira.jpg)
 #
+#  COPYRIGHT: University Corporation for Atmospheric Research, 2010-2012
+#
 
 import os
 import sys

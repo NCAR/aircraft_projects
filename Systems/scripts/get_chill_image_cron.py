@@ -19,6 +19,8 @@
 #         replace all prints with syslog.syslog()
 #	  set up to take arguments:
 #
+#  COPYRIGHT: University Corporation for Atmospheric Research, 2010-2012
+#
 
 import os
 import sys
