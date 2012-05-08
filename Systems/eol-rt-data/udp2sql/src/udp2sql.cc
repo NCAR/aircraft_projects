@@ -8,7 +8,6 @@
 #include <map>
 #include <QtCore/QTimerEvent>
 #include <QtCore/QStringList>
-#include <QtCore/QDateTime>
 
 #include <nidas/util/Socket.h>
 #include <nidas/util/Inet4Address.h>
@@ -384,8 +383,8 @@ handleAircraftMessage(string aircraft, char* buffer)
   QString varsStrCopy(varsStr);
 
   // update database entries
-  if (newPostgresConnection(aircraft))
-  {
+  if (newPostgresConnection(aircraft)) {
+
     // instert NANs for all missing values
     len = 0;
     while (len != varsStr.length()) {
@@ -399,8 +398,7 @@ handleAircraftMessage(string aircraft, char* buffer)
     QStringList varList = varsStr.split(",");
 
     // correct +/- 180 to 0..360 on wind direction
-    if (strncmp(aircraft.c_str(), "DC8", 3) == 0)
-    {
+    if (strncmp(aircraft.c_str(), "DC8", 3) == 0) {
       QString windDirectionStr = varList[WDC];
       double windDirection = varList[WDC].toFloat() + 180.0;
       varList[WDC] = QString::number(windDirection, 'g', 1);
@@ -423,10 +421,11 @@ handleAircraftMessage(string aircraft, char* buffer)
       datetime.replace("-","");
       datetime.replace(":","");
     }
-    // ignore messages with more than day old datetime stamp
-    QDateTime data_datetime = QDateTime::fromString( datetime, "yyyyMMddTHHmmss" );
-    if ( data_datetime.addDays(1) < QDateTime::currentDateTime() ) {
-      cout << "DROPPED older timestamped data: " << datetime.toStdString() << endl;
+    // ignore test messages DC8
+    if ( (strncmp(aircraft.c_str(), "DC8", 3) == 0) &&
+         ( (datetime == "20111024T162748") ||
+           (datetime == "20120504T224344") ) ) {
+      cout << "DROPPED older timestamped data from DC8 test feed: " << datetime.toStdString() << endl;
       closePostgresConnection();
       return;
     }
