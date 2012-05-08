@@ -8,6 +8,7 @@
 #include <map>
 #include <QtCore/QTimerEvent>
 #include <QtCore/QStringList>
+#include <QtCore/QDateTime>
 
 #include <nidas/util/Socket.h>
 #include <nidas/util/Inet4Address.h>
@@ -421,6 +422,13 @@ handleAircraftMessage(string aircraft, char* buffer)
       len = datetime.length();
       datetime.replace("-","");
       datetime.replace(":","");
+    }
+    // ignore messages with more than day old datetime stamp
+    QDateTime data_datetime = QDateTime::fromString( datetime, "yyyyMMddTHHmmss" );
+    if ( data_datetime.addDays(1) < QDateTime::currentDateTime() ) {
+      cout << "DROPPED older timestamped data: " << datetime.toStdString() << endl;
+      closePostgresConnection();
+      return;
     }
     QString sql_str;
     // create postgres statements
