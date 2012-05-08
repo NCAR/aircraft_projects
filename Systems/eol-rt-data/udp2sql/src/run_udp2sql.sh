@@ -7,10 +7,8 @@
 # This is where the log will go
 logfile="/tmp/udp2sql.log"
 
-# Move the previous logfile, if any
-if [[ -e $logfile ]]; then
-	mv $logfile $logfile.old
-fi
+# Rotate the previous logfiles, if any
+/usr/sbin/logrotate -s /tmp/.udp2sql.log.state ../logrotate.d/udp2sql
 
 # Kill any running instances of udp2sql
 killall udp2sql
