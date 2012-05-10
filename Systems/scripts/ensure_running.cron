@@ -22,6 +22,7 @@ endif
 ps ax | grep acTrack2kml | grep -qv grep
 if ($status) then
   nohup /opt/local/bin/acTrack2kml -o >& /tmp/acTrack2kml.log &
+  nohup /opt/local/bin/acTrack2kml -p DC8 -o >& /tmp/acTrack2kml-DC8.log &
 endif
 
 #ps ax | grep listen_sat.pl | grep -qv grep
@@ -51,6 +52,12 @@ if ($AIRCRAFT == "GV_N677F") then
   ps ax | grep mtpudpd | grep -qv grep
   if ($status) then
     /home/local/Systems/scripts/mtpudpd /mnt/r1/mtp acserver 40000 /tmp/mtpudpd.log &
+  endif
+  
+  # Start udp2sql to receive database update messages from the ground
+  ps ax | grep udp2sql | grep -qv grep
+  if ($status) then
+    /opt/local/bin/udp2sql >& /tmp/udp2sql.log &
   endif
 endif
 

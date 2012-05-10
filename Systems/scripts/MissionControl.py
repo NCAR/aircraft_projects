@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Control Research Data Generation
+Mission Control
 
 Two toggle buttons are created to transmit via UDP to dsm_server
 the following two messages:
@@ -200,7 +200,7 @@ class MissionControl(QWidget):
 
     def initUI(self):
 #       print("initUI: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
-        self.setWindowTitle('Control Research Data Generation')
+        self.setWindowTitle('Mission Control')
         startLabel    = QLabel("Start:")
         RemainLabel   = QLabel("Remain:")
 
@@ -221,6 +221,7 @@ class MissionControl(QWidget):
 
         # setup DoNotRecord
         self.DoNotRecord = QPushButton('Do Not Record', self)
+        self.DoNotRecord.setEnabled(False)
         self.DoNotRecord.setCheckable(True)
         self.DoNotRecord.setChecked(False)
         self.DoNotRecord.clicked[bool].connect(self.setDoNotRecord)

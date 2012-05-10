@@ -1,6 +1,9 @@
 #!/usr/bin/python
 #
 # This script attempts to get the latest lightning image(s) from the ground.
+#  For West Texas LMA only!  This gets called by the generic script when we're 
+#  flying OK region.
+#
 #  Lightning data will be grouped according to the region of the 
 #  detector network and images will be generated for elevation ranges.
 #  Therefore we will need to determine the elevation of the aircraft from 
@@ -25,8 +28,6 @@
 #             Image type (IR, VIS, lightning, radar, etc)
 #             filename convention on ftp site (e.g. ir_image_*.jpg)
 #             "latest" name on acserver (e.g. latest_ira.jpg)
-#
-#  COPYRIGHT: University Corporation for Atmospheric Research, 2010-2012
 #
 
 import os
@@ -75,11 +76,19 @@ if region=='off':
     print "Exiting"
     sys.exit(1)
 
+if region!='OK':
+    print "this script was called when region was not OK - WT pulled only when we're in OK"
+    print "Exiting"
+    sys.exit(1)
+
+# Actually we need West Texas data
+region = 'WT'
+
 # Initialization 
 #  *******************  Modify The Following *********************
 local_image_dir     = '/var/www/html/flight_data/images/'
 image_type          = 'lghtng'
-busy_file           = local_image_dir+'BUSY_'+image_type
+busy_file           = local_image_dir+'BUSY_'+image_type+'WT'
 ftp_site            = 'catalog1.eol.ucar.edu'
 ftp_login           = 'anonymous'
 ftp_passwd          = ''
@@ -90,8 +99,8 @@ midfix              = '10minute_'
 postfix		    = '.png' 
 compositpostfix     = 'composite.png'
 levelpostfix        = 'kft.png'
-osm_file_name_level = "LMA_"+region+"_COMP.png"
-osm_file_name_comp  = "LMA_"+region+"_FLTLEV.png"
+osm_file_name_comp  = "LMA_"+region+"_COMP.png"
+osm_file_name_level = "LMA_"+region+"_FLTLEV.png"
 min_of_imgs	    = 10 # Script will backfill this many minutes for loops
 num_imgs_to_get     = 10 # Script will backfill this many images for loops
 
@@ -233,13 +242,6 @@ if len(ftplist) == 0:  # didn't get any file names, bail out
     print timestr
     print "+"+midfix+altstr+postfix+" OR"
     print "+"+midfix+altstr+compositpostfix
-
-    # Finally, we need to check for whether or not to pull the West Texas 
-    #  Lightning data
-    if region=="OK":
-        command = "/home/local/Systems/scripts/get_WTltng_at_elev_cron.py"
-        os.system(command)
-
     os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
@@ -304,13 +306,6 @@ if latestlevel != "":
             ftp.quit()
             sys.exit(1)
     
-
-# Finally, we need to check for whether or not to pull the West Texas 
-#  Lightning data
-if region=="OK":
-    command = "/home/local/Systems/scripts/get_WTltng_at_elev_cron.py"
-    os.system(command)
-
 
 # *****************************************************************
 #        NO BACKFILL of DATA for frequent Flight level types!

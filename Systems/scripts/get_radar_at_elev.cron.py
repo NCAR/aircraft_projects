@@ -118,12 +118,6 @@ if len(regionlst) == 0:
     sys.exit(1)
 region = (regionlst[0])[0]
 
-if region=='CO':
-    print "Mission Coordinator has selected CO region which has no useful CAPPI data."
-    print "Exiting"
-    sys.exit(1)
-
-
 # Get Pressure Altitude from the database
 querres = con.query("select value from global_attributes where key='EndTime'")
 fultimlst = querres.getresult()
