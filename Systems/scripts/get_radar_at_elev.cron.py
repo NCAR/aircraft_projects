@@ -117,7 +117,6 @@ if len(regionlst) == 0:
     con.close()
     sys.exit(1)
 region = (regionlst[0])[0]
-con.close()
 
 if region=='CO':
     print "Mission Coordinator has selected CO region which has no useful CAPPI data."
@@ -251,18 +250,37 @@ if latest in listing:
 
 # Get the latest image 
 try:
-    command = "wget ftp://"+ftp_site+":"+ftp_dir+latest
+    command = "wget ftp://"+ftp_site+":"+ftp_dir+latest+" -O /tmp/latest_radar_at_elev_from_ground.png"
+    print command
     os.system(command)
     print 'file retrieved: '+latest
-    print 'setting it as overlay image for OSM.'
-    command = "cp "+latest+" "+osm_file_name
-    os.system(command)
 
 except:
     print "problems getting file, exiting."
     os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
+
+
+#  Now we need to warp the image to the right projection
+print "doing the warping"
+command = "gdal_translate -a_ullr -112.074 45 -74.4591 28 /tmp/latest_radar_at_elev_from_ground.png /tmp/cappi.gtiff"
+print command
+os.system(command)
+command = "gdalwarp -t_srs '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs' /tmp/cappi.gtiff /tmp/cappi_warped.gtiff"
+print command
+os.system(command)
+command = "gdal_translate -of png /tmp/cappi_warped.gtiff /tmp/cappi_final.png"
+print command
+os.system(command)
+command = "cp /tmp/cappi_final.png " + latest
+print command
+os.system(command)
+print 'setting it as overlay image for OSM.'
+command = "cp "+latest+" "+osm_file_name
+os.system(command)
+
+
 
 #***********************************************************************
 # CAPPI images are huge!  Don't backfill!
