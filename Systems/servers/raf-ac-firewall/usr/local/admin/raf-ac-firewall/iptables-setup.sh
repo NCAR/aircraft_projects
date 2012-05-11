@@ -709,7 +709,7 @@ for (( i = 0; i < ${#UDP_PORT_FORWARDS[*]}; )); do
 	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j DNAT --to $toaddr:$toport
             # then must open the forward filter to internal interfaces
             for iif in ${INT_IFS[*]}; do
-                    iptables -A FORWARD -i $eif -o $iif -p udp --dport $port -j ACCEPT
+                    iptables -A FORWARD -i $eif -o $iif -p udp --dport $toport -j ACCEPT
             done
         fi
     done
