@@ -145,7 +145,7 @@ function acMap() {
 	
 		//set icon to reflect latest position and heading
 		this.planeLayer.icon.style.rotation = h.head;
-		this.planeLayer.icon.attributes.description = "Position:<br>"+h.lat+"&deg;N, "+h.lon+"&deg;E<br><br>Heading: "+(h.head%360)+"&deg;<br>Altitude: "+h.alt+"m";
+		this.planeLayer.icon.attributes.description = "Position:<br>"+h.lat+"&deg;N, "+h.lon+"&deg;E<br><br>Heading: "+(h.head%360)+"&deg;<br>Altitude: "+(h.alt*3.2808)+"ft";
 		this.planeLayer.setVisibility(true);
 		this.planeLayer.icon.move(lonLat);
 
