@@ -583,6 +583,38 @@
             <variable longname="NOx Mixing Ratio" name="NOX" units="pptv"/> 
         </sample>
     </sensor>
+    <sensor ID="THREEVCPI" class="raf.UDPSocketSensor" devicename="inet::30113">
+      <sample id="1" rate="10" scanfFormat="SPEC3V2D,%*f-%*f-%*fT%*f:%*f:%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable longname="3VCPI Horizontal Particles Detected" name="HPRT" units="count"/>
+        <variable longname="3VCPI Vertical Particles Detected" name="VPRT" units="count"/>
+        <!--<variable longname="3VCPI Total Particles Detected per second" name="TPRT" units="count"/>-->
+        <variable longname="3VCPI Sample Volume" name="SVOL" units="L"/>
+        <variable longname="3VCPI Mean Particle Size" name="SIZM" units="microns"/>
+        <variable longname="3VCPI Mean Particle Size for all > 50 microns" name="SIZM50" units="microns"/>
+        <variable longname="3VCPI Max Particle Size" name="SIZMAX" units="microns"/>
+        <variable length="13" longname="3VCPI Raw Count Histogram" name="A3VCPI" units="count"/>
+        <variable longname="3VCPI HElement0" name="H0" units="unk"/>
+        <variable longname="3VCPI HElement64" name="H64" units="unk"/>
+        <variable longname="3VCPI HElement127" name="H127" units="unk"/>
+        <variable longname="3VCPI VElement0" name="V0" units="unk"/>
+        <variable longname="3VCPI VElement64" name="V64" units="unk"/>
+        <variable longname="3VCPI VElement127" name="V127" units="unk"/>
+        <variable longname="+7V" name="POS7" units="unk"/>
+        <variable longname="-7V" name="NEG7" units="unk"/>
+        <variable longname="H Mask" name="HMSK" units="unk"/>
+        <variable longname="V Mask" name="VMSK" units="unk"/>
+        <variable longname="H TX Arm Temp" name="THTXARM" units="degC"/>
+        <variable longname="H RX Arm Temp" name="THRXARM" units="degC"/>
+        <variable longname="V TX Arm Temp" name="TVTXARM" units="degC"/>
+        <variable longname="V RX Arm Temp" name="TVRXARM" units="degC"/>
+        <variable longname="DSP Board Temp" name="TBRD" units="degC"/>
+        <variable longname="H Laser Temp" name="THLAS" units="degC"/>
+        <variable longname="V Laser Temp" name="TVLAS" units="degC"/>
+        <variable longname="Power Supply Temp" name="TPS" units="degC"/>
+        <variable longname="HK Received" name="HKREC" units="unk"/>
+        <variable longname="Internal Pressure" name="PINT" units="psi"/>
+      </sample>
+    </sensor>
     <sensor ID="HARP" class="raf.UDPSocketSensor" devicename="inet::30108">
         <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%d,%d">
             <variable longname="UVN 315 nm Counts" name="UVN315" units="count"/> 
@@ -1409,6 +1441,7 @@
       <sensor IDREF="PCIMS" devicename="inet::30111" id="2200" suffix="_PCIM"/>
       <sensor IDREF="NONOYO3" devicename="inet::30107" id="2400" suffix="_ACD"/>
       <sensor IDREF="HARP" devicename="inet::30108" id="2600" suffix="_HRP"/>
+      <sensor IDREF="THREEVCPI" devicename="inet::30113" id="2800" suffix="_3VCPI"/>
     </dsm>
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
