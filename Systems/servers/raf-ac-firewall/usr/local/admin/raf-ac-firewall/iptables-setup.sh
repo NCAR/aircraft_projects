@@ -705,6 +705,12 @@ for (( i = 0; i < ${#UDP_PORT_FORWARDS[*]}; )); do
         # if toaddr is localhost, use REDIRECT target, otherwise DNAT
 	if [ $toaddr == 127.0.0.1 ]; then
 	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j REDIRECT --to-ports $toport
+            # iptables manpage about the REDIRECT target in the nat table:
+            # It redirects  the  packet  to the machine itself by changing the destination
+            # IP to the primary address of the incoming interface  (locally-generated  packets
+            # are mapped to the 127.0.0.1 address).
+            # So, we need to then accept packets on the new port on the same interface.
+            iptables -A INPUT -i $eif -p udp --dport $toport -j ACCEPT
         else
 	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j DNAT --to $toaddr:$toport
             # then must open the forward filter to internal interfaces
