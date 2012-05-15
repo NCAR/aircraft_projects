@@ -709,13 +709,14 @@ for (( i = 0; i < ${#UDP_PORT_FORWARDS[*]}; )); do
             # It redirects  the  packet  to the machine itself by changing the destination
             # IP to the primary address of the incoming interface  (locally-generated  packets
             # are mapped to the 127.0.0.1 address).
+
             # So, we need to then accept packets on the new port on the same interface.
-            iptables -A INPUT -i $eif -p udp --dport $toport -j ACCEPT
+            iptables -A INPUT -i $eif -p udp -s $from --dport $toport -j ACCEPT
         else
 	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j DNAT --to $toaddr:$toport
             # then must open the forward filter to internal interfaces
             for iif in ${INT_IFS[*]}; do
-                    iptables -A FORWARD -i $eif -o $iif -p udp --dport $toport -j ACCEPT
+                    iptables -A FORWARD -i $eif -o $iif -s $from -p udp --dport $toport -j ACCEPT
             done
         fi
     done
