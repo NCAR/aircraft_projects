@@ -90,8 +90,8 @@ midfix              = '10minute_'
 postfix		    = '.png' 
 compositpostfix     = 'composite.png'
 levelpostfix        = 'kft.png'
-osm_file_name_level = "LMA_"+region+"_COMP.png"
-osm_file_name_comp  = "LMA_"+region+"_FLTLEV.png"
+osm_file_name_comp  = "LMA_"+region+"_COMP.png"
+osm_file_name_level = "LMA_"+region+"_FLTLEV.png"
 min_of_imgs	    = 10 # Script will backfill this many minutes for loops
 num_imgs_to_get     = 10 # Script will backfill this many images for loops
 
