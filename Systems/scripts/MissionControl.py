@@ -19,12 +19,12 @@ restrict calibration and recording of research data.
 """
 
 import sys
-from PyQt4.QtCore import (Qt, QObject, QTimer, QTime, QDateTime, SIGNAL)
+from PyQt4.QtCore import (Qt, QObject, QTimer, QTime, QDateTime, SIGNAL, QString, QSocketNotifier)
 from PyQt4.QtGui import (QWidget, QLabel, QPushButton, QLineEdit, QTimeEdit, QGridLayout,
                          QApplication, QMessageBox, QGroupBox, QHBoxLayout, QRadioButton)
 from PyQt4.QtNetwork import (QHostAddress, QUdpSocket)
 
-from PyQt4.QtSql import *
+from psycopg2 import *
 
 TIME_FORMAT_VIEW     = "hh:mm:ss"
 DATETIME_FORMAT_VIEW = "yyyy-MM-dd hh:mm:ss"
@@ -43,18 +43,25 @@ class MissionControl(QWidget):
         self.updatingRemainingTime = False
 
         # connect to the aircraft's real-time database
-        self.db = QSqlDatabase("QPSQL7")
+        conn_string = "host='acserver' dbname='real-time' user='ads'"
+#       print "Connecting to database\n -> %s" % (conn_string)
+        try:
+            # get a connection, if a connect cannot be made an exception will be raised here
+            self.conn = connect(conn_string)
 
-        self.db.setHostName("acserver")
-        self.db.setUserName("ads")
-        self.db.setDatabaseName("real-time")
+            # what is psycopg2._psycopg.connection ???
+            self.conn.set_isolation_level(extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
-        if not self.db.open():
+            # conn.cursor will return a cursor object, you can use this cursor to perform queries
+            self.cursor = self.conn.cursor()
+#           print "Connected!\n"
+        except:
+            # Get the most recent exception
+            exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
+            # Exit the script and show an error telling what happened.
             QMessageBox.warning(None, "open 'real-time'",
-                QString("Database Error: %1").arg(self.db.lasterror().text()))
+              QString("Database connection failed!\n -> %s" % exceptionValue))
             sys.exit(1)
-
-        self.query = QSqlQuery(self.db)
 
         self.initUI()
 
@@ -69,8 +76,7 @@ class MissionControl(QWidget):
 
     def __del__(self):
 #       super(MissionControl, self).__del__() # bug in PyQt4?  the examples never do this
-        self.query.finish()
-        self.db.close()
+        self.conn.close()
 
     def showRemainingTime(self, currentDateTime):
         self.updatingRemainingTime = True
@@ -94,6 +100,7 @@ class MissionControl(QWidget):
 
         self.CurrentTime.setText(currentDateTime.toString(DATETIME_FORMAT_VIEW))
 
+        # update countdown clock
         if self.DoNotCalibrateStopTime.isValid():
             self.showRemainingTime(currentDateTime)
             if currentDateTime >= self.DoNotCalibrateStopTime:
@@ -116,8 +123,8 @@ class MissionControl(QWidget):
                   message, QMessageBox.Ok, self, (Qt.Dialog |
                   Qt.MSWindowsFixedSizeDialogHint | Qt.WindowStaysOnTopHint))
 
-                box.setWindowModality(Qt.NonModal);
-                box.show();
+                box.setWindowModality(Qt.NonModal)
+                box.show()
 
         self.sendDatagrams(currentDateTime)
 
@@ -165,24 +172,30 @@ class MissionControl(QWidget):
 
     def RadioButtonSelected(self):
 #       print("RadioButtonSelected: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
-        for i in range(0, len(self.rbs)):
-            widget = self.rbs[i]
-            if (widget!=0) and (type(widget) is QRadioButton):
-                if widget.isChecked():
-                    key = widget.parent().objectName()
-                    value = widget.text()
-#                   print "radio button: %s %s is checked" % (key, value)
-                    self.query.exec_("UPDATE global_attributes SET value = '%s' WHERE key='%s'" % (value, key))
+        for (key, value), rb in self.rbs.iteritems():
+#           print "key: %s" % key
+            if rb.isChecked():
+#               print "key: %s\tvalue: %s\t %d" % (key, value, rb.isChecked())
+                self.cursor.execute("UPDATE global_attributes SET value = '%s' WHERE key='%s'" % (value, key))
+        self.cursor.execute("NOTIFY blah")
+        self.conn.commit()
+
+    def selectOrInsert(self, key, value):
+
+        # use current settings in database
+        try:
+            self.cursor.execute("SELECT value from global_attributes WHERE key='%s'" % key)
+            val = self.cursor.fetchone()
+            return unicode(val[0])
+        except Exception, e:
+            self.cursor.execute("INSERT INTO global_attributes VALUES ('%s', '%s')" % (key, value))
+            return value
 
     def horizontalRadioGroup(self, title, key, default, values):
 
         # use current setting in database for default
-        self.query.exec_("SELECT value from global_attributes WHERE key='%s'" % key)
-        if self.query.next():
-            default = unicode(self.query.value(0).toString())
-        else:
-            print("horizontalRadioGroup INSERT: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
-            self.query.exec_("INSERT INTO global_attributes VALUES ('%s', '%s')" % (key, default))
+        default = self.selectOrInsert(key, default)
+        self.keys.append(key)
 
         groupBox = QGroupBox(title)
         groupBox.setObjectName(key)
@@ -192,11 +205,22 @@ class MissionControl(QWidget):
             hbox.addWidget(rb)
             if (val == default):
               rb.setChecked(True)
-            self.rbs.append(rb)
             QObject.connect(rb, SIGNAL("toggled(bool)"), self.RadioButtonSelected)
+            self.rbs[key, val] = rb
 
         groupBox.setLayout(hbox)
         return groupBox
+
+    def updateSelection(self):
+#       print("updateSelection: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
+        for i in range(0, len(self.keys)):
+            key = self.keys[i]
+            try:
+                self.cursor.execute("SELECT value from global_attributes WHERE key='%s'" % key)
+                value = self.cursor.fetchone()
+                self.rbs[key, value[0]].setChecked(True)
+            except Exception, e:
+                pass
 
     def initUI(self):
 #       print("initUI: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
@@ -234,10 +258,21 @@ class MissionControl(QWidget):
         self.CurrentTime.setDisabled(True)
 
         # setup radio buttons
-        self.rbs = []
+        self.rbs = {}
+        self.keys = []
+
         self.region    = self.horizontalRadioGroup("Region:", "region", "off", ("off", "CO", "AL", "OK"))
         self.cappi     = self.horizontalRadioGroup("CAPPI:", "cappi", "off", ("off", "5 min", "15 min"))
         self.lightning = self.horizontalRadioGroup("LMA lightning:", "lightning", "off", ("off", "2 min", "12 min"))
+        for i in range(0, len(self.keys)):
+            key = self.keys[i]
+
+        # setup Postgres Notify/Listen connection
+#       print "self.conn.fileno() %d" % self.conn.fileno()
+        self.notify = QSocketNotifier(self.conn.fileno(), QSocketNotifier.Read)
+        QObject.connect(self.notify, SIGNAL("activated(int)"), self.updateSelection)
+        self.cursor.execute("LISTEN blah")
+        self.conn.commit()
 
         # layout in a grid
         layout = QGridLayout()
