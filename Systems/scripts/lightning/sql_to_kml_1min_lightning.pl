@@ -92,7 +92,7 @@ for($i = 0; $i < 6; $i++) {
 #   print "Getting data for $year-$mon-$mday $hour:$min\n";
    print "Getting data for $time\n";
 
-   $query = "SELECT * from lightning where datetime ~ '$time'";
+   $query = "SELECT * from lightning where CAST(datetime as TEXT) ~ '$time'";
    $sth = $dbh->prepare($query);
    $result = $sth->execute();
 
