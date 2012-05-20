@@ -19,9 +19,13 @@ if ($status) then
   status_listener
 endif
 
-ps ax | grep acTrack2kml | grep -qv grep
+ps ax | grep "acTrack2kml -o" | grep -qv grep
 if ($status) then
   nohup /opt/local/bin/acTrack2kml -o >& /tmp/acTrack2kml.log &
+endif
+
+ps ax | grep "acTrack2kml -p DC8 -o" | grep -qv grep
+if ($status) then
   nohup /opt/local/bin/acTrack2kml -p DC8 -o >& /tmp/acTrack2kml-DC8.log &
 endif
 
