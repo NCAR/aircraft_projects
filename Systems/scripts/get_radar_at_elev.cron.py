@@ -107,16 +107,6 @@ if cappi == 'off':
     con.close()
     os.remove(busy_file)
     sys.exit(1)
-# There is no CAPPI imagery over Colorado - why bother?
-querres = con.query("select value from global_attributes where key='region'")
-regionlst = querres.getresult()
-if len(regionlst) == 0:
-    print "Database has not been initialized by MC for region."
-    print "Must Exit!"
-    # TODO need a nagios call here to alert operator 
-    con.close()
-    sys.exit(1)
-region = (regionlst[0])[0]
 
 # Get Pressure Altitude from the database
 querres = con.query("select value from global_attributes where key='EndTime'")
