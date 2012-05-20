@@ -75,6 +75,10 @@ if region=='off':
     print "Exiting"
     sys.exit(1)
 
+# Handle difference in Alabama files
+if region=='AL':
+    region='Al'
+
 # Initialization 
 #  *******************  Modify The Following *********************
 local_image_dir     = '/var/www/html/flight_data/images/'
@@ -90,8 +94,8 @@ midfix              = '10minute_'
 postfix		    = '.png' 
 compositpostfix     = 'composite.png'
 levelpostfix        = 'kft.png'
-osm_file_name_comp  = "LMA_"+region+"_COMP.png"
 osm_file_name_level = "LMA_"+region+"_FLTLEV.png"
+osm_file_name_comp  = "LMA_"+region+"_COMP.png"
 min_of_imgs	    = 10 # Script will backfill this many minutes for loops
 num_imgs_to_get     = 10 # Script will backfill this many images for loops
 
@@ -111,19 +115,19 @@ con = pg.connect(dbname=database, host=dbhost, user='ads')
 
 # Get delay indication from the database if not off, then check time of most recent image
 #  and if enough time has passed, continue, else quit.
-querres = con.query("select value from global_attributes where key='cappi'")
-cappilst = querres.getresult()
-if len(cappilst) == 0:
-    print "Database has not been initialized by MC for CAPPI."
+querres = con.query("select value from global_attributes where key='lightning'")
+lghtnglst = querres.getresult()
+if len(lghtnglst) == 0:
+    print "Database has not been initialized by MC for lightning."
     print "Must Exit!"
     # TODO need a nagios call here to alert operator 
     con.close()
     os.remove(busy_file)
     sys.exit(1)
     
-cappi = (cappilst[0])[0]
-if cappi == 'off':
-    print "MC has turned cappi acquisition off"
+lghtng = (lghtnglst[0])[0]
+if lghtng == 'off':
+    print "MC has turned lightnig acquisition off"
     con.close()
     os.remove(busy_file)
     sys.exit(1)
@@ -144,21 +148,23 @@ con.close()
 
 # Create portion of filename based on paltf 
 # note: assumes that files are at 06,12,18,24,30,36,42 and 48 K ft
-if paltf<9000:
+if paltf<6000:
+    altstr = "00kft"
+elif paltf<12000:
     altstr = "06kft"
-elif paltf<15000:
+elif paltf<18000:
     altstr = "12kft"
-elif paltf<21000:
+elif paltf<24000:
     altstr = "18kft"
-elif paltf<27000:
+elif paltf<30000:
     altstr = "24kft"
-elif paltf<33000:
+elif paltf<36000:
     altstr = "30kft"
-elif paltf<39000:
+elif paltf<42000:
     altstr = "36kft"
-elif paltf<45000:
+elif paltf<48000:
     altstr = "42kft"
-elif paltf<51000:
+elif paltf<54000:
     altstr = "48kft"
 else: 
     altstr = "54kft"
@@ -352,6 +358,6 @@ if region=="OK":
 
 
 print "Done."
-ftp.quit() 
 os.remove(busy_file)
+ftp.quit() 
 sys.exit(1)
