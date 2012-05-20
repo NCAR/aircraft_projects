@@ -127,6 +127,11 @@ os.system(command)
 command = "/bin/cp /tmp/tmp_radar.png /var/www/html/flight_data/images/conus_radar.png"
 print command
 os.system(command)
+now = datetime.datetime.now()
+datim = now.strftime("%Y%m%dT%H%M%S")
+command = "/bin/cp /tmp/tmp_radar.png /var/www/html/flight_data/images/radar.NEXRAD.conus."+datim+".png"
+print command
+os.system(command)
 #command = "/bin/rm -f /tmp/tmp_radar.{gif,tiff,png}"
 #rint command
 #os.system(command)
