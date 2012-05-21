@@ -176,6 +176,9 @@ namespace
   init_passwords()
   {
     passwords["test1"] = "this will never work";
+    passwords["iss1"] = "dc3-4ba";
+    passwords["mgaus"] = "dc3-4ba";
+    passwords["nssl1"] = "dc3-4ba";
   }
 
 
