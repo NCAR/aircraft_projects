@@ -69,6 +69,8 @@ class MissionControl(QWidget):
         QObject.connect(self.timer, SIGNAL("timeout()"), self.timeout)
         self.timer.start(1000)
 
+        self.updateSelectionCnt = 0;
+
     def __del__(self):
 #       super(MissionControl, self).__del__() # bug in PyQt4?  the examples never do this
         self.conn.close()
@@ -99,7 +101,10 @@ class MissionControl(QWidget):
         self.updatingRemainingTime = False
 
     def timeout(self):
-        self.updateSelection()
+        self.updateSelectionCnt += 1
+        if (self.updateSelectionCnt % 30 == 0):
+            self.updateSelection()
+
         currentDateTime = QDateTime.currentDateTime()
 
         self.CurrentTime.setText(currentDateTime.toString(DATETIME_FORMAT_VIEW))
@@ -276,8 +281,6 @@ class MissionControl(QWidget):
         self.region    = self.horizontalRadioGroup("Region:", "region", "off", ("off", "CO", "AL", "OK"))
         self.cappi     = self.horizontalRadioGroup("CAPPI:", "cappi", "off", ("off", "5 min", "15 min"))
         self.lightning = self.horizontalRadioGroup("LMA lightning:", "lightning", "off", ("off", "2 min", "12 min"))
-        for i in range(0, len(self.keys)):
-            key = self.keys[i]
 
         # setup Postgres Notify/Listen connection
 #       print "self.conn.fileno() %d" % self.conn.fileno()
