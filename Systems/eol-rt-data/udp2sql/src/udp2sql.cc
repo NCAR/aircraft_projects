@@ -5,12 +5,16 @@
 #include <cstring>
 #include <unistd.h>
 #include <bzlib.h>
-#include <map>
 #include <QtCore/QTimerEvent>
 #include <QtCore/QStringList>
+#include <QtCore/QDateTime>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
 
 #include <nidas/util/Socket.h>
 #include <nidas/util/Inet4Address.h>
+
+#define DROPTIME 6  // hours
 
 using namespace std;
 
@@ -82,15 +86,14 @@ enum DC8VARS {
     MZ60
 };
 
-
 /* -------------------------------------------------------------------- */
 udp2sql::udp2sql()
 {
   _conn = 0;
-  _timer_id = 0;
   _count = 0;
   newUDPConnection();
-//  newPostgresConnection();
+
+  resetRealTime("DC8");
 }
 
 /* -------------------------------------------------------------------- */
@@ -117,7 +120,7 @@ bool udp2sql::newPostgresConnection(string platform)
   return (_conn != 0);
 }
 
-
+/* -------------------------------------------------------------------- */
 void
 udp2sql::
 closePostgresConnection()
@@ -128,7 +131,7 @@ closePostgresConnection()
   }
 }
 
-
+/* -------------------------------------------------------------------- */
 int
 udp2sql::
 execute(const char* sql_str)
@@ -140,6 +143,37 @@ execute(const char* sql_str)
   return ( strlen(PQerrorMessage(_conn)) > 0 );
 }
 
+/* -------------------------------------------------------------------- */
+void udp2sql::resetRealTime(string aircraft)
+{
+  cout << aircraft << " Resetting real-time database" << endl;
+  _newFlight[aircraft] = 1;
+  QFile file( string("/home/local/Systems/eol-rt-data/postgres/"
+                     "real-time-"+aircraft+".sql").c_str() );
+  if (!file.open(QFile::ReadOnly | QFile::Text)) return;
+  QTextStream in(&file);
+  QString line, longline;
+  newPostgresConnection(aircraft);
+  QStringList tables;
+  tables << "variable_list" << "global_attributes" << "raf_lrt";
+  for (int i = 0; i < tables.size(); ++i) {
+    line = "DROP TABLE " + tables[i] + "_lastflight;";
+    cout << aircraft << " " << line.toStdString() << endl;
+    execute(line.toStdString().c_str());
+    line = "ALTER TABLE " + tables[i] + " RENAME TO " + tables[i] + "_lastflight;";
+    cout << aircraft << " " << line.toStdString() << endl;
+    execute(line.toStdString().c_str());
+  }
+  while (!(line = in.readLine()).isNull()) {
+    cout << aircraft << " " << line.toStdString() << endl;
+    longline += line;
+    if ( longline.endsWith(";") ) {
+      execute(longline.toStdString().c_str());
+      longline = "";
+    }
+  }
+  closePostgresConnection();
+}
 
 /* -------------------------------------------------------------------- */
 void udp2sql::newUDPConnection()
@@ -157,16 +191,16 @@ void udp2sql::newUDPConnection()
 }
 
 /* -------------------------------------------------------------------- */
-void udp2sql::timerEvent(QTimerEvent *)
+void udp2sql::timerEvent(QTimerEvent *event)
 {
-  cout << "Resetting connection\n";
-//PQfinish(_conn);
-//newPostgresConnection();
-//  delete _udp;
-//  _timer_id = 0;
+  // only deal with DC8 for now...
+  string aircraft = "DC8";
+
+  if (event->timerId() == _timer[aircraft].timerId())
+    resetRealTime(aircraft);
 }
 
-
+/* -------------------------------------------------------------------- */
 namespace
 {
   typedef std::map<std::string,std::string> passwords_t;
@@ -200,8 +234,7 @@ namespace
 
 }
 
-
-
+/* -------------------------------------------------------------------- */
 void udp2sql::readPendingDatagrams()
 {
   while (_udp->hasPendingDatagrams())
@@ -209,7 +242,6 @@ void udp2sql::readPendingDatagrams()
     newData();
   }
 }
-
 
 /* -------------------------------------------------------------------- */
 void udp2sql::newData()
@@ -219,9 +251,6 @@ void udp2sql::newData()
   char* buffer = buffer_space;
   memset(udp_str, 0, 65000);
   memset(buffer, 0, 65000);
-
-  if (_timer_id)
-    killTimer(_timer_id);
 
   int nBytes = _udp->readDatagram(udp_str, 65000);
   if (nBytes < 1) 
@@ -348,7 +377,7 @@ void udp2sql::newData()
   }
 }
 
-
+/* -------------------------------------------------------------------- */
 void
 udp2sql::
 handleSoundingMessage(string platform, char* buffer)
@@ -364,8 +393,7 @@ handleSoundingMessage(string platform, char* buffer)
   }
 }
 
-
-
+/* -------------------------------------------------------------------- */
 void
 udp2sql::
 handleAircraftMessage(string aircraft, char* buffer)
@@ -386,13 +414,14 @@ handleAircraftMessage(string aircraft, char* buffer)
   QString varsStrCopy(varsStr);
 
   // update database entries
-  if (newPostgresConnection(aircraft)) {
-
+  if (newPostgresConnection(aircraft))
+  {
     // instert NANs for all missing values
     len = 0;
     while (len != varsStr.length()) {
       len = varsStr.length();
       varsStr.replace(",,",",-32767,");
+      varsStr.replace(",nan",",-32767");
     }
     if (varsStr.endsWith(","))
       varsStr.append("-32767");
@@ -401,10 +430,15 @@ handleAircraftMessage(string aircraft, char* buffer)
     QStringList varList = varsStr.split(",");
 
     // correct +/- 180 to 0..360 on wind direction
-    if (strncmp(aircraft.c_str(), "DC8", 3) == 0) {
+    if (strncmp(aircraft.c_str(), "DC8", 3) == 0)
+    {
       QString windDirectionStr = varList[WDC];
-      double windDirection = varList[WDC].toFloat() + 180.0;
-      varList[WDC] = QString::number(windDirection, 'g', 1);
+      double windDirection = varList[WDC].toDouble();
+//printf("[%s - ", varList[WDC].toAscii().data());
+//printf("%f - ", windDirection);
+      if (windDirection < 0.0 && windDirection > -200.0) windDirection += 360.0;
+      varList[WDC] = QString::number(windDirection, 'f', 1);
+//printf("%s]\n", varList[WDC].toAscii().data());
     }
     // remove the preceeding "IWG1,datetime,"
     varList.takeFirst();
@@ -412,9 +446,12 @@ handleAircraftMessage(string aircraft, char* buffer)
 
     // ignore messages that are missing datetime values
     if (datetime == "-32767") {
-      cout << "DROPPED missing datetime" << endl;
+      cout << aircraft << " DROPPED missing datetime" << endl;
       closePostgresConnection();
       return;
+//    QDateTime dt = QDateTime::currentDateTime();
+//    datetime = dt.toString("yyyyMMddTHHmmss");
+//    cout << aircraft << " STUBBED in missing datetime: " << datetime.toStdString() << endl;
     }
     // trim off the microsecond field from the datetime
     datetime.replace(QRegExp("\\.[0-9]+$"), "");
@@ -424,18 +461,17 @@ handleAircraftMessage(string aircraft, char* buffer)
       datetime.replace("-","");
       datetime.replace(":","");
     }
-    // ignore test messages DC8
-    if ( (strncmp(aircraft.c_str(), "DC8", 3) == 0) &&
-         ( (datetime == "20111024T162748") ||
-           (datetime == "20120504T224344") ) ) {
-      cout << "DROPPED older timestamped data from DC8 test feed: " << datetime.toStdString() << endl;
+    // ignore messages with more than day old datetime stamp
+    QDateTime data_datetime = QDateTime::fromString( datetime, "yyyyMMddTHHmmss" );
+    if ( data_datetime.addSecs(12*60*60) < QDateTime::currentDateTime() ) {
+      cout << aircraft << " DROPPED older timestamped data: " << datetime.toStdString() << endl;
       closePostgresConnection();
       return;
     }
     QString sql_str;
     // create postgres statements
     sql_str = "INSERT INTO raf_lrt VALUES ('" + datetime + "'," + varList.join(",") + ");";
-    cout << sql_str.toStdString() << endl;
+    cout << aircraft << " " << sql_str.toStdString() << endl;
 
     // bail out on failed insert commands like these:
     // ERROR:  duplicate key violates unique constraint "raf_lrt_pkey"
@@ -443,10 +479,19 @@ handleAircraftMessage(string aircraft, char* buffer)
       closePostgresConnection();
       return;
     }
-    sql_str = "UPDATE global_attributes SET value='" + datetime + ".999' WHERE key='EndTime';",
-    cout << sql_str.toStdString() << endl;
+    if (_newFlight[aircraft]) {
+      _newFlight[aircraft] = 0;
+      sql_str = "UPDATE global_attributes SET value='" + datetime + "' WHERE key='StartTime';";
+      cout << aircraft << " " << sql_str.toStdString() << endl;
+      execute(sql_str.toStdString().c_str());
+    }
+    sql_str = "UPDATE global_attributes SET value='" + datetime + ".999' WHERE key='EndTime';";
+    cout << aircraft << " " << sql_str.toStdString() << endl;
     execute(sql_str.toStdString().c_str());
     closePostgresConnection();
+
+    // restart database drop timer
+    _timer[aircraft].start(DROPTIME * 3600000, this);
   }
   // re-broadcast message to other aircraft
   if (strncmp(aircraft.c_str(), "DC8", 3) == 0) {
@@ -524,12 +569,9 @@ handleAircraftMessage(string aircraft, char* buffer)
 //  reBroadcastMessage("hyper.raf-guest.ucar.edu", temp);
     reBroadcastMessage("rafgv.dyndns.org", temp);
   }
-
-  //  _timer_id = startTimer(360000);
 }
 
-
-
+/* -------------------------------------------------------------------- */
 void
 udp2sql::
 reBroadcastMessage(string dest, char* buffer)

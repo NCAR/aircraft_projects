@@ -4,6 +4,7 @@
 
 #include <qhostaddress.h>
 #include <QtCore/QTimerEvent>
+#include <QtCore/QBasicTimer>
 #include <QtNetwork/QUdpSocket>
 #include <sys/time.h>
 
@@ -35,6 +36,7 @@ protected slots:
   void	timerEvent(QTimerEvent *);
 
 protected:
+  void  resetRealTime(string aircraft);
   void  newUDPConnection();
   bool  newPostgresConnection(string platform);
   void  closePostgresConnection();
@@ -46,8 +48,8 @@ protected:
 
   QUdpSocket * _udp;
 
-  // If a watchdog timer is desired.
-  int _timer_id;
+  std::map<std::string, QBasicTimer> _timer;
+  std::map<std::string, int> _newFlight;
 
   PGconn * _conn;
 
