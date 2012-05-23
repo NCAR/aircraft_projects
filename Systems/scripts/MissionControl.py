@@ -56,12 +56,7 @@ class MissionControl(QWidget):
             self.cursor = self.conn.cursor()
 #           print "Connected!\n"
         except:
-            # Get the most recent exception
-            exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
-            # Exit the script and show an error telling what happened.
-            QMessageBox.warning(None, "open 'real-time'",
-              QString("Database connection failed!\n -> %s" % exceptionValue))
-            sys.exit(1)
+            self.failExit()
 
         self.initUI()
 
@@ -77,6 +72,14 @@ class MissionControl(QWidget):
     def __del__(self):
 #       super(MissionControl, self).__del__() # bug in PyQt4?  the examples never do this
         self.conn.close()
+
+    def failExit(self):
+        # Get the most recent exception
+        exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
+        # Exit the script and show an error telling what happened.
+        QMessageBox.warning(None, "open 'real-time'",
+          QString("Database connection failed!\n -> %s" % exceptionValue))
+        sys.exit(1)
 
     def showRemainingTime(self, currentDateTime):
         self.updatingRemainingTime = True
@@ -96,6 +99,7 @@ class MissionControl(QWidget):
         self.updatingRemainingTime = False
 
     def timeout(self):
+        self.updateSelection()
         currentDateTime = QDateTime.currentDateTime()
 
         self.CurrentTime.setText(currentDateTime.toString(DATETIME_FORMAT_VIEW))
@@ -176,7 +180,11 @@ class MissionControl(QWidget):
 #           print "key: %s" % key
             if rb.isChecked():
 #               print "key: %s\tvalue: %s\t %d" % (key, value, rb.isChecked())
-                self.cursor.execute("UPDATE global_attributes SET value = '%s' WHERE key='%s'" % (value, key))
+                try:
+                    self.cursor.execute("UPDATE global_attributes SET value = '%s' WHERE key='%s'" % (value, key))
+                except:
+                    self.failExit()
+
         self.cursor.execute("NOTIFY blah")
         self.conn.commit()
 
@@ -187,8 +195,12 @@ class MissionControl(QWidget):
             self.cursor.execute("SELECT value from global_attributes WHERE key='%s'" % key)
             val = self.cursor.fetchone()
             return unicode(val[0])
-        except Exception, e:
-            self.cursor.execute("INSERT INTO global_attributes VALUES ('%s', '%s')" % (key, value))
+        except:
+            try:
+                self.cursor.execute("INSERT INTO global_attributes VALUES ('%s', '%s')" % (key, value))
+            except:
+                self.failExit()
+
             return value
 
     def horizontalRadioGroup(self, title, key, default, values):
@@ -219,8 +231,8 @@ class MissionControl(QWidget):
                 self.cursor.execute("SELECT value from global_attributes WHERE key='%s'" % key)
                 value = self.cursor.fetchone()
                 self.rbs[key, value[0]].setChecked(True)
-            except Exception, e:
-                pass
+            except:
+                self.failExit()
 
     def initUI(self):
 #       print("initUI: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
