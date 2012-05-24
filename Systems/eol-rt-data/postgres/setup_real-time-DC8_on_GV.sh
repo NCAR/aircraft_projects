@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Dev note 'IF EXISTS' clause is only supported in Postgres version 9 and higher.
-
 unset HOST
 unset AIRCRAFT
 
