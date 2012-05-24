@@ -36,6 +36,8 @@ protected slots:
   void	timerEvent(QTimerEvent *);
 
 protected:
+  string extractPQString(PGresult *result, int tuple, int field);
+  string getGlobalAttribute(PGconn *conn, string attr);
   void  resetRealTime(string aircraft);
   void  newUDPConnection();
   bool  newPostgresConnection(string platform);

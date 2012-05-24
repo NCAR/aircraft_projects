@@ -145,23 +145,62 @@ execute(const char* sql_str)
 }
 
 /* -------------------------------------------------------------------- */
+string udp2sql::extractPQString(PGresult *result, int tuple, int field)
+{ 
+  const char* pqstring = PQgetvalue(result, tuple, field);
+  if (! pqstring)
+    return "";
+  
+  int len = strlen(pqstring);
+  while (len > 0 &&
+          isascii(pqstring[len-1]) &&
+          isspace(pqstring[len-1]))
+    len--;
+  
+  return string(pqstring, len);
+}
+
+/* -------------------------------------------------------------------- */
+string udp2sql::getGlobalAttribute(PGconn *conn, string attr)
+{
+  string query = "SELECT value FROM global_attributes WHERE key='";
+  query += attr + "'";
+  PGresult * res = PQexec(conn, query.c_str());
+
+  int ntuples = PQntuples(res);
+
+  if (ntuples == 0)
+  {
+    cerr << "No global attribute " << attr << "!\n";
+    return "";
+  }
+  string s = extractPQString(res, 0, 0);
+  PQclear(res);
+  return s;
+}   
+
+/* -------------------------------------------------------------------- */
 void udp2sql::resetRealTime(string aircraft)
 {
   cout << aircraft << " Resetting real-time database" << endl;
   _newFlight[aircraft] = 1;
+
+  // TODO - utilize setup files sent down via LDM here for the GV and C130 aircraft.
+
   QFile file( string("/home/local/Systems/eol-rt-data/postgres/"
                      "real-time-"+aircraft+".sql").c_str() );
   if (!file.open(QFile::ReadOnly | QFile::Text)) return;
   QTextStream in(&file);
   QString line, longline;
   newPostgresConnection(aircraft);
+
+  QString StartTime = QString( getGlobalAttribute(_conn, "StartTime").c_str() );
+
   QStringList tables;
   tables << "variable_list" << "global_attributes" << "raf_lrt";
   for (int i = 0; i < tables.size(); ++i) {
-    line = "DROP TABLE " + tables[i] + "_lastflight;";
-    cout << aircraft << " " << line.toStdString() << endl;
-    execute(line.toStdString().c_str());
-    line = "ALTER TABLE " + tables[i] + " RENAME TO " + tables[i] + "_lastflight;";
+    line = "ALTER TABLE " + tables[i] + " RENAME TO " + tables[i]
+         + "_" + StartTime;
     cout << aircraft << " " << line.toStdString() << endl;
     execute(line.toStdString().c_str());
   }
