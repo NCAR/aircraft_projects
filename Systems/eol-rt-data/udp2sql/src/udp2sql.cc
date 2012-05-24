@@ -14,7 +14,7 @@
 #include <nidas/util/Socket.h>
 #include <nidas/util/Inet4Address.h>
 
-#define DROPTIME 6  // hours
+#define DROPTIME 12  // hours
 
 using namespace std;
 
@@ -93,7 +93,8 @@ udp2sql::udp2sql()
   _count = 0;
   newUDPConnection();
 
-  resetRealTime("DC8");
+  // restart database drop timer
+  _timer["DC8"].start(DROPTIME * 3600000, this);
 }
 
 /* -------------------------------------------------------------------- */
