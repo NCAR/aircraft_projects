@@ -140,18 +140,14 @@ class MissionControl(QWidget):
     # send state to NIDAS every second via a UDP socket
     def sendDatagrams(self, currentDateTime):
         datetime = currentDateTime.toString(DATETIME_FORMAT_DATA)
-        NOCAL = "NOCAL,%s," % datetime
-        NOREC = "NOREC,%s," % datetime
+        NOCAL = "NOCAL,%s,1" % datetime
+        NOREC = "NOREC,%s,1" % datetime
 
-        if self.DoNotCalibrate.isChecked(): NOCAL = NOCAL + "1"
-        else:                               NOCAL = NOCAL + "0"
-#       print("NOCAL: %s" % NOCAL)
-        self.udpSocket.writeDatagram(NOCAL, QHostAddress("192.168.184.1"), PORT)
+        if self.DoNotCalibrate.isChecked():
+            self.udpSocket.writeDatagram(NOCAL, QHostAddress("192.168.184.1"), PORT)
 
-        if self.DoNotRecord.isChecked(): NOREC = NOREC + "1"
-        else:                            NOREC = NOREC + "0"
-#       print("NOREC: %s" % NOREC)
-        self.udpSocket.writeDatagram(NOREC, QHostAddress("192.168.184.1"), PORT)
+        if self.DoNotRecord.isChecked():
+            self.udpSocket.writeDatagram(NOREC, QHostAddress("192.168.184.1"), PORT)
 
     # prevent operator from leaving while actively enforcing
     def closeEvent(self, event):
