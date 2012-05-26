@@ -540,8 +540,8 @@ handleAircraftMessage(string aircraft, char* buffer)
   // re-broadcast message to other aircraft
   if (strncmp(aircraft.c_str(), "DC8", 3) == 0) {
   
-    // send every 10 seconds
-    if (_count++ % 2) return;
+    // send every 20 seconds
+    if (_count++ % 4) return;
 
     // break the buffer into usable substrings
     QStringList varListCopy = varsStrCopy.split(",");
