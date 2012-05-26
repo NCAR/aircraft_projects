@@ -14,7 +14,7 @@
 #include <nidas/util/Socket.h>
 #include <nidas/util/Inet4Address.h>
 
-#define DROPTIME 12  // hours
+#define DROPTIME 2  // hours
 
 using namespace std;
 
@@ -201,6 +201,10 @@ void udp2sql::resetRealTime(string aircraft)
   for (int i = 0; i < tables.size(); ++i) {
     line = "ALTER TABLE " + tables[i] + " RENAME TO " + tables[i]
          + "_" + StartTime;
+    cout << aircraft << " " << line.toStdString() << endl;
+    execute(line.toStdString().c_str());
+    line = "ALTER INDEX " + tables[i] + "_pkey RENAME TO " + tables[i]
+         + "_pkey_" + StartTime;
     cout << aircraft << " " << line.toStdString() << endl;
     execute(line.toStdString().c_str());
   }
@@ -501,9 +505,9 @@ handleAircraftMessage(string aircraft, char* buffer)
       datetime.replace("-","");
       datetime.replace(":","");
     }
-    // ignore messages with more than day old datetime stamp
+    // ignore messages with with old datetime stamp
     QDateTime data_datetime = QDateTime::fromString( datetime, "yyyyMMddTHHmmss" );
-    if ( data_datetime.addSecs(12*60*60) < QDateTime::currentDateTime() ) {
+    if ( data_datetime.addSecs(DROPTIME*60*60) < QDateTime::currentDateTime() ) {
       cout << aircraft << " DROPPED older timestamped data: " << datetime.toStdString() << endl;
       closePostgresConnection();
       return;
@@ -536,8 +540,8 @@ handleAircraftMessage(string aircraft, char* buffer)
   // re-broadcast message to other aircraft
   if (strncmp(aircraft.c_str(), "DC8", 3) == 0) {
   
-    // send every 20 seconds
-    if (_count++ % 20) return;
+    // send every 10 seconds
+    if (_count++ % 2) return;
 
     // break the buffer into usable substrings
     QStringList varListCopy = varsStrCopy.split(",");
