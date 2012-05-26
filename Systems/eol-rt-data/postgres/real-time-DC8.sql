@@ -15,9 +15,7 @@ SET escape_string_warning = off;
 -- Name: global_attributes; Type: TABLE; Schema: public; Owner: ads; Tablespace: 
 --
 
--- ALTER TABLE ONLY global_attributes DROP CONSTRAINT IF EXISTS global_attributes_pkey;
--- DROP TABLE IF EXISTS global_attributes;
-
+ALTER TABLE ONLY global_attributes DROP CONSTRAINT global_attributes_pkey;
 DROP TABLE global_attributes;
 
 CREATE TABLE global_attributes (
@@ -26,6 +24,8 @@ CREATE TABLE global_attributes (
 );
 
 ALTER TABLE global_attributes OWNER TO ads;
+
+ALTER TABLE ONLY global_attributes ADD CONSTRAINT global_attributes_pkey PRIMARY KEY ("key");
 
 INSERT INTO global_attributes VALUES ('Source', 'NASA/NSERC Dryden');
 INSERT INTO global_attributes VALUES ('Platform', 'N817NA');
@@ -40,18 +40,13 @@ INSERT INTO global_attributes VALUES ('landmarks', '39.9088 -105.117 jeffco');
 INSERT INTO global_attributes VALUES ('EndTime', '');
 INSERT INTO global_attributes VALUES ('StartTime', '');
 
-ALTER TABLE ONLY global_attributes
-    ADD CONSTRAINT global_attributes_pkey PRIMARY KEY ("key");
-
 CREATE RULE "update" AS ON UPDATE TO global_attributes DO NOTIFY current;
 
 --
 -- Name: variable_list; Type: TABLE; Schema: public; Owner: ads; Tablespace: 
 --
 
--- ALTER TABLE ONLY variable_list DROP CONSTRAINT IF EXISTS variable_list_pkey;
--- DROP TABLE IF EXISTS variable_list;
-
+ALTER TABLE ONLY variable_list DROP CONSTRAINT variable_list_pkey;
 DROP TABLE variable_list;
 
 CREATE TABLE variable_list (
@@ -69,6 +64,8 @@ CREATE TABLE variable_list (
 );
 
 ALTER TABLE variable_list OWNER TO ads;
+
+ALTER TABLE ONLY variable_list ADD CONSTRAINT variable_list_pkey PRIMARY KEY (name);
 
 INSERT INTO variable_list VALUES ('GGLAT',                 'degree_N', '', 'Reference GPS Latitude',                             '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('GGLON',                 'degree_E', '', 'Reference GPS Longitude',                            '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
@@ -126,16 +123,11 @@ INSERT INTO variable_list VALUES ('MZ44',                  '',         '', 'MZ44
 INSERT INTO variable_list VALUES ('MZ57',                  '',         '', 'MZ57',                                               '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('MZ60',                  '',         '', 'MZ60',                                               '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 
-ALTER TABLE ONLY variable_list
-    ADD CONSTRAINT variable_list_pkey PRIMARY KEY (name);
-
 --
 -- Name: raf_lrt; Type: TABLE; Schema: public; Owner: ads; Tablespace: 
 --
 
--- ALTER TABLE ONLY raf_lrt DROP CONSTRAINT IF EXISTS raf_lrt_pkey;
--- DROP TABLE IF EXISTS raf_lrt;
-
+ALTER TABLE ONLY raf_lrt DROP CONSTRAINT raf_lrt_pkey;
 DROP TABLE raf_lrt;
 
 CREATE TABLE raf_lrt (
@@ -199,8 +191,7 @@ CREATE TABLE raf_lrt (
 
 ALTER TABLE raf_lrt OWNER TO ads;
 
-ALTER TABLE ONLY raf_lrt
-    ADD CONSTRAINT raf_lrt_pkey PRIMARY KEY (datetime);
+ALTER TABLE ONLY raf_lrt ADD CONSTRAINT raf_lrt_pkey PRIMARY KEY (datetime);
 
 --
 -- PostgreSQL database dump complete
