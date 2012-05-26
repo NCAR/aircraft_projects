@@ -31,7 +31,7 @@ INSERT INTO global_attributes VALUES ('Source', 'NASA/NSERC Dryden');
 INSERT INTO global_attributes VALUES ('Platform', 'N817NA');
 INSERT INTO global_attributes VALUES ('FlightNumber', 'FlightNumber');
 INSERT INTO global_attributes VALUES ('ProjectName', 'ProjectName');
-INSERT INTO global_attributes VALUES ('DataRate', '1');
+INSERT INTO global_attributes VALUES ('DataRate', '5');
 INSERT INTO global_attributes VALUES ('latitude_coordinate', 'GGLAT');
 INSERT INTO global_attributes VALUES ('longitude_coordinate', 'GGLON');
 INSERT INTO global_attributes VALUES ('zaxis_coordinate', 'PALTF');
