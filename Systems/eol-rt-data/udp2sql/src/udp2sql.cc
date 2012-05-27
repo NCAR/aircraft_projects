@@ -196,6 +196,11 @@ void udp2sql::resetRealTime(string aircraft)
 
   QString StartTime = QString( getGlobalAttribute(_conn, "StartTime").c_str() );
 
+  // don't backup empty tables
+  if (StartTime.length() == 0) {
+    closePostgresConnection();
+    return;
+  }
   QStringList tables;
   tables << "variable_list" << "global_attributes" << "raf_lrt";
   for (int i = 0; i < tables.size(); ++i) {
@@ -490,7 +495,7 @@ handleAircraftMessage(string aircraft, char* buffer)
 
     // ignore messages that are missing datetime values
     if (datetime == "-32767") {
-      cout << aircraft << " DROPPED missing datetime" << endl;
+//    cout << aircraft << " DROPPED missing datetime" << endl;
       closePostgresConnection();
       return;
 //    QDateTime dt = QDateTime::currentDateTime();
@@ -508,14 +513,13 @@ handleAircraftMessage(string aircraft, char* buffer)
     // ignore messages with with old datetime stamp
     QDateTime data_datetime = QDateTime::fromString( datetime, "yyyyMMddTHHmmss" );
     if ( data_datetime.addSecs(DROPTIME*60*60) < QDateTime::currentDateTime() ) {
-      cout << aircraft << " DROPPED older timestamped data: " << datetime.toStdString() << endl;
+ //   cout << aircraft << " DROPPED older timestamped data: " << datetime.toStdString() << endl;
       closePostgresConnection();
       return;
     }
     QString sql_str;
     // create postgres statements
     sql_str = "INSERT INTO raf_lrt VALUES ('" + datetime + "'," + varList.join(",") + ");";
-    cout << aircraft << " " << sql_str.toStdString() << endl;
 
     // bail out on failed insert commands like these:
     // ERROR:  duplicate key violates unique constraint "raf_lrt_pkey"
@@ -523,6 +527,7 @@ handleAircraftMessage(string aircraft, char* buffer)
       closePostgresConnection();
       return;
     }
+    cout << aircraft << " " << sql_str.toStdString() << endl;
     if (_newFlight[aircraft]) {
       _newFlight[aircraft] = 0;
       sql_str = "UPDATE global_attributes SET value='" + datetime + "' WHERE key='StartTime';";
