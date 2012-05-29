@@ -34,6 +34,12 @@ function compareChecksum {
 
 #MAIN SCRIPT
 cd $XMIT_DIR
+
+# LDM start packet to ground.
+prefix=`echo $1 | cut -c1-16`
+pqexpire -v -i 0 -a 0 ${prefix}\*
+pqinsert -v $1
+
 gunzip $1
 touch $statusFile #exists only if checksums are not verified
 
