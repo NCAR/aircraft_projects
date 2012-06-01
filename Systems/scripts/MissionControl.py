@@ -224,6 +224,16 @@ class MissionControl(QWidget):
         groupBox.setLayout(hbox)
         return groupBox
 
+    def getCameraList(self):
+#       print("getCameraList: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
+        try:
+            self.cursor.execute("SELECT direction from camera")
+            val = self.cursor.fetchone()
+            direction = val[0]
+        except:
+            direction = ['forward']
+        return direction
+
     def updateSelection(self):
 #       print("updateSelection: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
         for i in range(0, len(self.keys)):
@@ -270,6 +280,8 @@ class MissionControl(QWidget):
         self.CurrentTime.setReadOnly(True)
         self.CurrentTime.setDisabled(True)
 
+        direction = self.getCameraList()
+
         # setup radio buttons
         self.rbs = {}
         self.keys = []
@@ -277,6 +289,7 @@ class MissionControl(QWidget):
         self.region    = self.horizontalRadioGroup("Region:", "region", "off", ("off", "CO", "AL", "OK"))
         self.cappi     = self.horizontalRadioGroup("CAPPI:", "cappi", "off", ("off", "5 min", "15 min"))
         self.lightning = self.horizontalRadioGroup("LMA lightning:", "lightning", "off", ("off", "2 min", "12 min"))
+        self.camera    = self.horizontalRadioGroup("Camera feed to ground:", "camera", "forward", direction)
 
         # setup Postgres Notify/Listen connection
 #       print "self.conn.fileno() %d" % self.conn.fileno()
@@ -298,6 +311,7 @@ class MissionControl(QWidget):
         layout.addWidget(self.region,              3, 0, 1, 3)
         layout.addWidget(self.cappi,               4, 0, 1, 3)
         layout.addWidget(self.lightning,           5, 0, 1, 3)
+        layout.addWidget(self.camera,              6, 0, 1, 3)
         self.setLayout(layout)
 
     def setDoNotCalibrate(self, pressed):
