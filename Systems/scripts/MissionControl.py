@@ -189,6 +189,7 @@ class MissionControl(QWidget):
 
         self.cursor.execute("NOTIFY missioncontrol")
         self.conn.commit()
+        self.updateSelection()
 
     def selectOrInsert(self, key, value):
 
@@ -209,7 +210,7 @@ class MissionControl(QWidget):
 
         # use current setting in database for default
         default = self.selectOrInsert(key, default)
-        self.keys.append(key)
+        self.keys[key] = default
 
         groupBox = QGroupBox(title)
         groupBox.setObjectName(key)
@@ -246,14 +247,17 @@ class MissionControl(QWidget):
 #       print("updateSelection: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
         self.updateCameraList()
 
-        for i in range(0, len(self.keys)):
-            key = self.keys[i]
+        for key, value in self.keys.iteritems():
             try:
+#               print("SELECT value from global_attributes WHERE key='%s'" % key)
                 self.cursor.execute("SELECT value from global_attributes WHERE key='%s'" % key)
                 value = self.cursor.fetchone()
+#               print("value is '%s'" % value[0])
                 self.rbs[key, value[0]].setChecked(True)
             except:
-                self.failExit()
+                # don't fail when key is set and the UI hasn't updated yet to show the selection
+                if (key != 'camera'):
+                    self.failExit()
 
     def initUI(self):
 #       print("initUI: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
@@ -293,8 +297,8 @@ class MissionControl(QWidget):
         direction = self.getCameraList()
 
         # setup radio buttons
-        self.rbs = {}
-        self.keys = []
+        self.rbs = dict()
+        self.keys = dict()
 
         self.region    = self.horizontalRadioGroup("Region:", "region", "off", ("off", "CO", "AL", "OK"))
         self.cappi     = self.horizontalRadioGroup("CAPPI:", "cappi", "off", ("off", "5 min", "15 min"))
