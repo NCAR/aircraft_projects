@@ -21,7 +21,8 @@ restrict calibration and recording of research data.
 import sys
 from PyQt4.QtCore import (Qt, QObject, QTimer, QTime, QDateTime, SIGNAL, QString, QSocketNotifier)
 from PyQt4.QtGui import (QWidget, QLabel, QPushButton, QLineEdit, QTimeEdit, QGridLayout,
-                         QApplication, QMessageBox, QGroupBox, QHBoxLayout, QRadioButton)
+                         QApplication, QMessageBox, QGroupBox, QHBoxLayout, QRadioButton,
+                         QStackedWidget)
 from PyQt4.QtNetwork import (QHostAddress, QUdpSocket)
 
 from psycopg2 import *
@@ -186,7 +187,7 @@ class MissionControl(QWidget):
                 except:
                     self.failExit()
 
-        self.cursor.execute("NOTIFY blah")
+        self.cursor.execute("NOTIFY missioncontrol")
         self.conn.commit()
 
     def selectOrInsert(self, key, value):
@@ -234,8 +235,17 @@ class MissionControl(QWidget):
             direction = ['forward']
         return direction
 
+    def updateCameraList(self):
+#       print("updateCameraList: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
+        direction = self.getCameraList()
+        self.cameraList.removeWidget(self.camera)
+        self.camera = self.horizontalRadioGroup("Camera feed to ground:", "camera", "forward", direction)
+        self.cameraList.addWidget(self.camera)
+
     def updateSelection(self):
 #       print("updateSelection: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
+        self.updateCameraList()
+
         for i in range(0, len(self.keys)):
             key = self.keys[i]
             try:
@@ -291,11 +301,14 @@ class MissionControl(QWidget):
         self.lightning = self.horizontalRadioGroup("LMA lightning:", "lightning", "off", ("off", "2 min", "12 min"))
         self.camera    = self.horizontalRadioGroup("Camera feed to ground:", "camera", "forward", direction)
 
+        self.cameraList = QStackedWidget()
+        self.cameraList.addWidget(self.camera)
+
         # setup Postgres Notify/Listen connection
 #       print "self.conn.fileno() %d" % self.conn.fileno()
         self.notify = QSocketNotifier(self.conn.fileno(), QSocketNotifier.Read)
         QObject.connect(self.notify, SIGNAL("activated(int)"), self.updateSelection)
-        self.cursor.execute("LISTEN blah")
+        self.cursor.execute("LISTEN missioncontrol")
         self.conn.commit()
 
         # layout in a grid
@@ -311,7 +324,7 @@ class MissionControl(QWidget):
         layout.addWidget(self.region,              3, 0, 1, 3)
         layout.addWidget(self.cappi,               4, 0, 1, 3)
         layout.addWidget(self.lightning,           5, 0, 1, 3)
-        layout.addWidget(self.camera,              6, 0, 1, 3)
+        layout.addWidget(self.cameraList,          6, 0, 1, 3)
         self.setLayout(layout)
 
     def setDoNotCalibrate(self, pressed):
