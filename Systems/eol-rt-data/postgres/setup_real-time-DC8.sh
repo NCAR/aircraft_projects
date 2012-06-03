@@ -3,7 +3,7 @@
 unset HOST
 unset AIRCRAFT
 
-HOST='eol-rt-data.guest.ucar.edu'
+HOST='eol-rt-data.fl-ext.ucar.edu'
 AIRCRAFT='DC8'
 
 USAGE="usage: $0 [-h] [-s ...] [-a ...]
