@@ -33,7 +33,7 @@ try:
     dbhost = os.environ['PGHOST']
 except:
     #dbhost = "localhost"
-    dbhost = "eol-rt-data.guest.ucar.edu"
+    dbhost = "eol-rt-data.fl-ext.ucar.edu"
 
 # Initialization 
 #  *******************  Modify The Following *********************

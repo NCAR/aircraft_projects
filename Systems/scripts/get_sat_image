@@ -16,7 +16,7 @@ find . -name "ops*.jpg" -mmin +360 -exec rm {} \;
 
 # Get filename from database, and then retrieve file.
 set sql_cmd="SELECT filename FROM satellite WHERE product = 'sat_$argv[1]';"
-set name=`psql -h eol-rt-data.guest.ucar.edu -d $PGGRND -q -t -c "$sql_cmd"`
+set name=`psql -h eol-rt-data.fl-ext.ucar.edu -d $PGGRND -q -t -c "$sql_cmd"`
 wget --limit-rate=3000 ftp://data.eol.ucar.edu/pub/incoming/predict/mc_sat/$name -O $name.tmp
 
 if (-s ${name}.tmp) then
