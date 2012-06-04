@@ -22,7 +22,7 @@ import sys
 from PyQt4.QtCore import (Qt, QObject, QTimer, QTime, QDateTime, SIGNAL, QString, QSocketNotifier)
 from PyQt4.QtGui import (QWidget, QLabel, QPushButton, QLineEdit, QTimeEdit, QGridLayout,
                          QApplication, QMessageBox, QGroupBox, QHBoxLayout, QRadioButton,
-                         QStackedWidget)
+                         QStackedWidget, QFrame)
 from PyQt4.QtNetwork import (QHostAddress, QUdpSocket)
 
 from psycopg2 import *
@@ -265,6 +265,13 @@ class MissionControl(QWidget):
         startLabel    = QLabel("Start:")
         RemainLabel   = QLabel("Remain:")
 
+        Line = QFrame()
+        Line.setFrameShape(QFrame.HLine)
+        Line.setFrameShadow(QFrame.Sunken)
+        Line.setFixedHeight(20)
+
+        NoteLabel    = QLabel("Note that both the IR sat and NWS radar are uploaded by default.\n")
+
         # setup DoNotCalibrate
         self.DoNotCalibrate = QPushButton('Do Not Calibrate', self)
         self.DoNotCalibrate.setCheckable(True)
@@ -300,9 +307,9 @@ class MissionControl(QWidget):
         self.rbs = dict()
         self.keys = dict()
 
-        self.region    = self.horizontalRadioGroup("Region:", "region", "off", ("off", "CO", "AL", "OK"))
-        self.cappi     = self.horizontalRadioGroup("CAPPI:", "cappi", "off", ("off", "5 min", "15 min"))
-        self.lightning = self.horizontalRadioGroup("LMA lightning:", "lightning", "off", ("off", "2 min", "12 min"))
+        self.region    = self.horizontalRadioGroup("Region (controls visable sat. and LMA location):", "region", "off", ("off", "CO", "AL", "OK"))
+        self.cappi     = self.horizontalRadioGroup("CAPPI (all regions):", "cappi", "off", ("off", "on"))
+        self.lightning = self.horizontalRadioGroup("LMA lightning:", "lightning", "off", ("off", "on"))
         self.camera    = self.horizontalRadioGroup("Camera feed to ground:", "camera", "forward", direction)
 
         self.cameraList = QStackedWidget()
@@ -325,10 +332,12 @@ class MissionControl(QWidget):
         layout.addWidget(RemainLabel,              2, 0)
         layout.addWidget(self.remainingTime,       2, 1)
         layout.addWidget(self.CurrentTime,         2, 2)
-        layout.addWidget(self.region,              3, 0, 1, 3)
-        layout.addWidget(self.cappi,               4, 0, 1, 3)
-        layout.addWidget(self.lightning,           5, 0, 1, 3)
-        layout.addWidget(self.cameraList,          6, 0, 1, 3)
+        layout.addWidget(Line,                     3, 0, 1, 3)
+        layout.addWidget(NoteLabel,                4, 0, 1, 3)
+        layout.addWidget(self.region,              5, 0, 1, 3)
+        layout.addWidget(self.cappi,               6, 0, 1, 3)
+        layout.addWidget(self.lightning,           7, 0, 1, 3)
+        layout.addWidget(self.cameraList,          8, 0, 1, 3)
         self.setLayout(layout)
 
     def setDoNotCalibrate(self, pressed):
