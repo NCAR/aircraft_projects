@@ -21,7 +21,7 @@ restrict calibration and recording of research data.
 import sys
 from PyQt4.QtCore import (Qt, QObject, QTimer, QTime, QDateTime, SIGNAL, QString, QSocketNotifier)
 from PyQt4.QtGui import (QWidget, QLabel, QPushButton, QLineEdit, QTimeEdit, QGridLayout,
-                         QApplication, QMessageBox, QGroupBox, QHBoxLayout, QRadioButton,
+                         QApplication, QMessageBox, QGroupBox, QHBoxLayout, QButtonGroup,
                          QStackedWidget, QFrame)
 from PyQt4.QtNetwork import (QHostAddress, QUdpSocket)
 
@@ -213,11 +213,14 @@ class MissionControl(QWidget):
         self.keys[key] = default
 
         groupBox = QGroupBox(title)
-        groupBox.setObjectName(key)
+        group = QButtonGroup(self)
+        group.setExclusive(True)
         hbox = QHBoxLayout()
         for val in values:
-            rb = QRadioButton(val)
+            rb = QPushButton(val)
+            rb.setCheckable(True)
             hbox.addWidget(rb)
+            group.addButton(rb)
             if (val == default):
               rb.setChecked(True)
             QObject.connect(rb, SIGNAL("toggled(bool)"), self.RadioButtonSelected)
