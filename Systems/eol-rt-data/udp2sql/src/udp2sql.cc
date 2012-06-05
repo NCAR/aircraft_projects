@@ -100,10 +100,10 @@ udp2sql::udp2sql()
 /* -------------------------------------------------------------------- */
 bool udp2sql::newPostgresConnection(string platform)
 {
-  string spec="user=ads dbname=real-time-"+platform;
+  string spec="user=data dbname=real-time-"+platform;
   if (platform == "GAUS")
   {
-    spec="user=ads dbname=soundings";
+    spec="user=data dbname=soundings";
   }
   spec += " " + this->_qspec;
 //cout << spec << endl;
@@ -520,6 +520,7 @@ handleAircraftMessage(string aircraft, char* buffer)
     QString sql_str;
     // create postgres statements
     sql_str = "INSERT INTO raf_lrt VALUES ('" + datetime + "'," + varList.join(",") + ");";
+    cout << aircraft << " " << sql_str.toStdString() << endl;
 
     // bail out on failed insert commands like these:
     // ERROR:  duplicate key violates unique constraint "raf_lrt_pkey"
@@ -527,7 +528,6 @@ handleAircraftMessage(string aircraft, char* buffer)
       closePostgresConnection();
       return;
     }
-    cout << aircraft << " " << sql_str.toStdString() << endl;
     if (_newFlight[aircraft]) {
       _newFlight[aircraft] = 0;
       sql_str = "UPDATE global_attributes SET value='" + datetime + "' WHERE key='StartTime';";
