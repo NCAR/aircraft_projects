@@ -28,9 +28,9 @@ ALTER TABLE global_attributes OWNER TO ads;
 ALTER TABLE ONLY global_attributes ADD CONSTRAINT global_attributes_pkey PRIMARY KEY ("key");
 
 INSERT INTO global_attributes VALUES ('Source', 'NASA/NSERC Dryden');
-INSERT INTO global_attributes VALUES ('Platform', 'N817NA');
+INSERT INTO global_attributes VALUES ('Platform', 'NASA817');
 INSERT INTO global_attributes VALUES ('FlightNumber', 'FlightNumber');
-INSERT INTO global_attributes VALUES ('ProjectName', 'ProjectName');
+INSERT INTO global_attributes VALUES ('ProjectName', 'DC3');
 INSERT INTO global_attributes VALUES ('DataRate', '5');
 INSERT INTO global_attributes VALUES ('latitude_coordinate', 'GGLAT');
 INSERT INTO global_attributes VALUES ('longitude_coordinate', 'GGLON');
