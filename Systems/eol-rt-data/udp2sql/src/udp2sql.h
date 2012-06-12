@@ -52,6 +52,7 @@ protected:
 
   std::map<std::string, QBasicTimer> _timer;
   std::map<std::string, int> _newFlight;
+  std::map<std::string, int> _cntVacuum;
 
   PGconn * _conn;
 

@@ -89,6 +89,8 @@ enum DC8VARS {
 /* -------------------------------------------------------------------- */
 udp2sql::udp2sql()
 {
+  cout << "compiled on " << __DATE__ << " at " << __TIME__ << endl;
+
   _conn = 0;
   _count = 0;
   newUDPConnection();
@@ -192,6 +194,7 @@ void udp2sql::resetRealTime(string aircraft)
   if (!file.open(QFile::ReadOnly | QFile::Text)) return;
   QTextStream in(&file);
   QString line, longline;
+
   newPostgresConnection(aircraft);
 
   QString StartTime = QString( getGlobalAttribute(_conn, "StartTime").c_str() );
@@ -199,7 +202,16 @@ void udp2sql::resetRealTime(string aircraft)
   // don't backup empty tables
   if (StartTime.length() == 0) {
     closePostgresConnection();
+    cout << aircraft << " Resetting real-time database skipped (no data)" << endl;
     return;
+  }
+  // trim off the microsecond field from the StartTime (if any) and remove the delimiters
+  StartTime.replace(QRegExp("\\.[0-9]+$"), "");
+  int len = 0;
+  while (len != StartTime.length()) {
+    len = StartTime.length();
+    StartTime.replace("-","");
+    StartTime.replace(":","");
   }
   QStringList tables;
   tables << "variable_list" << "global_attributes" << "raf_lrt";
@@ -410,11 +422,14 @@ void udp2sql::newData()
   else if (strncmp(buffer, "GAUS:", 5) == 0) platform = "GAUS";
   else return;
 
+  QDateTime dt = QDateTime::currentDateTime().toUTC();
+  QString datetime = dt.toString("yyyyMMddTHHmmss");
+
   // report on transferred amounts
   if (ret == BZ_OK)
-    cout << "\n" << platform << " decompressed " << nBytes << " -> " << bufLen << endl;
+    cout << "\n" << platform << " " << datetime.toStdString() << " decompressed " << nBytes << " -> " << bufLen << endl;
   else
-    cout << "\n" << platform << " received " << nBytes << endl;
+    cout << "\n" << platform << " " << datetime.toStdString() << " received " << nBytes << endl;
 
   if (platform == "GAUS")
   {
@@ -498,7 +513,7 @@ handleAircraftMessage(string aircraft, char* buffer)
 //    cout << aircraft << " DROPPED missing datetime" << endl;
       closePostgresConnection();
       return;
-//    QDateTime dt = QDateTime::currentDateTime();
+//    QDateTime dt = QDateTime::currentDateTime().toUTC();
 //    datetime = dt.toString("yyyyMMddTHHmmss");
 //    cout << aircraft << " STUBBED in missing datetime: " << datetime.toStdString() << endl;
     }
@@ -512,8 +527,8 @@ handleAircraftMessage(string aircraft, char* buffer)
     }
     // ignore messages with with old datetime stamp
     QDateTime data_datetime = QDateTime::fromString( datetime, "yyyyMMddTHHmmss" );
-    if ( data_datetime.addSecs(DROPTIME*60*60) < QDateTime::currentDateTime() ) {
- //   cout << aircraft << " DROPPED older timestamped data: " << datetime.toStdString() << endl;
+    if ( data_datetime.addSecs(1*60*60) < QDateTime::currentDateTime().toUTC() ) {
+      cout << aircraft << " DROPPED older timestamped data: " << datetime.toStdString() << endl;
       closePostgresConnection();
       return;
     }
@@ -530,6 +545,7 @@ handleAircraftMessage(string aircraft, char* buffer)
     }
     if (_newFlight[aircraft]) {
       _newFlight[aircraft] = 0;
+      _cntVacuum[aircraft] = 0;
       sql_str = "UPDATE global_attributes SET value='" + datetime + "' WHERE key='StartTime';";
       cout << aircraft << " " << sql_str.toStdString() << endl;
       execute(sql_str.toStdString().c_str());
@@ -537,6 +553,13 @@ handleAircraftMessage(string aircraft, char* buffer)
     sql_str = "UPDATE global_attributes SET value='" + datetime + ".999' WHERE key='EndTime';";
     cout << aircraft << " " << sql_str.toStdString() << endl;
     execute(sql_str.toStdString().c_str());
+
+    // Vacuum the database at the start of a new flight... then every so often
+    if (_cntVacuum[aircraft]++ % 1000 == 0) {
+      sql_str = "VACUUM;";
+      cout << aircraft << " " << sql_str.toStdString() << endl;
+      execute(sql_str.toStdString().c_str());
+    }
     closePostgresConnection();
 
     // restart database drop timer
