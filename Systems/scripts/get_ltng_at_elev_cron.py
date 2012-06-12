@@ -137,34 +137,34 @@ querres = con.query("select value from global_attributes where key='EndTime'")
 fultimlst = querres.getresult()
 fultim = (fultimlst[0])[0]
 endtim = fultim.split('.')[0]
-querstr = "select paltf from raf_lrt where datetime='"+endtim+"'"
+querstr = "select ggalt from raf_lrt where datetime='"+endtim+"'"
 querres = con.query(querstr)
-paltflst = querres.getresult()
-paltfstr = (paltflst[0])[0]
-paltf = float(paltfstr)
+altlst = querres.getresult()
+altstr = (altlst[0])[0]
+altf = float(altstr) * 3.2808
 
 #Done with our DB stuff
 con.close()
 
 # Create portion of filename based on paltf 
 # note: assumes that files are at 06,12,18,24,30,36,42 and 48 K ft
-if paltf<6000:
+if altf<6000:
     altstr = "00kft"
-elif paltf<12000:
+elif altf<12000:
     altstr = "06kft"
-elif paltf<18000:
+elif altf<18000:
     altstr = "12kft"
-elif paltf<24000:
+elif altf<24000:
     altstr = "18kft"
-elif paltf<30000:
+elif altf<30000:
     altstr = "24kft"
-elif paltf<36000:
+elif altf<36000:
     altstr = "30kft"
-elif paltf<42000:
+elif altf<42000:
     altstr = "36kft"
-elif paltf<48000:
+elif altf<48000:
     altstr = "42kft"
-elif paltf<54000:
+elif altf<54000:
     altstr = "48kft"
 else: 
     altstr = "54kft"
