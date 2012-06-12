@@ -62,7 +62,7 @@ ftp_dir          = '/pub/incoming/OSM/'+aircraft+'/'
 #Assumes filename form is prefix.YYYYMMDDHHMM.postfix
 prefix           = 'research.CHILL.'
 postfix		 = '.DBZ.png' 
-osm_file_name    = "latest_chill_radar.png"
+osm_file_name    = "latest_chill.DBZ.png"
 min_of_imgs      = 10
 
 # End of Initialization section
