@@ -1,5 +1,15 @@
 SHELL=/bin/csh
 
+# IRC and IRC bot
+@reboot /home/ads/ircd/Unreal3.2/unreal start >& /dev/null
+@reboot sleep 5; /home/ads/rbot/bin/rbot >& /dev/null
+
+@reboot /home/local/Systems/scripts/scrubber >& /tmp/scrubber.log
+
+# Persistent ssh tunnel to EOL, attempting reopens only every 15
+# minutes.
+0,15,30,45 * * * * ssh -N eoltunnel >& /tmp/eoltunnel.log &
+
 # Always
 */1 * * * * /home/local/Systems/scripts/ensure_running.cron >& /tmp/ensure_run.log
 */1 * * * * /home/local/Systems/scripts/send_camera.cron >& /tmp/camera_send.log
@@ -9,17 +19,9 @@ SHELL=/bin/csh
 02,12,22,32,42,52 * * * * /home/local/Systems/scripts/get_radar_image_cron.py >>& /tmp/get_sat_image.log
 04,14,24,34,44,54 * * * * /home/local/Systems/scripts/get_ir_image_cron.py >>& /tmp/get_sat_image.log
 06,16,26,36,46,56 * * * * /home/local/Systems/scripts/get_vis_image_cron.py >>& /tmp/get_sat_image.log
-#
-# DC-3
-#*/5 * * * * /home/local/Systems/scripts/get_smart_rad_cron >& /dev/null
-#08,18,28,38,48,58 * * * * /home/local/Systems/scripts/get_chill_image_cron.py >>& /tmp/get_sat_image.log
-#
-# Misc
-*/1 * * * * /home/local/Systems/scripts/iostat.csh >>& /tmp/iostat.out
-#
-#0 * * * * /home/local/Systems/scripts/get_sounding
-#12,42 * * * * /home/local/Systems/scripts/get_cloud_top >& /tmp/cloud_top.log
-#5,20,35,50 * * * * /home/local/Systems/scripts/get_sat_image
-#
+
 # AVAPS
-#* * * * * /home/local/Systems/scripts/send_avaps.cron.py >& /tmp/avaps_send.log
+#* * * * * /home/local/Systems/scripts/send_avaps.cron.py >& /tmp/avaps_send.log 
+
+# Misc
+#*/1 * * * * /home/local/Systems/scripts/iostat.csh >>& /tmp/iostat.out
