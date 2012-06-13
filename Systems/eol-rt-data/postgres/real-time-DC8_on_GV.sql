@@ -71,6 +71,7 @@ INSERT INTO variable_list VALUES ('GGLAT',                 'degree_N', '', 'Refe
 INSERT INTO variable_list VALUES ('GGLON',                 'degree_E', '', 'Reference GPS Longitude',                            '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('PALTF',                 'feet',     '', 'NACA Pressure Altitude',                             '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('TASX',                  'm/s',      '', 'Aircraft True Airspeed Reference',                   '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
+INSERT INTO variable_list VALUES ('THDG',                  'degree_T', '', 'IRS Aircraft True Heading Angle',                    '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('ATX',                   'deg_C',    '', 'Ambient Temperature, Reference',                     '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('DPXC',                  'deg_C',    '', 'Dew Point',                                          '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
 INSERT INTO variable_list VALUES ('WSC',                   'm/s',      '', 'GPS-Corrected Horizontal Wind Speed',                '', 1, '{1}', 0, '{}', -32767, 'Preliminary');
@@ -90,6 +91,7 @@ CREATE TABLE raf_lrt (
     gglon double precision,
     paltf double precision,
     tasx double precision,
+    thdg double precision,
     atx double precision,
     dpxc double precision,
     wsc double precision,

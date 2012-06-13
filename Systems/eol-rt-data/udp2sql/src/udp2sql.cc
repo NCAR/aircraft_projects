@@ -618,7 +618,7 @@ handleAircraftMessage(string aircraft, char* buffer)
     varListCopy.removeAt(PITCH);
     varListCopy.removeAt(DRFTA);
     varListCopy.removeAt(TKAT);
-    varListCopy.removeAt(THDG);
+//  varListCopy.removeAt(THDG);
     varListCopy.removeAt(VSPD);
     varListCopy.removeAt(MACH_A);
     varListCopy.removeAt(IAS);
