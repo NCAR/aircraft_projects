@@ -10,13 +10,14 @@
 
 #GLOBALS
 filename=`basename $1 .gz`
-timer=20 #seconds to wait between retries
+timer=60 #seconds to wait between retries
 logNot="logger -t sendGroundInitScript -s -p local1.notice"
 logErr="logger -t sendGroundInitScript -s -p local1.err"
 statusFile=${XMIT_DIR}/noconn
 last_compare=0
 
 export PGHOST=eol-rt-data.fl-ext.ucar.edu
+export PGUSER=ads
 export PGDATABASE=$PGGRND
 export PLATFORM_DATABASE='platforms'
 
@@ -32,7 +33,7 @@ function compareChecksum {
 }
 
 
-#MAIN SCRIPT
+# MAIN SCRIPT
 cd $XMIT_DIR
 
 # LDM start packet to ground.
@@ -44,8 +45,8 @@ gunzip $1
 touch $statusFile #exists only if checksums are not verified
 
 platformID=`head -n 1 $filename`
-flightNum=$(psql -h localhost real-time -t -c "SELECT value FROM global_attributes WHERE key='FlightNumber'")
-projectName=$(psql -h localhost real-time -t -c "SELECT value FROM global_attributes WHERE key='ProjectName'")
+flightNum=$(psql -h localhost real-time -t -c "SELECT value FROM global_attributes WHERE key='FlightNumber'" | tr -d ' ')
+projectName=$(psql -h localhost real-time -t -c "SELECT value FROM global_attributes WHERE key='ProjectName'" | tr -d ' ')
 
 
 while [ 1 ]; do 
@@ -60,7 +61,10 @@ while [ 1 ]; do
 
 	else
 		$logNot "nimbus checksum mismatch, sending packet."
-		sed 1,1d $filename | psql #send packet
+#
+# Uncomment this line if you want the aircraft to perform this.
+# Comment this line out if you have ground LDM setup to execute this commend.
+#		sed 1,1d $filename | psql #send packet
 		stat=$?
 		
 		if [ $stat -eq 0 ]; then #psql connected to ground DB
