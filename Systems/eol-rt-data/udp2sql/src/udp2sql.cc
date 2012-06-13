@@ -477,61 +477,59 @@ handleAircraftMessage(string aircraft, char* buffer)
   // save a copy for re-broadcast later
   QString varsStrCopy(varsStr);
 
+  // instert NANs for all missing values
+  len = 0;
+  while (len != varsStr.length()) {
+    len = varsStr.length();
+    varsStr.replace(",,",",-32767,");
+    varsStr.replace(",nan",",-32767");
+  }
+  if (varsStr.endsWith(","))
+    varsStr.append("-32767");
+
+  // break the buffer into usable substrings
+  QStringList varList = varsStr.split(",");
+
+  // correct +/- 180 to 0..360 on wind direction
+  if (strncmp(aircraft.c_str(), "DC8", 3) == 0)
+  {
+    QString windDirectionStr = varList[WDC];
+    double windDirection = varList[WDC].toDouble();
+//printf("[%s - ", varList[WDC].toAscii().data());
+//printf("%f - ", windDirection);
+    if (windDirection < 0.0 && windDirection > -200.0) windDirection += 360.0;
+    varList[WDC] = QString::number(windDirection, 'f', 1);
+//printf("%s]\n", varList[WDC].toAscii().data());
+  }
+  // remove the preceeding "IWG1,datetime,"
+  varList.takeFirst();
+  QString datetime = varList.takeFirst();
+
+  // ignore messages that are missing datetime values
+  if (datetime == "-32767") {
+//  cout << aircraft << " IGNORED missing datetime" << endl;
+    return;
+//  QDateTime dt = QDateTime::currentDateTime().toUTC();
+//  datetime = dt.toString("yyyyMMddTHHmmss");
+//  cout << aircraft << " STUBBED in missing datetime: " << datetime.toStdString() << endl;
+  }
+  // trim off the microsecond field from the datetime
+  datetime.replace(QRegExp("\\.[0-9]+$"), "");
+  len = 0;
+  while (len != datetime.length()) {
+    len = datetime.length();
+    datetime.replace("-","");
+    datetime.replace(":","");
+  }
+  // ignore messages with with old datetime stamp
+  QDateTime data_datetime = QDateTime::fromString( datetime, "yyyyMMddTHHmmss" );
+  if ( data_datetime.addSecs(10) < QDateTime::currentDateTime().toUTC() ) {
+    cout << aircraft << " IGNORED older timestamped data: " << datetime.toStdString() << endl;
+    return;
+  }
   // update database entries
   if (newPostgresConnection(aircraft))
   {
-    // instert NANs for all missing values
-    len = 0;
-    while (len != varsStr.length()) {
-      len = varsStr.length();
-      varsStr.replace(",,",",-32767,");
-      varsStr.replace(",nan",",-32767");
-    }
-    if (varsStr.endsWith(","))
-      varsStr.append("-32767");
-
-    // break the buffer into usable substrings
-    QStringList varList = varsStr.split(",");
-
-    // correct +/- 180 to 0..360 on wind direction
-    if (strncmp(aircraft.c_str(), "DC8", 3) == 0)
-    {
-      QString windDirectionStr = varList[WDC];
-      double windDirection = varList[WDC].toDouble();
-//printf("[%s - ", varList[WDC].toAscii().data());
-//printf("%f - ", windDirection);
-      if (windDirection < 0.0 && windDirection > -200.0) windDirection += 360.0;
-      varList[WDC] = QString::number(windDirection, 'f', 1);
-//printf("%s]\n", varList[WDC].toAscii().data());
-    }
-    // remove the preceeding "IWG1,datetime,"
-    varList.takeFirst();
-    QString datetime = varList.takeFirst();
-
-    // ignore messages that are missing datetime values
-    if (datetime == "-32767") {
-//    cout << aircraft << " DROPPED missing datetime" << endl;
-      closePostgresConnection();
-      return;
-//    QDateTime dt = QDateTime::currentDateTime().toUTC();
-//    datetime = dt.toString("yyyyMMddTHHmmss");
-//    cout << aircraft << " STUBBED in missing datetime: " << datetime.toStdString() << endl;
-    }
-    // trim off the microsecond field from the datetime
-    datetime.replace(QRegExp("\\.[0-9]+$"), "");
-    len = 0;
-    while (len != datetime.length()) {
-      len = datetime.length();
-      datetime.replace("-","");
-      datetime.replace(":","");
-    }
-    // ignore messages with with old datetime stamp
-    QDateTime data_datetime = QDateTime::fromString( datetime, "yyyyMMddTHHmmss" );
-    if ( data_datetime.addSecs(1*60*60) < QDateTime::currentDateTime().toUTC() ) {
-      cout << aircraft << " DROPPED older timestamped data: " << datetime.toStdString() << endl;
-      closePostgresConnection();
-      return;
-    }
     QString sql_str;
     // create postgres statements
     sql_str = "INSERT INTO raf_lrt VALUES ('" + datetime + "'," + varList.join(",") + ");";
