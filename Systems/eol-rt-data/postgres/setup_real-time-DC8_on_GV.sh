@@ -3,7 +3,7 @@
 unset HOST
 unset AIRCRAFT
 
-HOST='hyper.raf-guest.ucar.edu'
+HOST='localhost'
 AIRCRAFT='DC8'
 
 USAGE="usage: $0 [-h] [-s ...] [-a ...]

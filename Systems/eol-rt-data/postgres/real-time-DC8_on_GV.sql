@@ -30,7 +30,7 @@ ALTER TABLE ONLY global_attributes ADD CONSTRAINT global_attributes_pkey PRIMARY
 INSERT INTO global_attributes VALUES ('Source', 'NASA/NSERC Dryden');
 INSERT INTO global_attributes VALUES ('Platform', 'N817NA');
 INSERT INTO global_attributes VALUES ('FlightNumber', 'FlightNumber');
-INSERT INTO global_attributes VALUES ('ProjectName', 'ProjectName');
+INSERT INTO global_attributes VALUES ('ProjectName', 'DC3');
 INSERT INTO global_attributes VALUES ('DataRate', '20');
 INSERT INTO global_attributes VALUES ('latitude_coordinate', 'GGLAT');
 INSERT INTO global_attributes VALUES ('longitude_coordinate', 'GGLON');
