@@ -45,7 +45,7 @@ protected:
   int   execute(const char* sql_str);
 
   void  handleSoundingMessage(string platform, char* buffer);
-  void  handleAircraftMessage(string aircraft, char* buffer);
+  void  handleAircraftMessage(string aircraft, char* buffer, QString notes);
   void  reBroadcastMessage(string dest, char* buffer);
 
   QUdpSocket * _udp;

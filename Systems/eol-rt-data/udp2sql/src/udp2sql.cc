@@ -424,12 +424,13 @@ void udp2sql::newData()
 
   QDateTime dt = QDateTime::currentDateTime().toUTC();
   QString datetime = dt.toString("yyyyMMddTHHmmss");
+  QString notes;
 
   // report on transferred amounts
   if (ret == BZ_OK)
-    cout << "\n" << platform << " " << datetime.toStdString() << " decompressed " << nBytes << " -> " << bufLen << endl;
+    notes = QString("%1 %2 decompressed %3 -> %4").arg(platform.c_str()).arg(datetime).arg(nBytes).arg(bufLen);
   else
-    cout << "\n" << platform << " " << datetime.toStdString() << " received " << nBytes << endl;
+    notes = QString("%1 %2 received %3").arg(platform.c_str()).arg(datetime).arg(nBytes);
 
   if (platform == "GAUS")
   {
@@ -437,7 +438,7 @@ void udp2sql::newData()
   }
   else
   {
-    handleAircraftMessage(platform, buffer);
+    handleAircraftMessage(platform, buffer, notes);
   }
 }
 
@@ -460,7 +461,7 @@ handleSoundingMessage(string platform, char* buffer)
 /* -------------------------------------------------------------------- */
 void
 udp2sql::
-handleAircraftMessage(string aircraft, char* buffer)
+handleAircraftMessage(string aircraft, char* buffer, QString notes)
 {
   QString varsStr(buffer);
 
@@ -523,10 +524,12 @@ handleAircraftMessage(string aircraft, char* buffer)
   }
   // ignore messages with with old datetime stamp
   QDateTime data_datetime = QDateTime::fromString( datetime, "yyyyMMddTHHmmss" );
-  if ( data_datetime.addSecs(10) < QDateTime::currentDateTime().toUTC() ) {
-    cout << aircraft << " IGNORED older timestamped data: " << datetime.toStdString() << endl;
+  if ( data_datetime.addSecs(10) < QDateTime::currentDateTime().toUTC() )
     return;
-  }
+
+  // passed all filters... start logging useful information
+  cout << notes.toStdString() << endl;
+
   // update database entries
   if (newPostgresConnection(aircraft))
   {
