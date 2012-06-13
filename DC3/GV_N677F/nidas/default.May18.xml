@@ -658,14 +658,16 @@
         </sample>
     </sensor>
     <sensor ID="TOGA" class="raf.UDPSocketSensor" devicename="inet::30120">
-      <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f">
-        <variable longname="TOGA butane" name="BUTANE" units="pptv"/>
-        <variable longname="TOGA benzene" name="BENZ" units="pptv"/>
-        <variable longname="TOGA isoprene" name="ISOP" units="pptv"/>
-        <variable longname="TOGA toluene" name="TOL" units="pptv"/>
-        <variable longname="TOGA acetonitrile" name="CH3CN" units="pptv"/>
-        <variable longname="TOGA methanol" name="MEOH" units="pptv"/>
-        <variable longname="TOGA acetone" name="ACETONE" units="pptv"/>
+      <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable longname="TOGA Butane" name="BUTANE" units="pptv"/>
+        <variable longname="TOGA Benzene" name="BENZ" units="pptv"/>
+        <variable longname="TOGA Isoprene" name="ISOP" units="pptv"/>
+        <variable longname="TOGA Toluene" name="TOL" units="pptv"/>
+        <variable longname="TOGA Acetonitrile" name="CH3CN" units="pptv"/>
+        <variable longname="TOGA Methanol" name="MEOH" units="pptv"/>
+        <variable longname="TOGA Acetone" name="ACETONE" units="pptv"/>
+        <variable longname="TOGA Formaldehyde" name="HCHO" units="pptv"/>
+        <variable longname="TOGA Acetaldehyde" name="CH3CHO" units="pptv"/>
       </sample>
     </sensor>
     <serialSensor ID="Water_CN_Counter" baud="115200" class="DSMSerialSensor" databits="8" init_string="SM,4,1\r" parity="none" stopbits="1">
@@ -1039,7 +1041,7 @@
       </sample>
     </sensor>
     <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="inet::30104">
-        <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
             <variable longname="SMPS DMA Temperature" name="DMAT" units="deg_C"/>
             <variable longname="SMPS Flow Controller Pressure" name="FCPRES" units="Pa"/>
@@ -1054,6 +1056,8 @@
             <variable longname="SMPS CPC Condenser Temperature" name="CPCTCON" units="deg_C"/>
             <variable longname="SMPS DMA Q Excess" name="DMAQEX" units="L/min"/>
             <variable longname="SMPS Relative Humidity" name="RH" units="Pct"/>
+            <variable longname="SMPS Integrated N UP" name="INTGRNU" units="counts/cc"/>
+            <variable longname="SMPS Integrated N DOWN" name="INTGRND" units="counts/cc"/>
         </sample> 
     </sensor>
     <serialSensor ID="SP2" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
