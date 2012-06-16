@@ -7,9 +7,9 @@
 #
 #set -x
 
-FlightNumberGV=`psql -h eol-rt-data.guest.ucar.edu -U ads -d real-time-GV -t -c "SELECT value FROM global_attributes WHERE key='FlightNumber';" | tr -d ' '`
+FlightNumberGV=`psql -h localhost -U ads -d real-time-GV -t -c "SELECT value FROM global_attributes WHERE key='FlightNumber';" | tr -d ' '`
 
-FlightNumberDC8=`psql -h eol-rt-data.guest.ucar.edu -U ads -d real-time-DC8 -t -c "SELECT value FROM global_attributes WHERE key='FlightNumber';" | tr -d ' '`
+FlightNumberDC8=`psql -h localhost -U ads -d real-time-DC8 -t -c "SELECT value FROM global_attributes WHERE key='FlightNumber';" | tr -d ' '`
 
 if [ "$FlightNumberGV" == "" ]; then
   exit
@@ -18,4 +18,4 @@ if [ "$FlightNumberGV" == "$FlightNumberDC8" ]; then
   exit
 fi
 
-echo "UPDATE global_attributes SET value='$FlightNumberGV' WHERE key='FlightNumber';" | psql -h eol-rt-data.guest.ucar.edu -U ads -d real-time-DC8 > /dev/null
+echo "UPDATE global_attributes SET value='$FlightNumberGV' WHERE key='FlightNumber';" | psql -h localhost -U ads -d real-time-DC8 > /dev/null
