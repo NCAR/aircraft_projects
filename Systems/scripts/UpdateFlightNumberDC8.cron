@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# Script to update the DC8's flight number to mirror that of the GV's
+#
+# This is set up to run out of a cron job every minute
+# * * * * * /home/local/Systems/scripts/UpdateFlightNumberDC8.cron
+#
+#set -x
+
+FlightNumberGV=`psql -h eol-rt-data.guest.ucar.edu -U ads -d real-time-GV -t -c "SELECT value FROM global_attributes WHERE key='FlightNumber';" | tr -d ' '`
+
+FlightNumberDC8=`psql -h eol-rt-data.guest.ucar.edu -U ads -d real-time-DC8 -t -c "SELECT value FROM global_attributes WHERE key='FlightNumber';" | tr -d ' '`
+
+if [ "$FlightNumberGV" == "" ]; then
+  exit
+fi
+if [ "$FlightNumberGV" == "$FlightNumberDC8" ]; then
+  exit
+fi
+
+echo "UPDATE global_attributes SET value='$FlightNumberGV' WHERE key='FlightNumber';" | psql -h eol-rt-data.guest.ucar.edu -U ads -d real-time-DC8 > /dev/null
