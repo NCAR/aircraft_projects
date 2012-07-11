@@ -824,9 +824,20 @@
       <prompt rate="5" string="SIG?\r"/>
       <message length="0" position="end" separator="\r"/>
     </serialSensor>
-    <sensor ID="ACDFO3" class="raf.UDPSocketSensor" devicename="inet::30106">
-        <sample id="1" rate="10" scanfFormat="O3,%f">
+<!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
+      the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
+-->
+    <sensor ID="ACDFO3" class="raf.UDPSocketSensor" devicename="inet::30107">
+      <sample id="1" rate="10" scanfFormat="O3,%f">
+        <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
+      </sample>
+    </sensor>
+    <sensor ID="NONOYO3" class="raf.UDPSocketSensor" devicename="inet::30107">
+        <sample id="1" rate="1" scanfFormat="NONO2O3,%f,%f,%f,%f">
+            <variable longname="NO Mixing Ratio" name="NO" units="pptv"/>
+            <variable longname="NO2 Mixing Ratio" name="NO2" units="pptv"/>
             <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
+            <variable longname="NOx Mixing Ratio" name="NOX" units="pptv"/>
         </sample>
     </sensor>
     <sensor ID="Fast2DC" class="raf.TwoD64_USB">
@@ -1062,6 +1073,23 @@
         </sample>
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
+<!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
+    <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::30100" >
+
+<!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
+        <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
+          <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
+        </sample>
+      -->
+    </sensor>
+    <sensor ID="CTRLRESRCH" class="raf.UDPSocketSensor" devicename="inet::41005" id="1000">
+      <sample id="1" rate="1" scanfFormat="NOCAL,%*dT%*d,%d">
+        <variable longname="Do Not Calibrate" name="NOCAL" units="bool"/>
+      </sample>
+      <sample id="2" rate="1" scanfFormat="NOREC,%*dT%*d,%d">
+        <variable longname="Do Not Record" name="NOREC" units="bool"/>
+      </sample>
+    </sensor>
   </sensorcatalog>
     <serialSensor ID="ITR" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="10" scanfFormat="%f %f %f %f %f %f %f">
@@ -1129,17 +1157,10 @@
 -->
     <dsm id="99" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
 
-        <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::30100" id="1600">
-        <!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
-          <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
-              <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
-          </sample>
-        -->
-        </sensor>
-
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
+      <sensor IDREF="PARCELS" devicename="inet::30100" id = "100"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
 
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
