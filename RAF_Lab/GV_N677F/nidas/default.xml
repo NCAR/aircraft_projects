@@ -372,23 +372,18 @@
         <message separator="\r" position="end" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="TDLH2O" class="DSMSerialSensor"
-        baud="115200" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="20" scanfFormat="%f %f %f %f %*f %*f %f %f %f %f %f %f %f %f">
-            <variable name="XRAWMRS" units="hPa" longname="Raw Water Mixing Ratio, TDL Short Path"/>
-            <variable name="XRAWMRL" units="hPa" longname="Raw Water Mixing Ratio, TDL Long Path"/>
-            <variable name="PCELLS" units="hPa" longname="Sample Cell Pressure, TDL Short Path"/>
-            <variable name="TCELLS" units="deg_C" longname="Sample Cell Temperature, TDL Short Path"/>
-            <variable name="PP2FS" units="V" longname="2f Signal Amplitude, TDL Short Path"/>
-            <variable name="PWRS" units="V" longname="Laser Power, TDL Short Path"/>
-            <variable name="IDXS" units="V" longname="Spectral Line Position, TDL Short Path"/>
-            <variable name="DKS" units="V" longname="Zero Level, TDL Short Path"/>
-            <variable name="PP2FL" units="V" longname="2f Signal Amplitude, TDL Long Path"/>
-            <variable name="PWRL" units="V" longname="Laser Power, TDL Long Path"/>
-            <variable name="IDXL" units="V" longname="Spectral Line Position, TDL Long Path"/>
-            <variable name="DKL" units="V" longname="Zero Level, TDL Long Path"/>
+    <serialSensor ID="TDLH2O" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+        <sample id="1" rate="20" scanfFormat="%*f %*f %*f %*f %*f %*f %f %f %f %f %f %f %f %f">
+            <variable longname="2f Signal Amplitude, TDL Short Path" name="PP2FS" units="count"/>
+            <variable longname="Laser Power, TDL Short Path" name="PWRS" units="count"/>
+            <variable longname="Spectral Line Position, TDL Short Path" name="IDXS" units="count"/>
+            <variable longname="Zero Level, TDL Short Path" name="DKS" units="count"/>
+            <variable longname="2f Signal Amplitude, TDL Long Path" name="PP2FL" units="count"/>
+            <variable longname="Laser Power, TDL Long Path" name="PWRL" units="count"/>
+            <variable longname="Spectral Line Position, TDL Long Path" name="IDXL" units="count"/>
+            <variable longname="Zero Level, TDL Long Path" name="DKL" units="count"/>
         </sample>
-        <message separator="\n" position="end" length="0"/>
+        <message length="0" position="end" separator="\n"/>
     </serialSensor>
 
     <serialSensor ID="CDP" class="raf.CDP_Serial"
@@ -398,24 +393,24 @@
 
         <parameter name="NCHANNELS" type="int" value="30"/>
         <parameter name="RANGE" type="int" value="0"/>
-        <parameter name="THRESHOLD" type="int" value="20"/>
-        <parameter name="TRANSIT_REJ" type="int" value="1"/>
+        <parameter name="THRESHOLD" type="int" value="60"/>
         <parameter name="DOF_REJ" type="int" value="1"/>
-        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
-        <parameter name="ATT_ACCEPT" type="int" value="95"/>
-        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
-        <parameter name="CT_METHOD" type="int" value="0"/>
         <parameter name="CHAN_THRESH" type="int" value="91 111 159 190 215 243 254 272 301 355 382 488 636 751 846 959 1070 1297 1452 1665 1851 2016 2230 2513 2771 3003 3220 3424 3660 4095"/>
 
         <sample id="1">
-            <variable name="CDPLSRC" units="mAmp" longname="CDP Laser Current"/>
-            <variable name="CDPLSRP" units="V" longname="CDP Laser Power Monitor"/>
-            <variable name="CDPWBTMP" units="deg_C" longname="CDP Wing Board Temperature"/>
-            <variable name="CDPLBTMP" units="deg_C" longname="CDP Laser Block Temperature"/>
-            <variable name="REJDOF" units="count" longname="CDP Particles Rejected (Outside Depth-of-Field))"/>
-            <variable name="REJAT" units="" longname="CDP Average Transit Rejected Particles"/>
-            <variable name="AVGTRNS" units="" longname="CDP Average Transit Time"/>
-            <variable name="OVFLW" units="" longname="CDP AtoD Converter Overflow/Overrange"/>
+            <variable longname="CDP Laser Current" name="CDPLSRC" units="mAmp"/>
+            <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
+            <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="deg_C"/>
+            <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="deg_C"/>
+            <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="Vdc"/>
+            <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="Vdc"/>
+            <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="Vdc"/>
+            <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="deg_C"/>
+            <variable longname="CDP Particles Rejected (Outside Depth-of-Field)" name="REJDOF" units="count"/>
+            <variable longname="CDP Qual Bandwidth" name="CDPQBDW" units="unk"/>
+            <variable longname="CDP Qual Threshold" name="CDPQTHRSH" units="unk"/>
+            <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
+            <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
 
             <variable name="ACDP" length="31" units="count" longname="CDP Raw Accumulation (per cell)"/>
         </sample>
@@ -603,34 +598,6 @@
         </sample>
     </sensor>
 
-    <serialSensor ID="TDLH2O" class="DSMSerialSensor"
-        baud="115200" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="20" scanfFormat="%*f %*f %f %f %*f %*f %f %f %f %f %f %f %f %f">
-	    <variable name="PCELL_LHS" units="hPa" longname="Sample Cell Pressure"/>
-	    <variable name="TCELL_LHS" units="deg_C" longname="Sample Cell Temperature"/>
-	    <variable name="PP2F_LHS" units="count" longname="2f Signal Amplitude"/>
-	    <variable name="PWR_LHS" units="count" longname="Laser Power"/>
-	    <variable name="IDX_LHS" units="count" longname="Spectral Line Position"/>
-	    <variable name="DK_LHS" units="count" longname="Zero Level"/>
-	    <variable name="PP2F_LHL" units="count" longname="2f Signal Amplitude"/>
-	    <variable name="PWR_LHL" units="count" longname="Laser Power"/>
-	    <variable name="IDX_LHL" units="count" longname="Spectral Line Position"/>
-	    <variable name="DK_LHL" units="count" longname="Zero Level"/>
-        </sample>
-        <message separator="\n" position="end" length="0"/>
-    </serialSensor>
-
-    <lamsSensor ID="LAMS" class="raf.LamsSensor">
-        <parameter name="calm"  type="int" value="1"/>
-        <parameter name="nAVG"  type="int" value="40"/>
-        <parameter name="nSKIP" type="int" value="0"/>
-        <parameter name="nPEAK" type="int" value="1000"/>
-        <sample id="1" rate="1">
-            <variable name="LAMSAVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
-            <variable name="LAMSMAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
-        </sample>
-    </lamsSensor>
-
 </sensorcatalog>
 
 
@@ -674,7 +641,7 @@
 
     <dsm name="dsm301" location="LAMS_rack" id="1" rserialPort="30002">
         <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
-        <lamsSensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
+<!--        <lamsSensor IDREF="LAMS" devicename="/dev/lams0" id="200"/> -->
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
@@ -773,12 +740,6 @@
 
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/dsmser5" id="120">
         </serialSensor>
-        <sensor class="raf.TwoDC_USB" devicename="/dev/usbtwod0" id="790" suffix="_007">
-            <parameter name="SerialNumber" value="001" type="string"/>
-            <sample id="1">
-                <variable name="SHADOR" units="count" longname="High Speed 2DC Shadow-or count"/>
-            </sample>
-        </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
                 <variable name="DPL" units="V" longname="Dew/Frost Point Temperature, Fuselage Left">
