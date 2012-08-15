@@ -164,7 +164,9 @@
         <variable longname="IRS Vertical Acceleration" name="ACINS" units="m/s2"/>
       </sample>
       <sample id="0365" rate="50">
-        <variable longname="IRS Vertical Speed" name="VSPD" units="m/s"/>
+        <variable longname="IRS Vertical Speed" name="VSPD" units="m/s">
+            <linear intercept="0.0" slope="1.0385" units="m/s"/>
+        </variable>
       </sample>
       <sample id="0366" rate="12.5">
         <variable longname="IRS Ground Speed Vector, North Component" name="VNS" units="m/s"/>
@@ -659,19 +661,19 @@
 -->
       <parameter name="CHAN_THRESH" type="int" value="64 89 115 147 168 188 220 262 308 356 407 461 583 707 829 983 1148 1324 1512 1697 1909 2131 2356 2610 2864 3097 3337 3583 3879 4096"/>
       <sample id="1">
-            <variable longname="CDP Laser Current" name="CDPLSRC" units="mAmp"/>
-            <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
-            <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="deg_C"/>
-            <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="deg_C"/>
-            <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="Vdc"/>
-            <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="Vdc"/>
-            <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="Vdc"/>
-            <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="deg_C"/>
-            <variable longname="CDP Particles Rejected (Outside Depth-of-Field)" name="REJDOF" units="count"/>
-            <variable longname="CDP Qual Bandwidth" name="CDPQBDW" units="unk"/>
-            <variable longname="CDP Qual Threshold" name="CDPQTHRSH" units="unk"/>
-            <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
-            <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
+         <variable longname="CDP Laser Current" name="CDPLSRC" units="mAmp"/>
+         <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
+         <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="deg_C"/>
+         <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="deg_C"/>
+         <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="Vdc"/>
+         <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="Vdc"/>
+         <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="Vdc"/>
+         <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="deg_C"/>
+         <variable longname="CDP Particles Rejected (Outside Depth-of-Field)" name="REJDOF" units="count"/>
+         <variable longname="CDP Qual Bandwidth" name="CDPQBDW" units="unk"/>
+         <variable longname="CDP Qual Threshold" name="CDPQTHRSH" units="unk"/>
+         <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
+         <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
 
         <variable length="31" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
         <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
@@ -826,7 +828,9 @@
       <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %c %*f %f %*f %*f %f %f %f %f">
         <variable longname="VCSEL Status Code" name="STATUS" units="none"/>
         <variable longname="VCSEL Ambient Temperature" name="AT" units="deg_K"/>
-        <variable longname="VCSEL Ambient Pressure" name="PS" units="torr"/>
+        <variable longname="VCSEL Ambient Pressure" name="PS" units="torr">
+            <linear slope="1.333223" intercept="0.0" units="hPa"/>
+        </variable>
         <variable longname="VCSEL Laser Temperature" name="LSRTMP" units="ohm"/>
         <variable longname="VCSEL Set Temperature" name="SETTMP" units="ohm"/>
         <variable longname="VCSEL Thermoelectric Cooler Current" name="TCC" units="count"/>
@@ -842,7 +846,7 @@
 
 <!-- molecules/cm^3 -->
         <variable longname="VCSEL Sample Laser Intensity" name="SMPLSRINT" units="mV"/>
-        <variable longname="VCSEL Frost Dew Point" name="DPV" units="deg_C"/>
+        <!-- variable longname="VCSEL Frost Dew Point" name="DPV" units="deg_C"/ -->
       </sample>
 
 <!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
@@ -1247,7 +1251,7 @@
         </sample>
         <sample id="0324" rate="50">
           <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
-            <linear intercept="0.45" slope="1.0" units="degree"/>
+            <linear intercept="0.41" slope="1.0" units="degree"/>
           </variable>
         </sample>
       </arincSensor>
@@ -1358,13 +1362,13 @@
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-89.2 25.923 -0.07941" units="deg_C"/>
+            <poly coefs="-79.383 21.175 0.2708" units="deg_C"/>
           </variable>
           <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-89.31 26.128 -0.09022" units="deg_C"/>
+            <poly coefs="-78.632 21.153 0.2543" units="deg_C"/>
           </variable>
           <variable longname="Total Temperature, Radome Left, fast unheated" name="TTRL" units="V">
             <parameter name="channel" type="int" value="1"/>
