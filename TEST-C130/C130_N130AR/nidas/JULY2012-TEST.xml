@@ -1082,7 +1082,8 @@
   <site class="raf.Aircraft" name="C130_N130AR">
     <parameter name="tailNumber" type="string" value="N130AR"/>
     <server statusAddr="sock:127.0.0.1:30001">
-        <!-- There are now two mcaccept sockets, one for dsms to request xml configurations
+
+<!-- There are now two mcaccept sockets, one for dsms to request xml configurations
               and one for aeros sessions to request the xml configuration.  The XMLConfigService
               is set up to support the two different requestors.
               -->
@@ -1249,7 +1250,8 @@
                     <parameter name="bipolar" type="bool" value="false"/>
                     <poly coefs="0.387 14.082 -0.0037" units="hPa"/>
                 </variable>
-                <!--<variable longname="" name="TTRL" units="V">
+
+<!--<variable longname="" name="TTRL" units="V">
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
@@ -1262,7 +1264,7 @@
             </sample>
         </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
-            <calfile file="A2D004.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D003.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="10">
                 <parameter name="filter" type="string" value="boxcar"/>
@@ -1276,7 +1278,7 @@
             </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_FWDFS1" units="deg_C"/>
+                <variable longname="A2D Temperature" name="A2DTEMP__FWDFS1" units="deg_C"/>
             </sample>
         </sensor>
         <output class="RawSampleOutputStream">
@@ -1288,7 +1290,7 @@
     <dsm derivedData="sock::7071" id="21" location="Video_Rack" name="dsm321" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D1605.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
@@ -1328,7 +1330,7 @@
         </sample>
             <sample id="2" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_VID0" units="deg_C"/>
+                <variable longname="A2D Temperature" name="A2DTEMP__VID0" units="deg_C"/>
             </sample>
         </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
@@ -1371,11 +1373,11 @@
             </sample>
         </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D1607.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D018.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="4" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_AFTL0" units="deg_C"/>
+                <variable longname="A2D Temperature" name="A2DTEMP__AFTL0" units="deg_C"/>
             </sample>
         <sample id="1" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
@@ -1413,6 +1415,14 @@
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="400">
+        <calfile file="A2D018.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_AFTL2" units="deg_C"/>
+        </sample>
+      </sensor>
     </dsm>
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
@@ -1420,7 +1430,7 @@
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="120"/>
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS7" id="130" suffix="_GMN"/>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D016.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D012.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
@@ -1440,7 +1450,7 @@
         </sample>
             <sample id="3" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_AFTR0" units="deg_C"/>
+                <variable longname="A2D Temperature" name="A2DTEMP__AFTR0" units="deg_C"/>
             </sample>
         </sensor>
         <output class="RawSampleOutputStream">
@@ -1453,6 +1463,14 @@
         <parameter name="SerialNumber" type="string" value="CDP058"/>
       </serialSensor>
       <serialSensor IDREF="STABPLAT" devicename="/dev/ttyS8" id="800" suffix="_R2RACK"/>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="1000">
+        <calfile file="A2D012.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_AFTR2" units="deg_C"/>
+        </sample>
+      </sensor>
     </dsm>
     <dsm derivedData="sock::7071" id="25" location="RWP" name="dsm325" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_325"/>
@@ -1465,6 +1483,14 @@
       <serialSensor IDREF="S100" devicename="/dev/ttyS11" id="500" suffix="_new">
         <parameter name="SerialNumber" type="string" value="FSSP109"/>
       </serialSensor>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="700">
+        <calfile file="A2D007.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_RWP0" units="deg_C"/>
+        </sample>
+      </sensor>
     </dsm>
     <dsm derivedData="sock::7071" id="22" location="LWP" name="dsm322" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_322"/>
