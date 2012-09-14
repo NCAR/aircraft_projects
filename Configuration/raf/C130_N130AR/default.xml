@@ -670,6 +670,7 @@
       <parameter name="RANGE" type="int" value="0"/>
       <parameter name="THRESHOLD" type="int" value="60"/>
       <parameter name="DOF_REJ" type="int" value="1"/>
+
 <!-- 
         New thresholds effective March 2012. 
 -->
@@ -688,7 +689,6 @@
         <variable longname="CDP Qual Threshold" name="CDPQTHRSH" units="unk"/>
         <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
         <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
-
         <variable length="31" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
         <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
       </sample>
@@ -819,6 +819,7 @@
       <prompt rate="5" string="SIG?\r"/>
       <message length="0" position="end" separator="\r"/>
     </serialSensor>
+
 <!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
       the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
 -->
@@ -1059,17 +1060,18 @@
     </serialSensor>
     <serialSensor ID="HoneywellPPT" baud="19200" class="raf.PPT_Serial" databits="8" parity="none" stopbits="1">
         <sample id="1" scanfFormat="?%*2dCP=%f">
-           <variable name="PA" units="hPa" longname="Raw Dynamic Pressure"/>
+           <variable longname="Raw Dynamic Pressure" name="PA" units="hPa"/>
            <prompt rate="50" string="*00P1\r"/>
         </sample>
         <sample id="2" scanfFormat="?%*2dCT=%f">
-           <variable name="PATEMP" units="deg_C" longname="Temperature of Honeywell Pressure Probe"/>
+           <variable longname="Temperature of Honeywell Pressure Probe" name="PATEMP" units="deg_C"/>
            <prompt rate="1" string="*00T1\r"/>
         </sample>
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
+
 <!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
-    <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::30100" >
+    <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::30100">
 
 <!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
         <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
@@ -1098,8 +1100,6 @@
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-
-
   <site class="raf.Aircraft" name="C130_N130AR">
     <parameter name="tailNumber" type="string" value="N130AR"/>
     <server statusAddr="sock:127.0.0.1:30001">
@@ -1151,13 +1151,11 @@
          ########################################################################################################### 
 -->
     <dsm id="99" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
-
-      <sensor IDREF="PARCELS" devicename="inet::30100" id = "100"/>
+      <sensor IDREF="PARCELS" devicename="inet::30100" id="100"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
     </dsm>
-
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="319"/>
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
@@ -1174,7 +1172,6 @@
         </arincSensor>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G"/>
-
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
             <sample id="5" rate="25">
                 <variable longname="Altitude above ground (radar altimeter)" name="HGM232" units="feet">
@@ -1214,7 +1211,7 @@
             </sample>
         </serialSensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D003.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
@@ -1262,7 +1259,7 @@
             </sample>
         </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
-            <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D003.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="10">
                 <parameter name="filter" type="string" value="boxcar"/>
@@ -1283,11 +1280,10 @@
             <socket block="false" type="mcrequest"/>
         </output>
     </dsm>
-
     <dsm derivedData="sock::7071" id="21" location="Video_Rack" name="dsm321" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D1706.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
@@ -1342,7 +1338,7 @@
             </sample>
         </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
-            <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D1706.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
@@ -1459,6 +1455,14 @@
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="400">
+        <calfile file="A2D1714.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_AFTL1" units="deg_C"/>
+        </sample>
+      </sensor>
     </dsm>
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
@@ -1509,6 +1513,14 @@
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="400">
+        <calfile file="A2D1702.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_AFTR1" units="deg_C"/>
+        </sample>
+      </sensor>
     </dsm>
     <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmGustPod" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
@@ -1552,6 +1564,5 @@
             <socket type="mcrequest"/>
         </output>
     </dsm>
-
   </site>
 </project>
