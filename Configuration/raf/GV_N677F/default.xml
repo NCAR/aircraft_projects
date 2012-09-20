@@ -9,13 +9,11 @@
         <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
       </sample>
     </sensor>
-
     <arincSensor ID="LSZ-GV" class="raf.LSZ_HW_EB7032239" speed="low">
       <sample id="0001" rate="1">
         <variable longname="Lightning Preamble / mode" name="LSZMODE" units="none"/>
       </sample>
     </arincSensor>
-
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
 
 <!-- Taken from the Honeywell installation manual for the         -->
@@ -570,6 +568,7 @@
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
     <sensor ID="HOLODEC" class="raf.UDPSocketSensor" devicename="inet::30120"/>
+
 <!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
       the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
 -->
@@ -755,6 +754,7 @@
       <parameter name="RANGE" type="int" value="0"/>
       <parameter name="THRESHOLD" type="int" value="60"/>
       <parameter name="DOF_REJ" type="int" value="1"/>
+
 <!-- 
         New thresholds effective March 2011. 
 -->
@@ -773,7 +773,6 @@
         <variable longname="CDP Qual Threshold" name="CDPQTHRSH" units="unk"/>
         <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
         <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
-
         <variable length="31" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
         <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
       </sample>
@@ -899,7 +898,7 @@
         <variable longname="VCSEL Status Code" name="STATUS" units="none"/>
         <variable longname="VCSEL Ambient Temperature" name="AT" units="deg_K"/>
         <variable longname="VCSEL Ambient Pressure" name="PS" units="torr">
-            <linear slope="1.333223" intercept="0.0" units="hPa"/>
+            <linear intercept="0.0" slope="1.333223" units="hPa"/>
         </variable>
         <variable longname="VCSEL Laser Temperature" name="LSRTMP" units="ohm"/>
         <variable longname="VCSEL Set Temperature" name="SETTMP" units="ohm"/>
@@ -914,6 +913,7 @@
       <sample id="2" rate="25" scanfFormat="%f %f %*f %*f">
         <variable longname="VCSEL Moisture Number Density" name="RAWCONC" units="#/cm3"/>
         <variable longname="VCSEL Sample Laser Intensity" name="SMPLSRINT" units="mV"/>
+
 <!--        <variable longname="VCSEL Frost Dew Point" name="DPV" units="deg_C"/>  third %f above -->
       </sample>
 
@@ -947,7 +947,6 @@
       <prompt rate="5" string="SIG?\r"/>
       <message length="0" position="end" separator="\r"/>
     </serialSensor>
-
     <serialSensor ID="NOAA_CSD_O3" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="NOAA-OZONE%*d,%f,%f">
         <variable longname="NOAA O3 Ambiant Pressure" name="PS" units="hPa"/>
@@ -1457,8 +1456,9 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+
 <!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
-    <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::30100" >
+    <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::30100">
 
 <!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
         <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
@@ -1509,7 +1509,7 @@
       </service>
     </server>
     <dsm id="19" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
-      <sensor IDREF="PARCELS" devicename="inet::30100" id = "100"/>
+      <sensor IDREF="PARCELS" devicename="inet::30100" id="100"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -1551,12 +1551,20 @@
         </sample>
         <sample id="2" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2D Temperature" name="A2DTEMP_ADS" units="deg_C"/>
+          <variable longname="A2D Temperature" name="A2DTEMP_ADS0" units="deg_C"/>
         </sample>
       </sensor>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="4200">
+        <calfile file="A2D1705.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_ADS1" units="deg_C"/>
+        </sample>
+      </sensor>
     </dsm>
     <dsm derivedData="sock::7071" id="4" location="cabin_mpdb" name="dsm304" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
@@ -1591,7 +1599,6 @@
       </arincSensor>
       <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
       <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G"/>
-
       <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110">
         <sample id="1">
           <variable longname="Raw Static Pressure, Fuselage" name="PSF" units="hPa"/>
@@ -1603,6 +1610,14 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="4200">
+        <calfile file="A2D1600.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_MPDB0" units="deg_C"/>
+        </sample>
+      </sensor>
     </dsm>
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
