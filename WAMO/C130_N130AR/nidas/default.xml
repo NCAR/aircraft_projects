@@ -120,8 +120,8 @@
         </sample>
         <sample id="0315" rate="12.5"><variable name="IWS" units="m/s" longname="IRS Wind Speed"/></sample>
         <sample id="0316" rate="12.5"><variable name="IWD" units="degree_T" longname="IRS Wind Direction"/></sample>
-        <sample id="0317" rate="25" process="false"><variable name="TKAM" units="deg" longname="trk angle mag"/></sample>
-        <sample id="0320" rate="25" process="false"><variable name="mag_heading_25hz" units="deg" longname="mag heading 25Hz"/></sample>
+        <sample id="0317" rate="25"><variable name="TKAM" units="deg" longname="IRS Aircraft Magnetic Track Angle"/></sample>
+        <sample id="0320" rate="25"><variable name="MHDG" units="deg" longname="IRS Aircraft Magnetic Heading Angle"/></sample>
         <sample id="0321" rate="25"><variable name="DRFTA" units="degree" longname="IRS Drift Angle"/></sample>
         <sample id="0322" rate="25" process="false"><variable name="flt_pth_angle" units="deg" longname="flt pth angle"/></sample>
         <sample id="0323" rate="50" process="false"><variable name="flt_pth_accel" units="G" longname="flt pth accel"/></sample>
@@ -325,10 +325,13 @@
         <message separator="\xff\x81" position="beg" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="DewPointer" class="DSMSerialSensor"
-        baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="%d,%f,%*d,%*d,%d" rate="1"/>
-        <message separator="\n" position="end" length="0"/>
+    <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="%d,%f,%*d,%*d,%d">
+            <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+            <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
+            <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
+        </sample>
+        <message length="0" position="end" separator="\n"/>
     </serialSensor>
 
     <serialSensor ID="Mensor_6100" class="DSMSerialSensor"
@@ -890,16 +893,7 @@
 
 	<sensor IDREF="ACDFO3" id="130" suffix="_CL"/>
 
-
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="140">
-            <sample id="1">
-                <variable name="DPBB" units="unk" longname="Dew/Frost Point Balance, Fuselage Bottom"/>
-                <variable name="DPB" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Bottom">
-                    <linear slope="1.0" intercept="-1.5" units="deg_C"/>
-                </variable>
-                <variable name="DPBTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Bottom"/>
-            </sample>
-        </serialSensor>
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="140" suffix="_DPB"/>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS6" id="150">
             <sample id="1">
