@@ -75,15 +75,15 @@ enum DC8VARS {
     O3,
     SP2_INCPARTICLECOUNT,
     HSP2_INCPARTICLECOUNT,
-    SO4,
-    NO3,
-    NH4,
-    TOTAL_ORGANIC,
-    CHLORIDE,
-    MZ43,
-    MZ44,
-    MZ57,
-    MZ60
+    Sulfate_AMS_1um,
+    Nitrate_AMS_1um,
+    Ammonium_AMS_1um,
+    Organic_AMS_1um,
+    Chloride_AMS_1um,
+    F43,
+    F44,
+    F57,
+    F60
 };
 
 /* -------------------------------------------------------------------- */
@@ -97,6 +97,7 @@ udp2sql::udp2sql()
 
   // restart database drop timer
   _timer["DC8"].start(DROPTIME * 3600000, this);
+  _newFlight["DC8"] = 1;
 }
 
 /* -------------------------------------------------------------------- */
@@ -468,8 +469,8 @@ handleAircraftMessage(string aircraft, char* buffer, QString notes)
   QString varsStr(buffer);
 
   // trim off '\r' and '\n' characters if present
-//varsStr.replace("\r","");
-//varsStr.replace("\n","");
+  varsStr.replace("\r","");
+  varsStr.replace("\n","");
 
   // remove all spaces
   int len = 0;
@@ -578,15 +579,15 @@ handleAircraftMessage(string aircraft, char* buffer, QString notes)
     QStringList varListCopy = varsStrCopy.split(",");
 
     // prune un-needed variables
-    varListCopy.removeAt(MZ60);
-    varListCopy.removeAt(MZ57);
-    varListCopy.removeAt(MZ44);
-    varListCopy.removeAt(MZ43);
-    varListCopy.removeAt(CHLORIDE);
-    varListCopy.removeAt(TOTAL_ORGANIC);
-    varListCopy.removeAt(NH4);
-    varListCopy.removeAt(NO3);
-    varListCopy.removeAt(SO4);
+    varListCopy.removeAt(F60);
+    varListCopy.removeAt(F57);
+    varListCopy.removeAt(F44);
+    varListCopy.removeAt(F43);
+    varListCopy.removeAt(Chloride_AMS_1um);
+    varListCopy.removeAt(Organic_AMS_1um);
+    varListCopy.removeAt(Ammonium_AMS_1um);
+    varListCopy.removeAt(Nitrate_AMS_1um);
+    varListCopy.removeAt(Sulfate_AMS_1um);
     varListCopy.removeAt(HSP2_INCPARTICLECOUNT);
     varListCopy.removeAt(SP2_INCPARTICLECOUNT);
     varListCopy.removeAt(O3);
