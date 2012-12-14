@@ -22,4 +22,4 @@ done
 echo "HOST:" $HOST
 echo "AIRCRAFT:" $AIRCRAFT
 
-cat /home/local/Systems/eol-rt-data/postgres/real-time-DC8.sql | psql -h $HOST -U ads -d real-time-$AIRCRAFT
+cat /home/local/Systems/eol-rt-data/postgres/real-time-${AIRCRAFT}.sql | psql -h $HOST -U ads -d real-time-${AIRCRAFT}
