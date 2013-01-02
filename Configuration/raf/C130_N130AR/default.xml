@@ -823,12 +823,12 @@
 <!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
       the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
 -->
-    <sensor ID="ACDFO3" class="raf.UDPSocketSensor" devicename="inet::30107">
+    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="inet::30107">
       <sample id="1" rate="10" scanfFormat="O3,%f">
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
     </sensor>
-    <sensor ID="NONOYO3" class="raf.UDPSocketSensor" devicename="inet::30107">
+    <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="inet::30107">
         <sample id="1" rate="1" scanfFormat="NONO2O3,%f,%f,%f,%f">
             <variable longname="NO Mixing Ratio" name="NO" units="pptv"/>
             <variable longname="NO2 Mixing Ratio" name="NO2" units="pptv"/>
@@ -900,7 +900,7 @@
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-    <sensor ID="GHUHSAS" class="raf.UDPSocketSensor" devicename="inet::30033" id="1700" suffix="_GH">
+    <sensor ID="GHUHSAS" class="UDPSocketSensor" devicename="inet::30033" id="1700" suffix="_GH">
       <parameter name="SerialNumber" type="string" value="UHSAS003"/>
       <parameter name="sendInit" type="bool" value="false"/>
 
@@ -1071,7 +1071,7 @@
     </serialSensor>
 
 <!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
-    <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::30100">
+    <sensor ID="PARCELS" class="UDPSocketSensor" devicename="inet::30100">
 
 <!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
         <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
@@ -1079,7 +1079,7 @@
         </sample>
       -->
     </sensor>
-    <sensor ID="CTRLRESRCH" class="raf.UDPSocketSensor" devicename="inet::41005" id="1000">
+    <sensor ID="CTRLRESRCH" class="UDPSocketSensor" devicename="inet::41005" id="1000">
       <sample id="1" rate="1" scanfFormat="NOCAL,%*dT%*d,%d">
         <variable longname="Do Not Calibrate" name="NOCAL" units="bool"/>
       </sample>
