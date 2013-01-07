@@ -1534,7 +1534,11 @@
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
         <calfile file="A2D016.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="10">
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2D Temperature" name="A2DTEMP_ADS0" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
           <variable longname="Cabin Temperature at ADS Rack Location" name="TCAB" units="V">
@@ -1557,10 +1561,6 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="3.86 103.76 0.0555" units="hPa"/>
           </variable>
-        </sample>
-        <sample id="2" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2D Temperature" name="A2DTEMP_ADS0" units="deg_C"/>
         </sample>
       </sensor>
       <output class="RawSampleOutputStream">
@@ -1665,7 +1665,11 @@
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
         <calfile file="A2D1704.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="100">
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2D Temperature" name="A2DTEMP_RAD" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
           <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH2" units="V">
@@ -1705,10 +1709,6 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <linear intercept="0.0" slope="220.0" units="hPa"/>  
           </variable>
-        </sample>
-        <sample id="2" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2D Temperature" name="A2DTEMP_RAD" units="deg_C"/>
         </sample>
       </sensor>
       <output class="RawSampleOutputStream">

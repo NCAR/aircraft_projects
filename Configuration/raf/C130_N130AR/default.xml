@@ -1213,7 +1213,11 @@
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D003.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="100">
+            <sample id="1" rate="1">
+                <parameter name="temperature" type="bool" value="true"/>
+                <variable longname="A2D Temperature" name="A2DTEMP_FWDFS0" units="deg_C"/>
+            </sample>
+            <sample id="2" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="5"/>
                 <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="V">
@@ -1265,15 +1269,15 @@
             <poly coefs="0.82548 219.42 0.053876" units="hPa"/>
           </variable>
         </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_FWDFS0" units="deg_C"/>
-            </sample>
         </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
             <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="10">
+            <sample id="1" rate="1">
+                <parameter name="temperature" type="bool" value="true"/>
+                <variable longname="A2D Temperature" name="A2DTEMP_FWDFS1" units="deg_C"/>
+            </sample>
+            <sample id="2" rate="10">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="50"/>
                 <variable longname="Interior Cabin Static Pressure" name="PCAB" units="V">
@@ -1282,10 +1286,6 @@
                     <parameter name="bipolar" type="bool" value="true"/>
                     <poly coefs="13.024 107.73 -0.0515" units="hPa"/>
                 </variable>
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_FWDFS1" units="deg_C"/>
             </sample>
         </sensor>
         <output class="RawSampleOutputStream">
@@ -1297,7 +1297,11 @@
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="100">
+            <sample id="1" rate="1">
+                <parameter name="temperature" type="bool" value="true"/>
+                <variable longname="A2D Temperature" name="A2DTEMP_VID0" units="deg_C"/>
+            </sample>
+            <sample id="2" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="5"/>
                 <variable longname="Total Temperature, Deiced Left, HARCO" name="TTHL1" units="V">
@@ -1344,15 +1348,15 @@
                     <poly coefs="199.3 188.86 0.0034" units="hPa"/>
                 </variable>
             </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_VID0" units="deg_C"/>
-            </sample>
         </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
             <calfile file="A2D1706.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="100">
+            <sample id="1" rate="1">
+                <parameter name="temperature" type="bool" value="true"/>
+                <variable longname="A2D Temperature" name="A2DTEMP_VID1" units="deg_C"/>
+            </sample>
+            <sample id="2" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="5"/>
                 <variable longname="UV Hygrometer Temperature" name="XUVT" units="V">
@@ -1385,10 +1389,6 @@
                     <parameter name="bipolar" type="bool" value="true"/>
                 </variable>
             </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_VID1" units="deg_C"/>
-            </sample>
         </sensor>
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -1404,7 +1404,11 @@
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D018.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="10">
+            <sample id="1" rate="1">
+                <parameter name="temperature" type="bool" value="true"/>
+                <variable longname="A2D Temperature" name="A2DTEMP_AFTL0" units="deg_C"/>
+            </sample>
+            <sample id="2" rate="10">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="50"/>
                 <variable longname="CN Counter Inlet Pressure" name="PCN" units="V">
@@ -1435,10 +1439,6 @@
                     <parameter name="bipolar" type="bool" value="true"/>
                     <linear intercept="0.03" slope="1.118" units="vlpm"/>
                 </variable>
-            </sample>
-            <sample id="4" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_AFTL0" units="deg_C"/>
             </sample>
         </sensor>
 
@@ -1484,7 +1484,11 @@
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D1702.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="100">
+            <sample id="1" rate="1">
+                <parameter name="temperature" type="bool" value="true"/>
+                <variable longname="A2D Temperature" name="A2DTEMP_AFTR0" units="deg_C"/>
+            </sample>
+            <sample id="2" rate="100">
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="5"/>
                 <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
@@ -1516,10 +1520,6 @@
                     <parameter name="bipolar" type="bool" value="false"/>
                     <poly coefs="-68.485 28.126 -0.416" units="deg_C"/>
                 </variable>
-            </sample>
-            <sample id="3" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_AFTR0" units="deg_C"/>
             </sample>
         </sensor>
         <output class="RawSampleOutputStream">
