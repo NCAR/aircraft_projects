@@ -326,8 +326,12 @@ void udp2sql::newData()
   // buffer will be null-terminated no matter what bunzip does to it.
   unsigned int bufLen = sizeof(buffer_space) - 1;
   int ret = BZ2_bzBuffToBuffDecompress(buffer, &bufLen, udp_str, nBytes, 0, 0);
+
+  // if BZ_DATA_ERROR_MAGIC is returned then the stream is not compressed;
+  // copy the initially read in udp_str into the prossessed buffer string.
   if (ret == BZ_DATA_ERROR_MAGIC)
     memcpy(buffer, udp_str, nBytes);
+
   else if (ret < 0) {
     typedef struct {     // copied from bzlib.c
       FILE*     handle;
