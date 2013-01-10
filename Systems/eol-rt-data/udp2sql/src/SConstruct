@@ -2,6 +2,7 @@
 
 env = Environment(tools = ["default", "qt4", "nidas"])
 
+env.Append(CXXFLAGS='-g -Werror')
 env.EnableQt4Modules(['QtNetwork'])
 env.AppendUnique(LIBS = ["ssl", "pq", "bz2", "crypto", "nidas_util"])
 
