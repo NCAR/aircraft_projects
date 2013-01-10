@@ -1,5 +1,4 @@
 #include <QtCore/QCoreApplication>
-
 #include "udp2sql.h"
 #include <openssl/ssl.h>
 
