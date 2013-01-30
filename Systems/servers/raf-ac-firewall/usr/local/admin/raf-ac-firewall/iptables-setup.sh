@@ -180,6 +180,9 @@ EXT_PING_HOST=($UCAR_128)
 # HTTP_CLNTS=($UCAR_128)
 HTTP_CLNTS=($ANYHOST)
 
+# Remote Instrument Control Host.
+RIC_HOST=(128.117.188.122)
+
 # who can make requests of outside servers
 HTTP_REQUESTERS=($PRIV_HOSTS_DATA $PRIV_HOSTS_DISP)
 
@@ -234,28 +237,18 @@ iptables -P FORWARD DROP
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A OUTPUT -o lo -j ACCEPT
 
-# allow any INPUT or OUTPUT on internal and trusted interfaces
+# allow anything on trusted interfaces
 for iif in ${INT_IFS[*]} ${SAFE_EXT_IFS[*]}; do
     iptables -A INPUT -i $iif -j ACCEPT
     iptables -A OUTPUT -o $iif -j ACCEPT
-done
-
-for iif in ${INT_IFS[*]}; do
-    # Redirect http requests from a restricted set of hosts on the internal interfaces to squid.
-    # http requests from other hosts will not be forwarded to the outside
-    # network except to the safe and cheap external interfaces, which is permitted below.
-    for host in ${HTTP_REQUESTERS[*]}; do
-        iptables -t nat -A PREROUTING -i $iif -s $host -p tcp --dport 80 -j REDIRECT --to-port 3128
-    done
 done
 
 # If two or more trusted internal interfaces, forward between first two
 if [ $forward -eq 1 -a ${#INT_IFS[*]} -ge 2 ]; then
     iptables -A FORWARD -i ${INT_IFS[0]} -o ${INT_IFS[1]} -j ACCEPT
     iptables -A FORWARD -i ${INT_IFS[1]} -o ${INT_IFS[0]} -j ACCEPT
-
-    # forward between internal interfaces and safe external and cheap external
-    for eif in ${SAFE_EXT_IFS[*]} ${CHEAP_UNSAFE_EXT_IFS[*]}; do
+    # forward to internal interfaces from safe external
+    for eif in ${SAFE_EXT_IFS[*]}; do
         for iif in ${INT_IFS[*]}; do
             iptables -A FORWARD -i $iif -o $eif -j ACCEPT
             iptables -A FORWARD -i $eif -o $iif -j ACCEPT
@@ -414,63 +407,6 @@ for eif in ${UNSAFE_EXT_IFS[*]}; do
     filter_icmp $eif
 done
 
-# port forwarding of udp packets coming in on external interfaces:
-# cheap and expensive, unsafe and safe. These rules allow udp traffic.
-# Place them before the rules in filter_ip that block udp traffic.
-for (( i = 0; i < ${#UDP_PORT_FORWARDS[*]}; )); do
-    # mystery: incrementing with "let i++" results in an error exit
-    from=${UDP_PORT_FORWARDS[$i]}
-    i=$(( $i+1 ))
-    port=${UDP_PORT_FORWARDS[$i]}
-    i=$(( $i+1 ))
-    toaddr=${UDP_PORT_FORWARDS[$i]}
-    i=$(( $i+1 ))
-    toport=${UDP_PORT_FORWARDS[$i]}
-    i=$(( $i+1 ))
-    for eif in ${EXT_IFS[*]}; do
-        # if toaddr is localhost, use REDIRECT target, otherwise DNAT
-	if [ $toaddr == 127.0.0.1 ]; then
-	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j REDIRECT --to-ports $toport
-            # iptables manpage about the REDIRECT target in the nat table:
-            # It redirects  the  packet  to the machine itself by changing the destination
-            # IP to the primary address of the incoming interface  (locally-generated  packets
-            # are mapped to the 127.0.0.1 address).
-
-            # So, we need to then accept packets on the new port on the same interface.
-            iptables -A INPUT -i $eif -p udp -s $from --dport $toport -j ACCEPT
-        else
-	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j DNAT --to $toaddr:$toport
-            # then must open the forward filter to internal interfaces
-            for iif in ${INT_IFS[*]}; do
-                    iptables -A FORWARD -i $eif -o $iif -s $from -p udp --dport $toport -j ACCEPT
-            done
-        fi
-    done
-done
-
-for eif in ${SAFE_EXT_IFS[*]}; do
-    # MASQUERADE is a form of SNAT (source NAT), intended to be used for interfaces
-    # with dynamic addresses. I believe it works OK with static IP addresses too, except
-    # that connections are forgotten if the interface goes down, which should
-    # not be a problem for us.
-    if [ $forward -eq 1 ]; then
-	iptables -t nat -A POSTROUTING -o $eif -j MASQUERADE
-    fi
-done
-
-# Over ppp1 (MPDS), clamp MSS.
-iptables -t mangle -A FORWARD -o ppp1 -p tcp --tcp-flags SYN,RST SYN \
-    -j TCPMSS --clamp-mss-to-pmtu
-
-# accept fragments on any interface
-iptables -A OUTPUT -f -j ACCEPT
-iptables -A INPUT -f -j ACCEPT
-if [ $forward -eq 1 ]; then
-    iptables -A FORWARD -f -j ACCEPT
-fi
-
-# function that establishes filters that are meant to be used for 
-# expensive interfaces (satcom) and for unsafe but cheap interfaces.
 filter_ip()
 {
     local eif=$1        # interface
@@ -506,6 +442,11 @@ filter_ip()
 	iptables -A OUTPUT -o $eif -d $host -p tcp --dport ssh -m state --state NEW -j ACCEPT
 	if [ $forward -eq 1 ]; then
 	    iptables -A FORWARD -o $eif -d $host -p tcp --dport ssh -m state --state NEW -j ACCEPT
+	fi
+	# Same for outbound to sshd on port 23, although may want to limit this to eol-rt-data.
+	iptables -A OUTPUT -o $eif -d $host -p tcp --dport 23 -m state --state NEW -j ACCEPT
+	if [ $forward -eq 1 ]; then
+	    iptables -A FORWARD -o $eif -d $host -p tcp --dport 23 -m state --state NEW -j ACCEPT
 	fi
     done
 
@@ -579,7 +520,8 @@ filter_ip()
 	# iptables -A FORWARD -o $eif -p udp --dport domain -m state --state NEW -j ACCEPT
     # fi
 
-    # Log, then block GoogleEarth on expensive links. This will block squid too.
+    # Log, then block GoogleEarth on expensive links. This will block
+    # squid too.
     if ! $cheap; then
       for host in ${GOOGLE_EARTH[*]}; do
 	iptables -A OUTPUT -o $eif -d $host -p tcp --dport http -m limit --limit 1/minute --limit-burst 5 -j LOG --log-prefix "IPTABLES OUT GoogleEarth: "
@@ -587,12 +529,13 @@ filter_ip()
       done
     fi
 
-    # outgoing http requests from browser on acserver and squid daemon to remote servers
+    # squid's outgoing http requests to remote servers
     iptables -A OUTPUT -o $eif -p tcp --dport http -m state --state NEW -j ACCEPT
     iptables -A OUTPUT -o $eif -p tcp --dport https -m state --state NEW -j ACCEPT
     if [ $forward -eq 1 ]; then
-        # forward https requests from permitted hosts. REDIRECT of port 80 to squid is done elsewhere
 	for host in ${HTTP_REQUESTERS[*]}; do
+            # Added by truss 20070511 for transparent squid proxy
+            iptables -t nat -A PREROUTING -s $host -p tcp --dport 80 -j REDIRECT --to-port 3128
 	    iptables -A FORWARD -o $eif -s $host -p tcp --dport https -m state --state NEW -j ACCEPT
 	done
     fi
@@ -691,6 +634,10 @@ filter_ip()
 
     # Allow UDP data feed to UCAR
     iptables -A OUTPUT -o $eif -p udp --dport 31007 -d $UCAR_128 -j ACCEPT
+    iptables -A OUTPUT -o $eif -p udp --dport 30009 -d $UCAR_128 -j ACCEPT
+    iptables -A INPUT -i $eif -p udp --dport 30009 -d $UCAR_128 -j ACCEPT
+    iptables -A OUTPUT -o $eif -p udp --dport 30010 -d $UCAR_128 -j ACCEPT
+    iptables -A INPUT -i $eif -p udp --dport 30010 -d $UCAR_128 -j ACCEPT
 
     # iptables -A FORWARD -m limit -j LOG --log-prefix iptables_FORWARD \
 	#	--log-level info
@@ -727,8 +674,7 @@ filter_ip()
     iptables -A OUTPUT -o $eif -m limit --limit 1/minute --limit-burst 5 -j LOG --log-prefix "IPTABLES PROTOCOL-X-OUT: "
     iptables -A OUTPUT -o $eif -j DROP
 
-    # MASQUERADE is a form of SNAT (source NAT), to be used for interfaces
-    # with dynamic addresses.
+    # MASQUERADE is a form of SNAT (source NAT)
     if [ $forward -eq 1 ]; then
 	iptables -t nat -A POSTROUTING -o $eif -j MASQUERADE
     fi
@@ -738,6 +684,33 @@ filter_ip()
     # 	--to 192.168.84.99:22
 }
 
+# port forwarding of all udp packets coming in on external interfaces
+# cheap and expensive, unsafe and safe.
+for (( i = 0; i < ${#UDP_PORT_FORWARDS[*]}; )); do
+    # mystery: incrementing with "let i++" results in an error exit
+    from=${UDP_PORT_FORWARDS[$i]}
+    i=$(( $i+1 ))
+    port=${UDP_PORT_FORWARDS[$i]}
+    i=$(( $i+1 ))
+    ip=${UDP_PORT_FORWARDS[$i]}
+    i=$(( $i+1 ))
+    toport=${UDP_PORT_FORWARDS[$i]}
+    i=$(( $i+1 ))
+    for eif in ${EXT_IFS[*]}; do
+        # if dest is localhost, use REDIRECT target, otherwise DNAT
+	if [ $ip == 127.0.0.1 ]; then
+	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j REDIRECT --to-ports $toport
+	    iptables -A INPUT -i $eif -p udp -s $from --dport $toport -j ACCEPT
+	    # iptables -A INPUT -i $eif -p udp --dport $toport -j ACCEPT
+        else
+	    iptables -t nat -A PREROUTING -i $eif -p udp -s $from --dport $port -j DNAT --to $ip:$toport
+            # then must open the forward filter to internal interfaces
+            for iif in ${INT_IFS[*]}; do
+                    iptables -A FORWARD -i $eif -o $iif -p udp --dport $toport -j ACCEPT
+            done
+        fi
+    done
+done
 
 # setup rules for cheap, i.e. non-satcom, but unsafe interfaces
 for eif in ${CHEAP_UNSAFE_EXT_IFS[*]}; do
@@ -748,6 +721,24 @@ done
 for eif in ${SATCOM_EXT_IFS[*]}; do
     filter_ip $eif false
 done
+
+for eif in ${SAFE_EXT_IFS[*]}; do
+    # MASQUERADE is a form of SNAT (source NAT)
+    if [ $forward -eq 1 ]; then
+	iptables -t nat -A POSTROUTING -o $eif -j MASQUERADE
+    fi
+done
+
+# Over ppp1 (MPDS), clamp MSS.
+iptables -t mangle -A FORWARD -o ppp1 -p tcp --tcp-flags SYN,RST SYN \
+    -j TCPMSS --clamp-mss-to-pmtu
+
+# accept fragments on any interface
+iptables -A OUTPUT -f -j ACCEPT
+iptables -A INPUT -f -j ACCEPT
+if [ $forward -eq 1 ]; then
+    iptables -A FORWARD -f -j ACCEPT
+fi
 
 info() {
     echo "# Generated by $0 from raf-ac-firewall package on `date`"
