@@ -178,7 +178,7 @@ EXT_PING_HOST=($UCAR_128)
 
 # who is allowed to make requests of our http server
 # HTTP_CLNTS=($UCAR_128)
-HTTP_CLNTS=($ANYHOST)
+HTTP_CLNTS=()
 
 # Remote Instrument Control Host.
 RIC_HOST=(128.117.188.122)
@@ -540,13 +540,15 @@ filter_ip()
 	done
     fi
 
-    for host in ${HTTP_CLNTS[*]}; do
-	# incoming http requests to our server
-	iptables -A INPUT -i $eif -s $host -p tcp --dport http -m state --state NEW -j ACCEPT
+    if $cheap; then
+        for host in ${HTTP_CLNTS[*]}; do
+            # incoming http requests to our server
+            iptables -A INPUT -i $eif -s $host -p tcp --dport http -m state --state NEW -j ACCEPT
 
-	# incoming https
-	iptables -A INPUT -i $eif -s $host -p tcp --dport https -m state --state NEW -j ACCEPT
-    done
+            # incoming https
+            iptables -A INPUT -i $eif -s $host -p tcp --dport https -m state --state NEW -j ACCEPT
+        done
+    fi
 
     # outgoing ntp (udp) is OK on cheap/fast interfaces.
     # Satcom is so slow that no-one should be doing ntp over it.
@@ -639,7 +641,7 @@ filter_ip()
     iptables -A OUTPUT -o $eif -p udp --dport 30010 -d $UCAR_128 -j ACCEPT
     iptables -A INPUT -i $eif -p udp --dport 30010 -d $UCAR_128 -j ACCEPT
 
-    #  3200{1-2} are for RIC
+    #  3200{1-2} are for Remote Instrument Control (RIC)
     iptables -A OUTPUT -o $eif -p udp --dport 32001 -d $UCAR_128 -j ACCEPT # plane to ground
     iptables -A INPUT -i $eif -p udp --dport 32001 -s $UCAR_128 -j ACCEPT # ground to plane
     iptables -A OUTPUT -o $eif -p udp --dport 32002 -d $UCAR_128 -j ACCEPT # plane to ground

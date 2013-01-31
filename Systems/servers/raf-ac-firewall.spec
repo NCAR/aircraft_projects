@@ -1,7 +1,7 @@
 Summary: Iptables configuration for RAF aircraft server
 Name: raf-ac-firewall
 Version: 1.0
-Release: 7
+Release: 8
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -88,6 +88,11 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ac-firewall/iptables-setup.sh
 
 %changelog
+* Thu Jan 31 2013 Gordon Maclean <maclean@ucar.edu> 1.0-8
+- Added UDP ports for RemoteInstrumentControl
+- HTTP_CLNTS is now an empty array. It was $ANYHOST, allowing any
+- outsite host to make http requests.
+- Removed eth3 since we don't ever seem to be using ISDN
 * Fri Apr 20 2012 Gordon Maclean <maclean@ucar.edu> 1.0-7
 - Added support for udp port forwarding.
 - In iptables-setup.sh, exit on error, clearing out firewall.
