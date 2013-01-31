@@ -639,6 +639,13 @@ filter_ip()
     iptables -A OUTPUT -o $eif -p udp --dport 30010 -d $UCAR_128 -j ACCEPT
     iptables -A INPUT -i $eif -p udp --dport 30010 -d $UCAR_128 -j ACCEPT
 
+    #  3200{1-2} are for RIC
+    iptables -A OUTPUT -o $eif -p udp --dport 32001 -d $UCAR_128 -j ACCEPT # plane to ground
+    iptables -A INPUT -i $eif -p udp --dport 32001 -s $UCAR_128 -j ACCEPT # ground to plane
+    iptables -A OUTPUT -o $eif -p udp --dport 32002 -d $UCAR_128 -j ACCEPT # plane to ground
+    iptables -A INPUT -i $eif -p udp --dport 32002 -s $UCAR_128 -j ACCEPT # ground to plane
+
+
     # iptables -A FORWARD -m limit -j LOG --log-prefix iptables_FORWARD \
 	#	--log-level info
 
