@@ -38,7 +38,7 @@ cd $XMIT_DIR
 
 # LDM start packet to ground.
 prefix=`echo $1 | cut -c1-16`
-pqexpire -v -i 0 -a 0 ${prefix}\*
+pqexpire -v -i 0 -a 0 -p ${prefix}\*
 pqinsert -v $1
 
 gunzip $1
