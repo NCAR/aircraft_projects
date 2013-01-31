@@ -88,8 +88,8 @@ SAFE_EXT_IFS=(cipsec+ tun+ eth2)
 CHEAP_UNSAFE_EXT_IFS=()
 
 # Slow and expensive external interfaces.
-# eth3 is here in case one activates Inmarsat ISDN
-SATCOM_EXT_IFS=(ppp+ eth3)
+# Add eth3 if one activates Inmarsat ISDN
+SATCOM_EXT_IFS=(ppp+)
 
 UNSAFE_EXT_IFS=(${CHEAP_UNSAFE_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]})
 
