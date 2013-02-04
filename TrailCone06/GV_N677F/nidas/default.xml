@@ -265,8 +265,12 @@
 
     <serialSensor ID="DewPointer" class="DSMSerialSensor"
         baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="%*d,%f" rate="1"/>
-        <message separator="\n" position="end" length="0"/>
+      <sample id="1" rate="1" scanfFormat="%d,%f,%*d,%*d,%d">
+        <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+        <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
+        <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
+      </sample>
+      <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
     <serialSensor ID="Mensor_6100" class="DSMSerialSensor"
@@ -395,30 +399,20 @@
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser1" id="130">
-	    <sample id="1">
-                <variable name="DPLS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left"/>
-	    </sample>
-        </serialSensor>
-
-        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser2" id="140">
-	    <sample id="1">
-                <variable name="DPRS" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right"/>
-	    </sample>
-        </serialSensor>
-
+        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser1" id="130" suffix="_DPL"/>
+        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser2" id="140" suffix="_DPR"/>
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/dsmser5" id="120"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
-                <variable name="DPL" units="V" longname="Dew/Frost Point Temperature, Fuselage Left">
+                <variable name="XDPL" units="V" longname="Dew/Frost Point Temperature, Fuselage Left">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.052057" type="float"/>
                     <parameter name="corIntercept" value="-0.355214" type="float"/>
 		    <linear slope="12.5" intercept="-75.0" units="deg_C"/>
                 </variable>
-                <variable name="DPR" units="V" longname="Dew/Frost Point Temperature, Fuselage Right">
+                <variable name="XDPR" units="V" longname="Dew/Frost Point Temperature, Fuselage Right">
                     <parameter name="gain" value="2" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.0538739" type="float"/>
