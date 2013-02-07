@@ -78,7 +78,8 @@ if len(regionlst) == 0:
     print "Must Exit!"
     # TODO need a nagios call here to alert operator 
     con.close()
-    os.remove(busy_file)
+    if os.path.isfile(busy_file):
+        os.remove(busy_file)
     sys.exit(1)
 region = (regionlst[0])[0]
 con.close()

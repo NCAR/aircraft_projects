@@ -114,6 +114,8 @@ os.system(command)
 command = "/usr/bin/curl " + http_site + http_dir + http_gfwname + " -o /tmp/tmp_radar.gfw"
 print command
 os.system(command)
+os.system("rm /tmp/*tiff")
+
 # convert latest conus radar from rectangular to sm
 command = "/usr/bin/gdalwarp -rcs -s_srs '+proj=longlat +ellps=clrk80 +no_defs' -t_srs '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs' /tmp/tmp_radar.gif /tmp/tmp_radar.tiff"
 print command
