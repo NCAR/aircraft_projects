@@ -1,0 +1,6 @@
+#!/bin/csh
+logger "start_cameras shell script called"
+/etc/init.d/capture stop
+sudo /usr/sbin/reload_fw
+sleep 2
+/etc/init.d/capture start &
