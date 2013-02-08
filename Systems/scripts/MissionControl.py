@@ -59,6 +59,15 @@ class MissionControl(QWidget):
         except:
             self.failExit()
 
+        # create the mission_control table
+        self.cursor.execute("SELECT exists(SELECT * FROM information_schema.tables where table_name='mission_control')")
+        val = self.cursor.fetchone()
+        if not val[0]:
+            try:
+                self.cursor.execute("CREATE TABLE mission_control (key text PRIMARY KEY, value text)")
+            except:
+                self.failExit()
+
         self.initUI()
 
         self.udpSocket = QUdpSocket()
@@ -78,7 +87,7 @@ class MissionControl(QWidget):
 
     def failExit(self):
         # Get the most recent exception
-        exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
+        exceptionValue = sys.exc_info()[1]
         # Exit the script and show an error telling what happened.
         QMessageBox.warning(None, "open 'real-time'",
           QString("Database connection failed!\n -> %s" % exceptionValue))
@@ -183,7 +192,7 @@ class MissionControl(QWidget):
             if rb.isChecked():
 #               print "key: %s\tvalue: %s\t %d" % (key, value, rb.isChecked())
                 try:
-                    self.cursor.execute("UPDATE global_attributes SET value = '%s' WHERE key='%s'" % (value, key))
+                    self.cursor.execute("UPDATE mission_control SET value = '%s' WHERE key='%s'" % (value, key))
                 except:
                     self.failExit()
 
@@ -195,12 +204,12 @@ class MissionControl(QWidget):
 
         # use current settings in database
         try:
-            self.cursor.execute("SELECT value from global_attributes WHERE key='%s'" % key)
+            self.cursor.execute("SELECT value from mission_control WHERE key='%s'" % key)
             val = self.cursor.fetchone()
             return unicode(val[0])
         except:
             try:
-                self.cursor.execute("INSERT INTO global_attributes VALUES ('%s', '%s')" % (key, value))
+                self.cursor.execute("INSERT INTO mission_control VALUES ('%s', '%s')" % (key, value))
             except:
                 self.failExit()
 
@@ -252,8 +261,8 @@ class MissionControl(QWidget):
 
         for key, value in self.keys.iteritems():
             try:
-#               print("SELECT value from global_attributes WHERE key='%s'" % key)
-                self.cursor.execute("SELECT value from global_attributes WHERE key='%s'" % key)
+#               print("SELECT value from mission_control WHERE key='%s'" % key)
+                self.cursor.execute("SELECT value from mission_control WHERE key='%s'" % key)
                 value = self.cursor.fetchone()
 #               print("value is '%s'" % value[0])
                 self.rbs[key, value[0]].setChecked(True)

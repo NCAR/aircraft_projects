@@ -51,7 +51,7 @@ ltngFile = ''
 visFile = ''
 
 con = pg.connect(dbname=database, host=dbhost, user='ads')
-querres = con.query("select value from global_attributes where key='cappi'")
+querres = con.query("select value from mission_control where key='cappi'")
 cappilst = querres.getresult()
 if len(cappilst) == 0:
     cappiFile = "CAPPI: Off\\n"
@@ -62,7 +62,7 @@ else:
         cappiFile = "CAPPI: Off\\n"
         conusFile = "NWS  : Off\\n"
 
-querres = con.query("select value from global_attributes where key='lightning'")
+querres = con.query("select value from mission_control where key='lightning'")
 ltnglst = querres.getresult()
 if len(ltnglst) == 0:
     ltngFile = "LMA  : Off\\n"
@@ -71,7 +71,7 @@ else:
     if ltng == 'off':
         ltngFile = "LMA  : Off\\n"
 
-querres = con.query("select value from global_attributes where key='region'")
+querres = con.query("select value from mission_control where key='region'")
 regionlst = querres.getresult()
 if len(regionlst) == 0:
     visFile = "VIS  : Off\\n"

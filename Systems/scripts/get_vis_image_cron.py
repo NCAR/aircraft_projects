@@ -112,7 +112,7 @@ print monthstr+"/"+todaystr+"/"+str(year)+" "+str(gmt[3])+":"+str(gmt[4])
 
 # Get Region information from the database
 con = pg.connect(dbname=database, host=dbhost, user='ads')
-querres = con.query("select value from global_attributes where key='region'")
+querres = con.query("select value from mission_control where key='region'")
 regionlst = querres.getresult()
 if len(regionlst) == 0:
     print "Database has not been initialized by MC for region, etc."

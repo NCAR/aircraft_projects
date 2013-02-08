@@ -59,7 +59,7 @@ except:
 
 # Get Region information from the database
 con = pg.connect(dbname=database, host=dbhost, user='ads')
-querres = con.query("select value from global_attributes where key='region'")
+querres = con.query("select value from mission_control where key='region'")
 regionlst = querres.getresult()
 if len(regionlst) == 0:
     print "Database has not been initialized by MC for region."
@@ -115,7 +115,7 @@ con = pg.connect(dbname=database, host=dbhost, user='ads')
 
 # Get delay indication from the database if not off, then check time of most recent image
 #  and if enough time has passed, continue, else quit.
-querres = con.query("select value from global_attributes where key='lightning'")
+querres = con.query("select value from mission_control where key='lightning'")
 lghtnglst = querres.getresult()
 if len(lghtnglst) == 0:
     print "Database has not been initialized by MC for lightning."

@@ -10,7 +10,7 @@
 key=`echo $AIRCRAFT | cut -d _ -f 1`_camera_
 #key=GV_camera_
 
-camera=`psql -d real-time -U ads -t -c "SELECT value FROM global_attributes WHERE key='camera';" | tr -d ' '`
+camera=`psql -d real-time -U ads -t -c "SELECT value FROM mission_control WHERE key='camera';" | tr -d ' '`
 if [ "$camera" == "" ]; then
   camera="forward"
 fi

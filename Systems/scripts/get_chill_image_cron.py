@@ -71,7 +71,7 @@ print "Starting get_chill_image.py for getting " + image_type + " imagery"
 
 # Get Region information from the database
 con = pg.connect(dbname=database, host=dbhost, user='ads')
-querres = con.query("select value from global_attributes where key='region'")
+querres = con.query("select value from mission_control where key='region'")
 regionlst = querres.getresult()
 if len(regionlst) == 0:
     print "Database has not been initialized by MC for region, etc."

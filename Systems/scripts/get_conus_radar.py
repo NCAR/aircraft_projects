@@ -75,7 +75,7 @@ con = pg.connect(dbname=database, host=dbhost, user='ads')
 #  and if enough time has passed, continue, else quit.
 # NOTE: right now we're using the cappi indicator for both cappi and conus radar
 #   may wish to separate these out.
-querres = con.query("select value from global_attributes where key='cappi'")
+querres = con.query("select value from mission_control where key='cappi'")
 cappilst = querres.getresult()
 if len(cappilst) == 0:
     print "Database has not been initialized by MC for region etc."
@@ -91,7 +91,7 @@ if cappi == 'off':
     os.remove(busy_file)
     sys.exit(1)
 # There is no CAPPI imagery over Colorado - why bother?
-querres = con.query("select value from global_attributes where key='region'")
+querres = con.query("select value from mission_control where key='region'")
 regionlst = querres.getresult()
 if len(regionlst) == 0:
     print "Database has not been initialized by MC for region."
