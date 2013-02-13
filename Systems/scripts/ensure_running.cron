@@ -24,10 +24,11 @@ if ($status) then
   nohup /opt/local/bin/acTrack2kml -o >& /tmp/acTrack2kml.log &
 endif
 
-ps ax | grep "acTrack2kml -p DC8 -o" | grep -qv grep
-if ($status) then
-  nohup /opt/local/bin/acTrack2kml -p DC8 -o >& /tmp/acTrack2kml-DC8.log &
-endif
+# from DC3 project
+#ps ax | grep "acTrack2kml -p DC8 -o" | grep -qv grep
+#if ($status) then
+#  nohup /opt/local/bin/acTrack2kml -p DC8 -o >& /tmp/acTrack2kml-DC8.log &
+#endif
 
 #ps ax | grep listen_sat.pl | grep -qv grep
 #if ($status) then
@@ -85,4 +86,14 @@ endif
 ps ax | grep renderd | grep -qv grep
 if ($status) then
   nice /usr/local/bin/renderd &
+endif
+
+if ($AIRCRAFT == "GV_N677F") then
+
+  # Start the Remote Instrument Control aircraft switch
+  # It will read its configuration from ~/.config/NCAR/Switch.ini
+  ps ax | grep ric_switch | grep -qv grep
+  if ($status) then
+    /home/local/raf/instruments/instctrl/switch/ric_switch >& /tmp/ric_switch.log &
+  endif
 endif
