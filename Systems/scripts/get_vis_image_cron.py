@@ -192,13 +192,14 @@ try:
     print 'setting it as overlay image for OSM.'
     command = "cp "+latest+" "+osm_file_name
     os.system(command)
-    command = "wget ftp://"+ftp_site+":"+ftp_dir+label_name + " -O " + label_name
-    os.system(command)
-    print 'obtained image label: '+label_name
-    command = "rm " + osm_label
-    os.system(command)
-    command = "ln -s " + label_name + " " + osm_label
-    os.system(command)
+# Using make_label.py now.
+#    command = "wget ftp://"+ftp_site+":"+ftp_dir+label_name + " -O " + label_name
+#    os.system(command)
+#    print 'obtained image label: '+label_name
+#    command = "rm " + osm_label
+#    os.system(command)
+#    command = "ln -s " + label_name + " " + osm_label
+#    os.system(command)
 
 except:
     print "problems getting file, exiting."

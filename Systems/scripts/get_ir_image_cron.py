@@ -153,9 +153,10 @@ try:
     print 'setting it as overlay image for OSM.'
     command = "cp "+latest+" "+osm_file_name
     os.system(command)
-    command = "wget ftp://"+ftp_site+":"+ftp_dir+label+" -O " + label
-    os.system(command)
-    print 'obtained image label: '+label
+# Using make_label.py now.
+#    command = "wget ftp://"+ftp_site+":"+ftp_dir+label+" -O " + label
+#    os.system(command)
+#    print 'obtained image label: '+label
 
 except:
     print "problems getting file, exiting."
