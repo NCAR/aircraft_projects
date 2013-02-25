@@ -69,9 +69,8 @@ endif
 
 
 echo "\nCreating directories."
-/bin/mkdir -vp $PROJ_DIR/$proj
-/bin/chmod -v g+s $proj
-/bin/chgrp -v proj $proj
+/bin/mkdir -vp $PROJ_DIR/$proj/$platform
+/bin/chmod -vR g+s $PROJ_DIR/$proj
 
 if ($status != 0) then
   echo "mkdir $PROJ_DIR/$proj/$platform failed, exiting."
