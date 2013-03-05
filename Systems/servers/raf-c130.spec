@@ -25,7 +25,6 @@ Requires: chrony
 Requires: raf-ac-avaps
 Requires: raf-ac-nfs
 Requires: GMT
-Requires: GMT-coastlines-all
 
 BuildArch: noarch
 

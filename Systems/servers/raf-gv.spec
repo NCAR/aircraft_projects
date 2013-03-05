@@ -26,7 +26,6 @@ Requires: raf-ac-nfs
 Requires: raf-ac-avaps
 Requires: raf-ac-mtp
 Requires: GMT
-Requires: GMT-coastlines-all
 
 BuildArch: noarch
 
