@@ -1568,26 +1568,36 @@
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
           <variable longname="Cabin Temperature at ADS Rack Location" name="TCAB" units="V">
-            <parameter name="gain" type="float" value="4"/> 
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <linear units="deg_C"> 
-              <calfile file="TCAB.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>  
-            </linear>
+            <poly units="deg_C">
+              <calfile file="TCAB.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
           </variable>
           <variable longname="Interior Cabin Static Pressure" name="PCAB" units="V">
-            <parameter name="gain" type="float" value="2"/> 
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-4.34962 108.196 -0.0150027" units="hPa"/>
+            <poly units="hPa">
+              <calfile file="PCAB.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
           </variable>
           <variable longname="Pressure of instrument exhaust duct, right" name="PDUMPPR" units="V">
-            <parameter name="gain" type="float" value="2"/> 
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-2.50 103.93 0.0235" units="hPa"/>
+            <poly units="hPa">
+              <calfile file="PDUMPPR.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
           </variable>
           <variable longname="Pressure of instrument exhaust duct, left" name="PDUMPPL" units="V">
-            <parameter name="gain" type="float" value="2"/> 
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="3.86 103.76 0.0555" units="hPa"/>
+            <poly units="hPa">
+              <calfile file="PDUMPPL.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
           </variable>
         </sample>
       </sensor>
