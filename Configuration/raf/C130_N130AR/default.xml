@@ -1237,59 +1237,75 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_FWDFS0" units="deg_C"/>
             </sample>
-            <sample id="2" rate="100">
-                <parameter name="filter" type="string" value="boxcar"/>
-                <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="V">
-                    <parameter name="channel" type="int" value="0"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-2.094 17.727 -0.0041" units="hPa"/>
-                </variable>
-                <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="V">
-                    <parameter name="channel" type="int" value="1"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-3.184 17.935 -0.0052" units="hPa"/>
-                </variable>
-                <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="V">
-                    <parameter name="channel" type="int" value="2"/>
-                    <parameter name="gain" type="float" value="1"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="1.044 6.9873 -0.0029" units="hPa"/>
-                </variable>
-                <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="V">
-                    <parameter name="channel" type="int" value="3"/>
-                    <parameter name="gain" type="float" value="1"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="0.99 5.163 0.0001" units="hPa"/>
-                </variable>
-                <variable longname="Total Temperature, Radome Left" name="TTRL" units="V">
-                    <parameter name="channel" type="int" value="4"/>
-                    <parameter name="gain" type="float" value="4"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-74.434 29.429 -0.6613" units="deg_C"/>
-                </variable>
-                <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="V">
-                    <parameter name="channel" type="int" value="5"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="0.387 14.082 -0.0037" units="hPa"/>
-                </variable>
-            <variable longname="Dewpoint Cavity Pressure, Top" name="CAVP_DPT" units="V">
+        <sample id="2" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="hPa">
+              <calfile file="QCR.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="hPa">
+              <calfile file="QCF.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="hPa">
+              <calfile file="ADIFR.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="hPa">
+              <calfile file="BDIFR.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Total Temperature, Radome Left" name="TTRL" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="deg_C">
+              <calfile file="TTRL.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="hPa">
+              <calfile file="QCFR.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Dewpoint Cavity Pressure, Top" name="CAVP_DPT" units="V">
             <parameter name="channel" type="int" value="6"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="0.37872 219.53 0.046591" units="hPa"/>
+            <poly units="hPa">
+              <calfile file="CAVP_DPT.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
           </variable>
           <variable longname="Dewpoint Cavity Pressure, Bottom" name="CAVP_DPB" units="V">
             <parameter name="channel" type="int" value="7"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="0.82548 219.42 0.053876" units="hPa"/>
+            <poly units="hPa">
+              <calfile file="CAVP_DPB.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
           </variable>
         </sample>
-        </sensor>
+      </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
             <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
@@ -1297,17 +1313,19 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_FWDFS1" units="deg_C"/>
             </sample>
-            <sample id="2" rate="10">
-                <parameter name="filter" type="string" value="boxcar"/>
-                <parameter name="numpoints" type="int" value="50"/>
-                <variable longname="Interior Cabin Static Pressure" name="PCAB" units="V">
-                    <parameter name="channel" type="int" value="0"/>
-                    <parameter name="gain" type="float" value="1"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="13.024 107.73 -0.0515" units="hPa"/>
-                </variable>
-            </sample>
-        </sensor>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Interior Cabin Static Pressure" name="PCAB" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="hPa">
+              <calfile file="PCAB.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
         <output class="RawSampleOutputStream">
             <socket block="false" type="mcrequest"/>
         </output>
@@ -1321,54 +1339,58 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_VID0" units="deg_C"/>
             </sample>
-            <sample id="2" rate="100">
-                <parameter name="filter" type="string" value="boxcar"/>
-                <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="Total Temperature, Deiced Left, HARCO" name="TTHL1" units="V">
-                    <parameter name="channel" type="int" value="0"/>
-                    <parameter name="gain" type="float" value="4"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-93.412 28.747 -0.1131" units="deg_C"/>
-                </variable>
-                <variable longname="Total Temperature, Deiced Left, HARCO" name="TTHL2" units="V">
-                    <parameter name="channel" type="int" value="1"/>
-                    <parameter name="gain" type="float" value="4"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-94.483 29.029 -0.132" units="deg_C"/>
-                </variable>
-                <variable longname="xcomr" name="XCOMR" units="V">
-                    <parameter name="channel" type="int" value="2"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                </variable>
-                <variable longname="xcofs" name="XCOFS" units="V">
-                    <parameter name="channel" type="int" value="3"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                </variable>
-                <variable longname="xcofcal" name="XCOFCAL" units="V">
-                    <parameter name="channel" type="int" value="4"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                </variable>
-                <variable longname="xcocell" name="XCOCELL" units="V">
-                    <parameter name="channel" type="int" value="5"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                </variable>
-                <variable longname="xcopin" name="XCOPIN" units="V">
-                    <parameter name="channel" type="int" value="6"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                </variable>
-                <variable longname="UV Hygrometer Pressure" name="XUVP" units="V">
-                    <parameter name="channel" type="int" value="7"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="199.3 188.86 0.0034" units="hPa"/>
-                </variable>
-            </sample>
-        </sensor>
+        <sample id="2" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="Total Temperature, Deiced Left, HARCO" name="TTHL1" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="deg_C">
+              <calfile file="TTHL1.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Total Temperature, Deiced Left, HARCO" name="TTHL2" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="deg_C">
+              <calfile file="TTHL2.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="xcomr" name="XCOMR" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="xcofs" name="XCOFS" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="xcofcal" name="XCOFCAL" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="xcocell" name="XCOCELL" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="xcopin" name="XCOPIN" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="UV Hygrometer Pressure" name="XUVP" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="199.3 188.86 0.0034" units="hPa"/>
+          </variable>
+        </sample>
+      </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
             <calfile file="A2D1706.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
@@ -1376,40 +1398,44 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_VID1" units="deg_C"/>
             </sample>
-            <sample id="2" rate="100">
-                <parameter name="filter" type="string" value="boxcar"/>
-                <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="UV Hygrometer Temperature" name="XUVT" units="V">
-                    <parameter name="channel" type="int" value="0"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="70.84 -18.295" units="deg_C"/>
-                </variable>
-                <variable longname="UV Hygrometer Intensity" name="XUVI" units="V">
-                    <parameter name="channel" type="int" value="1"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="24.087 -7.0017 0.5067" units="deg_C"/>
-                </variable>
-                <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
-                    <parameter name="channel" type="int" value="2"/>
-                    <parameter name="gain" type="float" value="1"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="-51.588 9.8077 0.0596" units="deg_C"/>
-                </variable>
-                <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
-                    <parameter name="channel" type="int" value="3"/>
-                    <parameter name="gain" type="float" value="1"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="-58.5 12.176 -0.1488" units="deg_C"/>
-                </variable>
-                <variable longname="Radiometric Surface Temperature" name="TRSTB" units="V">
-                    <parameter name="channel" type="int" value="4"/>
-                    <parameter name="gain" type="float" value="1"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                </variable>
-            </sample>
-        </sensor>
+        <sample id="2" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="UV Hygrometer Temperature" name="XUVT" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <linear intercept="70.84" slope="-18.295" units="deg_C"/>
+          </variable>
+          <variable longname="UV Hygrometer Intensity" name="XUVI" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="24.087 -7.0017 0.5067" units="deg_C"/>
+          </variable>
+          <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="deg_C">
+              <calfile file="RSTB.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="deg_C">
+              <calfile file="RSTB1.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Radiometric Surface Temperature" name="TRSTB" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+          </variable>
+        </sample>
+      </sensor>
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
@@ -1428,39 +1454,41 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_AFTL0" units="deg_C"/>
             </sample>
-            <sample id="2" rate="10">
-                <parameter name="filter" type="string" value="boxcar"/>
-                <parameter name="numpoints" type="int" value="50"/>
-                <variable longname="CN Counter Inlet Pressure" name="PCN" units="V">
-                    <parameter name="channel" type="int" value="0"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="7.25361 106.036 -0.0205082" units="hPa"/>
-                </variable>
-                <variable longname="CN Counter Inlet Temperature" name="CNTEMP" units="V">
-                    <parameter name="channel" type="int" value="1"/>
-                    <parameter name="gain" type="float" value="1"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="13.85 4.668 -0.0056" units="deg_C"/>
-                </variable>
-                <variable longname="Raw CN Counter Sample Flow Rate" name="FCN" units="V">
-                    <parameter name="channel" type="int" value="2"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                    <linear intercept="0.0" slope="0.3229" units="vlpm"/>
-                </variable>
-            </sample>
-            <sample id="3" rate="100">
-                <parameter name="filter" type="string" value="boxcar"/>
-                <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="CN Isokinetic Side Flow Rate" name="XICN" units="V">
-                    <parameter name="channel" type="int" value="3"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                    <linear intercept="0.03" slope="1.118" units="vlpm"/>
-                </variable>
-            </sample>
-        </sensor>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="CN Counter Inlet Pressure" name="PCN" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="hPa">
+              <calfile file="PCN.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="CN Counter Inlet Temperature" name="CNTEMP" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly coefs="13.85 4.668 -0.0056" units="deg_C"/>
+          </variable>
+          <variable longname="Raw CN Counter Sample Flow Rate" name="FCN" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <linear intercept="0" slope="0.3229" units="vlpm"/>
+          </variable>
+        </sample>
+        <sample id="3" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="CN Isokinetic Side Flow Rate" name="XICN" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <linear intercept="0.03" slope="1.118" units="vlpm"/>
+          </variable>
+        </sample>
+      </sensor>
 
 <!--
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="220">
@@ -1494,6 +1522,18 @@
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_AFTL1" units="deg_C"/>
         </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Dummy to facilitate recording of A2D Temperature" name="DUMMY_AFTL1" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DUMMY_AFTL1.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
       </sensor>
     </dsm>
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
@@ -1508,40 +1548,42 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_AFTR0" units="deg_C"/>
             </sample>
-            <sample id="2" rate="100">
-                <parameter name="filter" type="string" value="boxcar"/>
-                <parameter name="numpoints" type="int" value="5"/>
-                <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
-                    <parameter name="channel" type="int" value="0"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <linear intercept="0.0" slope="10.0" units="W"/>
-                </variable>
-                <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
-                    <parameter name="channel" type="int" value="1"/>
-                    <parameter name="gain" type="float" value="1"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                </variable>
-                <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC1" units="V">
-                    <parameter name="channel" type="int" value="2"/>
-                    <parameter name="gain" type="float" value="2"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <linear intercept="0.0" slope="10.0" units="W"/>
-                </variable>
-                <variable longname="Radiometric Sky/Cloud-Base Temperature" name="RSTT" units="V">
-                    <parameter name="channel" type="int" value="3"/>
-                    <parameter name="gain" type="float" value="1"/> 
-                    <parameter name="bipolar" type="bool" value="true"/>
-                    <poly coefs="-55.751 10.765 -0.0004" units="deg_C"/>
-                </variable>
-                <variable longname="Total Temperature, Deiced Wing" name="TTWH" units="V">
-                    <parameter name="channel" type="int" value="4"/>
-                    <parameter name="gain" type="float" value="4"/> 
-                    <parameter name="bipolar" type="bool" value="false"/>
-                    <poly coefs="-68.485 28.126 -0.416" units="deg_C"/>
-                </variable>
-            </sample>
-        </sensor>
+        <sample id="2" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <linear intercept="0" slope="10" units="W"/>
+          </variable>
+          <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+          </variable>
+          <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC1" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <linear intercept="0" slope="10" units="W"/>
+          </variable>
+          <variable longname="Radiometric Sky/Cloud-Base Temperature" name="RSTT" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="deg_C">
+              <calfile file="RSTT.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Total Temperature, Deiced Wing" name="TTWH" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly coefs="-68.485 28.126 -0.416" units="deg_C"/>
+          </variable>
+        </sample>
+      </sensor>
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
@@ -1551,6 +1593,16 @@
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_AFTR1" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="500">
+          <variable longname="Dummy to facilitate delivery of A2D Temperature" name="DUMMY_AFTR1" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="">
+              <calfile file="DUMMY_AFTR1.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
         </sample>
       </sensor>
     </dsm>
