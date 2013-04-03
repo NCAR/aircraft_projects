@@ -1387,7 +1387,9 @@
             <parameter name="channel" type="int" value="7"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="199.3 188.86 0.0034" units="hPa"/>
+            <poly units="hPa">
+              <calfile file="XUVP.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
           </variable>
         </sample>
       </sensor>
@@ -1469,13 +1471,17 @@
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <poly coefs="13.85 4.668 -0.0056" units="deg_C"/>
+            <poly units="deg_C">
+              <calfile file="CNTEMP.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
           </variable>
           <variable longname="Raw CN Counter Sample Flow Rate" name="FCN" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <linear intercept="0" slope="0.3229" units="vlpm"/>
+            <poly units="vlpm">
+              <calfile file="FCN.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
           </variable>
         </sample>
         <sample id="3" rate="100">
@@ -1485,7 +1491,9 @@
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <linear intercept="0.03" slope="1.118" units="vlpm"/>
+            <poly units="vlpm">
+              <calfile file="XICN.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
           </variable>
         </sample>
       </sensor>
@@ -1575,12 +1583,6 @@
             <poly units="deg_C">
               <calfile file="RSTT.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
-          </variable>
-          <variable longname="Total Temperature, Deiced Wing" name="TTWH" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly coefs="-68.485 28.126 -0.416" units="deg_C"/>
           </variable>
         </sample>
       </sensor>
