@@ -1,7 +1,7 @@
 Summary: Additions to syslog config for logging from NIDAS processes.
 Name: raf-ads3-syslog
 Version: 1.0
-Release: 6
+Release: 7
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -88,7 +88,7 @@ fi
 cf=/etc/rsyslog.conf
 if [ -f $cf ]; then
     # enable these modules
-    modules=(imuxsock.so imklog.so imudp.so)
+    modules=(imuxsock imklog imudp)
     for mod in ${modules[*]}; do
         sed -i -r '/^[[:space:]]*#[[:space:]]*\$ModLoad[[:space:]]+'$mod'/s/^[[:space:]]*#//' $cf
     done
@@ -137,6 +137,8 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %attr(0755,root,root) /etc/logrotate.d/ads3
 
 %changelog
+* Thu Apr 04 2011 Gordon Maclean <maclean@ucar.edu> 1.0-7
+- Removed .so from rsyslogd module's names.
 * Wed Oct 26 2011 Gordon Maclean <maclean@ucar.edu> 1.0-6
 - Removed  debug output to /var/log/ads3_debug.log and /var/log/ads3_kernel_debug.log
 * Tue Feb 9 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5
