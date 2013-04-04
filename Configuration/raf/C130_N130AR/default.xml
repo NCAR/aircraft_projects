@@ -1358,31 +1358,6 @@
               <calfile file="TTHL2.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="xcomr" name="XCOMR" units="V">
-            <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-          </variable>
-          <variable longname="xcofs" name="XCOFS" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-          </variable>
-          <variable longname="xcofcal" name="XCOFCAL" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-          </variable>
-          <variable longname="xcocell" name="XCOCELL" units="V">
-            <parameter name="channel" type="int" value="5"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-          </variable>
-          <variable longname="xcopin" name="XCOPIN" units="V">
-            <parameter name="channel" type="int" value="6"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-          </variable>
           <variable longname="UV Hygrometer Pressure" name="XUVP" units="V">
             <parameter name="channel" type="int" value="7"/>
             <parameter name="gain" type="float" value="2"/>
@@ -1435,6 +1410,9 @@
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="TRSTB.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
           </variable>
         </sample>
       </sensor>
@@ -1563,18 +1541,25 @@
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <linear intercept="0" slope="10" units="W"/>
+            <poly units="W">
+              <calfile file="PLWC.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
           </variable>
           <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="RICE.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
           </variable>
           <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC1" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <linear intercept="0" slope="10" units="W"/>
+            <poly units="W">
+              <calfile file="PLWC1.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
           </variable>
           <variable longname="Radiometric Sky/Cloud-Base Temperature" name="RSTT" units="V">
             <parameter name="channel" type="int" value="3"/>
