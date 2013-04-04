@@ -137,7 +137,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %attr(0755,root,root) /etc/logrotate.d/ads3
 
 %changelog
-* Thu Apr 04 2011 Gordon Maclean <maclean@ucar.edu> 1.0-7
+* Thu Apr 04 2013 Gordon Maclean <maclean@ucar.edu> 1.0-7
 - Removed .so from rsyslogd module's names.
 * Wed Oct 26 2011 Gordon Maclean <maclean@ucar.edu> 1.0-6
 - Removed  debug output to /var/log/ads3_debug.log and /var/log/ads3_kernel_debug.log
