@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 17
+Release: 18
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -28,6 +28,7 @@ cp home/ads/ads3_environment.csh     ${RPM_BUILD_ROOT}/home/ads/ads3_environment
 cp home/ads/login                    ${RPM_BUILD_ROOT}/home/ads/.login
 cp home/ads/bin/*                    ${RPM_BUILD_ROOT}/home/ads/bin
 cp home/ads/Desktop/*                ${RPM_BUILD_ROOT}/home/ads/Desktop
+cp -r home/ads/.ssh                  ${RPM_BUILD_ROOT}/home/ads
 
 %trigger -- nidas-daq
 # set contents of /var/lib/nidas/DaqUser to "ads", and set ownership of /var/run/nidas
@@ -48,6 +49,7 @@ fi
 %config /home/ads/.my_defaults
 %config /home/ads/ads3_environment.csh
 %config /home/ads/.login
+%config %attr(0600,ads,ads) /home/ads/.ssh/config
 %attr(0775,ads,ads) /home/ads/bin/swcreate
 %attr(0775,ads,ads) /home/ads/bin/svn-ask-username.sh
 %attr(0755,ads,ads) /home/ads/bin/foldertab
@@ -96,10 +98,17 @@ echo "  If your installing this on an aircraft then fix the AIRCRAFT and PROJECT
 echo "  variables in ~/ads3_environment.csh !!!"
 echo
 
+cf=/home/ads/.ssh/id_dsa_dsm
+if ! [ -f /home/ads/.ssh/id_dsa_dsm ]; then
+    echo "$cf private ssh key not found. Copy it from another system, and chmod 0600"
+fi
+
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Fri Apr 05 2013 Gordon Maclean <maclean@ucar.edu> 1.18
+- Added .ssh/config
 * Tue Apr 10 2012 Gordon Maclean <maclean@ucar.edu> 1.17
 - Update nidas path to /opt/nidas/bin.
 - Added trigger script to update ownership of /var/run/nidas and
