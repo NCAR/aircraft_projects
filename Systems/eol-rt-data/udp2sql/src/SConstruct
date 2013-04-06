@@ -17,7 +17,7 @@ udp2sql.h
 
 app = env.Program('udp2sql', SOURCES)
 
-EXECPATH = '/opt/local/bin/'
+EXECPATH = env.get('UDP2SQL_INSTALL_PATH', '/opt/local/bin/')
 
 env.Install(EXECPATH, app)
 
