@@ -1175,7 +1175,7 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-    </dsm>
+      <sensor IDREF="ACDFO3" devicename="inet::30107" id="300" suffix="_ACD"/></dsm>
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="319"/>
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
@@ -1237,7 +1237,27 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_FWDFS0" units="deg_C"/>
             </sample>
-        <sample id="2" rate="100">
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Dewpoint Cavity Pressure, Top" name="CAVP_DPT" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="hPa">
+              <calfile file="CAVP_DPT.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Dewpoint Cavity Pressure, Bottom" name="CAVP_DPB" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="hPa">
+              <calfile file="CAVP_DPB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
+        <sample id="3" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
           <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="V">
@@ -1288,22 +1308,6 @@
               <calfile file="QCFR.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="Dewpoint Cavity Pressure, Top" name="CAVP_DPT" units="V">
-            <parameter name="channel" type="int" value="6"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="CAVP_DPT.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Dewpoint Cavity Pressure, Bottom" name="CAVP_DPB" units="V">
-            <parameter name="channel" type="int" value="7"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="CAVP_DPB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
         </sample>
       </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
@@ -1339,7 +1343,27 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_VID0" units="deg_C"/>
             </sample>
-        <sample id="2" rate="100">
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Mercury Generic 1" name="GEM1" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="vdc">
+              <calfile file="GEM1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Mercury Generic 2" name="GEM2" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="vdc">
+              <calfile file="GEM2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
+        <sample id="3" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
           <variable longname="Total Temperature, Deiced Left, HARCO" name="TTHL1" units="V">
@@ -1367,9 +1391,9 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_VID1" units="deg_C"/>
             </sample>
-        <sample id="2" rate="100">
+        <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="5"/>
+          <parameter name="numpoints" type="int" value="50"/>
           <variable longname="RSTB Sensor Head Temperature" name="TRSTB" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="1"/>
@@ -1402,6 +1426,10 @@
               <calfile file="XUVT.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
+        </sample>
+        <sample id="3" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
           <variable longname="UV Hygrometer Intensity" name="XUVI" units="V">
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="2"/>
@@ -1457,10 +1485,6 @@
               <calfile file="CNTEMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-        </sample>
-        <sample id="3" rate="100">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="5"/>
           <variable longname="CN Isokinetic Side Flow Rate" name="XICN" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="2"/>
@@ -1517,7 +1541,7 @@
           </variable>
         </sample>
       </sensor>
-      <serialSensor IDREF="UHSAS" devicename="/dev/ttyS5" id="600">
+      <serialSensor IDREF="UHSAS" devicename="/dev/ttyS5" id="600" suffix="_LPO">
         <parameter name="SerialNumber" type="string" value="UHSAS001"/>
       </serialSensor>
     </dsm>
@@ -1536,26 +1560,6 @@
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="Top Pyrgeometer Stabilized Platform Pitch Angle" name="SPTPITCH" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="degree">
-              <calfile file="SPTPITCH.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Top Pyrgeometer Stabilized Platform Roll Angle" name="SPTROLL" units="V">
-            <parameter name="channel" type="int" value="5"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="degree">
-              <calfile file="SPTROLL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-        </sample>
-        <sample id="3" rate="100">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="5"/>
           <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="1"/>
@@ -1580,6 +1584,30 @@
               <calfile file="RSTT.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
+          <variable longname="Top Pyrgeometer Stabilized Platform Pitch Angle" name="SPTPITCH" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="degree">
+              <calfile file="SPTPITCH.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Top Pyrgeometer Stabilized Platform Roll Angle" name="SPTROLL" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="degree">
+              <calfile file="SPTROLL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="" name="XPTRMS1" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="vdc">
+              <calfile file="XPTRMS1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
         </sample>
       </sensor>
         <output class="RawSampleOutputStream">
@@ -1592,7 +1620,61 @@
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_AFTR1" units="deg_C"/>
         </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="HONO Generic 1" name="XHONO1" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="vdc">
+              <calfile file="XHONO1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="HONO Generic 2" name="XHONO2" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="vdc">
+              <calfile file="XHONO2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="TROPHON Nictric Acid" name="XHNO3" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="vdc">
+              <calfile file="XHNO3.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="TROPHONO Pressure" name="XPNO3" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="vdc">
+              <calfile file="XPNO3.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="TROPHON Organics" name="XPORG" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="vdc">
+              <calfile file="XPORG.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="SDI Inlet Flow" name="INFLOW" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="slpm">
+              <calfile file="INFLOW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
       </sensor>
+      <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS9" id="600" suffix="_PICPICPIC"/>
+      <serialSensor IDREF="CO_2005" devicename="/dev/ttyS8" id="800" suffix="_ALAL"/>
     </dsm>
     <dsm derivedData="sock::7071" id="18" location="Video_Rack2" name="dsm318" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_318"/>
@@ -1609,26 +1691,6 @@
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="Bottom Pyrgeometer Stabilized Platform Pitch Angle" name="SPBPITCH" units="V">
-            <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="degree">
-              <calfile file="SPBPITCH.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Bottom Pyrgeometer Stabilized Platform Roll Angle" name="SPBROLL" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="degree">
-              <calfile file="SPBROLL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-        </sample>
-        <sample id="3" rate="100">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="5"/>
           <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="1"/>
@@ -1643,6 +1705,22 @@
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="deg_C">
               <calfile file="RSTB1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Bottom Pyrgeometer Stabilized Platform Pitch Angle" name="SPBPITCH" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="degree">
+              <calfile file="SPBPITCH.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Bottom Pyrgeometer Stabilized Platform Roll Angle" name="SPBROLL" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="degree">
+              <calfile file="SPBROLL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
@@ -1729,7 +1807,7 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <serialSensor IDREF="S200" devicename="/dev/ttyS5" id="300">
+      <serialSensor IDREF="S200" devicename="/dev/ttyS5" id="300" suffix="_LPI">
         <parameter name="SerialNumber" type="string" value="PCAS108"/>
       </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="500">
@@ -1739,29 +1817,15 @@
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_322" units="deg_C"/>
         </sample>
-        <sample id="2" rate="500">
-          <variable longname="Gerber PV-100 Probe Liquid Water Content" name="XGLWC" units="V">
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="DUMMY_322" units="V">
             <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="2"/>
+            <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="gram/m3">
-              <calfile file="XGLWC.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Gerber PV-100 Effective Droplet Radius" name="XGREFF" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="um">
-              <calfile file="XGREFF.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Gerber PV-100 Particle Surface Area (Raw)" name="XGSFC" units="V">
-            <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="cm2/m3">
-              <calfile file="XGSFC.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            <poly units="vdc">
+              <calfile file="DUMMY_322.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
@@ -1772,6 +1836,12 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <serialSensor IDREF="S300" devicename="/dev/ttyS5" id="300" suffix="_RPO">
+        <parameter name="SerialNumber" type="string" value="FSSP305"/>
+      </serialSensor>
+      <serialSensor IDREF="S100" devicename="/dev/ttyS6" id="500" suffix="_RPI">
+        <parameter name="SerialNumber" type="string" value="FSSP122"/>
+      </serialSensor>
     </dsm>
   </site>
 </project>
