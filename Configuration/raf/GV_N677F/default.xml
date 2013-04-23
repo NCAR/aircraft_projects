@@ -576,12 +576,12 @@
 <!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
       the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
 -->
-    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="inet::30107">
+    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="inet::30107" suffix="_ACD">
       <sample id="1" rate="10" scanfFormat="O3,%f">
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
     </sensor>
-    <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="inet::30107">
+    <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="inet::30107" suffix="_ACD">
         <sample id="1" rate="1" scanfFormat="NONO2O3,%f,%f,%f,%f">
             <variable longname="NO Mixing Ratio" name="NO" units="pptv"/>
             <variable longname="NO2 Mixing Ratio" name="NO2" units="pptv"/>
@@ -670,7 +670,7 @@
             <variable longname="NIRZ 2000 nm Counts" name="NIRZ2000" units="count"/>
         </sample>
     </sensor>
-    <sensor ID="TOGA" class="UDPSocketSensor" devicename="inet::30120">
+    <sensor ID="TOGA" class="UDPSocketSensor" devicename="inet::30120" suffix="_TOGA">
       <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="TOGA Butane" name="BUTANE" units="pptv"/>
         <variable longname="TOGA Benzene" name="BENZ" units="pptv"/>
@@ -1062,7 +1062,7 @@
         <variable longname="NOAA PANTHER Methane" name="CH4" units="ppbv"/>
       </sample>
     </sensor>
-    <sensor ID="SMPS" class="UDPSocketSensor" devicename="inet::30104">
+    <sensor ID="SMPS" class="UDPSocketSensor" devicename="inet::30104" suffix="_SMPS">
         <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
             <variable longname="SMPS DMA Temperature" name="DMAT" units="deg_C"/>
