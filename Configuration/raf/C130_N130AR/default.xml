@@ -563,6 +563,19 @@
         <prompt rate="1" string="RB\r"/>
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
+    <sensor ID="TOGA" class="raf.UDPSocketSensor" devicename="inet::30120" suffix="TOGA">
+      <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable longname="TOGA Butane" name="BUTANE" units="pptv"/>
+        <variable longname="TOGA Benzene" name="BENZ" units="pptv"/>
+        <variable longname="TOGA Isoprene" name="ISOP" units="pptv"/>
+        <variable longname="TOGA Toluene" name="TOL" units="pptv"/>
+        <variable longname="TOGA Acetonitrile" name="CH3CN" units="pptv"/>
+        <variable longname="TOGA Methanol" name="MEOH" units="pptv"/>
+        <variable longname="TOGA Acetone" name="ACETONE" units="pptv"/>
+        <variable longname="TOGA Formaldehyde" name="HCHO" units="pptv"/>
+        <variable longname="TOGA Acetaldehyde" name="CH3CHO" units="pptv"/>
+      </sample>
+    </sensor>
     <serialSensor ID="Water_CN_Counter" baud="115200" class="DSMSerialSensor" databits="8" init_string="SM,4,1\r" parity="none" stopbits="1" suffix="_WCN">
         <sample id="1" rate="10" scanfFormat="D,%f,%f,%f,%f,%f,%f,%f,%f">
 	      <variable longname="WCN Current Operating Mode" name="MCN" units="none"/>
@@ -820,12 +833,12 @@
 <!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
       the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
 -->
-    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="inet::30107">
+    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="inet::30107" suffix="_ACD">
       <sample id="1" rate="10" scanfFormat="O3,%f">
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
     </sensor>
-    <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="inet::30107">
+    <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="inet::30107" suffix="_ACD">
         <sample id="1" rate="1" scanfFormat="NONO2O3,%f,%f,%f,%f">
             <variable longname="NO Mixing Ratio" name="NO" units="pptv"/>
             <variable longname="NO2 Mixing Ratio" name="NO2" units="pptv"/>
@@ -923,6 +936,24 @@
         <variable longname="UHSAS Auxilliary" name="UAUX" units="V"/>
         <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
+    </sensor>
+    <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="inet::30104" suffix="SMPS">
+        <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
+            <variable longname="SMPS DMA Temperature" name="DMAT" units="deg_C"/>
+            <variable longname="SMPS Flow Controller Pressure" name="FCPRES" units="Pa"/>
+            <variable longname="SMPS DMA Voltage" name="DMAV" units="V"/>
+            <variable longname="SMPS CPC QAE" name="CPCQAE" units="cc/sec"/>
+            <variable longname="SMPS DMA QAE" name="DMAQAE" units="L/min"/>
+            <variable longname="SMPS DP1 Pressure Difference" name="DP1" units="Pa"/>
+            <variable longname="SMPS DP2 Pressure Difference" name="DP2" units="Pa"/>
+            <variable longname="SMPS CPC Counts" name="CPCCNT" units="count"/>
+            <variable longname="SMPS Time Since Last Call" name="TSLC" units="sec"/>
+            <variable longname="SMPS CPC Saturator Temperature" name="CPCTSAT" units="deg_C"/>
+            <variable longname="SMPS CPC Condenser Temperature" name="CPCTCON" units="deg_C"/>
+            <variable longname="SMPS DMA Q Excess" name="DMAQEX" units="L/min"/>
+            <variable longname="SMPS Relative Humidity" name="RH" units="Pct"/>
+        </sample> 
     </sensor>
     <serialSensor ID="SP2" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%f %f %f">
