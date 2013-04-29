@@ -172,6 +172,22 @@ if [ $topchoice == newflight ]; then
         [ $? -eq 0 ] || exit 1
     done
 
+    # purge any cal files
+    export TMP_PROJ_DIR=/tmp/projects
+    rm -rf $TMP_PROJ_DIR/Configuration/raf/cal_files/Engineering/$AIRCRAFT
+
+    # prepare variable configurations for instrument calibrations
+    if [ `flight_type $fname` == cf ]; then
+        mkdir -p $TMP_PROJ_DIR/Configuration/raf/cal_files/Engineering/$AIRCRAFT
+        contents='Preparing the following variable configurations\nfor instrument calibrations:\n'
+        for datfile in `ls $PROJ_DIR/Configuration/raf/cal_files/Engineering/$AIRCRAFT/`; do
+            contents=$contents$datfile'\n'
+            cp -p $PROJ_DIR/Configuration/raf/cal_files/Engineering/$AIRCRAFT/VOLTS.dat \
+              $TMP_PROJ_DIR/Configuration/raf/cal_files/Engineering/$AIRCRAFT/$datfile
+        done
+        kdialog --caption "a cal flight was chosen" --msgbox "$contents\n"
+    fi
+
     case `flight_type $fname` in
     tf)
         prevflight=$ltf # empty string if no previous test flight
