@@ -21,9 +21,14 @@ set_config_dir
 stop_dsm_server
 
 # Shutdown any existing process
-if [ -f /tmp/dsm.pid ]; then
-    pkill -TERM $(</tmp/dsm.pid)
+if [ -f /var/run/nidas/dsm.pid ]; then
+    pkill -TERM $(</var/run/nidas/dsm.pid)
 fi
+
+# purge any cal files - this will allow config editor to have good cals
+#  even after a cal flight has been run.
+export TMP_PROJ_DIR=/tmp/projects
+rm -rf $TMP_PROJ_DIR/Configuration/raf/cal_files/Engineering/$AIRCRAFT
 
 terminate_last_config || exit 1
 
