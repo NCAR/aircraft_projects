@@ -4,3 +4,8 @@ ps ax | grep udp2sql | grep -qv grep
 if ($status) then                                                                                                                                                                                    
   /home/local/Systems/eol-rt-data/udp2sql/src/run_udp2sql.sh
 endif
+
+ps ax | grep killIITdaemon | grep -qv grep
+if ($status) then                                                                                                                                                                                    
+  /home/local/Systems/eol-rt-data/killIITdaemon.py
+endif
