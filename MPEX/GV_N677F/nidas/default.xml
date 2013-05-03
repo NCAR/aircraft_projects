@@ -1031,7 +1031,29 @@
       </sample>
     </sensor>
     <sensor ID="MTP" class="UDPSocketSensor" devicename="inet::30101" suffix="_MTP">
-        <sample id="1" rate="1" scanfFormat="MTP,%*dT%*d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d">
+        <sample id="1" rate="1" scanfFormat="MTP,%2d%2d%2dT%2d%2d%2d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d">
+            <variable longname="MTP Scan Year" name="SYEAR" units="count"/>
+            <variable longname="MTP Scan Month" name="SMONTH" units="count"/>
+            <variable longname="MTP Scan Day" name="SDAY" units="count"/>
+            <variable longname="MTP Scan Hour" name="SHOUR" units="count"/>
+            <variable longname="MTP Scan Minute" name="SMIN" units="count"/>
+            <variable longname="MTP Scan Second" name="SSEC" units="count"/>
+            <variable longname="MTP Scan Avg Pitch" name="SAPITCH" units="degree"/>
+            <variable longname="MTP Scan RMS Pitch" name="SRPITCH" units="degree"/>
+            <variable longname="MTP Scan Avg Roll" name="SAROLL" units="degree"/>
+            <variable longname="MTP Scan RMS Roll" name="SRROLL" units="degree"/>
+
+            <variable longname="MTP Scan Avg Pressure Altitude" name="SAPALT" units="km"/>
+            <variable longname="MTP Scan RMS Pressure Altitude" name="SRPALT" units="km"/>
+            <variable longname="MTP Scan Avg Ambient Air Temp" name="SAAT" units="deg_K"/>
+            <variable longname="MTP Scan RMS Ambient Air Temp" name="SRAT" units="deg_K"/>
+            <variable longname="MTP Scan Avg Latitude" name="SALAT" units="degree_N"/>
+            <variable longname="MTP Scan RMS Latitude" name="SRLAT" units="degree_N"/>
+            <variable longname="MTP Scan Avg Longitude" name="SALON" units="degree_E"/>
+            <variable longname="MTP Scan RMS Longitude" name="SRLON" units="degree_E"/>
+            <variable longname="MTP Scan Motor Commanded Position" name="SMCMD" units="count"/>
+            <variable longname="MTP Scan Motor Encoded Position" name="SMENC" units="count"/>
+
             <variable longname="MTP Angle 1 Channel 1 Counts" name="A1CHN1CNT" units="count"/>
             <variable longname="MTP Angle 1 Channel 2 Counts" name="A1CHN2CNT" units="count"/>
             <variable longname="MTP Angle 1 Channel 3 Counts" name="A1CHN3CNT" units="count"/>
@@ -1042,6 +1064,7 @@
             <variable longname="MTP Angle 3 Channel 2 Counts" name="A3CHN2CNT" units="count"/>
             <variable longname="MTP Angle 3 Channel 3 Counts" name="A3CHN3CNT" units="count"/>
             <variable longname="MTP Angle 4 Channel 1 Counts" name="A4CHN1CNT" units="count"/>
+            
             <variable longname="MTP Angle 4 Channel 2 Counts" name="A4CHN2CNT" units="count"/>
             <variable longname="MTP Angle 4 Channel 3 Counts" name="A4CHN3CNT" units="count"/>
             <variable longname="MTP Angle 5 Channel 1 Counts" name="A5CHN1CNT" units="count"/>
@@ -1052,6 +1075,7 @@
             <variable longname="MTP Angle 6 Channel 3 Counts" name="A6CHN3CNT" units="count"/>
             <variable longname="MTP Angle 7 Channel 1 Counts" name="A7CHN1CNT" units="count"/>
             <variable longname="MTP Angle 7 Channel 2 Counts" name="A7CHN2CNT" units="count"/>
+
             <variable longname="MTP Angle 7 Channel 3 Counts" name="A7CHN3CNT" units="count"/>
             <variable longname="MTP Angle 8 Channel 1 Counts" name="A8CHN1CNT" units="count"/>
             <variable longname="MTP Angle 8 Channel 2 Counts" name="A8CHN2CNT" units="count"/>
@@ -1062,6 +1086,37 @@
             <variable longname="MTP Angle 10 Channel 1 Counts" name="A10CHN1CNT" units="count"/>
             <variable longname="MTP Angle 10 Channel 2 Counts" name="A10CHN2CNT" units="count"/>
             <variable longname="MTP Angle 10 Channel 3 Counts" name="A10CHN3CNT" units="count"/>
+
+<!-- M01 line -->
+            <variable longname="MTP Engineering Multiplxr Vm08 Counts" name="VM08CNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr Vvid Counts" name="VVIDCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr Vp08 Counts" name="VP08CNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr Vmtr Counts" name="VMTRCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr Vsyn Counts" name="VSYNCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr Vp15 Counts" name="VP15CNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr Vp05 Counts" name="VP05CNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr VM15 Counts" name="VM15CNTE" units="count"/>
+<!-- M02 line -->
+            <variable longname="MTP Engineering Multiplxr Acceler Counts" name="ACCPCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T Data Counts" name="TDATCNTE" units="count"/>
+
+            <variable longname="MTP Engineering Multiplxr T Motor Counts" name="TMTRCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T Pod Air Counts" name="TAIRCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T Scan Counts" name="TSMPCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T Power Supply Counts" name="TPSPCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T N/C Counts" name="TNCCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T Synth Counts" name="TSYNCNTE" units="count"/>
+<!-- Pt line -->
+            <variable longname="MTP Platinum Multiplxr R350 Counts" name="TR350CNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr Target Center Temp Counts" name="TTCNTRCNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr Target Edge Temp Counts" name="TTEDGCNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr Polyethelene Window Temp Counts" name="TWINCNTP" units="count"/>
+
+            <variable longname="MTP Platinum Multiplxr Mixer Temperature Counts" name="TMIXCNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr Amplifier Temp Counts" name="TAMPCNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr Noise Diode Temp Counts" name="TNDCNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr R600 Counts" name="TR600CNTP" units="count"/>
+<!-- E line -->
             <variable longname="MTP Target 1 Channel 1 Counts" name="T1CHN1CNT" units="count"/>
             <variable longname="MTP Target 1 Channel 2 Counts" name="T1CHN2CNT" units="count"/>
             <variable longname="MTP Target 1 Channel 3 Counts" name="T1CHN3CNT" units="count"/>
