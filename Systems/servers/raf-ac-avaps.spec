@@ -9,7 +9,7 @@ Packager: Chris Webster <cjw@ucar.edu>
 BuildRoot: %{_tmppath}/%{name}-root
 Vendor: UCAR
 BuildArch: noarch
-Requires: rsync crontabs
+Requires: rsync crontabs python-inotify
 #Source: %{name}-%{version}.tar.gz
 
 %description
