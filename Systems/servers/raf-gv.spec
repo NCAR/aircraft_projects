@@ -15,7 +15,7 @@ Requires: raf-gv-dhcp
 Requires: raf-ac-named
 Requires: raf-gv-ddclient
 Requires: raf-satcom
-Requires: raf-satcom-mpds
+Requires: raf-satcom-bgan
 Requires: raf-ads3-sudoers
 Requires: nidas-buildeol
 Requires: nidas-ael
