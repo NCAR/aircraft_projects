@@ -9,6 +9,9 @@ License: none
 BuildRoot: %{_tmppath}/%{name}
 BuildArch: noarch
 
+Requires: xchat
+Requires: firefox
+
 %description
 Provides the 'ads' user cshrc files.
 

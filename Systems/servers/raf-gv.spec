@@ -1,7 +1,7 @@
 Summary: Metapackage for all server and satcom packages needed on GV
 Name: raf-gv
 Version: 1.0
-Release: 12
+Release: 13
 License: GPL
 Group: System Environment
 
@@ -21,11 +21,12 @@ Requires: nidas-buildeol
 Requires: nidas-ael
 Requires: nidas-daq
 Requires: ael-local-dpkgs
-Requires: chrony
 Requires: raf-ac-nfs
 Requires: raf-ac-avaps
 Requires: raf-ac-mtp
 Requires: GMT
+Requires: ruby
+Requires: chrony
 
 BuildArch: noarch
 
