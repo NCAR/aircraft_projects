@@ -180,10 +180,25 @@ class PClose(ProcessEvent):
                 data = "MTPP," + m.group(1) + "T" + \
                 	m.group(2) + m.group(3) + m.group(4)
             file = open(fn)
+            alts = []
+            temps = []
+            numpnts = 33
+            count = 0
             for line in file:
                 m = reProfElmt.match(line)
                 if m:
-                    data = data + "," + m.group(2) + "," + m.group(3)
+                    alts.append(m.group(2))
+                    temps.append(m.group(3))
+                    count = count + 1
+
+            for i in range(count,numpnts):
+                alts.insert(0,0.0)
+                temps.insert(0,0.0)
+
+            for i in range(0, numpnts):
+                    data = data + "," + str(alts[i])
+            for i in range(0, numpnts):
+                    data = data + "," + str(temps[i])
 
             file.close()
 
