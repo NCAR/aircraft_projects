@@ -47,6 +47,7 @@ MTPP, yyyymmddThhmmss, alt1, temp1, alt2, temp2 ...
 
 import logging, logging.handlers
 import os, sys, pyinotify, re
+import time
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
 from socket import socket, AF_INET, SOCK_DGRAM, IPPROTO_IP, IP_MULTICAST_TTL, SOL_SOCKET, SO_BROADCAST, SO_REUSEADDR
 
@@ -168,7 +169,8 @@ class PClose(ProcessEvent):
                 elif not gotTarg:
                     logging.error("  Did not find Target Counts line")
 
-        if event.name.startswith('ATP_'):
+        elif event.name.startswith('ATP_'):
+            logging.info("Found ATP_ file "+event.name)
             if os.path.isfile(event.path):
                 fn = event.path
             else:
@@ -202,10 +204,15 @@ class PClose(ProcessEvent):
 
             file.close()
 
+            time.sleep(1)
+
             # broadcast UDP Data Content to next higher port number
             if data:
-                udp_bcast.sendto(data, (bcast_host, port+1))
+                newport=port+1
+                #udp.sendto(data, (host, newport))
+                udp_bcast.sendto(data, (bcast_host, newport))
                 logging.info(data)
+                logging.info("Sent on port:"+str(newport))
 
 
 def Monitor(path):
@@ -268,4 +275,3 @@ if __name__ == '__main__':
  
         # watch the data folder for new files being created
         Monitor(path)
-rig
