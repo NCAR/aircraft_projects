@@ -26,6 +26,9 @@ Requires: raf-ac-nfs
 Requires: GMT
 Requires: ruby
 Requires: chrony
+Requires: squid
+Requires: nagios
+Requires: nagios-plugins
 
 BuildArch: noarch
 
