@@ -571,17 +571,17 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
-    <sensor ID="HOLODEC" class="UDPSocketSensor" devicename="inet::30120"/>
+    <sensor ID="HOLODEC" class="UDPSocketSensor" devicename="usock::30120"/>
 
 <!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
       the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
 -->
-    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="inet::30107" suffix="_ACD">
+    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="usock::30107" suffix="_ACD">
       <sample id="1" rate="10" scanfFormat="O3,%f">
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
     </sensor>
-    <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="inet::30107" suffix="_ACD">
+    <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="usock::30107" suffix="_ACD">
         <sample id="1" rate="1" scanfFormat="NONO2O3,%f,%f,%f,%f">
             <variable longname="NO Mixing Ratio" name="NO" units="pptv"/>
             <variable longname="NO2 Mixing Ratio" name="NO2" units="pptv"/>
@@ -589,7 +589,7 @@
             <variable longname="NOx Mixing Ratio" name="NOX" units="pptv"/>
         </sample>
     </sensor>
-    <sensor ID="THREEVC2D" class="UDPSocketSensor" devicename="inet::30113">
+    <sensor ID="THREEVC2D" class="UDPSocketSensor" devicename="usock::30113">
       <sample id="1" rate="1" scanfFormat="SPEC3V2D,%*f-%*f-%*fT%*f:%*f:%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="3VCPI Horizontal Particles Detected" name="HPRT" units="count"/>
         <variable longname="3VCPI Vertical Particles Detected" name="VPRT" units="count"/>
@@ -622,7 +622,7 @@
         <variable longname="Internal Pressure" name="PINT" units="psi"/>
       </sample>
     </sensor>
-    <sensor ID="THREEVCPI" class="UDPSocketSensor" devicename="inet::30114">
+    <sensor ID="THREEVCPI" class="UDPSocketSensor" devicename="usock::30114">
       <sample id="1" rate="1" scanfFormat="SPEC3CPI,%*f-%*f-%*fT%*f:%*f:%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="3VCPI Frames per Second" name="FRMS" units="count"/>
         <variable longname="3VCPI # Concentration" name="CONC" units="1/L"/>
@@ -636,7 +636,7 @@
         <variable longname="3VCPI Background Mean" name="BKGM" units="count"/>
       </sample>
     </sensor>
-    <sensor ID="HARP" class="UDPSocketSensor" devicename="inet::30108">
+    <sensor ID="HARP" class="UDPSocketSensor" devicename="usock::30108">
         <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%d,%d">
             <variable longname="UVN 315 nm Counts" name="UVN315" units="photons/(s*cm^2*nm) ">
                 <linear intercept="-10772830027980" slope="46838391426" units="vlpm"/>
@@ -670,7 +670,7 @@
             <variable longname="NIRZ 2000 nm Counts" name="NIRZ2000" units="count"/>
         </sample>
     </sensor>
-    <sensor ID="TOGA" class="UDPSocketSensor" devicename="inet::30120" suffix="_TOGA">
+    <sensor ID="TOGA" class="UDPSocketSensor" devicename="usock::30120" suffix="_TOGA">
       <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="TOGA Butane" name="BUTANE" units="pptv"/>
         <variable longname="TOGA Benzene" name="BENZ" units="pptv"/>
@@ -1030,14 +1030,14 @@
         <variable longname="SIDS Rejected Particle Count" name="REJECT" units="count"/>
       </sample>
     </sensor>
-    <sensor ID="MTP" class="UDPSocketSensor" devicename="inet::30101">
+    <sensor ID="MTP" class="UDPSocketSensor" devicename="usock::30101">
         <sample id="1" rate="1" scanfFormat="MTP,%*dT%*d,%d,%d,%d">
             <variable longname="Channel 1 Counts" name="CHN1CNT" units="count"/>
             <variable longname="Channel 2 Counts" name="CHN2CNT" units="count"/>
             <variable longname="Channel 3 Counts" name="CHN3CNT" units="count"/>
         </sample> 
     </sensor>
-    <sensor ID="NOAAUCATS" class="UDPSocketSensor" devicename="inet::30102">
+    <sensor ID="NOAAUCATS" class="UDPSocketSensor" devicename="usock::30102">
       <sample id="1" rate="1" scanfFormat="UWV:%f">
         <variable longname="NOAA UCATS Water Vapor Mixing Ratio" name="H2OMR" units="ppmv"/> 
       </sample>
@@ -1049,7 +1049,7 @@
         <variable longname="NOAA UCATS Methane" name="CH4" units="ppbv"/>
       </sample>
     </sensor>
-    <sensor ID="NOAAPANTHER" class="UDPSocketSensor" devicename="inet::30103">
+    <sensor ID="NOAAPANTHER" class="UDPSocketSensor" devicename="usock::30103">
       <sample id="1" rate="1" scanfFormat="PAN:%f,%f,%f">
         <variable longname="NOAA PANTHER Press N2 Low" name="PresLN2" units="psi"/>
         <variable longname="NOAA PANTHER Press He Low" name="PresLHe" units="psi"/>
@@ -1062,7 +1062,7 @@
         <variable longname="NOAA PANTHER Methane" name="CH4" units="ppbv"/>
       </sample>
     </sensor>
-    <sensor ID="SMPS" class="UDPSocketSensor" devicename="inet::30104" suffix="_SMPS">
+    <sensor ID="SMPS" class="UDPSocketSensor" devicename="usock::30104" suffix="_SMPS">
         <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
             <variable longname="SMPS DMA Temperature" name="DMAT" units="deg_C"/>
@@ -1082,7 +1082,7 @@
             <variable longname="SMPS Integrated N DOWN" name="INTGRND" units="counts/cc"/>
         </sample>
     </sensor>
-    <sensor ID="GTCIMS" class="UDPSocketSensor" devicename="inet::30110" suffix="_GTCIMS">
+    <sensor ID="GTCIMS" class="UDPSocketSensor" devicename="usock::30110" suffix="_GTCIMS">
         <sample id="1" rate="1" scanfFormat="GTCIMS, %*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%*f">
 
 <!--        <variable longname="GTCIMS time at start of mass sequence" name="UST0" units="sec since 1/1/1970"/>
@@ -1183,7 +1183,7 @@
 -->
         </sample>
     </sensor>
-    <sensor ID="PCIMS" class="UDPSocketSensor" devicename="inet::30111" suffix="_PCIMS">
+    <sensor ID="PCIMS" class="UDPSocketSensor" devicename="usock::30111" suffix="_PCIMS">
         <sample id="1" rate="1" scanfFormat="PCIMS, %*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%*f">
 
 <!--        <variable longname="PCIMS time at start of mass sequence" name="UST0" units="sec since 1/1/1970"/>
@@ -1284,7 +1284,7 @@
 -->
         </sample>
     </sensor>
-    <sensor ID="GHUHSAS" class="UDPSocketSensor" devicename="inet::30033" id="1700" suffix="_GH">
+    <sensor ID="GHUHSAS" class="UDPSocketSensor" devicename="usock::30033" id="1700" suffix="_GH">
       <parameter name="SerialNumber" type="string" value="UHSAS003"/>
       <parameter name="sendInit" type="bool" value="false"/>
 
@@ -1319,7 +1319,7 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-    <sensor ID="NOAASP2" class="UDPSocketSensor" devicename="inet::30105">
+    <sensor ID="NOAASP2" class="UDPSocketSensor" devicename="usock::30105">
       <sample id="1" rate="1" scanfFormat="NOAA_SP2,%*dT%*d,%f,%f,%f,%f,%f">
 
 <!-- Do %*d and skip the time - only know floating point -->
@@ -1482,7 +1482,7 @@
     </serialSensor>
 
 <!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
-    <sensor ID="PARCELS" class="UDPSocketSensor" devicename="inet::30100">
+    <sensor ID="PARCELS" class="UDPSocketSensor" devicename="usock::30100">
 
 <!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
         <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
@@ -1493,7 +1493,7 @@
 
 <!-- Specialized UDP Packets indicating that Mission Controller is asking for instruments to behave in
      specific ways -->
-    <sensor ID="CTRLRESRCH" class="UDPSocketSensor" devicename="inet::41005" id="1000">
+    <sensor ID="CTRLRESRCH" class="UDPSocketSensor" devicename="usock::41005" id="1000">
       <sample id="1" rate="1" scanfFormat="NOCAL,%*dT%*d,%d">
         <variable longname="Do Not Calibrate" name="NOCAL" units="bool"/>
       </sample>
@@ -1542,7 +1542,7 @@
       </service>
     </server>
     <dsm id="19" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
-      <sensor IDREF="PARCELS" devicename="inet::30100" id="100"/>
+      <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
