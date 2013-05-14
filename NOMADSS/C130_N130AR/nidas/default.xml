@@ -674,7 +674,7 @@
         <prompt rate="10" string="\x1b\x02\x1d\x00"/>
         <message length="156"/>
     </serialSensor>
-    <serialSensor ID="CDP" baud="38400" class="raf.CDP_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
+    <serialSensor ID="CDP" baud="57600" class="raf.CDP_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
       <parameter name="calfile" type="string" value="PMSspecs"/>
       <parameter name="NCHANNELS" type="int" value="30"/>
       <parameter name="RANGE" type="int" value="0"/>
@@ -846,6 +846,17 @@
             <variable longname="NOx Mixing Ratio" name="NOX" units="pptv"/>
         </sample>
     </sensor>
+    <!--
+    <sensor ID="PTRMS" class="UDPSocketSensor" devicename="usock::30108" suffix="_ACD">
+        <sample id="1" rate="1" scanfFormat="XPTRMS,%f,%f,%f,%f">
+            <variable longname="" name="" units=""/>
+            <variable longname="" name="" units=""/>
+            <variable longname="" name="" units=""/>
+            <variable longname="" name="" units=""/>
+            <variable longname="" name="" units=""/>
+        </sample>
+    </sensor>
+    -->
     <sensor ID="Fast2DC" class="raf.TwoD64_USB">
         <parameter name="TAS_RATE" type="int" value="10"/>
         <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
