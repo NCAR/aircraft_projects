@@ -30,8 +30,9 @@ function getNames(offset, pbmode){
 
 function setImgs(name, pbmode){
 //start loading the images for the next playback frame
-	for (i=1; i<=$(".camCheck").size(); i=i+1){
+	for (i=0; i<=$(".camCheck").size(); i=i+1){
 		if ($("#showCam"+i).attr('checked') == 1 ){
+                        imgSrc[i] = "http://acserver.raf.ucar.edu/";
 			imgSrc[i]  = "camera_images/flight_number_";
 		 	imgSrc[i] += flightNumber;
 			imgSrc[i] += "/";
