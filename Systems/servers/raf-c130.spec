@@ -23,6 +23,7 @@ Requires: nidas-daq
 Requires: ael-local-dpkgs
 Requires: raf-ac-avaps
 Requires: raf-ac-nfs
+Requires: capture-camserver
 Requires: GMT
 Requires: ruby
 Requires: chrony
@@ -38,6 +39,8 @@ Metapackage for all server and satcom packages needed on C130.
 %files 
 
 %changelog
+* Thu May 16 2013 Chris Webster <cjw@ucar.edu> 1.0-13
+- Updated Requires for new packages.
 * Sat Apr  7 2012 Gordon Maclean <maclean@ucar.edu> 1.0-12
 - Updated Requires for new nidas packages.
 * Fri Aug 5 2011 Chris Webster <cjw@ucar.edu> 1.0-11
