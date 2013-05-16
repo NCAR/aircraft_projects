@@ -1,7 +1,7 @@
 Summary: Package containing updates for /etc/sudoers file for ADS3 data acquisition
 Name: raf-ads3-sudoers
 Version: 1.0
-Release: 3
+Release: 4
 License: GPL
 Group: System Administration
 Url: http://www.eol.ucar.edu/
@@ -59,6 +59,7 @@ if ! fgrep -q dsm_server $tmpsudo; then
 cat << \EOD >> $tmpsudo
 ads ALL=NOPASSWD: STORAGE,NETWORKING
 ads ALL=NOPASSWD: /usr/sbin/tcpdump
+ads ALL=NOPASSWD: /usr/sbin/reload_fw
 ads ALL=NOPASSWD: SETENV: /opt/nidas/bin/dsm_server
 EOD
 fi
@@ -88,6 +89,8 @@ fi
 %files
 
 %changelog
+* Thu May 16 2013 Chris Webster <cjw@ucar.edu> 1.0-4
+- Add firewire driver reload program (reload_fw) for cameras.
 * Thu Apr  7 2012 Gordon Maclean <maclean@ucar.edu> 1.0-3
 - Updates for moves of nidas and ael-dpkgs from /opt/local to /opt.
 * Thu Mar 18 2010 Gordon Maclean <maclean@ucar.edu> 1.0-2
