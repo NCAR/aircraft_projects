@@ -854,6 +854,40 @@
             <variable longname="NOx Mixing Ratio" name="NOX" units="pptv"/>
         </sample>
     </sensor>
+    <sensor ID="HARP" class="UDPSocketSensor" devicename="usock::30108">
+        <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%d,%d">
+            <variable longname="UVN 315 nm Counts" name="UVN315" units="photons/(s*cm^2*nm) ">
+                <linear intercept="-10772830027980" slope="46838391426" units="vlpm"/>
+            </variable>
+            <variable longname="UVN 382 nm Counts" name="UVN382" units="photons/(s*cm^2*nm) ">
+                <linear intercept="-15527725277200" slope="77638626386" units="vlpm"/>
+            </variable>
+        </sample>
+        <sample id="2" rate="1" scanfFormat="HRP_AFZ,%*dT%*d,%d,%d">
+            <variable longname="UVZ 315 nm Counts" name="UVZ315" units="count">
+                <linear intercept="-3847338196710" slope="16727557377" units="photons/(s*cm^2*nm) "/>
+            </variable>
+            <variable longname="UVZ 382 nm Counts" name="UVZ382" units="count">
+                <linear intercept="-3570755511200" slope="17853777556" units="photons/(s*cm^2*nm) "/>
+            </variable>
+        </sample>
+        <sample id="3" rate="1" scanfFormat="HRP_VISN,%*dT%*d,%d,%d">
+            <variable longname="VISN 550 nm Counts" name="VISN550" units="count"/>
+            <variable longname="VISN 860 nm Counts" name="VISN860" units="count"/>
+        </sample>
+        <sample id="4" rate="1" scanfFormat="HRP_VISZ,%*dT%*d,%d,%d">
+            <variable longname="UVN 550 nm Counts" name="VISZ550" units="count"/>
+            <variable longname="UVN 860 nm Counts" name="VISZ860" units="count"/>
+        </sample>
+        <sample id="5" rate="1" scanfFormat="HRP_NIRN,%*dT%*d,%d,%d">
+            <variable longname="NIRN 1500 nm Counts" name="NIRN1500" units="count"/>
+            <variable longname="NIRN 2000 nm Counts" name="NIRN2000" units="count"/>
+        </sample>
+        <sample id="6" rate="1" scanfFormat="HRP_NIRZ,%*dT%*d,%d,%d">
+            <variable longname="NIRZ 1500 nm Counts" name="NIRZ1500" units="count"/>
+            <variable longname="NIRZ 2000 nm Counts" name="NIRZ2000" units="count"/>
+        </sample>
+    </sensor>
     <sensor ID="Fast2DC" class="raf.TwoD64_USB">
         <parameter name="TAS_RATE" type="int" value="10"/>
         <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
