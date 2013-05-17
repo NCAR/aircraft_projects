@@ -21,8 +21,8 @@ set_config_dir
 stop_dsm_server
 
 # Shutdown any existing process
-if [ -f /var/run/nidas/dsm.pid ]; then
-    pkill -TERM $(</var/run/nidas/dsm.pid)
+if [ -f /tmp/run/nidas/dsm.pid ]; then
+    pkill -TERM $(</tmp/run/nidas/dsm.pid)
 fi
 
 # purge any cal files - this will allow config editor to have good cals

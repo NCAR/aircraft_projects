@@ -176,18 +176,6 @@ if [ $topchoice == newflight ]; then
         [ $? -eq 0 ] || exit 1
     done
 
-    # prepare variable configurations for instrument calibrations
-    if [ `flight_type $fname` == cf ]; then
-        mkdir -p $TMP_PROJ_DIR/Configuration/raf/cal_files/Engineering/$AIRCRAFT
-        contents='Preparing the following variable configurations\nfor instrument calibrations:\n'
-        for datfile in `ls $PROJ_DIR/Configuration/raf/cal_files/Engineering/$AIRCRAFT/`; do
-            contents=$contents$datfile'\n'
-            cp -p $PROJ_DIR/Configuration/raf/cal_files/Engineering/$AIRCRAFT/VOLTS.dat \
-              $TMP_PROJ_DIR/Configuration/raf/cal_files/Engineering/$AIRCRAFT/$datfile
-        done
-        kdialog --caption "a cal flight was chosen" --msgbox "$contents\n"
-    fi
-
     case `flight_type $fname` in
     tf)
         prevflight=$ltf # empty string if no previous test flight
@@ -432,12 +420,12 @@ export FLIGHT=$fname
 
 # Start local dsm process
 # Shutdown any existing process
-#if [ -f /var/run/nidas/dsm.pid ]; then
-#    pkill -TERM $(</var/run/nidas/dsm.pid)
+#if [ -f /tmp/run/nidas/dsm.pid ]; then
+#    pkill -TERM $(</tmp/run/nidas/dsm.pid)
 #    for (( i = 0; i < 10; i++ )); do
-#        pgrep $(</var/run/nidas/dsm.pid) || break;
+#        pgrep $(</tmp/run/nidas/dsm.pid) || break;
 #        sleep 5
-#	pkill -TERM $(</var/run/nidas/dsm.pid)
+#	pkill -TERM $(</tmp/run/nidas/dsm.pid)
 #    done
 #fi
 #dsm "$xmlchoice"
