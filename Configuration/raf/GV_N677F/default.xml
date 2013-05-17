@@ -1390,18 +1390,26 @@
         <variable length="512" longname="LAMS histogram maximums" name="LAMS_MAX" units="Mhz"/>
       </sample>
     </sensor>
-    <serialSensor ID="PIC_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC">
+    <serialSensor ID="PIC_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC1301">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %*d %*f">
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
         <variable longname="Picarro Methane Mixing Ratio" name="CH4" units="ppmv"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-    <serialSensor ID="PIC_H2O" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC">
+    <serialSensor ID="PIC_H2O" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PICCU">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %f %*d %*f">
         <variable longname="Picarro Water Mixing Ratio" name="H2O" units="ppmv"/>
         <variable longname="Picarro O18 Mixing Ratio" name="O18" units="per mil"/>
         <variable longname="Picarro Deuterium Mixing Ratio" name="2H" units="per mil"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
+    <serialSensor ID="PIC2311_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC2311">
+      <sample id="1" rate="5" scanfFormat="%*f %f %f %f %*d %*f">
+        <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
+        <variable longname="Picarro Methane Mixing Ratio" name="CH4" units="ppmv"/>
+        <variable longname="Picarro Water Mixing Ratio" name="H2O" units="ppmv"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
