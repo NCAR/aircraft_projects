@@ -226,7 +226,7 @@ start_dsm_server() {
     #     -u ads: switch to ads user from root after setting up process capabilities
     if sudo -E dsm_server -l 6 -r -u ads -c 2>$errfile > $txtfile; then
 
-        local pidfile=/var/run/nidas/dsm_server.pid
+        local pidfile=/tmp/run/nidas/dsm_server.pid
         local pid=""
         local ntry=10
         while [ $ntry -gt 0 ]; do
@@ -284,7 +284,7 @@ start_dsm_server() {
 }
 
 stop_dsm_server() {
-    local pidfile=/var/run/nidas/dsm_server.pid
+    local pidfile=/tmp/run/nidas/dsm_server.pid
 
     if [ -f $pidfile ]; then
         local pid=$(<$pidfile)
@@ -319,7 +319,7 @@ stop_dsm_server() {
 }
 
 check_dsm_server() {
-    local pidfile=/var/run/nidas/dsm_server.pid
+    local pidfile=/tmp/run/nidas/dsm_server.pid
     if [ -f $pidfile ]; then
         local pid=$(<$pidfile)
         if [ -n "$pid" -a -d /proc/"$pid" ];then
