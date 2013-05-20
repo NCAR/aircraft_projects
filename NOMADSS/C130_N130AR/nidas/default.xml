@@ -854,18 +854,14 @@
             <variable longname="NOx Mixing Ratio" name="NOX" units="pptv"/>
         </sample>
     </sensor>
-
-<!--
     <sensor ID="PTRMS" class="UDPSocketSensor" devicename="usock::30106" suffix="_ACD">
         <sample id="1" rate="1" scanfFormat="XPTRMS,%f,%f,%f,%f">
-            <variable longname="" name="" units=""/>
-            <variable longname="" name="" units=""/>
-            <variable longname="" name="" units=""/>
-            <variable longname="" name="" units=""/>
-            <variable longname="" name="" units=""/>
+            <variable longname="First PTRMS counts variable" name="PTRMS1" units="ncps"/>
+            <variable longname="Second PTRMS counts variable" name="PTRMS2" units="ncps"/>
+            <variable longname="Third PTRMS counts variable" name="PTRMS3" units="ncps"/>
+            <variable longname="Fourth PTRMS counts variable" name="PTRMS4" units="ncps"/>
         </sample>
     </sensor>
-    -->
     <sensor ID="HARP" class="UDPSocketSensor" devicename="usock::30108">
         <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%d,%d">
             <variable longname="UVN 315 nm Counts" name="UVN315" units="photons/(s*cm^2*nm) ">
@@ -1284,7 +1280,7 @@
       <sensor IDREF="SMPS" devicename="usock::30104" id="700" suffix="_SMPS"/>
       <sensor IDREF="MINIDOAS" devicename="usock::30109" id="900" suffix="_MDOAS"/>
       <sensor IDREF="HARP" devicename="usock::30108" id="1100"/>
-    </dsm>
+      <sensor IDREF="PTRMS" devicename="usock::30106" id="1300"/></dsm>
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="319"/>
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
