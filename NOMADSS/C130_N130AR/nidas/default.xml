@@ -879,22 +879,6 @@
                 <linear intercept="-3570755511200" slope="17853777556" units="photons/(s*cm^2*nm) "/>
             </variable>
         </sample>
-        <sample id="3" rate="1" scanfFormat="HRP_VISN,%*dT%*d,%d,%d">
-            <variable longname="VISN 550 nm Counts" name="VISN550" units="count"/>
-            <variable longname="VISN 860 nm Counts" name="VISN860" units="count"/>
-        </sample>
-        <sample id="4" rate="1" scanfFormat="HRP_VISZ,%*dT%*d,%d,%d">
-            <variable longname="UVN 550 nm Counts" name="VISZ550" units="count"/>
-            <variable longname="UVN 860 nm Counts" name="VISZ860" units="count"/>
-        </sample>
-        <sample id="5" rate="1" scanfFormat="HRP_NIRN,%*dT%*d,%d,%d">
-            <variable longname="NIRN 1500 nm Counts" name="NIRN1500" units="count"/>
-            <variable longname="NIRN 2000 nm Counts" name="NIRN2000" units="count"/>
-        </sample>
-        <sample id="6" rate="1" scanfFormat="HRP_NIRZ,%*dT%*d,%d,%d">
-            <variable longname="NIRZ 1500 nm Counts" name="NIRZ1500" units="count"/>
-            <variable longname="NIRZ 2000 nm Counts" name="NIRZ2000" units="count"/>
-        </sample>
     </sensor>
     <sensor ID="MINIDOAS" class="UDPSocketSensor" devicename="usock::30109" suffix="_MDOAS">
         <sample id="1" rate="1" scanfFormat="Mini-DOAS,%*d-%*d-%*dT%*d:%*dZ,%f,%f,%f,%f">
@@ -1279,7 +1263,7 @@
       <sensor IDREF="TOGA" devicename="usock::30120" id="500" suffix="_TOGA"/>
       <sensor IDREF="SMPS" devicename="usock::30104" id="700" suffix="_SMPS"/>
       <sensor IDREF="MINIDOAS" devicename="usock::30109" id="900" suffix="_MDOAS"/>
-      <sensor IDREF="HARP" devicename="usock::30108" id="1100"/>
+      <sensor IDREF="HARP" devicename="usock::30108" id="1100" suffix="_HARP"/>
       <sensor IDREF="PTRMS" devicename="usock::30106" id="1300"/></dsm>
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="319"/>
@@ -1507,7 +1491,9 @@
               <calfile file="TRSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="UV Hygrometer Pressure" name="XCELLPRES_UVH" units="V">
+        </sample>
+        <sample id="3" rate="500">
+          <variable longname="UV Hygrometer Cell Pressure" name="XCELLPRES_UVH" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="true"/>
@@ -1515,26 +1501,22 @@
               <calfile file="XCELLPRES.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="UV Hygrometer Temperature" name="XCELLTEMPV_UVH" units="V">
+          <variable longname="UV Hygrometer Cell Temperature" name="XCELLTEMP_UVH" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-              <calfile file="XCELLTEMPV.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            <poly units="deg_C">
+              <calfile file="XCELLTEMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="UV Hygrometer Temperature" name="XTUBETEMPV_UVH" units="V">
+          <variable longname="UV Hygrometer Tube Temperature" name="XTUBETEMP_UVH" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-              <calfile file="XTUBETEMPV.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            <poly units="deg_C">
+              <calfile file="XTUBETEMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-        </sample>
-        <sample id="3" rate="100">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="5"/>
           <variable longname="UV Hygrometer Intensity" name="XSIGV_UVH" units="V">
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="2"/>
