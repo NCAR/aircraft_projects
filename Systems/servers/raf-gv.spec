@@ -31,6 +31,8 @@ Requires: chrony
 Requires: squid
 Requires: nagios
 Requires: nagios-plugins
+Requires: uucp
+Requires: minicom
 
 BuildArch: noarch
 
