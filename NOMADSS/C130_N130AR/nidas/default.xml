@@ -643,7 +643,9 @@
             <variable longname="SPP-200 Mid-Gain Baseline" name="PMGB" units="V"/>
             <variable longname="SPP-200 Low-Gain Baseline" name="PLGB" units="V"/>
             <variable longname="SPP-200 Flow" name="PFLW" units="cnts">
-                <poly coefs="7.51885 -8.46821e-03 2.30130e-06" units="std cm3/s"/>
+                <poly coefs="7.51885 -8.46821e-03 2.30130e-06" units="std cm3/s"/> 
+            <!--    <poly coefs="0.0 1.0 0.0" units="std cm3/s"/> 
+                    Al and Pavel's attempt to change cal value in post processing ... didn't work... -->
             </variable>
             <variable longname="SPP-200 Laser Reference Voltage" name="PREF" units="V"/>
             <variable longname="SPP-200 Sheath Flow" name="PFLWS" units="cnts">
@@ -1771,7 +1773,7 @@
           </variable>
         </sample>
       </sensor>
-      <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS9" id="600" suffix="_PIC"/>
+      <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS9" id="600" suffix="_PIC1301"/>
       <serialSensor IDREF="CO_2005" devicename="/dev/ttyS8" id="800" suffix="_AL"/>
       </dsm>
     <dsm derivedData="sock::7071" id="18" location="Video_Rack2" name="dsm318" rserialPort="30002" statusAddr="sock::30001">
