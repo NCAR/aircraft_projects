@@ -881,7 +881,16 @@
         </sample>
     </sensor>
     <sensor ID="MINIDOAS" class="UDPSocketSensor" devicename="usock::30109" suffix="_MDOAS">
-        <sample id="1" rate="1" scanfFormat="Mini-DOAS,%*d-%*d-%*dT%*d:%*dZ,%f,%f,%f,%f">
+
+<!-- 'Mini-DOAS,20130524T171643.874,32,100.001,00000000,26.0238,24.2557,30.8672,36338.1268,47520.1256,25987.1283,0.00,0.00,0.00,0.00,0.00,0.00
+             -->
+        <sample id="1" rate="1" scanfFormat="Mini-DOAS,%4d%2d%2dT%2d%2d%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="Mini-DOAS Year" name="YEAR" units="count"/>
+            <variable longname="Mini-DOAS Month" name="MONTH" units="count"/>
+            <variable longname="Mini-DOAS Day" name="DAY" units="count"/>
+            <variable longname="Mini-DOAS Hour" name="HOUR" units="count"/>
+            <variable longname="Mini-DOAS Minute" name="MIN" units="count"/>
+            <variable longname="Mini-DOAS Second" name="SEC" units="count"/>
             <variable longname="Mini-DOAS Status" name="STAT" units=""/>
             <variable longname="Mini-DOAS Sequence" name="SEQ" units=""/>
             <variable longname="Mini-DOAS RelayStatus" name="RLYSTAT" units=""/>
@@ -1435,20 +1444,20 @@
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="" name="XTHG_GEM" units="V">
+          <variable longname="" name="XTHG_DOHGS" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="ng/m3">
-              <calfile file="XTHG_GEM.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="XTHG_DOHGS.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="" name="XGEM_GEM" units="V">
+          <variable longname="" name="XGEM_DOHGS" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="ng/m3">
-              <calfile file="XGEM_GEM.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="XGEM_DOHGS.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
@@ -1634,7 +1643,7 @@
       <serialSensor IDREF="CR2HYGROMETER" devicename="/dev/ttyS8" id="800" suffix="_CR2"/>
       <serialSensor IDREF="PIC2311_CO2" devicename="/dev/ttyS9" id="1000" suffix="_PIC2311"/>
     </dsm>
-    <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm306" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="324"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS5" id="110"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="120"/>
