@@ -32,6 +32,8 @@ Requires: nagios
 Requires: nagios-plugins
 Requires: uucp
 Requires: minicom
+Requires: exiv2-devel
+Requires: libdc1394-devel
 
 BuildArch: noarch
 
