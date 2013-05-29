@@ -4,9 +4,10 @@
 
 find /var/www/html/flight_data/images -name "ops*.jpg*" -mmin +720 -exec rm {} \;
 find /var/www/html/flight_data/images -name "radar*.gif*" -mmin +720 -exec rm {} \;
-find /var/www/html/flight_data/images -name "radar*.png*" -mmin +720 -exec rm {} \;
+find /var/www/html/flight_data/images -name "NEXRAD*.png*" -mmin +720 -exec rm {} \;
 find /var/www/html/flight_data/images -name "research*.png" -mmin +720 -exec rm {} \;
 find /var/www/html/flight_data/images -name "latest*" -mmin +720 -exec rm {} \;
+find /var/www/html/flight_data/GE -name last_hour_lightning.kml -mmin +30 -exec rm {} \;
 find /var/www/html/skewt -name "*.svg" -mmin +1440 -exec rm {} \;
 find /tmp/avaps-rt -name "D*" -mmin +720 -exec rm {} \;
 find /tmp -maxdepth 1 -name "iostat*" -mmin +3000 -exec rm{} \;
@@ -19,3 +20,4 @@ find /var/www/html/flight_data/images/ -name "*BUSY*" -mmin +10 -exec rm {} \;
 # Clean these every couple months.
 find /mnt/r1/dropsondes -name "D*" -mmin +80000 -exec rm {} \;
 find /mnt/r1/mtp -name "MTPcurrent*.txt" -mmin +80000 -exec rm -f {} \;
+find /mnt/r1/mtp -name "ATP_*.txt" -mmin +80000 -exec rm -f {} \;
