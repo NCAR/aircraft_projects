@@ -49,7 +49,7 @@ ftp_passwd       = ''
 ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
 label            = 'sat_ir_label.jpg'
 #Assumes filename form is prefixYYYYMMDD*postfix
-prefix           = 'ge.NCAR_'+plane+'.'
+prefix           = 'ge.NSF_NCAR_'+plane+'.'
 postfix		 = '.flight_plan.kml'
 osm_file_name    = image_type+'.kml'
 num_imgs_to_get  = 1 # Script will backfill this many images for loops
