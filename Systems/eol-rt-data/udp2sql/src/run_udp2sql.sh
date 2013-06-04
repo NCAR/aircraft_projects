@@ -11,7 +11,7 @@ killall udp2sql
 logfile="/tmp/udp2sql.log"
 
 # Rotate the previous logfiles, if any
-/usr/sbin/logrotate -s /tmp/.udp2sql.log.state /home/local/Systems/eol-rt-data/udp2sql/logrotate.d/udp2sql
+/usr/sbin/logrotate -s /tmp/.udp2sql.log.state /home/local/Systems/eol-rt-data/etc/logrotate.d/udp2sql
 
 # Start the new udp2sql in background, logging to $logfile.
 /opt/local/bin/udp2sql < /dev/null > $logfile 2>&1 &
