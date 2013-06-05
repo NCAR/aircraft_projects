@@ -14,12 +14,12 @@
 #include <nidas/util/Socket.h>
 #include <nidas/util/Inet4Address.h>
 
-#define DROPTIME 2  // hours
 
 using namespace std;
 
 namespace n_u = nidas::util;
 
+static const int DropDuration = 2;  // hours
 static const int port = 31007;
 
 
@@ -95,9 +95,13 @@ udp2sql::udp2sql()
   _count = 0;
   newUDPConnection();
 
-  // restart database drop timer
-  _timer["DC8"].start(DROPTIME * 3600000, this);
-  _newFlight["DC8"] = 1;
+  _autoDBresetList.push_back("DC8");
+  _autoDBresetList.push_back("G4");
+  for (int i = 0; i < _autoDBresetList.size(); ++i)
+  {
+    _timer[_autoDBresetList[i]].start(DropDuration * 3600000, this);
+    _newFlight[_autoDBresetList[i]] = 1;
+  }
 }
 
 /* -------------------------------------------------------------------- */
@@ -255,11 +259,11 @@ void udp2sql::newUDPConnection()
 /* -------------------------------------------------------------------- */
 void udp2sql::timerEvent(QTimerEvent *event)
 {
-  // only deal with DC8 for now...
-  string aircraft = "DC8";
-
-  if (event->timerId() == _timer[aircraft].timerId())
-    resetRealTime(aircraft);
+  for (int i = 0; i < _autoDBresetList.size(); ++i)
+  {
+    if (event->timerId() == _timer[_autoDBresetList[i]].timerId())
+      resetRealTime(_autoDBresetList[i]);
+  }
 }
 
 /* -------------------------------------------------------------------- */
@@ -330,7 +334,10 @@ void udp2sql::newData()
   // if BZ_DATA_ERROR_MAGIC is returned then the stream is not compressed;
   // copy the initially read in udp_str into the prossessed buffer string.
   if (ret == BZ_DATA_ERROR_MAGIC)
+{
     memcpy(buffer, udp_str, nBytes);
+cout << "[" << udp_str << "]" << endl;
+}
 
   else if (ret < 0) {
     typedef struct {     // copied from bzlib.c
@@ -416,7 +423,10 @@ void udp2sql::newData()
 
     // This is a valid message.  Use the rest of the buffer as it is.
   }
-      
+
+  if (strstr(buffer, "IWG1_NAMES"))	// don't process G4 IWG1_NAMES string.
+    return;
+
   // Filter out messages from un-expected sources, and pass the
   // uncompressed message to the platform handler.
   string platform;
@@ -470,6 +480,21 @@ void
 udp2sql::
 handleAircraftMessage(string aircraft, char* buffer, QString notes)
 {
+  if (aircraft == "G4")	// For G4 test on 01/09/2013
+  {
+    char *p = strstr(buffer, "N1");
+    if (p)
+    {
+      *p = '\0';
+      for (int i = 0; i < 5; ++i)
+      {
+        p = strrchr(buffer, ',');
+        *p = '\0';
+      }
+    }
+  }
+cout << buffer << "\n";
+
   QString varsStr(buffer);
 
   // trim off '\r' and '\n' characters if present
@@ -485,7 +510,7 @@ handleAircraftMessage(string aircraft, char* buffer, QString notes)
   // save a copy for re-broadcast later
   QString varsStrCopy(varsStr);
 
-  // instert NANs for all missing values
+  // insert NANs for all missing values
   len = 0;
   while (len != varsStr.length()) {
     len = varsStr.length();
@@ -499,7 +524,7 @@ handleAircraftMessage(string aircraft, char* buffer, QString notes)
   QStringList varList = varsStr.split(",");
 
   // correct +/- 180 to 0..360 on wind direction
-  if (strncmp(aircraft.c_str(), "DC8", 3) == 0)
+  if (strcmp(aircraft.c_str(), "DC8") == 0)
   {
     QString windDirectionStr = varList[WDC];
     double windDirection = varList[WDC].toDouble();
@@ -509,7 +534,8 @@ handleAircraftMessage(string aircraft, char* buffer, QString notes)
     varList[WDC] = QString::number(windDirection, 'f', 1);
 //printf("%s]\n", varList[WDC].toAscii().data());
   }
-  // remove the preceeding "IWG1,datetime,"
+
+  // remove the preceeding "platform,datetime,"
   varList.takeFirst();
   QString datetime = varList.takeFirst();
 
@@ -531,8 +557,8 @@ handleAircraftMessage(string aircraft, char* buffer, QString notes)
   }
   // ignore messages with with old datetime stamp
   QDateTime data_datetime = QDateTime::fromString( datetime, "yyyyMMddTHHmmss" );
-  if ( data_datetime.addSecs(10) < QDateTime::currentDateTime().toUTC() )
-    return;
+//  if ( data_datetime.addSecs(10) < QDateTime::currentDateTime().toUTC() )
+//    return;
 
   // passed all filters... start logging useful information
   cout << notes.toStdString() << endl;
@@ -571,8 +597,10 @@ handleAircraftMessage(string aircraft, char* buffer, QString notes)
     closePostgresConnection();
 
     // restart database drop timer
-    _timer[aircraft].start(DROPTIME * 3600000, this);
+    _timer[aircraft].start(DropDuration * 3600000, this);
   }
+
+
   // re-broadcast message to other aircraft
   if (strncmp(aircraft.c_str(), "DC8", 3) == 0) {
   
