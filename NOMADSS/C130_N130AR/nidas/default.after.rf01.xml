@@ -11,11 +11,42 @@
     </sensor>
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
 
+      <sample id="0132" process="true" rate="25">
+        <variable longname="Hybrid True Heading - 132" name="THDGHYB" units="deg_T"/>
+      </sample>
+      <sample id="0135" process="true" rate="1.5">
+        <variable longname="Hybrid Vertical Figure of Merit - 135" name="HYBVFOM" units="feet"/>
+      </sample>
+      <sample id="0175" process="true" rate="25">
+        <variable longname="Hybrid Ground Speed - 175" name="GSFHYB" units="knots"/>
+      </sample>
+      <sample id="0254" process="true" rate="12.5">
+        <variable longname="Hybrid Lat - 254" name="LATHYB" units="deg_N"/>
+      </sample>
+      <sample id="0255" process="true" rate="12.5">
+        <variable longname="Hybrid Lon - 255" name="LONHYB" units="deg_E"/>
+      </sample>
+      <sample id="0261" process="true" rate="1.5">
+        <variable longname="Hybrid Altitude - 261" name="ALTHYB" units="feet"/>
+      </sample>
+      <sample id="0264" process="true" rate="12.5">
+        <variable longname="Hybrid Horizontal Figure of Merit- 264" name="HYBHFOM" units="feet"/>
+      </sample>
+      <sample id="0266" process="true" rate="12.5">
+        <variable longname="Hybrid Velocity NS - 266" name="VNSHYB" units="knots"/>
+      </sample>
+      <sample id="0267" process="true" rate="12.5">
+        <variable longname="Hybrid Velocity EW - 267" name="VEWHYB" units="knots"/>
+      </sample>
+      <sample id="0353" process="true" rate="1.5">
+        <variable longname="Hybrid Maintenance Word - 353" name="SELHYB" units="none"/>
+      </sample>
+
 <!-- 
          Taken from the Honeywell installation manual for the         
          Inertial Reference Unit / Part No. HG2001GD (pages 649-651). 
         -->
-        <sample id="0007" process="false" rate="3.125">
+      <sample id="0007" process="false" rate="3.125">
         <variable longname="time to nav" name="time_to_nav" units="min"/>
       </sample>
         <sample id="0010" process="false" rate="3.125">
@@ -53,7 +84,7 @@
             The following sample is not used.
         <sample id="0277" rate="?" process="false"> <variable name="test_word" units="" longname="test word"/> </sample>
         -->
-        <sample id="0300" process="false" rate="50">
+      <sample id="0300" process="false" rate="50">
         <variable longname="delta theta x" name="dtheta_x" units="radian"/>
       </sample>
         <sample id="0301" process="false" rate="50">
@@ -195,7 +226,7 @@
             Taken from the Honeywell Engineering Specification A.4.1 spec. no. 
             EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). 
         -->
-        <sample id="0203" rate="16">
+      <sample id="0203" rate="16">
         <variable longname="ADC Pressure Altitude" name="PALT" units="m"/>
       </sample>
         <sample id="0204" rate="16">
@@ -233,14 +264,14 @@
             The following sample as well as 0237 are not used.
             <sample id="0235" rate="16" process="false"><variable name="BAROCOR1" units="inHg" longname="ADC baro correction #1 inHg"/></sample 
         -->
-        <sample id="0236" rate="16">
+      <sample id="0236" rate="16">
         <variable longname="ADC baro correction #2 mB" name="BAROCOR2" units="hPa"/>
       </sample>
 
 <!--
             <sample id="0237" rate="16" process="false"><variable name="BAROCOR2" units="inHg" longname="ADC baro correction #2 inHg"/></sample 
         -->
-        <sample id="0242" rate="16">
+      <sample id="0242" rate="16">
         <variable longname="ADC Total Pressure" name="PT" units="hPa"/>
       </sample>
         <sample id="0244" process="false" rate="8">
@@ -283,7 +314,7 @@
             Taken from the Honeywell Installation Manual PN HG2021GB02/GD02 
             Table 207 "GNSSU ARINC 429 Output Data" (GPS)  (pages 217-219). 
         -->
-        <sample id="0060" process="false" rate="1">
+      <sample id="0060" process="false" rate="1">
         <variable longname="Measurement Status" name="measurement_Stat" units=""/>
       </sample>
         <sample id="0061" process="false" rate="1">
