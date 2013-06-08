@@ -1238,7 +1238,10 @@
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
   </sensorcatalog>
-  <site class="raf.Aircraft" name="C130_N130AR">
+
+
+
+  <site class="raf.Aircraft" name="C130_N130AR" applyCals="true">
     <parameter name="tailNumber" type="string" value="N130AR"/>
     <parameter name="applyCals" type="bool" value="true"/>
     <server statusAddr="sock:127.0.0.1:30001">
@@ -1936,38 +1939,9 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-    <serialSensor IDREF="S200" devicename="/dev/ttyS6" id="300" suffix="_LPI">
-        <parameter name="calfile" type="string" value="PMSspecs"/>
-        <parameter name="NCHANNELS" type="int" value="30"/>
-        <parameter name="RANGE" type="int" value="0"/>
-        <parameter name="THRESHOLD" type="int" value="80"/>
-        <parameter name="DIVISOR_FLAG" type="int" value="2"/>
-        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
-        <parameter name="CHAN_THRESH" type="int" value="692 1040 1517 2157 4096 4231 4348 4537 4825 5251 5859 6703 8192 8345 8502 8682 8872 9070 9252 9432 9544 9737 9937 10166 10471 10797 11162 11499 11852 12288"/>
+      <serialSensor IDREF="S200" devicename="/dev/ttyS6" id="300" suffix="_LPI">
         <parameter name="SerialNumber" type="string" value="PCAS108"/>
-        <sample id="1">
-            <variable longname="SPP-200 High-Gain Baseline" name="PHGB" units="V"/>
-            <variable longname="SPP-200 Mid-Gain Baseline" name="PMGB" units="V"/>
-            <variable longname="SPP-200 Low-Gain Baseline" name="PLGB" units="V"/>
-            <variable longname="SPP-200 Flow" name="PFLW" units="cnts">
-                <poly units="std cm3/s">
-                  <calfile file="PFLW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-
-<!--                <poly coefs="0.0 1.0 0.0" units="tst units"/> 
-                    Al and Pavel's attempt to change cal value in post processing ... didn't work... -->
-                </poly>
-            </variable>
-            <variable longname="SPP-200 Laser Reference Voltage" name="PREF" units="V"/>
-            <variable longname="SPP-200 Sheath Flow" name="PFLWS" units="cnts">
-                <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>
-            </variable>
-            <variable longname="SPP-200 Detector Temperature" name="PTMP" units="deg_C"/>
-            <variable length="31" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT" name="AS200" units="count"/>
-            <variable longname="SPP-200 Time between last sample and this sample" name="DELTAT" units="msec"/>
-        </sample>
-        <prompt rate="10" string="\x1b\x02\x1d\x00"/>
-        <message length="154"/>
-    </serialSensor>
+      </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="500">
         <calfile file="A2D011.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
