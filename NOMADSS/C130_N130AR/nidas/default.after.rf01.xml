@@ -10,7 +10,6 @@
         </sample>
     </sensor>
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
-
       <sample id="0132" process="true" rate="25">
         <variable longname="Hybrid True Heading - 132" name="THDGHYB" units="deg_T"/>
       </sample>
@@ -939,6 +938,11 @@
             <variable longname="Mini-DOAS Near InfraRed Elevation Angle" name="NIRELEV" units="degree"/>
         </sample>
     </sensor>
+    <sensor ID="SO2" class="UDPSocketSensor" devicename="usock::30121" suffix="_CU">
+        <sample id="1" rate="1" scanfFormat="SO2,%f">
+            <variable longname="Sulfur Dioxide" name="SO2" units="pptv"/>
+        </sample>
+    </sensor>
     <sensor ID="Fast2DC" class="raf.TwoD64_USB">
         <parameter name="TAS_RATE" type="int" value="10"/>
         <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
@@ -1238,9 +1242,7 @@
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
   </sensorcatalog>
-
-
-  <site class="raf.Aircraft" name="C130_N130AR" applyCals="true">
+  <site applyCals="true" class="raf.Aircraft" name="C130_N130AR">
     <parameter name="tailNumber" type="string" value="N130AR"/>
     <parameter name="applyCals" type="bool" value="true"/>
     <server statusAddr="sock:127.0.0.1:30001">
@@ -1306,7 +1308,9 @@
       <sensor IDREF="SMPS" devicename="usock::30104" id="700" suffix="_SMPS"/>
       <sensor IDREF="MINIDOAS" devicename="usock::30109" id="900" suffix="_MDOAS"/>
       <sensor IDREF="HARP" devicename="usock::30108" id="1100" suffix="_HARP"/>
-      <sensor IDREF="PTRMS" devicename="usock::30106" id="1300"/></dsm>
+      <sensor IDREF="PTRMS" devicename="usock::30106" id="1300"/>
+      <sensor IDREF="SO2" devicename="usock::30121" id="1500" suffix="_CU"/>
+    </dsm>
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="319"/>
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
@@ -1514,7 +1518,7 @@
             </poly>
           </variable>
           <variable longname="" name="XGEM_DOHGS" units="V">
-            <parameter name="channel" type="int" value="2"/>
+            <parameter name="channel" type="int" value="5"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="ng/m3">
@@ -1522,7 +1526,7 @@
             </poly>
           </variable>
           <variable longname="" name="XTHG_DOHGS" units="V">
-            <parameter name="channel" type="int" value="3"/>
+            <parameter name="channel" type="int" value="6"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="ng/m3">
@@ -1936,7 +1940,7 @@
       </output>
       <serialSensor IDREF="S200" devicename="/dev/ttyS6" id="300" suffix="_LPI">
         <parameter name="SerialNumber" type="string" value="PCAS108"/>
-      </serialSensor>
+    </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="500">
         <calfile file="A2D011.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
