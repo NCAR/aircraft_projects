@@ -4,22 +4,32 @@ unset HOST
 unset AIRCRAFT
 
 HOST='eol-rt-data.fl-ext.ucar.edu'
-AIRCRAFT='DC8'
+#AIRCRAFT='N43RF'
 
 USAGE="usage: $0 [-h] [-s ...] [-a ...]
         -h help
         -s server name (default $HOST)
-        -a Aircraft name (default $AIRCRAFT)"
+        -p Project name (default $PROJECT)
+        -a Aircraft name (default $AIRCRAFT)
+        -n Flight number (default $FLIGHT)"
 
-while getopts hs:a: c; do
+while getopts hs:a:n:p: c; do
     case $c in
     h)    echo "$USAGE"; exit ;;
     s)    HOST=$OPTARG ;;
+    p)    PROJECT=$OPTARG ;;
     a)    AIRCRAFT=$OPTARG ;;
+    n)    FLIGHT=$OPTARG ;;
     esac
 done
 
 echo "HOST:" $HOST
 echo "AIRCRAFT:" $AIRCRAFT
+echo "FLIGHTNUM:" $FLIGHT
 
-cat /home/local/Systems/eol-rt-data/postgres/real-time-${AIRCRAFT}.sql | psql -h $HOST -U ads -d real-time-${AIRCRAFT}
+if [ -z "$AIRCRAFT" ];
+    echo "AIRCRFT must be set."
+    exit 1
+fi
+
+cat /tmp/real-time-init.sql | sed s/PROJECT/$PROJECT/ | sed s/FLIGHTNUM/$FLIGHT/ | sed s/PLATFORM/$AIRCRAFT/ | psql -h $HOST -U ads -d real-time-$AIRCRAFT
