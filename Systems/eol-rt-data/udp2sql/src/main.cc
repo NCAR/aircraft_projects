@@ -7,11 +7,12 @@ int main(int argc, char *argv[])
   SSL_library_init();
   QCoreApplication app(argc, argv);
 
+  // Parse arguments list
+  int res = udp2sql::parseRunstring(argc,argv);
+  if (res)
+    return udp2sql::usage(argv[0]);
+
   udp2sql reader;
-  if (argc > 1)
-  {
-    reader.setConnectionQualifier(argv[1]);
-  }
 
   app.exec();
 }

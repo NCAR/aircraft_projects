@@ -11,6 +11,9 @@
 #include <map>
 #include <string>
 
+#include <Python.h>
+
+
 /**
  * Class to read UDP broadcast data from EOL aircraft, reformat the
  * data and insert it into the eol-rt-data exposed host database.
@@ -23,6 +26,7 @@ public:
   typedef std::string string;
 
   udp2sql();
+  ~udp2sql();
 
   void
   setConnectionQualifier(const std::string& qspec)
@@ -30,12 +34,17 @@ public:
     _qspec = qspec;
   }
 
+  static int usage(const char* argv0);
+  static int parseRunstring(int argc, char** argv);
+
 protected slots:
   void	newData();
   void	readPendingDatagrams();
   void	timerEvent(QTimerEvent *);
 
 protected:
+  PyObject *pName, *pModule, *pDict, *pFunc, *pArgs, *pValue;
+
   string extractPQString(PGresult *result, int tuple, int field);
   string getGlobalAttribute(PGconn *conn, string attr);
   void  resetRealTime(string aircraft);

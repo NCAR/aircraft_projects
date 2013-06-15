@@ -1,5 +1,8 @@
 #include "udp2sql.h"
 
+#include <stdio.h>
+#include <string.h>
+
 #include <iostream>
 #include <cstdio>
 #include <cstring>
@@ -22,12 +25,13 @@ namespace n_u = nidas::util;
 static const int DropDuration = 2;  // hours
 static const int port = 31007;
 
+static int processAOC = 0;
 
 #include <openssl/ripemd.h>
 
 
-enum DC8VARS {
-    DC8,
+enum IWG1VARS {
+    IWG1,
     DATETIME,
     GGLAT,
     GGLON,
@@ -59,8 +63,11 @@ enum DC8VARS {
     SOLZE,
     SOLAR_EL_AC,
     SOLAZ,
-    SOLAR_AZ_AC,
-    VNS_MMS,
+    SOLAR_AZ_AC
+};
+
+enum DC8VARS {
+    VNS_MMS = 33,
     VEW_MMS,
     VUP_MMS,
     COLDCN,
@@ -86,6 +93,124 @@ enum DC8VARS {
     F60
 };
 
+enum AOCVARS {
+    FLID = 33,
+    MISSIONID,
+    STORMID,
+    MDSHOUR_1,
+    MDSMINUTE_1,
+    MDSSECOND_1,
+    AccZfilterI_GPS_1,
+    AccZfilterI_GPS_2,
+    ACCZref,
+    AccZI_GPS_1,
+    AccZI_GPS_2,
+    ALTGA_d,
+    AltGPS_1,
+    AltGPS_2,
+    AltGPS_3,
+    AltI_GPS_1,
+    AltI_GPS_2,
+    AltRa_2,
+    AltRa1_c,
+    AltRa2_c,
+    AXBT_1,
+    AXBT_2,
+    AXBT_3,
+    COURSEcorr_d,
+    DV_d,
+    GPS_AltErr_1,
+    GPS_Quality_1,
+    GSXref,
+    GSYref,
+    HT_d,
+    HUM_ABS_d,
+    HUM_REL_d,
+    IASkt_d,
+    LicHum_Abs_1,
+    LicCO2D_1,
+    LicTDM_1,
+    LicTTMi_1,
+    LicTTMo_1,
+    LicPT_1,
+    LatGPS_1,
+    LatGPS_2,
+    LatGPS_3,
+    LatI_GPS_1,
+    LatI_GPS_2,
+    LonGPS_1,
+    LonGPS_2,
+    LonGPS_3,
+    LonI_GPS_1,
+    LonI_GPS_2,
+    LWC_1,
+    MR_d,
+    PDALPHA_1,
+    PDALPHA_2,
+    PDBETA_1,
+    PDBETA_2,
+    PitchI_1,
+    PitchI_2,
+    PitchI_GPS_1,
+    PitchI_GPS_2,
+    PitchI_GPS_3,
+    PitchI_GPS_4,
+    PitchRate_1,
+    PQALPHA_1,
+    PQBETA_1,
+    PQM_2,
+    PQM_3,
+    PQM_4,
+    PQM_1,
+    PSM_2,
+    PSM_1,
+    PSURF_d,
+    PTM_1,
+    RollI_1,
+    RollI_2,
+    RollI_GPS_1,
+    RollI_GPS_2,
+    RollI_GPS_3,
+    RollI_GPS_4,
+    SfmrRainRate_R,
+    SfmrWS_R,
+    SST_1,
+    TASkt_d,
+    TDM_1,
+    TDM_2,
+    TDM_3,
+    THdgI_GPS_1,
+    THdgI_GPS_2,
+    THdgI_GPS_3,
+    THdgI_GPS_4,
+    THETA_d,
+    THETAE_d,
+    TRadD_1,
+    TRadS_1,
+    TRadU_1,
+    TRKdesired_d,
+    TTM_1,
+    TTM_2,
+    TTM_3,
+    TVIRT_d
+};
+
+/* -------------------------------------------------------------------- */
+udp2sql::~udp2sql()
+{
+  cout << "exiting" << endl;
+
+  if (processAOC == 1)
+  {
+    // Clean up
+    Py_DECREF(pModule);
+    Py_DECREF(pName);
+
+    // Finish the Python Interpreter
+    Py_Finalize();
+  }
+}
+
 /* -------------------------------------------------------------------- */
 udp2sql::udp2sql()
 {
@@ -101,6 +226,38 @@ udp2sql::udp2sql()
   {
     _timer[_autoDBresetList[i]].start(DropDuration * 3600000, this);
     _newFlight[_autoDBresetList[i]] = 1;
+  }
+
+  if (processAOC == 1)
+  {
+    // Initialize the Python Interpreter
+    Py_InitializeEx(0);
+  
+    // Build the name object
+    pName = PyString_FromString("decrypt");
+  
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString("sys.path.append(\"/home/local/Systems/eol-rt-data/udp2sql/src\")");
+  
+    // Load the module object
+    pModule = PyImport_Import(pName);
+  
+    // pDict is a borrowed reference 
+    pDict = PyModule_GetDict(pModule);
+  
+    // pFunc is also a borrowed reference 
+    pFunc = PyDict_GetItemString(pDict, "decode");
+  
+    if (!PyCallable_Check(pFunc)) 
+    {
+      cout << "failing" << endl;
+      // Clean up
+      Py_DECREF(pModule);
+      Py_DECREF(pName);
+  
+      // Finish the Python Interpreter
+      Py_Finalize();
+    }
   }
 }
 
@@ -129,9 +286,45 @@ bool udp2sql::newPostgresConnection(string platform)
 }
 
 /* -------------------------------------------------------------------- */
-void
-udp2sql::
-closePostgresConnection()
+int udp2sql::usage(const char* argv0)
+{
+  std::cerr << "Usage: " << argv0 << " [options]\n";
+  std::cerr << "  -R       Process only UDP feeds from RAF Aircraft.\n";
+  std::cerr << "  -N       Process only UDP feeds from NON RAF Aircraft.\n";
+  std::cerr << "  -h       This usage info.\n\n";
+  return 1;
+}
+
+/* -------------------------------------------------------------------- */
+int udp2sql::parseRunstring(int argc, char** argv)
+{
+    extern char *optarg;     /* set by getopt() */
+//  extern int optind;       /* "   "  "        */
+    int opt_char;            /* option character */
+
+    if (argc == 1) return 1;
+
+    while ((opt_char = getopt(argc, argv, "hRN")) != -1) {
+        switch (opt_char) {
+        case 'R':
+            cout << "Process only UDP feeds from RAF Aircraft." << endl;
+            processAOC = 0;
+            break;
+        case 'N':
+            cout << "Process only UDP feeds from NON RAF Aircraft." << endl;
+            processAOC = 1;
+            break;
+        default:
+        case 'h':
+            return 1;
+        }
+//  setConnectionQualifier(argv[1]);  // Prior implementation used this but never seen used by the command line
+    }
+   return 0;
+}
+
+/* -------------------------------------------------------------------- */
+void udp2sql::closePostgresConnection()
 {
   if (_conn)
   {
@@ -140,9 +333,7 @@ closePostgresConnection()
 }
 
 /* -------------------------------------------------------------------- */
-int
-udp2sql::
-execute(const char* sql_str)
+int udp2sql::execute(const char* sql_str)
 {
   PGresult * res;
   res = PQexec(_conn, sql_str);
@@ -314,9 +505,13 @@ void udp2sql::newData()
 {
   char udp_str[65000];
   char buffer_space[65000];
+  char decrypted_space[65000];
   char* buffer = buffer_space;
+  char* decrypted = decrypted_space;
+
   memset(udp_str, 0, 65000);
   memset(buffer, 0, 65000);
+  memset(decrypted, 0, 65000);
 
   int nBytes = _udp->readDatagram(udp_str, 65000);
   if (nBytes < 1) 
@@ -334,11 +529,9 @@ void udp2sql::newData()
   // if BZ_DATA_ERROR_MAGIC is returned then the stream is not compressed;
   // copy the initially read in udp_str into the prossessed buffer string.
   if (ret == BZ_DATA_ERROR_MAGIC)
-{
-    memcpy(buffer, udp_str, nBytes);
-cout << "[" << udp_str << "]" << endl;
-}
-
+  {
+     memcpy(buffer, udp_str, nBytes);
+  }
   else if (ret < 0) {
     typedef struct {     // copied from bzlib.c
       FILE*     handle;
@@ -356,6 +549,69 @@ cout << "[" << udp_str << "]" << endl;
          << BZ2_bzerror(&b, &errnum) << endl;
     return;
   }
+  if (processAOC == 1) {
+//  cout << "buffer: " << buffer << endl;
+    int AOClen = 0;
+
+    // unencrypt messages from NOAA that begin with AOC
+    if (strncmp(buffer, "AOCN42RF", 8) == 0)
+      AOClen = 8;
+    if (strncmp(buffer, "AOCN43RF", 8) == 0)
+      AOClen = 8;
+    if (strncmp(buffer, "AOCN49RF", 8) == 0)
+      AOClen = 8;
+    if (AOClen > 0) {
+      cout << &buffer[AOClen] << endl;
+
+      // utilize imported Python decrypt
+      pArgs = PyTuple_New(1);
+      pValue = PyString_FromString(&buffer[AOClen]); //(const char *v)
+      if (!pValue)
+	PyErr_Print();
+
+      PyTuple_SetItem(pArgs, 0, pValue);    
+
+      pValue = PyObject_CallObject(pFunc, pArgs);
+
+      if (pArgs != NULL)
+      {
+	Py_DECREF(pArgs);
+      }
+      if (pValue != NULL) 
+      {
+	decrypted = PyString_AsString(pValue);
+	memset(buffer, 0, 65000);
+	memcpy(buffer, decrypted, strlen(decrypted));
+	printf("Return of call : %s\n", buffer);
+	Py_DECREF(pValue);
+      }
+      if (strstr(buffer, "IWG1_NAMES"))	// don't process G4 IWG1_NAMES string.
+	return;
+
+      // Identify and prune the NOAA aircraft feeds
+//    cout << "JDW0 " << buffer << endl;
+      QString iwg1(buffer);
+      QStringList iwg1List = iwg1.split(',', QString::KeepEmptyParts);
+//    cout << "iwg1List[FLID]: " << iwg1List[FLID].toStdString() << endl;
+      if (iwg1List[FLID][8] == 'H')
+        iwg1List[0] = "N42RF";
+      if (iwg1List[FLID][8] == 'I')
+        iwg1List[0] = "N43RF";
+      if (iwg1List[FLID][8] == 'N')
+        iwg1List[0] = "N49RF";
+
+//    iwg1List.removeAt(FLID);    // remove this pseudo ID located inline with the other values
+
+      iwg1List.erase(iwg1List.begin()+FLID, iwg1List.end());
+
+      iwg1 = iwg1List.join(",");
+      memset(buffer, 0, 65000);
+      memcpy(buffer, iwg1.toStdString().c_str(), iwg1.size());
+//    cout << "JDW1 " << buffer << endl;
+    }
+  }
+
+  if (processAOC == 0) {
   // Now see if this message has a digest.
   if (strncmp(buffer, "DIGEST:", 7) == 0)
   {
@@ -423,21 +679,25 @@ cout << "[" << udp_str << "]" << endl;
 
     // This is a valid message.  Use the rest of the buffer as it is.
   }
-
-  if (strstr(buffer, "IWG1_NAMES"))	// don't process G4 IWG1_NAMES string.
-    return;
+  }
 
   // Filter out messages from un-expected sources, and pass the
   // uncompressed message to the platform handler.
   string platform;
-  if      (strncmp(buffer, "C130", 4) == 0)  platform = "C130";
-  else if (strncmp(buffer, "GV", 2) == 0)    platform = "GV";
-  else if (strncmp(buffer, "G4", 2) == 0)    platform = "G4";
-  else if (strncmp(buffer, "P3", 2) == 0)    platform = "P3";
-  else if (strncmp(buffer, "DC8", 3) == 0)   platform = "DC8";
-  else if (strncmp(buffer, "A10", 3) == 0)   platform = "A10";
-  else if (strncmp(buffer, "GAUS:", 5) == 0) platform = "GAUS";
-  else return;
+  if (processAOC == 0) {
+    if      (strncmp(buffer, "C130", 4) == 0)  platform = "C130";
+    else if (strncmp(buffer, "GV", 2) == 0)    platform = "GV";
+    else if (strncmp(buffer, "DC8", 3) == 0)   platform = "DC8";
+    else if (strncmp(buffer, "A10", 3) == 0)   platform = "A10";
+    else if (strncmp(buffer, "GAUS:", 5) == 0) platform = "GAUS";
+    else return;
+  }
+  if (processAOC == 1) {
+    if      (strncmp(buffer, "N42RF", 5) == 0) platform = "N42RF";
+    else if (strncmp(buffer, "N43RF", 5) == 0) platform = "N43RF";
+    else if (strncmp(buffer, "N49RF", 5) == 0) platform = "N49RF";
+    else return;
+  }
 
   QDateTime dt = QDateTime::currentDateTime().toUTC();
   QString datetime = dt.toString("yyyyMMddTHHmmss");
@@ -460,9 +720,7 @@ cout << "[" << udp_str << "]" << endl;
 }
 
 /* -------------------------------------------------------------------- */
-void
-udp2sql::
-handleSoundingMessage(string platform, char* buffer)
+void udp2sql::handleSoundingMessage(string platform, char* buffer)
 {
   // Strip the GAUS: header.
   buffer += 5;
@@ -476,11 +734,10 @@ handleSoundingMessage(string platform, char* buffer)
 }
 
 /* -------------------------------------------------------------------- */
-void
-udp2sql::
-handleAircraftMessage(string aircraft, char* buffer, QString notes)
+void udp2sql::handleAircraftMessage(string aircraft, char* buffer, QString notes)
 {
-  if (aircraft == "G4")	// For G4 test on 01/09/2013
+/* TODO purge this?  it was allready trimmed down
+  if (aircraft == "N49RF")	// For G4 test on 01/09/2013
   {
     char *p = strstr(buffer, "N1");
     if (p)
@@ -493,6 +750,7 @@ handleAircraftMessage(string aircraft, char* buffer, QString notes)
       }
     }
   }
+*/
 cout << buffer << "\n";
 
   QString varsStr(buffer);
@@ -600,7 +858,7 @@ cout << buffer << "\n";
     _timer[aircraft].start(DropDuration * 3600000, this);
   }
 
-
+#if 0
   // re-broadcast message to other aircraft
   if (strncmp(aircraft.c_str(), "DC8", 3) == 0) {
   
@@ -677,12 +935,11 @@ cout << buffer << "\n";
 //  reBroadcastMessage("hyper.raf-guest.ucar.edu", temp);
     reBroadcastMessage("rafgv.dyndns.org", temp);
   }
+#endif
 }
 
 /* -------------------------------------------------------------------- */
-void
-udp2sql::
-reBroadcastMessage(string dest, char* buffer)
+void udp2sql::reBroadcastMessage(string dest, char* buffer)
 {
   n_u::DatagramSocket * _socket;
   n_u::Inet4SocketAddress * _to;
