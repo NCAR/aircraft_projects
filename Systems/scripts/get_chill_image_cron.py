@@ -132,11 +132,15 @@ for x in timesecs:
 listing=os.listdir('.')
 
 # Get list of current images from ftp site
-#  TODO: use ftp.nlst to reduce size of listing significantly
+print 'opening FTP connection'
 try:
-    print 'opening FTP connection '
-
     ftp = ftplib.FTP(ftp_site)
+except:
+    print 'Error Connecting to ftp server: ' + ftp_site
+    os.remove(busy_file)
+    sys.exit(1)
+
+try:
     ftp.login(ftp_login, ftp_passwd)
     ftp.cwd(ftp_dir)
 
