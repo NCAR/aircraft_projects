@@ -1,7 +1,7 @@
 Summary: triggerin script for sysctl.conf
 Name: raf-ads3-sysctl
 Version: 1.0
-Release: 2
+Release: 3
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -31,6 +31,8 @@ fi
 %files
 
 %changelog
+* Wed Jul 03 2013 Chris Webster <cjw@ucar.edu> - 1.0-3
+- Clean up logrotate.d/ads3 file.  Bugs.
 * Tue Feb 21 2011 Gordon Maclean <maclean@ucar.edu> - 1.0-2
 - /etc/sysctl.conf is owned by initscripts, can't be owned by this package.
 * Sun Feb 06 2010 Chris Webster <cjw@ucar.edu> - 1.0-1
