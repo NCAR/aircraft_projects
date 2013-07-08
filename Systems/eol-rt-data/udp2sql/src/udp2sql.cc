@@ -25,8 +25,6 @@ namespace n_u = nidas::util;
 static const int DropDuration = 2;  // hours
 static const int port = 31007;
 
-static int processAOC = 0;
-
 #include <openssl/ripemd.h>
 
 
@@ -200,15 +198,12 @@ udp2sql::~udp2sql()
 {
     cout << "exiting" << endl;
 
-    if (processAOC == 1)
-    {
-        // Clean up
-        Py_DECREF(pModule);
-        Py_DECREF(pName);
+    // Clean up
+    Py_DECREF(pModule);
+    Py_DECREF(pName);
 
-        // Finish the Python Interpreter
-        Py_Finalize();
-    }
+    // Finish the Python Interpreter
+    Py_Finalize();
 }
 
 /* -------------------------------------------------------------------- */
@@ -220,16 +215,17 @@ udp2sql::udp2sql()
     _count = 0;
     newUDPConnection();
 
-    _autoDBresetList.push_back("DC8");
-    _autoDBresetList.push_back("G4");
+    _autoDBresetList.push_back("N42RF");
+    _autoDBresetList.push_back("N43RF");
+    _autoDBresetList.push_back("N49RF");
+    _autoDBresetList.push_back("C130");
+    _autoDBresetList.push_back("GV");
     for (int i = 0; i < _autoDBresetList.size(); ++i)
     {
         _timer[_autoDBresetList[i]].start(DropDuration * 3600000, this);
         _newFlight[_autoDBresetList[i]] = 1;
     }
 
-    if (processAOC == 1)
-    {
         // Initialize the Python Interpreter
         Py_InitializeEx(0);
 
@@ -258,7 +254,6 @@ udp2sql::udp2sql()
             // Finish the Python Interpreter
             Py_Finalize();
         }
-    }
 }
 
 /* -------------------------------------------------------------------- */
@@ -283,44 +278,6 @@ bool udp2sql::newPostgresConnection(string platform)
         _conn = 0;
     }
     return (_conn != 0);
-}
-
-/* -------------------------------------------------------------------- */
-int udp2sql::usage(const char* argv0)
-{
-    std::cerr << "Usage: " << argv0 << " [options]\n";
-    std::cerr << "  -R       Process only UDP feeds from RAF Aircraft.\n";
-    std::cerr << "  -N       Process only UDP feeds from NON RAF Aircraft.\n";
-    std::cerr << "  -h       This usage info.\n\n";
-    return 1;
-}
-
-/* -------------------------------------------------------------------- */
-int udp2sql::parseRunstring(int argc, char** argv)
-{
-    extern char *optarg;     /* set by getopt() */
-    //  extern int optind;       /* "   "  "        */
-    int opt_char;            /* option character */
-
-    if (argc == 1) return 1;
-
-    while ((opt_char = getopt(argc, argv, "hRN")) != -1) {
-        switch (opt_char) {
-            case 'R':
-                cout << "Process only UDP feeds from RAF Aircraft." << endl;
-                processAOC = 0;
-                break;
-            case 'N':
-                cout << "Process only UDP feeds from NON RAF Aircraft." << endl;
-                processAOC = 1;
-                break;
-            default:
-            case 'h':
-                return 1;
-        }
-        //  setConnectionQualifier(argv[1]);  // Prior implementation used this but never seen used by the command line
-    }
-    return 0;
 }
 
 /* -------------------------------------------------------------------- */
@@ -382,6 +339,7 @@ void udp2sql::resetRealTime(string aircraft)
 {
     cout << aircraft << " Resetting real-time database" << endl;
     _newFlight[aircraft] = 1;
+    return;
 
     // TODO - utilize setup files sent down via LDM here for the GV and C130 aircraft.
 
@@ -549,7 +507,6 @@ void udp2sql::newData()
             << BZ2_bzerror(&b, &errnum) << endl;
         return;
     }
-    if (processAOC == 1) {
         //  cout << "buffer: " << buffer << endl;
         int AOClen = 0;
 
@@ -561,7 +518,7 @@ void udp2sql::newData()
         if (strncmp(buffer, "AOCN49RF", 8) == 0)
             AOClen = 8;
         if (AOClen > 0) {
-            cout << &buffer[AOClen] << endl;
+//          cout << &buffer[AOClen] << endl;
 
             // utilize imported Python decrypt
             pArgs = PyTuple_New(1);
@@ -582,7 +539,7 @@ void udp2sql::newData()
                 decrypted = PyString_AsString(pValue);
                 memset(buffer, 0, 65000);
                 memcpy(buffer, decrypted, strlen(decrypted));
-                printf("Return of call : %s\n", buffer);
+//              printf("Return of call : %s\n", buffer);
                 Py_DECREF(pValue);
             }
             if (strstr(buffer, "IWG1_NAMES")) // don't process G4 IWG1_NAMES string.
@@ -609,9 +566,7 @@ void udp2sql::newData()
             memcpy(buffer, iwg1.toStdString().c_str(), iwg1.size());
             //    cout << "JDW1 " << buffer << endl;
         }
-    }
 
-    if (processAOC == 0) {
         // Now see if this message has a digest.
         if (strncmp(buffer, "DIGEST:", 7) == 0)
         {
@@ -678,26 +633,20 @@ void udp2sql::newData()
             }
 
             // This is a valid message.  Use the rest of the buffer as it is.
-        }
     }
 
     // Filter out messages from un-expected sources, and pass the
     // uncompressed message to the platform handler.
     string platform;
-    if (processAOC == 0) {
-        if      (strncmp(buffer, "C130", 4) == 0)  platform = "C130";
-        else if (strncmp(buffer, "GV", 2) == 0)    platform = "GV";
-        else if (strncmp(buffer, "DC8", 3) == 0)   platform = "DC8";
-        else if (strncmp(buffer, "A10", 3) == 0)   platform = "A10";
-        else if (strncmp(buffer, "GAUS:", 5) == 0) platform = "GAUS";
-        else return;
-    }
-    if (processAOC == 1) {
-        if      (strncmp(buffer, "N42RF", 5) == 0) platform = "N42RF";
-        else if (strncmp(buffer, "N43RF", 5) == 0) platform = "N43RF";
-        else if (strncmp(buffer, "N49RF", 5) == 0) platform = "N49RF";
-        else return;
-    }
+    if      (strncmp(buffer, "C130", 4) == 0)  platform = "C130";
+    else if (strncmp(buffer, "GV", 2) == 0)    platform = "GV";
+    else if (strncmp(buffer, "DC8", 3) == 0)   platform = "DC8";
+    else if (strncmp(buffer, "A10", 3) == 0)   platform = "A10";
+    else if (strncmp(buffer, "GAUS:", 5) == 0) platform = "GAUS";
+    else if (strncmp(buffer, "N42RF", 5) == 0) platform = "N42RF";
+    else if (strncmp(buffer, "N43RF", 5) == 0) platform = "N43RF";
+    else if (strncmp(buffer, "N49RF", 5) == 0) platform = "N49RF";
+    else return;
 
     QDateTime dt = QDateTime::currentDateTime().toUTC();
     QString datetime = dt.toString("yyyyMMddTHHmmss");
