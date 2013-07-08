@@ -226,34 +226,34 @@ udp2sql::udp2sql()
         _newFlight[_autoDBresetList[i]] = 1;
     }
 
-        // Initialize the Python Interpreter
-        Py_InitializeEx(0);
+    // Initialize the Python Interpreter
+    Py_InitializeEx(0);
 
-        // Build the name object
-        pName = PyString_FromString("decrypt");
+    // Build the name object
+    pName = PyString_FromString("decrypt");
 
-        PyRun_SimpleString("import sys");
-        PyRun_SimpleString("sys.path.append(\"/home/local/Systems/eol-rt-data/udp2sql/src\")");
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString("sys.path.append(\"/home/local/Systems/eol-rt-data/udp2sql/src\")");
 
-        // Load the module object
-        pModule = PyImport_Import(pName);
+    // Load the module object
+    pModule = PyImport_Import(pName);
 
-        // pDict is a borrowed reference 
-        pDict = PyModule_GetDict(pModule);
+    // pDict is a borrowed reference
+    pDict = PyModule_GetDict(pModule);
 
-        // pFunc is also a borrowed reference 
-        pFunc = PyDict_GetItemString(pDict, "decode");
+    // pFunc is also a borrowed reference
+    pFunc = PyDict_GetItemString(pDict, "decode");
 
-        if (!PyCallable_Check(pFunc)) 
-        {
-            cout << "failing" << endl;
-            // Clean up
-            Py_DECREF(pModule);
-            Py_DECREF(pName);
+    if (!PyCallable_Check(pFunc))
+    {
+        cout << "failing" << endl;
+        // Clean up
+        Py_DECREF(pModule);
+        Py_DECREF(pName);
 
-            // Finish the Python Interpreter
-            Py_Finalize();
-        }
+        // Finish the Python Interpreter
+        Py_Finalize();
+    }
 }
 
 /* -------------------------------------------------------------------- */
@@ -301,7 +301,7 @@ int udp2sql::execute(const char* sql_str)
 
 /* -------------------------------------------------------------------- */
 string udp2sql::extractPQString(PGresult *result, int tuple, int field)
-{ 
+{
     const char* pqstring = PQgetvalue(result, tuple, field);
     if (! pqstring)
         return "";
@@ -332,7 +332,7 @@ string udp2sql::getGlobalAttribute(PGconn *conn, string attr)
     string s = extractPQString(res, 0, 0);
     PQclear(res);
     return s;
-}   
+}
 
 /* -------------------------------------------------------------------- */
 void udp2sql::resetRealTime(string aircraft)
@@ -472,7 +472,7 @@ void udp2sql::newData()
     memset(decrypted, 0, 65000);
 
     int nBytes = _udp->readDatagram(udp_str, 65000);
-    if (nBytes < 1) 
+    if (nBytes < 1)
     {
         cout << "readDatagram() returned " << nBytes << "\n";
         return;
@@ -503,136 +503,136 @@ void udp2sql::newData()
         bzFile b;
         b.lastErr = ret;
         int errnum;
-        cout << "Failed to decompress the ground feed stream: " 
+        cout << "Failed to decompress the ground feed stream: "
             << BZ2_bzerror(&b, &errnum) << endl;
         return;
     }
-        //  cout << "buffer: " << buffer << endl;
-        int AOClen = 0;
+    //  cout << "buffer: " << buffer << endl;
+    int AOClen = 0;
 
-        // unencrypt messages from NOAA that begin with AOC
-        if (strncmp(buffer, "AOCN42RF", 8) == 0)
-            AOClen = 8;
-        if (strncmp(buffer, "AOCN43RF", 8) == 0)
-            AOClen = 8;
-        if (strncmp(buffer, "AOCN49RF", 8) == 0)
-            AOClen = 8;
-        if (AOClen > 0) {
-//          cout << &buffer[AOClen] << endl;
+    // unencrypt messages from NOAA that begin with AOC
+    if (strncmp(buffer, "AOCN42RF", 8) == 0)
+        AOClen = 8;
+    if (strncmp(buffer, "AOCN43RF", 8) == 0)
+        AOClen = 8;
+    if (strncmp(buffer, "AOCN49RF", 8) == 0)
+        AOClen = 8;
+    if (AOClen > 0) {
+//      cout << &buffer[AOClen] << endl;
 
-            // utilize imported Python decrypt
-            pArgs = PyTuple_New(1);
-            pValue = PyString_FromString(&buffer[AOClen]); //(const char *v)
-            if (!pValue)
-                PyErr_Print();
+        // utilize imported Python decrypt
+        pArgs = PyTuple_New(1);
+        pValue = PyString_FromString(&buffer[AOClen]); //(const char *v)
+        if (!pValue)
+            PyErr_Print();
 
-            PyTuple_SetItem(pArgs, 0, pValue);    
+        PyTuple_SetItem(pArgs, 0, pValue);
 
-            pValue = PyObject_CallObject(pFunc, pArgs);
+        pValue = PyObject_CallObject(pFunc, pArgs);
 
-            if (pArgs != NULL)
-            {
-                Py_DECREF(pArgs);
-            }
-            if (pValue != NULL) 
-            {
-                decrypted = PyString_AsString(pValue);
-                memset(buffer, 0, 65000);
-                memcpy(buffer, decrypted, strlen(decrypted));
-//              printf("Return of call : %s\n", buffer);
-                Py_DECREF(pValue);
-            }
-            if (strstr(buffer, "IWG1_NAMES")) // don't process G4 IWG1_NAMES string.
-                return;
-
-            // Identify and prune the NOAA aircraft feeds
-            //    cout << "JDW0 " << buffer << endl;
-            QString iwg1(buffer);
-            QStringList iwg1List = iwg1.split(',', QString::KeepEmptyParts);
-            //    cout << "iwg1List[FLID]: " << iwg1List[FLID].toStdString() << endl;
-            if (iwg1List[FLID][8] == 'H')
-                iwg1List[0] = "N42RF";
-            if (iwg1List[FLID][8] == 'I')
-                iwg1List[0] = "N43RF";
-            if (iwg1List[FLID][8] == 'N')
-                iwg1List[0] = "N49RF";
-
-            //    iwg1List.removeAt(FLID);    // remove this pseudo ID located inline with the other values
-
-            iwg1List.erase(iwg1List.begin()+FLID, iwg1List.end());
-
-            iwg1 = iwg1List.join(",");
+        if (pArgs != NULL)
+        {
+            Py_DECREF(pArgs);
+        }
+        if (pValue != NULL)
+        {
+            decrypted = PyString_AsString(pValue);
             memset(buffer, 0, 65000);
-            memcpy(buffer, iwg1.toStdString().c_str(), iwg1.size());
-            //    cout << "JDW1 " << buffer << endl;
+            memcpy(buffer, decrypted, strlen(decrypted));
+//          printf("Return of call : %s\n", buffer);
+            Py_DECREF(pValue);
+        }
+        if (strstr(buffer, "IWG1_NAMES")) // don't process G4 IWG1_NAMES string.
+            return;
+
+        // Identify and prune the NOAA aircraft feeds
+//      cout << "JDW0 " << buffer << endl;
+        QString iwg1(buffer);
+        QStringList iwg1List = iwg1.split(',', QString::KeepEmptyParts);
+//      cout << "iwg1List[FLID]: " << iwg1List[FLID].toStdString() << endl;
+        if (iwg1List[FLID][8] == 'H')
+            iwg1List[0] = "N42RF";
+        if (iwg1List[FLID][8] == 'I')
+            iwg1List[0] = "N43RF";
+        if (iwg1List[FLID][8] == 'N')
+            iwg1List[0] = "N49RF";
+
+//      iwg1List.removeAt(FLID);    // remove this pseudo ID located inline with the other values
+
+        iwg1List.erase(iwg1List.begin()+FLID, iwg1List.end());
+
+        iwg1 = iwg1List.join(",");
+        memset(buffer, 0, 65000);
+        memcpy(buffer, iwg1.toStdString().c_str(), iwg1.size());
+//      cout << "JDW1 " << buffer << endl;
+    }
+
+    // Now see if this message has a digest.
+    if (strncmp(buffer, "DIGEST:", 7) == 0)
+    {
+        buffer += 7;
+        // The digest (in hexadecimal format) will be the next 40 bytes, unless
+        // there are not enough.
+        if (strlen(buffer) < 41)
+        {
+            cout << "expected digest, but none found: ";
+            return;
+        }
+        string digest = string(buffer, buffer+40);
+        cout << "found digest: " << digest << "\n";
+        buffer += 41; // skip the newline between digest and id.
+
+        // Next is the id.
+        char *idp = buffer;
+        while (*buffer != 0 && *buffer != '\n')
+        {
+            ++buffer;
+        }
+        string id = string(idp, buffer);
+        if (*buffer) ++buffer; // skip newline after id
+        cout << "found id: " << id << "\n";
+        std::string pwd = get_password(id);
+        if (pwd.size() == 0)
+        {
+            cout << "unrecognized id '" << id << "': ignoring this message!\n";
+            return;
         }
 
-        // Now see if this message has a digest.
-        if (strncmp(buffer, "DIGEST:", 7) == 0)
+        // The rest of the buffer is the message.  Pipe everything back through
+        // a digest with the password and see if it matches.
+        RIPEMD160_CTX ctx;
+        if (! RIPEMD160_Init(&ctx))
         {
-            buffer += 7;
-            // The digest (in hexadecimal format) will be the next 40 bytes, unless
-            // there are not enough.
-            if (strlen(buffer) < 41)
-            {
-                cout << "expected digest, but none found: ";
-                return;
-            }
-            string digest = string(buffer, buffer+40);
-            cout << "found digest: " << digest << "\n";
-            buffer += 41; // skip the newline between digest and id.
+            cout << "hash init failed!\n";
+            return;
+        }
+        RIPEMD160_Update(&ctx, id.c_str(), id.length());
+        RIPEMD160_Update(&ctx, pwd.c_str(), pwd.length());
+        RIPEMD160_Update(&ctx, buffer, strlen(buffer));
+        unsigned char md[RIPEMD160_DIGEST_LENGTH];
+        if (! RIPEMD160_Final(md, &ctx))
+        {
+            cout << "final digest computation failed!\n";
+            return;
+        }
 
-            // Next is the id.
-            char *idp = buffer;
-            while (*buffer != 0 && *buffer != '\n')
-            {
-                ++buffer;
-            }
-            string id = string(idp, buffer);
-            if (*buffer) ++buffer; // skip newline after id
-            cout << "found id: " << id << "\n";
-            std::string pwd = get_password(id);
-            if (pwd.size() == 0)
-            {
-                cout << "unrecognized id '" << id << "': ignoring this message!\n";
-                return;
-            }
+        // Finally, convert this to hex and compare with the incoming digest.
+        char hexmd[2*RIPEMD160_DIGEST_LENGTH + 1];
+        for (int i = 0; i < RIPEMD160_DIGEST_LENGTH; ++i)
+        {
+            sprintf(hexmd + 2*i, "%02x", (int)md[i]);
+        }
+        hexmd[2*RIPEMD160_DIGEST_LENGTH] = 0;
+        cout << "expected digest: " << hexmd << "\n";
 
-            // The rest of the buffer is the message.  Pipe everything back through
-            // a digest with the password and see if it matches.
-            RIPEMD160_CTX ctx;
-            if (! RIPEMD160_Init(&ctx))
-            {
-                cout << "hash init failed!\n";
-                return;
-            }
-            RIPEMD160_Update(&ctx, id.c_str(), id.length());
-            RIPEMD160_Update(&ctx, pwd.c_str(), pwd.length());
-            RIPEMD160_Update(&ctx, buffer, strlen(buffer));
-            unsigned char md[RIPEMD160_DIGEST_LENGTH];
-            if (! RIPEMD160_Final(md, &ctx))
-            {
-                cout << "final digest computation failed!\n";
-                return;
-            }
+        if (digest != hexmd)
+        {
+            cout << "authentication failed for '" << id
+                << "', ignoring message!\n";
+            return;
+        }
 
-            // Finally, convert this to hex and compare with the incoming digest.
-            char hexmd[2*RIPEMD160_DIGEST_LENGTH + 1];
-            for (int i = 0; i < RIPEMD160_DIGEST_LENGTH; ++i)
-            {
-                sprintf(hexmd + 2*i, "%02x", (int)md[i]);
-            }
-            hexmd[2*RIPEMD160_DIGEST_LENGTH] = 0;
-            cout << "expected digest: " << hexmd << "\n";
-
-            if (digest != hexmd)
-            {
-                cout << "authentication failed for '" << id
-                    << "', ignoring message!\n";
-                return;
-            }
-
-            // This is a valid message.  Use the rest of the buffer as it is.
+        // This is a valid message.  Use the rest of the buffer as it is.
     }
 
     // Filter out messages from un-expected sources, and pass the
