@@ -28,8 +28,8 @@ echo "AIRCRAFT:" $AIRCRAFT
 echo "FLIGHTNUM:" $FLIGHT
 
 if [ -z "$AIRCRAFT" ];
-    echo "AIRCRFT must be set."
+    echo "AIRCRAFT must be set."
     exit 1
 fi
 
-cat /tmp/real-time-init.sql | sed s/PROJECT/$PROJECT/ | sed s/FLIGHTNUM/$FLIGHT/ | sed s/PLATFORM/$AIRCRAFT/ | psql -h $HOST -U ads -d real-time-$AIRCRAFT
+cat real-time-init.sql | sed s/PROJECT/$PROJECT/ | sed s/FLIGHTNUM/$FLIGHT/ | sed s/PLATFORM/$AIRCRAFT/ | psql -h $HOST -U ads -d real-time-$AIRCRAFT
