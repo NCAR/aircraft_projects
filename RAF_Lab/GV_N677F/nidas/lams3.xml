@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="RAF_Lab"
+    system="GV_N677F"
+    version="$LastChangedRevision: 2514 $"
+    >
+<sensorcatalog>
+
+    <sensor ID="IRIG" class="raf.IRIGSensor">
+        <sample id="1">
+            <variable name="Clock" units="msec"
+                    longname="milliseconds since 1970 Jan 01 00:00 +0"/>
+        </sample>
+    </sensor>
+
+    <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41001">
+        <sample id="1" rate="100">
+            <variable name="SEQ1_LAMS" units="none" longname="LAMS Sequence Number, Beam 1"/>
+            <variable name="BEAM1_LAMS" length="512" units="Mhz" longname="LAMS Histogram Averages, Beam 1"/>
+        </sample>
+        <sample id="2" rate="100">
+            <variable name="SEQ2_LAMS" units="none" longname="LAMS Sequence Number, Beam 1"/>
+            <variable name="BEAM2_LAMS" length="512" units="Mhz" longname="LAMS Histogram Maximums, Beam 2"/>
+        </sample>
+        <sample id="3" rate="100">
+            <variable name="SEQ3_LAMS" units="none" longname="LAMS Sequence Number, Beam 1"/>
+            <variable name="BEAM3_LAMS" length="512" units="Mhz" longname="LAMS Histogram Maximums, Beam 3"/>
+        </sample>
+    </sensor>
+
+</sensorcatalog>
+
+<site name="GV_N677F" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N677F" type="string"/>
+
+    <server statusAddr="sock:127.0.0.1:30001">
+        <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="RawSampleService">
+            <!-- input from every DSM on this aircraft that has
+                 a socket output of type RawSampleOutputStream -->
+            <input class="RawSampleInputStream">
+                <socket type="mcaccept"/>
+            </input>
+            <processor class="SampleArchiver">
+                <output class="RawSampleOutputStream">
+                    <fileset dir="/home/data/"
+                        file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
+                        length="0"/>
+
+                </output>
+                <output class="RawSampleOutputStream">
+                    <socket type="server" port="30000"/>
+                </output>
+            </processor>
+            <processor class="raf.SyncRecordGenerator">
+                <output class="RawSampleOutputStream">
+                    <socket type="server" port="30001"/>
+                </output>
+            </processor>
+        </service>
+    </server>
+
+    <dsm id="19" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
+
+      <sensor IDREF="LAMS3" id="1500"/>
+
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+    </dsm>
+
+</site>
+</project>
