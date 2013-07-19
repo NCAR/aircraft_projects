@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 18
+Release: 19
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -56,6 +56,8 @@ fi
 %attr(0775,ads,ads) /home/ads/bin/swcreate
 %attr(0775,ads,ads) /home/ads/bin/svn-ask-username.sh
 %attr(0755,ads,ads) /home/ads/bin/foldertab
+%attr(0755,ads,ads) /home/ads/Desktop/AutoCal.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/CalibrationDatabaseEditor.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/ConfigEditor.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/aeros.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/nimbus.desktop
@@ -110,6 +112,9 @@ fi
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Fri Jul 19 2013 John Wasinger <wasinger@ucar.edu> 1.19
+- Added Auto Cal icon to desktop.
+- Added Calibration Database Editor icon to desktop.
 * Fri Apr 05 2013 Gordon Maclean <maclean@ucar.edu> 1.18
 - Added .ssh/config
 * Tue Apr 10 2012 Gordon Maclean <maclean@ucar.edu> 1.17
