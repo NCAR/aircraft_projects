@@ -39,7 +39,7 @@ if [ -f $cf ]; then
     if ! egrep -q "^[[:space:]]*SYSLOGD_OPTIONS=" $cf; then
         sed -i '${
 a###### start %{name}-%{version} ######
-aSYSLOGD_OPTIONS="-m 0 -r -s raf.ucar.edu:eol.ucar.edu:atd.ucar.edu"
+aSYSLOGD_OPTIONS="-m 0 -r -s raf.ucar.edu:eol.ucar.edu"
 a###### end %{name}-%{version} ######
 }' $cf
     else
