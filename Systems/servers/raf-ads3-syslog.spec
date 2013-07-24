@@ -51,7 +51,7 @@ h
 # comment out existing statement
 s/.*/# &/p
 x
-s/SYSLOGD_OPTIONS="[^"]*/& -r -s raf.ucar.edu:eol.ucar.edu:atd.ucar.edu/
+s/SYSLOGD_OPTIONS="[^"]*/& -r -s raf.ucar.edu:eol.ucar.edu/
 a###### end %{name}-%{version} ######
 }' $cf
     fi
