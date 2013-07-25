@@ -56,26 +56,26 @@ dirlist = os.listdir(local_image_dir)
 label = ''
 
 # Infra-red
-IRregx = 'ops.GOES-15.*thermal-IR.jpg'  
+IRregx = 'ops.GOES-13.*thermal-IR.jpg'  
 irlist = getList(dirlist,IRregx)
 if len(irlist) != 0:
     irFile = irlist[len(irlist)-1]
     irElmts = []
     irElmts = irFile.split('.')
-    label = label + "IR   : "+ irElmts[2] +'\\n'
+    label = label + "IR   : "+ irElmts[2][:8] + 'T' + irElmts[2][8:-2] + ':' + irElmts[2][10:] + '\\n'
 else:
     label = label + 'IR   : no file available\\n'
 
 # Visible
 if len(visFile) == 0:
     print "Making vis label"
-    VISregx = 'ops.GOES-15.*ch1_vis.jpg'
+    VISregx = 'ops.GOES-13.*ch1_vis.jpg'
     vislist = getList(dirlist,VISregx)
     if len(vislist) != 0:
         visFile = vislist[len(vislist)-1]
         visElmts = []
         visElmts = visFile.split('.')
-        visFile = "VIS  : "+ visElmts[2] + '\\n'
+        visFile = "VIS  : "+ visElmts[2][:8] + 'T' + visElmts[2][8:-2] + ':' + visElmts[2][10:] + '\\n'
     else:
         visFile = "VIS  : no file available\\n"
 
@@ -91,7 +91,7 @@ if len(conusFile) == 0:
         conusFile = conuslist[len(conuslist)-1]
         conusElts = []
         conusElts = conusFile.split('.')
-        conusFile = "NWS  : "+conusElts[2] + ''
+        conusFile = "NWS  : "+ conusElts[2][:8] + 'T' + conusElts[2][8:-2] + ':' + conusElts[2][10:] + ''
     else:
         conusFile = "NWS  : no file available"
 
