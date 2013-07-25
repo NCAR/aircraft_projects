@@ -50,12 +50,11 @@ busy_file        = 'BUSY_'+image_type
 ftp_site         = 'catalog.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
-#ftp_dir          = '/pub/incoming/OSM/C130/'
 ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
 label            = 'sat_ir_label.jpg'
 #Assumes filename form is prefixYYYYMMDD*postfix
-prefix           = 'ops.GOES-15.'  
-postfix		 = '4km_ch4_thermal-IR.jpg' 
+prefix           = 'ops.GOES-13.'
+postfix		 = '4km_ch4_thermal-IR.jpg'
 osm_file_name    = "latest_ir.jpg"
 num_imgs_to_get  = 10 # Script will backfill this many images for loops
 # End of Initialization section
