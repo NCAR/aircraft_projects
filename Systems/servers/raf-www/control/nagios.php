@@ -7,6 +7,7 @@
 
 	//open nagios status file
 	$statusdat = file_get_contents('/var/log/nagios/status.dat');
+	$status = "";
 
 	//regex parse out description, state, and output into $out array
 	preg_match_all('/service \{[.\S\s][^\}]+service_description=(.*)\n[.\S\s][^\}]+current_state=(.*)\n[.\S\s][^\}]+plugin_output=(.*)\n/', $statusdat, $out);
