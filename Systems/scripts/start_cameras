@@ -1,6 +1,12 @@
 #!/bin/csh
+
 logger "start_cameras shell script called"
-/etc/init.d/capture stop
-sudo /usr/sbin/reload_fw
+
+/etc/init.d/capture.sh stop
+
+sudo modprobe -r firewire_ohci
+sudo modprobe firewire_ohci
+
 sleep 2
+
 /etc/init.d/capture start &
