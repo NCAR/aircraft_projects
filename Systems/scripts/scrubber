@@ -8,6 +8,7 @@ find /var/www/html/flight_data/images -name "NEXRAD*.png*" -mmin +720 -exec rm {
 find /var/www/html/flight_data/images -name "research*.png" -mmin +720 -exec rm {} \;
 find /var/www/html/flight_data/images -name "latest*" -mmin +720 -exec rm {} \;
 find /var/www/html/flight_data/GE -name last_hour_lightning.kml -mmin +30 -exec rm {} \;
+find /var/www/html/flight_data/GE -name "*_Flight_Plan.kml" -mmin +720 -exec rm {} \;
 find /var/www/html/skewt -name "*.svg" -mmin +1440 -exec rm {} \;
 find /tmp/avaps-rt -name "D*" -mmin +720 -exec rm {} \;
 find /tmp -maxdepth 1 -name "iostat*" -mmin +3000 -exec rm{} \;
@@ -16,6 +17,7 @@ find /tmp -maxdepth 1 -name "iostat*" -mmin +3000 -exec rm{} \;
 # Don't allow the lock files to remain too long.
 find /mnt/r1/dropsondes -name "BUSY" -mmin +20 -exec rm {} \;
 find /var/www/html/flight_data/images/ -name "*BUSY*" -mmin +10 -exec rm {} \;
+find /var/www/html/flight_data/GE/ -name "*BUSY*" -mmin +10 -exec rm {} \;
 
 # Clean these every couple months.
 find /mnt/r1/dropsondes -name "D*" -mmin +80000 -exec rm {} \;
