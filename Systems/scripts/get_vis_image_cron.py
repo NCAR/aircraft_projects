@@ -64,8 +64,8 @@ ftp_passwd       = ''
 #ftp_dir          = '/pub/incoming/OSM/C130/'
 ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
 #Assumes filename form is prefixYYYYMMDD*.region_postfix where region is drawn from DB
-prefix           = 'ops.goes-13.'  
-postfix		 = '1km_ch1_vis.jpg' 
+prefix           = 'ops.goes-1?.'  
+postfix		 = '4km_ch1_vis.jpg' 
 osm_label            = 'sat_vis_label.jpg'
 #osm_file_name    = "latest_vis.jpg"  # NOTE: defined once we have region name
 num_imgs_to_get  = 10 # Script will backfill this many images for loops
