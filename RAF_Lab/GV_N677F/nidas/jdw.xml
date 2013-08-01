@@ -12,12 +12,12 @@
     >
 <sensorcatalog>
 
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="Clock" units="msec"
                     longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
 </sensorcatalog>
 
@@ -58,7 +58,7 @@
 <!-- ########################################################################################################### -->
 
     <dsm name="dsmCDB" location="CDB" id="46" rserialPort="30002" derivedData="sock::31000">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="CDB"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="CDB"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <sample id="1" rate="500">
@@ -93,10 +93,10 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
@@ -105,7 +105,7 @@
 <!-- ########################################################################################################### -->
 
     <dsm name="dsm303" location="big_blue" id="1" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
             <sample id="0" rate="500">
@@ -164,7 +164,7 @@
             </sample>
         </sensor>
 -->
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -173,7 +173,7 @@
 <!-- ########################################################################################################### -->
 
     <dsm name="dsm307" location="turtle" id="2" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="307"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="307"/>
 
         <sensor class="raf.DSMAnalogSensor"    devicename="/dev/dsma2d0" id="200">
             <sample id="0" rate="500">
@@ -219,7 +219,7 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>

@@ -12,12 +12,12 @@
     >
 
 <sensorcatalog>
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="Clock" units="msec"
                     longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
-    </irigSensor>
+    </sensor>
 </sensorcatalog>
 
 <site name="GV_N677F" class="raf.Aircraft">
@@ -56,7 +56,7 @@
     </server>
 
     <dsm name="bigblu" location="blue_viper" id="1" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="big"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="big"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
@@ -88,7 +88,7 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
