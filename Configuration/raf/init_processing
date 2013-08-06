@@ -36,11 +36,16 @@ cat > run_all << EOFRA
 #!/bin/csh
 
 /usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac :9 &
+set xvpid=$!
+sleep 2
+
 setenv DISPLAY :9.1
 
 ./run_nimbus
 ./reorder_all
 ./run_proc2d
+
+kill $xvpid
 EOFRA
 
 
