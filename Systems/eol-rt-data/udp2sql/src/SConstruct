@@ -2,9 +2,12 @@
 
 env = Environment(tools = ["default", "qt4", "nidas"])
 
-env.Append(CXXFLAGS='-g -Werror -I/usr/include/python2.4/')
+env.Append(CXXFLAGS='-g -Werror')
+env.ParseConfig('python-config --includes')
+env.ParseConfig('python-config --cflags')
+env.ParseConfig('python-config --libs')
 env.EnableQt4Modules(['QtNetwork'])
-env.AppendUnique(LIBS = ["ssl", "pq", "bz2", "crypto", "python2.4", "nidas_util"])
+env.AppendUnique(LIBS = ["ssl", "pq", "bz2", "crypto", "nidas_util"])
 
 SOURCES = Split("""
 main.cc
