@@ -221,7 +221,7 @@ udp2sql::udp2sql()
     _autoDBresetList.push_back("WKA");
     _autoDBresetList.push_back("C130");
     _autoDBresetList.push_back("GV");
-    for (int i = 0; i < _autoDBresetList.size(); ++i)
+    for (unsigned int i = 0; i < _autoDBresetList.size(); ++i)
     {
         _timer[_autoDBresetList[i]].start(DropDuration * 3600000, this);
         _newFlight[_autoDBresetList[i]] = 1;
@@ -409,7 +409,7 @@ void udp2sql::newUDPConnection()
 /* -------------------------------------------------------------------- */
 void udp2sql::timerEvent(QTimerEvent *event)
 {
-    for (int i = 0; i < _autoDBresetList.size(); ++i)
+    for (unsigned int i = 0; i < _autoDBresetList.size(); ++i)
     {
         if (event->timerId() == _timer[_autoDBresetList[i]].timerId())
             resetRealTime(_autoDBresetList[i]);
