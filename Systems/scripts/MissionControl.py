@@ -19,10 +19,12 @@ restrict calibration and recording of research data.
 """
 
 import sys
+import functools
+
 from PyQt4.QtCore import (Qt, QObject, QTimer, QTime, QDateTime, SIGNAL, QString, QSocketNotifier)
 from PyQt4.QtGui import (QWidget, QLabel, QPushButton, QLineEdit, QTimeEdit, QGridLayout,
                          QApplication, QMessageBox, QGroupBox, QHBoxLayout, QButtonGroup,
-                         QStackedWidget, QFrame)
+                         QStackedWidget, QFrame, QComboBox)
 from PyQt4.QtNetwork import (QHostAddress, QUdpSocket)
 
 from psycopg2 import *
@@ -188,13 +190,27 @@ class MissionControl(QWidget):
     def RadioButtonSelected(self):
 #       print("RadioButtonSelected: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
         for (key, value), rb in self.rbs.iteritems():
-#           print "key: %s" % key
+#           print "key: %s\tvalue: %s\tisChecked: %d" % (key, value, rb.isChecked())
             if rb.isChecked():
 #               print "key: %s\tvalue: %s\t %d" % (key, value, rb.isChecked())
                 try:
                     self.cursor.execute("UPDATE mission_control SET value = '%s' WHERE key='%s'" % (value, key))
                 except:
                     self.failExit()
+
+        self.cursor.execute("NOTIFY missioncontrol")
+        self.conn.commit()
+        self.updateSelection()
+
+    def currentIndexChanged(self, key):
+#       print "currentIndexChanged:", QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW)
+        value = self.entries[key].currentText()
+#       print "key:", key, "value:", value
+
+        try:
+            self.cursor.execute("UPDATE mission_control SET value = '%s' WHERE key='%s'" % (value, key))
+        except:
+            self.failExit()
 
         self.cursor.execute("NOTIFY missioncontrol")
         self.conn.commit()
@@ -219,7 +235,6 @@ class MissionControl(QWidget):
 
         # use current setting in database for default
         default = self.selectOrInsert(key, default)
-        self.keys[key] = default
 
         groupBox = QGroupBox(title)
         group = QButtonGroup(self)
@@ -237,6 +252,30 @@ class MissionControl(QWidget):
 
         groupBox.setLayout(hbox)
         return groupBox
+
+    def horizontalEntryGroup(self, title, key, default, aRange):
+
+#       print "horizontalEntryGroup:", QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW)
+        default = QString.number(default)
+#       print "key:", key, "default:", default
+
+        # use current setting in database for default
+        default = self.selectOrInsert(key, default)
+#       print "key:", key, "default:", default
+
+        hbox = QHBoxLayout()
+        hbox.addWidget( QLabel("<b>"+title+"</b>") )
+        entry = QComboBox()
+        for item in range(aRange[0], aRange[1]+1):
+            entry.addItem( QString.number(item) )
+
+        entry.setCurrentIndex( entry.findText( default ) )
+
+        hbox.addWidget(entry)
+        self.entries[key] = entry
+
+        QObject.connect(entry, SIGNAL("currentIndexChanged(QString)"), functools.partial(self.currentIndexChanged, key))
+        return hbox
 
     def getCameraList(self):
 #       print("getCameraList: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
@@ -259,7 +298,8 @@ class MissionControl(QWidget):
 #       print("updateSelection: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
         self.updateCameraList()
 
-        for key, value in self.keys.iteritems():
+        for (key, value), rb in self.rbs.iteritems():
+#           print "key: %s\tvalue: %s\tisChecked: %d" % (key, value, rb.isChecked())
             try:
 #               print("SELECT value from mission_control WHERE key='%s'" % key)
                 self.cursor.execute("SELECT value from mission_control WHERE key='%s'" % key)
@@ -270,6 +310,16 @@ class MissionControl(QWidget):
                 # don't fail when key is set and the UI hasn't updated yet to show the selection
                 if (key != 'camera'):
                     self.failExit()
+
+        for key, entry in self.entries.iteritems():
+#           print "key: %s" % key
+#           print("SELECT value from mission_control WHERE key='%s'" % key)
+            self.cursor.execute("SELECT value from mission_control WHERE key='%s'" % key)
+            value = self.cursor.fetchone()
+#           print("value is '%s'" % value[0])
+            index = entry.findText(value[0])
+#           print("index is '%d'" % index)
+            entry.setCurrentIndex(index)
 
     def initUI(self):
 #       print("initUI: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
@@ -317,7 +367,6 @@ class MissionControl(QWidget):
 
         # setup radio buttons
         self.rbs = dict()
-        self.keys = dict()
 
         self.region    = self.horizontalRadioGroup("Region (controls visable sat. and LMA location):", "region", "off", ("off", "CO", "AL", "OK"))
         self.cappi     = self.horizontalRadioGroup("CAPPI (all regions):", "cappi", "off", ("off", "on"))
@@ -326,6 +375,12 @@ class MissionControl(QWidget):
 
         self.cameraList = QStackedWidget()
         self.cameraList.addWidget(self.camera)
+
+        # setup entry fields
+        self.entries = dict()
+
+        # setup numeric entry for lighting time span
+        self.lightningTspan = self.horizontalEntryGroup("LMA lightning time span:", "lightningTspan", 6, [0, 10])
 
         # setup Postgres Notify/Listen connection
 #       print "self.conn.fileno() %d" % self.conn.fileno()
@@ -349,7 +404,8 @@ class MissionControl(QWidget):
         layout.addWidget(self.region,              5, 0, 1, 3)
         layout.addWidget(self.cappi,               6, 0, 1, 3)
         layout.addWidget(self.lightning,           7, 0, 1, 3)
-        layout.addWidget(self.cameraList,          8, 0, 1, 3)
+        layout.addLayout(self.lightningTspan,      8, 0, 1, 3)
+        layout.addWidget(self.cameraList,          9, 0, 1, 3)
         self.setLayout(layout)
 
     def setDoNotCalibrate(self, pressed):

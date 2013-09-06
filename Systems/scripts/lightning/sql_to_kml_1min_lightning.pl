@@ -2,7 +2,7 @@
 
 $| = 1;
 
-# This script reads the PsotgreSQL database for 1-min lightning data and pulls out the last hour
+# This script reads the PostgreSQL database for 1-min lightning data and pulls out the last hour
 # data based on the current time. The last hour is then put into placemarks in 5-10 minute bins
 
 use DBI;
@@ -11,6 +11,18 @@ $host = "acserver.raf.ucar.edu";
 
 $output = "/var/www/html/flight_data/GE/last_hour_lightning.kml";
 $output1 = "/var/www/html/flight_data/GE/last_hour_lightning.tmp";
+
+sub getMissionControlVal {
+
+    my $query = "select value from mission_control where key='$_[0]'";
+    my $sth = $dbh->prepare($query);
+    my $result = $sth->execute();
+    if ($result == 1) {
+        my $value = @{$sth->fetch}[0];
+        return $value;
+    }
+    return "";
+}
 
 open(OUT,">$output1") || die "Unable to open output file:$output1";
 print OUT "<kml xmlns=\"http://earth.google.com/kml/2.1\">\n<Document>\n<name>Lightning Strikes</name>\n" ;
@@ -72,8 +84,12 @@ print OUT "</Icon>\n</IconStyle>\n</Style>\n";
 
 $dbh = DBI->connect("dbi:Pg:dbname=real-time;host=$host",'ads','',{AutoCommit => 1, RaiseError => 1, PrintError => 0});
 
-# Set up loop to move through the last 6 minutes.
-for($i = 0; $i < 6; $i++) {
+$lightningTspan = getMissionControlVal("lightningTspan");
+if ($lightningTspan eq "") { $lightningTspan = 6; }
+#print 'getMissionControlVal("lightningTspan"): ', $lightningTspan, "\n";
+
+# Set up loop to move through the last N minutes.
+for($i = 0; $i <  $lightningTspan; $i++) {
 
 #   $i = 1;
 # Compute time parameters for query
