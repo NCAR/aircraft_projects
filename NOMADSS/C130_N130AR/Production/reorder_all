@@ -1,0 +1,14 @@
+#!/bin/csh
+
+if ($uid == 20000) then
+  cd /scr/raf/local_productiondata
+else
+  cd ${DATA_DIR}
+endif
+
+foreach file ( NOMADSS?f??.nc )
+  echo $file
+  ncReorder $file temp1.nc
+  mv -f temp1.nc $file
+  chmod g+w $file
+end
