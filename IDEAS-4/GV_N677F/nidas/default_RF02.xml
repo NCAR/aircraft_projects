@@ -423,7 +423,7 @@
     <serialSensor ID="D_GPS" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <message length="0" position="beg" separator="\xaa\x44\x12"/>
     </serialSensor>
-    <serialSensor ID="Novatel_GPS" baud="38400" class="GPS_NMEA_Serial" databits="8" parity="none" stopbits="1">
+    <serialSensor ID="Novatel_GPS" baud="38400" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
 
 <!-- GGA record -->
       <sample id="1" rate="5">
@@ -1416,7 +1416,7 @@
         <variable length="512" longname="LAMS histogram maximums" name="LAMS_MAX" units="Mhz"/>
       </sample>
     </sensor>
-    <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41001">
+    <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41002">
         <sample id="1" rate="100">
             <variable longname="LAMS Sequence Number, Beam 1" name="SEQ1_LAMS" units="none"/>
             <variable length="512" longname="LAMS Histogram Averages, Beam 1" name="BEAM1_LAMS" units="Mhz"/>
@@ -1600,12 +1600,13 @@
     </server>
     <dsm id="19" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
+      <sensor IDREF="SIDS" devicename="usock::41001" id="200"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
       <sensor IDREF="HOLODEC" devicename="usock::30120" id="300" suffix="_RWOI"/>
       <sensor IDREF="THREEVCPI" devicename="usock::30114" id="500" suffix="_RWI"/>
-      <sensor IDREF="LAMS3" devicename="usock::41001" id="700" suffix="_LWOI"/>
+      <sensor IDREF="LAMS3" devicename="usock::41002" id="700" suffix="_LWOI"/>
       <sensor IDREF="THREEVC2D" devicename="usock::30113" id="900" suffix="_RWI"/>
     </dsm>
     <dsm derivedData="sock::7071" id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
