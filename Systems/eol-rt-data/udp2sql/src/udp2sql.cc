@@ -65,7 +65,7 @@ enum IWG1VARS {
 };
 
 enum DC8VARS {
-    VNS_MMS = 33,
+    VNS_MMS = SOLAR_AZ_AC + 1,
     VEW_MMS,
     VUP_MMS,
     COLDCN,
@@ -92,7 +92,7 @@ enum DC8VARS {
 };
 
 enum AOCVARS {
-    FLID = 33,
+    FLID = SOLAR_AZ_AC + 1,
     MISSIONID,
     STORMID,
     MDSHOUR_1,
@@ -338,57 +338,8 @@ string udp2sql::getGlobalAttribute(PGconn *conn, string attr)
 /* -------------------------------------------------------------------- */
 void udp2sql::resetRealTime(string aircraft)
 {
-    cout << aircraft << " Resetting real-time database" << endl;
+//  cout << aircraft << " Resetting real-time database" << endl;
     _newFlight[aircraft] = 1;
-    return;
-
-    // TODO - utilize setup files sent down via LDM here for the GV and C130 aircraft.
-
-    QFile file( string("/home/local/Systems/eol-rt-data/postgres/"
-                "real-time-"+aircraft+".sql").c_str() );
-    if (!file.open(QFile::ReadOnly | QFile::Text)) return;
-    QTextStream in(&file);
-    QString line, longline;
-
-    newPostgresConnection(aircraft);
-
-    QString StartTime = QString( getGlobalAttribute(_conn, "StartTime").c_str() );
-
-    // don't backup empty tables
-    if (StartTime.length() == 0) {
-        closePostgresConnection();
-        cout << aircraft << " Resetting real-time database skipped (no data)" << endl;
-        return;
-    }
-    // trim off the microsecond field from the StartTime (if any) and remove the delimiters
-    StartTime.replace(QRegExp("\\.[0-9]+$"), "");
-    int len = 0;
-    while (len != StartTime.length()) {
-        len = StartTime.length();
-        StartTime.replace("-","");
-        StartTime.replace(":","");
-    }
-    QStringList tables;
-    tables << "variable_list" << "global_attributes" << "raf_lrt";
-    for (int i = 0; i < tables.size(); ++i) {
-        line = "ALTER TABLE " + tables[i] + " RENAME TO " + tables[i]
-            + "_" + StartTime;
-        cout << aircraft << " " << line.toStdString() << endl;
-        execute(line.toStdString().c_str());
-        line = "ALTER INDEX " + tables[i] + "_pkey RENAME TO " + tables[i]
-            + "_pkey_" + StartTime;
-        cout << aircraft << " " << line.toStdString() << endl;
-        execute(line.toStdString().c_str());
-    }
-    while (!(line = in.readLine()).isNull()) {
-        cout << aircraft << " " << line.toStdString() << endl;
-        longline += line;
-        if ( longline.endsWith(";") ) {
-            execute(longline.toStdString().c_str());
-            longline = "";
-        }
-    }
-    closePostgresConnection();
 }
 
 /* -------------------------------------------------------------------- */
@@ -687,21 +638,6 @@ void udp2sql::handleSoundingMessage(string platform, char* buffer)
 /* -------------------------------------------------------------------- */
 void udp2sql::handleAircraftMessage(string aircraft, char* buffer, QString notes)
 {
-    /* TODO purge this?  it was allready trimmed down
-       if (aircraft == "N49RF") // For G4 test on 01/09/2013
-       {
-       char *p = strstr(buffer, "N1");
-       if (p)
-       {
-     *p = '\0';
-     for (int i = 0; i < 5; ++i)
-     {
-     p = strrchr(buffer, ',');
-     *p = '\0';
-     }
-     }
-     }
-     */
     cout << buffer << "\n";
 
     QString varsStr(buffer);
