@@ -488,10 +488,8 @@
         <variable longname="Reference CMIGITS3 Altitude (MSL)" name="CALT" units="m"/>
         <variable longname="Reference CMIGITS3 Ground Speed Vector, North Component" name="CVNS" units="m/s"/>
         <variable longname="Reference CMIGITS3 Ground Speed Vector, East Component" name="CVEW" units="m/s"/>
-        <variable longname="reference CMIGITS3 Verticle Speed" name="CVSPD" units="m/s"/>
-        <variable longname="Reference CMIGITS3 Aircraft Pitch" name="CPITCH" units="degree">
-            <linear intercept="0.4" slope="1.0" units="degree"/>
-        </variable>
+        <variable longname="Reference CMIGITS3 Verticle Speed" name="CVSPD" units="m/s"/>
+        <variable longname="Reference CMIGITS3 Aircraft Pitch" name="CPITCH" units="degree"/>
         <variable longname="Reference CMIGITS3 Aircraft Roll" name="CROLL" units="degree"/>
         <variable longname="Reference CMIGITS3 True Heading" name="CTHDG" units="degree_T"/>
       </sample>
@@ -1538,7 +1536,7 @@
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
-<!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
+<!-- Specialized UDP Packets for RAF purposes - Parcel Tracking, instructing instrument behavior, etc... -->
     <sensor ID="PARCELS" class="UDPSocketSensor" devicename="usock::30100">
 
 <!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
@@ -1546,6 +1544,13 @@
           <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
         </sample>
       -->
+    </sensor>
+
+    <sensor ID="PAVEL_INLET" class="UDPSocketSensor" devicename="usock::29001">
+      <sample id="1" rate="1" scanfFormat="Position is  = %d">
+        <variable longname="Valco valve position" name="VALCOPOS" units="number"/>
+        <prompt rate="1" string="cp\r"/>
+      </sample>
     </sensor>
 
 <!-- Specialized UDP Packets indicating that Mission Controller is asking for instruments to behave in
@@ -1559,6 +1564,7 @@
       </sample>
     </sensor>
   </sensorcatalog>
+
   <site applyCals="true" class="raf.Aircraft" name="GV_N677F">
     <parameter name="tailNumber" type="string" value="N677F"/>
     <parameter name="applyCals" type="bool" value="true"/>
@@ -1600,14 +1606,16 @@
     </server>
     <dsm id="19" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
+      <sensor IDREF="PAVEL_INLET" devicename="usock::29001" id="150"/>
       <sensor IDREF="SIDS" devicename="usock::41001" id="200"/>
-      <output class="RawSampleOutputStream">
-        <socket type="mcrequest"/>
-      </output>
       <sensor IDREF="HOLODEC" devicename="usock::30120" id="300" suffix="_RWOI"/>
       <sensor IDREF="THREEVCPI" devicename="usock::30114" id="500" suffix="_RWI"/>
       <sensor IDREF="LAMS3" devicename="usock::41002" id="700" suffix="_LWOI"/>
       <sensor IDREF="THREEVC2D" devicename="usock::30113" id="900" suffix="_RWI"/>
+
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
     <dsm derivedData="sock::7071" id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
@@ -1815,7 +1823,13 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS6" id="300"/></dsm>
+      <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS2" id="300">
+        <parameter name="INSTRUMENT" type="string" value="LAMS"/>
+        <parameter name="LEVER_ARM_X" type="int" value="564"/>
+        <parameter name="LEVER_ARM_Y" type="int" value="730"/>
+        <parameter name="LEVER_ARM_Z" type="int" value="-284"/>
+      </serialSensor>
+    </dsm>
     <dsm derivedData="sock::7071" id="84" location="L5" name="dsm313" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
       <output class="RawSampleOutputStream">
@@ -2117,7 +2131,7 @@
             <message length="0" position="end" separator="\n"/>
         </serialSensor>
         <output class="RawSampleOutputStream">
-            <socket port="30000" type="server"/>
+            <socket port="30000" type="server" block="false" maxIdle="60"/>
         </output>
 
         <!-- To save data on local CF when running standalone
@@ -2129,7 +2143,7 @@
         </output>
         -->
         <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
+            <socket type="mcrequest" block="false" maxIdle="60"/>
         </output>
         <processor class="raf.CVIProcessor">
             <parameter name="vout" type="string" value="/dev/dmmat_d2a0"/>
@@ -2173,7 +2187,7 @@
                 <variable name="H2O_CVIP"/>
             </sample>
             <output class="raf.CVIOutput">
-                <socket address="cvi-pc-2" block="false" port="30005" type="client"/>
+                <socket address="cvi-pc-2" block="false" maxIdle="60" port="30005" type="client"/>
             </output>
 
             <!-- Uncomment this output to see what the DSM is sending to the LabView PC
