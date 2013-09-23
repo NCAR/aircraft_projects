@@ -1408,6 +1408,14 @@
             <variable length="512" longname="LAMS Histogram Maximums, Beam 3" name="BEAM3" units="Mhz"/>
         </sample>
     </sensor>
+    <serialSensor ID="LICOR_820" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_L820">
+      <sample id="1" rate="2" scanfFormat="%f %f %f">
+        <variable longname="Licor Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
+        <variable longname="Licor Methane Mixing Ratio" name="LI8202" units="ppmv"/>
+        <variable longname="Licor Methane Mixing Ratio" name="LI8203" units="ppmv"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
     <serialSensor ID="PIC_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC1301">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %*d %*f">
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
@@ -1814,6 +1822,7 @@
       </output>
       <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS5" id="300" suffix="_PIC1301"/>
       <serialSensor IDREF="PIC2311_CO2" devicename="/dev/ttyS6" id="500" suffix="_PIC2311"/>
+      <serialSensor IDREF="LICOR_820" devicename="/dev/ttyS8" id="400" suffix="_L820"/>
       <serialSensor IDREF="VCSEL" devicename="/dev/ttyS9" id="700" suffix="_VXL2"/>
     </dsm>
     <dsm derivedData="sock::7071" id="85" location="LWI" name="dsmLWI" rserialPort="30002" statusAddr="sock::30001">
