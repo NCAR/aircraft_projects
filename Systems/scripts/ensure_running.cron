@@ -7,7 +7,7 @@ set path = ($path /opt/nidas/bin)
 
 #  dsm process running on acserver - this dsm generally handles UDP packets 
 #    (e.g. parcel track packets)
-ps ax | grep dsm | grep -v grep | grep -qv dsm_server
+ps ax | grep -w dsm | grep -qv grep
 if ($status) then
   nohup dsm >& /tmp/dsm.log &
 endif
