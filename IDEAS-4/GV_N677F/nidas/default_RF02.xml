@@ -1411,7 +1411,7 @@
     <serialSensor ID="LICOR_820" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_L820">
       <sample id="1" rate="2" scanfFormat="%f %f %f">
         <variable longname="Licor Cell Temperature" name="CELLTEMP" units="deg_C"/>
-        <variable longname="Licor Cell Pressure" name="CELLPESS" units="hPa"/>
+        <variable longname="Licor Cell Pressure" name="CELLPRESS" units="hPa"/>
         <variable longname="Licor Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
@@ -1533,10 +1533,10 @@
         </sample>
       -->
     </sensor>
-    <sensor ID="PAVEL_INLET" class="UDPSocketSensor" devicename="usock::29001">
-      <sample id="1" rate="1" scanfFormat="Position is  = %d">
+    <sensor ID="PAVEL_INLET" class="UDPSocketSensor" devicename="usock::29003">
+      <sample id="1" rate="1" scanfFormat="%f,%f">
         <variable longname="Valco valve position" name="VALCOPOS" units="number"/>
-        <prompt rate="1" string="CP\r"/>
+        <variable longname="Solenoid state" name="SOLPOS" units="number"/>
       </sample>
     </sensor>
 
@@ -1592,7 +1592,7 @@
     </server>
     <dsm id="19" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
-      <sensor IDREF="PAVEL_INLET" devicename="usock::29001" id="150"/>
+      <sensor IDREF="PAVEL_INLET" devicename="usock::29003" id="150"/>
       <sensor IDREF="SIDS" devicename="usock::41001" id="200"/>
       <sensor IDREF="HOLODEC" devicename="usock::30120" id="300" suffix="_RWOI"/>
       <sensor IDREF="THREEVCPI" devicename="usock::30114" id="500" suffix="_RWI"/>
