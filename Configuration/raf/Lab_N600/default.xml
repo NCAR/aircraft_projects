@@ -720,6 +720,31 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
+    <serialSensor ID="S100" baud="38400" class="raf.SPP100_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
+        <parameter name="calfile" type="string" value="PMSspecs"/>
+        <parameter name="NCHANNELS" type="int" value="30"/>
+        <parameter name="RANGE" type="int" value="0"/>
+        <parameter name="THRESHOLD" type="int" value="20"/>
+        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
+        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
+        <parameter name="TRANSIT_REJ" type="int" value="1"/>
+        <parameter name="DOF_REJ" type="int" value="1"/>
+        <parameter name="ATT_ACCEPT" type="int" value="95"/>
+        <parameter name="CT_METHOD" type="int" value="0"/>
+        <parameter name="CHAN_THRESH" type="int" value="0 23 77 121 170 205 265 342 427 520 627 731 842 950 1084 1225 1374 1531 1695 1866 2032 2220 2416 2620 2830 3048 3258 3461 3668 4096"/>
+        <sample id="1">
+            <variable longname="SPP-100 Laser Reference Voltage" name="FREF" units="V"/>
+            <variable longname="SPP-100 Housekeeping Data" name="FTMP" units="deg_C"/>
+            <variable longname="SPP-100 Size Range Category" name="FRNG" units=""/>
+            <variable longname="SPP-100 Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
+            <variable longname="SPP-100 Rejected Particle Count (Transit-Time)" name="REJAT" units="count"/>
+            <variable longname="SPP-100 AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
+            <variable length="31" longname="SPP-100 Raw Accumulation (per cell) - DMT" name="AS100" units="count"/>
+            <variable longname="SPP-100 Time between last sample and this sample" name="DELTAT" units="msec"/>
+        </sample>
+        <prompt rate="10" string="\x1b\x02\x1d\x00"/>
+        <message length="156"/>
+    </serialSensor>
     <serialSensor ID="S200" baud="38400" class="raf.SPP200_Serial" databits="8" parity="none" stopbits="1">
       <parameter name="calfile" type="string" value="PMSspecs"/>
       <parameter name="NCHANNELS" type="int" value="30"/>
