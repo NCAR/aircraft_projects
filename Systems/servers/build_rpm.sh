@@ -7,13 +7,6 @@ if grep -q Fedora /etc/redhat-release; then
     echo "rpmbuild --version = " `rpmbuild --version`
     exit 1
 fi
-if ! grep -q "release 5" /etc/redhat-release; then
-    echo "Error: noarch RPMs built on RHEL6 seem to be incompatible with RHEL5"
-    echo "Until this is resolved, do this build on a RHEL5 system."
-    echo "/etc/redhat-release = $(</etc/redhat-release)"
-    echo "rpmbuild --version = " `rpmbuild --version`
-    exit 1
-fi
 
 script=`basename $0`
 
