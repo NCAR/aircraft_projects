@@ -1,17 +1,19 @@
-#!/bin/sh
+#!/bin/csh
 #
 # A script to backup all of the various calibrations databases
 # to an in house postgres server with is database folder on a
 # local hard disk drive.
 #
-# 0 5 * * mon csh -c "/home/local/RAF/Systems/scripts/backupCalib.cron"
+# 0 5 * * mon /home/local/RAF/Systems/scripts/backupCalib.cron
 
+rm -f   /tmp/backupCalib.cron.log
 touch   /tmp/backupCalib.cron.log
-exec 1> /tmp/backupCalib.cron.log 2>&1
 
-echo -n "START "; date
+echo -n "START " >>& /tmp/backupCalib.cron.log
+date             >>& /tmp/backupCalib.cron.log
 
-echo "backup shiraz's calibrations database to a directory that is regularly backed up by CIT."
-pg_dump --clean -h shiraz.eol.ucar.edu -U ads -d calibrations -f $DATA_DIR/databases/calibrations.sql
+echo "Backup of barolo's calibrations database to a directory that is regularly backed up by CIT." >>& /tmp/backupCalib.cron.log
+pg_dump --insert --clean -h barolo.eol.ucar.edu -U ads calibrations -f $PROJ_DIR/Configuration/raf/cal_files/master-calibrations.sql >>& /tmp/backupCalib.cron.log
 
-echo -n "END   "; date
+echo -n "END   " >>& /tmp/backupCalib.cron.log
+date             >>& /tmp/backupCalib.cron.log
