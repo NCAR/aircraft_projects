@@ -31,8 +31,12 @@ if ($#argv == 0) then
 endif
 
 set proj=$argv[1]
+set dat=${DATA_DIR}/${proj}
 
-cat > run_all << EOFRA
+# ---------------------------------------------------------
+# run_all script
+#
+cat > run_all << "EOFRA"
 #!/bin/csh
 
 /usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac :9 &
@@ -41,14 +45,31 @@ sleep 2
 
 setenv DISPLAY :9.1
 
-./run_nimbus
-./reorder_all
-./run_proc2d
+if ($uid == 20000) then
+  setenv DAT /scr/raf/local_productiondata/
+else
+  setenv DAT ${DATA_DIR}
+endif
+
+"EOFRA"
+
+echo setenv DAT '${DAT}'/$proj >> run_all
+
+cat >> run_all << "EOFRA2"
+
+mkdir ${DAT}
+
+nice ./run_nimbus
+nice ./reorder_all
+nice ./run_proc2d
 
 kill $xvpid
-EOFRA
+"EOFRA2"
 
 
+# ---------------------------------------------------------
+# run_nimbus script.
+#
 cat > run_nimbus << "EOFRN"
 #!/bin/csh
 
@@ -58,6 +79,7 @@ end
 "EOFRN"
 
 
+# ---------------------------------------------------------
 # ncReorder script.
 #
 set files=${proj}'?f??.nc'
@@ -65,11 +87,7 @@ set files=${proj}'?f??.nc'
 cat > reorder_all << "EOFREO"
 #!/bin/csh
 
-if ($uid == 20000) then
-  cd /scr/raf/local_productiondata
-else
-  cd ${DATA_DIR}
-endif
+cd ${DAT}
 
 "EOFREO"
 
@@ -84,26 +102,22 @@ end
 "EOFREO2"
 
 
+# ---------------------------------------------------------
 # nimbus setup_* files.
 #
 foreach file (${RAW_DATA_DIR}/$proj/*[rf]f*.ads)
   set bfname=`basename $file`
   set flight=`echo $bfname | cut -b 17-20`
   echo "if="$file > setup_$flight
-  echo "of="${DATA_DIR}/${proj}${flight}.nc >> setup_$flight
+  echo "of="${dat}/${proj}${flight}.nc >> setup_$flight
 end
 
 
+# ---------------------------------------------------------
 # Fast 2D processing script.
 #
 cat > run_proc2d << "EOF2D"
 #!/bin/csh
-
-if ($uid == 20000) then
-  setenv DAT /scr/raf/local_productiondata/
-else
-  setenv DAT ${DATA_DIR}
-endif
 
 "EOF2D"
 
