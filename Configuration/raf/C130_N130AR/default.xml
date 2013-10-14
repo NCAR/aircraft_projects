@@ -1208,16 +1208,28 @@
       </sample>
     </sensor>
     <serialSensor ID="ITR" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-        <sample id="1" rate="10" scanfFormat="%f %f %f %f %f %f %f">
+      <sample id="1" rate="10" scanfFormat="%f %f %f %f %f %f %f">
         <variable longname="ITR Detector Voltage 1" name="DETV1" units="A/D count"/>
         <variable longname="ITR Detector Voltage 2" name="DETV2" units="A/D count"/>
         <variable longname="ITR Detector Temperature" name="DETTEMP" units="deg_C"/>
-        <variable longname="ITR RTD 1 Counts" name="BENTEMP" units="deg_C"/>
-        <variable longname="ITR RTD 2 Counts" name="STRTEMP" units="deg_C"/>
-        <variable longname="ITR RTD 3 Counts" name="SNKTEMP" units="deg_C"/>
+        <variable longname="ITR RTD 1 Counts" name="STRTEMP" units="V">
+            <poly units="deg_C">
+              <calfile file="STRTEMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+        </variable>
+        <variable longname="ITR RTD 2 Counts" name="BENTEMP" units="V">
+            <poly units="deg_C">
+              <calfile file="BENTEMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+        </variable>
+        <variable longname="ITR RTD 3 Counts" name="SNKTEMP" units="V">
+            <poly units="deg_C">
+              <calfile file="SNKTEMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+        </variable>
         <variable longname="ITR Motor Speed" name="MOTRSPD" units="RPM"/>
-        </sample>
-        <message length="0" position="end" separator="\r\n"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
   </sensorcatalog>
 
