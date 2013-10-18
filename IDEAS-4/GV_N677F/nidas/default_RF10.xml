@@ -959,7 +959,6 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-
     <serialSensor ID="VCSEL2" baud="38400" class="raf.VCSEL2_Serial" databits="8" parity="none" stopbits="1">
 
 <!-- 3463862268.562111 0.000000 1994.000000 0.917325 1512.117696 316.004962 5.654814 -0.000032 3.271435 3.791543 0.204804 -0.004286 8.489168 0.890000 14.774336 -15.226784 11.835236 4.981973 \r\n -->
@@ -1640,7 +1639,6 @@
     <dsm id="19" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="PAVEL_INLET" devicename="usock::29003" id="150"/>
-      <sensor IDREF="SIDS" devicename="usock::41001" id="200"/>
       <sensor IDREF="HOLODEC" devicename="usock::30120" id="300" suffix="_RWOI"/>
       <sensor IDREF="THREEVCPI" devicename="usock::30114" id="500" suffix="_RWI"/>
       <sensor IDREF="LAMS3" devicename="usock::41002" id="700" suffix="_LAMS"/>
@@ -1943,6 +1941,9 @@
       </sensor>
       <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="600" suffix="_LWIO">
           <parameter name="SerialNumber" type="string" value="CDP058"/>
+      </serialSensor>
+      <serialSensor IDREF="CDP" devicename="/dev/ttyS3" id="800" suffix="_LWII">
+        <parameter name="SerialNumber" type="string" value="CDP016"/>
       </serialSensor>
     </dsm>
     <dsm derivedData="sock::7071" id="86" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
