@@ -1,4 +1,3 @@
-
 <!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
 
 <project
@@ -14,7 +13,7 @@
 
      <sensor ID="Fast2DP" class="raf.TwoD64_USB">
         <parameter name="SerialNumber" value="F2DP001" type="string"/>
-        <parameter name="RESOLUTION" value="200" type="int"/>
+        <parameter name="RESOLUTION" value="150" type="int"/>
         <parameter name="TAS_RATE" value="10" type="int"/>
 
         <sample id="1" rate="10">
@@ -36,17 +35,17 @@
 <site name="Lab_N600" class="raf.Aircraft">
     <parameter name="tailNumber" value="N600" type="string"/>
 
-    <server statusAddr="sock:127.0.0.1:30001">
+    <server statusAddr="sock::30001">
         <service class="XMLConfigService">
             <output>
-                <socket type="dgaccept"/>
+                <socket type="mcaccept"/>
             </output>
         </service>
         <service class="RawSampleService">
             <!-- input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream -->
             <input class="RawSampleInputStream">
-                <socket type="dgaccept"/>
+                <socket type="mcaccept"/>
             </input>
             <processor class="SampleArchiver">
                 <output class="SampleOutputStream">
@@ -61,8 +60,11 @@
         </service>
     </server>
 
-    <!-- dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071"> -->
-    <dsm name="localhost" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
+    <!-- dsm name="ux-cjwlap" ... -->
+<!--
+-->
+    <dsm name="localhost" location="lab" id="77" rserialPort="30002"
+     derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="Fast2DP" devicename="/dev/usbtwod_64_0" id="790" suffix="_010"/>
 
         <output class="RawSampleOutputStream">
@@ -75,7 +77,8 @@
             <socket type="dgrequest" address="localhost"/>
         </output>
     </dsm>
-    <dsm name="ltlblu" location="lab" id="78" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
+    <dsm name="ltlblu" location="lab" id="78" rserialPort="30002"
+     derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="Fast2DP" devicename="/dev/usbtwod_64_0" id="790" suffix="_LTL"/>
 
         <output class="RawSampleOutputStream">

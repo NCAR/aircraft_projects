@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="RAF_Lab"
+    system="Lab_N600"
+    version="$LastChangedRevision: 428 $"
+    >
+
+<sensorcatalog>
+
+<!-- 
+    CDP notes:  
+      - The CDP can be either a 38400 or 57600 baud instrument.  This is controlled via a jumper that is on the back side
+        of the small card in side the controller box.  Note from DMT says for reliable 10hz, baud rate should be 57600.
+      - The CDP can be either an RS-232 (ttyS5-9)  or an RS-422 (ttyS10-12) interfaced instrument.  This is controlled
+        via TWO jumpers in the control box, one of the backside of the small card, and one on the front of the larger card.
+-->
+    <serialSensor ID="CDP" baud="57600" class="raf.CDP_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
+      <parameter name="calfile" type="string" value="PMSspecs"/>
+      <parameter name="NCHANNELS" type="int" value="30"/>
+      <parameter name="RANGE" type="int" value="0"/>
+      <parameter name="THRESHOLD" type="int" value="60"/>
+      <parameter name="DOF_REJ" type="int" value="1"/>
+
+<!-- 
+        New thresholds effective March 2011. 
+-->
+      <parameter name="CHAN_THRESH" type="int" value="91 111 159 190 215 243 254 272 301 355 382 488 636 751 846 959 1070 1297 1452 1665 1851 2016 2230 2513 2771 3003 3220 3424 3660 4095"/>
+      <sample id="1">
+        <variable longname="CDP Laser Current" name="CDPLSRC" units="mAmp"/>
+        <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
+        <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="deg_C"/>
+        <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="deg_C"/>
+        <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="Vdc"/>
+        <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="Vdc"/>
+        <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="Vdc"/>
+        <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="deg_C"/>
+        <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
+        <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
+        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="unk"/>
+        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
+        <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
+        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
+        <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
+        <variable length="31" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
+        <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
+      </sample>
+      <prompt rate="10" string="\x1b\x02\x1d\x00"/>
+    </serialSensor>
+
+</sensorcatalog>
+
+
+<site name="Lab_N600" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N600" type="string"/>
+
+    <server statusAddr="sock:127.0.0.1:30001">
+        <service class="XMLConfigService">
+            <output>
+                <socket type="dgaccept"/>
+            </output>
+        </service>
+        <service class="RawSampleService">
+            <!-- input from every DSM on this aircraft that has
+                 a socket output of type RawSampleOutputStream -->
+            <input class="RawSampleInputStream">
+                <socket type="dgaccept"/>
+            </input>
+            <processor class="SampleArchiver">
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30000"/>
+                </output>
+            </processor>
+            <processor class="raf.SyncRecordGenerator">
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30001"/>
+                </output>
+            </processor>
+        </service>
+    </server>
+
+    <!-- dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071"> -->
+    <dsm name="localhost" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
+
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS5" id="730" suffix="_LWI"/>
+
+        <output class="RawSampleOutputStream">
+            <fileset dir="/home/data"
+                file="cdp_%Y%m%d_%H%M%S.dat"
+                length="1800">
+            </fileset>
+        </output>
+        <output class="RawSampleOutputStream">
+            <socket type="dgrequest" address="localhost"/>
+        </output>
+    </dsm>
+</site>
+</project>

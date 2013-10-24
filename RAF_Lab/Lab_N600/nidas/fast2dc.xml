@@ -14,8 +14,8 @@
 <sensorcatalog>
 
      <sensor ID="Fast2DC" class="raf.TwoD64_USB">
-        <parameter name="SerialNumber" value="F2DC001" type="string"/>
-        <parameter name="RESOLUTION" value="25" type="int"/>
+        <parameter name="SerialNumber" value="F2DC002" type="string"/>
+        <parameter name="RESOLUTION" value="10" type="int"/>
         <parameter name="TAS_RATE" value="10" type="int"/>
 
         <sample id="1" rate="10">
@@ -40,7 +40,13 @@
     <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
             <output>
+<!--                
                 <socket type="dgaccept"/>
+-->                
+                <socket type="mcaccept"/>
+            </output>
+            <output>
+                <socket type="mcaccept"/>
             </output>
         </service>
         <service class="RawSampleService">
