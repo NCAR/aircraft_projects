@@ -1,19 +1,59 @@
 #!/bin/csh
 #
-# A script to backup all of the various calibrations databases
-# to an in house postgres server with is database folder on a
-# local hard disk drive.
+# A script to backup the master calibrations postgres database
+# to a file that is checked into subversion.  This facilitates 
+# understanding how the database has changed since the last backup.
+#
+# Script provides notifications via e-mail when the database has changed.
+# 
+# Assumptions:   user has a .pgpass file in their home direcotry that contains 
+#                password information for the ads user on the calibrations database
 #
 # 0 5 * * mon /home/local/RAF/Systems/scripts/backupCalib.cron
 
-rm -f   /tmp/backupCalib.cron.log
-touch   /tmp/backupCalib.cron.log
+# Set up variables to be used in script
+set logfile = /tmp/backupCalib.cron.log
+set diffile = /tmp/backupCalib.diff.txt
+set dbserver = barolo.eol.ucar.edu
+set sqlfile = $PROJ_DIR/Configuration/raf/cal_files/master-calibrations.sql
+set tmpsqlfile = $PROJ_DIR/Configuration/raf/cal_files/master-calibrations.sql.tmp
+set emailaddr = tbaltzer@ucar.edu
+set subject = "Master Calibrations Databse Backup Notice"
 
-echo -n "START " >>& /tmp/backupCalib.cron.log
-date             >>& /tmp/backupCalib.cron.log
+# Set up log file
+rm -f   $logfile
+touch   $logfile
 
-echo "Backup of barolo's calibrations database to a directory that is regularly backed up by CIT." >>& /tmp/backupCalib.cron.log
-pg_dump --insert --clean -h barolo.eol.ucar.edu -U ads calibrations -f $PROJ_DIR/Configuration/raf/cal_files/master-calibrations.sql >>& /tmp/backupCalib.cron.log
+# Make a copy of the current sql code backup to compare against the new one
+rm -f $tmpsqlfile
+cp $sqlfile $tmpsqlfile
 
-echo -n "END   " >>& /tmp/backupCalib.cron.log
-date             >>& /tmp/backupCalib.cron.log
+# Perform and log the backup
+echo -n "START " >>& $logfile
+date             >>& $logfile
+echo "Backup of barolo's calibrations database to a directory that is regularly backed up by CIT." >>& $logfile
+pg_dump --insert --clean -h barolo.eol.ucar.edu -U ads calibrations -f $sqlfile >>& $logfile
+echo -n "END   " >>& $logfile
+date             >>& $logfile
+
+# Check for differences and notify of succesful run and changes.
+set res = `diff $tmpsqlfile $sqlfile | wc -l`
+if ($res == 0) then
+  echo "`date`: No Changes to Calibration DB on $dbserver" | mailx -s "$subject" $emailaddr
+else
+  rm -f $diffile
+  echo "`date`: There have been changes to the Master Calibrations Database" > $diffile
+  echo " found on the postgres server on: $dbserver" >> $diffile
+  echo "The changes have been backed up in the file:" >> $diffile
+  echo " $sqlfile" >> $diffile
+  echo " Which should now be checked into subversion." >> $diffile
+  echo "" >> $diffile
+  echo " The changes (in SQL code) follow:" >> $diffile
+  echo "" >> $diffile
+  diff $tmpsqlfile $sqlfile >> $diffile
+  cat $diffile | mailx -s "$subject" $emailaddr
+  rm -f $diffile
+endif
+
+rm -f $tmpsqlfile
+
