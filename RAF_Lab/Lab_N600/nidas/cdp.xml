@@ -62,16 +62,27 @@
     <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
             <output>
-                <socket type="dgaccept"/>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="XMLConfigAllService">
+            <output>
+                <socket type="mcaccept"/>
             </output>
         </service>
         <service class="RawSampleService">
             <!-- input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream -->
             <input class="RawSampleInputStream">
-                <socket type="dgaccept"/>
+                <socket type="mcaccept"/>
             </input>
             <processor class="SampleArchiver">
+                <output class="RawSampleOutputStream">
+                    <fileset dir="/home/data"
+                        file="cdp_%Y%m%d_%H%M%S.ads"
+                        length="0">
+                    </fileset>
+                </output>
                 <output class="SampleOutputStream">
                     <socket type="server" port="30000"/>
                 </output>
@@ -85,18 +96,14 @@
     </server>
 
     <!-- dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071"> -->
-    <dsm name="localhost" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
+    <dsm name="labdsm9" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
 
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS5" id="730" suffix="_LWI"/>
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS5" id="730" suffix="_sn016">
+            <parameter name="SerialNumber" value="CDP016" type="string"/>
+        </serialSensor>
 
         <output class="RawSampleOutputStream">
-            <fileset dir="/home/data"
-                file="cdp_%Y%m%d_%H%M%S.dat"
-                length="1800">
-            </fileset>
-        </output>
-        <output class="RawSampleOutputStream">
-            <socket type="dgrequest" address="localhost"/>
+            <socket type="mcrequest"/>
         </output>
     </dsm>
 </site>
