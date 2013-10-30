@@ -1,0 +1,11 @@
+#!/bin/csh
+
+setenv DAT ${DATA_DIR}/IDEAS-4-GV
+cd ${DAT}
+
+foreach file ( IDEAS-4?f??.nc )
+  echo $file
+  ncReorder $file temp1.nc
+  mv -f temp1.nc $file
+  chmod g+w $file
+end
