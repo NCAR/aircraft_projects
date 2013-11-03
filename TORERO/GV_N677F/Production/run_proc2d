@@ -1,6 +1,7 @@
 #!/bin/csh
 
-if ($uid == 20000) then
+set user = `whoami`
+if ($user == 'nimbus') then
   setenv DAT /scr/raf/local_productiondata/
 else
   setenv DAT ${DATA_DIR}
