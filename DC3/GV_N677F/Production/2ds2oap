@@ -1,0 +1,32 @@
+#!/bin/csh
+#
+# Script to translate 3V-CPI 2DS data into generic OAP file format.
+# Prodcuing files usable by process2d and xpms2d
+#
+# Run from /scr/raf_Raw_Data/IDEAS-4-GV/3v-cpi
+#
+
+set proj=DC3
+set platform=GV_N677F
+
+mkdir -p oapfiles
+
+#
+# Steps for converting to OAP file format (per flight):
+#  1. Concatenate raw 2DS files into a single file.
+#  2. Traslate the file
+#  3. Rename to RAF file naming
+#
+foreach dir (rf*2ds)
+  echo $dir
+  cd $dir
+  set list=`/bin/ls *2DSCPI`
+  set flnum=`echo $dir | cut -b 1-4`
+  set out=`echo $list | cut -c1-16`.2DSCPI
+  /bin/cat $list > ../oapfiles/$out
+  cd ../oapfiles
+  translate2ds -project $proj -flight $flnum -platform $platform -sn SPEC001 -f $out -o .
+  /bin/mv `basename $out .2DSCPI`.2d 20`echo $out | cut -b 5-16`_${flnum}.2d
+  rm $out
+  cd ..
+end
