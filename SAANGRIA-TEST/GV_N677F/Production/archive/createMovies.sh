@@ -1,0 +1,23 @@
+#!/bin/csh
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf01
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf02
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf03
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf04
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf05
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf06
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf07
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf08
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf09
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf10
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf11
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf12
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf13
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf14
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf15
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf16
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf17
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf18
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf19
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf20
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf21
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl SAANGRIA-TEST.paramfile rf22

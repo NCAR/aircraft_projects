@@ -1,0 +1,49 @@
+includeData = yes
+netcdfFile = /scr/raf/Prod_Data/SAANGRIA-TEST/SAANGRIA-TEST####.nc 
+gravityD = NorthWest
+# Times will be determined from the images in the imageDirectory
+# All other image dirs will try to match these times.
+imageDir1 = /scr/raf/Raw_Data/SAANGRIA-TEST/camera_images/flight_number_####
+gravity1 = West
+movieDirectory = /scr/raf/Prod_Data/DC3/movies
+overlayImageTime = yes
+overlayImagePointing = yes
+numCameras = 1
+# If numCameras > 1, add additional dirs and cameras here:
+#imageDir2 = /scr/raf/Raw_Data/DC3/camera_images/flight_number_####/forward
+#gravity2 = North
+#imageDir3 = /scr/raf/Raw_Data/DC3/camera_images/flight_number_####/right
+#gravity3 = SouthEast
+
+# For the moment, assume all cameras are the same type.
+cameraName = Flea
+
+# The outputResolution should be proportional to the scale:
+# For one image per frame, leave the ht and add 200 to the width
+# For two images, double the ht and add 50 or so padding, 
+#   and add 200 to the width
+# For three images, double the ht and width (plus padding).
+#outputResolution=1536x768
+scale = 512x384!
+outputResolution=1024x768
+outputResolutionD=1024x768
+#scale = 341x256!
+outputFrameRate = 15
+mp4BitRate = 1500000
+endParameters
+
+GGLAT
+GGLON
+GGALT
+PALTF
+PSXC
+ATX
+DPXC
+TASX
+WSC
+WDC
+WIC
+PITCH
+THDG
+endVariablesLT
+
