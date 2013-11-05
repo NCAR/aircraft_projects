@@ -16,7 +16,7 @@ echo "Make sure netCDF files have been reordered before archiving!"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
 
 ###LRT
-/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT .nc EOL janine@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT .nc EOL janine@ucar.edu
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT/ordered rf26.nc ATDdata
 
 ###KML
@@ -47,7 +47,7 @@ echo "Make sure netCDF files have been reordered before archiving!"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py DGPS /scr/raf/Raw_Data/$PROJECT/dgps ads ATDdata
 
 ### SID2H
-#/net/work/bin/scripts/mass_store/archAC/archAC.py SID2H -t /scr/raf/Raw_Data/$PROJECT/sid2h srd RAF
+#/net/work/bin/scripts/mass_store/archAC/archAC.py SID2H -t /scr/raf/Raw_Data/$PROJECT/sid2h srd EOL janine@ucar.edu
 
 ###CVI
 #/net/work/bin/scripts/mass_store/archAC/archAC.py hidden/cvi /scr/raf/Prod_Data/$PROJECT/cvi/orig txt EOL janine@ucar.edu
@@ -55,3 +55,11 @@ echo "Make sure netCDF files have been reordered before archiving!"
 
 ### VCSEL
 
+### GISMOS
+#/net/work/bin/scripts/mass_store/archAC/archAC.py gismos -r /scr/raf/Prod_Data/$PROJECT/gismos Z EOL janine@ucar.edu
+
+### MTP
+#/net/work/bin/scripts/mass_store/archAC/archAC.py mtp /scr/raf/Prod_Data/$PROJECT/mtp NGV EOL janine@ucar.edu
+
+### O3
+/net/work/bin/scripts/mass_store/archAC/archAC.py O3 /scr/raf/Prod_Data/$PROJECT/O3 dat EOL
