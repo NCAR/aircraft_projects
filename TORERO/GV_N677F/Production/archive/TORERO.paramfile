@@ -1,0 +1,57 @@
+includeData = yes
+netcdfFile = /scr/raf_data/TORERO####.nc 
+gravityD = SouthEast
+# Times will be determined from the images in the imageDirectory
+# All other image dirs will try to match these times.
+imageDir1 = /scr/raf/Raw_Data/TORERO/camera_images/flight_number_####/forward
+gravity1 = NorthWest
+#gravity = North
+movieDirectory = /scr/raf/Prod_Data/TORERO/movies
+overlayImageTime = yes
+overlayImagePointing = yes
+numCameras = 4
+# If numCameras > 1, add additional dirs and cameras here:
+imageDir2 = /scr/raf/Raw_Data/TORERO/camera_images/flight_number_####/left
+gravity2 = SouthWest
+#gravity2 = West
+imageDir3 = /scr/raf/Raw_Data/TORERO/camera_images/flight_number_####/right
+gravity3 = SouthEast
+#gravity3 = East
+imageDir4 = /scr/raf/Raw_Data/TORERO/camera_images/flight_number_####/down
+gravity4 = NorthEast
+#gravity4 = South
+
+# For the moment, assume all cameras are the same type.
+cameraName = Flea
+
+# The outputResolution should be proportional to the scale:
+# For one image per frame, leave the ht and add 200 to the width
+# For two images, double the ht and add 50 or so padding, 
+#   and add 200 to the width
+# For three images, double the ht and width (plus padding).
+#outputResolution=1536x768
+scale = 512x384!
+outputResolution=1024x768
+outputResolutionD=1250x768
+#scale = 341x256!
+outputFrameRate = 15
+mp4BitRate = 1500000
+endParameters
+
+GGALT
+GGLAT
+GGLON
+ATX
+DPXC
+PSXC
+RHUM
+TASX
+THDG
+PITCH
+ROLL
+WSC
+WDC
+DP_VXL
+VMR_VXL
+endVariablesLT
+
