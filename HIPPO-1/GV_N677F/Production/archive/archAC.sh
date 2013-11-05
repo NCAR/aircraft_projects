@@ -13,10 +13,10 @@ set PROJECT = "HIPPO"
 
 ### LRT - done
 #/net/work/bin/scripts/mass_store/archAC/archAC.py UNALTERED/LRT /scr/raf/Prod_Data/HIPPO-1 nc RAF
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/new /scr/raf/Prod_Data/HIPPO-1 .nc EOL stroble@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/HIPPO-1 .nc EOL
 
 ### KML - done
-#/net/work/bin/scripts/mass_store/archAC/archAC.py KML/new /scr/raf/Prod_Data/HIPPO-1/kml kml EOL stroble@ucar.edu
+/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/HIPPO-1/kml kml EOL
 
 ### CHAT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
@@ -71,4 +71,4 @@ set PROJECT = "HIPPO"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py NASA_AMES /net/work/Projects/HIPPO-1/aircraft/GV/GV_nav_and_state gz ATDdata
 
 
-/net/work/bin/scripts/mass_store/archAC/archAC.py NASA_AMES /net/work/Projects/HIPPO-1/aircraft/GV/GV_nav_and_state gz EOL stroble@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py NASA_AMES /net/work/Projects/HIPPO-1/aircraft/GV/gv gz EOL stroble@ucar.edu
