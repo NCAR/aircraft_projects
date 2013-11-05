@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2009 UCAR, NCAR, All Rights Reserved -->
+
+<!--  Test setup for Gust Pod - consists of 3 honeywell transducers, 
+      one Paro Digital Quartz transducer and a CMIGITS GPS
+-->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="RAF_Lab"
+    system="Lab_N600"
+    version="$LastChangedRevision: 774 $"
+    >
+    <!-- config="${PROJ_DIR}/RAF_Lab/GV-N677F/nidas/gust_pod.xml" -->
+
+<sensorcatalog>
+
+    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+        <sample id="1">
+            <variable name="IRIG_Tdiff" units="sec"
+                    longname="IRIG-UNIX clock diff"/>
+            <variable name="IRIG_Status" units="bits"
+                    longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC"/>
+        </sample>
+    </irigSensor>
+
+    <serialSensor ID="CMIGITS3" class="raf.CMIGITS3_Serial"
+        baud="38400" parity="odd" databits="8" stopbits="1">
+
+        <sample id="1" rate="10">
+<!--       Skipping CMIGITS Seconds of the day - seems to be faulty data 
+            <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
+-->
+            <variable name="CLAT" units="degree_N" longname="Reference CMIGITS3 Latitude"/>
+            <variable name="CLON" units="degree_E" longname="Reference CMIGITS3 Longitude"/>
+            <variable name="CALT" units="m" longname="Reference CMIGITS3 Altitude (MSL)"/>
+            <variable name="CVNS" units="m/s" 
+                      longname="Reference CMIGITS3 Ground Speed Vector, North Component"/>
+            <variable name="CVEW" units="m/s" longname="Reference CMIGITS3 Ground Speed Vector, East Component"/> 
+            <variable name="CVSPD" units="m/s" longname="reference cmigits3 Verticle Speed"/>
+            <variable name="CPITCH" units="degree" longname="Reference CMIGITS3 Aircraft Pitch"/>
+            <variable name="CROLL" units="degree" longname="Reference CMIGITS3 Aircraft Roll"/>
+            <variable name="CTHDG" units="degree_T" longname="Reference CMIGITS3 True Heading"/>
+        </sample>
+        <sample id="2" rate="1">
+<!--       Skipping CMIGITS Seconds of the day - seems to be faulty data 
+            <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
+-->
+            <variable name="MODE" units="" longname="CMIGITS Mode - see manual"/>
+            <variable name="STATVALID" units="" longname="Status Validity - BIT - see manual"/>
+            <variable name="NSAT" units="count" longname="Number of Satellites Tracked"/>
+            <variable name="NPOSP" units="count/sec" 
+                      longname="Number of Position Measurements Processed"/>
+            <variable name="NVELP" units="count/sec" 
+                      longname="Number of Velocity Measurements Processed"/>
+            <variable name="FOMINF" units="" longname="Figure of Merit Information - see manual"/>
+            <variable name="EXHPERR" units="meters" longname="Expected Horizontal Position Error"/>
+            <variable name="EXVPERR" units="meters" longname="Expected Vertical Position Error"/>
+            <variable name="EXVELERR" units="m/sec" longname="Expected Velocity Error"/>
+        </sample>
+        <message separator="\xff\x81" position="beg" length="0"/>
+
+    </serialSensor>
+
+    <serialSensor ID="Paro_DigiQuartz_1000" class="DSMSerialSensor"
+        baud="57600" parity="none" databits="8" stopbits="1">
+        <!-- initialization commands for the Paro:
+          unprompted mode, set rate with PI (and in sample tag)
+                If we set MD=2, don't need P4 init string
+          *9900BR=57600
+          *0100EW*0100MD=2      turn off  Model 715 output, unprompted
+          *0100EW*0100UN=2      units=millibars
+          *0100EW*0100PI=10     rate=50
+        -->
+        <sample id="1" scanfFormat="*%*2d%*2d%f" rate="50">
+        </sample>
+        <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="HoneywellPPT" class="raf.PPT_Serial"
+        baud="19200" parity="none" databits="8" stopbits="1">
+        <!-- initialization commands for the Honeywell PPT (cr = carriage return):
+               *99WE<cr>*99BP=N19<cr>   <- set baud rate to 19200
+               *99WE<cr>*99SP=ALL<cr>   <- write baud rate to nonvolitile memory
+               *99we<cr>*99du=mbar<cr>  <- set units to milibars (hPa)
+               *99WE<cr>*99SP=ALL<cr>   <- write units to nonvolitile memory
+               *99we<cr>*99i=r120<cr>   <- set integration rate to 120Hz
+               *99WE<cr>*99SP=ALL<cr>   <- write integration rate to nonvolitile memory
+         -->
+        <sample id="1" scanfFormat="?%*2dCP=%f">
+           <prompt string="*00P1\r" rate="50"/>
+        </sample>
+        <sample id="2" scanfFormat="?%*2dCT=%f">
+           <prompt string="*00T1\r" rate="1"/>
+        </sample>
+        <message separator="\r" position="end" length="0"/>
+    </serialSensor>
+
+</sensorcatalog>
+
+<site name="Lab_N600" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N600" type="string"/>
+
+    <server>
+        <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="RawSampleService">
+            <!-- input from every DSM on this aircraft that has
+                 a socket output of type RawSampleOutputStream -->
+            <input class="RawSampleInputStream">
+                <socket type="mcaccept"/>
+            </input>
+            <processor class="SampleArchiver">
+                <output class="SampleOutputStream">
+                    <fileset dir="/r1/${PROJECT}"
+                        file="%Y%m%d_%H%M%S_GUST_POD.ads"
+                        length="0"/>
+
+                </output>
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30000"/>
+                </output>
+            </processor>
+            <processor class="raf.SyncRecordGenerator">
+                <output class="SampleOutputStream">
+                    <socket type="server" port="30001"/>
+                </output>
+            </processor>
+        </service>
+    </server>
+
+    <dsm name="labdsm10" location="LAB PMS DSM" id="1" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
+<!--
+        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="big"/>
+-->
+
+        <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS5" id="120" suffix="_GP"/>
+
+        <serialSensor IDREF="Paro_DigiQuartz_1000"
+                devicename="/dev/ttyS6" id="110" suffix="_GP">
+            <sample id="1">
+                <variable name="PS" units="hPa" longname="Raw Dynamic Pressure, Gust Pod"/>
+            </sample>
+        </serialSensor>
+
+        <serialSensor IDREF="HoneywellPPT"
+                devicename="/dev/ttyS7" id="130" suffix="_GP">
+            <sample id="1">
+                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome"/>
+            </sample>
+            <sample id="2">
+                <variable name="BDIFRTEMP" units="deg_C" longname="Temperature of BDIFR Probe"/>
+            </sample>
+        </serialSensor>
+
+        <serialSensor IDREF="HoneywellPPT"
+                devicename="/dev/ttyS8" id="140" suffix="_GP">
+            <sample id="1">
+                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome"/>
+            </sample>
+            <sample id="2">
+                <variable name="ADIFRTEMP" units="deg_C" longname="Temperature of ADIFR Probe"/>
+            </sample>
+        </serialSensor>
+
+        <serialSensor IDREF="HoneywellPPT"
+                devicename="/dev/ttyS9" id="150" suffix="_GP">
+            <sample id="1">
+                <variable name="QCP" units="hPa" longname="Raw Dynamic Pressure, Radome"/>
+            </sample>
+            <sample id="2">
+                <variable name="QCRTEMP" units="deg_C" longname="Temperature of QCR Probe"/>
+            </sample>
+        </serialSensor>
+
+        <output class="RawSampleOutputStream" sorterLength="0">
+            <socket type="mcrequest"/>
+        </output>
+
+    </dsm>
+
+</site>
+
+</project>
+
