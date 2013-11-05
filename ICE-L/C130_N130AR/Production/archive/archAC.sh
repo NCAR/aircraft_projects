@@ -12,7 +12,7 @@ echo "Be sure to reorder netCDF files before archiving to MSS!!!"
 #msrm -R -wpwd RAFDMG /RAF/2008/115/CPI
 
 #PMS2D
-#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/ICE-L/PMS2D 2d ATDdata
+/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/ICE-L/PMS2D 2d EOL
 
 #CAMERA
 # Don't archive camera files here. Use the archive_camera script!!!
@@ -57,5 +57,5 @@ echo "Be sure to reorder netCDF files before archiving to MSS!!!"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FO3 /scr/raf/Raw_Data/ICE-L/FO3 mrg.txt RAF
 
 #FO3 - Interpolated
-/net/work/bin/scripts/mass_store/archAC/archAC.py FO3 /scr/raf/Prod_Data/ICE-L/MERGE/fO3 mrg.txt RAF
+#/net/work/bin/scripts/mass_store/archAC/archAC.py FO3 /scr/raf/Prod_Data/ICE-L/MERGE/fO3 mrg.txt RAF
 
