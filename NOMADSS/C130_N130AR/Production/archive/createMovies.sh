@@ -1,0 +1,20 @@
+#!/bin/csh 
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf01
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf02
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf03
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf04
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf05
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf06
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf07
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf08
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf09
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf10
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf11
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf12
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf13
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf14
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf15
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf16
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf17
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf18
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl NOMADSS.paramfile rf19
