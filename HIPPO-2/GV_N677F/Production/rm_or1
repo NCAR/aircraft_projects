@@ -1,0 +1,6 @@
+#!/bin/csh
+
+foreach FILENAME (Flight_rf*)
+sed 's:OR=1 ::' < $FILENAME > testfile
+mv testfile $FILENAME
+end
