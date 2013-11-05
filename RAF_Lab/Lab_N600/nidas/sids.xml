@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 
 <!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
-<project xmlns="http://www.eol.ucar.edu/nidas" name="IDEAS-4" system="GV_N677F" version="$LastChangedRevision: 2514 $" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd">
+<project xmlns="http://www.eol.ucar.edu/nidas" name="RAF_Lab" system="Lab_N600" version="$LastChangedRevision: 2514 $" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd">
   <sensorcatalog>
     <sensor ID="IRIG" class="raf.IRIGSensor">
       <sample id="1">
@@ -672,7 +672,6 @@
       <sample id="1" rate="1">
         <variable length="128" longname="SIDS Raw Accumulation (per cell)" name="HEIGHT" units="count"/>
         <variable length="128" longname="SIDS Raw Accumulation (per cell)" name="WIDTH" units="count"/>
-        <variable length="128" longname="SIDS Inter-arrival Time" name="IAT" units="count"/>
         <variable longname="SIDS Rejected Particle Count" name="REJDOF" units="count"/>
       </sample>
     </sensor>
@@ -1178,8 +1177,8 @@
       </sample>
     </sensor>
   </sensorcatalog>
-  <site applyCals="true" class="raf.Aircraft" name="GV_N677F">
-    <parameter name="tailNumber" type="string" value="N677F"/>
+  <site applyCals="true" class="raf.Aircraft" name="Lab_N600">
+    <parameter name="tailNumber" type="string" value="N600"/>
     <parameter name="applyCals" type="bool" value="true"/>
     <server statusAddr="sock:127.0.0.1:30001">
       <service class="XMLConfigService">
@@ -1201,10 +1200,7 @@
         </input>
         <processor class="SampleArchiver">
           <output class="RawSampleOutputStream">
-            <fileset dir="/var/r1/${PROJECT}" file="%Y%m%d_%H%M%S_${FLIGHT}.ads" length="0"/>
-          </output>
-          <output class="RawSampleOutputStream">
-            <fileset dir="/var/r2/${PROJECT}" file="%Y%m%d_%H%M%S_${FLIGHT}.ads.bz2" length="0"/>
+            <fileset dir="/var/r1/${PROJECT}" file="%Y%m%d_%H%M%S_sids.ads" length="0"/>
           </output>
           <output class="RawSampleOutputStream">
             <socket port="30000" type="server"/>
@@ -1217,7 +1213,7 @@
         </processor>
       </service>
     </server>
-    <dsm id="19" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
+    <dsm id="19" location="lab" name="acserver" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="SIDS" devicename="usock::41001" id="200" suffix="_SIDS"/>
       <sensor IDREF="THREEVCPI" devicename="usock::30114" id="500" suffix="_RWI"/>
       <sensor IDREF="LAMS3" devicename="usock::41002" id="700" suffix="_LAMS"/>
