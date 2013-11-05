@@ -17,11 +17,11 @@ set PROJECT = "VOCALS"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py UNALTERED/HRT /scr/productiondata ${PROJECT}rf..h.nc RAF
 
 #### Final (merged) Datasets ####
-# LRT - DONE - updated 6/30/09, 7/9/09, 7/7/2010
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT .nc ATDdata
+# LRT - DONE - updated 6/30/09, 7/9/09, 7/7/2010, 10/5/2011
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT .nc EOL
 
 # HRT - DONE - updated 7/8/2010
-/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT h.nc ATDdata
+#/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT h.nc ATDdata
 
 ### ADS - done
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT .ads RAF
@@ -41,7 +41,7 @@ set PROJECT = "VOCALS"
 ###/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
 
 ### PMS2D src format- done
-#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d ATDdata
+#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D f..\.2d EOL
 ### PMS2D nc format - done
 #/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Prod_Data/$PROJECT/PMS2D/V5_20090606 nc RAF
 
