@@ -1,0 +1,19 @@
+#!/bin/csh
+
+set I=0
+set PREFIX = "orig_position_"
+
+foreach C (`ls /scr/raf/local_productiondata/HIPPO-3rf04.nc`)
+	@ I++
+	set H = $I
+	if ($I < 10) then
+	    set H = 0$I
+	endif
+	echo "if="$C > temp
+	echo "of=Position_Interpolation/$PREFIX$H.asc" >> temp
+	echo "sp=Space" >> temp
+	echo "hd=AmesDEF" >> temp
+	cat pos_var_list >> temp
+	nc2asc -b temp
+end
+

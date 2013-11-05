@@ -25,4 +25,12 @@
 #-pass 2 -i /scr/raf/Prod_Data/HIPPO-3/Movies/for_AAS/AnnotatedImages_rf06/%05d.jpg
 #/scr/raf/Prod_Data/HIPPO-3/Movies/for_AAS/rf06.100405.232355_004159.mp4
 ################################################################################
-/net/work/bin/converters/createMovies/combineCameras.pl HIPPO-3.for_AAS.ParamFile rf06
+#/net/work/bin/converters/createMovies/combineCameras.pl HIPPO-3.for_AAS.ParamFile rf06
+#
+#/net/work/bin/converters/createMovies/combineCameras.pl HIPPO-3.rf03.hires.ParamFile rf03 
+#(Used to create hi-res RF03 imagery)
+#
+
+
+
+
