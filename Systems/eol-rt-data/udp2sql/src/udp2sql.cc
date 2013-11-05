@@ -1,8 +1,5 @@
 #include "udp2sql.h"
 
-#include <stdio.h>
-#include <string.h>
-
 #include <iostream>
 #include <cstdio>
 #include <cstring>
