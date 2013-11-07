@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 
 <!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
-<project xmlns="http://www.eol.ucar.edu/nidas" name="Lab_Project" system="Lab_N600" version="$LastChangedRevision: 2514 $" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd">
+<project xmlns="http://www.eol.ucar.edu/nidas" name="VETDSM" system="Lab_N600" version="$LastChangedRevision: 2514 $" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd">
   <sensorcatalog>
     <sensor ID="IRIG" class="raf.IRIGSensor">
       <sample id="1">
@@ -525,7 +525,7 @@
       <message length="0" position="beg" separator="\xff\x81"/>
     </serialSensor>
     <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-      <sample id="1" rate="1" scanfFormat="%f,%f,%*f,%*f,%f">
+      <sample id="1" rate="1" scanfFormat="%d,%f,%*d,%*d,%d">
         <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
         <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
         <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
@@ -1485,10 +1485,9 @@
       </sample>
     </sensor>
   </sensorcatalog>
-
-
-  <site class="raf.Aircraft" name="GV_N677F" applyCals="true">
-    <parameter name="tailNumber" type="string" value="N677F"/>
+  <site class="raf.Aircraft" name="Lab_N600">
+    <parameter name="tailNumber" type="string" value="N600"/>
+    <parameter name="applyCals" type="bool" value="true"/>
     <server statusAddr="sock:127.0.0.1:30001">
       <service class="XMLConfigService">
         <output>
@@ -1512,9 +1511,6 @@
             <fileset dir="/var/r1/${PROJECT}" file="%Y%m%d_%H%M%S_${FLIGHT}.ads" length="0"/>
           </output>
           <output class="RawSampleOutputStream">
-            <fileset dir="/var/r2/${PROJECT}" file="%Y%m%d_%H%M%S_${FLIGHT}.ads.bz2" length="0"/>
-          </output>
-          <output class="RawSampleOutputStream">
             <socket port="30000" type="server"/>
           </output>
         </processor>
@@ -1525,17 +1521,791 @@
         </processor>
       </service>
     </server>
-    <dsm id="19" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
-      <sensor IDREF="PARCELS" devicename="inet::30100" id="100"/>
+    <dsm derivedData="sock::7071" id="6" name="dsm304" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D1602.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_A0" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="DUMMYA0_0" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="DUMMYA0_0.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DUMMYA0_1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="DUMMYA0_1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DUMMYA0_2" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="DUMMYA0_2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DUMMYA0_3" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="DUMMYA0_3.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DUMMYA0_4" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="DUMMYA0_4.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DUMMYA0_5" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="DUMMYA0_5.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DUMMYA0_6" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="DUMMYA0_6.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DUMMYA0_7" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="DUMMYA0_7.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
     </dsm>
-    <dsm derivedData="sock::7071" id="3" location="lab" name="LabDSM9" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="7" name="dsm308" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_308"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D1607.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_1607" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="A1607_0" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="1607_0.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A1607_1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="1607_1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="8" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RW0"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D1710.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_RWO" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="DSMRWO_A00_0" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMRWO_A00_0.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMRWO_A00_1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMRWO_A00_1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMRWO_A00_2" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMRWO_A00_2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMRWO_A00_3" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMRWO_A00_3.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMRWO_A00_4" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMRWO_A00_4.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMRWO_A00_5" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMRWO_A00_5.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMRWO_A00_6" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMRWO_A00_6.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMRWO_A00_7" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMRWO_A00_7.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="9" name="dsmLWI" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWI"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D1601.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_LWI" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="LWI_A00" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="LWI_A00.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="10" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D017.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_LWO" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="DSMLWO_A00_0" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMLWO_A00_0.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMLWO_A00_1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMLWO_A00_1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMLWO_A00_2" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMLWO_A00_2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMLWO_A00_3" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMLWO_A00_3.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMLWO_A00_4" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMLWO_A00_4.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMLWO_A00_5" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMLWO_A00_5.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMLWO_A00_6" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMLWO_A00_6.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="DSMLWO_A00_7" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DSMLWO_A00_7.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="11" name="dsm313" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D1708.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_A00" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="Analog313_a0" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="Analog313_a0.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="Analog313_A1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="Analog313_A1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="Analog313_A2" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="Analog313_A2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="Analog313_A3" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="Analog313_A3.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="Analog313_A4" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="Analog313_A4.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="Analog313_A5" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="Analog313_A5.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="Analog313_A6" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="Analog313_A6.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="Analog313_A7" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="Analog313_A7.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="12" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_324"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D009.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_a009" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="A009_A00" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A009_A00.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A009_A01" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A009_A01.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A009_A02" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A009_A02.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A009_A03" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A009_A03.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A009_A04" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A009_A04.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A009_A05" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A009_A05.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A009_A06" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A009_A06.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A009_A07" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A009_A07.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="500">
+        <calfile file="A2D1606.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_a1606" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="a1606_A00" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="a1606_A00.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="a1606_a01" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="a1606_a01.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A1606_A02" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A1606_A02.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A1606_A03" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A1606_A03.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A1606_A04" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A1606_A04.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A1606_A05" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A1606_A05.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A1606_A06" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A1606_A06.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A1606_A07" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="A1606_A07.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="13" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D1705.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_303A0" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="A303A00_A00" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A00_A00.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A00_A01" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A00_A01.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A00_A02" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A00_A02.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A00_A03" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A00_A03.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A00_A04" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A00_A04.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A00_A05" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A00_A05.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A00_A06" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A00_A06.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A00_A07" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A00_A07.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="500">
+        <calfile file="A2D016.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_303A1" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="A303A01_A00" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A01_A00.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A01_A01" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A01_A01.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A01_A02" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A01_A02.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A01_A03" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A01_A03.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A01_A04" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A01_A04.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A01_A05" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A01_A05.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A01_A06" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A01_A06.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="A303A01_A07" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="303A01_A07.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="14" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D1704.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_DSM305" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="dsm305_A0" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm305_A0.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm305_A1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm305_A1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm305_A2" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm305_A2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm305_A3" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm305_A3.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm305_A4" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm305_A4.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm305_A5" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm305_A5.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm305_A6" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm305_A6.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm305_A7" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm305_A7.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
     </dsm>
   </site>
 </project>
