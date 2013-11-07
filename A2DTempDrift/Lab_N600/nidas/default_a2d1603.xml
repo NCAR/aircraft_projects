@@ -13,18 +13,23 @@
     >
 
 <sensorcatalog>
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="Clock" units="msec" longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
-    </irigSensor>
+    </sensor>
 </sensorcatalog>
 
 <site name="Lab_N600" class="raf.Aircraft">
    <parameter name="tailNumber" value="N600" type="string"/>
 
-    <server>
+    <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="XMLConfigAllService">
             <output>
                 <socket type="mcaccept"/>
             </output>
@@ -61,7 +66,7 @@
     </server>
 
     <dsm name="dsmWRD" location="WIRED_UP" id="1" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="JDW"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="JDW"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
@@ -219,13 +224,13 @@
             </sample>
         </sensor>
 -->
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm321" location="FORWARD" id="2" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="321"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
@@ -359,7 +364,7 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>

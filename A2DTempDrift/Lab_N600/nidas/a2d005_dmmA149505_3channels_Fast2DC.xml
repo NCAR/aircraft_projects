@@ -13,11 +13,11 @@
     >
 
 <sensorcatalog>
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="Clock" units="msec" longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
      <sensor ID="Fast2DC" class="raf.TwoD64_USB">
         <parameter name="SerialNumber" value="F2DC001" type="string"/>
@@ -43,8 +43,13 @@
 <site name="Lab_N600" class="raf.Aircraft">
    <parameter name="tailNumber" value="N600" type="string"/>
 
-    <server>
+    <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="XMLConfigAllService">
             <output>
                 <socket type="mcaccept"/>
             </output>
@@ -81,7 +86,7 @@
     </server>
 
     <dsm name="dsmJDW" location="radome" id="1" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_WRD"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_WRD"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
@@ -122,20 +127,20 @@
             </sample>
         </sensor> 
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="ltlblu" location="LWO" id="2" rserialPort="30002" derivedData="sock::31000">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
         <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="600" suffix="_LWO"/>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
