@@ -12,12 +12,12 @@
     >
 
 <sensorcatalog>
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="Clock" units="msec"
                     longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
     <arincSensor ID="IRS-C130" class="raf.IRS_HW_YG1854">
         <!-- Taken from the Honeywell installation manual for the -->
@@ -607,13 +607,42 @@
         </sample>
     </sensor>
 
+    <serialSensor ID="TDLH2O_OLD" class="DSMSerialSensor"
+        baud="115200" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="20" scanfFormat="%*f %*f %f %f %*f %*f %f %f %f %f %f %f %f %f">
+	    <variable name="PCELL_LHS" units="hPa" longname="Sample Cell Pressure"/>
+	    <variable name="TCELL_LHS" units="deg_C" longname="Sample Cell Temperature"/>
+	    <variable name="PP2F_LHS" units="count" longname="2f Signal Amplitude"/>
+	    <variable name="PWR_LHS" units="count" longname="Laser Power"/>
+	    <variable name="IDX_LHS" units="count" longname="Spectral Line Position"/>
+	    <variable name="DK_LHS" units="count" longname="Zero Level"/>
+	    <variable name="PP2F_LHL" units="count" longname="2f Signal Amplitude"/>
+	    <variable name="PWR_LHL" units="count" longname="Laser Power"/>
+	    <variable name="IDX_LHL" units="count" longname="Spectral Line Position"/>
+	    <variable name="DK_LHL" units="count" longname="Zero Level"/>
+        </sample>
+        <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
+    <sensor ID="LAMS" class="raf.LamsSensor">
+        <parameter name="TAS_level"  type="float" value="155.0"/>
+        <parameter name="calm"  type="int" value="1"/>
+        <parameter name="nAVG"  type="int" value="40"/>
+        <parameter name="nSKIP" type="int" value="0"/>
+        <parameter name="nPEAK" type="int" value="1000"/>
+        <sample id="1" rate="1">
+            <variable name="LAMSAVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
+            <variable name="LAMSMAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
+        </sample>
+    </sensor>
+
 </sensorcatalog>
 
 
 <site name="GV_N677F" class="raf.Aircraft">
     <parameter name="tailNumber" value="N677F" type="string"/>
 
-    <server>
+    <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
             <output>
                 <socket type="mcaccept"/>
@@ -654,8 +683,8 @@
     </server>
 
     <dsm name="dsm301" location="LAMS_rack" id="1" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
-<!--        <lamsSensor IDREF="LAMS" devicename="/dev/lams0" id="200"/> -->
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
+        <sensor IDREF="LAMS" devicename="/dev/lams0" id="200"/>
         <output class="RawSampleOutputStream" sorterLength="0">
             <socket type="mcrequest"/>
         </output>
@@ -663,7 +692,7 @@
 
 <!--
     <dsm name="dsm302" location="lab" id="2" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="302"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="302"/>
 
         <serialSensor IDREF="Water_CN_Counter"
                 devicename="/dev/dsmser0" id="120">
@@ -675,7 +704,7 @@
     </dsm>
 -->
     <dsm name="dsm303" location="blue_box" id="2" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="303"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/dsma2d0" id="200">
             <sample id="1" rate="500">
@@ -726,7 +755,7 @@
     </dsm>
 
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_I2"/>
@@ -786,7 +815,7 @@
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/dsmser0" id="110">
@@ -901,7 +930,7 @@
     </dsm>
 
     <dsm name="dsm306" location="chaps_rack" id="6" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="306"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="306"/>
 
         <serialSensor IDREF="TDLH2O"
                 devicename="/dev/dsmser3" id="120">
@@ -1009,7 +1038,7 @@
     </dsm>
 
     <dsm name="dsm308" location="AEROSOL_rack" id="8" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="308"/>
 
         <serialSensor IDREF="Water_CN_Counter"
                 devicename="/dev/dsmser1" id="110">
@@ -1067,7 +1096,7 @@
     </dsm>
 
     <dsm name="dsmJDW" location="JDW" id="46" rserialPort="30002" derivedData="sock::31000">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="JDW"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="JDW"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LWI"/>
 
