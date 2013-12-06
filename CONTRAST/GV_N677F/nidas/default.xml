@@ -324,28 +324,28 @@
         <variable longname="Avionics GPS UTC Measure Time" name="GTIME" units="s"/>
       </sample>
       <sample id="0076" rate="1">
-        <variable longname="Avionics GPS Altitude (MSL)" name="ALT" units="m"/>
+        <variable longname="Avionics GPS Altitude (MSL)" name="GALT" units="m"/>
       </sample>
       <sample id="0103" rate="1">
-        <variable longname="Avionics GPS Track Angle" name="TKAT" units="degree_T"/>
+        <variable longname="Avionics GPS Track Angle" name="GTKAT" units="degree_T"/>
       </sample>
       <sample id="0110" rate="1">
-        <variable longname="Avionics GPS Latitude" name="LAT" units="degree_N"/>
+        <variable longname="Avionics GPS Latitude" name="GLAT" units="degree_N"/>
       </sample>
       <sample id="0111" rate="1">
-        <variable longname="Avionics GPS Longitude" name="LON" units="degree_E"/>
+        <variable longname="Avionics GPS Longitude" name="GLON" units="degree_E"/>
       </sample>
       <sample id="0112" rate="1">
-        <variable longname="Avionics GPS Ground Speed" name="GSF" units="m/s"/>
+        <variable longname="Avionics GPS Ground Speed" name="GGSF" units="m/s"/>
       </sample>
       <sample id="0120" rate="1">
-        <variable longname="Avionics GPS Latitude Fine" name="LATF" units="degree_N"/>
+        <variable longname="Avionics GPS Latitude Fine" name="GLATF" units="degree_N"/>
       </sample>
       <sample id="0121" rate="1">
-        <variable longname="Avionics GPS Longitude Fine" name="LONF" units="degree_E"/>
+        <variable longname="Avionics GPS Longitude Fine" name="GLONF" units="degree_E"/>
       </sample>
       <sample id="0165" rate="1">
-        <variable longname="Avionics GPS Vertical Velocity" name="VSPD" units="m/s"/>
+        <variable longname="Avionics GPS Vertical Velocity" name="GVSPD" units="m/s"/>
       </sample>
       <sample id="0166" rate="1">
         <variable longname="Avionics GPS Ground Speed Vector, North Component" name="VNS" units="m/s"/>
@@ -417,7 +417,7 @@
         <variable longname="Maintenance 4" name="Maintenance_4" units=""/>
       </sample>
       <sample id="0377" process="false" rate="2">
-        <variable longname="equipment id" name="equipment_id" units=""/>
+        <variable longname="equipment id" name="gequipment_id" units=""/>
       </sample>
     </arincSensor>
     <serialSensor ID="D_GPS" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
@@ -1608,7 +1608,7 @@
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
       <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
-      <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G2"/>
+      <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A2"/>
       <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS5" id="140" suffix="_GMN"/>
       <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="150"/>
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="160"/>
@@ -1697,7 +1697,9 @@
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
+
+<!--<poly units="deg_C">-->
+            <poly units="V">
               <calfile file="THIML1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
@@ -1705,7 +1707,9 @@
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
+
+<!--<poly units="deg_C">-->
+            <poly units="V">
               <calfile file="THIML2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
@@ -1721,7 +1725,7 @@
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2"/>
       <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-      <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G"/>
+      <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A"/>
       <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110">
         <sample id="1">
           <variable longname="Raw Static Pressure, Fuselage" name="PSF" units="hPa"/>
@@ -1886,6 +1890,30 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="W">
               <calfile file="PLWC.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="V">
+              <calfile file="F2DIO1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="V">
+              <calfile file="F2DIO32.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="V">
+              <calfile file="F2DIO64.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
         </sample>
