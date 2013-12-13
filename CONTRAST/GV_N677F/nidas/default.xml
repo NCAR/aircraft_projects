@@ -1740,7 +1740,7 @@
         <socket type="mcrequest"/>
       </output>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="4200">
-        <calfile file="A2D1600.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <calfile file="A2D1602.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
@@ -1753,14 +1753,14 @@
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
+            <poly units="Torr">
               <calfile file="INLETP_AL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
         </sample>
       </sensor>
-      <serialSensor IDREF="PIC_CO2" devicename="/dev/ttyS8" id="4400" suffix="_PIC1301"/>
       <serialSensor IDREF="CO_2005" devicename="/dev/ttyS9" id="4600" suffix="_AL"/>
+      <serialSensor IDREF="PIC2311_CO2" devicename="/dev/ttyS8" id="4800" suffix="_PIC2311"/>
     </dsm>
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
