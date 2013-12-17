@@ -18,14 +18,14 @@
 
 <sensorcatalog>
 
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="IRIG_Tdiff" units="sec"
                     longname="IRIG-UNIX clock diff"/>
             <variable name="IRIG_Status" units="bits"
                     longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
     <serialSensor ID="CMIGITS3" class="raf.CMIGITS3_Serial"
         baud="38400" parity="odd" databits="8" stopbits="1">
@@ -37,8 +37,7 @@
             <variable name="CLAT" units="degree_N" longname="Reference CMIGITS3 Latitude"/>
             <variable name="CLON" units="degree_E" longname="Reference CMIGITS3 Longitude"/>
             <variable name="CALT" units="m" longname="Reference CMIGITS3 Altitude (MSL)"/>
-            <variable name="CVNS" units="m/s" 
-                      longname="Reference CMIGITS3 Ground Speed Vector, North Component"/>
+            <variable name="CVNS" units="m/s" longname="Reference CMIGITS3 Ground Speed Vector, North Component"/>
             <variable name="CVEW" units="m/s" longname="Reference CMIGITS3 Ground Speed Vector, East Component"/> 
             <variable name="CVSPD" units="m/s" longname="reference cmigits3 Verticle Speed"/>
             <variable name="CPITCH" units="degree" longname="Reference CMIGITS3 Aircraft Pitch"/>
@@ -52,10 +51,8 @@
             <variable name="MODE" units="" longname="CMIGITS Mode - see manual"/>
             <variable name="STATVALID" units="" longname="Status Validity - BIT - see manual"/>
             <variable name="NSAT" units="count" longname="Number of Satellites Tracked"/>
-            <variable name="NPOSP" units="count/sec" 
-                      longname="Number of Position Measurements Processed"/>
-            <variable name="NVELP" units="count/sec" 
-                      longname="Number of Velocity Measurements Processed"/>
+            <variable name="NPOSP" units="count/sec" longname="Number of Position Measurements Processed"/>
+            <variable name="NVELP" units="count/sec" longname="Number of Velocity Measurements Processed"/>
             <variable name="FOMINF" units="" longname="Figure of Merit Information - see manual"/>
             <variable name="EXHPERR" units="meters" longname="Expected Horizontal Position Error"/>
             <variable name="EXVPERR" units="meters" longname="Expected Vertical Position Error"/>
@@ -142,7 +139,7 @@
 
     <dsm name="labdsm10" location="LAB PMS DSM" id="1" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
 <!--
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="big"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="big"/>
 -->
 
         <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS5" id="120" suffix="_GP"/>
@@ -184,7 +181,7 @@
             </sample>
         </serialSensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
 
