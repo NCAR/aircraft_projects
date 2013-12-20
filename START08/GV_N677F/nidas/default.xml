@@ -12,12 +12,12 @@
     >
 
 <sensorcatalog>
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1" process="false">
             <variable name="Clock" units="msec"
                     longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
         <!-- Taken from the Honeywell installation manual for the         -->
@@ -110,7 +110,7 @@
         <sample id="0351" rate="2" process="false"><variable name="maint_word_2" units="" longname="ADC maint word #2"/></sample>
         <sample id="0352" rate="2" process="false"><variable name="maint_word_3" units="" longname="ADC maint word #3"/></sample>
         <sample id="0353" rate="2" process="false"><variable name="maint_word_4" units="" longname="ADC maint word #4"/></sample>
-        <sample id="0371" rate="2" process="false"><variable name="equipment_id" units="" longname="ADC equipment id"/></sample>
+        <sample id="0371" rate="2" process="false"><variable name="ADC_equipment_id" units="" longname="ADC equipment id"/></sample>
     </arincSensor>
 
     <arincSensor ID="GPS-GV" class="raf.GPS_HW_HG2021GB02" speed="low">
@@ -161,7 +161,7 @@
         <sample id="0352" rate="1" process="false"><variable name="Maintenance_3" units="" longname="Maintenance 3"/></sample>
         <sample id="0354" rate="1" process="false"><variable name="Counter" units="sec" longname="Counter"/></sample>
         <sample id="0355" rate="1" process="false"><variable name="Maintenance_4" units="" longname="Maintenance 4"/></sample>
-        <sample id="0377" rate="2" process="false"><variable name="equipment_id" units="" longname="equipment id"/></sample>
+        <sample id="0377" rate="2" process="false"><variable name="GPS_equipment_id" units="" longname="GPS equipment id"/></sample>
     </arincSensor>
 
     <serialSensor ID="D_GPS" class="DSMSerialSensor" baud="115200" parity="none" databits="8" stopbits="1">
@@ -523,7 +523,7 @@
     </server>
 
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
@@ -551,7 +551,7 @@
         </arincSensor>
 
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G">
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A">
           <sample id="0165" rate="50">
             <variable name="VSPD" units="m/s" longname="Avionics GPS Vertical Velocity">
               <linear slope="1.0" intercept="-0.06" units="m/s"/>
@@ -585,13 +585,13 @@
 
         <serialSensor IDREF="D_GPS" devicename="/dev/dsmser6" id="150"/>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/ttyS5" id="110">
@@ -674,13 +674,13 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
    
     <dsm name="dsm313" location="MTP Rack R-4" id="13" rserialPort="30002" derivedData="sock::58800">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="130" suffix="_VXL"/>
   
@@ -800,13 +800,13 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
          </sensor>
 
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm312" location="TDL Rack L-1" id="12" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
         <sensor IDREF="NOAAUCATS" id="120" suffix="_GMD"/>
@@ -838,13 +838,13 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
         </sensor>
  
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::58800">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_IRIG"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_IRIG"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="CDP016"/>
@@ -871,16 +871,16 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
         </sensor>
 
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
 
     <dsm name="dsmRWO" location="RWO" id="47" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="RWO"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="RWO"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
@@ -899,10 +899,10 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
