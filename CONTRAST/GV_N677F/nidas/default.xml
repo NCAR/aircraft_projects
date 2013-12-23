@@ -1535,6 +1535,64 @@
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+    <sensor ID="ISAF" class="UDPSocketSensor" devicename="usock::30124" suffix='_ISAF'>
+<!--
+Index  Name      Description                           Units
+1      ISAF      Insitu Airborne Formaldehyde
+2      Date Time Date and Time                         YYYY-MM-DD hh:mm:ss
+3      Status    Instrument Status                     1-Ready, 2-Operating, 4-Calibrating
+4      Concentration 
+                 Detector Concentration            Parts Per Trillion
+5      Counter 1 Gated Detector Counter                Photon counts
+6      Normalized Counter 2
+                 Gated Reference Counter / Detector Laser Power
+                                                       Photon counts (normalized)
+7      Counter 3 Gated Detector Counter (Fine)         Photon counts
+8      Laser Power 1
+                 Detector Laser Power                  Volts
+9      Laser Power 2
+                 Reference Laser Power                 Volts
+10     Laser Set Voltage
+                 Modulation Laser Voltage              Volts
+11     Laser Scan Mode
+                 Flag indicating when laser is scanning (for calibration)
+                                                       0-not scanning, 1-scanning
+12     Mon. Pwr. Input
+                 Laser Monitor Power Input             Volts
+13     Mon. Pwr. Output
+                 Laser Monitor Power Output            Volts
+14     SampleP   Sample Pressure                       Volts
+15     SampleF   Sample Flow Rate                      Volts
+16     3rd Pump Input
+                 Laser 3rd Pump Diode Input Current    Amperes
+-->
+        <sample id="1" rate="1" scanfFormat="ISAF %*f-%*f-%*f %*f:%*f:%*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
+<!--        <variable longname="ISAF Year" name="YR" units=""/>
+            <variable longname="ISAF Month" name="MO" units=""/>
+            <variable longname="ISAF Day of Month" name="DM" units=""/>
+            <variable longname="ISAF Hour" name="HR" units=""/>
+            <variable longname="ISAF Minute" name="MN" units=""/>
+            <variable longname="ISAF Second" name="SC" units=""/>
+-->
+            <variable longname="Instrument Status (1-Ready, 2-Operating, 4-Calibrating)"
+		      name="STATUS" units=""/>
+            <variable longname="Detector Concentration" name="CONC" units="pptv"/>
+            <variable longname="Gated Detector Photon Counter" name="GCNTR1" units="1"/>
+            <variable longname="Detector Photon Counter, Normalized" name="NCNTR2" units="1"/>
+	    <variable longname="Gated Detector Counter (Fine)" name="GCNTR3" units="1"/>
+	    <variable longname="Detector Laser Power" name="LPWR1" units="V"/>
+	    <variable longname="Reference Laser Power" name="LPWR2" units="V"/>
+	    <variable longname="Modulation Laser Voltage" name="LSETV" units="V"/>
+	    <variable longname="Laser Scan Mode (0-not scanning, 1-scanning)"
+		      name="SCANMD" units=""/>
+	    <variable longname="Laser Monitor Power Input" name="MONPWRIN" units="V"/>
+	    <variable longname="Laser Monitor Power Output" name="MONPWROUT" units="V"/>
+	    <variable longname="Sample Pressure" name="SAMPLEP" units="V"/>
+	    <variable longname="Sample Flow Rate" name="SAMPLEF" units="V"/>
+	    <variable longname="Laser 3rd Pump Diode Input Current" name="PUMPIN3" 
+		      units="Amperes"/>
+        </sample>
+    </sensor>
 
 <!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
     <sensor ID="PARCELS" class="UDPSocketSensor" devicename="usock::30100">
@@ -1604,6 +1662,7 @@
       <sensor IDREF="TOGA" devicename="usock::30120" id="300" suffix="_TOGA"/>
       <sensor IDREF="NONOYO3" devicename="usock::30107" id="500" suffix="_ACD"/>
       <sensor IDREF="HARP" devicename="usock::30108" id="700"/>
+      <sensor IDREF="ISAF" devicename="usock::30124" id="900"/>
     </dsm>
     <dsm derivedData="sock::7071" id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
