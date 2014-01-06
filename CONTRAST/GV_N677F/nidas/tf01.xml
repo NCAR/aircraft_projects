@@ -1536,7 +1536,6 @@
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
     <sensor ID="ISAF" class="UDPSocketSensor" devicename="usock::30124" suffix="_ISAF">
-
 <!--
 Index  Name      Description                           Units
 1      ISAF      Insitu Airborne Formaldehyde
@@ -1568,7 +1567,6 @@ Index  Name      Description                           Units
                  Laser 3rd Pump Diode Input Current    Amperes
 -->
         <sample id="1" rate="1" scanfFormat="ISAF,%*f-%*f-%*f %*f:%*f:%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-
 <!--        <variable longname="ISAF Year" name="YR" units=""/>
             <variable longname="ISAF Month" name="MO" units=""/>
             <variable longname="ISAF Day of Month" name="DM" units=""/>
@@ -1576,20 +1574,23 @@ Index  Name      Description                           Units
             <variable longname="ISAF Minute" name="MN" units=""/>
             <variable longname="ISAF Second" name="SC" units=""/>
 -->
-            <variable longname="Instrument Status (1-Ready, 2-Operating, 4-Calibrating)" name="STATUS" units=""/>
+            <variable longname="Instrument Status (1-Ready, 2-Operating, 4-Calibrating)"
+		      name="STATUS" units=""/>
             <variable longname="Detector Concentration" name="CONC" units="pptv"/>
             <variable longname="Gated Detector Photon Counter" name="GCNTR1" units="1"/>
             <variable longname="Detector Photon Counter, Normalized" name="NCNTR2" units="1"/>
-	      <variable longname="Gated Detector Counter (Fine)" name="GCNTR3" units="1"/>
-	      <variable longname="Detector Laser Power" name="LPWR1" units="V"/>
-	      <variable longname="Reference Laser Power" name="LPWR2" units="V"/>
-	      <variable longname="Modulation Laser Voltage" name="LSETV" units="V"/>
-	      <variable longname="Laser Scan Mode (0-not scanning, 1-scanning)" name="SCANMD" units=""/>
-	      <variable longname="Laser Monitor Power Input" name="MONPWRIN" units="V"/>
-	      <variable longname="Laser Monitor Power Output" name="MONPWROUT" units="V"/>
-	      <variable longname="Sample Pressure" name="SAMPLEP" units="V"/>
-	      <variable longname="Sample Flow Rate" name="SAMPLEF" units="V"/>
-	      <variable longname="Laser 3rd Pump Diode Input Current" name="PUMPIN3" units="Amperes"/>
+	    <variable longname="Gated Detector Counter (Fine)" name="GCNTR3" units="1"/>
+	    <variable longname="Detector Laser Power" name="LPWR1" units="V"/>
+	    <variable longname="Reference Laser Power" name="LPWR2" units="V"/>
+	    <variable longname="Modulation Laser Voltage" name="LSETV" units="V"/>
+	    <variable longname="Laser Scan Mode (0-not scanning, 1-scanning)"
+		      name="SCANMD" units=""/>
+	    <variable longname="Laser Monitor Power Input" name="MONPWRIN" units="V"/>
+	    <variable longname="Laser Monitor Power Output" name="MONPWROUT" units="V"/>
+	    <variable longname="Sample Pressure" name="SAMPLEP" units="V"/>
+	    <variable longname="Sample Flow Rate" name="SAMPLEF" units="V"/>
+	    <variable longname="Laser 3rd Pump Diode Input Current" name="PUMPIN3" 
+		      units="Amperes"/>
         </sample>
     </sensor>
 
@@ -1754,7 +1755,7 @@ Index  Name      Description                           Units
           <parameter name="numpoints" type="int" value="50"/>
           <variable longname="HIMIL Tip Temperature" name="THIML1" units="V">
             <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
               <calfile file="THIML1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
@@ -1762,7 +1763,7 @@ Index  Name      Description                           Units
           </variable>
           <variable longname="HIMIL Tip Temperature" name="THIML2" units="V">
             <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
               <calfile file="THIML2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
