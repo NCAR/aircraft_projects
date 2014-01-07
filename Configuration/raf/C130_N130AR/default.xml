@@ -594,17 +594,21 @@
         <prompt rate="1" string="RB\r"/>
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
-    <sensor ID="TOGA" class="raf.UDPSocketSensor" devicename="usock::30120" suffix="TOGA">
-      <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+    <sensor ID="TOGA" class="UDPSocketSensor" devicename="usock::30120" suffix="_TOGA">
+      <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable longname="TOGA HCN" name="HCN" units="pptv"/>
         <variable longname="TOGA Butane" name="BUTANE" units="pptv"/>
-        <variable longname="TOGA Benzene" name="BENZ" units="pptv"/>
-        <variable longname="TOGA Isoprene" name="ISOP" units="pptv"/>
-        <variable longname="TOGA Toluene" name="TOL" units="pptv"/>
-        <variable longname="TOGA Acetonitrile" name="CH3CN" units="pptv"/>
-        <variable longname="TOGA Methanol" name="MEOH" units="pptv"/>
+        <variable longname="TOGA CH3OH" name="CH3OH" units="pptv"/>
+        <variable longname="TOGA DMS" name="DMS" units="pptv"/>
         <variable longname="TOGA Acetone" name="ACETONE" units="pptv"/>
-        <variable longname="TOGA Formaldehyde" name="HCHO" units="pptv"/>
-        <variable longname="TOGA Acetaldehyde" name="CH3CHO" units="pptv"/>
+        <variable longname="TOGA CH2Cl2" name="CH2CL2" units="pptv"/>
+        <variable longname="TOGA Benzene" name="BENZENE" units="pptv"/>
+        <variable longname="TOGA CH2Br2" name="CH2BR2" units="pptv"/>
+        <variable longname="TOGA Toluene" name="TOLUENE" units="pptv"/>
+        <variable longname="TOGA CHBr3" name="CHBR3" units="pptv"/>
+        <variable longname="TOGA Acetonitrile" name="ACETONITRILE" units="pptv"/>
+        <variable longname="TOGA Methaclorein" name="METHACLOREIN" units="pptv"/>
+        <variable longname="TOGA Isoprene" name="ISOPRENE" units="pptv"/>
       </sample>
     </sensor>
     <serialSensor ID="Water_CN_Counter" baud="115200" class="DSMSerialSensor" databits="8" init_string="SM,4,1\r" parity="none" stopbits="1" suffix="_WCN">
