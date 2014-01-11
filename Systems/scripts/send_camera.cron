@@ -7,17 +7,37 @@
 #
 #set -x
 
+debug=0
+camera_images_dir="/mnt/r1/camera_images"
+if [ $debug -ne 0 ]; then
+    camera_images_dir="${RAW_DATA_DIR}/CONTRAST/camera_images"
+fi
+
 key=`echo $AIRCRAFT | cut -d _ -f 1`_camera_
 #key=GV_camera_
 
+# possible choices for the camera feed:
+#  forward
+#  down
+#  left
+#  right
+#  montage  All four camera images in a quadrant.
+#
 camera=`psql -d real-time -U ads -t -c "SELECT value FROM mission_control WHERE key='camera';" | tr -d ' '`
-if [ "$camera" == "" ]; then
-  camera="forward"
-fi
+feed="$camera"
+feed=montage
+case "$camera" in
+
+    left|right|down|forward)
+	;;
+    *)
+	camera="forward"
+	;;
+esac
 
 # change into the current flight's folder
-flight=`ls -td /mnt/r1/camera_images/flight_number_* | grep -v tar | head -n1`
-flight=$flight/$camera
+flightdir=`ls -td ${camera_images_dir}/flight_number_* | grep -v tar | head -n1`
+flight=$flightdir/$camera
 [[ -d $flight ]] || exit
 cd $flight
 
@@ -34,7 +54,35 @@ file=`ls -t | head -n 2 | tail -n 1`
 # exit if this file is older than 3 minutes
 let dtime=`date +%s`-`stat -c %X $file`
 #[ $dtime -gt 180 ] && echo "not sending out old file: "$PWD"/"$file
-[ $dtime -gt 180 ] && exit
+if [ $debug -eq 0 ]; then
+    [ $dtime -gt 180 ] && exit
+fi
+
+# Now we have a single camera image.  In montage mode, look for the
+# same image time in the other camera directories.
+case "$feed" in
+
+    montage)
+	if [ -f ../montage/${file} ]; then
+	    cd ../montage
+	    break
+	fi
+	quads=""
+	for q in forward down left right ; do
+	    if [ -f $flightdir/$q/$file ]; then
+		quads="$quads $flightdir/$q/$file"
+	    else
+		quads="$quads null:"
+	    fi
+	done
+	mkdir -p ../montage
+	# The forward camera is a little larger than the others, so we must
+	# resize all of them to fit evenly into the quadrants.
+	montage $quads -background black -tile 2x2 -geometry 1280x960+1+1 \
+	    ../montage/${file}
+	cd ../montage
+	;;
+esac	
 
 # exit if this file was already sent
 [[ -f ../sent/$key$file ]] && exit
