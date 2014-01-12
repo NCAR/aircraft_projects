@@ -1,0 +1,15 @@
+#!/bin/csh -f
+
+# Needs to operate on-board and in-house.  cd to appropriate directory.
+#
+expr `hostname` : acserver
+if ($status) then
+  cd /net/www/docs/flight_data/GV/images/
+else
+  cd /var/www/html/flight_data/images/
+endif
+
+wget http://www.acd.ucar.edu/~chomeyer/camchem/CO.png -O CO.png
+wget http://www.acd.ucar.edu/~chomeyer/camchem/O3.png -O O3.png
+wget http://www.acd.ucar.edu/~chomeyer/camchem/BrO.png -O BrO.png
+wget http://www.acd.ucar.edu/~chomeyer/camchem/CHBr3.png -O CHBr3.png

@@ -1,0 +1,12 @@
+#!/bin/csh -f
+
+# script to rsync TOGA data.
+#  - Data is being LDM'd to ground.
+#  - We want destination to be /net/ftp/pub/temp/users/cjw/toga
+#  - pub ftp directories are group root, so LDM can not write there.
+#  - Curreently writing to ~cjw/www/toga.
+#  - Apache access to user www directories has been disabled.
+#
+# So the need for this script until SIG can sort something out for us.
+
+rsync -r /h/eol/cjw/www/toga /net/ftp/pub/temp/users/cjw/
