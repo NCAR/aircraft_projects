@@ -1,0 +1,35 @@
+SHELL=/bin/csh
+
+*/2 * * * * python /home/local/projects/CONTRAST/GV_N677F/scripts/send_toga.py >>& /tmp/send_toga.log
+
+@reboot /home/local/Systems/scripts/scrubber >& /tmp/scrubber.log
+# @reboot ssh -N eoltunnel >& /tmp/eoltunnel.log
+
+# Always
+*/3 * * * * /home/local/Systems/scripts/ensure_running.cron >& /tmp/ensure_run.log
+*/1 * * * * /home/local/Systems/scripts/send_camera.cron >& /tmp/camera_send.log
+0 * * * * /home/local/Systems/scripts/scrubber >& /tmp/scrubber.log
+# MTP
+#*/3 * * * * /home/local/Systems/scripts/send_MTP.cron >& /tmp/mtp_send.log 
+# AVAPS
+#* * * * * /home/local/Systems/scripts/send_avaps.cron.py >>& /tmp/avaps_send.log 
+#
+# Get flight plan script
+*/30 * * * * /home/local/Systems/scripts/get_flight_plan.py >>& /tmp/get_flight_plan.log 
+# New satellite script
+3,18,33,48 * * * * /home/local/Systems/scripts/get_ir_image_cron.py >>& /tmp/get_ir_image.log 
+5,20,35,50 * * * * /home/local/Systems/scripts/get_4kmvis_image_cron.py >>& /tmp/get_4kmvis_image.log 
+#*/10 * * * * /home/local/Systems/scripts/get_conus_cweb_cron.py >>& /tmp/get_conus_cweb.log
+
+# CONTRAST - get model forecasts at 5 past the hour.
+5 * * * * /home/ads/bin/contrast.cron > /dev/null 2>&1
+
+# Test a persistent ssh tunnel to EOL, attempting reopens only every 10 minutes.
+#*/10 * * * * ssh -N eoltunnel >& /tmp/eoltunnel.log
+
+# Time stamp label for MC
+*/1 * * * * /home/local/Systems/scripts/make_label.py >>& /dev/null
+
+# IRC and IRC bot
+@reboot /home/ads/ircd/Unreal3.2/unreal start >& /dev/null
+@reboot sleep 5; /home/ads/rbot/bin/rbot >& /dev/null
