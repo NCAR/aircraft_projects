@@ -979,7 +979,10 @@
     </serialSensor>
     <serialSensor ID="CO_2005" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_AL">
       <sample id="1" scanfFormat="%f">
-        <variable longname="Aerolaser (2005) Carbon Monoxide Raw Signal" name="CORAW" units="V"/>
+	<!-- For CONTRAST to report engineering units as requested by Teresa -->
+        <variable longname="Aerolaser (2005) Carbon Monoxide Raw Signal" name="CORAW" units="V">
+          <linear intercept="38.4" slope="0.00548462" units="ppbv"/>
+	</variable>
       </sample>
       <prompt rate="5" string="SIG?\r"/>
       <message length="0" position="end" separator="\r"/>
