@@ -1452,12 +1452,51 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
     <serialSensor ID="PIC2311_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC2311">
-      <sample id="1" rate="5" scanfFormat="%*f %f %f %f %*d %*f">
+      <sample id="1" rate="20" scanfFormat="%f %f %f %f %f %f %*d %*f">
+	<variable longname="Picarro Time" name="TIME" units="s"/>
         <variable longname="Picarro Methane Mixing Ratio" name="CH4" units="ppmv"/>
+        <variable longname="Picarro Methane Mixing Ratio (Corrected)" name="CH4C" units="ppmv"/>
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
+        <variable longname="Picarro Carbon Dioxide Mixing Ratio (Corrected)" name="CO2C" units="ppmv"/>
         <variable longname="Picarro Water Mixing Ratio" name="H2O" units="vol%"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
+<!--
+
+Important text on page 24 of PICARRO manual (Remote Command Interface
+Specification):
+
+ The CPU that is servicing command requests is the same CPU that is
+ performing the measurement.
+
+ o ie: Do not poll the RS232 interface as fast as possible
+ o It is best to wait for a response from the instrument prior to
+   submitting the next query.
+ o Calling _INSTR_GETSTATUS is the same as calling _Instr_GetStatus
+
+This suggests that prompting while the instrument is hung up processing
+data may bog down the instrument by queuing up too many requests.
+
+Later though, on page 26, about the _Meas_GetBufferFirst command it
+suggests that if no data are available there will be an error message
+returned, like ERR:3002 No measurements data exists.  So do we just need to
+poll quickly enough to grab each measurement message before it gets
+overwritten, while ignoring the parse errors from the No data returns?  Or
+will two samples accumulate in the buffer if they both finish between
+prompts?
+
+From the manual page 26:
+
+ One way to get the instrument data with _Meas_GetBufferFirst is to
+ repeatedly make this call and ignore all return codes of ERR:3002 (no
+ data) that happen. This method has the disadvantage of not getting all of
+ the other system information that is available in the status register that
+ might be useful for something such as updating a Graphical User Interface.
+
+
+-->
+
+      <!-- <prompt rate="20" string="_meas_getbufferfirst\r"/> -->
     </serialSensor>
 
 <!--
