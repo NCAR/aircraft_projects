@@ -22,7 +22,7 @@ SHELL=/bin/csh
 #*/10 * * * * /home/local/Systems/scripts/get_conus_cweb_cron.py >>& /tmp/get_conus_cweb.log
 
 # CONTRAST - get model forecasts at 5 past the hour.
-5 * * * * /home/ads/bin/contrast.cron > /dev/null 2>&1
+5 * * * * /home/ads/bin/contrast.cron >& /dev/null 
 
 # Test a persistent ssh tunnel to EOL, attempting reopens only every 10 minutes.
 #*/10 * * * * ssh -N eoltunnel >& /tmp/eoltunnel.log
