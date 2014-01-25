@@ -823,21 +823,29 @@
         <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
         <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
         <variable longname="UHSAS Sample Flow" name="USMPFLW" units="V">
-          <linear intercept="-0.155" slope="0.3543" units="sccs"/>
+          <poly units="sccs">
+            <calfile file="USMPFLW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+          </poly>
         </variable>
         <variable longname="UHSAS Reference Intensity" name="UREF" units="V"/>
         <variable longname="UHSAS Temperature in Canister, signal" name="UTEMP" units="V"/>
         <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="V">
-          <linear intercept="0.0" slope="4.1667" units="sccs"/>
+          <poly units="sccs">
+            <calfile file="USHFLW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+          </poly>
         </variable>
         <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
         <variable longname="UHSAS Temperature in Canister" name="UBTMP" units="V">
-          <linear intercept="0.0" slope="173.722" units="K"/>
+          <poly units="K">
+            <calfile file="UBTMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+          </poly>
         </variable>
 
 <!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/-->
         <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="V">
-          <linear intercept="10.556" slope="22.222" units="kPa"/>
+          <poly units="kPa">
+            <calfile file="UPRESS.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+          </poly>
         </variable>
 
 <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
@@ -1536,6 +1544,7 @@
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
     <sensor ID="ISAF" class="UDPSocketSensor" devicename="usock::30124" suffix="_ISAF">
+
 <!--
 Index  Name      Description                           Units
 1      ISAF      Insitu Airborne Formaldehyde
@@ -1567,6 +1576,7 @@ Index  Name      Description                           Units
                  Laser 3rd Pump Diode Input Current    Amperes
 -->
         <sample id="1" rate="1" scanfFormat="ISAF,%*f-%*f-%*f %*f:%*f:%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+
 <!--        <variable longname="ISAF Year" name="YR" units=""/>
             <variable longname="ISAF Month" name="MO" units=""/>
             <variable longname="ISAF Day of Month" name="DM" units=""/>
@@ -1574,23 +1584,20 @@ Index  Name      Description                           Units
             <variable longname="ISAF Minute" name="MN" units=""/>
             <variable longname="ISAF Second" name="SC" units=""/>
 -->
-            <variable longname="Instrument Status (1-Ready, 2-Operating, 4-Calibrating)"
-		      name="STATUS" units=""/>
+            <variable longname="Instrument Status (1-Ready, 2-Operating, 4-Calibrating)" name="STATUS" units=""/>
             <variable longname="Detector Concentration" name="CONC" units="pptv"/>
             <variable longname="Gated Detector Photon Counter" name="GCNTR1" units="1"/>
             <variable longname="Detector Photon Counter, Normalized" name="NCNTR2" units="1"/>
-	    <variable longname="Gated Detector Counter (Fine)" name="GCNTR3" units="1"/>
-	    <variable longname="Detector Laser Power" name="LPWR1" units="V"/>
-	    <variable longname="Reference Laser Power" name="LPWR2" units="V"/>
-	    <variable longname="Modulation Laser Voltage" name="LSETV" units="V"/>
-	    <variable longname="Laser Scan Mode (0-not scanning, 1-scanning)"
-		      name="SCANMD" units=""/>
-	    <variable longname="Laser Monitor Power Input" name="MONPWRIN" units="V"/>
-	    <variable longname="Laser Monitor Power Output" name="MONPWROUT" units="V"/>
-	    <variable longname="Sample Pressure" name="SAMPLEP" units="V"/>
-	    <variable longname="Sample Flow Rate" name="SAMPLEF" units="V"/>
-	    <variable longname="Laser 3rd Pump Diode Input Current" name="PUMPIN3" 
-		      units="Amperes"/>
+	      <variable longname="Gated Detector Counter (Fine)" name="GCNTR3" units="1"/>
+	      <variable longname="Detector Laser Power" name="LPWR1" units="V"/>
+	      <variable longname="Reference Laser Power" name="LPWR2" units="V"/>
+	      <variable longname="Modulation Laser Voltage" name="LSETV" units="V"/>
+	      <variable longname="Laser Scan Mode (0-not scanning, 1-scanning)" name="SCANMD" units=""/>
+	      <variable longname="Laser Monitor Power Input" name="MONPWRIN" units="V"/>
+	      <variable longname="Laser Monitor Power Output" name="MONPWROUT" units="V"/>
+	      <variable longname="Sample Pressure" name="SAMPLEP" units="V"/>
+	      <variable longname="Sample Flow Rate" name="SAMPLEF" units="V"/>
+	      <variable longname="Laser 3rd Pump Diode Input Current" name="PUMPIN3" units="Amperes"/>
         </sample>
     </sensor>
 
@@ -1929,7 +1936,7 @@ Index  Name      Description                           Units
       </output>
     </dsm>
     <dsm derivedData="sock::7071" id="20" location="LWO" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
-      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_lwo"/>
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -1951,7 +1958,7 @@ Index  Name      Description                           Units
               <calfile file="PLWC.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
-          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1" units="V">
+          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LWOO" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
@@ -1959,7 +1966,7 @@ Index  Name      Description                           Units
               <calfile file="F2DIO1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
-          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32" units="V">
+          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_LWOO" units="V">
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
@@ -1967,7 +1974,7 @@ Index  Name      Description                           Units
               <calfile file="F2DIO32.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
-          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64" units="V">
+          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LWOO" units="V">
             <parameter name="channel" type="int" value="5"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>

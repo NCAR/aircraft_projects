@@ -464,7 +464,6 @@
         <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNSB" units="m/s"/>
         <variable longname="Reference GPS Vertical Speed" name="GGVSPDB" units="m/s"/>
       </sample>
-
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
     <serialSensor ID="Garmin_GPS" baud="4800" class="GPS_NMEA_Serial" databits="8" parity="none" stopbits="1">
@@ -662,12 +661,12 @@
             <variable longname="UVZ 315 nm Counts" name="UVZ315" units="count"/>
             <variable longname="UVZ 382 nm Counts" name="UVZ382" units="count"/>
         </sample>
-        <!--
+
+<!--
         <sample id="3" rate="1" scanfFormat="HRP_VISN,%*dT%*d,%d,%d">
             <variable longname="VISN 550 nm Counts" name="VISN550" units="count"/>
             <variable longname="VISN 860 nm Counts" name="VISN860" units="count"/>
         </sample>
-
         <sample id="4" rate="1" scanfFormat="HRP_VISZ,%*dT%*d,%d,%d">
             <variable longname="VISZ 550 nm Counts" name="VISZ550" units="count"/>
             <variable longname="VISZ 860 nm Counts" name="VISZ860" units="count"/>
@@ -843,21 +842,29 @@
         <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
         <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
         <variable longname="UHSAS Sample Flow" name="USMPFLW" units="V">
-          <linear intercept="-0.155" slope="0.3543" units="sccs"/>
+          <poly units="sccs">
+            <calfile file="USMPFLW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+          </poly>
         </variable>
         <variable longname="UHSAS Reference Intensity" name="UREF" units="V"/>
         <variable longname="UHSAS Temperature in Canister, signal" name="UTEMP" units="V"/>
         <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="V">
-          <linear intercept="0.0" slope="4.1667" units="sccs"/>
+          <poly units="sccs">
+            <calfile file="USHFLW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+          </poly>
         </variable>
         <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
         <variable longname="UHSAS Temperature in Canister" name="UBTMP" units="V">
-          <linear intercept="0.0" slope="173.722" units="K"/>
+          <poly units="K">
+            <calfile file="UBTMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+          </poly>
         </variable>
 
 <!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/-->
         <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="V">
-          <linear intercept="10.556" slope="22.222" units="kPa"/>
+          <poly units="kPa">
+            <calfile file="UPRESS.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+          </poly>
         </variable>
 
 <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
@@ -1000,7 +1007,9 @@
     </serialSensor>
     <serialSensor ID="CO_2005" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_AL">
       <sample id="1" scanfFormat="%f">
-	<!-- For CONTRAST to report engineering units as requested by Teresa -->
+	
+
+<!-- For CONTRAST to report engineering units as requested by Teresa -->
         <variable longname="Aerolaser (2005) Carbon Monoxide Raw Signal" name="CORAW" units="V">
           <linear intercept="-38.4" slope="0.00548462" units="ppbv"/>
 	</variable>
@@ -1158,7 +1167,8 @@
             <variable longname="GTCIMS # of Analog Channels" name="NA" units=""/>
 -->
             <variable longname="GTCIMS Measurement State flag #1" name="CB" units=""/>
-            <!--
+
+<!--
             <variable longname="GTCIMS Measurement State flag #2" name="C1" units=""/>
             <variable longname="GTCIMS Measurement State flag #3" name="CC" units=""/>
             <variable longname="GTCIMS Measurement State flag #4" name="C3" units=""/>
@@ -1217,7 +1227,6 @@
             <variable longname="GTCIMS ion rate at mass #14" name="HZ225" units="Hz"/>
             <variable longname="GTCIMS m/z ration for mass #14" name="MAMU225" units="milliu"/>
             <variable longname="GTCIMS counting time at mass #14" name="MS225" units="msec"/>
-
             <variable longname="GTCIMS Analog level #1" name="A01" units="mV"/>
             <variable longname="GTCIMS Analog level #2" name="A02" units="mV"/>
             <variable longname="GTCIMS Analog level #3" name="A03" units="mV"/>
@@ -1227,7 +1236,8 @@
             <variable longname="GTCIMS Analog level #7" name="A07" units="mV"/>
             <variable longname="GTCIMS Analog level #8" name="A08" units="mV"/>
             <variable longname="GTCIMS Analog level #9" name="A09" units="mV"/>
-            <!--
+
+<!--
             <variable longname="GTCIMS Analog level #10" name="A10" units="mV"/>
             <variable longname="GTCIMS Analog level #11" name="A11" units="mV"/>
             <variable longname="GTCIMS Analog level #12" name="A12" units="mV"/>
@@ -1252,6 +1262,7 @@
             <variable longname="GTCIMS Analog level #31" name="A31" units="mV"/>
             <variable longname="GTCIMS Analog level #32" name="A32" units="mV"/>
 -->
+
 <!--        <variable longname="GTCIMS Pressure Altitude from IWG1" name="AUX01" units="feet"/>
             <variable longname="GTCIMS Ambient Temp from IWG1" name="AUX02" units="degK"/>
 -->
@@ -1472,7 +1483,7 @@
     </serialSensor>
     <serialSensor ID="PIC2311_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC2311">
       <sample id="1" rate="20" scanfFormat="%f %f %f %f %f %f %*d %*f">
-	<variable longname="Picarro Time" name="TIME" units="s"/>
+	      <variable longname="Picarro Time" name="TIME" units="s"/>
         <variable longname="Picarro Methane Mixing Ratio" name="CH4" units="ppmv"/>
         <variable longname="Picarro Methane Mixing Ratio (Corrected)" name="CH4C" units="ppmv"/>
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
@@ -1480,22 +1491,18 @@
         <variable longname="Picarro Water Mixing Ratio" name="H2O" units="vol%"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
-<!--
 
+<!--
 Important text on page 24 of PICARRO manual (Remote Command Interface
 Specification):
-
  The CPU that is servicing command requests is the same CPU that is
  performing the measurement.
-
  o ie: Do not poll the RS232 interface as fast as possible
  o It is best to wait for a response from the instrument prior to
    submitting the next query.
  o Calling _INSTR_GETSTATUS is the same as calling _Instr_GetStatus
-
 This suggests that prompting while the instrument is hung up processing
 data may bog down the instrument by queuing up too many requests.
-
 Later though, on page 26, about the _Meas_GetBufferFirst command it
 suggests that if no data are available there will be an error message
 returned, like ERR:3002 No measurements data exists.  So do we just need to
@@ -1503,19 +1510,15 @@ poll quickly enough to grab each measurement message before it gets
 overwritten, while ignoring the parse errors from the No data returns?  Or
 will two samples accumulate in the buffer if they both finish between
 prompts?
-
 From the manual page 26:
-
  One way to get the instrument data with _Meas_GetBufferFirst is to
  repeatedly make this call and ignore all return codes of ERR:3002 (no
  data) that happen. This method has the disadvantage of not getting all of
  the other system information that is available in the status register that
  might be useful for something such as updating a Graphical User Interface.
-
-
 -->
 
-      <!-- <prompt rate="20" string="_meas_getbufferfirst\r"/> -->
+<!-- <prompt rate="20" string="_meas_getbufferfirst\r"/> -->
     </serialSensor>
 
 <!--
