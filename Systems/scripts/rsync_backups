@@ -1,0 +1,55 @@
+#! /bin/sh
+
+uid=`id -u`
+if [ "$uid" -ne 0 ]; then
+    echo "Must run as root."
+    exit 1
+fi
+
+if [ -z "$PROJECT" ]; then
+    echo "PROJECT must be set."
+    exit 1
+fi
+
+dest="/media/AircraftBkUps/$PROJECT/rsync-backups"
+if [ ! -d "$dest" ]; then
+    echo "$dest does not exist.  Mount the USB drive or create the directory."
+    exit 1
+fi
+
+rsync="rsync"
+set -x
+
+# Do not delete data files which may have been removed from plane for
+# whatever reason.
+$rsync -avP /var/r1/$PROJECT/*[rt]f[0-9][0-9].ads "$dest/data"
+$rsync -av --delete /etc "$dest"
+
+# Do not delete files, so that rotated log files with date in the name
+# will accumulate.
+$rsync -av /var/log "$dest"
+
+# Out of the local subdirectories:
+# GV_N677F 89% ls /home/local
+# ManufacturerManuals  Systems  aeros  ags  nidas  projects  raf  ric  src  upload
+#
+# We'll just sync all of them for now.  This includes Systems and projects so
+# there does not need to be a separate rsync for those.
+
+$rsync -av --delete /home/local/ "$dest/local"
+$rsync -av --delete /opt/ "$dest/opt"
+
+# Out of the home subdirectories:
+# GV_N677F 87% ls /home
+# DataBases  ads  data  eoladmin  ldm  local  lost+found  opt  smps  ted
+#
+# opt and local are handled separately, so this is what we want:
+
+mkdir -p "$dest/home"
+for homesub in ads data ldm ; do
+    $rsync -av --delete /home/$homesub "$dest/home"
+done
+
+# The web apps:
+$rsync -av --delete /var/www/html/ "$dest/var-www-html"
+

@@ -1,0 +1,4 @@
+#! /bin/sh
+
+cd /var/log
+find . -mtime -10 -type f -print0 -o -name 'httpd' -prune -o -name 'gdm' -prune | rsync --partial -av -0 --files-from=- . "$@"
