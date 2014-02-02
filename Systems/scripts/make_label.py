@@ -56,7 +56,7 @@ dirlist = os.listdir(local_image_dir)
 label = ''
 
 # Infra-red
-IRregx = 'ops.GOES-1?.*thermal-IR.jpg'  
+IRregx = 'ops.MTSAT-2.*thermal_IR.jpg'
 irlist = getList(dirlist,IRregx)
 if len(irlist) != 0:
     irFile = irlist[len(irlist)-1]
@@ -69,7 +69,7 @@ else:
 # Visible
 if len(visFile) == 0:
     print "Making vis label"
-    VISregx = 'ops.GOES-1?.*ch1_vis.jpg'
+    VISregx = 'ops.MTSAT-2.*ch1_vis.jpg'
     vislist = getList(dirlist,VISregx)
     if len(vislist) != 0:
         visFile = vislist[len(vislist)-1]
