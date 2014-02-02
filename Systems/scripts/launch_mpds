@@ -7,8 +7,8 @@
 #ifdown eth2
 
 # Reset eth3.  ifdown bgan does not seem to fully kill the connection.
-ifdown eth3
-sleep 3
+#ifdown eth3
+#sleep 3
 ifup eth3
 
 # sudo /usr/sbin/adsl-start
@@ -19,3 +19,7 @@ ifup eth3
 ifup bgan
  
 gnome-terminal --title "INMARSAT Log" -x /home/local/Systems/scripts/show_mpds_log.csh
+
+# this was in a diff and overwritten....  cjw 3/19/2013
+# +tail -f /var/log/messages | grep -e ppp -e ddclient
+
