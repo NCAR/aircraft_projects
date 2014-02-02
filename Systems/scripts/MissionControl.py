@@ -285,6 +285,7 @@ class MissionControl(QWidget):
             direction = val[0]
         except:
             direction = ['forward']
+        return ("forward", "right")
         return direction
 
     def updateCameraList(self):
@@ -380,11 +381,14 @@ class MissionControl(QWidget):
         self.entries = dict()
 
         # setup numeric entry for lighting time span
-        self.lightningTspan = self.horizontalEntryGroup("LMA lightning time span:", "lightningTspan", 6, [0, 10])
+        self.lightningTspan = self.horizontalEntryGroup("lightning time span (minutes):", "lightningTspan", 6, [0, 20])
 
         # setup Postgres Notify/Listen connection
 #       print "self.conn.fileno() %d" % self.conn.fileno()
-        self.notify = QSocketNotifier(self.conn.fileno(), QSocketNotifier.Read)
+        try:
+            self.notify = QSocketNotifier(self.conn.fileno(), QSocketNotifier.Read)
+        except:
+            self.notify = QSocketNotifier(self.cursor.fileno(), QSocketNotifier.Read)
         QObject.connect(self.notify, SIGNAL("activated(int)"), self.updateSelection)
         self.cursor.execute("LISTEN missioncontrol")
         self.conn.commit()
@@ -401,11 +405,11 @@ class MissionControl(QWidget):
         layout.addWidget(self.CurrentTime,         2, 2)
         layout.addWidget(Line,                     3, 0, 1, 3)
         layout.addWidget(NoteLabel,                4, 0, 1, 3)
-        layout.addWidget(self.region,              5, 0, 1, 3)
-        layout.addWidget(self.cappi,               6, 0, 1, 3)
-        layout.addWidget(self.lightning,           7, 0, 1, 3)
-        layout.addLayout(self.lightningTspan,      8, 0, 1, 3)
-        layout.addWidget(self.cameraList,          9, 0, 1, 3)
+#       layout.addWidget(self.region,              5, 0, 1, 3)
+#       layout.addWidget(self.cappi,               6, 0, 1, 3)
+#       layout.addWidget(self.lightning,           7, 0, 1, 3)
+        layout.addLayout(self.lightningTspan,      5, 0, 1, 3)
+        layout.addWidget(self.cameraList,          6, 0, 1, 3)
         self.setLayout(layout)
 
     def setDoNotCalibrate(self, pressed):
