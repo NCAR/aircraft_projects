@@ -31,6 +31,9 @@ SHELL=/bin/csh
 # Time stamp label for MC
 */1 * * * * /home/local/Systems/scripts/make_label.py >>& /dev/null
 
+# */30 * * * * wget -N -P /var/www/html/flight_data/B146/GE http://www.eol.ucar.edu/flight_data/B146/GE/real-time.kmz >>& /tmp/b146.log
+*/15 * * * * /home/local/projects/CONTRAST/GV_N677F/scripts/actrack_b146 start >& /dev/null
+
 # IRC and IRC bot
 @reboot /home/ads/ircd/Unreal3.2/unreal start >& /dev/null
 @reboot sleep 5; /home/ads/rbot/bin/rbot >& /dev/null
