@@ -53,8 +53,8 @@ ftp_passwd       = ''
 ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
 label            = 'sat_ir_label.jpg'
 #Assumes filename form is prefixYYYYMMDD*postfix
-prefix           = 'ops.GOES-1?.'  
-postfix		 = '4km_ch4_thermal-IR.jpg' 
+prefix           = 'ops.MTSAT-2.'  
+postfix		 = 'ch2_thermal_IR.jpg' 
 osm_file_name    = "latest_ir.jpg"
 num_imgs_to_get  = 10 # Script will backfill this many images for loops
 # End of Initialization section
