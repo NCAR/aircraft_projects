@@ -51,7 +51,8 @@ for homesub in ads data ldm ; do
 done
 
 # The web apps:
-$rsync -av --delete /var/www/html/ "$dest/var-www-html"
+$rsync -av --delete /var/www/html "$dest/web/"
+$rsync -av --delete /var/www/cgi-bin "$dest/web/"
 
 # Camera images
 $rsync -av /mnt/r1/camera_images/*.tar "$dest/camera_images"
