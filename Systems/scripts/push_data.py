@@ -17,26 +17,53 @@ import ftplib
 import syslog
 import time
 import datetime
-import pg 
+#import pg 
 import glob
-
-# Get the tf number
-flight = raw_input('Input flight designation (e.g. tf01):')
-print flight
 
 
 # Initialization 
 #  *******************  Modify The Following *********************
-nc_dir    = '/home/data/DC3/'
-raw_dir   = '/home/data/Raw_Data/DC3/'
+#  NOTE: assumes that Raw_Data is subdirectory of data_dir + project
+project =        'CONTRAST'
+data_dir =       '/home/data/'
+ftp_site =       'ftp.eol.ucar.edu'
+#ftp_site =       '192.168.1.43'
+user =           'anonymous'
+password =      ''
+#password  =      'tbaltzer@ucar.edu'
+ftp_data_dir =   '/pub/data/incoming/contrast/'
+#ftp_data_dir =   '/FieldStorage/Temporary Items'
+ftp_raw_dir  =   '/pub/data/incoming/contrast/Raw_Data/'
+#ftp_raw_dir  =   '/FieldStorage/Temporary Items'
+local_ftp_site = '192.168.1.43'
+local_user     = 'anonymous'
+local_password = 'tbaltzer@ucar.edu'
+local_ftp_dir  = '/FieldStorage/DataFiles/CONTRAST/GVnc'
+#local_ftp_dir  = '/FieldStorage/Temporary Items'
+# ******************  End of Modification Section ****************
+
+nc_dir    = data_dir + project + '/'
+raw_dir   = data_dir + 'Raw_Data/' + project + '/'
+
 # End of Initialization section
 
-# Get the netCDF and raw ADS files for working with
+# Get the flight designation
+flight = raw_input('Input flight designation (e.g. tf01):')
+print flight
+
+# Get the netCDF, kml  and raw ADS files for working with
+# First netCDF
 nclist = glob.glob(nc_dir+'*'+flight+'*.nc')
 if nclist.__len__() == 1:
   ncfile = nclist[0]
+elif nclist.__len__() == 0:
+  print "No files found matching form: "+nc_dir+'*'+flight+'*.nc'
+  print "aborting..."
+  sys.exit(0)
 else:
-  print "More than one file found.  Stepping through files, please select the right one"
+  print "More than one netCDF file found."
+  print "Stepping through files, please select the right one"
+#  print nclist
   ncfile = ''
   i = 0
   while ncfile == '' :
@@ -47,9 +74,44 @@ else:
       i = i + 1
     else:
       i = 0
+if ncfile == '' : 
+  print "No NetCDF file identified!"
+  print "Aborting"
+  sys.exit(0)
+
+#KML file
+kmllist = glob.glob(nc_dir+'*'+flight+'.kml')
+if kmllist.__len__() == 1:
+  kmlfile = kmllist[0]
+elif kmllist.__len__() == 0:
+  print "No files found matching form: "+nc_dir+'*'+flight+'*.kml'
+  print "aborting..."
+  sys.exit(0)
+else:
+  print "More than one file found.  Stepping through files, please select the right one"
+  kmlfile = ''
+  i = 0
+  while kmlfile == '' :
+    ans = raw_input(kmllist[i]+'? (Y/N)')
+    if ans == 'Y' or ans == 'y':
+      kmlfile = kmllist[i]
+    if i < kmllist.__len__() - 1: 
+      i = i + 1
+    else:
+      i = 0
+if kmlfile == '' :
+  print "No KML file identified!"
+  print "Aborting..."
+  sys.exit(0)
+
+#Raw Data File
 rawlist = glob.glob(raw_dir+'*'+flight+'*.ads')
 if rawlist.__len__() == 1:
   rawfile = rawlist[0]
+elif rawlist.__len__() == 0:
+  print "No Raw files found matching the form: raw_dir+'*'+flight+'*.ads'"
+  print "aborting..."
+  sys.exit(0)
 else:
   print "More than one file found.  Stepping through files, please select the right one"
   rawfile = ''
@@ -62,9 +124,127 @@ else:
       i = i + 1
     else:
       i = 0
+if rawfile == '' :
+  print "No Raw file identified!"
+  print "Aborting! "
+  sys.exit(0)
 
+print "**************************"
 print "NetCDF file = "+ncfile
+print "KML file = "+kmlfile
 print "Raw ADS file = "+rawfile
+print "**************************"
+print ""
+
+# ZIP up the files as per expectations back home
+# First the nc file and the kml file go into one zip file (note want the files
+#   to exist at the diretory level of the zip file)
+
+data_dir,ncfilename = os.path.split(ncfile)
+data_dir,kmlfilename = os.path.split(kmlfile)
+zip_data_filename = project+"_"+flight+".zip"
+print "data_dir = "+data_dir
+print "ncfilename = "+ncfilename
+print "kmlfilename = "+kmlfilename
+# Make sure that there is not a zip file already there ("overwrite")
+command = "cd "+data_dir+"; rm "+project+"_"+flight+".zip"
+os.system(command)
+command = "cd "+data_dir+"; zip " + zip_data_filename + " " + ncfilename + " " + kmlfilename 
+print ""
+print "Zipping up netCDF and kml files with command:"
+print command
+os.system(command)
+
+# Now ZiP up the rawfile - again with the file existing at the same directory
+#  level as the zip file
+raw_dir,rawfilename = os.path.split(rawfile)
+zip_raw_filename = rawfilename+".zip"
+print "rawfilename = "+rawfilename
+# remove zip file if it exists
+command = "cd "+raw_dir+"; rm "+rawfilename+".zip"
+os.system(command)
+command = "cd "+raw_dir+"; zip "+zip_raw_filename+ " " +rawfilename
+print ""
+print "Zipping up raw data file with command:"
+print command
+os.system(command)
+
+# Put zipped files to EOL server
+try:
+    print 'opening FTP connection to: ' + ftp_site
+
+    ftp = ftplib.FTP(ftp_site)
+    ftp.login(user, password)
+    ftp.cwd(ftp_data_dir)
+    print ""
+    print "Putting file:"+zip_data_filename
+    os.chdir(data_dir)
+    file = open(zip_data_filename, 'r')
+    ftp.storbinary('STOR ' + zip_data_filename, file)
+    file.close()
+    print "Finished putting data file"
+    print ""
+    ftp.quit()
+
+except ftplib.all_errors as e:
+    print ""
+    print 'Error writing nc/kml data file to eol server'
+    print e
+    ftp.quit()
+    sys.exit(1)
+
+# Put zipped raw files to EOL server
+try: 
+    print ""
+    print 'opening FTP connection to: ' + ftp_site
+
+    ftp = ftplib.FTP(ftp_site)
+    ftp.login(user, password)
+    ftp.cwd(ftp_raw_dir)
+    print "Putting file: "+zip_raw_filename
+    os.chdir(raw_dir)
+    file = open(zip_raw_filename, 'r')
+    ftp.storbinary('STOR ' + zip_raw_filename, file)
+    file.close()
+    print "Finished putting raw data file"
+    print ""
+    ftp.quit()
+
+except ftplib.all_errors as e:
+    print 'Error writing raw data file to eol server'
+    print e
+    ftp.quit()
+    sys.exit(1)
+
+# Put unzipped data files to field server
+try: 
+    print ""
+    print 'Local Data Store: opening FTP connection to: ' + local_ftp_site
+
+    ftp = ftplib.FTP(local_ftp_site)
+    ftp.login(local_user, local_password)
+    ftp.cwd(local_ftp_dir)
+    print "Putting file: "+ncfilename
+    print "from directory: "+data_dir
+    os.chdir(data_dir)
+    file = open(ncfilename, 'r')
+    ftp.storbinary('STOR ' + ncfilename, file)
+    file.close()
+    print "Putting file: "+kmlfilename
+    file = open(kmlfilename, 'r')
+    ftp.storbinary('STOR ' + kmlfilename, file)
+    file.close()
+    print "Done Putting data files to local ftp server"
+    print ""
+    ftp.quit()
+
+except ftplib.all_errors as e:
+    print 'Error writing data file to local ftp server'
+    print e
+    ftp.quit()
+    sys.exit(1)
+
+sys.exit(1)
 
 
 # Produce the ICARTT formated file for NASA
