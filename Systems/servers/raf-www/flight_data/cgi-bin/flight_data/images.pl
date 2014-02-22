@@ -22,7 +22,7 @@ if ($name != defined) {
 }
 
 # Do not allow dangerous chars
-if ( $name =~ /\.\./ || $name !~ /^[-\w\s\.]+$/) {
+if ( $name =~ /\.\./ || $name !~ /^[\[\]-\w\s\.]+$/) {
 	print "Invalid image specifier, use expression i.e. ?name=vis";
 	exit;
 }
