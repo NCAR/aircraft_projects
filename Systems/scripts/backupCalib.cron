@@ -17,6 +17,10 @@ set diffile = /tmp/backupCalib.diff.txt
 set dbserver = barolo.eol.ucar.edu
 set sqlfile = $PROJ_DIR/Configuration/raf/cal_files/master-calibrations.sql
 set tmpsqlfile = $PROJ_DIR/Configuration/raf/cal_files/master-calibrations.sql.tmp
+set insfile = $PROJ_DIR/Configuration/raf/cal_files/master-cal.INSERTS.sql
+set tmpinsfile = $PROJ_DIR/Configuration/raf/cal_files/master-cal.INSERTS.sql.tmp
+set noninsfile = $PROJ_DIR/Configuration/raf/cal_files/master-cal.nonINSERTS.sql
+set tmpnoninsfile = $PROJ_DIR/Configuration/raf/cal_files/master-cal.nonINSERTS.sql.tmp
 set emailaddr = tbaltzer@ucar.edu
 set subject = "Master Calibrations Database Backup Notice"
 
@@ -24,23 +28,13 @@ set subject = "Master Calibrations Database Backup Notice"
 rm -f   $logfile
 touch   $logfile
 
-# Make a copy of the current sql code backup to compare against the new one
-rm -f $tmpsqlfile
-cp $sqlfile $tmpsqlfile
-
-# Perform and log the backup
-echo -n "START " >>& $logfile
-date             >>& $logfile
-echo "Backup of barolo's calibrations database to a directory that is regularly backed up by CIT." >>& $logfile
-pg_dump --insert --clean -h barolo.eol.ucar.edu -U ads calibrations -f $sqlfile >>& $logfile
-echo -n "END   " >>& $logfile
-date             >>& $logfile
-
-# Check for differences and notify of succesful run and changes.
-set res = `diff $tmpsqlfile $sqlfile | wc -l`
-if ($res == 0) then
-  echo "`date`: No Changes to Calibration DB on $dbserver" | mailx -s "$subject" $emailaddr
-else
+# Check for previous backup which have not yet been addressed
+# if we find this is the case, back up curent database, make notice and bail
+set res = `svn diff $sqlfile | wc -l`
+if ($res != 0) then
+  echo "Previous difference in backup of calibrations database has not been addressed" >>& $logfile
+  echo "Perform a new backup to the standard backup file to catch any additional changes" >>& $logfile
+  pg_dump --insert --clean -h barolo.eol.ucar.edu -U ads calibrations -f $tmpsqlfile >>& $logfile
   rm -f $diffile
   echo "`date`: There have been changes to the Master Calibrations Database" > $diffile
   echo " found on the postgres server on: $dbserver" >> $diffile
@@ -53,7 +47,83 @@ else
   diff $tmpsqlfile $sqlfile >> $diffile
   cat $diffile | mailx -s "$subject" $emailaddr
   rm -f $diffile
+  exit(1)
+endif
+
+echo "Perform backup"
+# Perform and log the backup
+echo -n "START " >>& $logfile
+date             >>& $logfile
+echo "Backup of barolo's calibrations database to a directory that is regularly backed up by CIT." >>& $logfile
+pg_dump --insert --clean -h barolo.eol.ucar.edu -U ads calibrations -f $tmpsqlfile >>& $logfile
+echo -n "END   " >>& $logfile
+date             >>& $logfile
+
+echo "Gather inserts"
+# Gather the INSERT portion of the original and new files and sort them so 
+# that the variation of the pg_dump sequencing does not affect comparison
+rm -f $tmpinsfile
+rm -f $insfile
+grep INSERT $tmpsqlfile | sort > $tmpinsfile
+grep INSERT $sqlfile | sort > $insfile
+
+# Check for INSERT differences 
+set res = `diff $tmpinsfile $insfile | wc -l`
+if ($res == 0) then
+  set insdiff = 0
+  echo "no diff INS file"
+else
+  set insdiff = 1
+  echo "INS file difference"
+endif
+
+echo "Gather non-inserts"
+# Gather the non-INSERT portion of the original and new files and sort them
+# so that variation of the pg_dump sequencing does not affect comparison
+rm -f $tmpnoninsfile
+rm -f $noninsfile
+grep -v INSERT $tmpsqlfile | sort > $tmpnoninsfile
+grep -v INSERT $sqlfile | sort > $noninsfile
+
+# Check for non-INSERT differences
+set res = `diff $tmpnoninsfile $noninsfile | wc -l`
+if ($res == 0) then
+  set noninsdiff = 0
+  echo "no diff non-INS file"
+else
+  set noninsdiff = 1
+  echo "non-INS file diff"
+endif
+
+if ($insdiff == 0 || $noninsdiff == 0) then
+  echo "`date`: No Changes to Calibration DB on $dbserver" | mailx -s "$subject" $emailaddr
+else
+  rm -f $diffile
+  echo "`date`: There have been changes to the Master Calibrations Database" > $diffile
+  echo " found on the postgres server on: $dbserver" >> $diffile
+  echo "The changes have been backed up in the file:" >> $diffile
+  echo " $sqlfile" >> $diffile
+  echo " Which should now be checked into subversion." >> $diffile
+  echo "" >> $diffile
+  echo " The changes (in SQL code) follow in two parts -"
+  echo " INSERT differences and then non-INSERT differences:" >> $diffile
+  echo "" >> $diffile
+  echo "**************  INSERT Diffs ************************" >> $diffile
+  diff $insfile $tmpinsfile >> $diffile
+  echo "" >> $diffile
+  echo "*************** non-INSERT Diffs *********************" >> $diffile
+  diff $noninsfile $tmpnoninsfile >> $diffile
+  echo ""
+  echo "Putting new sql file into place - please check into SVN" >> $diffile
+  
+  cat $diffile | mailx -s "$subject" $emailaddr
+  mv -f $tmpsqlfile $sqlfile
+  rm -f $diffile
 endif
 
 rm -f $tmpsqlfile
+rm -f $insfile
+rm -f $tmpinsfile
+rm -f $noninsfile
+rm -f $tmpnoninsfile
 
