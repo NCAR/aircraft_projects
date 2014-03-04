@@ -92,7 +92,7 @@
         <sample id="0205" rate="8"><variable name="MACH" units="none" longname="ADC Mach Number"/></sample>
         <sample id="0206" rate="8"><variable name="CAS" units="m/s" longname="ADC Computed Air Speed"/></sample>
         <sample id="0210" rate="16"><variable name="TAS" units="m/s" longname="ADC True Air Speed"/></sample>
-        <sample id="0211" rate="2"><variable name="TT" units="deg_C" longname="ADC Total Air Temperature"/></sample>
+        <sample id="0211" rate="2"><variable name="RT" units="deg_C" longname="ADC Recovery Air Temperature"/></sample>
         <sample id="0213" rate="2"><variable name="AT" units="deg_C" longname="ADC Ambient Air Temperature"/></sample>
         <sample id="0215" rate="8"><variable name="QC" units="hPa" longname="ADC Impact Pressure"/></sample>
         <sample id="0217" rate="8"><variable name="PS" units="hPa" longname="ADC Static Pressure"/></sample>
@@ -685,20 +685,20 @@
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120">
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL">
 	    <sample id="1">
-	        <variable name="DPLB" units="unk" longname="Dew/Frost Point Balance, Fuselage Left"/>
-                <variable name="DPLS" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Left">
+	        <variable name="BALNC" units="unk" longname="Dew/Frost Point Balance, Fuselage Left"/>
+                <variable name="MIRRTMP" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Left">
                     <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
                 </variable>
                 <variable name="DPLTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Left"/>
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130">
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130" suffix="_DPR">
 	    <sample id="1">
-                <variable name="DPRB" units="unk" longname="Dew/Frost Point Balance, Fuselage Right"/>
-                <variable name="DPRS" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Right">
+                <variable name="BALNC" units="unk" longname="Dew/Frost Point Balance, Fuselage Right"/>
+                <variable name="MIRRTMP" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Right">
                     <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
                 </variable>
                 <variable name="DPRTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Right"/>
@@ -763,24 +763,24 @@
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
-                <variable name="TTHL2" units="V" longname="Total Temperature, Deiced Left">
+                <variable name="RTHL2" units="V" longname="Recovery Air Temperature, Deiced Left">
                     <parameter name="channel"  value="0"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <!--<poly coefs="-90.997 25.705 0.063667" units="deg_C"/> --> <!-- Post-HIPPO-3 cal --> 
                     <poly coefs="-90.691 25.554 0.08566" units="deg_C"/>   <!-- Pre-HIPPO-3 cal --> 
                 </variable>
-                <variable name="TTHL1" units="V" longname="Total Temperature, Deiced Left">
+                <variable name="RTHL1" units="V" longname="Recovery Air Temperature, Deiced Left">
                     <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <!--<poly coefs="-90.772 25.67  0.069654" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
                     <poly coefs="-90.802 25.69  0.068852" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
                 </variable>
-                <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
+                <variable name="RTHR2" units="V" longname="Recovery Air Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <!--<poly coefs="-91.647 26.364 -0.020022" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
                     <poly coefs="-91.701 26.385 -0.020225" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
                 </variable>
-                <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
+                <variable name="RTHR1" units="V" longname="Recovery Air Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <!--<poly coefs="-90.874 26.076 -0.00095893" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
                     <poly coefs="-91.049 26.152 -0.0073493" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
