@@ -1,0 +1,76 @@
+#!/usr/bin/python
+#
+#  Script that takes as argument a nimbus produced variable name (i.e.  found in
+#    the database) and switches to indicate what kind of check to perform.
+#
+#   E.g. raf_test_datavalue -n DP_VXL -b -32767
+#      for checking a bad value of -32767 on the DP_VXL varialbe
+#
+#   switches supported:   
+#       -n {name}  : name of variable to be checked
+#       -b {value} : unaccpetable value (exit(2) if this value seen)
+#
+
+import psycopg2
+import sys
+import getopt
+
+def usage():
+  print 'Usage: raf_check_datavalue -n <varname> -b <badvalue> ...'
+
+def main(argv):
+  var_name = ''
+  bad_values = []
+  bad_value = ''
+  try:
+    opts, args = getopt.getopt(sys.argv[1:],'b:n:')
+  except getopt.GetoptError:
+    print 'except'
+    usage()
+    sys.exit(1)
+
+  for opt, arg in opts:
+    if opt == '-h':
+      print '-h'
+      usage()
+      sys.exit(1)
+    if opt in ("-n", "--name="):
+      var_name = arg
+    elif opt in ("-b", "--bad_val="):
+      bad_value = arg
+
+  if (var_name == ''):
+    print __file__,' : Error: No variable name provided in call'
+    usage()
+    sys.exit(1)
+  if (bad_value == ''):
+    print 'bad_value'
+    usage()
+    sys.exit(1)
+
+  print 'Name is:"',var_name,'"'
+  print 'Bad value is:"', bad_value,'"'
+
+  con = None
+  con = psycopg2.connect(database='real-time', user='ads')
+  cur = con.cursor()
+ 
+  select_string = 'select '+var_name+' from raf_lrt order by datetime desc limit 1;'
+ 
+  cur.execute("""select_string""")
+  res = cur.fetchall()
+ 
+  tup = res.pop()
+  num = tup[0]
+ 
+  if num == bad_value:
+    print var_name+" is generating bad_value: "+ bad_value
+    con.close()
+    sys.exit(2)
+  else:
+    print var_name+" is generating non_ngood value: "+num
+    con.close()
+    sys.exit(0)
+
+if __name__ == "__main__":
+  main(sys.argv[1:])

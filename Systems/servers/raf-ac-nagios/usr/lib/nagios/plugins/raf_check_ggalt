@@ -1,0 +1,24 @@
+#!/usr/bin/python
+
+import psycopg2
+import sys
+
+con = None
+con = psycopg2.connect(database='real-time', user='ads')
+cur = con.cursor()
+
+cur.execute("""select GGALT from raf_lrt order by datetime desc limit 1;""")
+#cur.execute("""select a09_gcim from raf_lrt order by datetime desc limit 1;""")
+res = cur.fetchall()
+
+tup = res.pop()
+num = tup[0]
+
+if num == -32767.0:
+  print "GGALT is a bad value! Check serial card. "
+  con.close()
+  sys.exit(2)
+else:
+  print "GGALT is good:"+num.__str__()
+  con.close()
+  sys.exit(0)
