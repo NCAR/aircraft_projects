@@ -110,11 +110,11 @@ try:
     ftp.cwd(ftp_dir)
 
     ftplist = []
-    form=prefix + str(year) + monthstr + yesterdaystr + "*" + postfix
+    form=prefix + str(year) + monthstr + yesterdaystr + "[0-9][0-9][0-9][0-9]." + postfix
     ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + todaystr + "*" + postfix
+    form=prefix + str(year) + monthstr + todaystr +  "[0-9][0-9][0-9][0-9]." + postfix
     ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + tomorrowstr + "*" + postfix
+    form=prefix + str(year) + monthstr + tomorrowstr + "[0-9][0-9][0-9][0-9]." + postfix
     ftp.dir(form, ftplist.append)
 
 except ftplib.all_errors, e:
