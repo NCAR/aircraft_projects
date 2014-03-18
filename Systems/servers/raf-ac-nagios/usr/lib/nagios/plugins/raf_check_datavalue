@@ -51,24 +51,26 @@ def main(argv):
   print 'Name is:"',var_name,'"'
   print 'Bad value is:"', bad_value,'"'
 
+  fBad_value = float(bad_value)
+
   con = None
   con = psycopg2.connect(database='real-time', user='ads')
   cur = con.cursor()
  
   select_string = 'select '+var_name+' from raf_lrt order by datetime desc limit 1;'
  
-  cur.execute("""select_string""")
+  cur.execute(select_string)
   res = cur.fetchall()
  
   tup = res.pop()
   num = tup[0]
  
-  if num == bad_value:
-    print var_name+" is generating bad_value: "+ bad_value
+  if num == fBad_value:
+    print var_name+" is generating bad_value: "+ str(num)
     con.close()
     sys.exit(2)
   else:
-    print var_name+" is generating non_ngood value: "+num
+    print var_name+" is generating good value: "+ str(num)
     con.close()
     sys.exit(0)
 
