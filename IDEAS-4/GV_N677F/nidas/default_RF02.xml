@@ -215,7 +215,7 @@
         <variable longname="ADC True Air Speed" name="TAS" units="m/s"/>
       </sample>
       <sample id="0211" rate="2">
-        <variable longname="ADC Total Air Temperature" name="TT" units="deg_C"/>
+        <variable longname="ADC Recovery Air Temperature" name="RT" units="deg_C"/>
       </sample>
       <sample id="0213" rate="2">
         <variable longname="ADC Ambient Air Temperature" name="AT" units="deg_C"/>
@@ -1057,7 +1057,8 @@
     <sensor ID="SIDS" class="raf.SidsNetSensor">
       <parameter name="RESOLUTION" type="int" value="25"/>
       <sample id="1" rate="1">
-        <variable length="64" longname="SIDS Raw Accumulation (per cell)" name="ASIDS" units="count"/>
+        <variable length="65" longname="SIDS Raw Accumulation (per cell)" name="HSIDS" units="count"/>
+        <variable length="65" longname="SIDS Raw Accumulation (per cell)" name="WSIDS" units="count"/>
         <variable longname="SIDS Rejected Particle Count" name="REJECT" units="count"/>
       </sample>
     </sensor>
@@ -1759,28 +1760,28 @@
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Total Temperature, Radome Left" name="TTRL" units="V">
+          <variable longname="Recovery Air Temperature, Radome Left" name="RTRL" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
-              <calfile file="TTRL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+              <calfile file="RTRL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
+          <variable longname="Recovery Air Temperature, Deiced Right, HARCO" name="RTHR2" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
-              <calfile file="TTHR2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+              <calfile file="RTHR2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
+          <variable longname="Recovery Air Temperature, Deiced Right, HARCO" name="RTHR1" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
-              <calfile file="TTHR1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+              <calfile file="RTHR1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
           <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="V">
