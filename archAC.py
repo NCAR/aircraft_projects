@@ -49,6 +49,18 @@
 #	Added renameKML which will add the timeinterval to the filename of KML 
 #	files similar to LRT and HRT files. renameKML will also watch out for 
 #	already renamed KML files to avoid adding the timeinterval twice.
+# Modified 8/12/2011 Janine Aquino
+#	to fix error in path to file when using -r (was duplicating root)
+# Modified 8/18/2011 Janine Aquino
+#	now removing root completely, so took previous fix back out (no duplicate
+#	root)
+# Modified 3/27/2014 Janine Aquino
+#	remove use of proj.info since this script was the only one still using it, and
+#       it only	pulled the calendar year. Just add that as part of the path on the 
+#	command line.
+#	add auto-removal of camera tarfiles once they are verified to be on HPSS 
+#	since they are big and freq. fill up the disk.
+#	Skip montage dirs.
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -99,64 +111,6 @@ class archRAFdata:
     def today(self):
 	today = time.strftime("%a, %d %b %Y %H:%M:%S local",time.localtime())
 	return today
-
-    def proj_info(self,projdir):
-	'''
-	Get some project-specific info from the proj.info file in the Production	dir
-		fiscalyear = fiscal year of the project
-		calendaryear = year data was collected, 
-			not necessarily the same as FY
-		rpwd = MSS Read PWD
-	Users will set rpwd = <some pwd> if they want the data protected, else 
-	set to "" 
-	Eventually ask the user for this directly on the command line? Not sure
-	what I want to do here. Read from a projinfo database entry?
-	'''
-	projinfo = open(projdir+"/proj.info",'r')
-	lines = projinfo.readlines()
-	projinfo.close()
-	fiscalyear = ""
-	calendaryear = ""
-	for line in lines:
-	    #Remove newline from end of string
-	    line = line.replace("\n","")
-	    #Echo contents of proj.info to screen to be saved in log.
-	    print line
-	    # Retrieve fiscal year
-	    match = re.search("FY",line)
-	    if match:
-		fiscalyear = string.split(line,'=')[1]
-	    # Retrieve calendar year
-	    match = re.search("CY",line)
-	    if match:
-		calendaryear = string.split(line,'=')[1]
-	    # Retrieve read password
-	    rpwd = ""
-	    #Never been used, switching to a new system soon so it probably will never be used
-	    #For reference if needed:
-	    #match = re.search("rpwd",line)
-	    #if match:
-		#rpwd = string.split(line,'=')[1]
-		#rpwd.strip()	# Remove leading and trailing spaces
-	    #else: #Sean Stroble crash fix
-	        #match = re.search("MSS Read Password: (.*)",line)
-		#if match:
-		     #if match.group(1).strip() == "no":
-			 #rpwd = ""
-		     #else:
-			 #rpwd = match.group(1).strip() #Sean Stroble quick experimental crash fix
-        
-	# Warn user if required params aren't in proj.info, ask user to add
-	# them, and quit.
-	if fiscalyear == "":
-	    print "Fiscal year not documented in "+projdir+ \
-		    "/proj.info. Please add it."
-	    raise SystemExit
-	if calendaryear == "":
-	    print "Calendar year not documented in "+projdir+ \
-		    "/proj.info. Please add it."
-	    raise SystemExit
-	return [fiscalyear,calendaryear,rpwd]
 
     def checkuser(self):
         '''
@@ -239,8 +193,10 @@ class archRAFdata:
 	filesfound = []
 	for root, dirs, files in os.walk(path):
 	    for name in files:
-	        match = re.search(searchstr,name)
+	        match = re.search(searchstr+"$",name)
 	        if match:
+		    #if flag == "-r": 
+		    #	root = string.split(root,'/')[-1]
 		    name = os.path.join(root,name)
 		    #print "Found "+name
 		    filesfound.append(name)
@@ -373,7 +329,7 @@ class archRAFdata:
 	Usage statement for this code. This is also the only documentation.
 	'''
         if len(sys.argv) < 3 or len(sys.argv) > 7:
-	    print '''Usage: archAC.py TYPE <flag> SDIR SFILES <RAF|ATDdata> [EMAIL]
+	    print '''Usage: archAC.py TYPE <flag> SDIR SFILES <ARCHIVEDIR> [EMAIL]
 	    where:	type is data type being archive (SID-2H, ADS, CAMERA)
 		(will be used a subdir name on mss)
 		flag is an optional argument that can be -r or -t
@@ -390,9 +346,8 @@ class archRAFdata:
 			DOWN, etc.
 		SDIR = source file directory
 		SFILES = source file suffix (i.e. ads)
-		'RAF' -> data will be archived to /RAF (in house)
-		'ATDdata' -> data will be archived to /ATD/DATA (public access)
-		EMAIL = Who to send msput_job e-mail's too (Optional)'''
+		ARCHIVEDIR -> HPSS dir data will be archived to: EOL/<year>
+		EMAIL = Who to send e-mail's too (Optional)'''
 	    raise SystemExit
 	return
 
@@ -407,7 +362,7 @@ class archRAFdata:
             path_components = string.split(spath,'/')
             if flag == "-r": 
 		# recursive searching, so path has subdir components
-	        sfile = path_components[len(path_components)-2]+'/'+\
+		sfile = path_components[len(path_components)-2]+'/'+\
 		        path_components[len(path_components)-1]
 	    else:
 		# all files are in highest dir, no recursion
@@ -426,12 +381,21 @@ class archRAFdata:
 
             (msrcpMachine,wpwd)=archraf.setMSSenv()
 
-	    #msput_job is a script written by Ron Ruth and located in
-	    #$PROJ_DIR/archives/scripts
-	    command.append('/opt/local/bin/hsi put -P ' + sdir + spath + ' :' + mssroot + type + '/' + sfile) 
-	    #command.append('ssh -x '+ msrcpMachine + ' msput_job -pe 32767 ' + \
-	#	    '-pr 41113009 -wpwd ' + wpwd + \
-	#            ' '+rpwd+' ' + sdir + spath+mssroot+type+'/'+sfile + ' ' + email)
+            # http://www.mgleicher.us/GEL/hsi/hsi_reference_manual_2/hsi_commands/put_command.html
+	    # -P : create intermediate HPSS subdirectories for the file(s) if they do not exist
+	    # -d : remove local files after success transfer to HPSS
+	    # Only remove camera tarfiles, since they are an intermediate product on local disk and are HUGE.
+	    match = re.search('CAMERA',type)
+	    if match:
+		options = '-d '
+	    else:
+		options = ''
+
+	    match = re.search(sdir,spath)
+	    if match:
+	    	command.append('/opt/local/bin/hsi put -P ' + options + spath + ' :' + mssroot + type + '/' + sfile) 
+	    else: 
+	    	command.append('/opt/local/bin/hsi put -P ' + options + sdir + spath + ' :' + mssroot + type + '/' + sfile) 
 
         for line in command:
 	    print line
@@ -498,13 +462,11 @@ if __name__ == "__main__":
         flag = ""
     sdir = sys.argv[index]
     searchstr = sys.argv[index+1]
-    #location is now optional
-    if len(sys.argv)-1 >= index+2:
-    	location = sys.argv[index+2]
-	if location != "EOL":
-		print "\033[1;4;33mWarning: "+sys.argv[index+2]+" is depreciated!\033[0m\n"
-    else:
-	location = ""
+    location = sys.argv[index+2]
+    match = re.search("EOL",location)
+    if not match:
+	print "\033[1;4;33mWarning: "+sys.argv[index+2]+" is depreciated!\033[0m\n"
+    (dir,calendaryear) = string.split(location,'/')
     #Optional e-mail argument
     if len(sys.argv)-1 >= index+3:
          email = sys.argv[index+3]
@@ -514,19 +476,6 @@ if __name__ == "__main__":
     # Make sure this script is being run from 
     # $PROJ_DIR/<proj>/<platform>/Production/archive.
     (platform,proj_name,projdir,current_dir) = archraf.checkpath()
-    
-    # Get the year and rpwd from the proj.info file in the Production dir.
-    (fiscalyear,calendaryear,rpwd) = archraf.proj_info(projdir)
-    
-    # Define the path files will be stored under on the MSS.
-    if location == 'RAF':
-        # Determine the 3-digit project number that goes with this project
-        proj = archraf.projnum(dirmapfile)
-        mssroot = ' /RAF/'+fiscalyear+'/'+proj+'/'
-    elif location == 'ATDdata':
-        mssroot = ' /ATD/DATA/'+calendaryear+'/'+proj_name+'/'+platform+'/'
-    else:
-	mssroot = ' /EOL/'+calendaryear+'/'+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
     
     # Confirm we are running on bora, merlot, or shiraz since these are the big data
     # processing machines and we don't want to step on anyone elses toes.
@@ -561,6 +510,10 @@ if __name__ == "__main__":
     	                match = re.search("sent",fullname)
     	                if match:
     	                  continue;
+    		        # Skip montage dirs (don't archive them)
+    	                match = re.search("montage",fullname)
+    	                if match:
+    	                  continue;
     		        # Skip removed dirs (don't archive them)
     	                match = re.search("removed",fullname)
     	                if match:
@@ -572,6 +525,8 @@ if __name__ == "__main__":
     			    pointing = 'LEFT'
     		        if re.search('right',fullname):
     			    pointing = 'RIGHT'
+    		        if re.search('down',fullname):
+    			    pointing = 'DOWN'
     		        if re.search('forward',fullname):
     			    pointing = 'FWD'
     		        if re.search('FWD',fullname):
@@ -664,7 +619,7 @@ if __name__ == "__main__":
     # Sort the files to be processed so they are processed in alphabetical order
     sfiles.sort()
     
-    
+    mssroot = ' /'+location+'/'+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
     #Now archive the data!
     archraf.archive_files(sdir,sfiles,flag,type,mssroot,email)
     
