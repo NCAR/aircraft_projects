@@ -402,6 +402,11 @@ class archRAFdata:
 	
         process = raw_input("Run the commands as listed? " + \
 		"yes == enter, no == anything else: ")
+
+	match = re.search('CAMERA',type)
+	if match:
+	    process = ""
+
         if process == "":
             for line in command:
 		p = subprocess.Popen(line,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
