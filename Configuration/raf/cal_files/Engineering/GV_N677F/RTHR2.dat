@@ -2,7 +2,28 @@
 # dateFormat="%Y %b %d %H:%M:%S"
 # timeZone = "UTC"
 #
+# Harco heated temperature probe - note: serial number can change for this variable so 
+#                                        it should not be surprising if cals vary
+#
 
 2013 Jan 30 23:09:25  -82.2177   22.6134  0.303286
 
 2013 May 02 20:27:38  -82.0533   22.6136   0.30347 # wasinger MPEX 
+
+# The following adjustments are made according to the Rsig agreement determined to compensate for an
+#   offset in the A2D board during the CONTRAST project.  The algorithm is as follows:
+#   (a) For flights before 6: no adjustment
+#   (b) For flights 6-12: adjust by -0.7195 Deg_C * (flight number - 5) / 8
+#   (c) For flights 13 and beyond: adjust by -0.7195 Deg_C
+2014 Jan 24 00:00:00  -82.1432   22.6136   0.30347 # tbaltzer Adjusted for A2D 1704 offset rf06 S/N: A50738B
+2014 Jan 28 00:00:00  -82.2332   22.6136   0.30347 # tbaltzer Adjusted for A2D 1704 offset rf07 S/N: A50738B
+2014 Feb 01 00:00:00  -82.3231   22.6136   0.30347 # tbaltzer Adjusted for A2D 1704 offset rf08 S/N: A50738B
+2014 Feb 04 00:00:00  -82.4131   22.6136   0.30347 # tbaltzer Adjusted for A2D 1704 offset rf09 S/N: A50738B
+2014 Feb 07 00:00:00  -82.5030   22.6136   0.30347 # tbaltzer Adjusted for A2D 1704 offset rf10 S/N: A50738B
+2014 Feb 12 00:00:00  -82.5881   22.6136   0.30347 # tbaltzer Adjusted for A2D 1704 offset rf11 S/N: A50738B
+2014 Feb 16 00:00:00  -82.6829   22.6136   0.30347 # tbaltzer Adjusted for A2D 1704 offset rf12 S/N: A50738B
+2014 Feb 19 00:00:00  -82.7728   22.6136   0.30347 # tbaltzer Adjusted for A2D 1704 offset rf13 S/N: A50738B
+
+# After CONTRAST for first blush, return to pre-CONTRAST cal since adjustments were for A2D offset and that
+# board has been replaced.
+2014 Mar 01 00:00:00  -82.0533   22.6136   0.30347 # tbaltzer CONTRAST Precal.  A2D Temp 58.8125 S/N: A50738B
