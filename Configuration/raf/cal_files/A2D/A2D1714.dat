@@ -1,3 +1,16 @@
+#  A2D Calibration for Board with serial number 1710
+#  Since these calibrations are for boards with 8 channels available, there is a linear calibration for each channel.
+#  Additionally, since each channel can support a variety of voltage ranges, each line represents one voltage range.  These ranges are defined by the Gain/Bipolar combination as follows:
+#  Gain	 Bipolar 	VoltageRange
+#  ----  ------         -------------
+#   1      1		-10 to 10 V
+#   2	   0		  0 to 10 V
+#   2	   1		 -5 to  5 V
+#   4	   0		  0 to  5 V
+#
+#   A2D calibrations are performed in a temperature chamber that is set to 40 degrees Celcius.  This facilitates a temperature based correction (currently appplied only to 0-5 V range)
+#   Further, these calibrations are generally done for all channels and for all 4 voltage ranges.
+#
 
 # temperature: nan - doubtless 40 degrees, but a bug in the cal tool is making this NaN
 #  Date              Gain  Bipolar  CH0-off   CH0-slope  CH1-off   CH1-slope  CH2-off   CH2-slope  CH3-off   CH3-slope  CH4-off   CH4-slope  CH5-off   CH5-slope  CH6-off   CH6-slope  CH7-off   CH7-slope
@@ -12,3 +25,11 @@
 2014 Feb 28 21:30:49    2       0       -0.278418 1.05133   -0.330586 1.0615    -0.349295 1.06269   -0.221515 1.03601   -0.390538 1.06163   -0.273921 1.06018   -0.159155 1.04058   -0.381068 1.05728 
 2014 Feb 28 22:23:31    2       1       -0.124226 1.05238   -0.129193 1.06259   -0.132834 1.06381   -0.11329  1.03717   -0.15969  1.06278   -0.0490736 1.06133   -0.0306558 1.0417    -0.126757 1.05843 
 2014 Feb 28 23:12:28    4       0       -0.140078 1.05206   -0.166048 1.06222   -0.175239 1.06339   -0.111316 1.03677   -0.195918 1.06235   -0.137534 1.06092   -0.0801281 1.0413    -0.19118  1.05803 
+
+# temperature: nan - performed in a 40 degree C chamber 
+# Comment: Recal after replacing voltage reference pot with fixed resistors.
+#  Date              Gain  Bipolar  CH0-off   CH0-slope  CH1-off   CH1-slope  CH2-off   CH2-slope  CH3-off   CH3-slope  CH4-off   CH4-slope  CH5-off   CH5-slope  CH6-off   CH6-slope  CH7-off   CH7-slope
+2014 Apr 10 20:33:32    4       0       -0.122694 1.05162   -0.148786 1.06182   -0.157739 1.0629    -0.0943007 1.03635   -0.178768 1.06191   -0.120473 1.0605    -0.0627494 1.04085   -0.174028 1.05764 
+2014 Apr 10 21:27:37    2       1       -0.106462 1.05189   -0.111538 1.0621    -0.114922 1.06331   -0.0958561 1.03668   -0.141822 1.06228   -0.0315016 1.06087   -0.0124317 1.04118   -0.109034 1.0579  
+2014 Apr 10 21:59:54    2       0       -0.243162 1.05091   -0.295281 1.06109   -0.313474 1.06224   -0.186506 1.03562   -0.355189 1.06119   -0.23885  1.05979   -0.123192 1.04012   -0.346329 1.05688 
+2014 Apr 10 22:37:46    1       1       -0.2125   1.05085   -0.223018 1.06122   -0.229679 1.06221   -0.191273 1.03564   -0.283424 1.06115   -0.0625628 1.05979   -0.0253642 1.04017   -0.217365 1.05669 
