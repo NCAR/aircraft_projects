@@ -1888,21 +1888,18 @@
         <parameter name="SerialNumber" type="string" value="UHSAS001"/>
       </serialSensor>
     </dsm>
+
     <dsm derivedData="sock::7071" id="90" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
-        <calfile file="A2D001.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
-        <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_RWO" units="deg_C"/>
-        </sample>
-        <sample id="2" rate="10">
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300">
+        <calfile file="A2D149505.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <parameter name="rate" type="int" value="100"/>
+        <sample id="1" rate="25">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="4"/>
           <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="1"/>
