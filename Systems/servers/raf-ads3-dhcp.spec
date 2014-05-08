@@ -1,7 +1,7 @@
 Summary: DHCP configuration for server on RAF aircraft
 Name: raf-ads3-dhcp
 Version: 1.0
-Release: 30
+Release: 31
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/

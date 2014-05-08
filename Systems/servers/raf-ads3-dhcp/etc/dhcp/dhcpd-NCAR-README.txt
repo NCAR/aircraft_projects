@@ -13,7 +13,7 @@ The raf-ads3-dhcp.spec file builds three RPMS:
 
 /etc/dhcpd.conf is owned by the dhcp RPM which comes with RedHat.
 
-Two RPMs cannot own the same file, so rad-*-dhcp cannot have
+Two RPMs cannot own the same file, so raf-*-dhcp cannot have
 its own version of /etc/dhcpd.conf.  Instead, raf-*-dhcp contains
 a triggerin script, which is run when the package is installed.
 This script checks the system /etc/dhcpd.conf file, and replaces
