@@ -420,10 +420,10 @@
         <variable longname="equipment id" name="equipment_id" units=""/>
       </sample>
     </arincSensor>
-    <serialSensor ID="D_GPS" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+    <serialSensor ID="D_GPS" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <message length="0" position="beg" separator="\xaa\x44\x12"/>
     </serialSensor>
-    <serialSensor ID="Novatel_GPS" baud="115200" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
+    <serialSensor ID="Novatel_GPS" baud="57600" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
 
 <!-- GGA record -->
       <sample id="1" rate="5">
@@ -1825,7 +1825,7 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
-    <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmGustPod" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
       <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
         <sample id="1">
