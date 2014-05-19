@@ -1062,11 +1062,108 @@
       </sample>
 -->
     </sensor>
-    <sensor ID="MTP" class="UDPSocketSensor" devicename="usock::30101">
-        <sample id="1" rate="1" scanfFormat="MTP,%*dT%*d,%d,%d,%d">
-            <variable longname="Channel 1 Counts" name="CHN1CNT" units="count"/>
-            <variable longname="Channel 2 Counts" name="CHN2CNT" units="count"/>
-            <variable longname="Channel 3 Counts" name="CHN3CNT" units="count"/>
+    <sensor ID="MTPATP" class="UDPSocketSensor" devicename="usock::30102" suffix="_MTP">
+        <sample id="1" rate="1" scanfFormat="MTPP,%4d%2d%2dT%2d%2d%2d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="MTP ATP Year" name="PYEAR" units="count"/>
+            <variable longname="MTP ATP Month" name="PMONTH" units="count"/>
+            <variable longname="MTP ATP Day" name="PDAY" units="count"/>
+            <variable longname="MTP ATP Hour" name="PHOUR" units="count"/>
+            <variable longname="MTP ATP Minute" name="PMIN" units="count"/>
+            <variable longname="MTP ATP Second" name="PSEC" units="count"/>
+            <variable length="33" longname="MTP ATP Altitude" name="ALT" units="km"/>
+            <variable length="33" longname="MTP ATP Temperature" name="TEMP" units="deg_K"/>
+        </sample>
+    </sensor>
+    <sensor ID="MTP" class="UDPSocketSensor" devicename="usock::30101" suffix="_MTP">
+        <sample id="1" rate="1" scanfFormat="MTP,%4d%2d%2dT%2d%2d%2d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d">
+            <variable longname="MTP Scan Year" name="SYEAR" units="count"/>
+            <variable longname="MTP Scan Month" name="SMONTH" units="count"/>
+            <variable longname="MTP Scan Day" name="SDAY" units="count"/>
+            <variable longname="MTP Scan Hour" name="SHOUR" units="count"/>
+            <variable longname="MTP Scan Minute" name="SMIN" units="count"/>
+            <variable longname="MTP Scan Second" name="SSEC" units="count"/>
+            <variable longname="MTP Scan Avg Pitch" name="SAPITCH" units="degree"/>
+            <variable longname="MTP Scan RMS Pitch" name="SRPITCH" units="degree"/>
+            <variable longname="MTP Scan Avg Roll" name="SAROLL" units="degree"/>
+            <variable longname="MTP Scan RMS Roll" name="SRROLL" units="degree"/>
+            <variable longname="MTP Scan Avg Pressure Altitude" name="SAPALT" units="km"/>
+            <variable longname="MTP Scan RMS Pressure Altitude" name="SRPALT" units="km"/>
+            <variable longname="MTP Scan Avg Ambient Air Temp" name="SAAT" units="deg_K"/>
+            <variable longname="MTP Scan RMS Ambient Air Temp" name="SRAT" units="deg_K"/>
+            <variable longname="MTP Scan Avg Latitude" name="SALAT" units="degree_N"/>
+            <variable longname="MTP Scan RMS Latitude" name="SRLAT" units="degree_N"/>
+            <variable longname="MTP Scan Avg Longitude" name="SALON" units="degree_E"/>
+            <variable longname="MTP Scan RMS Longitude" name="SRLON" units="degree_E"/>
+            <variable longname="MTP Scan Motor Commanded Position" name="SMCMD" units="count"/>
+            <variable longname="MTP Scan Motor Encoded Position" name="SMENC" units="count"/>
+            <variable longname="MTP Angle 1 Channel 1 Counts" name="A1CHN1CNT" units="count"/>
+            <variable longname="MTP Angle 1 Channel 2 Counts" name="A1CHN2CNT" units="count"/>
+            <variable longname="MTP Angle 1 Channel 3 Counts" name="A1CHN3CNT" units="count"/>
+            <variable longname="MTP Angle 2 Channel 1 Counts" name="A2CHN1CNT" units="count"/>
+            <variable longname="MTP Angle 2 Channel 2 Counts" name="A2CHN2CNT" units="count"/>
+            <variable longname="MTP Angle 2 Channel 3 Counts" name="A2CHN3CNT" units="count"/>
+            <variable longname="MTP Angle 3 Channel 1 Counts" name="A3CHN1CNT" units="count"/>
+            <variable longname="MTP Angle 3 Channel 2 Counts" name="A3CHN2CNT" units="count"/>
+            <variable longname="MTP Angle 3 Channel 3 Counts" name="A3CHN3CNT" units="count"/>
+            <variable longname="MTP Angle 4 Channel 1 Counts" name="A4CHN1CNT" units="count"/>
+            <variable longname="MTP Angle 4 Channel 2 Counts" name="A4CHN2CNT" units="count"/>
+            <variable longname="MTP Angle 4 Channel 3 Counts" name="A4CHN3CNT" units="count"/>
+            <variable longname="MTP Angle 5 Channel 1 Counts" name="A5CHN1CNT" units="count"/>
+            <variable longname="MTP Angle 5 Channel 2 Counts" name="A5CHN2CNT" units="count"/>
+            <variable longname="MTP Angle 5 Channel 3 Counts" name="A5CHN3CNT" units="count"/>
+            <variable longname="MTP Angle 6 Channel 1 Counts" name="A6CHN1CNT" units="count"/>
+            <variable longname="MTP Angle 6 Channel 2 Counts" name="A6CHN2CNT" units="count"/>
+            <variable longname="MTP Angle 6 Channel 3 Counts" name="A6CHN3CNT" units="count"/>
+            <variable longname="MTP Angle 7 Channel 1 Counts" name="A7CHN1CNT" units="count"/>
+            <variable longname="MTP Angle 7 Channel 2 Counts" name="A7CHN2CNT" units="count"/>
+            <variable longname="MTP Angle 7 Channel 3 Counts" name="A7CHN3CNT" units="count"/>
+            <variable longname="MTP Angle 8 Channel 1 Counts" name="A8CHN1CNT" units="count"/>
+            <variable longname="MTP Angle 8 Channel 2 Counts" name="A8CHN2CNT" units="count"/>
+            <variable longname="MTP Angle 8 Channel 3 Counts" name="A8CHN3CNT" units="count"/>
+            <variable longname="MTP Angle 9 Channel 1 Counts" name="A9CHN1CNT" units="count"/>
+            <variable longname="MTP Angle 9 Channel 2 Counts" name="A9CHN2CNT" units="count"/>
+            <variable longname="MTP Angle 9 Channel 3 Counts" name="A9CHN3CNT" units="count"/>
+            <variable longname="MTP Angle 10 Channel 1 Counts" name="A10CHN1CNT" units="count"/>
+            <variable longname="MTP Angle 10 Channel 2 Counts" name="A10CHN2CNT" units="count"/>
+            <variable longname="MTP Angle 10 Channel 3 Counts" name="A10CHN3CNT" units="count"/>
+
+<!-- M01 line -->
+            <variable longname="MTP Engineering Multiplxr Vm08 Counts" name="VM08CNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr Vvid Counts" name="VVIDCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr Vp08 Counts" name="VP08CNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr Vmtr Counts" name="VMTRCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr Vsyn Counts" name="VSYNCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr Vp15 Counts" name="VP15CNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr Vp05 Counts" name="VP05CNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr VM15 Counts" name="VM15CNTE" units="count"/>
+
+<!-- M02 line -->
+            <variable longname="MTP Engineering Multiplxr Acceler Counts" name="ACCPCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T Data Counts" name="TDATCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T Motor Counts" name="TMTRCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T Pod Air Counts" name="TAIRCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T Scan Counts" name="TSMPCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T Power Supply Counts" name="TPSPCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T N/C Counts" name="TNCCNTE" units="count"/>
+            <variable longname="MTP Engineering Multiplxr T Synth Counts" name="TSYNCNTE" units="count"/>
+
+<!-- Pt line -->
+            <variable longname="MTP Platinum Multiplxr R350 Counts" name="TR350CNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr Target Center Temp Counts" name="TTCNTRCNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr Target Edge Temp Counts" name="TTEDGCNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr Polyethelene Window Temp Counts" name="TWINCNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr Mixer Temperature Counts" name="TMIXCNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr Amplifier Temp Counts" name="TAMPCNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr Noise Diode Temp Counts" name="TNDCNTP" units="count"/>
+            <variable longname="MTP Platinum Multiplxr R600 Counts" name="TR600CNTP" units="count"/>
+
+<!-- E line -->
+            <variable longname="MTP Target 1 Channel 1 Counts" name="T1CHN1CNT" units="count"/>
+            <variable longname="MTP Target 1 Channel 2 Counts" name="T1CHN2CNT" units="count"/>
+            <variable longname="MTP Target 1 Channel 3 Counts" name="T1CHN3CNT" units="count"/>
+            <variable longname="MTP Target 2 Channel 1 Counts" name="T2CHN1CNT" units="count"/>
+            <variable longname="MTP Target 2 Channel 2 Counts" name="T2CHN2CNT" units="count"/>
+            <variable longname="MTP Target 2 Channel 3 Counts" name="T2CHN3CNT" units="count"/>
         </sample> 
     </sensor>
     <sensor ID="NOAAUCATS" class="UDPSocketSensor" devicename="usock::30102">
@@ -1394,7 +1491,6 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-
     <sensor ID="SIDS" class="raf.SidsNetSensor">
       <parameter name="RESOLUTION" type="int" value="25"/>
       <sample id="1" rate="1">
@@ -1404,20 +1500,20 @@
         <variable longname="SIDS Rejected Particle Count" name="REJDOF" units="count"/>
       </sample>
     </sensor>
-
     <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41002">
         <sample id="1" rate="50">
-            <variable name="SEQ1" units="none" longname="LAMS Sequence Number, Beam 1"/>
-            <variable name="BEAM1" length="512" units="Mhz" longname="LAMS Histogram Averages, Beam 1"/>
+            <variable longname="LAMS Sequence Number, Beam 1" name="SEQ1" units="none"/>
+            <variable length="512" longname="LAMS Histogram Averages, Beam 1" name="BEAM1" units="Mhz"/>
         </sample>
         <sample id="2" rate="50">
-            <variable name="SEQ2" units="none" longname="LAMS Sequence Number, Beam 1"/>
-            <variable name="BEAM2" length="512" units="Mhz" longname="LAMS Histogram Maximums, Beam 2"/>
+            <variable longname="LAMS Sequence Number, Beam 1" name="SEQ2" units="none"/>
+            <variable length="512" longname="LAMS Histogram Maximums, Beam 2" name="BEAM2" units="Mhz"/>
         </sample>
         <sample id="3" rate="50">
-            <variable name="SEQ3" units="none" longname="LAMS Sequence Number, Beam 1"/>
-            <variable name="BEAM3" length="512" units="Mhz" longname="LAMS Histogram Maximums, Beam 3"/>
+            <variable longname="LAMS Sequence Number, Beam 1" name="SEQ3" units="none"/>
+            <variable length="512" longname="LAMS Histogram Maximums, Beam 3" name="BEAM3" units="Mhz"/>
         </sample>
+
 <!--
         <sample id="4" rate="50">
             <variable longname="LAMS Sequence Number, Beam 4" name="SEQ4" units="none"/>
@@ -1425,7 +1521,6 @@
         </sample>
 -->
     </sensor>
-
     <serialSensor ID="PIC1301_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC1301">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %*d %*f">
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
@@ -1608,11 +1703,14 @@
     </server>
     <dsm id="99" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
+
 <!--          <sensor IDREF="SIDS" devicename="usock::41001" id="200" suffix="_SIDS"/> -->
       <sensor IDREF="LAMS3" devicename="usock::41002" id="300" suffix="_LAMS"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <sensor IDREF="MTP" devicename="usock::30101" id="500" suffix="_MTP"/>
+      <sensor IDREF="MTPATP" devicename="usock::30102" id="700" suffix="_MTP"/>
     </dsm>
     <dsm derivedData="sock::7071" id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
@@ -1834,6 +1932,9 @@
       </serialSensor>
       <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS6" id="120" suffix="_GP">
           <parameter name="INSTRUMENT" type="string" value="GUSTPOD"/>
+          <parameter name="LEVER_ARM_X" type="int" value="564"/>
+          <parameter name="LEVER_ARM_Y" type="int" value="730"/>
+          <parameter name="LEVER_ARM_Z" type="int" value="-284"/>
       </serialSensor>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130" suffix="_GP">
         <sample id="1">
@@ -1888,7 +1989,6 @@
         <parameter name="SerialNumber" type="string" value="UHSAS001"/>
       </serialSensor>
     </dsm>
-
     <dsm derivedData="sock::7071" id="90" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
       <output class="RawSampleOutputStream">
