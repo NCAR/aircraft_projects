@@ -1,0 +1,61 @@
+pagepng <- function(filename)
+{
+    png(filename=filename,width=10.3,height=8,units="in",res=300)
+}
+
+project_plots <- function(dataDir=Sys.getenv("SONDE_DATA"),plotDir=file.path(dataDir,"postflight"))
+{
+    dpar(start="2012 1 1 00:00",end="2019 1 1 00:00")
+
+    # set plot suffix to trailing portion of dataDir
+    plotSuffix <- dataDir
+    psep <- unlist(gregexpr(.Platform$file.sep,dataDir,fixed=TRUE))
+    if (tail(psep,1) == nchar(dataDir)) psep <- tail(psep,2)[1]
+    else psep <- tail(psep,1)
+    if (!is.null(psep)) plotSuffix <- substring(dataDir,psep+1)
+
+    xs <- readSoundings(dir=dataDir)
+    ns <- length(xs)
+
+    if (ns == 0)
+        stop(paste("No data found between",format(dpar("start")),"and",format(dpar("end"))))
+
+    # t1 <- positions(xs[[1]])[1]
+    # plotSuffix <- format(t1,format="%Y%m%d_%H%M")
+
+    vars <- c("T","RH","Wspd","Vz")
+    col = c("black", "red", "blue", "green", "purple")
+
+    # Make level and contour plots
+    for (type in c("level","contour")) {
+        for (var in vars) {
+            pagepng(filename=file.path(plotDir,paste0(var,"_",type,"_",plotSuffix,".png")))
+
+            units <- units(xs[[1]][,var])
+            scontour(xs,"P",var,contour=(type=="contour"))
+            dev.off()
+        }
+    }
+
+    # plot layout on page, nr X nc
+    nr <- 2L
+    if (ns < 3) nr <- 1L
+    nc <- 2L
+    # if (ns > 4) nc <- 4L
+    np <- 0
+    browser()
+    for (sname in names(xs)) {
+        if (np %% (nc*nr) == 0) {
+            if (np > 0) dev.off()
+            pagepng(filename=file.path(plotDir,paste0("profiles_",np,"_",plotSuffix,".png")))
+            par(mfrow=c(nr,nc))
+        }
+        sprofile(xs[[sname]][,c(vars,"P")],title=sname,col=col)
+        np <- np + 1
+        cat("np=",np,"\n")
+        cat("page=",paste(par("page"),collapse=","),"\n")
+        cat("mfg=",paste(par("mfg"),collapse=","),"\n")
+    }
+    dev.off()
+
+}
