@@ -27,7 +27,7 @@ project_plots <- function(dataDir=Sys.getenv("SONDE_DATA"),plotDir=file.path(dat
     col = c("black", "red", "blue", "green", "purple")
 
     # Make level and contour plots
-    for (type in c("level","contour")) {
+    for (type in c("level")) {
         for (var in vars) {
             pagepng(filename=file.path(plotDir,paste0(var,"_",type,"_",plotSuffix,".png")))
 
@@ -37,25 +37,31 @@ project_plots <- function(dataDir=Sys.getenv("SONDE_DATA"),plotDir=file.path(dat
         }
     }
 
-    # plot layout on page, nr X nc
-    nr <- 2L
-    if (ns < 3) nr <- 1L
-    nc <- 2L
-    # if (ns > 4) nc <- 4L
-    np <- 0
-    browser()
-    for (sname in names(xs)) {
-        if (np %% (nc*nr) == 0) {
-            if (np > 0) dev.off()
-            pagepng(filename=file.path(plotDir,paste0("profiles_",np,"_",plotSuffix,".png")))
-            par(mfrow=c(nr,nc))
-        }
-        sprofile(xs[[sname]][,c(vars,"P")],title=sname,col=col)
-        np <- np + 1
-        cat("np=",np,"\n")
-        cat("page=",paste(par("page"),collapse=","),"\n")
-        cat("mfg=",paste(par("mfg"),collapse=","),"\n")
-    }
-    dev.off()
+    if (FALSE) {
 
+        # plot layout on page, nr X nc
+        nr <- 1L
+        if (ns < 3) nr <- 1L
+        nc <- 2L
+        # if (ns > 4) nc <- 4L
+        np <- 0
+
+        xlim <- list(RH=c(0,100),T=c(-80,30),Vz=c(-60,60),Wspd=c(-60,60))
+
+        for (sname in names(xs)) {
+            if (np %% (nc*nr) == 0) {
+                if (np > 0) {
+                    mtext(paste(plotSuffix,"Profiles"),outer=TRUE,side=3,cex=1.2)
+                    dev.off()
+                }
+                pagepng(filename=file.path(plotDir,paste0("profiles_",np,"_",plotSuffix,".png")))
+                par(mfrow=c(nr,nc))
+            }
+            sprofile(xs[[sname]][,c(vars,"P")],title=sname,col=col,xlim=xlim)
+            np <- np + 1
+        }
+        mtext(paste(plotSuffix,"Profiles"),outer=TRUE,side=3,cex=1.2)
+        dev.off()
+    }
+    NULL
 }
