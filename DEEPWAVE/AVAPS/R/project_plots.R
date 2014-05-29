@@ -14,7 +14,7 @@ project_plots <- function(dataDir=Sys.getenv("SONDE_DATA"),plotDir=file.path(dat
     else psep <- tail(psep,1)
     if (!is.null(psep)) plotSuffix <- substring(dataDir,psep+1)
 
-    xs <- readSoundings(dir=dataDir)
+    xs <- readSoundings(dir=dataDir,file="D%Y%m%d_%H%M%S_P\\.[0-9]+")
     ns <- length(xs)
 
     if (ns == 0)

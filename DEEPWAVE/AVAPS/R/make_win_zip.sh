@@ -3,7 +3,7 @@
 zipfile=$PWD/deepwave_R.zip
 rm -f $zipfile
 
-echo $zipfile
+# echo $zipfile
 
 tmpdir=$(mktemp -d /tmp/mkzip_XXXXXX)
 trap "{ rm -rf $tmpdir; }" EXIT
@@ -16,4 +16,6 @@ cd $tmpdir
 zip $zipfile * .Rprofile
 
 echo "zip file: $zipfile"
+
+cp $zipfile /net/ftp/pub/temp/users/maclean/DEEPWAVE
 
