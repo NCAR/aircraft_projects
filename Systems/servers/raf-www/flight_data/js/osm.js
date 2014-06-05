@@ -229,9 +229,8 @@ function acMap() {
 		var vis = (g.name.search("Track") != -1)? true:
 			(cookieJar.getLayerCookie(g.name));
 
-		var vector = new OpenLayers.Layer.GML( 
+		var vector = new OpenLayers.Layer.Vector( 
 			g.name,
-			g.href,
 			{
 				visibility: vis,
 				projection: llProj,
