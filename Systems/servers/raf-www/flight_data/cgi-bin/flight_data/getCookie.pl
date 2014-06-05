@@ -59,7 +59,7 @@ else {
 			$plat_vars{'platform'} = $platform_cookie;
 		}
 	}
-	$plat_vars{'openlayers'}="http://openlayers.org/api/2.11/OpenLayers.js";
+	$plat_vars{'openlayers'}="http://openlayers.org/api/2.12/OpenLayers.js";
 	$plat_vars{'jquery'}="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js";
 	$plat_vars{'jqueryui'}="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js";
 	$plat_vars{'jquerycss'}="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/black-tie/jquery-ui.css";
