@@ -142,12 +142,12 @@ print ""
 
 data_dir,ncfilename = os.path.split(ncfile)
 data_dir,kmlfilename = os.path.split(kmlfile)
-zip_data_filename = project+"_"+flight+".zip"
+zip_data_filename = project+flight+".zip"
 print "data_dir = "+data_dir
 print "ncfilename = "+ncfilename
 print "kmlfilename = "+kmlfilename
 # Make sure that there is not a zip file already there ("overwrite")
-command = "cd "+data_dir+"; rm "+project+"_"+flight+".zip"
+command = "cd "+data_dir+"; rm "+project+flight+".zip"
 os.system(command)
 command = "cd "+data_dir+"; zip " + zip_data_filename + " " + ncfilename + " " + kmlfilename 
 print ""
