@@ -104,6 +104,31 @@ if kmlfile == '' :
   print "Aborting..."
   sys.exit(0)
 
+#IWG1 file
+iwg1list = glob.glob(nc_dir+'*'+flight+'.iwg1')
+if iwg1list.__len__() == 1:
+  iwg1file = iwg1list[0]
+elif iwg1list.__len__() == 0:
+  print "No files found matching form: "+nc_dir+'*'+flight+'*.iwg1'
+  print "aborting..."
+  sys.exit(0)
+else:
+  print "More than one file found.  Stepping through files, please select the right one"
+  iwg1file = ''
+  i = 0
+  while iwg1file == '' :
+    ans = raw_input(iwg1list[i]+'? (Y/N)')
+    if ans == 'Y' or ans == 'y':
+      iwg1file = iwg1list[i]
+    if i < iwg1list.__len__() - 1: 
+      i = i + 1
+    else:
+      i = 0
+if iwg1file == '' :
+  print "No IWG1 file identified!"
+  print "Aborting..."
+  sys.exit(0)
+
 #Raw Data File
 rawlist = glob.glob(raw_dir+'*'+flight+'*.ads')
 if rawlist.__len__() == 1:
@@ -132,6 +157,7 @@ if rawfile == '' :
 print "**************************"
 print "NetCDF file = "+ncfile
 print "KML file = "+kmlfile
+print "IWG1 file = "+iwg1file
 print "Raw ADS file = "+rawfile
 print "**************************"
 print ""
@@ -142,14 +168,16 @@ print ""
 
 data_dir,ncfilename = os.path.split(ncfile)
 data_dir,kmlfilename = os.path.split(kmlfile)
+data_dir,iwg1filename = os.path.split(iwg1file)
 zip_data_filename = project+flight+".zip"
 print "data_dir = "+data_dir
 print "ncfilename = "+ncfilename
 print "kmlfilename = "+kmlfilename
+print "iwg1filename = "+iwg1filename
 # Make sure that there is not a zip file already there ("overwrite")
 command = "cd "+data_dir+"; rm "+project+flight+".zip"
 os.system(command)
-command = "cd "+data_dir+"; zip " + zip_data_filename + " " + ncfilename + " " + kmlfilename 
+command = "cd "+data_dir+"; zip " + zip_data_filename + " " + ncfilename + " " + kmlfilename + " " + iwg1filename
 print ""
 print "Zipping up netCDF and kml files with command:"
 print command
