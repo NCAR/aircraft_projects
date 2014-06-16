@@ -605,6 +605,14 @@
         <prompt rate="1" string="RB\r"/>
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
+    <sensor ID="PTRMS" class="UDPSocketSensor" devicename="usock::30106" suffix="_ACD">
+        <sample id="1" rate="1" scanfFormat="XPTRMS,%f,%f,%f,%f">
+            <variable longname="First PTRMS counts variable" name="PTRMS1" units="ncps"/>
+            <variable longname="Second PTRMS counts variable" name="PTRMS2" units="ncps"/>
+            <variable longname="Third PTRMS counts variable" name="PTRMS3" units="ncps"/>
+            <variable longname="Fourth PTRMS counts variable" name="PTRMS4" units="ncps"/>
+        </sample>
+    </sensor>
     <sensor ID="TOGA" class="UDPSocketSensor" devicename="usock::30120" suffix="_TOGA">
       <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="TOGA HCN" name="HCN" units="pptv"/>
@@ -1316,7 +1324,9 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor IDREF="SMPS" devicename="usock::30104" id="300" suffix="_SMPS"/></dsm>
+      <sensor IDREF="SMPS" devicename="usock::30104" id="300" suffix="_SMPS"/>
+      <sensor IDREF="PTRMS" devicename="usock::30106" id="500" suffix="_ACD"/>
+    </dsm>
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_319"/>
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
