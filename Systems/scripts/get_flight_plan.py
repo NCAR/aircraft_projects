@@ -43,13 +43,13 @@ plane,tail = aircraft.split("_",1)
 local_image_dir  = '/var/www/html/flight_data/GE/'
 image_type       = plane+'_Flight_Plan'
 busy_file        = 'BUSY_'+image_type
-ftp_site         = 'catalog1.eol.ucar.edu'
+ftp_site         = 'catalog.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
 ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
 label            = 'sat_ir_label.jpg'
 #Assumes filename form is prefixYYYYMMDD*postfix
-prefix           = 'ge.NSF_NCAR_'+plane+'.'
+prefix           = 'gis.NSF_NCAR_'+plane+'.'
 postfix		 = '.flight_plan.kml'
 osm_file_name    = image_type+'.kml'
 num_imgs_to_get  = 1 # Script will backfill this many images for loops

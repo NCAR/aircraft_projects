@@ -55,7 +55,7 @@ except:
 local_image_dir  = '/var/www/html/flight_data/images/'
 image_type       = 'cappi_cweb'
 busy_file        = local_image_dir+'BUSY_'+image_type
-ftp_site         = 'catalog1.eol.ucar.edu'
+ftp_site         = 'catalog.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
 ftp_dir          = '/pub/incoming/OSM/'+aircraft+'/CAPPI/'

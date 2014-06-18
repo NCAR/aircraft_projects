@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# This script attempts to get the latest satellite image from the ground.
+# This script attempts to get the latest flight plan from the ground.
 #  It does so by getting a listing of available files, and finding the most 
 #  recent file.  It then compares the file name with the latest gotten file 
 #  name stored in the db and if it's different, it pulls the file and stores 
@@ -13,17 +13,13 @@
 #  greater than all other images.
 #
 # This is set up to run out of a cron job every N minutes
-# N * * * * /home/local/Systems/scripts/get_sat_image.cron.py
+# N * * * * /home/local/Systems/scripts/get_flight_plan.py
 #
 #  TODO:  
 #         Refactor into python modules for better coding practice
 #         replace all prints with syslog.syslog()
-#	  set up to take arguments:
-#             Image type (IR, VIS, lightning, radar, etc)
-#             filename convention on ftp site (e.g. ir_image_*.jpg)
-#             "latest" name on acserver (e.g. latest_ira.jpg)
 #
-#  COPYRIGHT: University Corporation for Atmospheric Research, 2010-2012
+#  COPYRIGHT: University Corporation for Atmospheric Research, 2010-2013
 #
 
 import os
@@ -44,24 +40,23 @@ except:
 plane,tail = aircraft.split("_",1)
 
 # Initialization - change this for different file types/names/locations.
-local_image_dir  = '/var/www/html/flight_data/images/'
-image_type       = '4KMVIS'
+local_image_dir  = '/var/www/html/flight_data/GE/'
+image_type       = plane+'_drop_plan'
 busy_file        = 'BUSY_'+image_type
 ftp_site         = 'catalog.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
-#ftp_dir          = '/pub/incoming/OSM/C130/'
 ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
 label            = 'sat_ir_label.jpg'
 #Assumes filename form is prefixYYYYMMDD*postfix
-prefix           = 'ops.MTSAT-2.'  
-postfix		 = 'ch1_vis.jpg' 
-osm_file_name    = "latest_4kmvis.jpg"
-num_imgs_to_get  = 5 # Script will backfill this many images for loops
+prefix           = 'gis.NSF_NCAR_'+plane+'.'
+postfix		 = '.drop_plan.kml'
+osm_file_name    = image_type+'.kml'
+num_imgs_to_get  = 1 # Script will backfill this many images for loops
 # End of Initialization section
 
 
-print "Starting get_ir_image_cron.py for getting " + image_type + " imagery"
+print "Starting "+os.path.basename( __file__ ) + " for getting " + image_type + " imagery"
 
 gmt=time.gmtime()
 
@@ -102,19 +97,24 @@ os.system(cmd)
 listing=os.listdir('.')
 
 # Get list of current images from ftp site
+print 'opening FTP connection'
 try:
-    print 'opening FTP connection '
-
     ftp = ftplib.FTP(ftp_site)
+except:
+    print 'Error Connecting to ftp server: ' + ftp_site
+    os.remove(busy_file)
+    sys.exit(1)
+
+try:
     ftp.login(ftp_login, ftp_passwd)
     ftp.cwd(ftp_dir)
 
     ftplist = []
-    form=prefix + str(year) + monthstr + yesterdaystr + "[0-9][0-9][0-9][0-9]." + postfix
+    form=prefix + str(year) + monthstr + yesterdaystr + "*" + postfix
     ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + todaystr +  "[0-9][0-9][0-9][0-9]." + postfix
+    form=prefix + str(year) + monthstr + todaystr + "*" + postfix
     ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + tomorrowstr + "[0-9][0-9][0-9][0-9]." + postfix
+    form=prefix + str(year) + monthstr + tomorrowstr + "*" + postfix
     ftp.dir(form, ftplist.append)
 
 except ftplib.all_errors, e:
@@ -140,7 +140,7 @@ print "last file on ftp site is: " + latest
 
 # Check to see if we've got the most recent file
 if latest in listing:
-    print "Already have file" + latest
+    print "Already have file " + latest
     os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
@@ -153,6 +153,7 @@ try:
     print 'setting it as overlay image for OSM.'
     command = "cp "+latest+" "+osm_file_name
     os.system(command)
+# Using make_label.py now.
 #    command = "wget ftp://"+ftp_site+":"+ftp_dir+label+" -O " + label
 #    os.system(command)
 #    print 'obtained image label: '+label

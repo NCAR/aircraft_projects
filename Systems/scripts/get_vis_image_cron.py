@@ -58,7 +58,7 @@ except:
 local_image_dir  = '/var/www/html/flight_data/images/'
 image_type       = 'vis'
 busy_file        = 'BUSY_'+image_type
-ftp_site         = 'catalog1.eol.ucar.edu'
+ftp_site         = 'catalog.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
 #ftp_dir          = '/pub/incoming/OSM/C130/'
