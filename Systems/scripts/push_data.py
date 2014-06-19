@@ -219,7 +219,7 @@ except ftplib.all_errors as e:
     print 'Error writing nc/kml data file to eol server'
     print e
     ftp.quit()
-    sys.exit(1)
+#    sys.exit(1)
 
 # Put zipped raw files to EOL server
 try: 
@@ -242,7 +242,7 @@ except ftplib.all_errors as e:
     print 'Error writing raw data file to eol server'
     print e
     ftp.quit()
-    sys.exit(1)
+#    sys.exit(1)
 
 # Put unzipped data files to field server
 try: 
@@ -270,7 +270,7 @@ except ftplib.all_errors as e:
     print 'Error writing data file to local ftp server'
     print e
     ftp.quit()
-    sys.exit(1)
+#    sys.exit(1)
 
 sys.exit(1)
 
