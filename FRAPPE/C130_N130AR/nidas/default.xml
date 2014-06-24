@@ -613,6 +613,17 @@
             <variable longname="Fourth PTRMS counts variable" name="PTRMS4" units="ncps"/>
         </sample>
     </sensor>
+    <sensor ID="PILS" class="UDPSocketSensor" devicename="usock::30125" suffix="_PILS">
+        <sample id="1" rate="1" scanfFormat="PILS,%fT%f,%f,%f,%f,%f">
+            <variable longname="Date" name="DATE" units="yyyymmdd"/>
+            <variable longname="Time" name="TIME" units="HHMMSS"/>
+            <variable longname="Pressure Drop across Impactor" name="DPI" units="psi"/>
+            <variable longname="Pressure Drop across Inlet Filter" name="DPF" units="psi"/>
+            <variable longname="Temperature of Tip" name="TTIP" units="deg_C"/>
+            <variable longname="Temperature of Heater" name="THEATER" units="deg_C"/>
+            <variable longname="Current auto-collector sample vial" name="SAMPNUM" units="count"/>
+        </sample>
+    </sensor>
     <sensor ID="TOGA" class="UDPSocketSensor" devicename="usock::30120" suffix="_TOGA">
       <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="TOGA HCN" name="HCN" units="pptv"/>
