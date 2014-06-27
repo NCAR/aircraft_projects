@@ -1337,6 +1337,8 @@
       </output>
       <sensor IDREF="SMPS" devicename="usock::30104" id="300" suffix="_SMPS"/>
       <sensor IDREF="PTRMS" devicename="usock::30106" id="500" suffix="_ACD"/>
+      <sensor IDREF="PILS" devicename="usock::30125" id="700" suffix="_PILS"/>
+      <sensor IDREF="NONOYO3" devicename="usock::30107" id="900" suffix="_ACD"/>
     </dsm>
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_319"/>
@@ -1492,7 +1494,7 @@
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_FWDFS1" units="deg_C"/>
+                <variable longname="A2D Temperature" name="A2DTEMP_320A1" units="deg_C"/>
             </sample>
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
@@ -1518,7 +1520,7 @@
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_VID0" units="deg_C"/>
+                <variable longname="A2D Temperature" name="A2DTEMP_321A0" units="deg_C"/>
             </sample>
         <sample id="3" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
@@ -1549,7 +1551,7 @@
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_VID1" units="deg_C"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_321A1" units="deg_C"/>
         </sample>
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
@@ -1748,42 +1750,38 @@
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_318A1" units="deg_C"/>
         </sample>
-        <sample id="2" rate="10">
+        <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="5"/>
           <variable longname="" name="XUVP" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="">
+            <poly units="hPa">
               <calfile file="XUVP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-        </sample>
-        <sample id="3" rate="100">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="UV Hygrometer Temperture Spare" name="XUVT3" units="V">
+          <variable longname="UV Hygrometer Temperture #3" name="XUVT3" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
+            <poly units="Deg_C">
               <calfile file="XUVT3.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="UV Hygrometer Temperature Spare" name="XUVT2" units="V">
+          <variable longname="UV Hygrometer Temperature #2" name="XUVT2" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
+            <poly units="Deg_C">
               <calfile file="XUVT2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="UV Hygrometer Cell Temperature" name="XUVT1" units="V">
+          <variable longname="UV Hygrometer Cell Temperature #1" name="XUVT1" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
+            <poly units="Deg_C">
               <calfile file="XUVT1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
@@ -1791,7 +1789,7 @@
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
+            <poly units="Deg_C">
               <calfile file="XUVI.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
