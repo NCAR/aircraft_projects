@@ -1166,6 +1166,23 @@
             <variable longname="NIRZ 2000 nm Counts" name="NIRZ2000" units="count"/>
         </sample>
     </sensor>
+    <sensor ID="SO2" class="UDPSocketSensor" devicename="usock::30121" suffix="_CU">
+        <sample id="1" rate="1" scanfFormat="SO2,%f">
+            <variable longname="Sulfur Dioxide" name="SO2" units="pptv"/>
+        </sample>
+    </sensor>
+    <sensor ID="HOX1" class="UDPSocketSensor" devicename="usock::30122" suffix="_CU">
+        <sample id="1" rate="1" scanfFormat="HOX1,%f,%f">
+            <variable longname="Hydroxyl radical" name="OH" units="molecules/cc"/>
+            <variable longname="Sulfuric Acid" name="H2SO4" units="molecules/cc"/>
+        </sample>
+    </sensor>
+    <sensor ID="HOX2" class="UDPSocketSensor" devicename="usock::30123" suffix="_CU">
+        <sample id="1" rate="1" scanfFormat="HOX2,%f,%f">
+            <variable longname="Sum of HO2 and RO2" name="HO2RO2" units="pptv"/>
+            <variable longname="Hydroperoxy radical" name="HO2" units="pptv"/>
+        </sample>
+    </sensor>
     <sensor ID="Fast2DC" class="raf.TwoD64_USB">
         <parameter name="TAS_RATE" type="int" value="10"/>
         <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
@@ -1543,7 +1560,11 @@
       <sensor IDREF="NONOYO3" devicename="usock::30107" id="900" suffix="_ACD"/>
       <sensor IDREF="GTCIMS" devicename="usock::30110" id="1100" suffix="_GTCIMS"/>
       <sensor IDREF="PCIMS" devicename="usock::30111" id="1300" suffix="_PCIMS"/>
-      <sensor IDREF="HARP" devicename="usock::30108" id="1500"/></dsm>
+      <sensor IDREF="HARP" devicename="usock::30108" id="1500"/>
+      <sensor IDREF="SO2" devicename="usock::30121" id="1700" suffix="_CU"/>
+      <sensor IDREF="HOX1" devicename="usock::30122" id="1900" suffix="_CU"/>
+      <sensor IDREF="HOX2" devicename="usock::30123" id="2100" suffix="_CU"/>
+    </dsm>
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_319"/>
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
