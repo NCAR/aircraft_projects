@@ -613,6 +613,13 @@
             <variable longname="Fourth PTRMS counts variable" name="PTRMS4" units="ncps"/>
         </sample>
     </sensor>
+    <sensor ID="PAN-CIMS" class="UDPSocketSensor" devicename="usock::30126" suffix="_PAN">
+        <sample id="1" rate="1" scanfFormat="PAN-CIMS,%*fT%*f,%f,%f,%f">
+            <variable longname="First PAN Variable" name="PAN1" units="ncps"/>
+            <variable longname="Second PAN Variable" name="PAN2" units="ncps"/>
+            <variable longname="Third PAN Variable" name="PAN3" units="ncps"/>
+        </sample>
+    </sensor>
     <sensor ID="PILS" class="UDPSocketSensor" devicename="usock::30125" suffix="_PILS">
         <sample id="1" rate="1" scanfFormat="PILS,%fT%f,%f,%f,%f,%f">
             <variable longname="Date" name="DATE" units="yyyymmdd"/>
@@ -1134,21 +1141,16 @@
     </sensor>
     <sensor ID="HARP" class="UDPSocketSensor" devicename="usock::30108">
         <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%d,%d">
-            <variable longname="UVN 315 nm Counts" name="UVN315" units="photons/(s*cm^2*nm) ">
-                <linear intercept="-10772830027980" slope="46838391426" units="vlpm"/>
-            </variable>
-            <variable longname="UVN 382 nm Counts" name="UVN382" units="photons/(s*cm^2*nm) ">
-                <linear intercept="-15527725277200" slope="77638626386" units="vlpm"/>
-            </variable>
+            <variable longname="UVN 315 nm Counts" name="UVN315" units="counts"/>
+            <variable longname="UVN 382 nm Counts" name="UVN382" units="counts"/>
+            <variable longname="UVN Relative Humidity" name="UVNRH" units="%"/>
         </sample>
-        <sample id="2" rate="1" scanfFormat="HRP_AFZ,%*dT%*d,%d,%d">
-            <variable longname="UVZ 315 nm Counts" name="UVZ315" units="count">
-                <linear intercept="-3847338196710" slope="16727557377" units="photons/(s*cm^2*nm) "/>
-            </variable>
-            <variable longname="UVZ 382 nm Counts" name="UVZ382" units="count">
-                <linear intercept="-3570755511200" slope="17853777556" units="photons/(s*cm^2*nm) "/>
-            </variable>
+        <sample id="2" rate="1" scanfFormat="HRP_AFZ,%*dT%*d,%d,%d,%f">
+            <variable longname="UVZ 315 nm Counts" name="UVZ315" units="counts"/>
+            <variable longname="UVZ 382 nm Counts" name="UVZ382" units="counts"/>
+            <variable longname="UVZ Relative Humidity" name="UVZRH" units="%"/>
         </sample>
+        <!--
         <sample id="3" rate="1" scanfFormat="HRP_VISN,%*dT%*d,%d,%d">
             <variable longname="VISN 550 nm Counts" name="VISN550" units="count"/>
             <variable longname="VISN 860 nm Counts" name="VISN860" units="count"/>
@@ -1165,6 +1167,7 @@
             <variable longname="NIRZ 1500 nm Counts" name="NIRZ1500" units="count"/>
             <variable longname="NIRZ 2000 nm Counts" name="NIRZ2000" units="count"/>
         </sample>
+        -->
     </sensor>
     <sensor ID="SO2" class="UDPSocketSensor" devicename="usock::30121" suffix="_CU">
         <sample id="1" rate="1" scanfFormat="SO2,%f">
@@ -1560,7 +1563,8 @@
       <sensor IDREF="NONOYO3" devicename="usock::30107" id="900" suffix="_ACD"/>
       <sensor IDREF="GTCIMS" devicename="usock::30110" id="1100" suffix="_GTCIMS"/>
       <sensor IDREF="PCIMS" devicename="usock::30111" id="1300" suffix="_PCIMS"/>
-      <sensor IDREF="HARP" devicename="usock::30108" id="1500"/>
+      <sensor IDREF="HARP" devicename="usock::30108" id="1500" suffix="_HARP"/>
+      <sensor IDREF="PAN-CIMS" devicename="usock::30126" id="1700"/>
       <sensor IDREF="HOX1" devicename="usock::30122" id="1900" suffix="_CU"/>
       <sensor IDREF="HOX2" devicename="usock::30123" id="2100" suffix="_CU"/>
     </dsm>
@@ -2015,12 +2019,12 @@
               <calfile file="XUVT2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="UV Hygrometer Cell Temperature #1" name="XUVT1" units="V">
+          <variable longname="UV Hygrometer Cell Temperature" name="XCELLTEMP_UVH" units="V">
             <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="Deg_C">
-              <calfile file="XUVT1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="deg_C">
+              <calfile file="XCELLTEMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
           <variable longname="UV Hygrometer Intensity" name="XSIGV_UVH" units="V">
