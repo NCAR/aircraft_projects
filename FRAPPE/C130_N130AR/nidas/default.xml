@@ -605,19 +605,24 @@
         <prompt rate="1" string="RB\r"/>
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
-    <sensor ID="PTRMS" class="UDPSocketSensor" devicename="usock::30106" suffix="_ACD">
-        <sample id="1" rate="1" scanfFormat="XPTRMS,%f,%f,%f,%f">
-            <variable longname="First PTRMS counts variable" name="PTRMS1" units="ncps"/>
-            <variable longname="Second PTRMS counts variable" name="PTRMS2" units="ncps"/>
-            <variable longname="Third PTRMS counts variable" name="PTRMS3" units="ncps"/>
-            <variable longname="Fourth PTRMS counts variable" name="PTRMS4" units="ncps"/>
+    <sensor ID="PTRMS" class="UDPSocketSensor" devicename="usock::30106" suffix="_PTRMS">
+        <sample id="1" rate="1" scanfFormat="XPTRMS,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="Methanol" name="METHANOL" units="ppbv"/>
+            <variable longname="Acetonitrile" name="ACETONITRILE" units="ppbv"/>
+            <variable longname="Acetaldehyde" name="ACETALDEHYDE" units="ppbv"/>
+            <variable longname="Acetone+Propanal" name="ACETONE.PROPANAL" units="ppbv"/>
+            <variable longname="Monoterpenes" name="MONOTERPENES" units="ppbv"/>
+            <variable longname="MBO+Isoprene" name="MBO.ISOPRENE" units="ppbv"/>
+            <variable longname="Benzene" name="BENZENE" units="ppbv"/>
+            <variable longname="Toluene" name="TOLURENE" units="ppbv"/>
+            <variable longname="C8 Aromatics" name="C8AROMATICS" units="ppbv"/>
         </sample>
     </sensor>
     <sensor ID="PAN-CIMS" class="UDPSocketSensor" devicename="usock::30126" suffix="_PAN">
         <sample id="1" rate="1" scanfFormat="PAN-CIMS,%*fT%*f,%f,%f,%f">
-            <variable longname="First PAN Variable" name="PAN1" units="ncps"/>
-            <variable longname="Second PAN Variable" name="PAN2" units="ncps"/>
-            <variable longname="Third PAN Variable" name="PAN3" units="ncps"/>
+            <variable longname="Peroxy-acetyl-nitrate" name="PAN" units="pptv"/>
+            <variable longname="Peroxy-propionyl-nitrate" name="PPN" units="pptv"/>
+            <variable longname="PAN Calibration Signal" name="CAL" units="counts"/>
         </sample>
     </sensor>
     <sensor ID="PILS" class="UDPSocketSensor" devicename="usock::30125" suffix="_PILS">
