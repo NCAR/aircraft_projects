@@ -1,8 +1,14 @@
+# -*- python -*-
 
 import os
 import sys
 import subprocess as sp
 import glob
+
+# Run this script from cron something like this:
+#
+# */2 * * * * python /home/local/projects/FRAPPE/C130_N130AR/scripts/send_toga.py >>& /tmp/send_toga.log
+#
 
 # rsync the toga data directory from the toga pc.
 # look for the second-to-last .D directory.
