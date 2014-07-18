@@ -52,12 +52,12 @@ ftp_login        = 'anonymous'
 ftp_passwd       = ''
 #ftp_dir          = '/pub/incoming/OSM/C130/'
 ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
-label            = 'sat_ir_label.jpg'
+label            = 'sat_vis_label.jpg'
 #Assumes filename form is prefixYYYYMMDD*postfix
-prefix           = 'ops.MTSAT-2.'  
+prefix           = 'satellite.GOES-13.'
 postfix		 = 'ch1_vis.jpg' 
 osm_file_name    = "latest_4kmvis.jpg"
-num_imgs_to_get  = 5 # Script will backfill this many images for loops
+num_imgs_to_get  = 10 # Script will backfill this many images for loops
 # End of Initialization section
 
 
