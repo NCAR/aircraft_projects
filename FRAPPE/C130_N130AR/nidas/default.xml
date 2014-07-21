@@ -625,6 +625,12 @@
             <variable longname="PAN Calibration Signal" name="CAL" units="counts"/>
         </sample>
     </sensor>
+    <sensor ID="CAMS" class="UDPSocketSensor" devicename="usock::30127" suffix="_CAMS">
+        <sample id="1" rate="1" scanfFormat="CAMS,%*fT%*f,%f,%f">
+            <variable longname="CAMS Ethane" name="C2H6" units="pptv"/>
+            <variable longname="CAMS Formaldehyde" name="CH2O" units="pptv"/>
+        </sample>
+    </sensor>
     <sensor ID="PILS" class="UDPSocketSensor" devicename="usock::30125" suffix="_PILS">
         <sample id="1" rate="1" scanfFormat="PILS,%fT%f,%f,%f,%f,%f,%f">
             <variable longname="Date" name="DATE" units="yyyymmdd"/>
@@ -1565,6 +1571,7 @@
       <sensor IDREF="SMPS" devicename="usock::30104" id="300" suffix="_SMPS"/>
       <sensor IDREF="PTRMS" devicename="usock::30106" id="500" suffix="_PTRMS"/>
       <sensor IDREF="PILS" devicename="usock::30125" id="700" suffix="_PILS"/>
+      <sensor IDREF="CAMS" devicename="usock::30127" id="800" suffix="_CAMS"/>
       <sensor IDREF="NONOYO3" devicename="usock::30107" id="900" suffix="_ACD"/>
       <sensor IDREF="GTCIMS" devicename="usock::30110" id="1100" suffix="_GTCIMS"/>
       <sensor IDREF="PCIMS" devicename="usock::30111" id="1300" suffix="_PCIMS"/>
