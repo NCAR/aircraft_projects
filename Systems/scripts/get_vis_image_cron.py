@@ -65,7 +65,7 @@ ftp_passwd       = ''
 ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
 #Assumes filename form is prefixYYYYMMDD*.region_postfix where region is drawn from DB
 prefix           = 'satellite.GOES-13.'  
-postfix		 = '4km_ch1_vis.jpg' 
+postfix		 = '*4km_ch1_vis.jpg' 
 osm_label            = 'sat_vis_label.jpg'
 #osm_file_name    = "latest_vis.jpg"  # NOTE: defined once we have region name
 num_imgs_to_get  = 10 # Script will backfill this many images for loops
@@ -167,7 +167,7 @@ except ftplib.all_errors, e:
     sys.exit(1)
 
 if len(ftplist) == 0:  # didn't get any file names, bail out
-    print "didn't find any files on ftp server with form: " +prefix+str(year)+monthstr+"{"+yesterdaystr+"|"+todaystr+"|"+tomorrowstr+"}*"+postfix
+    print "didn't find any files on ftp server with form: " +form
     os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
