@@ -38,6 +38,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/ip-up.local
 %attr(0755,root,root) /etc/ppp/ip-pre-up
 %attr(0755,root,root) /etc/ppp/ip-pre-up.local
+%attr(0755,root,root) /etc/ppp/ip-down.local
 %attr(0755,root,root) /sbin/ifup-pre-local
 
 %changelog

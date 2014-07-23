@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# PATH=/usr/sbin:/sbin:$PATH
+
+[ $# -lt 6 ] && exit 1
+ipparam=$6
+dev=$1
+
+# Look for and execute /etc/ppp/ip-pre-up.$ipparam,
+# where $ipparam is iridium or mpds
+[ -x /etc/ppp/ip-down.$ipparam ] && { /etc/ppp/ip-down.$ipparam "$@" || exit $?; }
+
+exit 0

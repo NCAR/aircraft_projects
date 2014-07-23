@@ -92,8 +92,10 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/sysconfig/network-scripts/ifcfg-eth3
 %config /etc/sysconfig/networking/devices/ifcfg-eth3
 %config /etc/sysconfig/networking/profiles/default/ifcfg-eth3
+%config /etc/logrotate.d/pppd_bgan
 %attr(0755,root,root) /etc/ppp/ip-up.bgan
 %attr(0755,root,root) /etc/ppp/ip-pre-up.bgan
+%attr(0755,root,root) /etc/ppp/ip-down.bgan
 %config /etc/ppp/options.eth3
 %attr(0755,root,root) /etc/ppp/pppoe-lost
 
