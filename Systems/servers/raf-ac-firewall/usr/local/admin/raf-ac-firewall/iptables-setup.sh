@@ -131,7 +131,7 @@ SSH_OUTGOING=($ANYHOST)
 # external hosts that can ssh into our systems
 # may want to limit this to known systems
 # like 128.117.0.0/16 to avoid password guessers.
-SSH_INCOMING=($ANYHOST)
+SSH_INCOMING=($UCAR_128)
 
 # Google Earth SATCOM block.
 # April 2008:
