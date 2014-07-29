@@ -2,4 +2,37 @@
 
 # PATH=/usr/sbin:/sbin:$PATH
 
-ifdown eth3
+# arguments to this script:
+#   ppp1 eth3 0 193.220.216.9 192.168.108.1 bgan
+
+netdev=$2
+
+# On the C130 we don't want to ifdown eth3, because that appears
+# to cause a pppd hang. Here's the sequence in the pppd log on a disconnect:
+#
+#=================================================================
+# Script /etc/ppp/ip-up finished (pid 27232), status = 0x0
+# No response to 3 echo-requests
+# Serial link appears to be disconnected.
+# Connect time 185.8 minutes.
+# Sent 21096142 bytes, received 22334130 bytes.
+# Script /etc/ppp/ip-down started (pid 28063)
+# sent [LCP TermReq id=0x2 "Peer not responding"]
+# Script /etc/ppp/ip-down finished (pid 28063), status = 0x0
+# sent [LCP TermReq id=0x3 "Peer not responding"]
+# sent [LCP TermReq id=0x4 "Peer not responding"]
+# sent [LCP TermReq id=0x5 "Peer not responding"]
+# sent [LCP TermReq id=0x6 "Peer not responding"]
+# Connection terminated.
+# Modem hangup
+# Now pppd retries a connection:
+# pppd options in effect:
+#=================================================================
+#
+# Notice that pppd still tries to send LCP packets on eth3 after ip-down runs.
+# That is what must be causing things to hang.
+# We need to test whether we still want to do "ifdown eth3" on the GV,
+# perhaps its PPPOE hardware behaves differently.
+
+
+# ifdown $netdev
