@@ -122,6 +122,7 @@ end
 # ---------------------------------------------------------
 # Fast 2D processing script.
 #
+if (-d ${RAW_DATA_DIR}/'${proj}/PMS2D/') then
 cat > run_proc2d << "EOF2D"
 #!/bin/csh
 
@@ -132,6 +133,7 @@ foreach file (${RAW_DATA_DIR}/${proj}/PMS2D/*2d)
   set flight=`echo $bfname | cut -b 17-20`
   echo 'process2d ${RAW_DATA_DIR}/'${proj}/PMS2D/${bfname} '-o ${DAT}/'${proj}${flight}.nc >> run_proc2d
 end
+endif
 
 
 chmod +x run_all run_nimbus reorder_all run_proc2d
