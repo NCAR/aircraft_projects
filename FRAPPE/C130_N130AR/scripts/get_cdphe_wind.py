@@ -186,14 +186,21 @@ while i<num_imgs_to_get:
 # If we got an older image it's date/time will be out of sequence for 
 # time series veiwing (which is done based on date/time of file) so we need
 # to correct for that by touching the files based on time sequence.
-if got_old == 'true':
-    print 'cleaning up dates of image files'
-    listing=glob.glob(prefix+'*')
-    i = 0
-    while i < len(listing):
-        dt = listing[i].split('.')
-        os.system('touch -t '+dt[2]+' '+listing[i])
-        i = i + 1
+# also, no sense keeping more imagery than we want for time loops so 
+# remove any additional files.
+#if got_old == 'true':
+print 'cleaning up dates of image files'
+listing=glob.glob(prefix+'*'+postfix)
+i = 0
+extras = len(listing) - num_imgs_to_get - 1
+while i < len(listing):
+    dt = listing[i].split('.')
+    os.system('touch -t '+dt[2]+' '+listing[i])
+    if (extras > 0):
+        print 'removing extra: '+listing[i]
+        command = "rm "+listing[i]
+        os.system(command)
+    i = i + 1
 
 
 print "Done."
