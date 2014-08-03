@@ -152,8 +152,6 @@ try:
     print 'file retrieved: '+latest
     print 'setting it as overlay image for OSM.'
     #command = "cp "+latest+" "+osm_file_name
-    command = "rm -f "+osm_file_name
-    os.system(command)
     command = "sed s@www.nrlmry.navy.mil/TC/kml/TC/images@acserver.raf.ucar.edu/flight_data/display@g "+latest+" > "+osm_file_name
     os.system(command)
 
