@@ -191,8 +191,9 @@ while i<num_imgs_to_get:
 # to correct for that by touching the files based on time sequence.
 print 'cleaning up dates of image files'
 listing=glob.glob(prefix+'*'+postfix)
+listing.sort()
 i = 0
-extras = len(listing) - num_imgs_to_get - 1
+extras = len(listing) - num_imgs_to_get 
 while i < len(listing):
     dt = listing[i].split('.')
     os.system('touch -t '+dt[2]+' '+listing[i])
@@ -200,6 +201,7 @@ while i < len(listing):
         print 'removing extra: '+listing[i]
         command = "rm "+listing[i]
         os.system(command)
+        extras = extras - 1
     i = i + 1
 
 print "Done."
