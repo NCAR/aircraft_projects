@@ -1514,6 +1514,9 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+    <serialSensor ID="HD710" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+        <message length="0" position="beg" separator="\r\n"/>
+    </serialSensor>
   </sensorcatalog>
   <site applyCals="true" class="raf.Aircraft" name="C130_N130AR">
     <parameter name="tailNumber" type="string" value="N130AR"/>
@@ -1588,6 +1591,7 @@
       <sensor IDREF="HOX2" devicename="usock::30123" id="2100" suffix="_CU"/>
       <sensor IDREF="TOGA" devicename="usock::30120" id="2300" suffix="_TOGA"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
+      <sensor IDREF="HD710" devicename="/dev/ttyS0" id="2700" suffix="_HD710"/>
       </dsm>
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_319"/>
