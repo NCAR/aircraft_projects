@@ -85,8 +85,15 @@ endif
 # Open Street Maps rendering daemon.
 ps ax | grep renderd | grep -qv grep
 if ($status) then
-  nice /usr/local/bin/renderd &
+  nice /usr/bin/renderd &
 endif
+
+# Nagios variable QC checks
+ps ax | grep qc_check | grep -qv grep
+if ($status) then
+  /home/local/raf/nagios-qc/qc_check.sh >& /tmp/qc_check.log &
+endif
+
 
 if ($AIRCRAFT == "GV_N677F") then
 
@@ -95,5 +102,15 @@ if ($AIRCRAFT == "GV_N677F") then
   ps ax | grep ric_switch | grep -qv grep
   if ($status) then
     /home/local/ric/src/switch/ric_switch >& /tmp/ric_switch.log &
+  endif
+endif
+
+if ($AIRCRAFT == "C130_N130AR") then
+
+  # Start the Remote Instrument Control aircraft switch
+  # It reads its configuration from ~/.config/NCAR/SwitchC130.ini
+  ps ax | grep ric_switch | grep -qv grep
+  if ($status) then
+    /home/local/raf/instruments/instctrl/switch/ric_switch -c ~/.config/NCAR/SwitchC130.ini >& /tmp/ric_switch.log &
   endif
 endif
