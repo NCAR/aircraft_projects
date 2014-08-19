@@ -79,6 +79,9 @@ int:
 cat > run_nimbus << "EOFRN"
 #!/bin/csh
 
+# Remove existing files.  Helps to avoid if a residual data if nimbus fails.
+/bin/rm ${DAT}/$proj?f??.nc
+
 foreach setup_file ( setup_?f?? )
   nimbus -b $setup_file
 end
@@ -122,7 +125,7 @@ end
 # ---------------------------------------------------------
 # Fast 2D processing script.
 #
-if (-d ${RAW_DATA_DIR}/'${proj}/PMS2D/') then
+if (-d ${RAW_DATA_DIR}/${proj}/PMS2D/) then
 cat > run_proc2d << "EOF2D"
 #!/bin/csh
 
