@@ -1,13 +1,5 @@
 #!/bin/csh
 
-set user = `whoami`
-if ($user == 'nimbus') then
-	setenv DAT /scr/raf/local_productiondata/
-else
-        setenv DAT ${DATA_DIR}
-endif
-
-
 process2d ${RAW_DATA_DIR}/HIPPO-4/PMS2D/20110614_140916_rf01.2d -o ${DAT}/HIPPO-4rf01.nc
 process2d ${RAW_DATA_DIR}/HIPPO-4/PMS2D/20110616_155046_rf02.2d -o ${DAT}/HIPPO-4rf02.nc
 process2d ${RAW_DATA_DIR}/HIPPO-4/PMS2D/20110618_155628_rf03.2d -o ${DAT}/HIPPO-4rf03.nc
