@@ -49,14 +49,12 @@ setenv DISPLAY :9.1
 if ($uid == 20000) then
   setenv DAT /scr/raf/local_productiondata/
 else
-  setenv DAT ${DATA_DIR}
-endif
-
 "EOFRA"
 
-echo setenv DAT '${DAT}'/$proj >> run_all
+echo '  setenv DAT ${DATA_DIR}/'$proj >> run_all
 
 cat >> run_all << "EOFRA2"
+endif
 
 mkdir ${DAT}
 
