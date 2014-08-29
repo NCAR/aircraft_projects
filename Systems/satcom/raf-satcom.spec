@@ -1,7 +1,7 @@
 Summary: Master package for UCAR RAF satcom network configuration
 Name: raf-satcom
 Version: 1.0
-Release: 5
+Release: 6
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -42,6 +42,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /sbin/ifup-pre-local
 
 %changelog
+* Fri Aug  9 2014 Tom Baltzer <tbaltzer@ucar.edu> 1.0-6
+- Comments to help debug ip-down.local in the field.
 * Mon Sep 26 2011 Gordon Maclean <maclean@ucar.edu> 1.0-5
 - Added /sbin/ifup-pre-local
 * Tue Mar  2 2010 Chris Webster <cjw@ucar.edu>
