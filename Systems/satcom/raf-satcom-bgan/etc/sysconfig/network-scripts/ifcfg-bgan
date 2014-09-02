@@ -40,7 +40,8 @@ ETH=eth3
 # contains the right username/password combination.
 # For Magma, use xxyyzz@magma.ca
 # USER=bxxxnxnx@sympatico.ca
-USER=hiaper
+# USER=hiaper
+USER=MPDS
 
 # Bring link up on demand?  Default is to leave link up all the time.
 # If you want the link to come up on demand, set DEMAND to a number indicating
@@ -86,7 +87,19 @@ CONNECT_POLL=2
 
 # Specific desired service name. Sent in a PADR packet to server.
 # Arg to plugin: rp_pppoe_service $SERVICENAME
-SERVICENAME=BGAN:BACKGROUND
+# Aug 2014: BGAN:BACKGROUND no longer works
+#   got PacketData to work, tried others
+# No go:
+# SERVICENAME=BGAN:BACKGROUND
+# SERVICENAME=SBB
+# SERVICENAME=SBB-1
+# SERVICENAME=BGAN
+#  Works:
+SERVICENAME=PacketData
+# SERVICENAME=PacketData-1
+# Decidedlly not an ISDN connection (28# is an ISDN type)
+# SERVICENAME=ISDN
+# SERVICENAME=28#  
 
 # Character to echo at each poll.  Use PING="" if you don't want
 # anything echoed
@@ -126,7 +139,6 @@ MRU=1492
 # PPPOE adds 8 bytes of overhead. Max MRU for ethernet is 1500
 # so max MTU is 1500-8=1492
 MTU=1492
-
 # Do you want to clamp the MSS?  Here's how to decide:
 # - If you have only a SINGLE computer connected to the DSL modem, choose
 #   "no".
