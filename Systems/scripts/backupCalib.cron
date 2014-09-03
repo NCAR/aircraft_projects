@@ -95,7 +95,7 @@ else
   echo "non-INS file diff"
 endif
 
-if ($insdiff == 0 || $noninsdiff == 0) then
+if ($insdiff == 0 && $noninsdiff == 0) then
   echo "`date`: No Changes to Calibration DB on $dbserver" | mailx -s "$subject" $emailaddr
 else
   rm -f $diffile
@@ -105,7 +105,7 @@ else
   echo " $sqlfile" >> $diffile
   echo " Which should now be checked into subversion." >> $diffile
   echo "" >> $diffile
-  echo " The changes (in SQL code) follow in two parts -"
+  echo " The changes (in SQL code) follow in two parts -" >> $diffile
   echo " INSERT differences and then non-INSERT differences:" >> $diffile
   echo "" >> $diffile
   echo "**************  INSERT Diffs ************************" >> $diffile
