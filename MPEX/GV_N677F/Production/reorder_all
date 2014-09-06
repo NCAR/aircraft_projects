@@ -1,15 +1,10 @@
 #!/bin/csh
 
-set user = `whoami`
-if ($user == 'nimbus') then
-        cd /scr/raf/local_productiondata
-else
-        cd ${DATA_DIR}
-endif
+cd ${DAT}
 
-foreach file ( MPEX_?f??.nc )
+foreach file ( MPEX?f??.nc )
   echo $file
-  ncReorder $file temp_mpex.nc
-  mv -f temp_mpex.nc $file
+  ncReorder $file temp1.nc
+  mv -f temp1.nc $file
   chmod g+w $file
 end
