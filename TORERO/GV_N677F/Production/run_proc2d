@@ -1,12 +1,5 @@
 #!/bin/csh
 
-set user = `whoami`
-if ($user == 'nimbus') then
-  setenv DAT /scr/raf/local_productiondata/
-else
-  setenv DAT ${DATA_DIR}
-endif
-
 process2d ${RAW_DATA_DIR}/TORERO/PMS2D/20120106_183329_tf01.2d -o ${DAT}/TOREROtf01.nc
 process2d ${RAW_DATA_DIR}/TORERO/PMS2D/20120114_193001_tf02.2d -o ${DAT}/TOREROtf02.nc
 process2d ${RAW_DATA_DIR}/TORERO/PMS2D/20120118_141332_ff01.2d -o ${DAT}/TOREROff01.nc
