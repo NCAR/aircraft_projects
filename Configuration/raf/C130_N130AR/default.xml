@@ -9,7 +9,7 @@
             <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
         </sample>
     </sensor>
-    <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
+    <arincSensor ID="IRS-C130" class="raf.IRS_HW_HG2001GD">
 
       <sample id="0132" process="true" rate="25">
         <variable longname="Hybrid True Heading - 132" name="THDGHYB" units="deg_T"/>
@@ -18,7 +18,7 @@
         <variable longname="Hybrid Vertical Figure of Merit - 135" name="HYBVFOM" units="feet"/>
       </sample>
       <sample id="0175" process="true" rate="25">
-        <variable longname="Hybrid Ground Speed - 175" name="GSFHYB" units="knots"/>
+        <variable longname="Hybrid Ground Speed - 175" name="GSPDHYB" units="knots"/>
       </sample>
       <sample id="0254" process="true" rate="12.5">
         <variable longname="Hybrid Lat - 254" name="LATHYB" units="deg_N"/>
@@ -79,144 +79,139 @@
         <sample id="0270" process="false" rate="2">
         <variable longname="irs_discretes" name="irs_discretes" units=""/>
       </sample>
-
-<!--
-            The following sample is not used.
-        <sample id="0277" rate="?" process="false"> <variable name="test_word" units="" longname="test word"/> </sample>
-        -->
       <sample id="0300" process="false" rate="50">
         <variable longname="delta theta x" name="dtheta_x" units="radian"/>
       </sample>
-        <sample id="0301" process="false" rate="50">
+      <sample id="0301" process="false" rate="50">
         <variable longname="delta theta y" name="dtheta_y" units="radian"/>
       </sample>
         <sample id="0302" process="false" rate="50">
         <variable longname="delta theta z" name="dtheta_z" units="radian"/>
       </sample>
-        <sample id="0303" process="false" rate="50">
+      <sample id="0303" process="false" rate="50">
         <variable longname="delta theta v x" name="dtheta_v_x" units="ft/s"/>
       </sample>
-        <sample id="0304" process="false" rate="50">
+      <sample id="0304" process="false" rate="50">
         <variable longname="delta theta v y" name="dtheta_v_y" units="ft/s"/>
       </sample>
-        <sample id="0305" process="false" rate="50">
+      <sample id="0305" process="false" rate="50">
         <variable longname="delta theta v z" name="dtheta_v_z" units="ft/s"/>
       </sample>
-        <sample id="0310" rate="12.5">
+      <sample id="0310" rate="12.5">
         <variable longname="IRS Latitude" name="LAT" units="degree_N"/>
       </sample>
-        <sample id="0311" rate="12.5">
+      <sample id="0311" rate="12.5">
         <variable longname="IRS Longitude" name="LON" units="degree_E"/>
       </sample>
-        <sample id="0312" rate="25">
-        <variable longname="IRS Aircraft Ground Speed" name="GSF" units="m/s"/>
+      <sample id="0312" rate="25">
+        <variable longname="IRS Aircraft Ground Speed" name="GSPD" units="m/s"/>
       </sample>
-        <sample id="0313" rate="25">
+      <sample id="0313" rate="25">
         <variable longname="IRS Aircraft Track Angle" name="TKAT" units="degree_T"/>
       </sample>
-        <sample id="0314" rate="25">
+      <sample id="0314" rate="25">
         <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T"/>
       </sample>
-        <sample id="0315" rate="12.5">
+      <sample id="0315" rate="12.5">
         <variable longname="IRS Wind Speed" name="IWS" units="m/s"/>
       </sample>
-        <sample id="0316" rate="12.5">
+      <sample id="0316" rate="12.5">
         <variable longname="IRS Wind Direction" name="IWD" units="degree_T"/>
       </sample>
-        <sample id="0317" process="false" rate="25">
+      <sample id="0317" process="false" rate="25">
         <variable longname="IRS Aircraft Magnetic Track Angle" name="TKAM" units="deg"/>
       </sample>
-        <sample id="0320" rate="25">
+      <sample id="0320" rate="25">
         <variable longname="IRS Aircraft Magnetic Heading Angle" name="MHDG" units="deg"/>
       </sample>
-        <sample id="0321" rate="25">
+      <sample id="0321" rate="25">
         <variable longname="IRS Drift Angle" name="DRFTA" units="degree"/>
       </sample>
-        <sample id="0322" process="false" rate="25">
+      <sample id="0322" process="false" rate="25">
         <variable longname="flt pth angle" name="flt_pth_angle" units="deg"/>
       </sample>
-        <sample id="0323" process="false" rate="50">
+      <sample id="0323" process="false" rate="50">
         <variable longname="flt pth accel" name="flt_pth_accel" units="G"/>
       </sample>
-        <sample id="0324" rate="50">
+      <sample id="0324" rate="50">
         <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree"/>
       </sample>
-        <sample id="0325" rate="50">
+      <sample id="0325" rate="50">
         <variable longname="IRS Aircraft Roll Angle" name="ROLL" units="degree"/>
       </sample>
-        <sample id="0326" process="false" rate="50">
+      <sample id="0326" process="false" rate="100">
         <variable longname="IRS Body Pitch Rate" name="BPITCHR" units="deg/s"/>
       </sample>
-        <sample id="0327" process="false" rate="50">
+      <sample id="0327" process="false" rate="100">
         <variable longname="IRS Body Roll Rate" name="BROLLR" units="deg/s"/>
       </sample>
-        <sample id="0330" process="false" rate="50">
+      <sample id="0330" process="false" rate="100">
         <variable longname="IRS Body Yaw Rate" name="BYAWR" units="deg/s"/>
       </sample>
-        <sample id="0331" process="false" rate="50">
+      <sample id="0331" process="false" rate="100">
         <variable longname="IRS Body Longitudal Acceleration" name="BLONGA" units="G"/>
       </sample>
-        <sample id="0332" process="false" rate="50">
+      <sample id="0332" process="false" rate="100">
         <variable longname="IRS Body Latitudal Acceleration" name="BLATA" units="G"/>
       </sample>
-        <sample id="0333" process="false" rate="50">
+      <sample id="0333" process="false" rate="100">
         <variable longname="IRS Body Normal Acceleration" name="BNORMA" units="G"/>
       </sample>
-        <sample id="0334" process="false" rate="25">
+      <sample id="0334" process="false" rate="25">
         <variable longname="IRS Platform Heading" name="PHDG" units="deg"/>
       </sample>
-        <sample id="0335" process="false" rate="50">
+      <sample id="0335" process="false" rate="50">
         <variable longname="IRS Track Angle Rate" name="TKAR" units="deg/s"/>
       </sample>
-        <sample id="0336" process="false" rate="50">
+      <sample id="0336" process="false" rate="50">
         <variable longname="pitch_att_rate" name="pitch_att_rate" units="deg/s"/>
       </sample>
-        <sample id="0337" process="false" rate="50">
+      <sample id="0337" process="false" rate="50">
         <variable longname="roll_att_rate" name="roll_att_rate" units="deg/s"/>
       </sample>
-        <sample id="0350" process="false" rate="3.125">
+      <sample id="0350" process="false" rate="3.125">
         <variable longname="irs_maint_discretes" name="irs_maint_disc" units=""/>
       </sample>
-        <sample id="0351" process="false" rate="3.125">
+      <sample id="0351" process="false" rate="3.125">
         <variable longname="time_to_nav_ready" name="time_to_nav_rdy" units="min"/>
       </sample>
-        <sample id="0354" process="false" rate="50">
+      <sample id="0354" process="false" rate="50">
         <variable longname="total time" name="total_time" units="count"/>
       </sample>
-        <sample id="0360" process="false" rate="50">
+      <sample id="0360" process="false" rate="50">
         <variable longname="pot_vert_speed" name="pot_vert_speed" units="ft/min"/>
       </sample>
-        <sample id="0361" rate="25">
+      <sample id="0361" rate="25">
         <variable longname="IRS Altitude" name="ALT" units="m"/>
       </sample>
-        <sample id="0362" process="false" rate="50">
+      <sample id="0362" process="false" rate="50">
         <variable longname="along trk accel" name="along_trk_accel" units="G"/>
       </sample>
-        <sample id="0363" process="false" rate="50">
+      <sample id="0363" process="false" rate="50">
         <variable longname="cross trk accel" name="cross_trk_accel" units="G"/>
       </sample>
-        <sample id="0364" rate="50">
+      <sample id="0364" rate="50">
         <variable longname="IRS Vertical Acceleration" name="ACINS" units="m/s2"/>
       </sample>
-        <sample id="0365" rate="50">
+      <sample id="0365" rate="50">
         <variable longname="IRS Vertical Speed" name="VSPD" units="m/s"/>
       </sample>
-        <sample id="0366" rate="12.5">
+      <sample id="0366" rate="12.5">
         <variable longname="IRS Ground Speed Vector, North Component" name="VNS" units="m/s"/>
       </sample>
-        <sample id="0367" rate="12.5">
+      <sample id="0367" rate="12.5">
         <variable longname="IRS Ground Speed Vector, East Component" name="VEW" units="m/s"/>
       </sample>
-        <sample id="0370" process="false" rate="6.25">
+      <sample id="0370" process="false" rate="6.25">
         <variable longname="norm_accel" name="norm_accel" units="G"/>
       </sample>
-        <sample id="0371" process="false" rate="3.125">
+      <sample id="0371" process="false" rate="3.125">
         <variable longname="equipment_id" name="equipment_id" units=""/>
       </sample>
-        <sample id="0375" process="false" rate="50">
+      <sample id="0375" process="false" rate="50">
         <variable longname="along hdg accel" name="along_hdg_accel" units="G"/>
       </sample>
-        <sample id="0376" process="false" rate="50">
+      <sample id="0376" process="false" rate="50">
         <variable longname="cross hdg accel" name="cross_hdg_accel" units="G"/>
       </sample>
     </arincSensor>
@@ -369,7 +364,7 @@
         <variable longname="Avionics GPS Longitude" name="LON" units="degree_E"/>
       </sample>
         <sample id="0112" rate="1">
-        <variable longname="Avionics GPS Ground Speed" name="GSF" units="m/s"/>
+        <variable longname="Avionics GPS Ground Speed" name="GSPD" units="m/s"/>
       </sample>
         <sample id="0120" rate="1">
         <variable longname="Avionics GPS Latitude Fine" name="LATF" units="degree_N"/>
@@ -487,6 +482,9 @@
         <variable longname="Reference GPS Latitude" name="GGLATB" units="degree_N"/>
         <variable longname="Reference GPS Longitude" name="GGLONB" units="degree_E"/>
         <variable longname="Reference GPS Altitude (MSL)" name="GGALTB" units="m"/>
+        <variable longname="Standard Deviation of Reference GPS Latitude" name="GGLATBDEV" units="degree_N"/>
+        <variable longname="Standard Deviation of Reference GPS Longitude" name="GGLONBDEV" units="degree_E"/>
+        <variable longname="Standard Deviation of Reference GPS Altitude (MSL)" name="GGALTBDEV" units="m"/>
       </sample>
 
 <!-- BESTVEL record -->
@@ -1540,7 +1538,7 @@
     </dsm>
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_319"/>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
+        <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
             <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
               <linear intercept="0.0" slope="1.0" units="degree_T"/>
@@ -1566,7 +1564,7 @@
     </dsm>
     <dsm id="20" location="Fwd_FS245_1" name="dsm320" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_320"/>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS2">
+        <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000" suffix="_IRS2">
           <sample id="0314" rate="25">
             <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
               <linear intercept="0.0" slope="1.0" units="degree_T"/>

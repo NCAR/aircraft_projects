@@ -9,7 +9,7 @@
             <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
         </sample>
     </sensor>
-    <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
+    <arincSensor ID="IRS-C130" class="raf.IRS_HW_HG2001GD">
 
 <!-- 
          Taken from the Honeywell installation manual for the         
@@ -113,22 +113,22 @@
         <sample id="0325" rate="50">
         <variable longname="IRS Aircraft Roll Angle" name="ROLL" units="degree"/>
       </sample>
-        <sample id="0326" rate="50">
+        <sample id="0326" rate="100">
         <variable longname="IRS Body Pitch Rate" name="BPITCHR" units="deg/s"/>
       </sample>
-        <sample id="0327" rate="50">
+        <sample id="0327" rate="100">
         <variable longname="IRS Body Roll Rate" name="BROLLR" units="deg/s"/>
       </sample>
-        <sample id="0330" rate="50">
+        <sample id="0330" rate="100">
         <variable longname="IRS Body Yaw Rate" name="BYAWR" units="deg/s"/>
       </sample>
-        <sample id="0331" rate="50">
+        <sample id="0331" rate="100">
         <variable longname="IRS Body Longitudal Acceleration" name="BLONGA" units="G"/>
       </sample>
-        <sample id="0332" rate="50">
+        <sample id="0332" rate="100">
         <variable longname="IRS Body Latitudal Acceleration" name="BLATA" units="G"/>
       </sample>
-        <sample id="0333" rate="50">
+        <sample id="0333" rate="100">
         <variable longname="IRS Body Normal Acceleration" name="BNORMA" units="G"/>
       </sample>
         <sample id="0334" process="false" rate="25">
@@ -211,7 +211,7 @@
         <variable longname="ADC True Air Speed" name="TAS" units="m/s"/>
       </sample>
         <sample id="0211" rate="2">
-        <variable longname="ADC Total Air Temperature" name="TT" units="deg_C"/>
+        <variable longname="ADC Total Air Temperature" name="RT" units="deg_C"/>
       </sample>
         <sample id="0213" rate="2">
         <variable longname="ADC Ambient Air Temperature" name="AT" units="deg_C"/>
@@ -508,11 +508,9 @@
     </serialSensor>
     <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%f,%f,%*f,%*f,%f">
-            <variable longname="Dew/Frost Point Balance" name="DPBAL" units="unk"/>
-            <variable longname="Dew/Frost Point Temperature" name="DPTEMP" units="deg_C">
-                <linear intercept="-1.5" slope="1.0" units="deg_C"/>
-            </variable>
-            <variable longname="Dew/Frost Point TEC" name="DPTEC" units="unk"/>
+            <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+            <variable longname="Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
+            <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
         </sample>
         <message length="0" position="end" separator="\n"/>
     </serialSensor>
@@ -1077,7 +1075,7 @@
 -->
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="319"/>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
+        <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
             <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
               <linear intercept="-0.6" slope="1.0" units="degree_T"/>
@@ -1109,7 +1107,7 @@
     </dsm>
     <dsm id="20" location="Fwd_FS245_1" name="dsm320" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="320"/>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS2">
+        <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000" suffix="_IRS2">
           <sample id="0314" rate="25">
             <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
               <linear intercept="0.0" slope="1.0" units="degree_T"/>
@@ -1129,36 +1127,8 @@
             </variable>
           </sample>
         </arincSensor>
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130">
-            <sample id="1">
-                <variable longname="Dew/Frost Point Balance, Fuselage Top" name="DPTB" units="unk"/>
-                <variable longname="Dew/Frost Point Temperature, Fuselage Top" name="DPT" units="deg_C">
-                    <linear intercept="-1.5" slope="1.0" units="deg_C"/>
-                </variable>
-                <variable longname="Dew/Frost Point TEC, Fuselage Top" name="DPTTEC" units="unk"/>
-            </sample>
-        <sample id="1" rate="1">
-                <variable longname="Dew/Frost Point Balance, Fuselage Top" name="DPTB" units="unk"/>
-                <variable longname="Dew/Frost Point Temperature, Fuselage Top" name="DPT" units="deg_C">
-                <poly coefs="0 1 0" units="deg_C"/></variable>
-                <variable longname="Dew/Frost Point TEC, Fuselage Top" name="DPTTEC" units="unk"/>
-            </sample>
-        </serialSensor>
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="140">
-            <sample id="1">
-                <variable longname="Dew/Frost Point Balance, Fuselage Bottom" name="DPBB" units="unk"/>
-                <variable longname="Dew/Frost Point Temperature, Fuselage Bottom" name="DPB" units="deg_C">
-                    <linear intercept="-1.5" slope="1.0" units="deg_C"/>
-                </variable>
-                <variable longname="Dew/Frost Point TEC, Fuselage Bottom" name="DPBTEC" units="unk"/>
-            </sample>
-        <sample id="1" rate="1">
-                <variable longname="Dew/Frost Point Balance, Fuselage Bottom" name="DPBB" units="unk"/>
-                <variable longname="Dew/Frost Point Temperature, Fuselage Bottom" name="DPB" units="deg_C">
-                <poly coefs="0 1 0" units="deg_C"/></variable>
-                <variable longname="Dew/Frost Point TEC, Fuselage Bottom" name="DPBTEC" units="unk"/>
-            </sample>
-        </serialSensor>
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130" suffix="_DPT"/>
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="140" suffix="_DPB"/>
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS7" id="150">
             <sample id="1">
                 <variable longname="Raw Static Pressure, Fuselage" name="PSFD" units="hPa">
@@ -1214,7 +1184,7 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-1.163 17.415 -0.0023" units="hPa"/>
           </variable>
-          <variable longname="Total Temperature, Radome Left" name="TTRL" units="V">
+          <variable longname="Total Temperature, Radome Left" name="RTRL" units="V">
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
@@ -1282,13 +1252,13 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="199.3 188.86 0.0034" units="hPa"/>
           </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
+          <variable longname="Total Temperature, Deiced Right, HARCO" name="RTHR1" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-93.032 28.854 -0.0988" units="deg_C"/>
           </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
+          <variable longname="Total Temperature, Deiced Right, HARCO" name="RTHR2" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>

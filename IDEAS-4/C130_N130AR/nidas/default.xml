@@ -9,7 +9,7 @@
             <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
         </sample>
     </sensor>
-    <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
+    <arincSensor ID="IRS-C130" class="raf.IRS_HW_HG2001GD">
 
 <!-- 
          Taken from the Honeywell installation manual for the         
@@ -113,22 +113,22 @@
         <sample id="0325" rate="50">
         <variable longname="IRS Aircraft Roll Angle" name="ROLL" units="degree"/>
       </sample>
-        <sample id="0326" process="false" rate="50">
+        <sample id="0326" process="false" rate="100">
         <variable longname="IRS Body Pitch Rate" name="BPITCHR" units="deg/s"/>
       </sample>
-        <sample id="0327" process="false" rate="50">
+        <sample id="0327" process="false" rate="100">
         <variable longname="IRS Body Roll Rate" name="BROLLR" units="deg/s"/>
       </sample>
-        <sample id="0330" process="false" rate="50">
+        <sample id="0330" process="false" rate="100">
         <variable longname="IRS Body Yaw Rate" name="BYAWR" units="deg/s"/>
       </sample>
-        <sample id="0331" process="false" rate="50">
+        <sample id="0331" process="false" rate="100">
         <variable longname="IRS Body Longitudal Acceleration" name="BLONGA" units="G"/>
       </sample>
-        <sample id="0332" process="false" rate="50">
+        <sample id="0332" process="false" rate="100">
         <variable longname="IRS Body Latitudal Acceleration" name="BLATA" units="G"/>
       </sample>
-        <sample id="0333" process="false" rate="50">
+        <sample id="0333" process="false" rate="100">
         <variable longname="IRS Body Normal Acceleration" name="BNORMA" units="G"/>
       </sample>
         <sample id="0334" process="false" rate="25">
@@ -1192,7 +1192,7 @@
 
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="319"/>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
+        <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
             <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
               <linear intercept="0.0" slope="1.0" units="degree_T"/>
@@ -1224,7 +1224,7 @@
     </dsm>
     <dsm id="20" location="Fwd_FS245_1" name="dsm320" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="320"/>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS2">
+        <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000" suffix="_IRS2">
           <sample id="0314" rate="25">
             <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
               <linear intercept="0.0" slope="1.0" units="degree_T"/>
