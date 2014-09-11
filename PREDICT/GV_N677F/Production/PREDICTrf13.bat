@@ -1,4 +1,0 @@
-if=/scr/raf/Raw_Data/PREDICT/20100907_095545_rf13.ads
-of=/scr/raf/local_data/PREDICT/PREDICTrf13.nc
-pr=1
-ti=12:27:00-18:24:00
