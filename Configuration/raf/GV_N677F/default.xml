@@ -52,8 +52,6 @@
       <sample id="0270" process="false" rate="2">
         <variable longname="irs_discretes" name="irs_discretes" units=""/>
       </sample>
-
-<!--<sample id="0277" rate="?"     process="false"><variable name="test_word"        units=""         longname="test word"/></sample>                       not used    -->
       <sample id="0300" process="false" rate="50">
         <variable longname="delta theta x" name="dtheta_x" units="radian"/>
       </sample>
@@ -79,7 +77,7 @@
         <variable longname="IRS Longitude" name="LON" units="degree_E"/>
       </sample>
       <sample id="0312" rate="25">
-        <variable longname="IRS Aircraft Ground Speed" name="GSF" units="m/s"/>
+        <variable longname="IRS Aircraft Ground Speed" name="GSPD" units="m/s"/>
       </sample>
       <sample id="0313" rate="25">
         <variable longname="IRS Aircraft Track Angle" name="TKAT" units="degree_T"/>
@@ -336,7 +334,7 @@
         <variable longname="Avionics GPS Longitude" name="LON" units="degree_E"/>
       </sample>
       <sample id="0112" rate="1">
-        <variable longname="Avionics GPS Ground Speed" name="GSF" units="m/s"/>
+        <variable longname="Avionics GPS Ground Speed" name="GSPD" units="m/s"/>
       </sample>
       <sample id="0120" rate="1">
         <variable longname="Avionics GPS Latitude Fine" name="LATF" units="degree_N"/>
@@ -454,6 +452,9 @@
         <variable longname="Reference GPS Latitude" name="GGLATB" units="degree_N"/>
         <variable longname="Reference GPS Longitude" name="GGLONB" units="degree_E"/>
         <variable longname="Reference GPS Altitude (MSL)" name="GGALTB" units="m"/>
+        <variable longname="Standard Deviation of Reference GPS Latitude" name="GGLATBDEV" units="degree_N"/>
+        <variable longname="Standard Deviation of Reference GPS Longitude" name="GGLONBDEV" units="degree_E"/>
+        <variable longname="Standard Deviation of Reference GPS Altitude (MSL)" name="GGALTBDEV" units="m"/>
       </sample>
 
 <!-- BESTVEL record -->
@@ -497,24 +498,24 @@
       <sample id="1" rate="10">
 
 <!--    Skipping CMIGITS Seconds of the day - seems to be faulty data 
-        <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
+        <variable name="CSECSDAY" units="sec" longname="CMIGITS3 seconds of day"/>
 -->
-        <variable longname="Reference CMIGITS3 Latitude" name="CLAT" units="degree_N"/>
-        <variable longname="Reference CMIGITS3 Longitude" name="CLON" units="degree_E"/>
-        <variable longname="Reference CMIGITS3 Altitude (MSL)" name="CALT" units="m"/>
-        <variable longname="Reference CMIGITS3 Ground Speed Vector, North Component" name="CVNS" units="m/s"/>
-        <variable longname="Reference CMIGITS3 Ground Speed Vector, East Component" name="CVEW" units="m/s"/>
-        <variable longname="Reference CMIGITS3 Verticle Speed" name="CVSPD" units="m/s"/>
-        <variable longname="Reference CMIGITS3 Aircraft Pitch" name="CPITCH" units="degree">
+        <variable longname="CMIGITS3 Latitude" name="CLAT" units="degree_N"/>
+        <variable longname="CMIGITS3 Longitude" name="CLON" units="degree_E"/>
+        <variable longname="CMIGITS3 Altitude (MSL)" name="CALT" units="m"/>
+        <variable longname="CMIGITS3 Ground Speed Vector, North Component" name="CVNS" units="m/s"/>
+        <variable longname="CMIGITS3 Ground Speed Vector, East Component" name="CVEW" units="m/s"/>
+        <variable longname="CMIGITS3 Verticle Speed" name="CVSPD" units="m/s"/>
+        <variable longname="CMIGITS3 Aircraft Pitch" name="CPITCH" units="degree">
             <linear intercept="0.4" slope="1.0" units="degree"/>
         </variable>
-        <variable longname="Reference CMIGITS3 Aircraft Roll" name="CROLL" units="degree"/>
-        <variable longname="Reference CMIGITS3 True Heading" name="CTHDG" units="degree_T"/>
+        <variable longname="CMIGITS3 Aircraft Roll" name="CROLL" units="degree"/>
+        <variable longname="CMIGITS3 True Heading" name="CTHDG" units="degree_T"/>
       </sample>
       <sample id="2" rate="1">
 
 <!--    Skipping CMIGITS Seconds of the day - seems to be faulty data 
-        <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
+        <variable name="CSECSDAY" units="sec" longname="CMIGITS3 seconds of day"/>
 -->
         <variable longname="CMIGITS Mode - 2=init,4=align,7=nav" name="MODE" units=""/>
         <variable longname="CMIGITS Status Validity - BIT - see manual" name="STATVALID" units=""/>
@@ -529,7 +530,7 @@
       <sample id="3" rate="100">
 
 <!--    Skipping CMIGITS Seconds of the day - seems to be faulty data 
-        <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
+        <variable name="CSECSDAY" units="sec" longname="CMIGITS3 seconds of day"/>
 -->
         <variable longname="Delta Theta in X direction" name="DTHETAX" units="radians"/>
         <variable longname="Delta Theta in Y direction" name="DTHETAY" units="radians"/>
@@ -1728,7 +1729,6 @@
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
       <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
       <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A2"/>
-      <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS5" id="140" suffix="_GMN"/>
       <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="160"/>
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="170"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
