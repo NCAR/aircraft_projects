@@ -497,7 +497,7 @@
     <serialSensor ID="CMIGITS3" baud="38400" class="raf.CMIGITS3_Serial" databits="8" parity="odd" stopbits="1" timeout="5">
       <sample id="1" rate="10">
 
-<!--    Skipping CMIGITS Seconds of the day - seems to be faulty data 
+<!--    Skipping CMIGITS Seconds of the day, need to work on 64 bit double decoding.
         <variable name="CSECSDAY" units="sec" longname="CMIGITS3 seconds of day"/>
 -->
         <variable longname="CMIGITS3 Latitude" name="CLAT" units="degree_N"/>
@@ -506,15 +506,13 @@
         <variable longname="CMIGITS3 Ground Speed Vector, North Component" name="CVNS" units="m/s"/>
         <variable longname="CMIGITS3 Ground Speed Vector, East Component" name="CVEW" units="m/s"/>
         <variable longname="CMIGITS3 Verticle Speed" name="CVSPD" units="m/s"/>
-        <variable longname="CMIGITS3 Aircraft Pitch" name="CPITCH" units="degree">
-            <linear intercept="0.4" slope="1.0" units="degree"/>
-        </variable>
+        <variable longname="CMIGITS3 Aircraft Pitch" name="CPITCH" units="degree"/>
         <variable longname="CMIGITS3 Aircraft Roll" name="CROLL" units="degree"/>
         <variable longname="CMIGITS3 True Heading" name="CTHDG" units="degree_T"/>
       </sample>
       <sample id="2" rate="1">
 
-<!--    Skipping CMIGITS Seconds of the day - seems to be faulty data 
+<!--    Skipping CMIGITS Seconds of the day, need to work on 64 bit double decoding.
         <variable name="CSECSDAY" units="sec" longname="CMIGITS3 seconds of day"/>
 -->
         <variable longname="CMIGITS Mode - 2=init,4=align,7=nav" name="MODE" units=""/>
@@ -529,7 +527,7 @@
       </sample>
       <sample id="3" rate="100">
 
-<!--    Skipping CMIGITS Seconds of the day - seems to be faulty data 
+<!--    Skipping CMIGITS Seconds of the day, need to work on 64 bit double decoding.
         <variable name="CSECSDAY" units="sec" longname="CMIGITS3 seconds of day"/>
 -->
         <variable longname="Delta Theta in X direction" name="DTHETAX" units="radians"/>
