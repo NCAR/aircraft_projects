@@ -79,7 +79,7 @@
         <variable longname="IRS Longitude" name="LON" units="degree_E"/>
       </sample>
       <sample id="0312" rate="25">
-        <variable longname="IRS Aircraft Ground Speed" name="GSF" units="m/s"/>
+        <variable longname="IRS Aircraft Ground Speed" name="GSPD" units="m/s"/>
       </sample>
       <sample id="0313" rate="25">
         <variable longname="IRS Aircraft Track Angle" name="TKAT" units="degree_T"/>
@@ -332,7 +332,7 @@
         <variable longname="Avionics GPS Longitude" name="LON" units="degree_E"/>
       </sample>
       <sample id="0112" rate="1">
-        <variable longname="Avionics GPS Ground Speed" name="GSF" units="m/s"/>
+        <variable longname="Avionics GPS Ground Speed" name="GSPD" units="m/s"/>
       </sample>
       <sample id="0120" rate="1">
         <variable longname="Avionics GPS Latitude Fine" name="LATF" units="degree_N"/>
@@ -419,6 +419,7 @@
     <serialSensor ID="D_GPS" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <message length="0" position="beg" separator="\xaa\x44\x12"/>
     </serialSensor>
+
     <serialSensor ID="Novatel_GPS" baud="115200" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
 
 <!-- GGA record -->
@@ -444,31 +445,48 @@
         <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
         <variable longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)" name="GGRepLag" units="s"/>
       </sample>
+
+<!-- BESTPOS record -->
+      <sample id="4" rate="5">
+        <variable longname="Reference GPS Latitude" name="GGLATB" units="degree_N"/>
+        <variable longname="Reference GPS Longitude" name="GGLONB" units="degree_E"/>
+        <variable longname="Reference GPS Altitude (MSL)" name="GGALTB" units="m"/>
+      </sample>
+
+<!-- BESTVEL record -->
+      <sample id="5" rate="5">
+        <variable longname="Reference GPS Ground Speed" name="GGSPDB" units="m/s"/>
+        <variable longname="Reference GPS Track Angle" name="GGTRKB" units="degree_T"/>
+        <variable longname="Reference GPS Ground Speed Vector, East Component" name="GGVEWB" units="m/s"/>
+        <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNSB" units="m/s"/>
+        <variable longname="Reference GPS Vertical Speed" name="GGVSPDB" units="m/s"/>
+      </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
+
     <serialSensor ID="Garmin_GPS" baud="4800" class="GPS_NMEA_Serial" databits="8" parity="none" stopbits="1">
 
 <!-- GGA record -->
       <sample id="1" rate="1">
-        <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="sec"/>
-        <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
-        <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
-        <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS" name="GGQUAL" units="none"/>
-        <variable longname="Reference GPS number of satellites tracked" name="GGNSAT" units="count"/>
-        <variable longname="Reference GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
-        <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
-        <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
+        <variable longname="GPS seconds of day" name="GGSECSDAY" units="sec"/>
+        <variable longname="GPS Latitude" name="GGLAT" units="degree_N"/>
+        <variable longname="GPS Longitude" name="GGLON" units="degree_E"/>
+        <variable longname="GPS Qual, 0=inval,1=GPS,2=DGPS" name="GGQUAL" units="none"/>
+        <variable longname="GPS number of satellites tracked" name="GGNSAT" units="count"/>
+        <variable longname="GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
+        <variable longname="GPS Altitude (MSL)" name="GGALT" units="m"/>
+        <variable longname="GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
         <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
         <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
       </sample>
 
 <!-- RMC record -->
       <sample id="2" rate="1">
-        <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="none"/>
-        <variable longname="Reference GPS Ground Speed" name="GGSPD" units="m/s"/>
-        <variable longname="Reference GPS Track Angle" name="GGTRK" units="degree_T"/>
-        <variable longname="Reference GPS Ground Speed Vector, East Component" name="GGVEW" units="m/s"/>
-        <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
+        <variable longname="GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="none"/>
+        <variable longname="GPS Ground Speed" name="GGSPD" units="m/s"/>
+        <variable longname="GPS Track Angle" name="GGTRK" units="degree_T"/>
+        <variable longname="GPS Ground Speed Vector, East Component" name="GGVEW" units="m/s"/>
+        <variable longname="GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
         <variable longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)" name="GGRepLag" units="s"/>
       </sample>
       <message length="0" position="end" separator="\n"/> 
@@ -479,17 +497,15 @@
 <!--    Skipping CMIGITS Seconds of the day - seems to be faulty data 
         <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
 -->
-        <variable longname="Reference CMIGITS3 Latitude" name="CLAT" units="degree_N"/>
-        <variable longname="Reference CMIGITS3 Longitude" name="CLON" units="degree_E"/>
-        <variable longname="Reference CMIGITS3 Altitude (MSL)" name="CALT" units="m"/>
-        <variable longname="Reference CMIGITS3 Ground Speed Vector, North Component" name="CVNS" units="m/s"/>
-        <variable longname="Reference CMIGITS3 Ground Speed Vector, East Component" name="CVEW" units="m/s"/>
-        <variable longname="Reference CMIGITS3 Verticle Speed" name="CVSPD" units="m/s"/>
-        <variable longname="Reference CMIGITS3 Aircraft Pitch" name="CPITCH" units="degree">
-            <linear intercept="0.4" slope="1.0" units="degree"/>
-        </variable>
-        <variable longname="Reference CMIGITS3 Aircraft Roll" name="CROLL" units="degree"/>
-        <variable longname="Reference CMIGITS3 True Heading" name="CTHDG" units="degree_T"/>
+        <variable longname="CMIGITS3 Latitude" name="CLAT" units="degree_N"/>
+        <variable longname="CMIGITS3 Longitude" name="CLON" units="degree_E"/>
+        <variable longname="CMIGITS3 Altitude (MSL)" name="CALT" units="m"/>
+        <variable longname="CMIGITS3 Ground Speed Vector, North Component" name="CVNS" units="m/s"/>
+        <variable longname="CMIGITS3 Ground Speed Vector, East Component" name="CVEW" units="m/s"/>
+        <variable longname="CMIGITS3 Verticle Speed" name="CVSPD" units="m/s"/>
+        <variable longname="CMIGITS3 Aircraft Pitch" name="CPITCH" units="degree"/>
+        <variable longname="CMIGITS3 Aircraft Roll" name="CROLL" units="degree"/>
+        <variable longname="CMIGITS3 True Heading" name="CTHDG" units="degree_T"/>
       </sample>
       <sample id="2" rate="1">
 
