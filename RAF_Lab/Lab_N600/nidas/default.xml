@@ -620,6 +620,52 @@
         </sample>
     </sensor>
 
+    <serialSensor ID="CMIGITS3" baud="38400" class="raf.CMIGITS3_Serial" databits="8" parity="odd" stopbits="1" timeout="5">
+      <sample id="1" rate="10">
+
+<!--    Skipping CMIGITS Seconds of the day, need to work on 64 bit double decoding.
+        <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
+-->
+        <variable longname="CMIGITS3 Latitude" name="CLAT" units="degree_N"/>
+        <variable longname="CMIGITS3 Longitude" name="CLON" units="degree_E"/>
+        <variable longname="CMIGITS3 Altitude (MSL)" name="CALT" units="m"/>
+        <variable longname="CMIGITS3 Ground Speed Vector, North Component" name="CVNS" units="m/s"/>
+        <variable longname="CMIGITS3 Ground Speed Vector, East Component" name="CVEW" units="m/s"/>
+        <variable longname="CMIGITS3 Verticle Speed" name="CVSPD" units="m/s"/>
+        <variable longname="CMIGITS3 Aircraft Pitch" name="CPITCH" units="degree"/>
+        <variable longname="CMIGITS3 Aircraft Roll" name="CROLL" units="degree"/>
+        <variable longname="CMIGITS3 True Heading" name="CTHDG" units="degree_T"/>
+      </sample>
+      <sample id="2" rate="1">
+
+<!--    Skipping CMIGITS Seconds of the day, need to work on 64 bit double decoding.
+        <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
+-->
+        <variable longname="CMIGITS Mode - 2=init,4=align,7=nav" name="MODE" units=""/>
+        <variable longname="CMIGITS Status Validity - BIT - see manual" name="STATVALID" units=""/>
+        <variable longname="CMIGITS Number of Satellites Tracked" name="NSAT" units="count"/>
+        <variable longname="CMIGITS Number of Position Measurements Processed" name="NPOSP" units="count/sec"/>
+        <variable longname="CMIGITS Number of Velocity Measurements Processed" name="NVELP" units="count/sec"/>
+        <variable longname="CMIGITS Figure of Merit Information - see manual" name="FOMINF" units=""/>
+        <variable longname="CMIGITS Expected Horizontal Position Error" name="EXHPERR" units="meters"/>
+        <variable longname="CMIGITS Expected Vertical Position Error" name="EXVPERR" units="meters"/>
+        <variable longname="CMIGITS Expected Velocity Error" name="EXVELERR" units="m/sec"/>
+      </sample>
+      <sample id="3" rate="100">
+
+<!--    Skipping CMIGITS Seconds of the day, need to work on 64 bit double decoding.
+        <variable name="CSECSDAY" units="sec" longname="Reference CMIGITS3 seconds of day"/>
+-->
+        <variable longname="Delta Theta in X direction" name="DTHETAX" units="radians"/>
+        <variable longname="Delta Theta in Y direction" name="DTHETAY" units="radians"/>
+        <variable longname="Delta Theta in Z direction" name="DTHETAZ" units="radians"/>
+        <variable longname="Delta Velocity in X direction" name="DVELX" units="m/s"/>
+        <variable longname="Delta Velocity in Y direction" name="DVELY" units="m/s"/>
+        <variable longname="Delta Velocity in Z direction" name="DVELZ" units="m/s"/>
+      </sample>
+      <message length="0" position="beg" separator="\xff\x81"/>
+    </serialSensor>
+
 </sensorcatalog>
 
 
