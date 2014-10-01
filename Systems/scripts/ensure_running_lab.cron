@@ -1,0 +1,26 @@
+#!/bin/csh -x
+
+set path = ($path /opt/nidas/bin)
+
+# Script to ensure miscellanious processes are running.  Run out of cron
+# periodically, say every 3-5 minutes.
+
+#  dsm process running on acserver - this dsm generally handles UDP packets 
+#    (e.g. parcel track packets)
+ps ax | grep -w dsm | grep -qv grep
+if ($status) then
+  nohup dsm >& /tmp/dsm.log &
+endif
+
+# status_listener runs in daemon mode (background) by default.
+# Use -d option to run in foreground, with debug messages.
+ps ax | grep status_listener | grep -qv grep
+if ($status) then
+  status_listener
+endif
+
+ps ax | grep xmlrpc2shell.py | grep -qv grep
+if ($status) then
+  /home/local/Systems/scripts/xmlrpc2shell.py >& /tmp/xmlrpc2sh.log
+endif
+
