@@ -1,0 +1,2 @@
+#/usr/bin/ffmpeg -passlogfile ./ffmpeg_rf02 -r 15 -b 1500000 -y -pass 1 -i /scr/raf/Prod_Data/NOMADSS/Movies/AnnotatedImages_rf02/%05d.jpg /scr/raf/Prod_Data/NOMADSS/Movies/rf02.20130605.144330_213000.mp4
+#/usr/bin/ffmpeg -passlogfile ./ffmpeg_rf02 -r 15 -b 1500000 -y -pass 2 -i /scr/raf/Prod_Data/NOMADSS/Movies/AnnotatedImages_rf02/%05d.jpg /scr/raf/Prod_Data/NOMADSS/Movies/rf02.20130605.144330_213000.mp4
