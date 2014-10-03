@@ -1,7 +1,7 @@
 Summary: PPP and PPPOE configuration for Inmarsat BGAN
 Name: raf-satcom-bgan
 Version: 1.0
-Release: 4
+Release: 5
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -16,11 +16,24 @@ Requires: ppp >= 2.4.4
 # contains some of the same files as this package, like /etc/ppp/options.eth3.
 # Removing raf-satcom-mpds in the %pre stage is too late.
 Conflicts: raf-satcom-mpds
+Obsoletes: raf-satcom-bgan
 BuildArch: noarch
 
 # LIC: GPL
 %description
 /etc files for configuring pppoe and ppp for Inmarsat BGAN
+
+%package -n raf-gv-satcom-bgan
+Summary: bgan satcom client for server systems on GV
+Group: System Environment/Daemons
+%description -n raf-gv-satcom-bgan
+bgan satcom for server system on GV.
+
+%package -n raf-c130-satcom-bgan
+Summary: bgan satcom client for server systems on C130
+Group: System Environment/Daemons
+%description -n raf-c130-satcom-bgan
+bgan satcom for server system on C130.
 
 %prep
 %setup -n %{name}
@@ -48,7 +61,7 @@ for f in ifcfg-bgan ifcfg-eth3; do
     done
 done
 
-%post
+%post -n raf-gv-satcom-bgan
 
 # disable /etc/ppp/options.  I think the default version from the ppp RPM
 # contains a "lock" option, which I believe will fail on an ethernet port
@@ -74,10 +87,63 @@ ${muser} 	bgan 	None
 fi
 chmod 600 /etc/ppp/pap-secrets
 
+sed -i 's,^SERVICENAME=.*,#SERVICENAME=PacketData,' /etc/sysconfig/network-scripts/ifcfg-bgan
+
+%post -n raf-c130-satcom-bgan
+
+# disable /etc/ppp/options.  I think the default version from the ppp RPM
+# contains a "lock" option, which I believe will fail on an ethernet port
+# (need to check). In any case it may contain options which we don't want.
+# pppd still requires it though, so we create an empty one.
+if [ -f /etc/ppp/options ]; then
+    osize=`wc -w /etc/ppp/options |  cut -f 1 -d \ `
+    if [ $osize -gt 0 ]; then
+        echo "/etc/ppp/options has non-zero size, and it may conflict with raf-satcom-bgan. Renaming the original to /etc/ppp/options.disable"
+        mv /etc/ppp/options /etc/ppp/options.disable
+    fi
+fi
+touch /etc/ppp/options
+
+muser=`egrep  "^[:space:]*USER=" /etc/sysconfig/network-scripts/ifcfg-bgan | sed "s/.*=[\"']*\([^\"']*\)[\"']*/\1/"`
+
+if [ -n $muser ]; then
+    if ! egrep "^[:space:]*[^#]" /etc/ppp/pap-secrets | fgrep -q $muser; then
+        echo "###### from %{name}-%{version} ######
+${muser} 	bgan 	None
+###### end %{name}-%{version} ######" >> /etc/ppp/pap-secrets
+    fi
+fi
+chmod 600 /etc/ppp/pap-secrets
+
+sed -i 's,^SERVICENAME=.*,SERVICENAME=PacketData,' /etc/sysconfig/network-scripts/ifcfg-bgan
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
+%files -n raf-gv-satcom-bgan
+# If a file does not change between RPM versions, then locally edited
+# %config files are not altered (no overwriting and no .rpmnew or .rpmsave).
+# If a file is changed from one package version to another then
+# use %config if you want locally changed files to be renamed to .rpmsave,
+# Use %config(noreplace) if you want locally changed
+# files to be left alone, and newly installed files to become .rpmnew
+%defattr(-,root,root)
+%config /etc/sysconfig/network-scripts/ifcfg-bgan
+%config /etc/sysconfig/network-scripts/ifup-pre-bgan
+%config /etc/sysconfig/networking/devices/ifcfg-bgan
+%config /etc/sysconfig/networking/profiles/default/ifcfg-bgan
+%config /etc/sysconfig/network-scripts/ifcfg-eth3
+%config /etc/sysconfig/networking/devices/ifcfg-eth3
+%config /etc/sysconfig/networking/profiles/default/ifcfg-eth3
+%config /etc/logrotate.d/pppd_bgan
+%attr(0755,root,root) /etc/ppp/ip-up.bgan
+%attr(0755,root,root) /etc/ppp/ip-pre-up.bgan
+%attr(0755,root,root) /etc/ppp/ip-down.bgan
+%config /etc/ppp/options.eth3
+%attr(0755,root,root) /etc/ppp/pppoe-lost
+
+%files -n raf-c130-satcom-bgan
 # If a file does not change between RPM versions, then locally edited
 # %config files are not altered (no overwriting and no .rpmnew or .rpmsave).
 # If a file is changed from one package version to another then
@@ -100,6 +166,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/pppoe-lost
 
 %changelog
+* Tue Sep 30 2014 Tom Baltzer <tbaltzer@ucar.edu> 1.0-5
+- Separate gv and c130 configs, need different SERVICENAMEs
 * Thu May  3 2012 Gordon Maclean <maclean@ucar.edu> 1.0-4
 - Updated /etc/ppp/ip-up.bgan to turn off multicast, "ip link set $1 multicast off",
 - after ppp is up.
