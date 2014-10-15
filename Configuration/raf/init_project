@@ -101,4 +101,9 @@ echo $proj > $proj/$platform/ProjectName
 echo "\nSetting group write permissions."
 /bin/chmod -vR g+w,o-w $PROJ_DIR/$proj $RAW_DATA_DIR/$proj
 
+echo "\nGive us a legitimate vardb.xml and xsd ."
+cd $proj/$platform
+/opt/local/bin/vdb2xml VarDB
+
 echo "\nMake sure this gets added to subversion (svn add $PROJ_DIR/$proj)."
+
