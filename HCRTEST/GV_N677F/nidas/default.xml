@@ -1509,25 +1509,29 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-    <sensor ID="LAMSX" class="raf.LamsSensor">
-      <parameter name="TAS_level" type="float" value="155.0"/>
 
-<!--    nAVG must be a power of 2. The sample rates below should be
-        set to 400/nAVG.  For nAVG=4, rate=100. nAVG=8,rate=50. nAVG=16,rate=25 
+    <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41002">
+        <sample id="1" rate="100">
+            <variable longname="LAMS Sequence Number, Beam 1" name="SEQ1" units="none"/>
+            <variable length="512" longname="LAMS Histogram Averages, Beam 1" name="BEAM1" units="Mhz"/>
+        </sample>
+        <sample id="2" rate="100">
+            <variable longname="LAMS Sequence Number, Beam 1" name="SEQ2" units="none"/>
+            <variable length="512" longname="LAMS Histogram Maximums, Beam 2" name="BEAM2" units="Mhz"/>
+        </sample>
+        <sample id="3" rate="100">
+            <variable longname="LAMS Sequence Number, Beam 1" name="SEQ3" units="none"/>
+            <variable length="512" longname="LAMS Histogram Maximums, Beam 3" name="BEAM3" units="Mhz"/>
+        </sample>
+
+<!--
+        <sample id="4" rate="50">
+            <variable longname="LAMS Sequence Number, Beam 4" name="SEQ4" units="none"/>
+            <variable length="512" longname="LAMS Histogram Maximums, Beam 4" name="BEAM4" units="Mhz"/>
+        </sample>
 -->
-      <parameter name="nAVG" type="int" value="16"/>
-      <parameter name="nSKIP" type="int" value="5"/>
-      <parameter name="nPEAK" type="int" value="2800"/>
-
-<!-- The rate is is set to 100 for in-house and post-processing.  Set to 1 for
-           one-point-pick-off onboard the aircraft only. -->
-      <sample id="1" rate="100">
-        <variable length="512" longname="LAMS histogram averages" name="LAMS_AVG" units="Mhz"/>
-      </sample>
-      <sample id="2" rate="100">
-        <variable length="512" longname="LAMS histogram maximums" name="LAMS_MAX" units="Mhz"/>
-      </sample>
     </sensor>
+
     <serialSensor ID="PIC1301_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC1301">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %*d %*f">
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
@@ -1713,6 +1717,8 @@
     </server>
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
+      <sensor IDREF="SIDS" devicename="usock::41001" id="200" suffix="_SIDS"/>
+      <sensor IDREF="LAMS3" devicename="usock::41002" id="300" suffix="_LAMS"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -1958,7 +1964,7 @@
       </output>
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="700">
         <parameter name="SerialNumber" type="string" value="A149505"/>
-        <parameter name="rate" type="int" value="100"/>
+        <parameter name="rate" type="int" value="10"/>
       </sensor>
     </dsm>
     <dsm derivedData="sock::7071" id="10" location="RWI" name="dsmRWI" rserialPort="30002" statusAddr="sock::30001">
@@ -1968,10 +1974,11 @@
       </output>
       <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="300" suffix="_RWIO">
         <parameter name="SerialNumber" type="string" value="F2DC002"/>
-        <parameter name="RESOLUTION" type="int" value="10"/></sensor>
+        <parameter name="RESOLUTION" type="int" value="10"/>
+      </sensor>
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="500">
         <parameter name="SerialNumber" type="string" value="477551"/>
-        <parameter name="rate" type="int" value="100"/>
+        <parameter name="rate" type="int" value="10"/>
         <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="10"/>
