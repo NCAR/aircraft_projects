@@ -48,6 +48,15 @@ fi
 if ! egrep -q "/raf_localhost.cfg" $cf; then
   sed -i 's/localhost.cfg/localhost.cfg\ncfg_file=\/etc\/nagios\/raf_localhost.cfg/' $cf
 fi
+if ! egrep -q "log_external_commands=1" $cf; then
+  sed -i 's/log_external_commands=1/log_external_commands=0/' $cf
+fi
+if ! egrep -q "log_passive_checks=1" $cf; then
+  sed -i 's/log_passive_checks=1/log_passive_checks=0/' $cf
+fi
+if ! egrep -q "use_syslog=1" $cf; then
+  sed -i 's/use_syslog=1/use_syslog=0/' $cf
+fi
 
 /sbin/chkconfig --level 345 nagios on
 /sbin/chkconfig --add raf_nagios_init
@@ -64,6 +73,8 @@ rm -rf %{buildroot}
 /usr/lib/nagios/plugins/raf_*
 
 %changelog
+* Thu Nov 13 2014 Chris Webster <cjw@ucar.edu> - 1.0-12
+- Change logging options in nagios.cfg.
 * Mon Mar 05 2012 John Wasinger <wasinger@ucar.edu> - 1.0-11
 - Omit non ARCOM based DSMs from the list when checking CF cards.
 * Wed Feb 15 2012 John Wasinger <wasinger@ucar.edu> - 1.0-10
