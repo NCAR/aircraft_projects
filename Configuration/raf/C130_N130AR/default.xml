@@ -1550,6 +1550,42 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
+
+    <dsm derivedData="sock::7071" id="18" location="Video_Rack" name="dsm318" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_318"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D001.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_318" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="deg_C">
+              <calfile file="RSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="deg_C">
+              <calfile file="RSTB1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
+
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_319"/>
         <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000">
@@ -1572,10 +1608,39 @@
                 </variable>
             </sample>
         </sensor>
+        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+            <calfile file="A2D015.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <parameter name="rate" type="int" value="500"/>
+            <sample id="1" rate="1">
+                <parameter name="temperature" type="bool" value="true"/>
+                <variable longname="A2D Temperature" name="A2DTEMP_319" units="deg_C"/>
+            </sample>
+        <sample id="2" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="hPa">
+              <calfile file="QCF.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Raw Dynamic Pressure, Fuselage" name="CAVP_DPB" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="hPa">
+              <calfile file="CAVP_DPB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
+        </sensor>
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
+
     <dsm id="20" location="Fwd_FS245_1" name="dsm320" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_320"/>
         <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000" suffix="_IRS2">
@@ -1622,16 +1687,8 @@
               <calfile file="QCR.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="QCF.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
           <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="V">
-            <parameter name="channel" type="int" value="2"/>
+            <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="hPa">
@@ -1639,7 +1696,7 @@
             </poly>
           </variable>
           <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="V">
-            <parameter name="channel" type="int" value="3"/>
+            <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="hPa">
@@ -1647,7 +1704,7 @@
             </poly>
           </variable>
           <variable longname="Recovery Air Temperature, Radome Left" name="RTRL" units="V">
-            <parameter name="channel" type="int" value="4"/>
+            <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
@@ -1655,7 +1712,7 @@
             </poly>
           </variable>
           <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="V">
-            <parameter name="channel" type="int" value="5"/>
+            <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="hPa">
@@ -1663,19 +1720,11 @@
             </poly>
           </variable>
           <variable longname="Dewpoint Cavity Pressure, Top" name="CAVP_DPT" units="V">
-            <parameter name="channel" type="int" value="6"/>
+            <parameter name="channel" type="int" value="5"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="hPa">
               <calfile file="CAVP_DPT.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Dewpoint Cavity Pressure, Bottom" name="CAVP_DPB" units="V">
-            <parameter name="channel" type="int" value="7"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="CAVP_DPB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
@@ -1704,10 +1753,11 @@
             <socket block="false" type="mcrequest"/>
         </output>
     </dsm>
+
     <dsm derivedData="sock::7071" id="21" location="Video_Rack" name="dsm321" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_321"/>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D008.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
@@ -1743,7 +1793,7 @@
         </sample>
       </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
-            <calfile file="A2D1706.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D1702.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
@@ -1768,22 +1818,6 @@
               <calfile file="XUVI.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
-            <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="deg_C">
-              <calfile file="RSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="deg_C">
-              <calfile file="RSTB1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
           <variable longname="Radiometric Surface Temperature" name="TRSTB" units="V">
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="1"/>
@@ -1798,6 +1832,7 @@
             <socket type="mcrequest"/>
         </output>
     </dsm>
+
     <dsm derivedData="sock::7071" id="23" location="AftOvrhd_L" name="dsm323" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_323"/>
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
@@ -1806,7 +1841,7 @@
             </sample>
         </sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D018.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D1714.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
@@ -1824,7 +1859,7 @@
             </poly>
           </variable>
           <variable longname="CN Counter Inlet Temperature" name="CNTEMP" units="V">
-            <parameter name="channel" type="int" value="1"/>
+            <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="deg_C">
@@ -1832,7 +1867,7 @@
             </poly>
           </variable>
           <variable longname="Raw CN Counter Sample Flow Rate" name="FCN" units="V">
-            <parameter name="channel" type="int" value="2"/>
+            <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="vlpm">
@@ -1900,12 +1935,13 @@
         </sample>
       </sensor>
     </dsm>
+
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_324"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS5" id="110"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="120"/>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D1702.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+            <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
             <sample id="1" rate="1">
                 <parameter name="temperature" type="bool" value="true"/>
@@ -1952,7 +1988,7 @@
             <socket type="mcrequest"/>
         </output>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="400">
-        <calfile file="A2D012.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <calfile file="A2D009.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
@@ -1970,6 +2006,7 @@
         </sample>
       </sensor>
     </dsm>
+
     <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmGustPod" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
