@@ -1440,7 +1440,6 @@
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-
     <sensor ID="ISAF" class="UDPSocketSensor" devicename="usock::30124" suffix="_ISAF">
 
 <!--
@@ -1498,6 +1497,7 @@ Index  Name      Description                           Units
 	      <variable longname="Laser 3rd Pump Diode Input Current" name="PUMPIN3" units="Amperes"/>
         </sample>
     </sensor>
+
 <!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
     <sensor ID="PARCELS" class="UDPSocketSensor" devicename="usock::30100">
 
@@ -1601,6 +1601,7 @@ Index  Name      Description                           Units
 -->
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
+      <sensor IDREF="ISAF" devicename="usock::30124" id="900" suffix="_ISAF"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -1889,28 +1890,6 @@ Index  Name      Description                           Units
         </sample>
       </sensor>
 
-<!--
-        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="220">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1704.dat"/>
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="10">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="50" type="int"/>
-                <variable name="THIML1" units="V" longname="HIMIL Tip Temperature">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <poly coefs="0 100 0" units="deg_C"/>
-                </variable>
-                <variable name="THIML2" units="V" longname="HIMIL Tip Temperature">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <poly coefs="0 100 0" units="deg_C"/>
-                </variable>
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_AFTL1" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
--->
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
@@ -1991,25 +1970,26 @@ Index  Name      Description                           Units
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="HIMIL Tip Temperature" name="THIML2_ISAF" units="V">
+          <variable longname="HIMIL Strut Temperature" name="THIML1" units="V">
             <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
-              <calfile file="THIML2_ISAF.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="THIML1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="HIMIL Tip Temperature" name="THIML1_ISAF" units="V">
+          <variable longname="HIMIL Cigar Temperature" name="THIML2" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
-              <calfile file="THIML1_ISAF.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="THIML2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
       </sensor>
-      <serialSensor IDREF="CO_2000" devicename="/dev/ttyS8" id="600" suffix="_AL"/>
+      <serialSensor IDREF="CO_2005" devicename="/dev/ttyS8" id="600" suffix="_AL"/>
+      <serialSensor IDREF="PIC1301_CO2" devicename="/dev/ttyS9" id="800" suffix="_PIC1301"/>
     </dsm>
     <dsm derivedData="sock::7071" id="18" location="Video_Rack" name="dsm318" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_318"/>
