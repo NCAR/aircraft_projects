@@ -1,7 +1,7 @@
 Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
-Release: 11
+Release: 12
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/

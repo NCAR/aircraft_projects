@@ -1,11 +1,11 @@
 Summary: Web-based live camera image viewer (for use with capture program)
 Name: raf-www-camera
 Version: 1
-Release: 2
+Release: 3
 Group: Applications/Web
 Source: %{name}-%{version}.tar.gz
 License: none
-Distribution: RHEL 5.3 Linux
+Distribution: RHEL 6.5 Linux
 Requires: httpd php php-pgsql php-pecl-json jquery python-inotify
 # BuildRoot is only needed by older rpm versions
 BuildRoot: %{_tmppath}/%{name}-root
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 /var/www/html/camera/*
 
 %changelog
+* Mon Sep 30 2013 <cjw@ucar.edu> 1.2
+- Fix interface bug.
+
 * Mon Aug 31 2009 <dlagreca@ucar.edu> 0.1-2
 - Update for JQuery upgrade.
 
