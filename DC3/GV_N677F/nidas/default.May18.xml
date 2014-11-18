@@ -211,7 +211,7 @@
         <variable longname="ADC True Air Speed" name="TAS" units="m/s"/>
       </sample>
       <sample id="0211" rate="2">
-        <variable longname="ADC Total Air Temperature" name="TT" units="deg_C"/>
+        <variable longname="ADC Total Air Temperature" name="RT" units="deg_C"/>
       </sample>
       <sample id="0213" rate="2">
         <variable longname="ADC Ambient Air Temperature" name="AT" units="deg_C"/>
@@ -427,7 +427,7 @@
         <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
         <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
         <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=OMNISTAR" name="GGQUAL" units="none"/>
-        <variable longname="Reference GPS number of satellites tracked" name="GGNSAT" units="number"/>
+        <variable longname="Reference GPS number of satellites used" name="GGNSAT" units="number"/>
         <variable longname="Reference GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
         <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
         <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
@@ -454,7 +454,7 @@
         <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
         <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
         <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS" name="GGQUAL" units="none"/>
-        <variable longname="Reference GPS number of satellites tracked" name="GGNSAT" units="count"/>
+        <variable longname="Reference GPS number of satellites used" name="GGNSAT" units="count"/>
         <variable longname="Reference GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
         <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
         <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
@@ -790,21 +790,29 @@
         <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
         <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
         <variable longname="UHSAS Sample Flow" name="USMPFLW" units="V">
-          <linear intercept="-0.155" slope="0.3543" units="sccs"/>
+          <poly units="sccs">
+            <calfile file="USMPFLW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+          </poly>
         </variable>
         <variable longname="UHSAS Reference Intensity" name="UREF" units="V"/>
         <variable longname="UHSAS Temperature in Canister, signal" name="UTEMP" units="V"/>
         <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="V">
-          <linear intercept="0.0" slope="4.1667" units="sccs"/>
+          <poly units="sccs">
+            <calfile file="USHFLW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+          </poly>
         </variable>
         <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
         <variable longname="UHSAS Temperature in Canister" name="UBTMP" units="V">
-          <linear intercept="0.0" slope="173.722" units="K"/>
+          <poly units="K">
+            <calfile file="UBTMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+          </poly>
         </variable>
 
 <!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/-->
         <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="V">
-          <linear intercept="10.556" slope="22.222" units="kPa"/>
+          <poly units="kPa">
+            <calfile file="UPRESS.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+          </poly>
         </variable>
 
 <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
@@ -1484,23 +1492,23 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor IDREF="SMPS" devicename="inet::30104" id="1800" suffix="_SMPS"/>
-      <sensor IDREF="GTCIMS" devicename="inet::30110" id="2000" suffix="_GCIM"/>
-      <sensor IDREF="PCIMS" devicename="inet::30111" id="2200" suffix="_PCIM"/>
+<!--      <sensor IDREF="SMPS" devicename="inet::30104" id="1800" suffix="_SMPS"/> -->
+<!--      <sensor IDREF="GTCIMS" devicename="inet::30110" id="2000" suffix="_GCIM"/> -->
+<!--      <sensor IDREF="PCIMS" devicename="inet::30111" id="2200" suffix="_PCIM"/> -->
       <sensor IDREF="NONOYO3" devicename="inet::30107" id="2400" suffix="_ACD"/>
-      <sensor IDREF="HARP" devicename="inet::30108" id="2600" suffix="_HRP"/>
+<!--      <sensor IDREF="HARP" devicename="inet::30108" id="2600" suffix="_HRP"/> -->
       <sensor IDREF="THREEVCPI" devicename="inet::30114" id="2800" suffix="_3VCPI"/>
       <sensor IDREF="THREEVC2D" devicename="inet::30113" id="3000" suffix="_3VC2D"/>
-      <sensor IDREF="TOGA" devicename="inet::30120" id="3200" suffix="_TOGA"/>
+<!--      <sensor IDREF="TOGA" devicename="inet::30120" id="3200" suffix="_TOGA"/> -->
     </dsm>
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
-      <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
+<!--      <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/> -->
       <arincSensor IDREF="LSZ-GV" devicename="/dev/arinc1" id="2000"/>
-      <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
-      <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G2"/>
-      <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS5" id="140" suffix="_GMN"/>
-      <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="150"/>
+<!--      <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/> -->
+<!--      <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G2"/> -->
+<!--      <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS5" id="140" suffix="_GMN"/> -->
+<!--      <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="150"/> -->
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="160"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
         <calfile file="A2D016.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
@@ -1559,39 +1567,12 @@
     </dsm>
     <dsm derivedData="sock::7071" id="4" location="cabin_mpdb" name="dsm304" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
-      <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
-        <sample id="0314" rate="25">
-          <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
-            <linear intercept="0.0" slope="1.0" units="degree_T"/>
-          </variable>
-        </sample>
-        <sample id="0324" rate="50">
-          <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
-            <linear intercept="0.5" slope="1.0" units="degree">
-              <calfile file="PITCH.dat" path="$PROJ_DIR/Configuration/raf/cal_files/Engineering/GV_N677F"/>
-            </linear>
-          </variable>
-        </sample>
-      </arincSensor>
-      <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2">
-        <sample id="0314" rate="25">
-          <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
-            <linear intercept="0.0" slope="1.0" units="degree_T"/>
-          </variable>
-        </sample>
-        <sample id="0324" rate="50">
-          <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
-            <linear intercept="0.5" slope="1.0" units="degree"/>
-          </variable>
-        </sample>
-        <sample id="0325" rate="50">
-          <variable longname="IRS Aircraft Roll Angle" name="ROLL" units="degree">
-            <linear intercept="0.0" slope="1.0" units="degree"/>
-          </variable>
-        </sample>
-      </arincSensor>
+
+      <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
+      <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2"/>
       <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
       <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G"/>
+
       <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110">
         <sample id="1">
           <variable longname="Raw Static Pressure, Fuselage" name="PSF" units="hPa"/>
@@ -1665,19 +1646,19 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <linear intercept="-50" slope="10" units="deg_C"/>
           </variable>
-          <variable longname="Total Temperature, Radome Left" name="TTRL" units="V">
+          <variable longname="Recovery Temperature, Radome Left" name="RTRL" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-81.781 21.082 0.2515" units="deg_C"/>
           </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
+          <variable longname="Recovery Temperature, Deiced Right, HARCO" name="RTHR1" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-79.383 21.175 0.2708" units="deg_C"/>
           </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
+          <variable longname="Recovery Temperature, Deiced Right, HARCO" name="RTHR2" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
