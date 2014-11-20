@@ -429,7 +429,7 @@
         <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
         <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
         <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=OMNISTAR" name="GGQUAL" units="none"/>
-        <variable longname="Reference GPS number of satellites tracked" name="GGNSAT" units="number"/>
+        <variable longname="Reference GPS number of satellites used" name="GGNSAT" units="number"/>
         <variable longname="Reference GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
         <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
         <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
@@ -475,7 +475,7 @@
         <variable longname="GPS Latitude" name="GGLAT" units="degree_N"/>
         <variable longname="GPS Longitude" name="GGLON" units="degree_E"/>
         <variable longname="GPS Qual, 0=inval,1=GPS,2=DGPS" name="GGQUAL" units="none"/>
-        <variable longname="GPS number of satellites tracked" name="GGNSAT" units="count"/>
+        <variable longname="GPS number of satellites used" name="GGNSAT" units="count"/>
         <variable longname="GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
         <variable longname="GPS Altitude (MSL)" name="GGALT" units="m"/>
         <variable longname="GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
@@ -1076,8 +1076,10 @@
     <sensor ID="SIDS" class="raf.SidsNetSensor">
       <parameter name="RESOLUTION" type="int" value="25"/>
       <sample id="1" rate="1">
-        <variable length="64" longname="SIDS Raw Accumulation (per cell)" name="ASIDS" units="count"/>
-        <variable longname="SIDS Rejected Particle Count" name="REJECT" units="count"/>
+        <variable length="128" longname="SIDS Raw Accumulation (per cell)" name="HEIGHT" units="count"/>
+        <variable length="128" longname="SIDS Raw Accumulation (per cell)" name="WIDTH" units="count"/>
+        <variable length="128" longname="SIDS Inter-arrival Time" name="IAT" units="count"/>
+        <variable longname="SIDS Rejected Particle Count" name="REJDOF" units="count"/>
       </sample>
     </sensor>
     <sensor ID="MTPATP" class="UDPSocketSensor" devicename="usock::30102" suffix="_MTP">
