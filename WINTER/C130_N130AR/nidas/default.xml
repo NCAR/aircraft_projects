@@ -1993,14 +1993,10 @@ Index  Name      Description                           Units
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
-        <calfile file="A2D011.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300">
+        <parameter name="SerialNumber" type="string" value="011"/>
         <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_322" units="deg_C"/>
-        </sample>
-        <sample id="2" rate="10">
+        <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
           <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LPB" units="V">
