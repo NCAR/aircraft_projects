@@ -707,6 +707,18 @@
         </service>
     </server>
 
+    <dsm id="99" location="acserver" name="acserver" derivedData="sock::31000" statusAddr="sock:192.168.184.1:30001">
+      <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS0" id="120" suffix="_GP">
+          <parameter name="INSTRUMENT" type="string" value="GUSTPOD"/>
+          <parameter name="LEVER_ARM_X" type="int" value="564"/>
+          <parameter name="LEVER_ARM_Y" type="int" value="730"/>
+          <parameter name="LEVER_ARM_Z" type="int" value="-284"/>
+      </serialSensor>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+    </dsm>
+
     <dsm name="ltlblu" location="LWO" id="46" rserialPort="30002" derivedData="sock::31000" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
