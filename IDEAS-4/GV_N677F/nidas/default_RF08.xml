@@ -460,7 +460,6 @@
           <variable longname="Reference GPS Vertical Speed" name="GGVSPD" units="m/s"/>
       </sample>
 
-        <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
     <serialSensor ID="Garmin_GPS" baud="4800" class="GPS_NMEA_Serial" databits="8" parity="none" stopbits="1">
@@ -1100,9 +1099,10 @@
     <sensor ID="SIDS" class="raf.SidsNetSensor">
       <parameter name="RESOLUTION" type="int" value="25"/>
       <sample id="1" rate="1">
-        <variable length="128" longname="SIDS Raw Accumulation (per cell)" name="HSIDS" units="count"/>
-        <variable length="128" longname="SIDS Raw Accumulation (per cell)" name="WSIDS" units="count"/>
-        <variable longname="SIDS Rejected Particle Count" name="REJECT" units="count"/>
+        <variable length="16" longname="SIDS Raw Accumulation (per cell)" name="HEIGHT" units="count"/>
+        <variable length="256" longname="SIDS Raw Accumulation (per cell)" name="WIDTH" units="count"/>
+        <variable length="100" longname="SIDS Inter-arrival Time" name="IAT" units="count"/>
+        <variable longname="SIDS Rejected Particle Count" name="REJDOF" units="count"/>
       </sample>
     </sensor>
     <sensor ID="MTP" class="UDPSocketSensor" devicename="usock::30101">
