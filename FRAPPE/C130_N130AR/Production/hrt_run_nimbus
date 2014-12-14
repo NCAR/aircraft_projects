@@ -1,0 +1,8 @@
+#!/bin/csh
+
+# Remove existing files.  Helps to avoid if a residual data if nimbus fails.
+/bin/rm ${DAT}/FRAPPE?f??h.nc
+
+foreach setup_file ( hrt_setup_?f?? )
+  nimbus -b $setup_file
+end
