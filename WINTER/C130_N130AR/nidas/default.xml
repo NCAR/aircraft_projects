@@ -486,10 +486,8 @@
         <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
         <variable longname="Reference GPS Vertical Speed" name="GGVSPD" units="m/s"/>
       </sample>
-
         <message length="0" position="end" separator="\n"/> 
     </serialSensor>
-
     <serialSensor ID="CMIGITS3" baud="38400" class="raf.CMIGITS3_Serial" databits="8" parity="odd" stopbits="1" timeout="5">
       <sample id="1" rate="10">
 
@@ -1788,20 +1786,12 @@ Index  Name      Description                           Units
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTHL1" units="V">
+          <variable longname="Recovery Temperature, Deiced Left, HARCO" name="RTHL1" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
               <calfile file="RTHL1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTHL2" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="RTHL2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
@@ -1813,15 +1803,23 @@ Index  Name      Description                           Units
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_VID1" units="deg_C"/>
             </sample>
-        <sample id="2" rate="100">
+        <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Radiometric Surface Temperature" name="TRSTB" units="V">
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
             <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-              <calfile file="TRSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="deg_C">
+              <calfile file="RSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="deg_C">
+              <calfile file="RSTB1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
@@ -1885,7 +1883,6 @@ Index  Name      Description                           Units
           </variable>
         </sample>
       </sensor>
-
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
@@ -2002,20 +1999,24 @@ Index  Name      Description                           Units
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
+          <variable longname="RSTB Sensor Head Temperature" name="TRSTB" units="V">
             <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
-              <calfile file="RSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="TRSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
+        </sample>
+        <sample id="3" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
+          <variable longname="Recovery Temperature, Deiced Left, HARCO" name="RTHL2" units="V">
             <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
-              <calfile file="RSTB1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="RTHL2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
@@ -2034,24 +2035,24 @@ Index  Name      Description                           Units
           <parameter name="numpoints" type="int" value="50"/>
           <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LPB" units="V">
             <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
             <poly units="V">
               <calfile file="F2DIO1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
           <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_LPB" units="V">
             <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
             <poly units="V">
               <calfile file="F2DIO32.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
           <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LPB" units="V">
             <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
             <poly units="V">
               <calfile file="F2DIO64.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
