@@ -1021,6 +1021,38 @@
 -->
         <message length="220" position="end" separator="\xff\xff\x07"/>
     </serialSensor>
+    <serialSensor ID="VCSEL" baud="38400" class="raf.VCSEL_Serial" databits="8" parity="none" stopbits="1">
+
+<!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
+      <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %c %*f %f %*f %*f %f %f %f %f">
+        <variable longname="VCSEL Status Code" name="STATUS" units="none"/>
+        <variable longname="VCSEL Ambient Temperature" name="AT" units="deg_K"/>
+        <variable longname="VCSEL Ambient Pressure" name="PS" units="torr">
+            <linear intercept="0.0" slope="1.333223" units="hPa"/>
+        </variable>
+        <variable longname="VCSEL Laser Temperature" name="LSRTMP" units="ohm"/>
+        <variable longname="VCSEL Set Temperature" name="SETTMP" units="ohm"/>
+        <variable longname="VCSEL Thermoelectric Cooler Current" name="TCC" units="count"/>
+        <variable longname="VCSEL Mode" name="MODE" units="none"/>
+        <variable longname="VCSEL Center Current" name="CNTRCUR" units="count"/>
+        <variable longname="VCSEL Peak Position" name="PKPOS" units="count"/>
+        <variable longname="VCSEL Pre Gain" name="PREGAIN" units="count"/>
+        <variable longname="VCSEL AC Gain" name="ACGAIN" units="count"/>
+        <variable longname="VCSEL Averaged Laser Intensity" name="LSRINT" units="count"/>
+      </sample>
+      <sample id="2" rate="25" scanfFormat="%f %f %*f %*f">
+        <variable longname="VCSEL Moisture Number Density" name="RAWCONC" units="#/cm3"/>
+        <variable longname="VCSEL Sample Laser Intensity" name="SMPLSRINT" units="mV"/>
+
+<!--        <variable longname="VCSEL Frost Dew Point" name="DPV" units="deg_C"/>  third %f above -->
+      </sample>
+
+<!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
+      <sample id="3" rate="1" scanfFormat="SPEC %98f">
+        <variable length="98" longname="VCSEL Absorbption Spectrum" name="ABSPEC" units="count"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
     <serialSensor ID="RDMA" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
@@ -1745,6 +1777,7 @@ Index  Name      Description                           Units
     </dsm>
     <dsm derivedData="sock::7071" id="21" location="Video_Rack" name="dsm321" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_321"/>
+        <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="330" suffix="_VXL"/>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D008.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
