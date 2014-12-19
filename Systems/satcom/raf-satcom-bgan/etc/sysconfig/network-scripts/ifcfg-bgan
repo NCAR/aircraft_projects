@@ -90,12 +90,12 @@ CONNECT_POLL=2
 # Aug 2014: BGAN:BACKGROUND no longer works
 #   got PacketData to work, tried others
 # No go:
-# SERVICENAME=BGAN:BACKGROUND
+SERVICENAME=SBB:BACKGROUND
 # SERVICENAME=SBB
 # SERVICENAME=SBB-1
 # SERVICENAME=BGAN
 #  Works:
-SERVICENAME=PacketData
+# SERVICENAME=PacketData
 # SERVICENAME=PacketData-1
 # Decidedlly not an ISDN connection (28# is an ISDN type)
 # SERVICENAME=ISDN
@@ -117,7 +117,7 @@ PIDFILE="/var/run/$CF_BASE-pppoe.pid"
 # easier on CPU usage, but may not work for you.  It is safer to use
 # "no", but you may want to experiment with "yes".  "yes" is generally
 # safe on Linux machines with the n_hdlc line discipline; unsafe on others.
-SYNCHRONOUS=yes
+SYNCHRONOUS=no
 
 # mru n  Set the MRU [Maximum Receive Unit] value to n. Pppd  will
 # ask  the  peer  to  send packets of no more than n bytes.
@@ -153,7 +153,7 @@ MTU=1492
 #                         -j TCPMSS --clamp-mss-to-pmtu
 # 
 # CLAMPMSS=1452
-#CLAMPMSS=no
+CLAMPMSS=1412
 
 #  lcp-echo-interval n: If this option is given, pppd will send
 # an LCP echo-request frame to the peer every n seconds.  Normally
