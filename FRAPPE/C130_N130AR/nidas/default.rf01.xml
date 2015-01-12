@@ -1585,14 +1585,14 @@
           <sample id="0314" rate="25">
             <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
               <linear units="degree_T">
-                <calfile file="THDG.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR/"/>
+                <calfile file="THDG.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS1/"/>
               </linear>
             </variable>
           </sample>
           <sample id="0324" rate="50">
             <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
               <linear units="degree">
-                <calfile file="PITCH.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR/"/>
+                <calfile file="PITCH.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS1/"/>
               </linear>
             </variable>
           </sample>
@@ -1645,12 +1645,16 @@
         <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
             <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
-              <linear intercept="0.0" slope="1.0" units="degree_T"/>
+              <linear units="degree_T">
+                <calfile file="THDG.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS2/"/>
+              </linear>
             </variable>
           </sample>
           <sample id="0324" rate="50">
             <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
-              <linear intercept="0.0" slope="1.0" units="degree"/>
+              <linear units="degree">
+                <calfile file="PITCH.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS2/"/>
+              </linear>
             </variable>
           </sample>
         </arincSensor>
