@@ -1745,14 +1745,6 @@ Index  Name      Description                           Units
               <calfile file="BDIFR.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="Recovery Air Temperature, Radome Left" name="RTRL" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="RTRL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
           <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="V">
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="2"/>
@@ -1797,7 +1789,7 @@ Index  Name      Description                           Units
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_VID0" units="deg_C"/>
             </sample>
-        <sample id="2" rate="100">
+        <sample id="3" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
           <variable longname="Recovery Temperature, Deiced Left, HARCO" name="RTHL1" units="V">
@@ -1991,6 +1983,22 @@ Index  Name      Description                           Units
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
               <calfile file="THIML2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Aerolaser Flow" name="COFLOW_AL" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="">
+              <calfile file="COFLOW_AL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Aerolaser Inlet Pressure Measurement" name="INLETP_AL" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="INLETP_AL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
