@@ -1433,6 +1433,19 @@
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+
+    <sensor ID="ARNOLD" class="UDPSocketSensor" devicename="usock::30112" suffix="_ARN">
+        <sample id="1" rate="1" scanfFormat="ARNOLD,%*dT%*d%,%f,%f,%f,%f,%f,%f">
+            <variable longname="Dinitrogen Pentoxide" name="N2O5" units="pptv"/>
+            <variable longname="Nitrate Radical" name="NO3" units="pptv"/>
+            <variable longname="Total Reactive Nitrogen" name="NOY" units="ppbv"/>
+            <variable longname="Odd Oxygen" name="OX" units="ppbv"/>
+            <variable longname="Nitrogen Dioxide" name="NO2" units="ppbv"/>
+            <variable longname="Nitric Oxide" name="NO" units="ppbv"/>
+        </sample>
+    </sensor>
+
+
     <sensor ID="ISAF" class="UDPSocketSensor" devicename="usock::30124" suffix="_ISAF">
 
 <!--
@@ -1595,6 +1608,7 @@ Index  Name      Description                           Units
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="ISAF" devicename="usock::30124" id="900" suffix="_ISAF"/>
+      <sensor IDREF="ARNOLD" devicename="usock::30112" id="1000" suffix="_ARN"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
