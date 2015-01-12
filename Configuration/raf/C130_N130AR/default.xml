@@ -454,37 +454,29 @@
     <serialSensor ID="Novatel_GPS" baud="57600" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
 
 <!-- GGA record -->
-        <sample id="1" rate="5">
-            <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="sec"/>
-            <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
-            <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
-            <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS" name="GGQUAL" units="none"/>
-            <variable longname="Reference GPS number of satellites tracked" name="GGNSAT" units="number"/>
-            <variable longname="Reference GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
-            <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
-            <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
-            <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
-            <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
-        </sample>
+      <sample id="1" rate="10">
+        <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=OMNISTAR" name="GGQUAL" units="none"/>
+        <variable longname="Reference GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
+      </sample>
 
 <!-- RMC record -->
-        <sample id="2" rate="5">
-            <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="none"/>
-            <variable longname="Reference GPS Ground Speed" name="GGSPD" units="m/s"/>
-            <variable longname="Reference GPS Track Angle" name="GGTRK" units="degree_T"/>
-            <variable longname="Reference GPS Ground Speed Vector, East Component" name="GGVEW" units="m/s"/>
-            <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
-            <variable longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)" name="GGRepLag" units="s"/>
-        </sample>
+      <sample id="2" rate="10">
+        <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="none"/>
+        <variable longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)" name="GGRepLag" units="s"/>
+      </sample>
 
 <!-- BESTPOS record -->
-      <sample id="4" rate="5">
-        <variable longname="Reference GPS Latitude" name="GGLATB" units="degree_N"/>
-        <variable longname="Reference GPS Longitude" name="GGLONB" units="degree_E"/>
-        <variable longname="Reference GPS Altitude (MSL)" name="GGALTB" units="m"/>
-        <variable longname="Standard Deviation of Reference GPS Latitude" name="GGLATBDEV" units="degree_N"/>
-        <variable longname="Standard Deviation of Reference GPS Longitude" name="GGLONBDEV" units="degree_E"/>
-        <variable longname="Standard Deviation of Reference GPS Altitude (MSL)" name="GGALTBDEV" units="m"/>
+      <sample id="4" rate="10">
+          <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
+          <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
+          <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
+          <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
+          <variable longname="Standard Deviation of Reference GPS Latitude" name="GGLATSD" units="m"/>
+          <variable longname="Standard Deviation of Reference GPS Longitude" name="GGLONSD" units="m"/>
+          <variable longname="Standard Deviation of Reference GPS Altitude (MSL)" name="GGALTSD" units="m"/>
+          <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
+          <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
+          <variable longname="Reference GPS number of satellites used in solution" name="GGNSAT" units="number"/>
       </sample>
 
 <!-- BESTVEL record -->
@@ -507,7 +499,7 @@
             <variable longname="GPS Latitude" name="GGLAT" units="degree_N"/>
             <variable longname="GPS Longitude" name="GGLON" units="degree_E"/>
             <variable longname="GPS Qual, 0=inval,1=GPS,2=DGPS" name="GGQUAL" units="none"/>
-            <variable longname="GPS number of satellites tracked" name="GGNSAT" units="number"/>
+            <variable longname="GPS number of satellites used" name="GGNSAT" units="number"/>
             <variable longname="GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
             <variable longname="GPS Altitude (MSL)" name="GGALT" units="m"/>
             <variable longname="GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
@@ -982,23 +974,31 @@
             <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
             <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
             <variable longname="UHSAS Sample Flow" name="USMPFLW" units="V">
-                <linear intercept="-0.155" slope="0.3543" units="sccs"/>
+              <poly units="sccs">
+                <calfile file="USMPFLW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              </poly>
             </variable>
             <variable longname="UHSAS Reference Intensity" name="UREF" units="V"/>
             <variable longname="UHSAS Temperature in Canister, signal" name="UTEMP" units="V"/>
             <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="V">
-                <linear intercept="0.0" slope="4.1667" units="sccs"/>
+              <poly units="sccs">
+                <calfile file="USHFLW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              </poly>
             </variable>
             <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
             <variable longname="UHSAS Temperature in Canister" name="UBTMP" units="V">
-                <linear intercept="0.0" slope="173.722" units="K"/>
+              <poly units="K">
+                <calfile file="UBTMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              </poly>
             </variable>
 
 <!--
             <variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/>
 -->
             <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="V">
-                <linear intercept="10.556" slope="22.222" units="kPa"/>
+              <poly units="kPa">
+                <calfile file="UPRESS.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              </poly>
             </variable>
 
 <!--
@@ -1591,12 +1591,16 @@
         <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
             <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
-              <linear intercept="0.0" slope="1.0" units="degree_T"/>
+              <linear units="degree_T">
+                <calfile file="THDG.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS1/"/>
+              </linear>
             </variable>
           </sample>
           <sample id="0324" rate="50">
             <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
-              <linear intercept="0.0" slope="1.0" units="degree"/>
+              <linear units="degree">
+                <calfile file="PITCH.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS1/"/>
+              </linear>
             </variable>
           </sample>
         </arincSensor>
@@ -1646,12 +1650,16 @@
         <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000" suffix="_IRS2">
           <sample id="0314" rate="25">
             <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
-              <linear intercept="0.0" slope="1.0" units="degree_T"/>
+              <linear units="degree_T">
+                <calfile file="THDG.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS2/"/>
+              </linear>
             </variable>
           </sample>
           <sample id="0324" rate="50">
             <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
-              <linear intercept="0.0" slope="1.0" units="degree"/>
+              <linear units="degree">
+                <calfile file="PITCH.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS2/"/>
+              </linear>
             </variable>
           </sample>
         </arincSensor>
