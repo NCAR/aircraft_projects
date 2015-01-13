@@ -1113,6 +1113,16 @@
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
     </sensor>
+    <sensor ID="AMS" class="UDPSocketSensor" devicename="usock::30115" suffix="_AMS">
+        <sample id="1" rate="1" scanfFormat="%*d %*d %*f %*d %*d %f %*f %f %f %f %f %f %*f %*f %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*f %*f %*f %*f %*f %*f %*f %*f">
+            <variable longname="AMS Air Beam" name="AIRBM" units=" Hz"/>
+            <variable longname="AMS Flow Rate" name="FLOW" units="cc/sec"/>
+            <variable longname="AMS Sulfate Loadings" name="SO4" units="ug/m3"/>
+            <variable longname="AMS Nitrate Loadings" name="NO3" units="ug/m3"/>
+            <variable longname="AMS Organics less than 60 Loadings" name="R" units="ug/m3"/>
+            <variable longname="AMS Cloride Loadings" name="CL" units="ug/m3"/>
+        </sample>
+    </sensor>
     <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="usock::30107" suffix="_ACD">
         <sample id="1" rate="1" scanfFormat="NONO2O3,%f,%f,%f,%f">
             <variable longname="NO Mixing Ratio" name="NO" units="pptv"/>
@@ -1608,7 +1618,8 @@ Index  Name      Description                           Units
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="ISAF" devicename="usock::30124" id="900" suffix="_ISAF"/>
-      <sensor IDREF="ARNOLD" devicename="usock::30112" id="1000" suffix="_ARN"/>
+      <sensor IDREF="ARNOLD" devicename="usock::30112" id="950" suffix="_ARN"/>
+      <sensor IDREF="AMS" devicename="usock::30115" id="1000" suffix="_AMS"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
