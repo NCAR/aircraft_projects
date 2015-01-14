@@ -1,5 +1,4 @@
-
-FUN=project_init.R project_plots.R
+FUN=sproject_init.R clean_gps.R
 
 OFUN=$(FUN:%.R=.%.Ro)
 all: $(OFUN)

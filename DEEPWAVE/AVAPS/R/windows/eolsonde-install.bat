@@ -15,9 +15,18 @@ copy /Y project_init.R %USERPROFILE%
 copy /Y project_plots.R %USERPROFILE%
 copy /Y .Rprofile %USERPROFILE%
 
+copy /Y project_init.R %HOMEPATH%
+copy /Y project_plots.R %HOMEPATH%
+copy /Y .Rprofile %HOMEPATH%
+
 @rem Navidate to the user profile.  Since we may be installing from a USB (different drive), go to the drive first
 %SYSTEMDRIVE%
 cd %USERPROFILE%
+
+Rscript --vanilla --restore --save -e "source('project_init.R')"
+Rscript --vanilla --restore --save -e "source('project_plots.R')"
+
+cd %HOMEPATH%
 
 Rscript --vanilla --restore --save -e "source('project_init.R')"
 Rscript --vanilla --restore --save -e "source('project_plots.R')"
