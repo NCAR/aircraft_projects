@@ -21,7 +21,7 @@ endif
 
 ps ax | grep "acTrack2kml -o" | grep -qv grep
 if ($status) then
-  nohup /opt/local/bin/acTrack2kml -o >& /tmp/acTrack2kml.log &
+  nohup /opt/local/bin/acTrack2kml -o -v >& /tmp/acTrack2kml.log &
 endif
 
 # from DC3 project
@@ -91,7 +91,7 @@ endif
 # Nagios variable QC checks
 ps ax | grep qc_check | grep -qv grep
 if ($status) then
-  /home/local/raf/nagios-qc/qc_check.sh >& /tmp/qc_check.log &
+  /home/local/raf/nagios-qc/qc_check.sh 30 >& /tmp/qc_check.log &
 endif
 
 
