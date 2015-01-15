@@ -338,7 +338,7 @@ filter_igmp()
     iptables -A INPUT -i $1 -d $CLASS_D_MULTICAST -p igmp -j REJECT
 }
 
-filter_icmp()
+filter_icmp() #<eif>
 {
     ## ===================================================================
     ## ICMP
@@ -363,7 +363,7 @@ filter_icmp()
     # 17: address mask request
     # 18: address mask reply
 
-
+    local eif=$1        # interface
     iptables -A INPUT  -i $eif -p icmp -j icmp-in
     iptables -A OUTPUT -o $eif -p icmp -j icmp-out
 
