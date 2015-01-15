@@ -641,11 +641,15 @@ filter_ip()
     iptables -A OUTPUT -o $eif -p udp --dport 30010 -d $UCAR_128 -j ACCEPT
     iptables -A INPUT -i $eif -p udp --dport 30010 -d $UCAR_128 -j ACCEPT
 
-    #  3200{1-2} are for Remote Instrument Control (RIC)
+    #  3200{1-2} and {4-5} are for Remote Instrument Control (RIC)
     iptables -A OUTPUT -o $eif -p udp --dport 32001 -d $UCAR_128 -j ACCEPT # plane to ground
     iptables -A INPUT -i $eif -p udp --dport 32001 -s $UCAR_128 -j ACCEPT # ground to plane
     iptables -A OUTPUT -o $eif -p udp --dport 32002 -d $UCAR_128 -j ACCEPT # plane to ground
     iptables -A INPUT -i $eif -p udp --dport 32002 -s $UCAR_128 -j ACCEPT # ground to plane
+    iptables -A OUTPUT -o $eif -p udp --dport 32004 -d $UCAR_128 -j ACCEPT # plane to ground
+    iptables -A INPUT -i $eif -p udp --dport 32004 -s $UCAR_128 -j ACCEPT # ground to plane
+    iptables -A OUTPUT -o $eif -p udp --dport 32005 -d $UCAR_128 -j ACCEPT # plane to ground
+    iptables -A INPUT -i $eif -p udp --dport 32005 -s $UCAR_128 -j ACCEPT # ground to plane
 
 
     # iptables -A FORWARD -m limit -j LOG --log-prefix iptables_FORWARD \
