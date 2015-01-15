@@ -89,12 +89,17 @@ CHEAP_UNSAFE_EXT_IFS=()
 
 # Slow and expensive external interfaces.
 # Add eth3 if one activates Inmarsat ISDN
-SATCOM_EXT_IFS=(ppp+)
+SATCOM_EXT_IFS=(eth3)
 
 UNSAFE_EXT_IFS=(${CHEAP_UNSAFE_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]})
 
 # All external (WAN) interfaces
 EXT_IFS=(${CHEAP_UNSAFE_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]} ${SAFE_EXT_IFS[*]})
+
+# Set the interfaces on which IP masquerading should be enabled.  The SATCOM
+# interface does not need it when there is a PPPoE router doing it, while the 
+# other external interfaces do, assuming forwarding is enabled.
+MASQUERADE_IFS=(${SAFE_EXT_FS[*]})
 
 # Internal trusted interfaces. Forwarding is done between first two
 INT_IFS=(eth0 eth1)
@@ -123,6 +128,15 @@ UDP_PORT_FORWARDS=(\
     $ANYHOST 33500 192.168.84.151 31100 # John Ortega's system \
     $ANYHOST 33501 127.0.0.1      31101 #  acserver \
     $UCAR_128 33502 192.168.84.11  31102 # testing to adslap1 \
+    $UCAR_128 5500 192.168.184.178  5500 # VNC from ground to toga-pc\
+    $UCAR_128 5800 192.168.184.178  5800 # VNC from ground to toga-pc\
+    $UCAR_128 5801 192.168.184.178  5801 # VNC from ground to toga-pc\
+    $UCAR_128 5802 192.168.184.178  5802 # VNC from ground to toga-pc\
+    $UCAR_128 5803 192.168.184.178  5803 # VNC from ground to toga-pc\
+    $UCAR_128 5900 192.168.184.178  5900 # VNC from ground to toga-pc\
+    $UCAR_128 5901 192.168.184.178  5901 # VNC from ground to toga-pc\
+    $UCAR_128 5902 192.168.184.178  5902 # VNC from ground to toga-pc\
+    $UCAR_128 5903 192.168.184.178  5903 # VNC from ground to toga-pc\
 )
 
 # external hosts that we can ssh to
@@ -402,6 +416,7 @@ iptables -N icmp-in
 iptables -N icmp-out
 
 filter_igmp ppp+
+filter_igmp eth3
 
 for eif in ${UNSAFE_EXT_IFS[*]}; do
     filter_icmp $eif
@@ -687,10 +702,6 @@ filter_ip()
     iptables -A OUTPUT -o $eif -m limit --limit 1/minute --limit-burst 5 -j LOG --log-prefix "IPTABLES PROTOCOL-X-OUT: "
     iptables -A OUTPUT -o $eif -j DROP
 
-    # MASQUERADE is a form of SNAT (source NAT)
-    if [ $forward -eq 1 ]; then
-	iptables -t nat -A POSTROUTING -o $eif -j MASQUERADE
-    fi
     # port forwarding is a form of DNAT (destination NAT)
     # Example of port forwarding to allow ssh to an internal host
     # iptables -t nat -A PREROUTING -p tcp --dport 50022 -i $eif -j DNAT \
@@ -735,16 +746,18 @@ for eif in ${SATCOM_EXT_IFS[*]}; do
     filter_ip $eif false
 done
 
-for eif in ${SAFE_EXT_IFS[*]}; do
+for eif in ${MASQUERADE_IFS[*]}; do
     # MASQUERADE is a form of SNAT (source NAT)
     if [ $forward -eq 1 ]; then
 	iptables -t nat -A POSTROUTING -o $eif -j MASQUERADE
     fi
 done
 
-# Over ppp1 (MPDS), clamp MSS.
-iptables -t mangle -A FORWARD -o ppp1 -p tcp --tcp-flags SYN,RST SYN \
-    -j TCPMSS --clamp-mss-to-pmtu
+# Over the satcom external interfaces, clamp MSS.
+for eif in ${SATCOM_EXT_IFS[*]}; do
+    iptables -t mangle -A FORWARD -o $eif -p tcp --tcp-flags SYN,RST SYN \
+        -j TCPMSS --clamp-mss-to-pmtu
+done
 
 # accept fragments on any interface
 iptables -A OUTPUT -f -j ACCEPT
