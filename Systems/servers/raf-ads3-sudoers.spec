@@ -38,6 +38,15 @@ else
     echo "Cmnd_Alias STORAGE = /sbin/fdisk, /sbin/sfdisk, /sbin/parted, /sbin/partprobe, /bin/mount, /bin/umount, /sbin/fsck, /sbin/fsck.ext3, /sbin/mkfs, /sbin/mkfs.ext3, /sbin/tune2fs, /sbin/dumpe2fs" >> $tmpsudo
 fi
 
+# add mkfs, tune2fs, dumpe2fs to STORAGE alias
+if egrep -q "^Cmnd_Alias DRIVERS" $tmpsudo; then
+    if ! egrep "^Cmnd_Alias DRIVERS" | fgrep -q mkfs $tmpsudo; then
+        sed -i -r 's@^(Cmnd_Alias DRIVERS.*)$@\1, /sbin/modprobe, /sbin/rmmod@' $tmpsudo
+    fi
+else
+    echo "Cmnd_Alias DRIVERS = /sbin/modprobe, /sbin/rmmod" >> $tmpsudo
+fi
+
 # Remove requiretty requirement for ads account so that we can
 # do sudo from bootup scripts.
 if egrep -q "^Defaults[[:space:]]+requiretty" $tmpsudo; then
@@ -57,9 +66,10 @@ fi
 
 if ! fgrep -q dsm_server $tmpsudo; then
 cat << \EOD >> $tmpsudo
-ads ALL=NOPASSWD: STORAGE,NETWORKING
+ads ALL=NOPASSWD: STORAGE,NETWORKING,DRIVERS
 ads ALL=NOPASSWD: /usr/sbin/tcpdump
-ads ALL=NOPASSWD: /usr/sbin/reload_fw
+ads ALL=NOPASSWD: /usr/bin/pkill
+ads ALL=NOPASSWD: /sbin/route
 ads ALL=NOPASSWD: SETENV: /opt/nidas/bin/dsm_server
 EOD
 fi
