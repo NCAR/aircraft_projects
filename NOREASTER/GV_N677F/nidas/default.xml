@@ -1889,59 +1889,24 @@
 
     <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
-    </dsm>
-
-    <dsm derivedData="sock::7071" id="6" location="LWI" name="dsmLWI" rserialPort="30002" statusAddr="sock::30001">
-      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWI"/>
-      <output class="RawSampleOutputStream">
-        <socket type="mcrequest"/>
-      </output>
-      <!--
-      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="700">
-        <parameter name="SerialNumber" type="string" value="A149505"/>
-        <parameter name="rate" type="int" value="10"/>
-      </sensor>
-      -->
-    </dsm>
-
-    <dsm derivedData="sock::7071" id="10" location="RWI" name="dsmRWI" rserialPort="30002" statusAddr="sock::30001">
-      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWI"/>
-      <output class="RawSampleOutputStream">
-        <socket type="mcrequest"/>
-      </output>
-      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="500">
-        <parameter name="SerialNumber" type="string" value="477551"/>
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200">
+        <parameter name="SerialNumber" type="string" value="W477510"/>
         <parameter name="rate" type="int" value="100"/>
         <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="1"/>
-          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_RWIO" units="V">
-            <parameter name="channel" type="int" value="3"/>
+          <parameter name="numpoints" type="int" value="10"/>
+          <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
+            <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="V">
-              <calfile file="F2DIO1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_RWIO" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO32.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_RWIO" units="V">
-            <parameter name="channel" type="int" value="5"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO64.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="PLWC.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
         </sample>
       </sensor>
     </dsm>
+
     <dsm derivedData="sock::7071" id="11" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
       <output class="RawSampleOutputStream">
