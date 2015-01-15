@@ -218,6 +218,7 @@ CLASS_D_MULTICAST="224.0.0.0/4"
 CLASS_E_RESERVED_NET="240.0.0.0/5"
 PRIV_PORTS="0:1023"
 UPRIV_PORTS="1024:65535"
+ROUTER_NET="192.168.99.0/24"
 
 # Look in /etc/services for ldm port
 if egrep -q ^unidata-ldm /etc/services; then
@@ -256,6 +257,13 @@ for iif in ${INT_IFS[*]} ${SAFE_EXT_IFS[*]}; do
     iptables -A INPUT -i $iif -j ACCEPT
     iptables -A OUTPUT -o $iif -j ACCEPT
 done
+
+# Allow anything between the server and the router network.  I think
+# this still prevents other internal hosts from reaching the router (ie, 
+# the web admin interface), but that should be tested, assuming that's
+# desirable.
+iptables -A INPUT -s $ROUTER_NET -j ACCEPT
+iptables -A OUTPUT -d $ROUTER_NET -j ACCEPT
 
 # If two or more trusted internal interfaces, forward between first two
 if [ $forward -eq 1 -a ${#INT_IFS[*]} -ge 2 ]; then
