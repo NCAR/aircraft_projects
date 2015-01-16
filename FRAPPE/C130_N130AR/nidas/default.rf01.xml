@@ -1840,6 +1840,7 @@
         </sensor>
 -->
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
+            <parameter name="lag" type = "float" value="10.0"/>
             <sample id="1" rate="100">
                 <variable count="true" longname="TSI CN Counter Output" name="CNTS" units="count"/>
             </sample>
@@ -1848,6 +1849,7 @@
             <socket type="mcrequest"/>
         </output>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <parameter name="lag" type = "float" value="10.0"/>
         <calfile file="A2D1714.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
