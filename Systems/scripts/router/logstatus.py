@@ -25,7 +25,7 @@ host = '192.168.99.1'
 
 import raf.router
 
-router = raf.router.Router("localhost", 8130)
+router = raf.router.Router(host)
 router.setStatusHelper(raf.router.netgear.NetgearStatusHelper)
 router.updateStatus()
 
