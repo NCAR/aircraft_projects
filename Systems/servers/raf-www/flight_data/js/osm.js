@@ -213,6 +213,9 @@ function acMap() {
 		graphic.visibility = (cookieJar.getLayerCookie(g.name));
 		graphic.opacity = cookieJar.getCookie("mapImgOpacity");
 		graphic.cleanUrl = g.cleanHref;
+                if (graphic.opacity == 0) {
+                        graphic.opacity = 100;
+                }
 
 		this.addLayer(graphic);
 		this.setLayerIndex(graphic, 0);
