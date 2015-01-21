@@ -1,7 +1,7 @@
 /*
  * acMap is sub-class of OpenLayers.Map
  *
- * COPYRIGHT: University Corporation for Atmospheric Research, 2009-12
+ * COPYRIGHT: University Corporation for Atmospheric Research, 2009-15
  */
 
 acMap.prototype = new OpenLayers.Map();
@@ -27,7 +27,6 @@ function acMap() {
 	OpenLayers.Map.call(this, 'map', {
 		controls: this.controls,
 		projection: smProj, 
-		numZoomLevels: 17,
 		maxResolution: 156543.0339,
 		maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
 					20037508.34, 20037508.34)
@@ -95,7 +94,7 @@ function acMap() {
 
 		// Update icon now and every 10 seconds
 		this.getIconUpdate();
-		setInterval(this.getIconUpdate, 10000);
+		setInterval(this.getIconUpdate, 5000);
 
 		// Update the camera image every 5 seconds onboard.
 		// Use 30 seconds for ground based install.
@@ -193,7 +192,7 @@ function acMap() {
 		setInterval(function(){
 			timestamp1.src = timestamp1.src.split("?",1) + "?" + Math.random();
 			timestamp2.src = timestamp2.src.split("?",1) + "?" + Math.random();
-		}, 60000);
+		}, 30000);
 	}
 	this.addImageOverlay = function(g) {
 		var domimg = new Image(); domimg.src = g.href;
@@ -245,7 +244,7 @@ function acMap() {
 					},
 					format:  new OpenLayers.Format.KML({
 						extractStyles: true,
-						extractAttributes: true 
+						extractAttributes: true
 					})
 				})
 		});
@@ -400,8 +399,7 @@ function acPlaneLayer() {
 	OpenLayers.Layer.Vector.call(this, "Plane", {
 		visibility: false,
 		displayInLayerSwitcher: false,
-		'calculateInRange': function() {return true; },
-		numZoomLevels: 18
+		'calculateInRange': function() {return true; }
 	});
 	this.icon = new OpenLayers.Feature.Vector( 
 		new OpenLayers.Geometry.Point(0,0),
@@ -416,11 +414,12 @@ acBaseMap.prototype = new OpenLayers.Layer.OSM();
 function acBaseMap() {
 	OpenLayers.Layer.OSM.call(this,
 		"OpenStreetMap",
-		"/osm/tiles2/${z}/${x}/${y}.png",
+		"/osm_tiles2/${z}/${x}/${y}.png",
 		{
 			displayOutsideMaxExtent: false,
 			displayInLayerSwitcher: false,
 			sphericalMercator: true,
+			numZoomLevels: 12,
 			wrapDateLine: true
 		}
 	);
