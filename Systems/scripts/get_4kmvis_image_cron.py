@@ -41,6 +41,7 @@ try:
 except:
     print "AIRCRAFT envirnment variable not defined - exit!"
     sys.exit()
+
 plane,tail = aircraft.split("_",1)
 
 # Initialization - change this for different file types/names/locations.
