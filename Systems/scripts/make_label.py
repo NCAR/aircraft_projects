@@ -56,7 +56,7 @@ dirlist = os.listdir(local_image_dir)
 label = ''
 
 # Infra-red
-IRregx = 'satellite.GOES-13.*thermal_IR.jpg'
+IRregx = 'satellite.GOES-13.*thermal-IR.jpg'
 irlist = getList(dirlist,IRregx)
 if len(irlist) != 0:
     irFile = irlist[len(irlist)-1]
