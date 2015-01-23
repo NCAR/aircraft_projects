@@ -1132,7 +1132,7 @@
         </sample>
     </sensor>
     <sensor ID="HARP_ACTINIC_FLUX" class="UDPSocketSensor" devicename="usock::30108" suffix="_HARP">
-        <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%d,%d">
+        <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%d,%d,%f">
             <variable longname="UVN 315 nm Counts" name="UVN315" units="counts"/>
             <variable longname="UVN 382 nm Counts" name="UVN382" units="counts"/>
             <variable longname="UVN Relative Humidity" name="UVNRH" units="%"/>
@@ -1617,10 +1617,12 @@ Index  Name      Description                           Units
 -->
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
-      <sensor IDREF="ISAF" devicename="usock::30124" id="900" suffix="_ISAF"/>
-      <sensor IDREF="ARNOLD" devicename="usock::30112" id="950" suffix="_ARN"/>
-      <sensor IDREF="AMS" devicename="usock::30115" id="1000" suffix="_AMS"/>
-      <sensor IDREF="HARP_ACTINIC_FLUX" devicename="usock::30108" id="1100" suffix="_HARP"/>
+      <sensor IDREF="NONOYO3" devicename="usock::30107" id="900" suffix="_ACD"/>
+      <sensor IDREF="HARP_ACTINIC_FLUX" devicename="usock::30108" id="1000" suffix="_HARP"/>
+      <sensor IDREF="TOGA" devicename="usock::30120" id="1100" suffix="_TOGA"/>
+      <sensor IDREF="ISAF" devicename="usock::30124" id="1200" suffix="_ISAF"/>
+      <sensor IDREF="ARNOLD" devicename="usock::30112" id="1300" suffix="_ARN"/>
+      <sensor IDREF="AMS" devicename="usock::30115" id="1400" suffix="_AMS"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
