@@ -1121,6 +1121,10 @@
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
     </sensor>
+
+    <sensor ID="SO2" class="UDPSocketSensor" devicename="usock::30130" suffix="_SO2">
+    </sensor>
+
     <sensor ID="AMS" class="UDPSocketSensor" devicename="usock::30115" suffix="_AMS">
         <sample id="1" rate="1" scanfFormat="%*d %*d %*f %*d %*d %f %*f %f %f %f %f %f %*f %*f %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*f %*f %*f %*f %*f %*f %*f %*f">
             <variable longname="AMS Air Beam" name="AIRBM" units=" Hz"/>
@@ -1168,11 +1172,13 @@
             <variable longname="NIRZ 2000 nm Counts" name="NIRZ2000" units="count"/>
         </sample>
     </sensor>
+<!--
     <sensor ID="SO2" class="UDPSocketSensor" devicename="usock::30121" suffix="_CU">
         <sample id="1" rate="1" scanfFormat="SO2,%f">
             <variable longname="Sulfur Dioxide" name="SO2" units="pptv"/>
         </sample>
     </sensor>
+-->
     <sensor ID="HOX1" class="UDPSocketSensor" devicename="usock::30122" suffix="_CU">
         <sample id="1" rate="1" scanfFormat="HOX1,%f,%f">
             <variable longname="Hydroxyl radical" name="OH" units="molecules/cc"/>
@@ -1630,6 +1636,7 @@ Index  Name      Description                           Units
       <sensor IDREF="ISAF" devicename="usock::30124" id="1200" suffix="_ISAF"/>
       <sensor IDREF="ARNOLD" devicename="usock::30112" id="1300" suffix="_ARN"/>
       <sensor IDREF="AMS" devicename="usock::30115" id="1400" suffix="_AMS"/>
+      <sensor IDREF="SO2" devicename="usock::30130" id="1500" suffix="_SO2"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -2124,7 +2131,7 @@ Index  Name      Description                           Units
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <serialSensor IDREF="S200" devicename="/dev/ttyS5" id="300" suffix="_RPT">
+      <serialSensor IDREF="S200" devicename="/dev/ttyS6" id="300" suffix="_RPT">
         <parameter name="SerialNumber" type="string" value="PCAS108"/>
       </serialSensor>
     </dsm>
