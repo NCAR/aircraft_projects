@@ -1,5 +1,56 @@
 #! /bin/sh
 
+# Use the rsync_backups script to rsync key data and system directories
+# from the aircraft server to a USB disk or network directory.
+#
+# To rsync back to EOL, the default rsync path uses the 'ads' username, so
+# the operator needs to know the ads EOL password and the password will
+# need to be entered for each rsync call.  For backing up data files there
+# are at least three rsync calls, so entering the password could be
+# cumbersome.  Here are ways to authenticate with the ads account using ssh
+# keys, so that a password is not required:
+#
+# 1. Log into the ads account at EOL and start an authentication agent for
+#    a key which is authorized to log into the ads account without a
+#    password.  This is how the key was created:
+#
+#    cd ~ads/.ssh
+#    ssh-keygen id_ads
+#    <Use the EOL password to encrypt the key, so only those who know the
+#     password can use the key>
+#    Add this key to authorized_keys
+#    cat id_ads.pub >> authorized_keys
+#
+#    Here's how to use this key once logged into the EOL ads account:
+#
+#    Start the agent (if not already running) and add the key.
+#
+#    eval `ssh-agent`
+#    ssh-add id_ads
+#
+#    Now log into the plane with the authentication agent forwarded.
+#    gv-hangar is an alias for the GV connected in the RAF hangar.
+#
+#    ssh -A gv-hangar
+#
+#    Now connections back to the EOL ads account from acserver should not
+#    need a password.  The gv-hangar alias forwards the barolo ssh port so
+#    that ssh can connect back to barolo over the ssh session.
+#
+# 2. Create a personal key and authorize it for ads.  You could create your
+#    own key, specific to ads authorization, and add it to the ads
+#    authorized keys as above, and then use ssh-agent in your own account
+#    to add that key.
+#
+# It is possible to create a key on the aircraft server and authorize that
+# key for the EOL ads account, then it would not be necessary to run an
+# agent.  However, this is a bad idea because the private part of the key
+# is in a compromising position, exposed on a server often outside the EOL
+# network and on an account to which many people have access.  Therefore
+# the only keys which get stored on a field system are the keys used to
+# open a tunnel port on eol-rt-data or to access other field systems which
+# are also outside the EOL/UCAR network.
+#
 # TODO: 
 #  - Automatically create camera tar files as needed.
 #  - Provide convenient options to copy from plane to USB and
@@ -27,9 +78,9 @@ if [ $# -ne 1 ]; then
     cat <<EOF
 Usage: $0 {usb|eol|<path>}
 
-Backup raw data and other critical directories on the aircraft server.
-The destination specifier is required.  It can be 'usb' to specify
-standard backup path onto a USB:
+Backup raw data and other critical directories on the aircraft server.  The
+destination specifier is required.  It can be 'usb' to specify standard
+backup path onto a USB:
 
    $usbdest
 
@@ -39,9 +90,9 @@ Or it can be 'eol' to rsync back to EOL with this specifier:
 
 Or it can be a custom directory path or rsync destination.
 
-If the specifier is 'usb', then all the critical directories and data
-will be synchronized, including /etc and /home.  If the specifier is 'eol',
-then only the raw data and camera images are synchronized.
+If the specifier is 'usb', then all the critical directories and data will
+be synchronized, including /etc and /home.  If the specifier is 'eol', then
+only the raw data and camera images are synchronized.
 
 Note that the rsync specifier for 'eol' uses the hostname 'barolo', which
 on the plane is sometimes an ssh alias for localhost:30122.
@@ -101,12 +152,13 @@ rsync_log() {
 
 rsync_cameras() {
     echo "Copying cameras..."
-    # Camera images: typically camera backups off the plane are made
-    # by creating tar files and then copying off the tar files.  However, for
-    # an rsync directly off the plane, it is much safer and easier to rsync the 
-    # camera directories directly without the intermediate tar file.  So for
-    # now distinguish between the two methods by the destination argument.
-    # And if we need tar files, then this may be the place to create them.
+    # Camera images: typically camera backups off the plane are made by
+    # creating tar files and then copying off the tar files.  However, for
+    # an rsync directly off the plane, it is much safer and easier to rsync
+    # the camera directories directly without the intermediate tar file.
+    # So for now distinguish between the two methods by the destination
+    # argument.  And if we need tar files, then this may be the place to
+    # create them.
     case "$destspec" in 
         usb)
             $rsync -av /mnt/r1/camera_images/*.tar "$dest/camera_images"
@@ -124,8 +176,8 @@ rsync_home()
     # GV_N677F 89% ls /home/local
     # ManufacturerManuals  Systems  aeros  ags  nidas  projects  raf  ric  src  upload
     #
-    # We'll just sync all of them for now.  This includes Systems and projects so
-    # there does not need to be a separate rsync for those.
+    # We'll just sync all of them for now.  This includes Systems and
+    # projects so there does not need to be a separate rsync for those.
 
     $rsync -av --delete /home/local/ "$dest/local"
     $rsync -av --delete /opt/ "$dest/opt"
@@ -136,9 +188,9 @@ rsync_home()
     #
     # opt and local are handled separately, so this is what we want:
 
-    # This creates the home parent directory first, into which the
-    # selected subdirectories will be sync'd.  It's rsync -av without
-    # recursion plus the --dirs option.
+    # This creates the home parent directory first, into which the selected
+    # subdirectories will be sync'd.  It's rsync -av without recursion plus
+    # the --dirs option.
     rsync -lptgoDv --dirs /home "${dest}/home"
     for homesub in ads data ldm ; do
         $rsync -av --delete /home/$homesub "${dest}/home"
