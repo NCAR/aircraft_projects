@@ -1,5 +1,14 @@
 #! /bin/sh
 
+# TODO: 
+#  - Automatically create camera tar files as needed.
+#  - Provide convenient options to copy from plane to USB and
+#    sync the USB back to EOL from another system.
+#  - Allow more customization in selecting what gets backed up, such
+#    as by time or latest flight.
+#  - Reconcile/consolidate functionality this script with the
+#    script Chris wrote to do full system backups to USB.
+
 uid=`id -u`
 if [ "$uid" -ne 0 ]; then
     echo "Must run as root."
@@ -11,49 +20,151 @@ if [ -z "$PROJECT" ]; then
     exit 1
 fi
 
-dest="/media/AircraftBkUps/$PROJECT/rsync-backups"
-if [ ! -d "$dest" ]; then
-    echo "$dest does not exist.  Mount the USB drive or create the directory."
+usbdest="/media/AircraftBkUps/$PROJECT/rsync-backups"
+eoldest="ads@barolo:/scr/raf_Raw_Data/$PROJECT"
+
+if [ $# -ne 1 ]; then
+    cat <<EOF
+Usage: $0 {usb|eol|<path>}
+
+Backup raw data and other critical directories on the aircraft server.
+The destination specifier is required.  It can be 'usb' to specify
+standard backup path onto a USB:
+
+   $usbdest
+
+Or it can be 'eol' to rsync back to EOL with this specifier:
+
+   $eoldest
+
+Or it can be a custom directory path or rsync destination.
+
+If the specifier is 'usb', then all the critical directories and data
+will be synchronized, including /etc and /home.  If the specifier is 'eol',
+then only the raw data and camera images are synchronized.
+
+Note that the rsync specifier for 'eol' uses the hostname 'barolo', which
+on the plane is sometimes an ssh alias for localhost:30122.
+
+EOF
     exit 1
 fi
+
+destspec="$1"
+
+case "$destspec" in 
+
+    usb)
+        dest="$usbdest"
+        if [ ! -d "$dest" ]; then
+            echo "$dest does not exist.  Mount the USB drive or create the directory."
+            exit 1
+        fi
+        ;;
+    eol)
+        dest="$eoldest"
+        ;;
+    *:*)
+        dest="$destspec"
+        ;;
+    *)
+        dest="$destspec"
+        if [ ! -d "$dest" ]; then
+            echo "$dest does not exist.  Mount the USB drive or create the directory."
+            exit 1
+        fi
+        ;;
+
+esac
 
 rsync="rsync"
 set -x
 
-# Do not delete data files which may have been removed from plane for
-# whatever reason.
-$rsync -avP /var/r1/$PROJECT/*[rt]f[0-9][0-9].ads "$dest/data"
-$rsync -av --delete /etc "$dest"
+rsync_data() {
+    echo "Copying ADS raw data files..."
+    # Do not delete data files which may have been removed from plane for
+    # whatever reason.
+    $rsync -avP /var/r1/$PROJECT/*[rt]f[0-9][0-9].ads "$dest"
+}
 
-# Do not delete files, so that rotated log files with date in the name
-# will accumulate.
-$rsync -av /var/log "$dest"
+rsync_etc() {
+    echo "Copying /etc ..."
+    $rsync -av --delete /etc "$dest"
+}
 
-# Out of the local subdirectories:
-# GV_N677F 89% ls /home/local
-# ManufacturerManuals  Systems  aeros  ags  nidas  projects  raf  ric  src  upload
-#
-# We'll just sync all of them for now.  This includes Systems and projects so
-# there does not need to be a separate rsync for those.
+rsync_log() {
+    echo "Copying log files..."
+    # Do not delete files, so that rotated log files with date in the name
+    # will accumulate.
+    $rsync -av /var/log/ "${dest}/log"
+}
 
-$rsync -av --delete /home/local/ "$dest/local"
-$rsync -av --delete /opt/ "$dest/opt"
+rsync_cameras() {
+    echo "Copying cameras..."
+    # Camera images: typically camera backups off the plane are made
+    # by creating tar files and then copying off the tar files.  However, for
+    # an rsync directly off the plane, it is much safer and easier to rsync the 
+    # camera directories directly without the intermediate tar file.  So for
+    # now distinguish between the two methods by the destination argument.
+    # And if we need tar files, then this may be the place to create them.
+    case "$destspec" in 
+        usb)
+            $rsync -av /mnt/r1/camera_images/*.tar "$dest/camera_images"
+            ;;
+        *)
+            $rsync -av --exclude="*.tar" /mnt/r1/camera_images/ "$dest/camera_images"
+            ;;
+    esac
+}
 
-# Out of the home subdirectories:
-# GV_N677F 87% ls /home
-# DataBases  ads  data  eoladmin  ldm  local  lost+found  opt  smps  ted
-#
-# opt and local are handled separately, so this is what we want:
+rsync_home()
+{
+    echo "Copying directories under /home..."
+    # Out of the local subdirectories:
+    # GV_N677F 89% ls /home/local
+    # ManufacturerManuals  Systems  aeros  ags  nidas  projects  raf  ric  src  upload
+    #
+    # We'll just sync all of them for now.  This includes Systems and projects so
+    # there does not need to be a separate rsync for those.
 
-mkdir -p "$dest/home"
-for homesub in ads data ldm ; do
-    $rsync -av --delete /home/$homesub "$dest/home"
+    $rsync -av --delete /home/local/ "$dest/local"
+    $rsync -av --delete /opt/ "$dest/opt"
+
+    # Out of the home subdirectories:
+    # GV_N677F 87% ls /home
+    # DataBases  ads  data  eoladmin  ldm  local  lost+found  opt  smps  ted
+    #
+    # opt and local are handled separately, so this is what we want:
+
+    # This creates the home parent directory first, into which the
+    # selected subdirectories will be sync'd.  It's rsync -av without
+    # recursion plus the --dirs option.
+    rsync -lptgoDv --dirs /home "${dest}/home"
+    for homesub in ads data ldm ; do
+        $rsync -av --delete /home/$homesub "${dest}/home"
+    done
+}
+
+rsync_web() {
+    echo "Copying web app directories..."
+    # The web apps:
+    $rsync -av --delete /var/www/html "${dest}/web/"
+    $rsync -av --delete /var/www/cgi-bin "${dest}/web/"
+}
+
+
+sources="data cameras log"
+
+case "$destspec" in
+
+    usb)
+        sources="data cameras log etc web home"
+        ;;
+
+esac
+
+for s in $sources ; do
+
+    rsync_${s}
+
 done
-
-# The web apps:
-$rsync -av --delete /var/www/html "$dest/web/"
-$rsync -av --delete /var/www/cgi-bin "$dest/web/"
-
-# Camera images
-$rsync -av /mnt/r1/camera_images/*.tar "$dest/camera_images"
-
