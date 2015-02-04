@@ -1099,7 +1099,9 @@
     <serialSensor ID="CO_2000" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_AL">
       <sample id="1" scanfFormat="%f">
         <variable longname="AeroLaser (2000) Carbon Monoxide Raw Signal" name="CORAW" units="V">
-          <linear intercept="0" slope="1" units="Hz"/>
+          <linear units="Hz"/>
+            <calfile file="CORAW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/Aero2000:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/Aero2000"/>
+          </linear>
         </variable>
       </sample>
       <prompt rate="5" string="SIG?\r"/>
@@ -1107,7 +1109,10 @@
     </serialSensor>
     <serialSensor ID="CO_2005" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_AL">
       <sample id="1" scanfFormat="%f">
-        <variable longname="Aerolaser (2005) Carbon Monoxide Raw Signal" name="CORAW" units="V"/>
+        <variable longname="Aerolaser (2005) Carbon Monoxide Raw Signal" name="CORAW" units="V">
+          <linear units="Hz"/>
+            <calfile file="CORAW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/Aero2005:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/Aero2005"/>
+          </linear>
       </sample>
       <prompt rate="5" string="SIG?\r"/>
       <message length="0" position="end" separator="\r"/>
