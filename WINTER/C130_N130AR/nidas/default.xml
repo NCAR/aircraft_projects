@@ -1099,7 +1099,7 @@
     <serialSensor ID="CO_2000" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_AL">
       <sample id="1" scanfFormat="%f">
         <variable longname="AeroLaser (2000) Carbon Monoxide Raw Signal" name="CORAW" units="V">
-          <linear units="Hz"/>
+          <linear units="Hz">
             <calfile file="CORAW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/Aero2000:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/Aero2000"/>
           </linear>
         </variable>
@@ -1110,9 +1110,10 @@
     <serialSensor ID="CO_2005" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_AL">
       <sample id="1" scanfFormat="%f">
         <variable longname="Aerolaser (2005) Carbon Monoxide Raw Signal" name="CORAW" units="V">
-          <linear units="Hz"/>
+          <linear units="Hz">
             <calfile file="CORAW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/Aero2005:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/Aero2005"/>
           </linear>
+        </variable>
       </sample>
       <prompt rate="5" string="SIG?\r"/>
       <message length="0" position="end" separator="\r"/>
@@ -1127,17 +1128,48 @@
       </sample>
     </sensor>
 
-    <sensor ID="SO2" class="UDPSocketSensor" devicename="usock::30130" suffix="_SO2">
+    <sensor ID="SO2" class="UDPSocketSensor" devicename="usock::30130" suffix="_NC">
+      <sample id="1" rate="1" scanfFormat="SO2,%*dT%*d,%f">
+        <variable longname="SO2 Ratio" name="SO2" units="ppbv"/>
+      </sample>
     </sensor>
 
     <sensor ID="AMS" class="UDPSocketSensor" devicename="usock::30115" suffix="_AMS">
-        <sample id="1" rate="1" scanfFormat="%*d %*d %*f %*d %*d %f %*f %f %f %f %f %f %*f %*f %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*f %*f %*f %*f %*f %*f %*f %*f">
-            <variable longname="AMS Air Beam" name="AIRBM" units=" Hz"/>
-            <variable longname="AMS Flow Rate" name="FLOW" units="cc/sec"/>
-            <variable longname="AMS Sulfate Loadings" name="SO4" units="ug/m3"/>
-            <variable longname="AMS Nitrate Loadings" name="NO3" units="ug/m3"/>
-            <variable longname="AMS Organics less than 60 Loadings" name="R" units="ug/m3"/>
-            <variable longname="AMS Cloride Loadings" name="CL" units="ug/m3"/>
+        <sample id="1" rate="1" scanfFormat="AMS %*d %*d %f %*d %*d %f %f %f %f %f %f %f %f %f %f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
+            <variable longname="AMS Time (Seconds since midnight)" name="UTSEC" units="sec"/>
+            <variable longname="AMS Air Beam Reference" name="AIRBM" units="Hz"/>
+            <variable longname="AMS Particle Time of Flight" name="PTAB" units=""/>
+            <variable longname="AMS Sampling Flow Rate" name="FLOW" units="sccs"/>
+            <variable longname="AMS Sulfate PM1 mass as measured by HRAMS" name="SO4" units="ug/m3"/>
+            <variable longname="AMS Nitrate PM1 mass as measured by HRAMS" name="NO3" units="ug/m3"/>
+            <variable longname="AMS Organic Aerosol mass as measured by HRAMS" name="OA" units="ug/m3"/>
+            <variable longname="AMS Chloride PM1 mass as measured by HRAMS" name="CL" units="ug/m3"/>
+            <variable longname="AMS Organics; Intensity of m/z 43" name="ORG43" units="Hz"/>
+            <variable longname="AMS Organics; Intensity of m/z 44" name="ORG44" units="Hz"/>
+            <variable longname="AMS Organics; Intensity of m/z 57" name="ORG57" units="Hz"/>
+
+            <variable longname="AMS Blankflag (0=ambient, 5=filter)" name="VALID" units="V"/>
+            <variable longname="AMS Vaporizer Temperature " name="TVAP" units="V">
+                <linear intercept="0.0" slope="131.0" units="deg_C"/>
+            </variable>
+            <variable longname="AMS Inlet Pressure " name="INLETP" units="V">
+                <linear intercept="0.0" slope="100.0" units="Torr"/>
+            </variable>
+            <variable longname="AMS Lens Pressure" name="LENSP" units="Torr"/>
+            <variable longname="AMS Sample Flag #4 (0Vdc=OFR, 5Vdc=Ambient" name="SAMPFLG" units="V"/>
+            <variable longname="AMS PCI Flow Meter" name="PCIF" units="V">
+                <linear intercept="0.0" slope="100.0" units="sccm"/>
+            </variable>
+            <variable longname="AMS OFR UV Light Meter" name="OFRUV" units="V"/>
+            <variable longname="AMS OFR Ozone Monitor" name="O3" units="V">
+                <linear intercept="0.0" slope="2000.0" units="ppmv"/>
+            </variable>
+            <variable longname="AMS Filament Emission Current" name="FILEM" units="mA"/>
+            <variable longname="AMS Ammonium PM1 mass as measured by HRAMS" name="AMMON" units="ug/m3"/>
+            <variable longname="AMS Fraction of OA from m/z 43" name="F43" units=""/>
+            <variable longname="AMS Fraction of OA from m/z 44" name="F44" units=""/>
+            <variable longname="AMS Fraction of OA from m/z 57" name="F57" units=""/>
+            <variable longname="AMS Fraction of OA from m/z 60" name="F60" units=""/>
         </sample>
     </sensor>
     <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="usock::30107" suffix="_ACD">
@@ -1635,13 +1667,14 @@ Index  Name      Description                           Units
 -->
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
+      <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
       <sensor IDREF="NONOYO3" devicename="usock::30107" id="900" suffix="_ACD"/>
       <sensor IDREF="HARP_ACTINIC_FLUX" devicename="usock::30108" id="1000" suffix="_HARP"/>
       <sensor IDREF="TOGA" devicename="usock::30120" id="1100" suffix="_TOGA"/>
       <sensor IDREF="ISAF" devicename="usock::30124" id="1200" suffix="_ISAF"/>
       <sensor IDREF="ARNOLD" devicename="usock::30112" id="1300" suffix="_ARN"/>
       <sensor IDREF="AMS" devicename="usock::30115" id="1400" suffix="_AMS"/>
-      <sensor IDREF="SO2" devicename="usock::30130" id="1500" suffix="_SO2"/>
+      <sensor IDREF="SO2" devicename="usock::30130" id="1500" suffix="_NC"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
