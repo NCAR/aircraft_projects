@@ -85,7 +85,11 @@
         <variable longname="IRS Aircraft Track Angle" name="TKAT" units="degree_T"/>
       </sample>
       <sample id="0314" rate="25">
-        <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T"/>
+        <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
+            <linear units="degree_T"> 
+              <calfile file="THDG.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>  
+            </linear>
+        </variable>
       </sample>
       <sample id="0315" rate="12.5">
         <variable longname="IRS Wind Speed" name="IWS" units="m/s"/>
@@ -1959,22 +1963,22 @@
       </serialSensor>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130" suffix="_GP">
         <sample id="1">
-          <variable longname="Horizontal Differential Pressure, Gust Pod" name="BDIFR" units="hPa"/>
+          <variable longname="Horizontal Differential Pressure, Gust Pod" name="BDIF" units="hPa"/>
         </sample>
         <sample id="2">
-          <variable longname="Temperature of BDIFR Probe" name="BDIFRTEMP" units="deg_C"/>
+          <variable longname="Temperature of BDIF Probe" name="BDIFTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140" suffix="_GP">
         <sample id="1">
-          <variable longname="Vertical Differential Pressure, Gust Pod" name="ADIFR" units="hPa">
+          <variable longname="Vertical Differential Pressure, Gust Pod" name="ADIF" units="hPa">
 
 <!-- Compensate for inserting Gust Probe "upside down" -->
             <linear intercept="0.0" slope="-1.0" units="hPa"/>
           </variable>
         </sample>
         <sample id="2">
-          <variable longname="Temperature of ADIFR Probe" name="ADIFRTEMP" units="deg_C"/>
+          <variable longname="Temperature of ADIF Probe" name="ADIFTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS9" id="150" suffix="_GP">
