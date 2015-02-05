@@ -1073,9 +1073,17 @@
       <sample id="1" rate="20" scanfFormat="%f %f %f %f %f %f %*d %*f">
         <variable longname="Picarro Time" name="TIME" units="s"/>
         <variable longname="Picarro Methane Mixing Ratio" name="CH4" units="ppmv"/>
-        <variable longname="Picarro Methane Mixing Ratio (Corrected)" name="CH4C" units="ppmv"/>
+        <variable longname="Picarro Methane Mixing Ratio (Corrected)" name="CH4C" units="ppmv">
+          <linear units="ppmv">
+            <calfile file="CH4C.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/Picarro2311:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/Picarro2311"/>
+          </linear>
+        </variable>
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
-        <variable longname="Picarro Carbon Dioxide Mixing Ratio (Corrected)" name="CO2C" units="ppmv"/>
+        <variable longname="Picarro Carbon Dioxide Mixing Ratio (Corrected)" name="CO2C" units="ppmv">
+          <linear units="ppmv">
+            <calfile file="CO2C.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/Picarro2311:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/Picarro2311"/>
+          </linear>
+        </variable>
         <variable longname="Picarro Water Mixing Ratio" name="H2O" units="vol%"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
