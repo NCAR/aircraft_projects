@@ -55,10 +55,10 @@ except:
 local_image_dir  = '/var/www/html/flight_data/images/'
 image_type       = 'conus_cweb'
 busy_file        = local_image_dir+'BUSY_'+image_type
-ftp_site         = 'catalog.eol.ucar.edu'
+ftp_site         = 'www.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
-ftp_dir          = '/pub/incoming/OSM/'
+ftp_dir          = '/flight_data/display/'
 filename         = 'conus_radar.png'
 tempfilename     = 'temp_conus_radar.png'
 
@@ -138,22 +138,9 @@ for x in timesecs:
     timestr.append(str(year)+monthstr+daystr+hourstr+str(min_ten))
 
 
-try:
-    print 'opening FTP connection '
-
-    ftp = ftplib.FTP(ftp_site)
-    ftp.login(ftp_login, ftp_passwd)
-    ftp.cwd(ftp_dir)
-
-except ftplib.all_errors, e:
-    print 'Error Getting ftp listing'
-    os.remove(busy_file)
-    ftp.quit()
-    sys.exit(1)
-
 # Get the latest image 
 try:
-    command = "wget ftp://"+ftp_site+":"+ftp_dir+filename + " -O " + tempfilename
+    command = "wget http://"+ftp_site+":"+ftp_dir+filename + " -O " + tempfilename
     os.system(command)
     print 'file retrieved: '+tempfilename
     command = "mv "+tempfilename+" "+filename
@@ -166,10 +153,8 @@ try:
 except:
     print "problems getting file, exiting."
     os.remove(busy_file)
-    ftp.quit()
     sys.exit(1)
 
 print "Done."
 os.remove(busy_file)
-ftp.quit() 
 sys.exit(1)
