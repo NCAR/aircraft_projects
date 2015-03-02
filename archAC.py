@@ -61,6 +61,9 @@
 #	add auto-removal of camera tarfiles once they are verified to be on HPSS 
 #	since they are big and freq. fill up the disk.
 #	Skip montage dirs.
+# Modified 3/2/2015 Janine Aquino
+#	Omitting "removed" subdirs did not work if "removed" was under an accepted
+#	archival dir, such as forward/removed. Fixed this bug.
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -193,6 +196,10 @@ class archRAFdata:
 	filesfound = []
 	for root, dirs, files in os.walk(path):
 	    for name in files:
+    	        fullname = os.path.join(root,name)
+    	        match = re.search("removed",fullname)
+    	        if match:
+    	            continue;
 	        match = re.search(searchstr+"$",name)
 	        if match:
 		    #if flag == "-r": 
