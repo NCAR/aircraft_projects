@@ -15,4 +15,7 @@ import raf.ac_config
 if len(sys.argv) < 2:
   sys.exit(1)
 
-print raf.ac_config.get_config(sys.argv[1])
+value = raf.ac_config.get_config(sys.argv[1])
+
+if value:
+  print value
