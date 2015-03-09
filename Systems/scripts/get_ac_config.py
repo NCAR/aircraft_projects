@@ -56,9 +56,9 @@ cpath += ac_config_dict['project.flightnumber']
 
 ac_config_dict['cameras.path'] = cpath
 
-ac_config_dict['toga.path'] = instrument_path_base + ac_config_dict['project.name'] + 'toga'
-ac_config_dict['mtp.path'] = instrument_path_base + ac_config_dict['project.name'] + 'mtp'
-ac_config_dict['avaps.path'] = instrument_path_base + ac_config_dict['project.name'] + 'avaps'
+ac_config_dict['toga.path'] = instrument_path_base + ac_config_dict['project.name'] + '/toga'
+ac_config_dict['mtp.path'] = instrument_path_base + ac_config_dict['project.name'] + '/mtp'
+ac_config_dict['avaps.path'] = instrument_path_base + ac_config_dict['project.name'] + '/avaps'
 
 
 db.close()
