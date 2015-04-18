@@ -1083,7 +1083,6 @@
             <calfile file="CO2C.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/Picarro2311:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/Picarro2311"/>
           </linear>
         </variable>
-        <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
         <variable longname="Picarro Water Mixing Ratio" name="H2O" units="vol%"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
@@ -1936,6 +1935,8 @@
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_324"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS5" id="110"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="120"/>
+        <serialSensor IDREF="CO_2005" devicename="/dev/ttyS8" id="600" suffix="_AL"/>
+        <serialSensor IDREF="PIC2311_CO2" devicename="/dev/ttyS9" id="800" suffix="_PIC2311"/>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
@@ -1996,12 +1997,12 @@
           <variable longname="Aerolaser Flow" name="COFLOW_AL" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="bipolar" type="bool" value="false"/>
             <poly units="slpm">
-              <calfile file="INFLOW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="COFLOW_AL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="Inlet Pressure Measurement" name="INLETP_AL" units="V">
+          <variable longname="Aerolaser Inlet Pressure Measurement" name="INLETP_AL" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
