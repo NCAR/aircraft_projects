@@ -1562,6 +1562,14 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <sensor IDREF="ACDFO3" devicename="usock::30107" id="2700" suffix="_ACD"/>
+      <sensor ID="PAVEL_INLET" class="UDPSocketSensor" devicename="usock::29003" id="2900">
+        <sample id="1" rate="1" scanfFormat="%f,%f,%f">
+            <variable longname="Valco HIGH valve position" name="VALCOHIGH" units="number"/>
+            <variable longname="Valco LOW valve position" name="VALCOLOW" units="number"/>
+            <variable longname="Solenoid state" name="SOLPOS" units="number"/>
+        </sample>
+      </sensor>
     </dsm>
     <dsm derivedData="sock::7071" id="18" location="Video_Rack" name="dsm318" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_318"/>
