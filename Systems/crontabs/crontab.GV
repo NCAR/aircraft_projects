@@ -16,6 +16,10 @@ SHELL=/bin/csh
 # Following is for flight days outside the 3 regions defined by DC3
 #5,20,35,50 * * * * /home/local/Systems/scripts/get_4kmvis_image_cron.py >>& /tmp/get_4kmvis_image.log 
 
+#*/30 * * * * /home/local/Systems/scripts/get_flight_plan >>& /tmp/get_flight_plan.log
+#*/30 * * * * /home/local/Systems/scripts/get_drop_plan >>& /tmp/get_drop_plan.log
+
+
 #DC3
 #  The following is a modified get vis to deal with regional 1km vis for DC3
 #5,20,35,50 * * * * /home/local/Systems/scripts/get_vis_image_cron.py >>& /tmp/get_vis_image.log 
@@ -25,7 +29,6 @@ SHELL=/bin/csh
 #*/5 * * * * /home/local/Systems/scripts/get_cappi_cweb_cron.py >>& /tmp/get_cappi_cweb.log
 #*/10 * * * * /home/local/Systems/scripts/get_conus_radar.py >>& /tmp/get_conus_radar.log
 #*/10 * * * * /home/local/Systems/scripts/get_conus_cweb_cron.py >>& /tmp/get_conus_cweb.log
-#*/40 * * * * /home/local/Systems/scripts/get_flight_plan >>& /tmp/get_flight_plan.log
 
 # Test a persistent ssh tunnel to EOL, attempting reopens only every 10 minutes.
 */10 * * * * ssh -N eoltunnel >& /tmp/eoltunnel.log
