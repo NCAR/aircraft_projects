@@ -1,0 +1,42 @@
+SHELL=/bin/csh
+
+@reboot /home/local/Systems/scripts/scrubber >& /tmp/scrubber.log
+
+# Always
+*/3 * * * * /home/local/Systems/scripts/ensure_running.cron >& /tmp/ensure_run.log
+*/2 * * * * /home/local/Systems/scripts/send_camera.cron >& /tmp/camera_send.log
+* * * * * /home/local/Systems/scripts/scrubber >& /tmp/scrubber.log
+
+# New satellite script
+#3,18,33,48 * * * * /home/local/Systems/scripts/get_ir_image_cron.py >>& /tmp/get_ir_image.log 
+#5,20,35,50 * * * * /home/local/Systems/scripts/get_4kmvis_image_cron.py >>& /tmp/get_4kmvis_image.log 
+*/10 * * * * /home/local/Systems/scripts/get_conus_cweb_cron.py >>& /tmp/get_conus_cweb.log
+
+# Get flight plan script
+*/30 * * * * /home/local/Systems/scripts/get_flight_plan.py >>& /tmp/get_flight_plan.log
+
+# AVAPS
+#* * * * * /home/local/Systems/scripts/send_avaps.cron.py >& /tmp/avaps_send.log 
+# TOGA
+#*/2 * * * * python /home/local/Systems/scripts/send_toga.py >>& /tmp/send_toga.log
+
+#DC3
+#  The following is a modified get vis to deal with regional 1km vis for DC3
+#5,20,35,50 * * * * /home/local/Systems/scripts/get_vis_image_cron.py >>& /tmp/get_vis_image.log 
+#*/3 * * * * /home/local/Systems/scripts/get_chill_image_cron.py >>& /tmp/get_chill_image.log
+#*/2 * * * * /home/local/Systems/scripts/get_ltng_at_elev_cron.py >>& /tmp/get_ltng_at_elev.log
+#*/5 * * * * /home/local/Systems/scripts/get_radar_at_elev.cron.py >>& /tmp/get_radar_at_elev.log
+#*/5 * * * * /home/local/Systems/scripts/get_cappi_cweb_cron.py >>& /tmp/get_cappi_cweb.log
+#*/10 * * * * /home/local/Systems/scripts/get_conus_radar.py >>& /tmp/get_conus_radar.log
+
+# Persistent ssh tunnel to EOL, attempting reopens only every 10 minutes.
+*/10 * * * * ssh -N eoltunnel >& /tmp/eoltunnel.log
+
+# Time stamp label for MC
+*/1 * * * * /home/local/Systems/scripts/make_label.py >>& /tmp/makelabel.log
+
+*/1 * * * * python /home/local/Systems/scripts/router/logstatus.py
+
+# IRC and IRC bot
+@reboot /home/ads/ircd/unreal start >& /dev/null
+@reboot sleep 5; /home/ads/rbot/bin/rbot >& /dev/null
