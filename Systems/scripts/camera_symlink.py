@@ -13,6 +13,9 @@ import logging, logging.handlers
 import os, sys, commands, pyinotify, re, time
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
 
+sys.path.append("/home/local/raf/python")
+import raf.ac_config
+
 mask = pyinotify.IN_CREATE | pyinotify.IN_CLOSE_WRITE
 
 class transferNotifier(pyinotify.ProcessEvent):
@@ -50,7 +53,7 @@ def Monitor(data):
 
 if __name__ == '__main__':
 
-    data     = "/mnt/r1/camera_images/"
+    data     = raf.ac_config.get_config("cameras.path")+"/"
     logfile  = "/tmp/camera_symlink.log"
     sym_link = "/var/www/html/flight_data/images/latest_forward.jpg"
 
@@ -58,7 +61,7 @@ if __name__ == '__main__':
     # to any rogue .jpg(s) that are created in the watched directory.
     # regexp hint:       any number of non...   /'s            .'s
     #                                         /----\         /----\
-    reLatest = re.compile(data+"flight_number_[^\/]*/forward/[^\.]*\.jpg")
+    reLatest = re.compile(data+"forward/[^\.]*\.jpg")
 
     # setup logging
     logger = logging.getLogger()
