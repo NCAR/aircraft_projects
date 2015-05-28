@@ -35,7 +35,7 @@ use NetCDF;
 
 # Usage
 if (scalar(@ARGV) != 1) {
-    print "\nUsage: ./blankout.pl <netCDF file>\n\n";
+    print "\nUsage: ./blankout_gp.pl <netCDF file>\n\n";
     exit(1);
 }
 
