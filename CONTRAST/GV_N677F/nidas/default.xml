@@ -85,7 +85,11 @@
         <variable longname="IRS Aircraft Track Angle" name="TKAT" units="degree_T"/>
       </sample>
       <sample id="0314" rate="25">
-        <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T"/>
+        <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
+            <linear units="degree_T">
+              <calfile file="THDG.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </linear>
+        </variable>
       </sample>
       <sample id="0315" rate="12.5">
         <variable longname="IRS Wind Speed" name="IWS" units="m/s"/>
