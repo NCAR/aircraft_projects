@@ -539,6 +539,17 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
+
+<!-- New Buck Dewpointers as of 2015 have a different serial interface. Eventually all dewpointers 
+     will have this interface.
+-->
+    <serialSensor ID="DewPointer2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="%*f,%f,%f,%*f,%*f,%f">
+        <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+        <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
+        <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
+      </sample>
+    </serialSensor>
     <serialSensor ID="Mensor_6100" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
 
 <!-- Turn off internal filtering on the Mensor:
@@ -1735,7 +1746,9 @@
       </output>
       <sensor IDREF="MTP" devicename="usock::30101" id="300" suffix="_MTP"/>
       <sensor IDREF="MTPATP" devicename="usock::30102" id="500" suffix="_MTP"/>
-      <sensor IDREF="ACDFO3" devicename="usock::30107" id="700" suffix="_ACD"/></dsm>
+      <sensor IDREF="ACDFO3" devicename="usock::30107" id="700" suffix="_ACD"/>
+      <sensor IDREF="HARP_IRRADIANCE" devicename="usock::30108" id="900" suffix="_HARP"/>
+    </dsm>
     <dsm derivedData="sock::7071" id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
@@ -1810,7 +1823,7 @@
           </variable>
         </sample>
       </sensor>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS8" id="400" suffix="_DPR"/>
+      <serialSensor IDREF="DewPointer2" devicename="/dev/ttyS8" id="400" suffix="_DPR"/>
       <serialSensor IDREF="UHSAS" devicename="/dev/ttyS4" id="600" suffix="_RWOOU">
         <parameter name="SerialNumber" type="string" value="UHSAS001"/>
       </serialSensor>
@@ -1826,7 +1839,7 @@
           <variable longname="Raw Static Pressure, Fuselage" name="PSF" units="hPa"/>
 	</sample>
       </serialSensor>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
+      <serialSensor IDREF="DewPointer2" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
