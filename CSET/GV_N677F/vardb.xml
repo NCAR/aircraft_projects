@@ -171,6 +171,7 @@
       <long_name>Vertical Differential Pressure, Boom</long_name>
       <is_analog>false</is_analog>
       <category>Uncorr'd Raw</category>
+      <derive>AKDF</derive>
       <reference>false</reference>
     </variable>
     <variable name="ADIFR">
@@ -218,7 +219,7 @@
       <long_name>Attack Angle, Radome Diff. Pressure</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>ADIFR QCXC ATX PSXC</dependencies>
+      <dependencies>ADIFR QCF PSF</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="ALT">
@@ -485,6 +486,7 @@
       <long_name>Horizontal Differential Pressure, Boom</long_name>
       <is_analog>false</is_analog>
       <category>Uncorr'd Raw</category>
+      <derive>SSDF</derive>
       <reference>false</reference>
     </variable>
     <variable name="BDIFR">
@@ -1925,7 +1927,7 @@
       <long_name>Ambient Water Vapor Pressure</long_name>
       <is_analog>false</is_analog>
       <category>Thermodynamic</category>
-      <dependencies>MIRRTMP PSXC CAVP</dependencies>
+      <dependencies>MIRRTMP_DPL PSXC CAVP_DPL</dependencies>
       <standard_name>water_vapor_pressure</standard_name>
       <reference>false</reference>
     </variable>
@@ -2470,7 +2472,6 @@
       <long_name>Pressure-Damped Inertial Altitude</long_name>
       <is_analog>false</is_analog>
       <category>Position</category>
-      <dependencies>WP3</dependencies>
       <standard_name>altitude</standard_name>
       <reference>false</reference>
     </variable>
@@ -3716,7 +3717,7 @@
       <long_name>Corrected PMS-King Liquid Water Content</long_name>
       <is_analog>false</is_analog>
       <category>Liquid Water</category>
-      <dependencies>PLWC TASX ATX PSXC CONCD_xxx</dependencies>
+      <dependencies>PLWC TASX ATX PSXC CONCD_LWOI</dependencies>
       <standard_name>atmosphere_cloud_liquid_water_content</standard_name>
       <reference>false</reference>
     </variable>
@@ -3725,7 +3726,7 @@
       <long_name>Corrected PMS-King Liquid Water Content</long_name>
       <is_analog>false</is_analog>
       <category>Liquid Water</category>
-      <dependencies>PLWC1 TASX ATX PSXC CONCD_xxx</dependencies>
+      <dependencies>PLWC1 TASX ATX PSXC CONCD_LWOI</dependencies>
       <standard_name>atmosphere_cloud_liquid_water_content</standard_name>
       <reference>false</reference>
     </variable>
@@ -3871,7 +3872,7 @@
       <long_name>Corrected Static Pressure, Fuselage</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
-      <dependencies>PSF QCF ADIFR QCR</dependencies>
+      <dependencies>PSF QCF ATTACK</dependencies>
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
@@ -4093,7 +4094,7 @@
       <long_name>Corrected Dynamic Pressure, Fuselage</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>PSF QCF ADIFR QCR</dependencies>
+      <dependencies>PSF QCF ATTACK</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="QCFR">
@@ -4127,7 +4128,7 @@
       <long_name>Corrected Dynamic Pressure, Radome</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>PSF QCF ADIFR QCR</dependencies>
+      <dependencies>QCR PSF QCF ATTACK</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="QCW">
@@ -4763,7 +4764,7 @@
       <long_name>Sideslip Angle, Radome Diff. Pressure</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>BDIFR QCXC MACHX</dependencies>
+      <dependencies>BDIFR QCF</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="STB">
@@ -4846,7 +4847,7 @@
       <long_name>Aircraft True Airspeed, Fuselage</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>QCFC PSFC RTX</dependencies>
+      <dependencies>MACHF ATX</dependencies>
       <standard_name>platform_speed_wrt_air</standard_name>
       <reference>false</reference>
     </variable>
@@ -4863,7 +4864,7 @@
       <long_name>Aircraft True Airspeed, Humidity Corrected</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>TASX MR</dependencies>
+      <dependencies>TASF MR</dependencies>
       <standard_name>platform_speed_wrt_air</standard_name>
       <reference>false</reference>
     </variable>
@@ -4872,7 +4873,7 @@
       <long_name>Aircraft True Airspeed, Radome</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>QCRC PSFC RTX</dependencies>
+      <dependencies>MACHR ATX</dependencies>
       <standard_name>platform_speed_wrt_air</standard_name>
       <reference>false</reference>
     </variable>
@@ -4881,7 +4882,6 @@
       <long_name>Aircraft True Airspeed, Wing</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>QCWC PSWC RTB</dependencies>
       <standard_name>platform_speed_wrt_air</standard_name>
       <reference>false</reference>
     </variable>
@@ -4890,7 +4890,7 @@
       <long_name>Aircraft True Airspeed, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>TASF</dependencies>
+      <dependencies>TASHC</dependencies>
       <standard_name>platform_speed_wrt_air</standard_name>
       <reference>false</reference>
     </variable>
@@ -5183,7 +5183,7 @@
     </variable>
     <variable name="TRSTB">
       <units>deg_C</units>
-      <long_name>RSTB Sensor Head Temperature</long_name>
+      <long_name>RSTB Sensor Heating Unit Setting</long_name>
       <is_analog>true</is_analog>
       <voltage_range>-10 10</voltage_range>
       <default_sample_rate>10</default_sample_rate>
@@ -5571,7 +5571,7 @@
       <long_name>GPS-Corrected Wind Vector, Vertical Gust Component</long_name>
       <is_analog>false</is_analog>
       <category>Wind</category>
-      <dependencies>TASX VEWC VNSC PITCH ROLL THDG ATTACK SSLIP GGVSPDB</dependencies>
+      <dependencies>TASX VEWC VNSC PITCH ROLL THDG ATTACK SSLIP GGVSPD</dependencies>
       <standard_name>upward_air_velocity</standard_name>
       <reference>false</reference>
     </variable>
@@ -5589,7 +5589,6 @@
       <long_name>Damped Aircraft Vertical Velocity</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>LAT VEW VNS PALT ACINS</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="WS">
