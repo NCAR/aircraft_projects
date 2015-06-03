@@ -438,12 +438,12 @@
 <!-- BESTPOS record -->
       <sample id="4" rate="10">
           <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
-	  <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
-	  <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
-	  <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
-	  <variable longname="Standard Deviation of Reference GPS Latitude" name="GGLATSD" units="m"/>
-	  <variable longname="Standard Deviation of Reference GPS Longitude" name="GGLONSD" units="m"/>
-	  <variable longname="Standard Deviation of Reference GPS Altitude (MSL)" name="GGALTSD" units="m"/>
+	      <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
+	      <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
+	      <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
+	      <variable longname="Standard Deviation of Reference GPS Latitude" name="GGLATSD" units="m"/>
+	      <variable longname="Standard Deviation of Reference GPS Longitude" name="GGLONSD" units="m"/>
+	      <variable longname="Standard Deviation of Reference GPS Altitude (MSL)" name="GGALTSD" units="m"/>
           <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
           <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
           <variable longname="Reference GPS number of satellites used in solution" name="GGNSAT" units="number"/>
@@ -459,7 +459,6 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
-
     <serialSensor ID="CMIGITS3" baud="38400" class="raf.CMIGITS3_Serial" databits="8" parity="odd" stopbits="1" timeout="5">
       <sample id="1" rate="10">
 
@@ -1484,7 +1483,6 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-
     <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41002">
         <sample id="1" rate="100">
             <variable longname="LAMS Sequence Number, Beam 1" name="SEQ1" units="none"/>
@@ -1506,7 +1504,6 @@
         </sample>
 -->
     </sensor>
-
     <serialSensor ID="PIC1301_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC1301">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %*d %*f">
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
@@ -1773,6 +1770,18 @@
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_CAB" units="deg_C"/>
         </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="V">
+              <calfile file="F2DIO1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+        </sample>
       </sensor>
     </dsm>
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
@@ -1885,7 +1894,6 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
-
     <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200">
@@ -1904,8 +1912,10 @@
           </variable>
         </sample>
       </sensor>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
-
     <dsm derivedData="sock::7071" id="11" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
       <output class="RawSampleOutputStream">
