@@ -22,19 +22,22 @@ import sys
 import glob
 import ftplib
 import syslog
+sys.path.append("/home/local/raf/python")
+import raf.ac_config
 
 ####################  CONFIGURATION #######################################
-send_Dfiles = 'false'
-send_prodfiles = 'true'
+send_Dfiles = False
+send_prodfiles = True
 # The following probably won't change
 Aspen_QC_exe = '/home/local/src/aspenqc/bin/Aspen-QC'
 d_file_re = 'D????????_??????_P.?'
-raw_data_dir = '/mnt/r1/dropsondes/'
-ads_web_dir = '/var/www/html/skewt/'
+raw_data_dir = raf.ac_config.get_config("dropsonde.raw_path")
+ads_web_dir = raf.ac_config.get_config("dropsonde.skewt_path")
 grnd_ftp_host = 'catalog.eol.ucar.edu'
 grnd_skewt_dir = '/pub/incoming/AVAPS/skewt'
 grnd_wmo_dir = '/pub/incoming/AVAPS/bufr'
 ###################  END OF CONFIGURATION #################################
+
 # Clean up name of script for logging
 ident = sys.argv[0][sys.argv[0].rfind("/")+1:]
 
@@ -42,7 +45,7 @@ os.chdir(raw_data_dir)
 
 # This cron script is not re-entrant, bail out if its still running.
 if os.path.isfile('BUSY'):
-    syslog.syslog('exiting, BUSY')
+    syslog.syslog(ident+':exiting, BUSY')
     syslog.closelog()
     sys.exit(1)
 os.system('touch BUSY')
@@ -51,7 +54,7 @@ list=glob.glob(d_file_re)
 
 # bail out if no files are found
 if (not list):
-    # syslog.syslog('exiting, nothing to send')
+    # syslog.syslog(ident+':exiting, nothing to send')
     os.remove('BUSY')
     syslog.closelog()
     sys.exit(1)
@@ -69,7 +72,7 @@ for file in list:
     os.system(cmd)
 
     # Put new skewt into ads web space
-    copy(skewt_fn, ads_web_dir_)
+    os.system('/bin/cp '+skewt_fn+' '+ads_web_dir)
 
     if (send_Dfiles):
         try:
@@ -87,14 +90,16 @@ for file in list:
             syslog.syslog(ident+':failed to compress/PQinsert:'+file)
             cmd='bunzip2 '+file_bz2
             os.system(cmd)
+    else:
+        os.system('/bin/rm '+file)
 
-    if (send_prodfiles)
+    if (send_prodfiles):
     
         try:
-            syslog.syslog(ident+'opening FTP connection for:'+skewt_fn+ \
+            syslog.syslog(ident+':opening FTP connection for:'+skewt_fn+ \
                           ' and '+wmo_fn)
     
-            ftp = ftplib.FTP('grnd_ftp_host')
+            ftp = ftplib.FTP(grnd_ftp_host)
             ftp.login('anonymous', '')
             ftp.cwd(grnd_skewt_dir)
             ftp.storbinary('stor '+skewt_fn, open(skewt_fn, 'rb'))
@@ -106,10 +111,11 @@ for file in list:
             os.rename(wmo_fn, 'sent/'+wmo_fn)
     
         except ftplib.all_errors, e:
-            syslog.syslog('Error putting file: %s' % e)
+            syslog.syslog(ident+':Error putting file: %s' % e)
     
         ftp.quit() 
-
+    else:
+        os.system('/bin/rm '+skewt_fn+' '+wmo_fn)
 
 # remove busy flag
 os.remove('BUSY')
