@@ -15,12 +15,12 @@ find /tmp -maxdepth 1 -name "iostat*" -mmin +3000 -exec rm{} \;
 #find /tmp -name "get_sat_*.log" -mmin +1440 -exec rm {} \;
 
 # Don't allow the lock files to remain too long.
-find /mnt/r1/dropsondes -name "BUSY" -mmin +20 -exec rm {} \;
+find `/home/local/Systems/scripts/get_ac_config.py dropsonde.raw_path` -name "BUSY" -mmin +20 -exec rm {} \;
 find /var/www/html/flight_data/images/ -name "*BUSY*" -mmin +10 -exec rm {} \;
 find /var/www/html/flight_data/GE/ -name "*BUSY*" -mmin +5 -exec rm {} \;
 
 # Clean these every couple months.
-find /mnt/r1/dropsondes -name "D*" -mmin +80000 -exec rm {} \;
+find `/home/local/Systems/scripts/get_ac_config.py dropsonde.raw_path` -name "D*" -mmin +80000 -exec rm {} \;
 find /mnt/r1/mtp -name "MTPcurrent*.txt" -mmin +80000 -exec rm -f {} \;
 find /mnt/r1/mtp -name "ATP_*.txt" -mmin +80000 -exec rm -f {} \;
 find /mnt/r1/toga -name "*.b" -mmin +800 -exec rm -f {} \;
