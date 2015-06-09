@@ -42,6 +42,12 @@ if ($AIRCRAFT == "C130_N130AR") then
   if ($status) then
     /home/local/Systems/scripts/uwyo_lidar /mnt/r1/uwyo_lidar 2 /tmp/uwyo_lidar.log &
   endif
+
+  # Open Street Maps rendering daemon.
+  ps ax | grep renderd | grep -qv grep
+  if ($status) then
+    nice /usr/bin/renderd &
+  endif
 endif
 
 if ($AIRCRAFT == "GV_N677F") then
@@ -64,6 +70,12 @@ if ($AIRCRAFT == "GV_N677F") then
   if ($status) then
     /opt/local/bin/udp2sql >& /tmp/udp2sql.log &
   endif
+
+  # Open Street Maps rendering daemon.
+  ps ax | grep renderd | grep -qv grep
+  if ($status) then
+    nice /usr/local/bin/renderd &
+  endif
 endif
 
 ps ax | grep listen_lightning.pl | grep -qv grep
@@ -80,12 +92,6 @@ endif
 ps ax | grep xmlrpc2shell.py | grep -qv grep
 if ($status) then
   /home/local/Systems/scripts/xmlrpc2shell.py >& /tmp/xmlrpc2sh.log
-endif
-
-# Open Street Maps rendering daemon.
-ps ax | grep renderd | grep -qv grep
-if ($status) then
-  nice /usr/local/bin/renderd &
 endif
 
 # Nagios variable QC checks
