@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 19
+Release: 20
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -59,6 +59,8 @@ fi
 %attr(0755,ads,ads) /home/ads/Desktop/AutoCal.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/CalibrationDatabaseEditor.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/ConfigEditor.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/EditTechProjNotes.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/RestartNetwork.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/aeros.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/nimbus.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_data_acq.desktop
@@ -112,6 +114,9 @@ fi
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Tue Jun 09 2015 Tom Baltzer <tbaltzer@ucar.edu> 1.20
+- Added EditTechProjNotes icon to desktop.
+- Corrected Calibration Database Editor icon.
 * Fri Jul 19 2013 John Wasinger <wasinger@ucar.edu> 1.19
 - Added Auto Cal icon to desktop.
 - Added Calibration Database Editor icon to desktop.
