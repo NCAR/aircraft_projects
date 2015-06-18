@@ -52,9 +52,9 @@ ftp_site         = 'catalog.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
 ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
-label            = 'sat_ir_label.jpg'
+label            = 'sat_ir_5km_label.jpg'
 #Assumes filename form is prefixYYYYMMDD*postfix
-prefix           = 'satellite.GOES-13.'  
+prefix           = 'satellite.GOES-15.'  
 postfix		 = '*ch4_thermal-IR.jpg' 
 osm_file_name    = "latest_ir.jpg"
 num_imgs_to_get  = 10 # Script will backfill this many images for loops
