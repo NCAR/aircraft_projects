@@ -60,7 +60,6 @@ fi
 %attr(0755,ads,ads) /home/ads/Desktop/CalibrationDatabaseEditor.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/ConfigEditor.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/EditTechProjNotes.desktop
-%attr(0755,ads,ads) /home/ads/Desktop/RestartNetwork.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/aeros.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/nimbus.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_data_acq.desktop
