@@ -5,7 +5,7 @@
 # This is set up to run out of a cron job every 2 minutes
 # */2 * * * * /home/local/Systems/scripts/send_camera.cron
 #
-#set -x
+set -x
 
 # select datetime, ggalt from raf_lrt order by datetime desc limit 1;
 #
@@ -59,7 +59,7 @@ key=`echo $AIRCRAFT | cut -d _ -f 1`_camera_
 #  montage  All four camera images in a quadrant.
 #
 camera=`$psql -t -c "SELECT value FROM mission_control WHERE key='camera';" | tr -d ' '`
-camera=montage
+camera=forward
 feed="$camera"
 case "$feed" in
 
@@ -76,7 +76,8 @@ case "$feed" in
 esac
 
 # change into the current flight's folder
-flightdir=`ls -td ${camera_images_dir}/flight_number_* | grep -v tar | head -n1`
+#flightdir=`ls -td ${camera_images_dir}/flight_number_* | grep -v tar | head -n1`
+flightdir=${camera_images_dir}
 flight=$flightdir/$camera
 [[ -d $flight ]] || exit
 cd $flight
