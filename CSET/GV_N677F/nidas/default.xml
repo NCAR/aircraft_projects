@@ -956,7 +956,7 @@
 <!-- look for ffff07 termination sequence after 220 bytes -->
       <message length="220" position="end" separator="\xff\xff\x07"/>
     </serialSensor>
-    <serialSensor ID="VCSEL" baud="38400" class="raf.VCSEL_Serial" databits="8" parity="none" stopbits="1">
+    <serialSensor ID="VCSEL" baud="38400" class="raf.VCSEL_Serial" databits="8" parity="none" stopbits="1" suffix="_VXL">
 
 <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
       <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %c %*f %f %*f %*f %f %f %f %f">
@@ -1749,8 +1749,8 @@
       <sensor IDREF="MTPATP" devicename="usock::30102" id="500" suffix="_MTP"/>
       <sensor IDREF="ACDFO3" devicename="usock::30107" id="700" suffix="_ACD"/>
       <sensor IDREF="HARP_IRRADIANCE" devicename="usock::30108" id="900" suffix="_HARP"/>
-      <sensor IDREF="THREEVC2D" devicename="usock::30113" id="1100"/>
-      <sensor IDREF="THREEVCPI" devicename="usock::30114" id="1300"/>
+      <sensor IDREF="THREEVC2D" devicename="usock::30113" id="1100" suffix="_3VC2D"/>
+      <sensor IDREF="THREEVCPI" devicename="usock::30114" id="1300" suffix="_3VCPI"/>
     </dsm>
     <dsm derivedData="sock::7071" id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
