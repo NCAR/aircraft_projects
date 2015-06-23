@@ -62,6 +62,8 @@ rePt = re.compile("^Pt: (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)")
 reTarg = re.compile("^E (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)")
 reProfTime = re.compile("ATP_(........)_(..)(..)(..).txt")
 reProfElmt = re.compile("(\d+)  (\d+.\d+)  (\d+.\d+)")
+reBTTime = re.compile("BT_(........)_(..)(..)(..).txt")
+reBTElmt = re.compile("(\d+.\d+) (\d+.\d+) (\d+.\d+)")
 reTemplNames = re.compile("^(TemplNames:)(\S+)")
 reTemplIdxs = re.compile("^(TemplIndexes:)(\S+)")
 reTemplAltIdxs = re.compile("^(TemplAltIndexes:)(\S+)")
@@ -248,7 +250,7 @@ class PClose(ProcessEvent):
                 data = data + "," + Trop2Alt
             data = data + "," + mri
 
-            time.sleep(1)
+            #time.sleep(1)
 
             # broadcast UDP Data Content to next higher port number
             if data:
@@ -257,6 +259,50 @@ class PClose(ProcessEvent):
                 #udp_bcast.sendto(data, (host, newport))
                 logging.info(data)
                 logging.info("Sent on port:"+str(newport))
+
+        elif event.name.startswith('BT_'):
+            logging.info("Found BT_ file "+event.name)
+            if os.path.isfile(event.path):
+                fn = event.path
+            else:
+                fn = os.path.join(event.path, event.name)
+
+            # Parse file and create UDP Data Content
+            m = reBTTime.match(event.name)
+            if m:
+                data = "MTPBT," + m.group(1) + "T" + \
+                        m.group(2) + m.group(3) + m.group(4)
+            file = open(fn)
+            btch1 = []
+            btch2 = []
+            btch3 = []
+            numpnts = 10
+            count = 0
+            for line in file:
+                logging.info("Line = " + line)
+                m = reBTElmt.match(line)
+                if m:
+                    logging.info("Got a match for re")
+                    btch1.append(m.group(1))
+                    btch2.append(m.group(2))
+                    btch3.append(m.group(3))
+                    count = count + 1
+            logging.info("btch1 = "+ str(btch1[0]) + str(btch1[count-1]))
+
+            file.close()
+
+            for i in range(0,count-1):
+                data = data + "," + str(btch1[i])
+            for i in range(0,count-1):
+                data = data + "," + str(btch2[i])
+            for i in range(0,count-1):
+                data = data + "," + str(btch3[i])
+
+            if data:
+                btport = port+29
+                udp.sendto(data, (host, btport))
+                logging.info(data)
+                logging.info("Sent on port:"+str(btport))
 
 
 def Monitor(path):
