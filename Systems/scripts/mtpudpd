@@ -62,6 +62,11 @@ rePt = re.compile("^Pt: (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)")
 reTarg = re.compile("^E (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)")
 reProfTime = re.compile("ATP_(........)_(..)(..)(..).txt")
 reProfElmt = re.compile("(\d+)  (\d+.\d+)  (\d+.\d+)")
+reTemplNames = re.compile("^(TemplNames:)(\S+)")
+reTemplIdxs = re.compile("^(TemplIndexes:)(\S+)")
+reTemplAltIdxs = re.compile("^(TemplAltIndexes:)(\S+)")
+reMRI = re.compile("^(MRI:)(\S+)")
+reATPTrops = re.compile("^(AltTrops:)(\S+)")
 
 class PClose(ProcessEvent):
 
@@ -176,7 +181,7 @@ class PClose(ProcessEvent):
             else:
                 fn = os.path.join(event.path, event.name)
 
-            # create UDP Data Content
+            # Parse file and create UDP Data Content
             m = reProfTime.match(event.name)
             if m:
                 data = "MTPP," + m.group(1) + "T" + \
@@ -193,6 +198,37 @@ class PClose(ProcessEvent):
                     temps.append(m.group(3))
                     count = count + 1
 
+                m = reTemplNames.match(line)
+                if m:
+                    parts = m.group(2).split(',')
+                    tpl2name = parts.pop()
+                    tpl1name = parts.pop()
+
+                m = reTemplIdxs.match(line)
+                if m:
+                    parts = m.group(2).split(',')
+                    tpl2idx = parts.pop()
+                    tpl1idx = parts.pop()
+
+                m = reTemplAltIdxs.match(line)
+                if m:
+                    parts = m.group(2).split(',')
+                    tplAlt2idx = parts.pop()
+                    tplAlt1idx = parts.pop()
+
+                m = reMRI.match(line)
+                if m:
+                    mri = m.group(2)
+
+                m = reATPTrops.match(line)
+                if m:
+                    parts = m.group(2).split(',')
+                    Trop2Alt = parts.pop()
+                    Trop1Alt = parts.pop()
+
+            # end looping over file lines and put data into UDP packet
+            file.close()
+
             for i in range(count,numpnts):
                 alts.insert(0,0.0)
                 temps.insert(0,0.0)
@@ -202,15 +238,23 @@ class PClose(ProcessEvent):
             for i in range(0, numpnts):
                     data = data + "," + str(temps[i])
 
-            file.close()
+            #data = data + "," + tpl1name   + "," + tpl2name
+            data = data + "," + tpl1idx    + "," + tpl2idx
+            data = data + "," + tplAlt1idx + "," + tplAlt2idx
+            data = data + "," + Trop1Alt
+            if float(Trop2Alt) == 99.9:
+                data = data + ","
+            else:
+                data = data + "," + Trop2Alt
+            data = data + "," + mri
 
             time.sleep(1)
 
             # broadcast UDP Data Content to next higher port number
             if data:
                 newport=port+1
-                #udp.sendto(data, (host, newport))
-                udp_bcast.sendto(data, (bcast_host, newport))
+                udp.sendto(data, (host, newport))
+                #udp_bcast.sendto(data, (host, newport))
                 logging.info(data)
                 logging.info("Sent on port:"+str(newport))
 
@@ -267,11 +311,12 @@ if __name__ == '__main__':
         udp.setsockopt(IPPROTO_IP, IP_MULTICAST_TTL, 20) 
 
         # open UDP socket for profile data
-        bcast_host = ''
-        udp_bcast = socket(AF_INET,SOCK_DGRAM)
-        udp_bcast.setsockopt(SOL_SOCKET,SO_REUSEADDR,1)
-        udp_bcast.setsockopt(SOL_SOCKET,SO_BROADCAST, 1)
-        udp_bcast.bind((bcast_host,port+1))
+        #bcast_host = ''
+        #udp_bcast = socket(AF_INET,SOCK_DGRAM)
+        #udp_bcast.setsocketopt(IPPROTO_IP, IP_MULTICAST_TTL, 20)
+        #udp_bcast.setsockopt(SOL_SOCKET,SO_REUSEADDR,1)
+        #udp_bcast.setsockopt(SOL_SOCKET,SO_BROADCAST, 1)
+        #udp_bcast.bind((bcast_host,port+1))
  
         # watch the data folder for new files being created
         Monitor(path)
