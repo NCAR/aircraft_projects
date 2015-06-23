@@ -1102,6 +1102,19 @@
         <variable longname="SIDS Rejected Particle Count" name="REJDOF" units="count"/>
       </sample>
     </sensor>
+    <sensor ID="MTPBT" class="UDPSocketSensor" devicename="usock::30130" suffix="_MTP">
+        <sample id="1" rate="1" scanfFormat="MTPBT,%4d%2d%2dT%2d%2d%2d, %f,%f,%f,%f,%f,%f,%f,%f,%f,%f, %f,%f,%f,%f,%f,%f,%f,%f,%f,%f, %f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="MTP BT Year" name="BYEAR" units="count"/>
+            <variable longname="MTP BT Month" name="BMONTH" units="count"/>
+            <variable longname="MTP BT Day" name="BDAY" units="count"/>
+            <variable longname="MTP BT Hour" name="BHOUR" units="count"/>
+            <variable longname="MTP BT Minute" name="BMIN" units="count"/>
+            <variable longname="MTP BT Second" name="BSEC" units="count"/>
+            <variable length="10" longname="MTP Channel 1 Brightness Temps" name="BTCH1" units="km"/>
+            <variable length="10" longname="MTP Channel 2 Brightness Temps" name="BTCH2" units="km"/>
+            <variable length="10" longname="MTP Channel 3 Brightness Temps" name="BTCH3" units="km"/>
+        </sample>
+    </sensor>
     <sensor ID="MTPATP" class="UDPSocketSensor" devicename="usock::30102" suffix="_MTP">
         <sample id="1" rate="1" scanfFormat="MTPP,%4d%2d%2dT%2d%2d%2d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="MTP ATP Year" name="PYEAR" units="count"/>
@@ -1764,6 +1777,7 @@
       <sensor IDREF="HARP_IRRADIANCE" devicename="usock::30108" id="900" suffix="_HARP"/>
       <sensor IDREF="THREEVC2D" devicename="usock::30113" id="1100" suffix="_RWI"/>
       <!--<sensor IDREF="THREEVCPI" devicename="usock::30114" id="1300" suffix="_RWI"/>-->
+      <sensor IDREF="MTPBT" devicename="usock::30130" id="1500" suffix="_MTP"/>
     </dsm>
     <dsm derivedData="sock::7071" id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
