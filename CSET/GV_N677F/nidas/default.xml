@@ -590,7 +590,15 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
-    <sensor ID="HOLODEC" class="UDPSocketSensor" devicename="usock::30120"/>
+    <sensor ID="HOLODEC" class="UDPSocketSensor" devicename="usock::30120">
+      <sample id="1" rate="1" scanfFormat="HOLO,%*f,%f,%f,%f,%f,%f">
+        <variable longname="Holodec temperature, heat zone 1" name="HTEMP1" units="deg_C"/>
+        <variable longname="Holodec temperature, heat zone 2" name="HTEMP2" units="deg_C"/>
+        <variable longname="Holodec temperature, heat zone 3" name="HTEMP3" units="deg_C"/>
+        <variable longname="Holodec temperature, heat zone 4" name="HTEMP4" units="deg_C"/>
+        <variable longname="Holodec temperature, heat zone 5" name="HTEMP5" units="deg_C"/>
+      </sample>
+    </sensor>
 
 <!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
       the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
