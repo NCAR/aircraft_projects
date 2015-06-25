@@ -1818,28 +1818,28 @@
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Recovery Temperature, Radome Left" name="RTRL" units="V">
+          <variable longname="Recovery Temperature, Radome Left" name="RTF1" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
-              <calfile file="RTRL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+              <calfile file="RTF1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
-          <variable longname="Recovery Air Temperature, Deiced Right, HARCO" name="RTHR2" units="V">
+          <variable longname="Recovery Air Temperature, Deiced Right, HARCO" name="RTH4" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
-              <calfile file="RTHR2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+              <calfile file="RTH4.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
-          <variable longname="Recovery Air Temperature, Deiced Right, HARCO" name="RTHR1" units="V">
+          <variable longname="Recovery Air Temperature, Deiced Right, HARCO" name="RTH3" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
-              <calfile file="RTHR1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+              <calfile file="RTH3.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
           <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="V">
@@ -1887,22 +1887,22 @@
       </serialSensor>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130" suffix="_GP">
         <sample id="1">
-          <variable longname="Horizontal Differential Pressure, Gust Pod" name="BDIFR" units="hPa"/>
+          <variable longname="Horizontal Differential Pressure, Gust Pod" name="BDIF" units="hPa"/>
         </sample>
         <sample id="2">
-          <variable longname="Temperature of BDIFR Probe" name="BDIFRTEMP" units="deg_C"/>
+          <variable longname="Temperature of BDIF Probe" name="BDIFTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140" suffix="_GP">
         <sample id="1">
-          <variable longname="Vertical Differential Pressure, Gust Pod" name="ADIFR" units="hPa">
+          <variable longname="Vertical Differential Pressure, Gust Pod" name="ADIF" units="hPa">
 
 <!-- Compensate for inserting Gust Probe "upside down" -->
             <linear intercept="0.0" slope="-1.0" units="hPa"/>
           </variable>
         </sample>
         <sample id="2">
-          <variable longname="Temperature of ADIFR Probe" name="ADIFRTEMP" units="deg_C"/>
+          <variable longname="Temperature of ADIF Probe" name="ADIFTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS9" id="150" suffix="_GP">
