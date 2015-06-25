@@ -1,12 +1,19 @@
 #!/bin/csh 
-nice +19 /net/work/dev/jaa/createMovies/combineCameras.pl MPEX.paramfile rf06
-nice +19 /net/work/dev/jaa/createMovies/combineCameras.pl MPEX.paramfile rf07
-nice +19 /net/work/dev/jaa/createMovies/combineCameras.pl MPEX.paramfile rf08
-nice +19 /net/work/dev/jaa/createMovies/combineCameras.pl MPEX.paramfile rf09
-nice +19 /net/work/dev/jaa/createMovies/combineCameras.pl MPEX.paramfile rf10
-nice +19 /net/work/dev/jaa/createMovies/combineCameras.pl MPEX.paramfile rf11
-nice +19 /net/work/dev/jaa/createMovies/combineCameras.pl MPEX.paramfile rf12
-nice +19 /net/work/dev/jaa/createMovies/combineCameras.pl MPEX.paramfile rf13
-nice +19 /net/work/dev/jaa/createMovies/combineCameras.pl MPEX.paramfile rf14
-nice +19 /net/work/dev/jaa/createMovies/combineCameras.pl MPEX.paramfile rf15
-
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf01
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf02
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf03
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf04
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf05
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf06
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf07
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf08
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf09
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf10
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf11
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf12
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf13
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf14
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile rf15
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile tf01
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile tf02
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl MPEX.paramfile tf03
