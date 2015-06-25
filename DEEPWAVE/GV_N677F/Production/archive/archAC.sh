@@ -24,18 +24,23 @@ set PROJECT = "DEEPWAVE"
 ### LRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc EOL/2014
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT Z.nc EOL/2014
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT ZPC.nc EOL/2014
 
 ### IWG1
-/net/work/bin/scripts/mass_store/archAC/archAC.py IWG1 /scr/raf/Prod_Data/$PROJECT/IWG1 iwg1 EOL/2014
+#/net/work/bin/scripts/mass_store/archAC/archAC.py IWG1 /scr/raf/Prod_Data/$PROJECT/LRT/IWG1 iwg1 EOL/2014
+#/net/work/bin/scripts/mass_store/archAC/archAC.py IWG1 /scr/raf/Prod_Data/$PROJECT/LRT/IWG1 ZPC.iwg1 EOL/2014
 
 ### KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml EOL/2014
+#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/KML kml EOL/2014
+#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/KML V1_2.kml EOL/2014
 
 ### HRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc EOL/2014
+#/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT h.nc EOL/2014
+#/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT hPC.nc EOL/2014
 
-### KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/HRT kml EOL/2014
+### HRT KML
+/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/HRT/KML h.kml EOL/2014
+
 
 ### PRELIMINARY KML - puts files in the wrong place, you need to then login
 #to HPSS and move them under field phase dir.

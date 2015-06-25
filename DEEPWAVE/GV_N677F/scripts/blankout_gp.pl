@@ -6,6 +6,7 @@
 # remove other data from a production netCDF file. Note that it only handles 
 # 1-D and 2-D variables but should be straight-forward to expand to other
 # cases.
+# This script should work on both LRT and HRT production files.
 # 
 # Written by Janine Aquino May 27, 2015
 ###############################################################################
@@ -19,8 +20,6 @@ use NetCDF;
 );
 
 # Variables to blankout when above criteria are met
-#@vars = ("TAS_GP", "WD_GP", "WI_GP", "UI_GP", "UX_GP", "VI_GP", "VY_GP",
-#    "WS_GP");
 %vars = (
     "TAS_GP" => ["ROLL", "GGALT", "TASF"],
     "WS_GP" => ["ROLL"],
