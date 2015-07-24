@@ -219,6 +219,7 @@ udp2sql::udp2sql()
     _autoDBresetList.push_back("B146");
     _autoDBresetList.push_back("C130");
     _autoDBresetList.push_back("GV");
+    _autoDBresetList.push_back("DC8");
     for (unsigned int i = 0; i < _autoDBresetList.size(); ++i)
     {
         _timer[_autoDBresetList[i]].start(DropDuration * 3600000, this);
@@ -593,8 +594,9 @@ void udp2sql::newData()
     else if (strncmp(buffer, "WKA", 3) == 0)   platform = "WKA";
     else if (strncmp(buffer, "B146", 4) == 0)  platform = "B146";
     else if (strncmp(buffer, "DC8", 3) == 0)   platform = "DC8";
-    else if (strncmp(buffer, "A10", 3) == 0)   platform = "A10";
     else if (strncmp(buffer, "WB57", 4) == 0)  platform = "WB57";
+    else if (strncmp(buffer, "GH", 4) == 0)    platform = "GH";
+    else if (strncmp(buffer, "A10", 3) == 0)   platform = "A10";
     else if (strncmp(buffer, "GAUS:", 5) == 0) platform = "GAUS";
     else if (strncmp(buffer, "N42RF", 5) == 0) platform = "N42RF";
     else if (strncmp(buffer, "N43RF", 5) == 0) platform = "N43RF";
