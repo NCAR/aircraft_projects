@@ -27,7 +27,8 @@ echo "HOST:" $HOST
 echo "AIRCRAFT:" $AIRCRAFT
 echo "FLIGHTNUM:" $FLIGHT
 
-if [ -z "$AIRCRAFT" ];
+if [ -z "$AIRCRAFT" ]
+  then
     echo "AIRCRAFT must be set."
     exit 1
 fi
