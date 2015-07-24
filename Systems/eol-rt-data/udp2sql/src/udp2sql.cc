@@ -594,6 +594,7 @@ void udp2sql::newData()
     else if (strncmp(buffer, "B146", 4) == 0)  platform = "B146";
     else if (strncmp(buffer, "DC8", 3) == 0)   platform = "DC8";
     else if (strncmp(buffer, "A10", 3) == 0)   platform = "A10";
+    else if (strncmp(buffer, "WB57", 4) == 0)  platform = "WB57";
     else if (strncmp(buffer, "GAUS:", 5) == 0) platform = "GAUS";
     else if (strncmp(buffer, "N42RF", 5) == 0) platform = "N42RF";
     else if (strncmp(buffer, "N43RF", 5) == 0) platform = "N43RF";
