@@ -2,8 +2,13 @@
 
 logger "start_cameras shell script called"
 
+# Reset symlink script so it gets new flight number.
+# Let ensure_running start it back up.
+pkill camera_symlink.py
+
 /etc/init.d/capture.sh stop
 
+# [Re]load firewire drivers.
 sudo modprobe -r firewire_ohci
 sudo modprobe firewire_ohci
 
