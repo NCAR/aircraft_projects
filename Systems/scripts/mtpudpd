@@ -48,6 +48,7 @@ MTPP, yyyymmddThhmmss, alt1, temp1, alt2, temp2 ...
 import logging, logging.handlers
 import os, sys, pyinotify, re
 import time
+import math
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
 from socket import socket, AF_INET, SOCK_DGRAM, IPPROTO_IP, IP_MULTICAST_TTL, SOL_SOCKET, SO_BROADCAST, SO_REUSEADDR
 
@@ -75,6 +76,7 @@ class PClose(ProcessEvent):
     def process_IN_CLOSE(self, event):
 
         data = None
+        TSynth = -32767
 
         if event.name.startswith('MTPcurrent_'):
             if os.path.isfile(event.path):
@@ -137,6 +139,19 @@ class PClose(ProcessEvent):
                          m.group(4)+","+m.group(5)+","+m.group(6)+"," + \
                          m.group(7)+","+m.group(8)+","
                   gotM02 = True
+                  TSynthCnts = int(m.group(8))
+                  A=0.0009376
+                  B=0.0002208
+                  C=0.0000001276
+                  if TSynthCnts == 4096 or TSynthCnts == 0:
+                      TSynth = -32767
+                  else:
+                      cnts = 4096 - TSynthCnts
+                      RR = (1.0/(float(cnts)/4096.0)) - 1.0
+                      Rt = 34800.0 * RR
+                      TSynth = (1.0/(A+B*math.log(Rt)+C*math.pow(math.log(Rt),3))-273.16)
+                  data = data + str(TSynth) + ","
+                  logging.info("TSynth = "+ str(TSynth))
 
                 m = rePt.match(line)
                 if m and gotTime and gotVars and gotM01 \
@@ -291,11 +306,14 @@ class PClose(ProcessEvent):
 
             file.close()
 
-            for i in range(0,count-1):
+            #for i in range(0,count-1):
+            for i in range(0,10):
                 data = data + "," + str(btch1[i])
-            for i in range(0,count-1):
+            #for i in range(0,count-1):
+            for i in range(0,10):
                 data = data + "," + str(btch2[i])
-            for i in range(0,count-1):
+            #for i in range(0,count-1):
+            for i in range(0,10):
                 data = data + "," + str(btch3[i])
 
             if data:
