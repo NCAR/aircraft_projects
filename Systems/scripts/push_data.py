@@ -21,6 +21,8 @@ import datetime
 import glob
 import time
 import string
+import smtplib
+from email.mime.text import MIMEText
 
 
 # Initialization 
@@ -29,6 +31,10 @@ import string
 project =        'CSET'
 data_dir =       '/home/data/'
 rstudio_dir =    '/home/ads/RStudio/'
+
+# Instruments, comment out if not on project
+threeVCPI =      'true'
+twoD      =      'true'
 
 NAS =            'true'
 nas_url =        '192.168.1.30:/data'
@@ -62,8 +68,18 @@ twods_aircraft = 'GV_N677F'
 
 # ******************  End of Modification Section ****************
 
-nc_dir    = data_dir + project + '/'
-raw_dir   = data_dir + 'Raw_Data/' + project + '/'
+# Get the flight designation
+flight = raw_input('Input flight designation (e.g. tf01):')
+print flight
+email = raw_input('Input email address to send results:')
+
+
+nc_dir        = data_dir + project + '/'
+raw_dir       = data_dir + 'Raw_Data/' + project + '/'
+twods_raw_dir = raw_dir+'3v_cpi/2DS/'+ string.upper(project) +'_'+ string.upper(flight) + '/'
+oapfile_dir   = raw_dir+'3v_cpi/oapfiles/'
+twodfile_dir  = raw_dir+'PMS2D/'
+cpi_raw_dir   = raw_dir+'3v_cpi/CPI/'+string.upper(project) + '_' + string.upper(flight) + '/'
 process   = "false"
 
 # End of Initialization section
@@ -75,6 +91,9 @@ stor_raw_file =    'NO!    '
 proc_3vcpi_files = 'NO!'
 ship_3vcpi_files = 'NO!    '
 stor_3vcpi_files = 'NO!    '
+proc_2d_files    = 'NO!'
+ship_2d_files    = 'NO!    '
+stor_2d_files    = 'NO!    '
 proc_nc_file  =    'NO!'
 ship_nc_file  =    'NO!    '
 stor_nc_file  =    'NO!    '
@@ -91,17 +110,14 @@ proc_qc_files =    'NO!'
 ship_qc_files =    'NO!    '
 stor_qc_files =    'NO!    '
 
-
-# Get the flight designation
-flight = raw_input('Input flight designation (e.g. tf01):')
-print flight
-
 final_message = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n'
 final_message = final_message + 'Process and Push log for Project:' + project
 final_message = final_message + '  Flight:'+flight+'\r\n\r\n'
 
 
-# Get the netCDF, kml  and raw ADS files for working with
+##############   Beginning of Setup ######################################
+
+# Get the netCDF, kml, icartt, IWG1 and raw ADS files for working with
 # First netCDF
 nclist = glob.glob(nc_dir+'*'+flight+'*.nc')
 if nclist.__len__() == 1:
@@ -139,11 +155,11 @@ if ncfile == '' :
   sys.exit(0)
 
 #KML file
-kmllist = glob.glob(nc_dir+'*'+flight+'.kml')
+kmllist = glob.glob(nc_dir+'*'+'_'+flight+'.kml')
 if kmllist.__len__() == 1:
   kmlfile = kmllist[0]
 elif kmllist.__len__() == 0:
-  print "No files found matching form: "+nc_dir+'*'+flight+'*.kml'
+  print "No files found matching form: "+nc_dir+'*'+'_'+flight+'*.kml'
   if process == "true":
     print "We are scheduled to process all is good"
     kmlfile = nc_dir+project+'_'+flight+".kml"
@@ -168,14 +184,14 @@ if kmlfile == '' :
   sys.exit(0)
 
 #nc2asc file
-icarttlist = glob.glob(nc_dir+'*'+flight+'.asc')
+icarttlist = glob.glob(nc_dir+'*'+'_'+flight+'.asc')
 if icarttlist.__len__() == 1:
   icarttfile = icarttlist[0]
 elif icarttlist.__len__() == 0:
-  print "No files found matching form: "+nc_dir+'*'+flight+'*.asc'
+  print "No files found matching form: "+nc_dir+'*'+'_'+flight+'*.asc'
   if process == "true":
     print "We are scheduled to process all is good"
-    icarttfile = nc_dir+project+"_"+flight+".asc"
+    icarttfile = nc_dir+project+"_"+'_'+flight+".asc"
   else:
     print "We have nc file but not ASCII file....  aborting..."
     sys.exit(0)
@@ -197,11 +213,11 @@ if icarttfile == '' :
   sys.exit(0)
 
 #IWG1 file
-iwg1list = glob.glob(nc_dir+'*'+flight+'.iwg1')
+iwg1list = glob.glob(nc_dir+'*'+'_'+flight+'.iwg1')
 if iwg1list.__len__() == 1:
   iwg1file = iwg1list[0]
 elif iwg1list.__len__() == 0:
-  print "No files found matching form: "+nc_dir+'*'+flight+'*.iwg1'
+  print "No files found matching form: "+nc_dir+'*'+'_'+flight+'*.iwg1'
   if process == "true":
     print "We are scheduled to process all is good"
     iwg1file = nc_dir+project+'_'+flight+".iwg1"
@@ -328,7 +344,10 @@ if rstudiofileHTML == '' :
   print "Aborting..."
   sys.exit(0)
 
-twoDfile = ''
+#########################  End of Setup ###################################
+
+###################  Beginning of Processing ##############################
+threevcpi2d_file = ''
 # Run nimbus to generate first look product
 # Use a configuration file
 if process == "true":
@@ -351,33 +370,89 @@ if process == "true":
 
 # 3VCPI 
 # Convert SPEC file form to oap file form
-  twods_raw_dir = raw_dir+'3v_cpi/2DS/'+ string.upper(project) +'_'+ string.upper(flight) + '/'
-  file_list = glob.glob(twods_raw_dir+'base*2DSCPI')
-  if len(file_list) > 0:
+  if threeVCPI:
+    print "\n\n *****************  3VCPI **************************\n"
+    mkdir_fail = 'false'
+    first_base_file = ''
+    catted_file = 'base_'+flight+'all.2DSCPI'
+    catted_2d_file = 'base_'+flight+'all.2d'
     os.chdir(twods_raw_dir)
-    for file in file_list:
+    if os.path.isfile(catted_file):
+      os.remove(catted_file)
+    file_list = glob.glob(twods_raw_dir+'base*2DSCPI')
+    if len(file_list) > 0:
+      os.chdir(twods_raw_dir)
+      filenum = 1
+      for file in file_list:
+        if filenum == 1:
+          first_base_file = file
+        command = 'cat '+file+' >> '+catted_file
+        print "cat 3vcPIfiles:"+command
+        os.system(command)
+  
       command = translate2ds + '-project ' + project + ' -flight ' + flight \
-                +' -platform '+twods_aircraft + ' -sn SPEC001 -f ' + file + ' -o .'
+                +' -platform '+twods_aircraft + ' -sn SPEC001 -f ' + catted_file + ' -o .'
       print ' 3v-cpi command:' + command
       os.system(command)
-    
-    # move 2D file to the RAF naming convention
-    file_list = glob.glob('base*.2d')
-    for file in file_list:
-      datetime = file.split('.')[0].split('e')[1] #Pull out of base{datetime}.2d
-      command = 'mv '+file+' 20'+datetime+'.2d'
-      print ' mv command: '+command
-      os.system(command)
-      twoDfile = twods_raw_dir+'20'+datetime+'.2d'
-    
-    # Merge 3v-cpi data into netCDF file
-    command = 'process2d '+twoDfile+' -o '+ncfile
-    print "3v-cpi merge cmd: "+command
-    if os.system(command) == 0:
-      proc_3vcpi_files = 'Yes'
+      
+      # move 2D file to the RAF naming convention and location
+      if not os.path.isdir(oapfile_dir):
+        try:
+          os.mkdir(oapfile_dir)
+        except:
+          message= "\nERROR: Could not make oapfile directory:"+oapfile_dir
+          message= message +  "\n  - skipping 2d file gen/placement\n"
+          print message
+          final_message = final_message + message
+          mkdir_fail = 'true'
+      if not mkdir_fail == 'true':
+        twod_dir,fb_filename=os.path.split(first_base_file)
+        datetime = fb_filename.split('.')[0].split('e')[1] #Pull out of base{datetime}.2d
+        command = 'mv '+catted_2d_file+' '+oapfile_dir+'20'+datetime+'_'+flight+'.2d'
+        print ' mv command: '+command
+        os.system(command)
+        threevcpi2d_file = oapfile_dir+'20'+datetime+'_'+flight+'.2d'
+      
+        # Merge 3v-cpi data into netCDF file
+        command = 'process2d '+threevcpi2d_file+' -o '+ncfile
+        print "3v-cpi merge cmd: "+command
+        if os.system(command) == 0:
+          proc_3vcpi_files = 'Yes'
 
+# 2D data
+  if twoD:
+    mkdir_fail = 'false'
+    if not os.path.isdir(twodfile_dir): 
+      try:
+        os.mkdir(twodfile_dir)
+      except:
+        message = "\nERROR: Could not make 2D file directory:"+twodfile_dir
+        message = message + "\n - skipping 2d file extract\n"
+        print message
+        final_message = final+message + message
+        mkdir_fail = 'true'
+    if not mkdir_fail == 'true':
+      filename = rawfile.split(raw_dir)[1]
+      fileelts = filename.split('_')
+      twoDfile = twodfile_dir+fileelts[0]+'_'+fileelts[1]+'_'+flight+'.2d'
+      command = 'extract2d '+twoDfile+' '+rawfile
+      message = '\nExtracting 2D from ads:'+command+'\n'
+      print message
+      os.system(command)
+
+    # merge 2D data into netCDF file
+    command = 'process2d '+twoDfile+' -o '+ncfile
+    print '2D merge command: '+command
+    if os.system(command) == 0:
+      proc_2d_files = 'Yes'
+      ship_2d_files = 'ads&NC '
+      stor_2d_files = 'ads&NC '
+    else:
+      ship_2d_files = 'ads    '
+      ship_2d_files = 'ads    '
 
   
+# NetCDF utility work - Reorder, generate Iwg ascii and ICARTT ascii
   command = "ncReorder "+ncfile+" tmp.nc";
   print "about to execute : "+command
   os.system(command)
@@ -397,6 +472,7 @@ if process == "true":
   if os.system(command) == 0:
     proc_asc_file = 'Yes'
 
+# Run Al Cooper's R code for QA/QC production
   os.chdir("/home/ads/RStudio/"+project)
   command = "Rscript /home/ads/RStudio/"+project+"/Review.R "+flight
   print "about to execute : "+command
@@ -435,9 +511,9 @@ print "RStudio HTML outfile = "+rstudiofileHTML
 print os.system("ls -l "+rstudiofileHTML)
 print "Raw ADS file = "+rawfile
 print os.system("ls -l "+rawfile)
-if twoDfile != '':
-  print "3V-CPI 2DS file = "+twoDfile
-  print os.system("ls -l "+twoDfile)
+if threevcpi2d_file != '':
+  print "3V-CPI 2DS file = "+threevcpi2d_file
+  print os.system("ls -l "+threevcpi2d_file)
 print "**************************"
 print ""
 
@@ -450,12 +526,16 @@ if NAS == 'true':
   if os.system(command) == 0:
     stor_nc_file = 'Yes-NAS'
   else: 
-    print 'ERROR!: syncing file: '+command
+    message = '\nERROR!: syncing file: '+command
+    print message
+    final_message = final_message + message
   command = 'rsync '+kmlfile+" "+nas_data_dir+"/nc/"
   if os.system(command) == 0:
     stor_kml_file = 'Yes-NAS'
   else:
-    print 'ERROR!: Syncing file: '+command
+    message = '\nERROR!: syncing file: '+command
+    print message
+    final_message = final_message + message
   command = 'rsync '+iwg1file+" "+nas_data_dir+"/nc/"
   if os.system(command) == 0:
     stor_iwg_file = 'Yes-NAS'
@@ -464,31 +544,43 @@ if NAS == 'true':
   if os.system(command) == 0:
     stor_asc_file = 'Yes-NAS'
   else:
-    print 'ERROR!: Syncing file: '+command
+    message = '\nERROR!: syncing file: '+command
+    print message
+    final_message = final_message + message
 
   command = 'rsync '+rstudiofile+" "+nas_data_dir+"/qc/"
   print 'Syncing file: '+command
   if os.system(command) == 0:
     stor_qc_files = 'Yes-NAS'
   else:
-    print 'ERROR!: Syncing file: '+command
+    message = '\nERROR!: syncing file: '+command
+    print message
+    final_message = final_message + message
   command = 'rsync '+rstudiofileHTML+" "+nas_data_dir+"/qc/"
   print 'Syncing file: '+command
   if os.system(command) == 0:
     stor_qc_files = 'Yes-NAS'
   else:
-    print 'ERROR!: Syncing file: '+command
+    message = '\nERROR!: syncing file: '+command
+    print message
+    final_message = final_message + message
 
   command = 'rsync '+rawfile+" "+nas_data_dir+"/raw/"
   print 'Syncing file: '+command
   if os.system(command) == 0:
     stor_raw_file = 'Yes-NAS'
   else:
-    print 'ERROR!: Syncing file: '+command
+    message = '\nERROR!: syncing file: '+command
+    print message
+    final_message = final_message + message
 
-  command = "sudo /bin/umount "+nas_mnt_pt
-  print 'Unmounting nas: ' + command
-  os.system(command) 
+emailfilename = 'email.addr.txt'
+emailfile = nc_dir+emailfilename
+command = 'rm '+emailfile
+os.system(command)
+fo = open(emailfile, 'w+')
+fo.write(email+'\n')
+fo.close()
 
 # ZIP up the files as per expectations back home
 # First the nc file and the kml file go into one zip file (note want the files
@@ -513,11 +605,12 @@ print "RStudiofilenameHTML = "+rstudiofilenameHTML
 # Make sure that there is not a zip file already there ("overwrite")
 command = "cd "+data_dir+"; rm "+zip_data_filename
 os.system(command)
-command = "cd "+data_dir+"; zip " + zip_data_filename + " " + ncfilename + " " + kmlfilename + " " + iwg1filename + " " + icarttfilename
+command = "cd "+data_dir+"; zip " + zip_data_filename + " " + ncfilename + " " + kmlfilename + " " + iwg1filename + " " + icarttfilename + " " + emailfilename
 if os.system(command) != 0:
-  print ""
-  print "ERROR!: Zipping up netCDF, IWG1, ASCII and KML files with command:\n  "
-  print command
+  message =  "\nERROR!: Zipping up netCDF, IWG1, ASCII and KML files with command:\n  "
+  message = message + command
+  print message
+  final_message = final_message + message
 
 # Put QC files into catalog and to the NAS if it exists
 try:
@@ -606,7 +699,7 @@ if NAS != 'true':
 # put zipped file onto NAS for BT-syncing back home.
 else:
 
-  # Now ZiP up the rawfile - since it replaces raw file, do in /tmp
+  # Now ZiP up the rawfile - since bzip2 overwrites raw file, do in /tmp
   raw_dir,rawfilename = os.path.split(rawfile)
   zip_raw_file = '/tmp/'+rawfilename+".bz2"
   print "rawfilename = "+rawfilename
@@ -649,9 +742,9 @@ else:
   else:
     print 'ERROR!: Syncing zipfile: '+command
 
-  command = "sudo /bin/umount "+nas_mnt_pt
-  print 'Unmounting nas: ' + command
-  os.system(command)
+#  command = "sudo /bin/umount "+nas_mnt_pt
+#  print 'Unmounting nas: ' + command
+#  os.system(command)
 
 
 # Put zipped raw files to backup disk as well (two copies)
@@ -754,6 +847,7 @@ final_message = final_message + ' REPORT on Processing and shipping. \n\n'
 final_message = final_message + 'FileType  Proc Stor     Ship\n'
 final_message = final_message + 'Raw       '+proc_raw_file+'  '+stor_raw_file+'  '+ship_raw_file+'\n'
 final_message = final_message + '3VCPI     '+proc_3vcpi_files+'  '+stor_3vcpi_files+'  '+ship_3vcpi_files+'\n'
+final_message = final_message + '2D        '+proc_2d_files+'  '+stor_2d_files+'  '+ship_2d_files+'\n'
 final_message = final_message + 'NetCDF    '+proc_nc_file+'  '+stor_nc_file+'  '+ship_nc_file+'\n'
 final_message = final_message + 'KML       '+proc_kml_file+'  '+stor_kml_file+'  '+ship_kml_file+'\n'
 final_message = final_message + 'ASCII     '+proc_asc_file+'  '+stor_asc_file+'  '+ship_asc_file+'\n'
@@ -762,6 +856,21 @@ final_message = final_message + 'QC        '+proc_qc_files+'  '+stor_qc_files+' 
 final_message = final_message + '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n'
 
 print final_message
+msg = MIMEText(final_message)
+msg['Subject'] = 'Process & Push message for:'+project+'  flight:'+flight
+msg['From'] = 'ads@groundstation'
+msg['To'] = email
 
-raw_input("\n\nPress Enter to continue...")
+s = smtplib.SMTP('smtp.mail.yahoo.com:587')
+s.ehlo()
+s.starttls()
+s.ehlo()
+s.login('ads_raf_ncar@yahoo.com','color;tree2')
+s.sendmail('ads_raf_ncar@yahoo.com', email, msg.as_string())
+s.quit()
+
+raw_input("\n\nPress Enter to terminate...")
+answer = 'N'
+while answer != 'Y':
+  answer = raw_input('\n\n  Are you sure you want to terminate? (Y/N):')
 sys.exit(1)
