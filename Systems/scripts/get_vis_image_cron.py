@@ -64,7 +64,7 @@ ftp_passwd       = ''
 ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
 #Assumes filename form is prefixYYYYMMDD*.region_postfix where region is drawn from DB
 prefix           = 'satellite.GOES-15.'  
-postfix		 = '*_ch1_vis.jpg' 
+postfix		 = '*_C01.jpg' 
 osm_label            = 'sat_vis_5km_label.jpg'
 #osm_file_name    = "latest_vis.jpg"  # NOTE: defined once we have region name
 num_imgs_to_get  = 10 # Script will backfill this many images for loops
@@ -153,10 +153,10 @@ try:
     print "form1 = "+form
     ftp.dir(form, ftplist.append)
     form=prefix + str(year) + monthstr + todaystr + "*" + region + "_" + postfix
-    print "form1 = "+form
+    print "form2 = "+form
     ftp.dir(form, ftplist.append)
     form=prefix + str(year) + monthstr + tomorrowstr + "*" + region + "_" + postfix
-    print "form1 = "+form
+    print "form3 = "+form
     ftp.dir(form, ftplist.append)
 
 except ftplib.all_errors, e:
