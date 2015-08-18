@@ -141,6 +141,8 @@ print "last file on ftp site is: " + latest
 # Check to see if we've got the most recent file
 if latest in listing:
     print "Already have file " + latest
+    command = "cp "+latest+" "+osm_file_name
+    os.system(command)
     os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
