@@ -24,12 +24,12 @@ class transferNotifier(pyinotify.ProcessEvent):
 #       logging.info("IN_CREATE saw:   %s" % event.pathname)
 
     def process_IN_CLOSE(self, event):
-#       logging.info("IN_CLOSE  saw:   %s" % event.pathname)
+#        logging.info("IN_CLOSE  saw:   %s" % event.pathname)
         if event.dir: return
 
         m = reLatest.match(event.pathname)
         if m:
-#           logging.info("IN_CLOSE  match: %s" % event.pathname)
+#            logging.info("IN_CLOSE  match: %s" % event.pathname)
             if os.path.islink(sym_link):
                 os.remove(sym_link)
             os.symlink(event.pathname, sym_link)
