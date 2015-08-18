@@ -869,9 +869,11 @@
     </server>
     <dsm id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
+<!--
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G2"/>
+-->
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS5" id="140" suffix="_GMN"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="150"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="160"/>
@@ -944,7 +946,7 @@
           </sample>
         </arincSensor>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G">
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A">
           <sample id="0165" rate="1">
             <variable longname="Avionics GPS Vertical Velocity" name="VSPD" units="m/s">
               <linear intercept="-0.06" slope="1.02" units="m/s"/>
