@@ -55,7 +55,9 @@ ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
 label            = 'sat_ir_5km_label.jpg'
 #Assumes filename form is prefixYYYYMMDD*postfix
 prefix           = 'satellite.GOES-15.'  
-postfix		 = '*ch4_thermal-IR.jpg' 
+#postfix		 = '*_C4C.jpg' 
+# Temp suffix for rf04
+postfix		 = '*thermal-IR.jpg' 
 osm_file_name    = "latest_ir.jpg"
 num_imgs_to_get  = 10 # Script will backfill this many images for loops
 # End of Initialization section
@@ -115,12 +117,12 @@ try:
     ftp.cwd(ftp_dir)
 
     ftplist = []
-    form=prefix + str(year) + monthstr + yesterdaystr + "[0-9][0-9][0-9][0-9]." + postfix
-    ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + todaystr + "[0-9][0-9][0-9][0-9]." + postfix
-    ftp.dir(form, ftplist.append)
-    form=prefix + str(year) + monthstr + tomorrowstr + "[0-9][0-9][0-9][0-9]." + postfix
-    ftp.dir(form, ftplist.append)
+    formy=prefix + str(year) + monthstr + yesterdaystr + "[0-9][0-9][0-9][0-9]." + postfix
+    ftp.dir(formy, ftplist.append)
+    formt=prefix + str(year) + monthstr + todaystr + "[0-9][0-9][0-9][0-9]." + postfix
+    ftp.dir(formt, ftplist.append)
+    formtm=prefix + str(year) + monthstr + tomorrowstr + "[0-9][0-9][0-9][0-9]." + postfix
+    ftp.dir(formtm, ftplist.append)
 
 except ftplib.all_errors, e:
     print 'Error Getting ftp listing'
@@ -129,7 +131,9 @@ except ftplib.all_errors, e:
     sys.exit(1)
 
 if len(ftplist) == 0:  # didn't get any file names, bail out
-    print "didn't find any files on ftp server with form: " +form
+    print "didn't find any files on ftp server with form: " +formy
+    print "didn't find any files on ftp server with form: " +formt
+    print "didn't find any files on ftp server with form: " +formtm
     os.remove(busy_file)
     ftp.quit()
     sys.exit(1)
