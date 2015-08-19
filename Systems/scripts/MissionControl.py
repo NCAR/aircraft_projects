@@ -157,6 +157,7 @@ class MissionControl(QWidget):
 
         if self.DoNotCalibrate.isChecked():
             self.udpSocket.writeDatagram(NOCAL, QHostAddress("192.168.184.1"), PORT)
+            print "Sending: "+str(NOCAL)+" to port:"+str(PORT)
 
         if self.DoNotRecord.isChecked():
             self.udpSocket.writeDatagram(NOREC, QHostAddress("192.168.184.1"), PORT)
