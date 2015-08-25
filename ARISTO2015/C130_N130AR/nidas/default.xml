@@ -1066,7 +1066,6 @@
 -->
         <message length="220" position="end" separator="\xff\xff\x07"/>
     </serialSensor>
-
     <sensor ID="SIDS" class="raf.SidsNetSensor">
       <parameter name="RESOLUTION" type="int" value="25"/>
       <sample id="1" rate="1">
@@ -1076,7 +1075,6 @@
         <variable longname="SIDS Rejected Particle Count" name="REJDOF" units="count"/>
       </sample>
     </sensor>
-
     <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41002">
         <sample id="1" rate="50">
             <variable longname="LAMS Sequence Number, Beam 1" name="SEQ1" units="none"/>
@@ -1090,13 +1088,11 @@
             <variable longname="LAMS Sequence Number, Beam 1" name="SEQ3" units="none"/>
             <variable length="512" longname="LAMS Histogram Maximums, Beam 3" name="BEAM3" units="Mhz"/>
         </sample>
-
         <sample id="4" rate="50">
             <variable longname="LAMS Sequence Number, Beam 4" name="SEQ4" units="none"/>
             <variable length="512" longname="LAMS Histogram Maximums, Beam 4" name="BEAM4" units="Mhz"/>
         </sample>
     </sensor>
-
     <serialSensor ID="PIC1301_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC1301">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %*d %*f">
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
@@ -1687,7 +1683,7 @@
         </sample>
       </sensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="500">
-        <calfile file="A2D1702.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <calfile file="A2D006.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
@@ -1768,11 +1764,10 @@
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A"/>
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
-            <sample id="5" rate="25">
+        <sample id="5" rate="25">
                 <variable longname="Altitude above ground (radar altimeter)" name="HGM232" units="feet">
                 </variable>
-            </sample>
-        </sensor>
+            </sample></sensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D015.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
@@ -2153,7 +2148,10 @@
     </dsm>
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_324"/>
-        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS5" id="120"/>
+        <serialSensor IDREF="D_GPS" devicename="/dev/ttyS5" id="120"/>
+        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="600"/>
+        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="700" suffix="_628"/>
+        <serialSensor IDREF="CR2HYGROMETER" devicename="/dev/ttyS8" id="800" suffix="_CR2"/>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
@@ -2229,8 +2227,6 @@
           </variable>
         </sample>
       </sensor>
-      <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="600" suffix="_2"/>
-      <serialSensor IDREF="CR2HYGROMETER" devicename="/dev/ttyS8" id="800" suffix="_CR2"/>
       <serialSensor IDREF="CDP" devicename="/dev/ttyS10" id="1000" suffix="_RPT">
         <parameter name="SerialNumber" type="string" value="CDP016"/>
       </serialSensor>
@@ -2240,14 +2236,10 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
-        <calfile file="A2D1702.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
-        <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_322" units="deg_C"/>
-        </sample>
-        <sample id="2" rate="10">
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300">
+        <parameter name="SerialNumber" type="string" value="W477547"/>
+        <parameter name="rate" type="int" value="100"/>
+        <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
           <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LPB" units="V">
@@ -2286,14 +2278,10 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
-        <calfile file="A2D001.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
-        <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_325" units="deg_C"/>
-        </sample>
-        <sample id="2" rate="10">
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300">
+        <parameter name="SerialNumber" type="string" value="W477510"/>
+        <parameter name="rate" type="int" value="100"/>
+        <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
           <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_RPB" units="V">
@@ -2329,6 +2317,56 @@
       <serialSensor IDREF="S100" devicename="/dev/ttyS5" id="700" suffix="_RPC">
         <parameter name="SerialNumber" type="string" value="FSSP122"/>
       </serialSensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="10" location="CN Rack" name="dsm310" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
+        <calfile file="A2D011.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_310" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="University of Wyoming UCPC" name="UCPC" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="UCPC.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="BCN Counter Inlet Pressure" name="PCN" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="hPa">
+              <calfile file="PCN.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Raw BCN Counter Sample Flow Rate" name="FCN" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="vlpm">
+              <calfile file="FCN.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="BCN Isokinetic Side Flow Rate" name="XICN" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="vlpm">
+              <calfile file="XICN.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
     </dsm>
   </site>
 </project>
