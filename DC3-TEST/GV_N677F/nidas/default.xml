@@ -528,14 +528,17 @@
         </sample>
         <message length="0" position="beg" separator="\xff\x81"/>
     </serialSensor>
+
     <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%f,%f,%*f,%*f,%f"/>
-        <message length="0" position="end" separator="\n"/>
+      <sample id="1" rate="1" scanfFormat="%f,%f,%*f,%*f,%f">
+        <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+        <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
+        <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
     </serialSensor>
+
     <serialSensor ID="Mensor_6100" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-	
-    
-  
     <!-- Turn off internal filtering on the Mensor:
 		#1FL ?	query the value (factory default is 90%)
 		#1FL 0	set to 0
@@ -547,9 +550,6 @@
         <prompt rate="50" string="#1?\r"/>
     </serialSensor>
     <serialSensor ID="Mensor_6101" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-	
-    
-  
     <!-- Turn off internal filtering on the Mensor:
 		#1FL ?	query the value (factory default is 90%)
 		#1FL 0	set to 0
@@ -1107,7 +1107,7 @@
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G2"/>
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A2"/>
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS5" id="140" suffix="_GMN"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="150"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="160"/>
@@ -1179,7 +1179,7 @@
           </sample>
         </arincSensor>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_G">
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A">
           <sample id="0165" rate="1">
             <variable longname="Avionics GPS Vertical Velocity" name="VSPD" units="m/s">
               <linear intercept="-0.06" slope="1.02" units="m/s"/>
@@ -1193,20 +1193,8 @@
                 </variable>
 	    </sample>
         </serialSensor>
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120">
-	      <sample id="1">
-	        <variable longname="Dew/Frost Point Balance, Fuselage Left" name="DPLB" units="unk"/>
-                <variable longname="Raw Dew/Frost Point Temperature, Fuselage Left" name="DPLS" units="deg_C"/>
-                <variable longname="Dew/Frost Point TEC, Fuselage Left" name="DPLTEC" units="unk"/>
-	    </sample>
-	</serialSensor>
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130">
-	      <sample id="1">
-                <variable longname="Dew/Frost Point Balance, Fuselage Right" name="DPRB" units="unk"/>
-                <variable longname="Raw Dew/Frost Point Temperature, Fuselage Right" name="DPRS" units="deg_C"/>
-                <variable longname="Dew/Frost Point TEC, Fuselage Right" name="DPRTEC" units="unk"/>
-	    </sample>
-        </serialSensor>
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130" suffix="_DPR"/>
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS8" id="330" suffix="_VXL"/>
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -1261,25 +1249,25 @@
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="5"/>
                 
-          <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH2" units="V">
+          <variable longname="Total Temperature, Deiced Left, Rosemount" name="RTH2" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-100.89 31.478 -0.8083" units="deg_C"/>
           </variable>
-          <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH1" units="V">
+          <variable longname="Total Temperature, Deiced Left, Rosemount" name="RTH1" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-101.13 31.579 -0.8081" units="deg_C"/>
           </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
+          <variable longname="Total Temperature, Deiced Right, HARCO" name="RTH4" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-89.148 25.709 -0.0513" units="deg_C"/>
           </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
+          <variable longname="Total Temperature, Deiced Right, HARCO" name="RTH3" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
@@ -1291,13 +1279,13 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <linear intercept="-50" slope="10" units="deg_C"/>
           </variable>
-          <variable longname="Dewpoint cavity pressure, left" name="PSDPL" units="V">
+          <variable longname="Dewpoint cavity pressure, left" name="CAVP_DPL" units="V">
             <parameter name="channel" type="int" value="5"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-29.4795 232.763 0.07021" units="std cm3/s"/>
           </variable>
-          <variable longname="Dewpoint cavity pressure, right" name="PSDPR" units="V">
+          <variable longname="Dewpoint cavity pressure, right" name="CAVP_DPR" units="V">
             <parameter name="channel" type="int" value="6"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
