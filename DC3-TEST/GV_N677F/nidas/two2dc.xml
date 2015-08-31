@@ -498,7 +498,11 @@
         <message length="0" position="beg" separator="\xff\x81"/>
     </serialSensor>
     <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%f,%f,%*f,%*f,%f"/>
+        <sample id="1" rate="1" scanfFormat="%f,%f,%*f,%*f,%f">
+          <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+          <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
+          <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
+        </sample>
         <message length="0" position="end" separator="\n"/>
     </serialSensor>
     <serialSensor ID="Mensor_6100" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
@@ -1118,24 +1122,8 @@
                 </variable>
 	    </sample>
         </serialSensor>
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120">
-	      <sample id="1">
-	        <variable longname="Dew/Frost Point Balance, Fuselage Left" name="DPLB" units="unk"/>
-                <variable longname="Dew/Frost Point Temperature, Fuselage Left" name="DPLS" units="deg_C"/>
-                <variable longname="Dew/Frost Point TEC, Fuselage Left" name="DPLTEC" units="unk"/>
-	    </sample>
-        <sample id="1" rate="1">
-	        <variable longname="Dew/Frost Point Balance, Fuselage Left" name="DPLB" units=""/>
-                <variable longname="Dew/Frost Point Temperature, Fuselage Left" name="DPLS" units="deg_C"/>
-                <variable longname="Dew/Frost Point TEC, Fuselage Left" name="DPLTEC" units="unk"/>
-	    </sample></serialSensor>
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130">
-	      <sample id="1">
-                <variable longname="Dew/Frost Point Balance, Fuselage Right" name="DPRB" units="unk"/>
-                <variable longname="Dew/Frost Point Temperature, Fuselage Right" name="DPRS" units="deg_C"/>
-                <variable longname="Dew/Frost Point TEC, Fuselage Right" name="DPRTEC" units="unk"/>
-	    </sample>
-        </serialSensor>
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130" suffix="_DPR"/>
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS8" id="330" suffix="_VXL"/>
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -1145,9 +1133,7 @@
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS5" id="110">
             <sample id="1">
-                <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="hPa">
-		        <poly coefs="0.685697 1.00113 7.09922e-07" units="hPa"/>
-                </variable>
+                <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="hPa"/>
             </sample>
             <sample id="2">
                 <variable longname="Temperature of QCF Probe" name="QCFTEMP" units="deg_C"/>
@@ -1155,9 +1141,7 @@
         </serialSensor>
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS6" id="120">
             <sample id="1">
-                <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="hPa">
-		        <poly coefs="0.563559 1.00118 1.90211e-07" units="hPa"/>
-                </variable>
+                <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="hPa"/>
             </sample>
             <sample id="2">
                 <variable longname="Temperature of QCR Probe" name="QCRTEMP" units="deg_C"/>
@@ -1165,9 +1149,7 @@
         </serialSensor>
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130">
             <sample id="1">
-                <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="hPa">
- 		        <poly coefs="0.11455 1.03429 4.79119e-06" units="hPa"/>
-                </variable>
+                <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="hPa"/>
             </sample>
             <sample id="2">
                 <variable longname="Temperature of ADIFR Probe" name="ADIFRTEMP" units="deg_C"/>
@@ -1175,9 +1157,7 @@
         </serialSensor>
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140">
             <sample id="1">
-                <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="hPa">
-		        <poly coefs="0.0722084 0.998595 9.33337e-06" units="hPa"/>
-                </variable>
+                <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="hPa"/>
             </sample>
             <sample id="2">
                 <variable longname="Temperature of BDIFR Probe" name="BDIFRTEMP" units="deg_C"/>
@@ -1190,25 +1170,25 @@
                 <parameter name="filter" type="string" value="boxcar"/>
                 <parameter name="numpoints" type="int" value="5"/>
                 
-          <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH2" units="V">
+          <variable longname="Total Temperature, Deiced Left, Rosemount" name="RTH2" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-100.89 31.478 -0.8083" units="deg_C"/>
           </variable>
-          <variable longname="Total Temperature, Deiced Left, Rosemount" name="TTFH1" units="V">
+          <variable longname="Total Temperature, Deiced Left, Rosemount" name="RTH1" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-101.13 31.579 -0.8081" units="deg_C"/>
           </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR2" units="V">
+          <variable longname="Total Temperature, Deiced Right, HARCO" name="RTH4" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-89.148 25.709 -0.0513" units="deg_C"/>
           </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="TTHR1" units="V">
+          <variable longname="Total Temperature, Deiced Right, HARCO" name="RTH3" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
@@ -1220,13 +1200,13 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <linear intercept="-50" slope="10" units="deg_C"/>
           </variable>
-          <variable longname="Dewpoint cavity pressure, left" name="PSDPL" units="V">
+          <variable longname="Dewpoint cavity pressure, left" name="CAVP_DPL" units="V">
             <parameter name="channel" type="int" value="5"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-29.4795 232.763 0.07021" units="std cm3/s"/>
           </variable>
-          <variable longname="Dewpoint cavity pressure, right" name="PSDPR" units="V">
+          <variable longname="Dewpoint cavity pressure, right" name="CAVP_DPR" units="V">
             <parameter name="channel" type="int" value="6"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
