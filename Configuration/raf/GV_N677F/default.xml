@@ -422,6 +422,7 @@
       <message length="0" position="beg" separator="\xaa\x44\x12"/>
     </serialSensor>
     <serialSensor ID="Novatel_GPS" baud="115200" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
+
 <!-- GGA record -->
       <sample id="1" rate="10">
         <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=OMNISTAR" name="GGQUAL" units="none"/>
@@ -456,7 +457,6 @@
         <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
         <variable longname="Reference GPS Vertical Speed" name="GGVSPD" units="m/s"/>
       </sample>
-
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
     <serialSensor ID="Garmin_GPS" baud="4800" class="GPS_NMEA_Serial" databits="8" parity="none" stopbits="1">
@@ -1112,7 +1112,6 @@
             <variable longname="MTP Scan RMS Pitch" name="SRPITCH" units="degree"/>
             <variable longname="MTP Scan Avg Roll" name="SAROLL" units="degree"/>
             <variable longname="MTP Scan RMS Roll" name="SRROLL" units="degree"/>
-
             <variable longname="MTP Scan Avg Pressure Altitude" name="SAPALT" units="km"/>
             <variable longname="MTP Scan RMS Pressure Altitude" name="SRPALT" units="km"/>
             <variable longname="MTP Scan Avg Ambient Air Temp" name="SAAT" units="deg_K"/>
@@ -1123,7 +1122,6 @@
             <variable longname="MTP Scan RMS Longitude" name="SRLON" units="degree_E"/>
             <variable longname="MTP Scan Motor Commanded Position" name="SMCMD" units="count"/>
             <variable longname="MTP Scan Motor Encoded Position" name="SMENC" units="count"/>
-
             <variable longname="MTP Angle 1 Channel 1 Counts" name="A1CHN1CNT" units="count"/>
             <variable longname="MTP Angle 1 Channel 2 Counts" name="A1CHN2CNT" units="count"/>
             <variable longname="MTP Angle 1 Channel 3 Counts" name="A1CHN3CNT" units="count"/>
@@ -1134,7 +1132,6 @@
             <variable longname="MTP Angle 3 Channel 2 Counts" name="A3CHN2CNT" units="count"/>
             <variable longname="MTP Angle 3 Channel 3 Counts" name="A3CHN3CNT" units="count"/>
             <variable longname="MTP Angle 4 Channel 1 Counts" name="A4CHN1CNT" units="count"/>
-            
             <variable longname="MTP Angle 4 Channel 2 Counts" name="A4CHN2CNT" units="count"/>
             <variable longname="MTP Angle 4 Channel 3 Counts" name="A4CHN3CNT" units="count"/>
             <variable longname="MTP Angle 5 Channel 1 Counts" name="A5CHN1CNT" units="count"/>
@@ -1145,7 +1142,6 @@
             <variable longname="MTP Angle 6 Channel 3 Counts" name="A6CHN3CNT" units="count"/>
             <variable longname="MTP Angle 7 Channel 1 Counts" name="A7CHN1CNT" units="count"/>
             <variable longname="MTP Angle 7 Channel 2 Counts" name="A7CHN2CNT" units="count"/>
-
             <variable longname="MTP Angle 7 Channel 3 Counts" name="A7CHN3CNT" units="count"/>
             <variable longname="MTP Angle 8 Channel 1 Counts" name="A8CHN1CNT" units="count"/>
             <variable longname="MTP Angle 8 Channel 2 Counts" name="A8CHN2CNT" units="count"/>
@@ -1166,26 +1162,27 @@
             <variable longname="MTP Engineering Multiplxr Vp15 Counts" name="VP15CNTE" units="count"/>
             <variable longname="MTP Engineering Multiplxr Vp05 Counts" name="VP05CNTE" units="count"/>
             <variable longname="MTP Engineering Multiplxr VM15 Counts" name="VM15CNTE" units="count"/>
+
 <!-- M02 line -->
             <variable longname="MTP Engineering Multiplxr Acceler Counts" name="ACCPCNTE" units="count"/>
             <variable longname="MTP Engineering Multiplxr T Data Counts" name="TDATCNTE" units="count"/>
-
             <variable longname="MTP Engineering Multiplxr T Motor Counts" name="TMTRCNTE" units="count"/>
             <variable longname="MTP Engineering Multiplxr T Pod Air Counts" name="TAIRCNTE" units="count"/>
             <variable longname="MTP Engineering Multiplxr T Scan Counts" name="TSMPCNTE" units="count"/>
             <variable longname="MTP Engineering Multiplxr T Power Supply Counts" name="TPSPCNTE" units="count"/>
             <variable longname="MTP Engineering Multiplxr T N/C Counts" name="TNCCNTE" units="count"/>
             <variable longname="MTP Engineering Multiplxr T Synth Counts" name="TSYNCNTE" units="count"/>
+
 <!-- Pt line -->
             <variable longname="MTP Platinum Multiplxr R350 Counts" name="TR350CNTP" units="count"/>
             <variable longname="MTP Platinum Multiplxr Target Center Temp Counts" name="TTCNTRCNTP" units="count"/>
             <variable longname="MTP Platinum Multiplxr Target Edge Temp Counts" name="TTEDGCNTP" units="count"/>
             <variable longname="MTP Platinum Multiplxr Polyethelene Window Temp Counts" name="TWINCNTP" units="count"/>
-
             <variable longname="MTP Platinum Multiplxr Mixer Temperature Counts" name="TMIXCNTP" units="count"/>
             <variable longname="MTP Platinum Multiplxr Amplifier Temp Counts" name="TAMPCNTP" units="count"/>
             <variable longname="MTP Platinum Multiplxr Noise Diode Temp Counts" name="TNDCNTP" units="count"/>
             <variable longname="MTP Platinum Multiplxr R600 Counts" name="TR600CNTP" units="count"/>
+
 <!-- E line -->
             <variable longname="MTP Target 1 Channel 1 Counts" name="T1CHN1CNT" units="count"/>
             <variable longname="MTP Target 1 Channel 2 Counts" name="T1CHN2CNT" units="count"/>
@@ -1520,7 +1517,6 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-
     <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41002">
         <sample id="1" rate="100">
             <variable longname="LAMS Sequence Number, Beam 1" name="SEQ1" units="none"/>
@@ -1542,7 +1538,6 @@
         </sample>
 -->
     </sensor>
-
     <serialSensor ID="PIC1301_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC1301">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %*d %*f">
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
@@ -1695,9 +1690,7 @@
       </sample>
     </sensor>
   </sensorcatalog>
-
-
-  <site class="raf.Aircraft" name="GV_N677F" applyCals="true">
+  <site applyCals="true" class="raf.Aircraft" name="GV_N677F">
     <parameter name="tailNumber" type="string" value="N677F"/>
     <parameter name="applyCals" type="bool" value="true"/>
     <server statusAddr="sock:127.0.0.1:30001">
@@ -1749,7 +1742,8 @@
       <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A2"/>
       <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="160"/>
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="170"/>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS8" id="200" suffix="_DPR"/>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="250">
         <calfile file="A2D1705.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
@@ -1796,7 +1790,7 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="4200">
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300">
         <calfile file="A2D016.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
@@ -1829,12 +1823,11 @@
 	</sample>
       </serialSensor>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130" suffix="_DPR"/>
       <serialSensor IDREF="VCSEL" devicename="/dev/ttyS10" id="330" suffix="_VXL"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="4200">
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="400">
         <calfile file="A2D1600.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
