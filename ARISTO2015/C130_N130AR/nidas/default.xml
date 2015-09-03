@@ -1592,6 +1592,7 @@
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="SIDS" devicename="usock::41001" id="200" suffix="_SIDS"/>
       <sensor IDREF="LAMS3" devicename="usock::41002" id="300" suffix="_LAMS"/>
+      <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="600" suffix="_UDP"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
@@ -2241,7 +2242,7 @@
         <parameter name="rate" type="int" value="100"/>
         <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="10"/>
           <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LPB" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
@@ -2283,7 +2284,7 @@
         <parameter name="rate" type="int" value="100"/>
         <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="10"/>
           <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_RPB" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
@@ -2363,6 +2364,14 @@
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="vlpm">
               <calfile file="XICN.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="BCN Counter Inlet Temperature" name="CNTEMP" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="deg_C">
+              <calfile file="CNTEMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
