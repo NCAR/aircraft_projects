@@ -171,7 +171,7 @@
         <sample id="0205" rate="8"><variable name="MACH" units="none" longname="ADC Mach Number"/></sample>
         <sample id="0206" rate="8"><variable name="CAS" units="m/s" longname="ADC Computed Air Speed"/></sample>
         <sample id="0210" rate="16"><variable name="TAS" units="m/s" longname="ADC True Air Speed"/></sample>
-        <sample id="0211" rate="2"><variable name="TT" units="deg_C" longname="ADC Total Air Temperature"/></sample>
+        <sample id="0211" rate="2"><variable name="RT" units="deg_C" longname="ADC Recovery Air Temperature"/></sample>
         <sample id="0213" rate="2"><variable name="AT" units="deg_C" longname="ADC Ambient Air Temperature"/></sample>
         <sample id="0215" rate="8"><variable name="QC" units="hPa" longname="ADC Impact Pressure"/></sample>
         <sample id="0217" rate="8"><variable name="PS" units="hPa" longname="ADC Static Pressure"/></sample>
@@ -934,11 +934,11 @@
             <sample id="2" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
-                <variable name="TTRL" units="V" longname="Total Temperature, Radome Left">
+                <variable name="RTF1" units="V" longname="Recovery Air Temperature, Radome Left">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-62.6034 24.727 -0.125968" units="deg_C"/>
                 </variable>
-                <variable name="TTRR" units="V" longname="Total Temperature, Radome Right">
+                <variable name="RTF2" units="V" longname="Recovery Air Temperature, Radome Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-64.553 25.1259 -0.190518" units="deg_C"/>
                 </variable>
@@ -1233,7 +1233,7 @@
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="47.6208 -15.3266 0.673274" units="deg_C"/>
                 </variable>
-                <variable name="TTWH" units="V" longname="Total Temperature, Deiced Wing">
+                <variable name="RTWH" units="V" longname="Recovery Air Temperature, Deiced Wing">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-65.9606 26.7273 -0.321917" units="deg_C"/>
                 </variable>
