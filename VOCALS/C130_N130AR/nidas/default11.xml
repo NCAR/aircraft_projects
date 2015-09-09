@@ -330,9 +330,12 @@
 
     </serialSensor>
 
-    <serialSensor ID="DewPointer" class="DSMSerialSensor"
-        baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="%*d,%f" rate="1"/>
+    <serialSensor ID="DewPointer" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="%f,%f,%*f,%*f,%f">
+            <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+            <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
+            <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
+        </sample>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
@@ -879,19 +882,8 @@
     <dsm name="dsm320" location="Fwd_FS245_1" id="20" rserialPort="30002">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="320"/>
 
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130">
-            <sample id="1">
-                <variable name="DPT" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Top"/>
-<!--            <poly coefs="-0.6 5.9697 0.0011"/> -->
-            </sample>
-        </serialSensor>
-
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="140">
-            <sample id="1">
-                <variable name="DPB" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Bottom"/>
-<!--            <poly coefs="-0.737 5.9813 0.0008"/> -->
-            </sample>
-        </serialSensor>
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130" suffix="_DPT"/>
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="140" suffix="_DPB"/>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS7" id="150">
             <sample id="1">
