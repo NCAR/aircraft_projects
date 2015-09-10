@@ -14,6 +14,8 @@ is handled according to the type of file it is:
 import logging, logging.handlers
 import os, sys, pyinotify, re, sys
 import time
+import smtplib
+from email.mime.text import MIMEText
 
 reProdFile = re.compile("PROD_(\S+)_(\S+).zip")
 reRawProjName = re.compile("project name: (\S+)")
@@ -44,6 +46,7 @@ ftp_parent_dir =  '/net/ftp/pub/data/download/'  # Where nc files go for PIs
 ##############################################################################
 def dist_prod_file(fn):
 
+    final_message = "Starting distribution of RAF Field Production Data\n"
     # This script is not re-entrant - bail if running
     busy_file = temp_dir+'DIST_PROD'
     if os.path.isfile(busy_file):
@@ -58,12 +61,19 @@ def dist_prod_file(fn):
     if not file_name.startswith('PROD_') or not file_name.endswith('.zip'):
         logging.error("Error - called w/non-product file:"+fn)
         sys.exit(1)
+    message = "Got an ADS Product file:"+fn
+    final_message = final_message + message + '\n'
+    logging.info(message)
 
-    logging.info("Got an ADS Product file:"+fn)
-
-    # Work in the /tmp dir - leave file in place
-    command = 'cp -f '+fn+' '+temp_dir
-    logging.info('copy file to temp dir: '+command)
+    # Work in the /tmp dir - If we have a NAS in the field leave file in 
+    # so BTSync doesn't keep replacing it, if move it so that ftp can 
+    # replace it if they choose to reprocess in the field.
+    if NAS_in_field == 'true':
+        command = 'cp -f '+fn+' '+temp_dir
+        logging.info('copy file to temp dir: '+command)
+    else: 
+        command = 'mv -f '+fn+' '+temp_dir
+        logging.info('Moving file to temp dir: '+command)
     os.system(command)
     os.chdir(temp_dir)
     command = 'unzip '+file_name
@@ -118,7 +128,9 @@ def dist_prod_file(fn):
 
     logging.info('FTP dir: ' + ftp_dir)
     command = 'cp -f '+project+'_'+flight+'* '+ftp_dir
-    logging.info('Moving to ftpdir:'+command)
+    message = "Moving files to ftpdir:"+command
+    final_message = final_message+message+'\n'
+    logging.info(message)
     os.system(command)
     
     # if files are being ftp'd in, then remove it so newly processed file
@@ -126,7 +138,25 @@ def dist_prod_file(fn):
     if NAS_in_field != 'true':
         os.remove(fn)
 
+    emailfilename = 'email.addr.txt'
+    fo = open(emailfilename, 'r+')
+    email = fo.readline()
+    fo.close()
+    message = "About to send e-mail to:"+email
+    logging.info(message)
+    msg = MIMEText(final_message)
+    msg['Subject'] = 'Receive and Disribute message for:'+project+'  flight:'+flight
+    msg['From'] = 'ads@groundstation'
+    msg['To'] = email
+
+    s = smtplib.SMTP('localhost')
+    s.sendmail('ads@tikal.eol.ucar.edu',email,msg.as_string())
+
+    logging.info("Message: "+msg.as_string())
+    s.quit()
+    os.remove(emailfilename)
     os.remove(busy_file)
+    os.remove(project+'_'+flight+'*')
     sys.exit(0)
 
 ##   End of dist_prod_file
@@ -160,7 +190,7 @@ def dist_raw_file(fn):
     # Put the file in /tmp (so sync doesn't keep writing it)
     # unzip it, get project name from ascii header
     # move the file into the raw data directory
-    if not event.name.endswith('.bz2'):
+    if not fn.endswith('.bz2'):
         logging.error('File does not match expected pattern:'+fn)
 
     logging.info("Got an ADS Raw file:"+fn)
@@ -198,6 +228,7 @@ def dist_raw_file(fn):
     command = 'mv -f '+filename+' '+raw_ads_dir
     logging.info(' Moving raw file into place:'+command)
     os.system(command)
+    os.remove(busy_file)
 ## End of dist_raw_data  ###
 
 
@@ -230,15 +261,15 @@ if __name__ == '__main__':
     # Look for files > 1 minute old and < 11 minutes old
      
     one_min_ago = time.time() - 60
-    eleven_min_ago = time.time() - 660
+    one_hour_ago = time.time() - 3600
     logging.info('Looking for new files in:'+path)
     for file in os.listdir(path):
         fullfile = path+file
         if os.path.isfile(fullfile):
             st=os.stat(fullfile)
             mtime=st.st_mtime
-            logging.info('file:'+file+'  mtime = '+str(mtime)+'  one:'+str(one_min_ago)+ '  eleven:'+str(eleven_min_ago))
-            if mtime > eleven_min_ago and mtime < one_min_ago:
+            logging.info('file:'+file+'  mtime = '+str(mtime)+'  - one:'+str(mtime - one_min_ago)+ '  - hour:'+str(mtime - one_hour_ago))
+            if mtime > one_hour_ago and mtime < one_min_ago:
                 logging.info('file met time criteria'+fullfile)
 
                 # If we find a file - fork off process to deal with it
