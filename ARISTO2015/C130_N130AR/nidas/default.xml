@@ -617,6 +617,20 @@
         <prompt rate="1" string="RB\r"/>
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
+    <sensor ID="OP1" class="UDPSocketSensor" devicename="usock::31222" suffix="_OP1">
+      <sample id="1" rate="1" scanfFormat="OP1,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable longname="OP1 time stamp" name="TimeStamp" units="seconds"/>
+        <variable longname="OP1 channel A signal" name="CHANA" units="nV"/>
+        <variable longname="OP1 channel B signal" name="CHANB" units="nV"/>
+        <variable longname="OP1 AD bias channel A" name="BIASA" units="int"/>
+        <variable longname="OP1 AD bias channel B" name="BIASB" units="int"/>
+        <variable longname="OP1 air temperature channel A" name="TOUTA" units="deg_C"/>
+        <variable longname="OP1 air temperature channel B" name="TOUTB" units="deg_C"/>
+        <variable longname="OP1 cell pressure channel A" name="PRESA" units="hPa"/>
+        <variable longname="OP1 cell pressure channel B" name="PRESB" units="hPa"/>
+        <variable longname="OP1 stream selection valve position" name="SELPOS" units="int"/>
+      </sample>
+    </sensor>
     <sensor ID="TOGA" class="UDPSocketSensor" devicename="usock::30120" suffix="_TOGA">
       <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="TOGA HCN" name="HCN" units="pptv"/>
@@ -1594,6 +1608,7 @@
       <sensor IDREF="LAMS3" devicename="usock::41002" id="300" suffix="_LAMS"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="600" suffix="_UDP"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="700"/>
+      <sensor IDREF="OP1" devicename="usock::31222" id="750"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
