@@ -2,6 +2,8 @@
 
 # Age-off; 1440 is 24 hours, 360 is 6 hours, 600 is 10 hours.
 
+find /var/www/mtp -name "MTPprofile*.PNG*" -mmin +1440 -exec rm {} \;
+find /mnt/r1/mtp -name "*.txt" -mmin +1440 -exec rm {} \;
 find /var/www/html/flight_data/images -name "satellite*.jpg*" -mmin +720 -exec rm {} \;
 find /var/www/html/flight_data/images -name "radar*.gif*" -mmin +720 -exec rm {} \;
 find /var/www/html/flight_data/images -name "NEXRAD*.png*" -mmin +720 -exec rm {} \;
