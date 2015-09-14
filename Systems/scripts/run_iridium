@@ -1,0 +1,20 @@
+#!/bin/sh
+# Iridium PPP: call with argv[1] = N (as in /dev/tty/N)
+# Note pppd will detach, so that bundle originator can stay alive
+# Therefore pppd gets respwaned by init and dies on tty lock reptitively
+#sleep 120; exit
+
+ifdown eth2
+sleep 3
+ifdown eth3
+sleep 3
+ifup eth3
+
+#gnome-terminal --title "IRIDIUM LOG" -x /home/local/Systems/scripts/show_iridium_log.csh &
+
+#/usr/sbin/pppd defaultroute  /dev/ttyUSB0 connect '/usr/sbin/chat -v -f /etc/ppp/peers/iridium.chat'
+/usr/sbin/pppd defaultroute  /dev/ttyACM0 connect '/usr/sbin/chat -v -f /etc/ppp/peers/iridium.chat' persist debug
+
+# keep init happy and give things a chance to reset
+sleep 30
+
