@@ -1326,7 +1326,7 @@
         <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
     </sensor>
-    <sensor ID="SMPS" class="raf.UDPSocketSensor" devicename="usock::30104" suffix="SMPS">
+    <sensor ID="SMPS" class="UDPSocketSensor" devicename="usock::30104" suffix="SMPS">
         <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
             <variable longname="SMPS DMA Temperature" name="DMAT" units="deg_C"/>
@@ -1606,10 +1606,20 @@
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="SIDS" devicename="usock::41001" id="200" suffix="_SIDS"/>
       <sensor IDREF="LAMS3" devicename="usock::41002" id="300" suffix="_LAMS"/>
-      <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="600" suffix="_UDP"/>
+      <sensor IDREF="ACDFO3" devicename="usock::30107" id="2700" suffix="_ACD"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="700"/>
+      <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="600" suffix="_UDP"/>
       <sensor IDREF="OP1" devicename="usock::31222" id="750"/>
+      <sensor IDREF="SIDS" devicename="usock::41001" id="200" suffix="_SIDS"/>
+      <sensor IDREF="LAMS3" devicename="usock::41002" id="300" suffix="_LAMS"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
+      <sensor ID="PAVEL_INLET" class="UDPSocketSensor" devicename="usock::29003" id="2900">
+        <sample id="1" rate="1" scanfFormat="%f,%f,%f">
+            <variable longname="Valco HIGH valve position" name="VALCOHIGH" units="number"/>
+            <variable longname="Valco LOW valve position" name="VALCOLOW" units="number"/>
+            <variable longname="Solenoid state" name="SOLPOS" units="number"/>
+        </sample>
+      </sensor>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -1661,12 +1671,12 @@
               <calfile file="IRBHT.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="Pyrgeometer Raw Visible Irradiance, Top" name="VISTC" units="V">
+          <variable longname="Pyrgeometer Raw Visible Irradiance, Top" name="VIST" units="V">
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="W/m2">
-              <calfile file="VISTC.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="VIST.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
           <variable longname="Pyrgeometer (Visible) Housing Temperature, Top" name="VISTHT" units="V">
@@ -1677,12 +1687,12 @@
               <calfile file="VISTHT.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="Pyrgeometer Raw Visible Irradiance, Bottom" name="VISBC" units="V">
+          <variable longname="Pyrgeometer Raw Visible Irradiance, Bottom" name="VISB" units="V">
             <parameter name="channel" type="int" value="6"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="W/m2">
-              <calfile file="VISBC.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="VISB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
           <variable longname="Pyrgeometer (Visible) Housing Temperature, Bottom" name="VISBHT" units="V">
