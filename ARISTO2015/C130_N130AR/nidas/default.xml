@@ -617,6 +617,14 @@
         <prompt rate="1" string="RB\r"/>
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
+    <sensor ID="CUTWC" class="UDPSocketSensor" devicename="usock::30129" suffix="_CLH">
+      <sample id="1" rate="1" scanfFormat="CUTWC,%*f,%f,%f,%f,%f">
+        <variable longname="CU Total Water Maximum Detector Voltage" name="RENDPT" units="V"/>
+        <variable longname="CU Total Water Cell Temperature" name="TEMP" units="deg_C"/>
+        <variable longname="CU Total Water Cell Pressure" name="PRESS" units="hPa"/>
+        <variable longname="CU Total Water Uncorrected VMR" name="VMR" units="ppmv"/>
+      </sample>
+    </sensor>
     <sensor ID="OP1" class="UDPSocketSensor" devicename="usock::31222" suffix="_OP1">
       <sample id="1" rate="1" scanfFormat="OP1,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="OP1 time stamp" name="TimeStamp" units="seconds"/>
@@ -1611,7 +1619,7 @@
       <sensor IDREF="ACDFO3" devicename="usock::30107" id="2700" suffix="_ACD"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="700"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="600" suffix="_UDP"/>
-      <sensor ID="CLH2" class="UDPSocketSensor" devicename="usock::30129" id="660" suffix="_CLH"/>
+      <sensor IDREF="CUTWC" devicename="usock::30129" id="660" suffix="_CLH"/>
       <sensor IDREF="OP1" devicename="usock::31222" id="750"/>
       <sensor IDREF="SIDS" devicename="usock::41001" id="200" suffix="_SIDS"/>
       <sensor IDREF="LAMS3" devicename="usock::41002" id="300" suffix="_LAMS"/>
