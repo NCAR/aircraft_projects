@@ -618,7 +618,7 @@
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
     <sensor ID="OP1" class="UDPSocketSensor" devicename="usock::31222" suffix="_OP1">
-      <sample id="1" rate="1" scanfFormat="OP1,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+      <sample id="1" rate="1" scanfFormat="OP1,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="OP1 time stamp" name="TimeStamp" units="seconds"/>
         <variable longname="OP1 channel A signal" name="CHANA" units="nV"/>
         <variable longname="OP1 channel B signal" name="CHANB" units="nV"/>
@@ -630,6 +630,7 @@
         <variable longname="OP1 cell pressure channel B" name="PRESB" units="hPa"/>
         <variable longname="OP1 stream selection valve position" name="SELPOS" units="int"/>
         <variable longname="OP1 Sample Air Flow" name="FLOW" units="slpm"/>
+        <variable longname="OP1 flow setpoint" name="FLOWSP" units="V"/>
       </sample>
     </sensor>
     <sensor ID="TOGA" class="UDPSocketSensor" devicename="usock::30120" suffix="_TOGA">
@@ -1610,6 +1611,7 @@
       <sensor IDREF="ACDFO3" devicename="usock::30107" id="2700" suffix="_ACD"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="700"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="600" suffix="_UDP"/>
+      <sensor ID="CLH2" class="UDPSocketSensor" devicename="usock::30129" id="660" suffix="_CLH"/>
       <sensor IDREF="OP1" devicename="usock::31222" id="750"/>
       <sensor IDREF="SIDS" devicename="usock::41001" id="200" suffix="_SIDS"/>
       <sensor IDREF="LAMS3" devicename="usock::41002" id="300" suffix="_LAMS"/>
@@ -1880,7 +1882,19 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_FWDFS0" units="deg_C"/>
             </sample>
-        <sample id="2" rate="100">
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Recovery Air Temperature, Unheated" name="DUMMY" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="deg_C">
+              <calfile file="RTF1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
+        <sample id="3" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
           <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="V">
@@ -2258,25 +2272,16 @@
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
           </variable>
           <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_LPB" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO32.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
           </variable>
           <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LPB" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO64.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
           </variable>
         </sample>
       </sensor>
@@ -2300,25 +2305,16 @@
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
           </variable>
           <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_RPB" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO32.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
           </variable>
           <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_RPB" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO64.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
           </variable>
         </sample>
       </sensor>
