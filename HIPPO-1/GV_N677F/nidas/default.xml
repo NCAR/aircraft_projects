@@ -92,7 +92,7 @@
         <sample id="0205" rate="8"><variable name="MACH" units="none" longname="ADC Mach Number"/></sample>
         <sample id="0206" rate="8"><variable name="CAS" units="m/s" longname="ADC Computed Air Speed"/></sample>
         <sample id="0210" rate="16"><variable name="TAS" units="m/s" longname="ADC True Air Speed"/></sample>
-        <sample id="0211" rate="2"><variable name="TT" units="deg_C" longname="ADC Total Air Temperature"/></sample>
+        <sample id="0211" rate="2"><variable name="RT" units="deg_C" longname="ADC Recovery Air Temperature"/></sample>
         <sample id="0213" rate="2"><variable name="AT" units="deg_C" longname="ADC Ambient Air Temperature"/></sample>
         <sample id="0215" rate="8"><variable name="QC" units="hPa" longname="ADC Impact Pressure"/></sample>
         <sample id="0217" rate="8"><variable name="PS" units="hPa" longname="ADC Static Pressure"/></sample>
@@ -587,7 +587,8 @@
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
 
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
+<!--
           <sample id="0314" rate="25">
             <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
               <linear slope="1.0" intercept="0.0" units="degree_T"/>
@@ -611,48 +612,36 @@
             </variable>
           </sample>
         </arincSensor>
-
+-->
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A">
-          <sample id="0165" rate="1">
-            <variable name="VSPD" units="m/s" longname="Avionics GPS Vertical Velocity">
-              <linear slope="1.02" intercept="-0.06" units="m/s"/>
-            </variable>
-          </sample>
-        </arincSensor>
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A"/>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110">
 	    <sample id="1">
-                <variable name="PSF" units="hPa" longname="Raw Static Pressure, Fuselage">
-                <linear slope="1.0006" intercept="-0.4453" units="hPa"/>
-                </variable>
+                <variable name="PSF" units="hPa" longname="Raw Static Pressure, Fuselage"/>
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120">
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL">
 	    <sample id="1">
-	        <variable name="DPLB" units="unk" longname="Dew/Frost Point Balance, Fuselage Left"/>
-                <variable name="DPLS" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Left">
-                    <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
-                </variable>
-                <variable name="DPLTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Left"/>
+                <variable name="BALNC" units="unk" longname="Dew/Frost Point Balance, Fuselage Left"/>
+                <variable name="MIRRTMP" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Left"/>
+                <variable name="TEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Left"/>
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130">
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130" suffix="_DPR">
 	    <sample id="1">
-	         <variable name="DPRB" units="unk" longname="Dew/Frost Point Balance, Fuselage Right"/>
-                <variable name="DPRS" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Right">
-                    <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
-                </variable>
-                <variable name="DPRTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Right"/>
+                <variable name="BALNC" units="unk" longname="Dew/Frost Point Balance, Fuselage Right"/>
+                <variable name="MIRRTMP" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Right"/>
+                <variable name="TEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Right"/>
 	    </sample>
         </serialSensor>
 
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/ttyS10" id="140" suffix="_GMN"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS11" id="150"/>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -660,39 +649,27 @@
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
 
-        <serialSensor IDREF="Mensor_6100"
-                devicename="/dev/ttyS5" id="110">
+        <serialSensor IDREF="Mensor_6100" devicename="/dev/ttyS5" id="110">
             <sample id="1">
-                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage">
-                <linear slope="1.0011" intercept="-0.3449" units="hPa"/>
-                </variable>
+                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage"/>
             </sample>
         </serialSensor>
 
-        <serialSensor IDREF="Mensor_6100"
-                devicename="/dev/ttyS6" id="112">
+        <serialSensor IDREF="Mensor_6100" devicename="/dev/ttyS6" id="112">
             <sample id="1">
-                <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome">
-                <linear slope="1.0007" intercept="-0.2478" units="hPa"/>
-                </variable>
+                <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome"/>
             </sample>
         </serialSensor>
 
-        <serialSensor IDREF="Mensor_6100"
-                devicename="/dev/ttyS7" id="114">
+        <serialSensor IDREF="Mensor_6100" devicename="/dev/ttyS7" id="114">
             <sample id="1">
-                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome">
-                <linear slope="1.0008" intercept="-0.5364" units="hPa"/>
-                </variable>
+                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome"/>
             </sample>
         </serialSensor>
 
-        <serialSensor IDREF="Mensor_6100"
-                devicename="/dev/ttyS8" id="116">
+        <serialSensor IDREF="Mensor_6100" devicename="/dev/ttyS8" id="116">
             <sample id="1">
-                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome">
-                <linear slope="1.0005" intercept="-0.2671" units="hPa"/>
-                </variable>
+                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome"/>
             </sample>
         </serialSensor>
 
@@ -712,16 +689,16 @@
 <!--
 Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 hand calculated multiple point calibrations.
 -->
-                <variable name="TTFR" units="V" longname="Total Temperature, Unheated Left">
+                <variable name="RTF1" units="V" longname="Recovery Air Temperature, Unheated Left">
                     <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-105.663048 39.530760 -3.828450 0.331160" units="deg_C"/>
                 </variable>
-                <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
+                <variable name="RTH2" units="V" longname="Recovery Air Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-98.200816 32.386316 -1.782778 0.153851" units="deg_C"/>
                 </variable>
-                <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
+                <variable name="RTH1" units="V" longname="Recovery Air Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-97.481298 32.098536 -1.740687 0.150691" units="deg_C"/>
                 </variable>
@@ -736,7 +713,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -819,7 +796,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
 
 
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -882,7 +859,7 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
         </sensor>
  
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
@@ -914,10 +891,10 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
         </sensor>
 
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
@@ -945,10 +922,10 @@ Engineering unit calibrations for TTFR, TTHR1, TTHR2 are based on 19 Mar 2009 ha
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>

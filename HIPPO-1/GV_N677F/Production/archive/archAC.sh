@@ -16,7 +16,7 @@ set PROJECT = "HIPPO"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/HIPPO-1 .nc EOL
 
 ### KML - done
-/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/HIPPO-1/kml kml EOL
+/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/HIPPO-1/kml kml EOL/2009
 
 ### CHAT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
