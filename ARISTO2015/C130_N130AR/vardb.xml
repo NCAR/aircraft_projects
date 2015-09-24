@@ -309,6 +309,7 @@
       <long_name>Ambient Temperature, Unheated</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
+      <dependencies>RTF1 MACHX</dependencies>
       <standard_name>air_temperature</standard_name>
       <reference>false</reference>
     </variable>
@@ -317,6 +318,7 @@
       <long_name>Ambient Temperature, Unheated</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
+      <dependencies>RTF2 MACHX</dependencies>
       <standard_name>air_temperature</standard_name>
       <reference>false</reference>
     </variable>
@@ -325,6 +327,7 @@
       <long_name>Ambient Temperature, Deiced Left</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
+      <dependencies>RTH1 MACHX</dependencies>
       <standard_name>air_temperature</standard_name>
       <reference>false</reference>
     </variable>
@@ -333,6 +336,7 @@
       <long_name>Ambient Temperature, Deiced Left</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
+      <dependencies>RTH2 MACHX</dependencies>
       <standard_name>air_temperature</standard_name>
       <reference>false</reference>
     </variable>
@@ -341,6 +345,7 @@
       <long_name>Ambient Temperature, Deiced Right</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
+      <dependencies>RTH3 MACHX</dependencies>
       <standard_name>air_temperature</standard_name>
       <reference>false</reference>
     </variable>
@@ -349,6 +354,7 @@
       <long_name>Ambient Temperature, Deiced Right</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
+      <dependencies>RTH4 MACHX</dependencies>
       <standard_name>air_temperature</standard_name>
       <reference>false</reference>
     </variable>
@@ -389,7 +395,7 @@
       <long_name>Ambient Temperature, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
-      <dependencies>ATRL</dependencies>
+      <dependencies>ATH1</dependencies>
       <standard_name>air_temperature</standard_name>
       <reference>false</reference>
     </variable>
@@ -2755,7 +2761,7 @@
       <units>none</units>
       <long_name>Aircraft Mach Number, Reference</long_name>
       <is_analog>false</is_analog>
-      <dependencies>MACHF</dependencies>
+      <dependencies>MACHFR</dependencies>
       <reference>true</reference>
     </variable>
     <variable name="MEDCO2">
@@ -3645,7 +3651,7 @@
       <long_name>Corrected PMS-King Liquid Water Content</long_name>
       <is_analog>false</is_analog>
       <category>Liquid Water</category>
-      <dependencies>PLWC TASX ATX PSXC CONCD_xxx</dependencies>
+      <dependencies>PLWC TASX ATX PSXC CONCD_RPT</dependencies>
       <standard_name>atmosphere_cloud_liquid_water_content</standard_name>
       <reference>false</reference>
     </variable>
@@ -3654,7 +3660,7 @@
       <long_name>Corrected PMS-King Liquid Water Content</long_name>
       <is_analog>false</is_analog>
       <category>Liquid Water</category>
-      <dependencies>PLWC1 TASX ATX PSXC CONCD_xxx</dependencies>
+      <dependencies>PLWC1 TASX ATX PSXC CONCD_RPT</dependencies>
       <standard_name>atmosphere_cloud_liquid_water_content</standard_name>
       <reference>false</reference>
     </variable>
@@ -3891,7 +3897,7 @@
       <long_name>Raw Static Pressure, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Uncorr'd Raw</category>
-      <dependencies>PSFD</dependencies>
+      <dependencies>PSFRD</dependencies>
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
@@ -3900,7 +3906,7 @@
       <long_name>Corrected Static Pressure, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
-      <dependencies>PSFDC</dependencies>
+      <dependencies>PSFC</dependencies>
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
@@ -4079,7 +4085,7 @@
       <long_name>Raw Dynamic Pressure, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Uncorr'd Raw</category>
-      <dependencies>QCF</dependencies>
+      <dependencies>QCFR</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="QCXC">
@@ -4087,7 +4093,7 @@
       <long_name>Corrected Dynamic Pressure, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>QCFC</dependencies>
+      <dependencies>QCFRC</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="RADCF">
@@ -4435,7 +4441,7 @@
       <long_name>Recovery Temperature, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Uncorr'd Raw</category>
-      <dependencies>RTRL</dependencies>
+      <dependencies>RTH1</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="SDWC1">
@@ -4733,6 +4739,7 @@
       <units>m/s</units>
       <long_name>Aircraft True Airpseed, Dry Air</long_name>
       <is_analog>false</is_analog>
+      <dependencies>QCFRC PSFDC RTX TASFLG</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="TASF">
@@ -4748,6 +4755,7 @@
       <units>bool</units>
       <long_name>True Airpseed Humidity Correction Flag</long_name>
       <is_analog>false</is_analog>
+      <dependencies>QCFC PSFDC RTX EWX</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="TASFR">
@@ -4764,7 +4772,6 @@
       <long_name>Aircraft True Airspeed, Humidity Corrected</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>TASF MR</dependencies>
       <standard_name>platform_speed_wrt_air</standard_name>
       <reference>false</reference>
     </variable>
@@ -4790,7 +4797,7 @@
       <long_name>Aircraft True Airspeed, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>TASHC</dependencies>
+      <dependencies>TASFR</dependencies>
       <standard_name>platform_speed_wrt_air</standard_name>
       <reference>false</reference>
     </variable>
@@ -5286,7 +5293,7 @@
       <long_name>GPS-Corrected Inertial Ground Speed Vector, East Component</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>LATC UI VI UX VY WI</dependencies>
+      <dependencies>LATC</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="VI">
