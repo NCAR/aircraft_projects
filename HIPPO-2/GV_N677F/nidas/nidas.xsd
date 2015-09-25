@@ -102,6 +102,7 @@
 <xsd:complexType name="calfile">
     <xsd:attribute name="path" type="xsd:normalizedString"/>
     <xsd:attribute name="file" type="xsd:normalizedString"/>
+    <xsd:attribute name="name" type="xsd:normalizedString"/>
 </xsd:complexType>
 
 <xsd:complexType name="linear">
@@ -195,11 +196,14 @@
         <xsd:element name="prompt" type="promptType"/>
     </xsd:choice>
     <xsd:attribute name="id" type="xsd:nonNegativeInteger"/>
-    <xsd:attribute name="rate" type="xsd:float"/>
-    <xsd:attribute name="period" type="xsd:float"/>
+    <xsd:attribute name="rate" type="xsd:token"/>
+    <xsd:attribute name="period" type="xsd:token"/>
     <xsd:attribute name="process" type="xsd:boolean"/>
     <xsd:attribute name="scanfFormat" type="xsd:normalizedString"/>
     <xsd:attribute name="suffix" type="xsd:token"/>
+    <xsd:attribute name="station" type="xsd:nonNegativeInteger"/>
+    <xsd:attribute name="enable" type="xsd:token"/>
+    <xsd:attribute name="disable" type="xsd:token"/>
 </xsd:complexType>
 
 <xsd:complexType name="sensorT" abstract="false">
@@ -224,7 +228,7 @@
     <xsd:choice minOccurs="0" maxOccurs="unbounded">
 	<xsd:element name="sample" type="sample"/>
 	<xsd:element name="parameter" type="parameter"/>
-        <xsd:element name="calfile" type="calfile" maxOccurs="1"/>
+        <xsd:element name="calfile" type="calfile" />
     </xsd:choice>
     <xsd:attribute name="ID" type="xsd:ID"/>
     <xsd:attribute name="IDREF" type="xsd:IDREF"/>
@@ -232,12 +236,14 @@
     <xsd:attribute name="devicename" type="xsd:token"/>
     <xsd:attribute name="location" type="xsd:token"/>
     <xsd:attribute name="suffix" type="xsd:token"/>
-    <xsd:attribute name="id" type="xsd:nonNegativeInteger"/>
+    <xsd:attribute name="id" type="xsd:token"/>
     <xsd:attribute name="latency" type="xsd:float"/>
     <xsd:attribute name="height" type="xsd:token"/>
     <xsd:attribute name="depth" type="xsd:token"/>
-    <xsd:attribute name="duplicateID" type="xsd:boolean"/>
+    <xsd:attribute name="duplicateIdOK" type="xsd:boolean"/>
     <xsd:attribute name="timeout" type="xsd:float"/>
+    <xsd:attribute name="readonly" type="xsd:boolean"/>
+    <xsd:attribute name="station" type="xsd:token"/>
 </xsd:complexType>
 
 <xsd:complexType name="messageSensorT">
@@ -274,20 +280,7 @@
 	    <xsd:attribute name="parity" type="paritytype"/>
 	    <xsd:attribute name="databits" type="databitstype"/>
 	    <xsd:attribute name="stopbits" type="stopbitstype"/>
-	</xsd:extension>
-    </xsd:complexContent>
-</xsd:complexType>
-
-<xsd:complexType name="socketSensorT">
-    <xsd:complexContent>
-	<xsd:extension base="messageSensorT">
-	</xsd:extension>
-    </xsd:complexContent>
-</xsd:complexType>
-
-<xsd:complexType name="lamsSensorT">
-    <xsd:complexContent>
-	<xsd:extension base="sensorT">
+	    <xsd:attribute name="rts485" type="xsd:boolean"/>
 	</xsd:extension>
     </xsd:complexContent>
 </xsd:complexType>
@@ -307,7 +300,6 @@
                  the catalog.  Need to fix this. -->
 	    <xsd:attribute name="parity"        type="paritytype"/>
 	    <xsd:attribute name="speed"         type="speedtype"/>
-            <xsd:attribute name="sim_xmit"      type="xsd:token" use="optional"/>
             <xsd:attribute name="irs_thdg_corr" type="xsd:token" use="optional"/>
             <xsd:attribute name="irs_ptch_corr" type="xsd:token" use="optional"/>
             <xsd:attribute name="irs_roll_corr" type="xsd:token" use="optional"/>
@@ -325,9 +317,6 @@
 		<xsd:field    xpath="@id"/>
 	    </xsd:unique>
 	</xsd:element>
-	<xsd:element name="irigSensor"  type="sensorT"/>
-	<xsd:element name="socketSensor"  type="socketSensorT"/>
-	<xsd:element name="lamsSensor"  type="lamsSensorT"/>
     </xsd:choice>
 </xsd:group>
 
@@ -360,18 +349,20 @@
 	<xsd:attribute name="name" type="xsd:token" use="optional"/>
 	<xsd:attribute name="suffix" type="xsd:token" use="optional"/>
 	<xsd:attribute name="location" type="xsd:token" use="optional"/>
-	<xsd:attribute name="id" type="xsd:nonNegativeInteger" use="optional"/>
+	<xsd:attribute name="id" type="xsd:token" use="optional"/>
 	<xsd:attribute name="rserialPort" type="xsd:nonNegativeInteger"/>
 	<xsd:attribute name="statusAddr" type="xsd:token"/>
 	<xsd:attribute name="derivedData" type="xsd:token"/>
 	<xsd:attribute name="rawSorterLength" type="xsd:float"/>
 	<xsd:attribute name="procSorterLength" type="xsd:float"/>
+        <xsd:attribute name="rawLateSampleCacheSize" type="xsd:nonNegativeInteger"/>
+        <xsd:attribute name="procLateSampleCacheSize" type="xsd:nonNegativeInteger"/>
         <!-- max heap size in bytes, followed by K,M or G -->
 	<xsd:attribute name="rawHeapMax" type="xsd:token"/>
 	<xsd:attribute name="procHeapMax" type="xsd:token"/>
     </xsd:complexType>
     <xsd:unique name="uniqueSensorId">
-	<xsd:selector xpath="sensor | serialSensor | arincSensor | irigSensor | socketSensor | lamsSensor"/>
+	<xsd:selector xpath="sensor | serialSensor | arincSensor"/>
 	<xsd:field    xpath="@id"/>
     </xsd:unique>
 </xsd:element>
@@ -404,6 +395,7 @@
 	<xsd:enumeration value="dgrequestUDP"/>
 	<xsd:enumeration value="server"/>
 	<xsd:enumeration value="client"/>
+	<xsd:enumeration value="udp"/>
 	<xsd:enumeration value="dataUDP"/>
     </xsd:restriction>
 </xsd:simpleType>
@@ -453,7 +445,7 @@
 		default="60"/>
         <xsd:attribute name="batchPeriod" type="xsd:positiveInteger"
 		default="60"/>
-        <xsd:attribute name="interval" type="xsd:positiveInteger"/>
+        <xsd:attribute name="interval" type="xsd:token"/>
    </xsd:complexType>
 </xsd:element>
 
@@ -517,6 +509,7 @@
         <xsd:attribute name="class" type="xsd:token" use="optional"/>
         <xsd:attribute name="sorterLength" type="xsd:float"/>
         <xsd:attribute name="heapMax" type="xsd:nonNegativeInteger"/>
+        <xsd:attribute name="latency" type="xsd:float"/>
    </xsd:complexType>
 </xsd:element>
 
@@ -546,6 +539,8 @@
 	<xsd:attribute name="priority" type="xsd:token"/>
 	<xsd:attribute name="rawSorterLength" type="xsd:float"/>
 	<xsd:attribute name="procSorterLength" type="xsd:float"/>
+        <xsd:attribute name="rawLateSampleCacheSize" type="xsd:nonNegativeInteger"/>
+        <xsd:attribute name="procLateSampleCacheSize" type="xsd:nonNegativeInteger"/>
         <!-- max heap size in bytes, followed by K,M or G -->
 	<xsd:attribute name="rawHeapMax" type="xsd:token"/>
 	<xsd:attribute name="procHeapMax" type="xsd:token"/>
@@ -623,8 +618,9 @@
     </xsd:choice>
     <xsd:attribute name="name"   type="xsd:token" use="required"/>
     <xsd:attribute name="class" type="xsd:token" use="required"/>
-    <xsd:attribute name="number"   type="xsd:nonNegativeInteger" use="optional"/>
+    <xsd:attribute name="number"   type="xsd:token" use="optional"/>
     <xsd:attribute name="suffix"   type="xsd:token" use="optional"/>
+    <xsd:attribute name="applyCals"   type="xsd:token" use="optional"/>
 </xsd:complexType>
 
 <xsd:element name="project">
@@ -647,6 +643,7 @@
         <xsd:attribute name="config" type="xsd:normalizedString"/>
         <xsd:attribute name="version" type="xsd:normalizedString"
 		use="required"/>
+        <xsd:attribute name="maxStation" type="xsd:nonNegativeInteger"/>
     </xsd:complexType>
 </xsd:element>
 

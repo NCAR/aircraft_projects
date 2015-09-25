@@ -413,7 +413,7 @@
         <sample id="2" rate="25" scanfFormat="%f %f %f %*f">
             <variable name="RAWCONC" units="#/cm3" longname="VCSEL Moisture Number Density"/>     <!-- molecules/cm^3 -->
             <variable name="SMPLSRINT" units="mV" longname="VCSEL Sample Laser Intensity"/>     
-            <variable name="DPV" units="deg_C" longname="VCSEL Frost Dew Point"/>
+            <variable name="DPV" units="deg_C" longname="VCSEL Frost Dew Point" maxValue="30"/>
         </sample>
         <!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
         <sample id="3" rate="1" scanfFormat="SPEC %98f">
@@ -643,65 +643,30 @@
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
 
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
-          <sample id="0314" rate="25">
-            <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
-              <linear slope="1.0" intercept="0.0" units="degree_T"/>
-            </variable>
-          </sample>
-          <sample id="0324" rate="50">
-            <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.26" units="degree"/>
-            </variable>
-          </sample>
-        </arincSensor>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2">
-          <sample id="0314" rate="25">
-            <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
-              <linear slope="1.0" intercept="0.24" units="degree_T"/>
-            </variable>
-          </sample>
-          <sample id="0324" rate="50">
-            <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.04" units="degree"/>
-            </variable>
-          </sample>
-        </arincSensor>
-
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2"/>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A">
-          <sample id="0165" rate="1">
-            <variable name="VSPD" units="m/s" longname="Avionics GPS Vertical Velocity">
-              <linear slope="1.02" intercept="-0.06" units="m/s"/>
-            </variable>
-          </sample>
-        </arincSensor>
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A"/>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110">
 	    <sample id="1">
-                <variable name="PSF" units="hPa" longname="Raw Static Pressure, Fuselage">
-                <linear slope="1.0006" intercept="-0.4453" units="hPa"/>
-                </variable>
+                <variable name="PSF" units="hPa" longname="Raw Static Pressure, Fuselage"/>
 	    </sample>
         </serialSensor>
 
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL">
 	    <sample id="1">
 	        <variable name="BALNC" units="unk" longname="Dew/Frost Point Balance, Fuselage Left"/>
-                <variable name="MIRRTMP" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Left">
-                    <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
-                </variable>
-                <variable name="DPLTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Left"/>
+                <variable name="MIRRTMP" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Left"/>
+                <variable name="TEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Left"/>
 	    </sample>
         </serialSensor>
 
         <serialSensor IDREF="DewPointer" devicename="/dev/ttyS7" id="130" suffix="_DPR">
 	    <sample id="1">
                 <variable name="BALNC" units="unk" longname="Dew/Frost Point Balance, Fuselage Right"/>
-                <variable name="MIRRTMP" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Right">
-                    <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
-                </variable>
-                <variable name="DPRTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Right"/>
+                <variable name="MIRRTMP" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Right"/>
+                <variable name="TEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Right"/>
 	    </sample>
         </serialSensor>
 
@@ -767,23 +732,23 @@
                     <parameter name="channel"  value="0"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <!--<poly coefs="-90.997 25.705 0.063667" units="deg_C"/> --> <!-- Post-HIPPO-3 cal --> 
-                    <poly coefs="-90.691 25.554 0.08566" units="deg_C"/>   <!-- Pre-HIPPO-3 cal --> 
+                    <poly coefs="-81.619 22.321 0.36363" units="deg_C"/>   <!-- Pre-HIPPO-3 cal --> 
                 </variable>
                 <variable name="RTH1" units="V" longname="Recovery Air Temperature, Deiced Left">
                     <parameter name="channel"  value="1"       type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <!--<poly coefs="-90.772 25.67  0.069654" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
-                    <poly coefs="-90.802 25.69  0.068852" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
+                    <poly coefs="-82.301 22.731 0.30567" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
                 </variable>
                 <variable name="RTH4" units="V" longname="Recovery Air Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <!--<poly coefs="-91.647 26.364 -0.020022" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
-                    <poly coefs="-91.701 26.385 -0.020225" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
+                    <poly coefs="-82.282 22.761 0.3115" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
                 </variable>
                 <variable name="RTH3" units="V" longname="Recovery Air Temperature, Deiced Right">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <!--<poly coefs="-90.874 26.076 -0.00095893" units="deg_C"/> --> <!-- Post-HIPPO-3 cal -->
-                    <poly coefs="-91.049 26.152 -0.0073493" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
+                    <poly coefs="-82.068 22.389 0.37123" units="deg_C"/>  <!-- Pre-HIPPO-3 cal -->
                 </variable>
                 <variable name="NOSETMP" units="V" longname="Radome Environmental Box Temperature">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>

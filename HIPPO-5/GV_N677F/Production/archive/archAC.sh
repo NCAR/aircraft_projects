@@ -38,7 +38,7 @@ set PROJECT = "HIPPO-5"
 #### VCSEL
 
 ###KML - done 5/16/2012, redone 6/25/2012
-#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/kml kml EOL janine@ucar.edu
+/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/kml kml EOL/2011
 
 ### NASA_AMES
 #/net/work/bin/scripts/mass_store/archAC/archAC.py NASA_AMES /scr/raf/Prod_Data/$PROJECT/NASA_AMES gz EOL stroble@ucar.edu
