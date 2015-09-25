@@ -397,7 +397,9 @@
         <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %*c %*f %f %*f %*f %f %f %f %f">
             <variable name="STATUS" units="none" longname="VCSEL Status Code"/>
             <variable name="AT" units="deg_K" longname="VCSEL Ambient Temperature"/>
-            <variable name="PS" units="torr" longname="VCSEL Ambient Pressure"/>
+            <variable name="PS" units="torr" longname="VCSEL Ambient Pressure">
+                <linear slope="1.333223" intercept="0.0" units="hPa"/>
+            </variable>
             <variable name="LSRTMP" units="ohm" longname="VCSEL Laser Temperature"/>
             <variable name="SETTMP" units="ohm" longname="VCSEL Set Temperature"/>
             <variable name="TCC" units="count" longname="VCSEL Thermoelectric Cooler Current"/>
@@ -409,7 +411,7 @@
         </sample>
         <sample id="2" rate="25" scanfFormat="%f %*f %f %*f">
             <variable name="CONC_H2O" units="#/cm3" longname="VCSEL Moisture Number Density"/>     <!-- molecules/cm^3 -->
-            <variable name="DP" units="deg_C" longname="VCSEL Frost Dew Point"/>
+            <variable name="DPV" units="deg_C" longname="VCSEL Frost Dew Point" maxValue="30"/>
         </sample>
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
