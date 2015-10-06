@@ -27,16 +27,27 @@ from email.mime.text import MIMEText
 
 # Initialization 
 #  *******************  Modify The Following *********************
+#  NOTE: Be sure to ask the systems group to create a directory:
+#   /net/ftp/pub/data/download/project_name
+#   and that it be owned by the ads user.
+#   Note that the CWIG standard and the standard expected by the 
+#   catcher script will be that project_name above will be the lower
+#   case version of the project name e.g. icebridge2015 not ICEBRIDGE2015
+#
+#   The RStudio piece seems to need special setup for each project
+#
 #  NOTE: assumes that Raw_Data is subdirectory of data_dir + project
-project =        'CSET'
+#  TODO: project should be pulled from environment variable(?)
+
+project =        'ICEBRIDGE2015'
 data_dir =       '/home/data/'
 rstudio_dir =    '/home/ads/RStudio/'
 
-# Instruments, comment out if not on project
-threeVCPI =      'true'
-twoD      =      'true'
+# Instruments, true or false depending on if instrument is on project
+threeVCPI =      'false'
+twoD      =      'false'
 
-NAS =            'true'
+NAS =            'false'
 nas_url =        '192.168.1.30:/data'
 nas_mnt_pt =     '/mnt/Data/'
 nas_sync_dir =   nas_mnt_pt + '/data/synced_data/ads/'
@@ -61,11 +72,16 @@ rlocal_ftp_dir = '/FieldStorage/FieldProjects/WINTER/RAFqc'
 raircraft      = 'aircraft.NSF_NCAR_GV.'
 #local_ftp_dir  = '/FieldStorage/Temporary Items'
 
+# Products set to true if you want 'em
+nc2asc = 'true'
 nc2ascBatch = '/home/data/WINTER/nc2asc.bat'
+
+nc2iwg = 'true'
 
 translate2ds = '/home/local/raf/instruments/3v-cpi/translate2ds/translate2ds '
 twods_aircraft = 'GV_N677F'
 
+catalog = 'false'
 # ******************  End of Modification Section ****************
 
 # Get the flight designation
@@ -152,7 +168,7 @@ else:
 if ncfile == '' : 
   print "No NetCDF file identified!"
   print "Aborting"
-  sys.exit(0)
+  #sys.exit(0)
 
 #KML file
 kmllist = glob.glob(nc_dir+'*'+'_'+flight+'.kml')
@@ -165,7 +181,7 @@ elif kmllist.__len__() == 0:
     kmlfile = nc_dir+project+'_'+flight+".kml"
   else:
     print "We have nc file but not kml file....  aborting..."
-    sys.exit(0)
+    #sys.exit(0)
 else:
   print "More than one file found.  Stepping through files, please select the right one"
   kmlfile = ''
@@ -181,9 +197,10 @@ else:
 if kmlfile == '' :
   print "No KML file identified!"
   print "Aborting..."
-  sys.exit(0)
+  #sys.exit(0)
 
 #nc2asc file
+icarttfile = ''
 icarttlist = glob.glob(nc_dir+'*'+'_'+flight+'.asc')
 if icarttlist.__len__() == 1:
   icarttfile = icarttlist[0]
@@ -194,7 +211,7 @@ elif icarttlist.__len__() == 0:
     icarttfile = nc_dir+project+"_"+'_'+flight+".asc"
   else:
     print "We have nc file but not ASCII file....  aborting..."
-    sys.exit(0)
+    #sys.exit(0)
 else:
   print "More than one file found.  Stepping through files, please select the right one"
   icarttfile = ''
@@ -210,7 +227,7 @@ else:
 if icarttfile == '' :
   print "No ASCII file identified!"
   print "Aborting..."
-  sys.exit(0)
+  #sys.exit(0)
 
 #IWG1 file
 iwg1list = glob.glob(nc_dir+'*'+'_'+flight+'.iwg1')
@@ -223,7 +240,7 @@ elif iwg1list.__len__() == 0:
     iwg1file = nc_dir+project+'_'+flight+".iwg1"
   else:
     print "We have nc file but not iwg1 file....  aborting..."
-    sys.exit(0)
+    #sys.exit(0)
 else:
   print "More than one file found.  Stepping through files, please select the right one"
   iwg1file = ''
@@ -239,7 +256,7 @@ else:
 if iwg1file == '' :
   print "No IWG1 file identified!"
   print "Aborting..."
-  sys.exit(0)
+  #sys.exit(0)
 
 #Raw Data File
 rawlist = glob.glob(raw_dir+'*'+flight+'*.ads')
@@ -248,7 +265,7 @@ if rawlist.__len__() == 1:
 elif rawlist.__len__() == 0:
   print "No Raw files found matching the form: raw_dir+'*'+flight+'*.ads'"
   print "aborting..."
-  sys.exit(0)
+  #sys.exit(0)
 else:
   print "More than one file found.  Stepping through files, please select the right one"
   rawfile = ''
@@ -264,7 +281,7 @@ else:
 if rawfile == '' :
   print "No Raw file identified!"
   print "Aborting! "
-  sys.exit(0)
+  #sys.exit(0)
 
 # RStudio PDF file
 
@@ -278,6 +295,7 @@ RStudio_outfile = rstudio_dir+project+'/'+project+'_'+flight+'Plots.pdf'
 rstudiolist = glob.glob(FCfilename)
 #rstudiolist = glob.glob(filename)
 
+rstudiofile = ''
 if rstudiolist.__len__() == 1:
   rstudiofile = rstudiolist[0]
 elif rstudiolist.__len__() == 0:
@@ -289,7 +307,7 @@ elif rstudiolist.__len__() == 0:
     #rstudiofile =  filename
   else:
     print "We have nc file but not rstudio file....  aborting..."
-    sys.exit(0)
+    #sys.exit(0)
 else:
   print "More than one file found.  Stepping through files, please select the right one"
   rstudiofile = ''
@@ -305,7 +323,7 @@ else:
 if rstudiofile == '' :
   print "No RStudio file identified!"
   print "Aborting..."
-  sys.exit(0)
+  #sys.exit(0)
 
 # RStudio HTML file
 
@@ -317,6 +335,7 @@ RStudio_outfileHTML = rstudio_dir+project+'/'+project+'_'+flight+'Plots.html'
 
 rstudiolist = glob.glob(FCfilenameHTML)
 
+rstudiofileHTML = ''
 if rstudiolist.__len__() == 1:
   rstudiofileHTML = rstudiolist[0]
 elif rstudiolist.__len__() == 0:
@@ -326,7 +345,7 @@ elif rstudiolist.__len__() == 0:
     rstudiofileHTML =  FCfilenameHTML
   else:
     print "We have nc file but not rstudio file....  aborting..."
-    sys.exit(0)
+    #sys.exit(0)
 else:
   print "More than one file found.  Stepping through files, please select the right one"
   rstudiofileHTML = ''
@@ -342,7 +361,7 @@ else:
 if rstudiofileHTML == '' :
   print "No RStudio file identified!"
   print "Aborting..."
-  sys.exit(0)
+  #sys.exit(0)
 
 #########################  End of Setup ###################################
 
@@ -362,15 +381,19 @@ if process == "true":
   cf.write(str(line))
   cf.close()
 
-  command = "nimbus -b "+nimConfFile
+  command = "/opt/local/bin/nimbus -b "+nimConfFile
   print "about to execute nimbus I hope: "+command
-  if os.system(command) == 0:
+
+  res = os.system(command)
+  print 'result of nimbus call = '+str(res)
+
+  if res == 0:
     proc_raw_file =    'Yes'
     proc_kml_file =    'Yes'
 
 # 3VCPI 
 # Convert SPEC file form to oap file form
-  if threeVCPI:
+  if threeVCPI=='true':
     print "\n\n *****************  3VCPI **************************\n"
     mkdir_fail = 'false'
     first_base_file = ''
@@ -420,7 +443,7 @@ if process == "true":
           proc_3vcpi_files = 'Yes'
 
 # 2D data
-  if twoD:
+  if twoD=='true':
     mkdir_fail = 'false'
     if not os.path.isdir(twodfile_dir): 
       try:
@@ -462,15 +485,17 @@ if process == "true":
   if os.system(command) == 0:
     proc_nc_file  =    'Yes'
 
-  command = "nc2iwg1 "+ncfile+" > "+iwg1file;
-  print "about to execute : "+command
-  if os.system(command) == 0:
-    proc_iwg_file = 'Yes'
+  if nc2iwg == 'true':
+    command = "nc2iwg1 "+ncfile+" > "+iwg1file;
+    print "about to execute : "+command
+    if os.system(command) == 0:
+      proc_iwg_file = 'Yes'
 
-  command = "nc2asc -b "+nc2ascBatch+" -i "+ncfile+" -o "+icarttfile;
-  print "about to execute : "+command
-  if os.system(command) == 0:
-    proc_asc_file = 'Yes'
+  if nc2asc == 'true':
+    command = "nc2asc -b "+nc2ascBatch+" -i "+ncfile+" -o "+icarttfile;
+    print "about to execute : "+command
+    if os.system(command) == 0:
+      proc_asc_file = 'Yes'
 
 # Run Al Cooper's R code for QA/QC production
   os.chdir("/home/ads/RStudio/"+project)
@@ -602,6 +627,12 @@ print "icarttfilename = "+icarttfilename
 print "RStudiofilenamePDF = "+rstudiofilename
 print "RStudiofilenameHTML = "+rstudiofilenameHTML
 
+#ICEBRIDGE special request for raw DGPS Data
+if project == 'ICEBRIDGE2015':
+  pcdfilename = project+'_'+flight+'.PDC'
+  command = 'data_dump -i 3,160 -n '+rawfile+'> '+data_dir+'/'+pcdfilename
+  os.system(command)
+
 # Make sure that there is not a zip file already there ("overwrite")
 command = "cd "+data_dir+"; rm "+zip_data_filename
 os.system(command)
@@ -613,37 +644,39 @@ if os.system(command) != 0:
   final_message = final_message + message
 
 # Put QC files into catalog and to the NAS if it exists
-try:
-  print 'opening FTP connection to: ' + qc_ftp_site
-
-  ftp = ftplib.FTP(qc_ftp_site)
-  ftp.login(user, password)
-  ftp.cwd(qc_ftp_dir)
-  print ""
-  print "Putting file:"+rstudiofilename
-  os.chdir(rdata_dir)
-  file = open(rstudiofilename, 'r')
-  ftp.storbinary('STOR ' + rstudiofilename, file)
-  file.close()
-  print "Putting file:"+rstudiofilenameHTML
-  file = open(rstudiofilenameHTML, 'r')
-  ftp.storbinary('STOR ' + rstudiofilenameHTML, file)
-  file.close()
-  print "Finished putting QC files"
-  print ""
-  ftp.quit()
-  ship_qc_files = 'Yes-Cat'
-
-except ftplib.all_errors as e:
-  print ""
-  print 'Error writing QC data to server'
-  print e
+if catalog=='true':
   try:
-    ftp.quit()
+    print 'opening FTP connection to: ' + qc_ftp_site
+    print '- putting QC data in directory: ' + qc_ftp_dir
+  
+    ftp = ftplib.FTP(qc_ftp_site)
+    ftp.login(user, password)
+    ftp.cwd(qc_ftp_dir)
+    print ""
+    print "Putting file:"+rstudiofilename
+    os.chdir(rdata_dir)
+    file = open(rstudiofilename, 'r')
+    ftp.storbinary('STOR ' + rstudiofilename, file)
     file.close()
+    print "Putting file:"+rstudiofilenameHTML
+    file = open(rstudiofilenameHTML, 'r')
+    ftp.storbinary('STOR ' + rstudiofilenameHTML, file)
+    file.close()
+    print "Finished putting QC files"
+    print ""
+    ftp.quit()
+    ship_qc_files = 'Yes-Cat'
+  
   except ftplib.all_errors as e:
-    print 'Could not close ftp connection:'
+    print ""
+    print 'Error writing QC data to server'
     print e
+    try:
+      ftp.quit()
+      file.close()
+    except ftplib.all_errors as e:
+      print 'Could not close ftp connection:'
+      print e
 #  sys.exit(1)
 
 #if NAS == 'true':
@@ -671,22 +704,24 @@ if NAS != 'true':
     ftp.login(user, password)
     ftp.cwd(ftp_data_dir)
     print ""
+    print datetime.datetime.now().time()
     print "Putting file:"+zip_data_filename
     os.chdir(data_dir)
     file = open(zip_data_filename, 'r')
     ftp.storbinary('STOR ' + zip_data_filename, file)
     file.close()
+    print datetime.datetime.now().time()
     print "Finished putting data file"
     print ""
     ftp.quit()
 
-    if ncfilename: 
+    if ncfilename != '': 
       ship_nc_file = 'Yes-FTP'
-    if kmlfilename:
+    if kmlfilename != '':
       ship_kml_file = 'Yes-FTP'
-    if iwg1filename:
+    if iwg1filename != '':
       ship_iwg_file = 'Yes-FTP'
-    if icarttfilename:
+    if icarttfilename != '':
       ship_asc_file = 'Yes-FTP'
 
   except ftplib.all_errors as e:
