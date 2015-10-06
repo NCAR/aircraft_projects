@@ -21,7 +21,7 @@ reProdFile = re.compile("PROD_(\S+)_(\S+).zip")
 reRawProjName = re.compile("project name: (\S+)")
 
 ##  Configuration for the distribution - modify the following
-NAS_in_field =     'true'                        # Set to false for ftp 
+NAS_in_field =     'false'                        # Set to false for ftp 
 temp_dir =        '/tmp/'                        # Where we unzip & put busy
 dat_parent_dir =  '/scr/raf_data/'               # Where nc files go
 rdat_parent_dir = '/scr/raf_Raw_Data/'           # where raw ads files go
@@ -50,8 +50,15 @@ def dist_prod_file(fn):
     # This script is not re-entrant - bail if running
     busy_file = temp_dir+'DIST_PROD'
     if os.path.isfile(busy_file):
-        logging.info("  Product Dist busy file:"+busy_file+" exists. Exiting")
-        sys.exit(0)
+        st=os.stat(busy_file)
+        bfiletime = st.st_mtime
+        curtime = time.mktime(time.localtime())
+        if (curtime-bfiletime) > 3000.0:
+            logging.info(" Busy file:"+busy_file+" more than 5 minutes old, deleting.")
+            os.remove(busy_file)
+        else:
+            logging.info("  Product Dist busy file:"+busy_file+" exists. Exiting")
+            sys.exit(0)
     command = 'touch '+busy_file
     os.system(command)
 
@@ -60,6 +67,7 @@ def dist_prod_file(fn):
     file_dir,file_name = os.path.split(fn)
     if not file_name.startswith('PROD_') or not file_name.endswith('.zip'):
         logging.error("Error - called w/non-product file:"+fn)
+        os.remove(busy_file)
         sys.exit(1)
     message = "Got an ADS Product file:"+fn
     final_message = final_message + message + '\n'
@@ -136,7 +144,8 @@ def dist_prod_file(fn):
     # if files are being ftp'd in, then remove it so newly processed file
     #   can be written to the directory.
     if NAS_in_field != 'true':
-        os.remove(fn)
+        if os.path.isfile(fn):
+            os.remove(fn)
 
     emailfilename = 'email.addr.txt'
     fo = open(emailfilename, 'r+')
@@ -182,6 +191,7 @@ def dist_raw_file(fn):
     busy_file = temp_dir+'DIST_RAW'
     if os.path.isfile(busy_file):
         logging.info("  Product Dist busy file:"+busy_file+" exists. Exiting")
+        os.remove(busy_file)
         sys.exit(0)
     command = 'touch '+busy_file
     os.system(command)
@@ -252,10 +262,12 @@ if __name__ == '__main__':
         print "    path    - path to data files  (i.e. /net/ftp/pub/data/ads/ads)"
         print "    logfile - logfile name (i.e. /tmp/ads_data_catcher.log)"
         print "\nThe logfile is rotated every 8192 bytes with a backup count of 10."
+        os.remove(busy_file)
         sys.exit(1)
 
     if not os.path.isdir(path):
         logging.critical("exiting, folder: '%s' does not exist." % path)
+        os.remove(busy_file)
         sys.exit(1)
 
     # Look for files > 1 minute old and < 11 minutes old
