@@ -1,6 +1,6 @@
 #!/bin/csh
 
-/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac :9 &
+/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac :7 &
 set xvpid=$!
 onintr int
 sleep 2
@@ -10,7 +10,7 @@ setenv DISPLAY :7.1
 if ($uid == 20000) then
   setenv DAT /scr/raf/local_productiondata/
 else
-  setenv DAT ${DATA_DIR}/HIPPO-1
+  setenv DAT ${DATA_DIR}/HIPPO
 endif
 
 mkdir ${DAT}
