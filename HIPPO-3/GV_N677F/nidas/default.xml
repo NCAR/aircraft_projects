@@ -370,20 +370,28 @@
             <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
             <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
             <variable name="USMPFLW" units="V" longname="UHSAS Sample Flow">
-                <linear slope="0.3543" intercept="-0.155" units="sccs"/>
+              <linear units="vccs">
+                <calfile file="USMPFLW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/UHSAS001:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/UHSAS001"/>
+              </linear>
             </variable>
             <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
             <variable name="UTEMP" units="V" longname="UHSAS Temperature in Canister, signal"/>
             <variable name="USHFLW" units="V" longname="UHSAS Air Sheath Flow">
-                <linear slope="4.1667" intercept="0.0" units="sccs"/>
+              <linear units="vccs">
+                <calfile file="USHFLW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/UHSAS001:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/UHSAS001"/>
+              </linear>
             </variable>
             <variable name="UDIFF" units="V" longname="UHSAS Absolute Pressure in Canister, signal"/>
             <variable name="UBTMP" units="V" longname="UHSAS Temperature in Canister">
-                <linear slope="173.722" intercept="0.0" units="K"/>
+              <linear units="K">
+                <calfile file="UBTMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/UHSAS001:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/UHSAS001"/>
+              </linear>
             </variable>
             <!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/-->
             <variable name="UPRESS" units="V" longname="UHSAS Absolute Pressure in Canister">
-                <linear slope="22.222" intercept="10.556" units="kPa"/>
+              <linear units="kPa">
+                <calfile file="UPRESS.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/UHSAS001:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/UHSAS001"/>
+              </linear>
             </variable>
             <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
             <!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
