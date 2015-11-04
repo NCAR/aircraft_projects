@@ -35,6 +35,7 @@ Requires: uucp
 Requires: minicom
 Requires: exiv2-devel
 Requires: libdc1394-devel
+Requires: kde-baseapps
 
 BuildArch: noarch
 
@@ -44,6 +45,8 @@ Metapackage for all server and satcom packages needed on GV.
 %files 
 
 %changelog
+* Tue Nov 4 2015 Chris Webster <cjw@ucar.edu> 1.0-14
+- Updated Requires kde-baseapps (kdialog).
 * Thu May 16 2013 Chris Webster <cjw@ucar.edu> 1.0-13
 - Updated Requires for new packages.
 * Sat Apr  7 2012 Gordon Maclean <maclean@ucar.edu> 1.0-12
