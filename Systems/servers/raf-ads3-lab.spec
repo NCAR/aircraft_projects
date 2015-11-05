@@ -14,6 +14,7 @@ Requires: ael-local-dpkgs
 Requires: raf-ads3-sudoers
 Requires: minicom
 Requires: chrony
+Requires: openmotif-devel
 Requires: kde-baseapps
 
 BuildArch: noarch
