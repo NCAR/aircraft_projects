@@ -1731,6 +1731,13 @@
     </server>
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
+      <sensor IDREF="ACDFO3" devicename="usock::30107" id="2700" suffix="_ACD"/>
+      <sensor IDREF="NOAAPANTHER" devicename="usock::30103" id="120" suffix="_PAN"/>
+      <sensor IDREF="NOAASP2" devicename="usock::30105" id="140" suffix="_SP2"/>
+      <sensor IDREF="NOAAUCATS" devicename="usock::30102" id="160" suffix="_GMD"/>
+      <sensor IDREF="SMPS" devicename="usock::30104" id="180" suffix="_SMPS"/>
+      <sensor IDREF="MTP" devicename="usock::30101" id="300" suffix="_MTP"/>
+      <sensor IDREF="GHUHSAS" devicename="usock::30117" id="400" suffix="_USAS"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -2176,6 +2183,31 @@
           </variable>
         </sample>
       </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="7" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300">
+        <parameter name="SerialNumber" type="string" value="A149505"/>
+        <parameter name="rate" type="int" value="100"/>
+        <sample id="1" rate="25">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="4"/>
+          <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="RICE.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <serialSensor IDREF="S200" devicename="/dev/ttyS3" id="500" suffix="_RWOOP">
+        <parameter name="SerialNumber" type="string" value="PCAS108"/>
+      </serialSensor>
     </dsm>
   </site>
 </project>
