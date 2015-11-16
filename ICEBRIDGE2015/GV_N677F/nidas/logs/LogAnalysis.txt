@@ -1,0 +1,132 @@
+On RF14 during the ICEBRIDGE2015 project, the data system encountered a problem that manifested as a disconnection between nimbus and dsm_server.  dsm_server continued to run and collect data, but nimbus would freeze with a "no connection to server" message and, of course aeros would freeze (with nothing new going to the database). A restart of both nimbus and aeros was necessary to clear the issue.  
+
+A restart of dsm_server was not sufficient to clear the problem, however a reboot of the server seems to have cleared it up.  A maintenance day with the data system running for several hours followed by a full 10 hour research flight were completed with no recurrence of the problem.  
+
+The following is an analysis of ads and system logs to try to identify the source of the bug.
+
+First are the technician's notes that detail the situation.
+
+1552 Aeros frozen, nimbus "no connection to server" - stop & restart data acq - now saving
+data as rf15
+1636 Aeros frozen, nimbus "no connection to server" - stop & restart nimbus, then aeros - 
+working again, T-bal does not think it has anything to do with stopping Iridium (still rf15 now)
+1712 Nimbus "no connection..." stop & restart nimbus, then aeros, back in business
+1722 Reboot nimbus & aeros
+1744 Reboot nimbus & aeros
+1811 Reboot nimbus & aeros
+1820 Reboot nimbus & aeros
+2051 Reboot nimbus & aeros
+2126 Reboot nimbus & aeros
+2148 Reboot nimbus & aeros
+2157 Reboot nimbus & aeros
+2220 Reboot nimbus & aeros
+
+
+For eacch instance noted by the technician entries from two logs: The ADS3 log file and the /var/log/messages file follow.  Note that both complete log files are in the directory with this analysis text.
+
+
+
+18:20:
+ADS3.LOG:
+Oct 20 18:19:30 last message repeated 2 times
+Oct 20 18:20:21 acserver dsm_server[2788]: NOTICE|SampleOutputStream: inet:127.0.0.1:43219: IOException: inet:127.0.0.1:43219: send: Broken pipe, disconnecting
+
+MESSAGES:
+Oct 20 18:19:54 acserver abrt: detected unhandled Python exception in '//usr/lib64/nagios/plugins/raf_check_datavalue'
+Oct 20 18:19:54 acserver abrt-server[25768]: Saved Python crash dump of pid 25766 to /var/spool/abrt/pyhook-2015-10-20-18:19:54-25766
+Oct 20 18:19:54 acserver abrtd: Directory 'pyhook-2015-10-20-18:19:54-25766' creation detected
+Oct 20 18:19:54 acserver abrtd: Executable '//usr/lib64/nagios/plugins/raf_check_datavalue' doesn't belong to any package and ProcessUnpackaged is set to 'no'
+Oct 20 18:19:54 acserver abrtd: 'post-create' on '/var/spool/abrt/pyhook-2015-10-20-18:19:54-25766' exited with 1
+Oct 20 18:19:54 acserver abrtd: Deleting problem directory '/var/spool/abrt/pyhook-2015-10-20-18:19:54-25766'
+
+20:51:
+ADS3.LOG:
+Oct 20 20:51:00 acserver nimbus: 2015-10-20,20:51:00|INFO|psql.cc: Performing VACUUM @ 20151020T205058.
+Oct 20 20:51:10 acserver dsm_server[2788]: NOTICE|SampleOutputStream: inet:127.0.0.1:45874: IOException: inet:127.0.0.1:45874: send: Broken pipe, disconnecting
+
+MESSAGES:
+Oct 20 20:49:42 acserver sendGroundInitScript: ground db connection sucessful.
+Oct 20 20:49:54 acserver abrt: detected unhandled Python exception in '//usr/lib64/nagios/plugins/raf_check_datavalue'
+Oct 20 20:49:54 acserver abrt-server[15605]: Saved Python crash dump of pid 15603 to /var/spool/abrt/pyhook-2015-10-20-20:49:54-15603
+Oct 20 20:49:54 acserver abrtd: Directory 'pyhook-2015-10-20-20:49:54-15603' creation detected
+Oct 20 20:49:54 acserver abrtd: Executable '//usr/lib64/nagios/plugins/raf_check_datavalue' doesn't belong to any package and ProcessUnpackaged is set to 'no'
+Oct 20 20:49:54 acserver abrtd: 'post-create' on '/var/spool/abrt/pyhook-2015-10-20-20:49:54-15603' exited with 1
+Oct 20 20:49:54 acserver abrtd: Deleting problem directory '/var/spool/abrt/pyhook-2015-10-20-20:49:54-15603'
+
+
+21:26:
+ADS3.LOG:
+Oct 20 21:28:47 acserver dsm_server[2788]: NOTICE|SampleOutputStream: inet:127.0.0.1:36615: IOException: inet:127.0.0.1:36615: send: Broken pipe, disconnecting
+Oct 20 21:28:47 acserver dsm_server[2788]: INFO|SampleOutputStream: inet:127.0.0.1:36615: disconnecting
+
+MESSAGES:
+Oct 20 21:28:27 acserver abrt: detected unhandled Python exception in '//usr/lib64/nagios/plugins/raf_check_vxl'
+Oct 20 21:28:27 acserver abrt-server[29923]: Saved Python crash dump of pid 29921 to /var/spool/abrt/pyhook-2015-10-20-21:28:27-29921
+Oct 20 21:28:27 acserver abrtd: Directory 'pyhook-2015-10-20-21:28:27-29921' creation detected
+Oct 20 21:28:27 acserver abrtd: Executable '//usr/lib64/nagios/plugins/raf_check_vxl' doesn't belong to any package and ProcessUnpackaged is set to 'no'
+Oct 20 21:28:27 acserver abrtd: 'post-create' on '/var/spool/abrt/pyhook-2015-10-20-21:28:27-29921' exited with 1
+Oct 20 21:28:27 acserver abrtd: Deleting problem directory '/var/spool/abrt/pyhook-2015-10-20-21:28:27-29921'
+Oct 20 21:28:36 acserver abrt: detected unhandled Python exception in '//usr/lib64/nagios/plugins/raf_check_datavalue'
+Oct 20 21:28:36 acserver abrt-server[29964]: Saved Python crash dump of pid 29962 to /var/spool/abrt/pyhook-2015-10-20-21:28:36-29962
+Oct 20 21:28:36 acserver abrtd: Directory 'pyhook-2015-10-20-21:28:36-29962' creation detected
+Oct 20 21:28:36 acserver abrtd: Executable '//usr/lib64/nagios/plugins/raf_check_datavalue' doesn't belong to any package and ProcessUnpackaged is set to 'no'
+Oct 20 21:28:36 acserver abrtd: 'post-create' on '/var/spool/abrt/pyhook-2015-10-20-21:28:36-29962' exited with 1
+Oct 20 21:28:36 acserver abrtd: Deleting problem directory '/var/spool/abrt/pyhook-2015-10-20-21:28:36-29962'
+
+
+
+"21:48":
+
+ADS3.LOG:
+Oct 20 21:51:42 acserver dsm_server[2788]: NOTICE|SampleOutputStream: inet:127.0.0.1:48533: IOException: inet:127.0.0.1:48533: send: Broken pipe, disconnecting
+Oct 20 21:51:42 acserver dsm_server[2788]: INFO|SampleOutputStream: inet:127.0.0.1:48533: disconnecting
+
+MESSAGES:
+Oct 20 21:51:01 acserver abrt: detected unhandled Python exception in '//usr/lib64/nagios/plugins/raf_check_mtp'
+Oct 20 21:51:01 acserver abrt-server[8338]: Saved Python crash dump of pid 8336 to /var/spool/abrt/pyhook-2015-10-20-21:51:01-8336
+Oct 20 21:51:01 acserver abrtd: Directory 'pyhook-2015-10-20-21:51:01-8336' creation detected
+Oct 20 21:51:01 acserver abrtd: Executable '//usr/lib64/nagios/plugins/raf_check_mtp' doesn't belong to any package and ProcessUnpackaged is set to 'no'
+Oct 20 21:51:01 acserver abrtd: 'post-create' on '/var/spool/abrt/pyhook-2015-10-20-21:51:01-8336' exited with 1
+Oct 20 21:51:01 acserver abrtd: Deleting problem directory '/var/spool/abrt/pyhook-2015-10-20-21:51:01-8336'
+
+
+
+
+21:57:
+
+ADS3.LOG:
+
+Oct 20 21:57:21 acserver dsm_server[2788]: NOTICE|SampleOutputStream: inet:127.0.0.1:56853: IOException: inet:127.0.0.1:56853: send: Broken pipe, disconnecting
+Oct 20 21:57:21 acserver dsm_server[2788]: INFO|SampleOutputStream: inet:127.0.0.1:56853: disconnecting
+MESSAGES:
+
+Oct 20 21:57:01 acserver renderd[10722]: Initialising unix server socket on /var/run/renderd/renderd.sock
+Oct 20 21:57:01 acserver renderd[10722]: Renderd is using mapnik version 2.0.0
+Oct 20 21:57:06 acserver abrtd: Generating core_backtrace
+Oct 20 21:57:06 acserver abrtd: New problem directory /var/spool/abrt/ccpp-2015-10-20-21:56:51-8415, processing
+Oct 20 21:57:06 acserver abrtd: Sending an email...
+Oct 20 21:57:06 acserver abrtd: Email was sent to: root@localhost
+Oct 20 21:57:06 acserver abrtd: Executable '/usr/local/bin/renderd' doesn't belong to any package and ProcessUnpackaged is set to 'no'
+Oct 20 21:57:06 acserver abrtd: 'post-create' on '/var/spool/abrt/ccpp-2015-10-20-21:56:55-8396' exited with 1
+Oct 20 21:57:06 acserver abrtd: Deleting problem directory '/var/spool/abrt/ccpp-2015-10-20-21:56:55-8396'
+Oct 20 21:57:41 acserver nagircbot: OUT: `TIME'
+
+
+
+22:20:
+
+ADS3.LOG:
+
+Oct 20 22:20:00 acserver dsm_server[2788]: NOTICE|SampleOutputStream: inet:127.0.0.1:58734: IOException: inet:127.0.0.1:58734: send: Broken pipe, disconnecting
+Oct 20 22:20:00 acserver dsm_server[2788]: INFO|SampleOutputStream: inet:127.0.0.1:58734: disconnecting
+
+MESSAGES:
+Oct 20 22:19:54 acserver abrt: detected unhandled Python exception in '//usr/lib64/nagios/plugins/raf_check_datavalue'
+Oct 20 22:19:54 acserver abrt-server[19455]: Saved Python crash dump of pid 19452 to /var/spool/abrt/pyhook-2015-10-20-22:19:54-19452
+Oct 20 22:19:54 acserver abrtd: Directory 'pyhook-2015-10-20-22:19:54-19452' creation detected
+Oct 20 22:19:54 acserver abrtd: Executable '//usr/lib64/nagios/plugins/raf_check_datavalue' doesn't belong to any package and ProcessUnpackaged is set to 'no'
+Oct 20 22:19:54 acserver abrtd: 'post-create' on '/var/spool/abrt/pyhook-2015-10-20-22:19:54-19452' exited with 1
+Oct 20 22:19:54 acserver abrtd: Deleting problem directory '/var/spool/abrt/pyhook-2015-10-20-22:19:54-19452'
+
+
+Looking at other abrt and in particular python excption "mishandling" happens frequently without impact on Port connections...
