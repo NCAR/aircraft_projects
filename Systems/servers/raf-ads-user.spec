@@ -74,7 +74,8 @@ fi
 %attr(0755,ads,ads) /home/ads/Desktop/nimbus.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_data_acq.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_mpds.desktop
-%attr(0755,ads,ads) /home/ads/Desktop/start_iridium.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/start_iridium_tbal.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/start_iridium_blue.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/stop_data_acq.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/stop_mpds.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/stop_iridium.desktop
@@ -123,6 +124,8 @@ fi
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Fri Nov 20 2015 Tom Baltzer <tbaltzer@ucar.edu> 1.21
+- Added two new iridium icons and deleted the old one
 * Thu Nov 19 2015 Chris Webster <cjw@ucar.edu> 1.21
 - Add .bashrc, .bash_profile, System.bashrc, and Jeffco_only.bashrc
 * Tue Jun 09 2015 Tom Baltzer <tbaltzer@ucar.edu> 1.20
