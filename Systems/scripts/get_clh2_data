@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#
+# Script to retreive and remove data files from CU Total Water probe (CLH-2).
+#
+
+set ddir = ${RAW_DATA_DIR}/${PROJECT}/CLH2
+
+if [ ! -d "$ddir" ]; then
+  mkdir -p $ddir
+fi
+
+cd $ddir
+
+ssh totalwater /home/dsc-guest/bin/stop_daq
+scp "totalwater:/home/dsc-guest/clh2ops/data/*" .
+ssh totalwater "/bin/rm /home/dsc-guest/clh2ops/data/*"
