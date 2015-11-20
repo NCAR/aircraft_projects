@@ -1,0 +1,73 @@
+#!/usr/sbin/chat -evf
+#
+#  pppd command we're using is:
+#  pppd lock modem crtscts asyncmap 00000000 defaultroute user ncarppp remotename iridium nodetach /dev/ttyUSB0 19200 ipparam iridium linkname iridium call iridium noauth
+
+#  See notes in /etc/ppp/peers/iridium regarding provisioning.
+#    also see notes in /etc/ppp/pap-secrets file.
+#
+#ABORT 'NO CARRIER'
+#ABORT 'NO DIALTONE'
+#ABORT 'NO ANSWER'
+#ABORT 'ERROR'
+#ABORT 'BUSY'
+TIMEOUT 20
+SAY "....Timing out for 17 seconds"
+''			'\d\d\d\d\d\d\d\d\d\d\d\d\d\d\d\d\d'
+SAY "....Resetting modem\n"
+''			AT
+''			ATH0
+''			ATZE0
+#
+# explicitly enable hardware handshaking
+#'OK\r\n'		AT&C1&D2&K3
+#
+# Verbose connect messages
+#'OK\r\n'		ATV1W1X4
+#
+# Set command escape char to ESC (dec 27). Default='+', dec 43
+#'OK\r\n'		ATS2=27
+#
+# query model number
+#'OK\r\n'		AT+CGMM
+#
+# query revision number
+#'OK\r\n'		AT+CGMR
+#
+# Select service type
+# Use V.22 or V.32 for connections to UCAR RAS
+# V.110 for iridium direct.
+# Default for NASA provisioning.
+#
+# 4,0,1=2400bps,V.22bis
+# 6,0,1=4800bps,V.32
+# 7,0,1=9600bps,V.32
+# 65,0,1=300bps,V.110
+# 66,0,1=1200bps,V.110
+# 68,0,1=2400bps,V.110
+# 70,0,1=4800bps,V.110
+# 71,0,1=9600bps,V.110
+#
+#'OK\r\n'	 	AT+CBST=71,0,1
+#'OK\r\n'	 	AT+CBST=68,0,1
+#'OK\r\n'	 	AT+CBST=7,0,1
+#
+# Set V.43bis data compression
+#   0,0=none, 1,0=transmit, 2,0=receive, 3,0=both
+#'OK\r\n'	 	AT+DS=3,0
+#
+# request service report (ASYNC,SYNC,REL ASYNC, REL SYNC) on connect
+#'OK\r\n'	 	AT+CR=1
+#
+# request compression info on connect
+#'OK\r\n'	 	AT+DR=1
+#
+# display current signal quality, 0-5
+#'OK\r\n'	 	AT+CSQ
+#SAY "Checking signal quality (0-5 bars)...\n"
+#
+TIMEOUT 30
+#
+#'OK\r\n'		ATTD006976506047400
+#CONNECT \c
+#TIMEOUT 30

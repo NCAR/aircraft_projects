@@ -1,6 +1,40 @@
-# Options for a modem on ttyACM1.
-# See peers/iridium for further options for the iridium connection.
-lock
-crtscts
-modem
+# This setup came from David Van Gilst of NASA to work
+# with their provisioning.
+#  The USB to Serial cable that is blue labeled "Iridium Serial"
+#   shows up as /dev/ACM0 on the server.
+debug
+10.15.11.2:10.15.11.1
 19200
+##lock
+##default-asyncmap   
+##modem              
+#mru 552
+##crtscts            
+# no routing, don't require auth since we dial out
+#ipcp-accept-local   
+#ipcp-accept-remote  
+noproxyarp
+##noauth
+###user pppuser        
+#user ncarppp        
+# handle the slow connection
+connect-delay 3000 
+pap-restart 10
+chap-restart 10
+ipcp-restart  10    
+lcp-restart 10
+lcp-echo-interval 30
+lcp-echo-failure 1  
+lcp-max-configure 10
+# turn off compression - it's not actually helpful
+noccp              
+nopcomp            
+noaccomp           
+nodeflate          
+nobsdcomp          
+novj               
+novjccomp          
+nopredictor1
+multilink
+#nodetach
+defaultroute

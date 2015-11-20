@@ -95,8 +95,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/peers/iridium.chat
 %config /etc/ppp/peers/iridium-direct
 %attr(0755,root,root) /etc/ppp/peers/iridium-direct.chat
+%attr(0755,root,root) /etc/ppp/peers/iridiumDC.chat
 
 %changelog
+* Fri Nov 20 2015 Tom Baltzer <tbaltzer@ucar.edu> 1.0-6
+- Updates to work for ICEBRIDGE2015 and for use of NASA provided SIM card (commented out)
 * Tue Oct 11 2011 Tom Baltzer <tbaltzer@ucar.edu> 1.0-5
 - made mods to allow connectivity with NASA modem bank and ppp
 - as well as new interface (ttyUSB0)

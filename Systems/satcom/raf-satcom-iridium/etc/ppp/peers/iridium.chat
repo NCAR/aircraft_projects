@@ -1,5 +1,8 @@
 #!/usr/sbin/chat -evf
 #
+#  pppd command we're using is:
+#  pppd lock modem crtscts asyncmap 00000000 defaultroute user ncarppp remotename iridium nodetach /dev/ttyUSB0 19200 ipparam iridium linkname iridium call iridium noauth
+
 #  See notes in /etc/ppp/peers/iridium regarding provisioning.
 #    also see notes in /etc/ppp/pap-secrets file.
 #
@@ -63,34 +66,39 @@ SAY "Checking signal quality (0-5 bars)...\n"
 #
 TIMEOUT 120
 #
-#  NetZero number in Dever (trying out alternate ISPs)
-#'OK\r\n'		ATTD0013033500050
 #
-# 008816000025 is the latest Iridium direct phone number.
-# 008816000023 is the phone number for Iridium's older dial in system.
-# 008816000022 is a number that requires username/password defined in papsecrets
-#  and was working best for ICEBRIDGE Oct 2011
+#  NASA has provided a setup for use in the ICEBRIDGE project
+#    Contact David Van Gilst (d.vangilst@nserc.und.edu) of NASA DC8 group for
+#    any problem resolution. He says NASA will provision us indefinitely.
+#
+'OK\r\n'		ATTD0016506047400
+#
+#  The following is for use with the DoD SIM card David Van Gilst sent for the 
+#  ICEBRIDGE2015 project.
+#'OK\r\n'		ATTD006976506047400
+#
+#  The following are some alternate numbers that have sometimes worked in the past 
+#  (with our SIM prefix) but seem to be failing now.  Sept 2015
+#'OK\r\n'		ATTD0016506047424
+#'OK\r\n'		ATTD0016506047420
+#
+#  Previous work using Iridium setup 
 # On linux, the ...23 phone number worked when the ...25 phone number didn't.
 # Iridium systems are geared toward Windows systems.
 #
 #'OK\r\n'		ATTD008816000023
-#'OK\r\n'                ATTD008816000025
+#'OK\r\n'               ATTD008816000025
 #'OK\r\n'		ATTD008816000022
-#
-#  NASA has provided a setup for use in the ICEBRIDGE project
-#    the 7420 number never hooked up with ppp
-#    Contact David Van Gilst (d.vangilst@nserc.und.edu) of NASA DC8 group for
-#    any problem resolution. He says NASA will provision us indefinitely.
-#
-'OK\r\n'		ATTD0016506047424
-#'OK\r\n'		ATTD0016506047420
+# 008816000025 is the latest Iridium direct phone number.
+# 008816000023 is the phone number for Iridium's older dial in system.
+# 008816000022 is a number that requires username/password defined in papsecrets
+#  and was working best for ICEBRIDGE Oct 2011
 
 
-SAY "....Dialing, timeout=120\n"
-CONNECT		 "\c"	
-#SAY "\n... Trying Login \n"
-#ogin:-BREAK-ogin:ncarppp
-#word:cHAchaw4
-#multilink: /usr/sbin/pppd
-SAY "\n....Connected\n"
-SAY "\n....Entering ppp\n"
+#SAY "....Dialing, timeout=120\n"
+CONNECT \c
+TIMEOUT 60
+ogin: ncarppp
+sword: cHAchaw4
+#ogin: pppuser
+#sword: lit75diode
