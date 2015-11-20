@@ -1,0 +1,19 @@
+#!/bin/sh
+#   - Special replacement Iridium start script for use if the "TBAL"
+#     USB to serial cable gets busted
+# Note pppd will detach, so that bundle originator can stay alive
+# Therefore pppd gets respwaned by init and dies on tty lock reptitively
+
+ifdown eth2
+sleep 3
+ifdown eth3
+sleep 3
+ifup eth3
+
+# Use the following line for when the Blue "Iridium serial" USB to serial
+# cable is being used.
+/usr/sbin/pppd defaultroute  /dev/ttyACM0 connect '/usr/sbin/chat -v -f /etc/ppp/peers/iridium.chat' disconnect '/usr/sbin/chat -v -f /etc/ppp/peers/iridiumDC.chat' persist debug
+
+# keep init happy and give things a chance to reset
+sleep 10
+
