@@ -1,0 +1,97 @@
+# .bashrc
+
+# bail if not an interactive shell (scp fails without this).
+if [[ $- != *i* ]]; then return; fi
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+if [ -f ~/.System.bashrc ]; then
+	. ~/.System.bashrc
+fi
+
+if [ -f ~/.Jeffco_only.bashrc ]; then
+	. ~/.Jeffco_only.bashrc
+fi
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+
+source $HOME/ads3_environment.sh
+
+set +o noclobber
+export FIGNORE=.o
+export PS1='\!% '
+
+export PATH=$PATH:/home/local/Systems/scripts:/opt/nidas/bin:/opt/arcom/bin:/usr/local/bin:/sbin:/usr/sbin:/home/ads/bin:/home/ldm/bin:/usr/lib64/qt4/bin
+
+unset LD_LIBRARY_PATH
+
+export MANPATH=/usr/share/man:/opt/local/man
+
+alias cd='set dot=$cwd; /bin/cd'
+alias ,='set odot=$cwd; /bin/cd $dot; set dot=$odot; pwd'
+
+if [ -z "$TERM" -a $OSTYPE == linux ]; then
+  alias ls='ls --color=tty'
+  if [ $AIRCRAFT == "Lab_N600" ]; then
+    set PS1="%{\033]0;%m:%~\007%}%m \!% "
+  else
+    set PS1="%{\033]0;%m:%~\007%}$AIRCRAFT \!% "
+  fi
+fi
+
+alias ,='set odot=$cwd; chdir $dot; set dot=$odot; pwd'
+alias ..='cd ..'
+alias clr='clear'
+alias cls='clear; ls'
+alias cp='cp -i'
+alias ctagit='ctags --extra=fq -eRo tags .'
+alias dir='ls -l \!* | more'
+alias empty='/bin/cp /dev/null'
+alias ff='find . -name \!* -print'
+alias ftp='ftp -i'
+alias gerp='grep'
+alias h=history
+alias hyper='ssh -Y ads@hyper.raf-guest.ucar.edu'
+alias herc='ssh -Y ads@hercules.ext-guest.ucar.edu'
+alias lman='nroff -man \!* | $PAGER'
+alias lookup='grep \!* /usr/dict/words'
+alias lpr4='expand -4 \!* | lpr'
+alias maek='make'
+alias mkae='make'
+alias mv='mv -i'
+alias pgrnd='psql -h eol-rt-data.fl-ext.ucar.edu -d $PGGRND'
+alias psg='ps ax | grep \!*'
+# ps which lists threads and real-time priority
+alias psrt='ps -eLo pid,tid,class,rtprio,ni,pri,psr,pcpu,stat,wchan:14,comm'
+alias psrtg='psrt | grep \!*'
+alias scons='nice scons -j4'
+alias socsh='source ~/.cshrc'
+alias svn='$HOME/bin/svn-ask-username.sh'
+alias svndiff='svn diff --diff-cmd /home/ads/bin/sh.svndiff'
+alias vh='$PAGER /usr/include/\!*.h'
+alias vhdr='$PAGER $JLOCAL/include/header.h'
+alias vi='vim'
+#alias vpn='/usr/local/bin/vpnclient connect ucar'
+alias vpn='sudo vpnc /etc/vpnc/eol.conf'
+alias x='chmod +x'
+alias e='xemacs -fg LightBlue -bg Maroon -geometry 90x46 &'
+
+alias proj='cd ${PROJ_DIR}/\!*'
+alias fl='cd /var/www/html/flight_data/\!*'
+alias hp='cd /home/local/aeros/source/\!*'
+alias nids='cd /home/local/nidas/src/\!*'
+alias raf='cd /home/local/raf'
+alias dat='cd $DATA_DIR/\!*'
+alias rdat='cd $RAW_DATA_DIR/$PROJECT\!*'
+
+alias dumpiwg='sudo tcpdump -i eth0 -A -s 1024 udp and dst port 7071'
+
+export CDPATH=$PROJ_DIR/$PROJECT/$AIRCRAFT
+alias nerrt='tail --lines=+0 --follow=name /var/log/ads3.log | grep --line-buffered -e WARN -e ERROR -e CRIT -e ALERT -e EMERG'
+

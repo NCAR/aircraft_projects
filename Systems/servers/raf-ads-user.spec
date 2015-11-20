@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 20
+Release: 21
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -13,7 +13,7 @@ Requires: xchat
 Requires: firefox
 
 %description
-Provides the 'ads' user cshrc files.
+Provides the 'ads' user csh & bash logins, and icons files.
 
 %prep
 %setup -n %{name}
@@ -28,7 +28,12 @@ cp home/ads/Jeffco_only.cshrc        ${RPM_BUILD_ROOT}/home/ads/.Jeffco_only.csh
 cp home/ads/cshrc                    ${RPM_BUILD_ROOT}/home/ads/.cshrc
 cp home/ads/my_defaults              ${RPM_BUILD_ROOT}/home/ads/.my_defaults
 cp home/ads/ads3_environment.csh     ${RPM_BUILD_ROOT}/home/ads/ads3_environment.csh
+cp home/ads/ads3_environment.sh      ${RPM_BUILD_ROOT}/home/ads/ads3_environment.sh
 cp home/ads/login                    ${RPM_BUILD_ROOT}/home/ads/.login
+cp home/ads/System.bashrc            ${RPM_BUILD_ROOT}/home/ads/.System.bashrc
+cp home/ads/Jeffco_only.bashrc       ${RPM_BUILD_ROOT}/home/ads/.Jeffco_only.bashrc
+cp home/ads/bashrc                   ${RPM_BUILD_ROOT}/home/ads/.bashrc
+cp home/ads/bash_profile             ${RPM_BUILD_ROOT}/home/ads/.bash_profile
 cp home/ads/bin/*                    ${RPM_BUILD_ROOT}/home/ads/bin
 cp home/ads/Desktop/*                ${RPM_BUILD_ROOT}/home/ads/Desktop
 cp -r home/ads/.ssh                  ${RPM_BUILD_ROOT}/home/ads
@@ -51,7 +56,12 @@ fi
 %config /home/ads/.cshrc
 %config /home/ads/.my_defaults
 %config /home/ads/ads3_environment.csh
+%config /home/ads/ads3_environment.sh
 %config /home/ads/.login
+%config /home/ads/.Jeffco_only.bashrc
+%config /home/ads/.System.bashrc
+%config /home/ads/.bashrc
+%config /home/ads/.bash_profile
 %config %attr(0600,ads,ads) /home/ads/.ssh/config
 %attr(0775,ads,ads) /home/ads/bin/swcreate
 %attr(0775,ads,ads) /home/ads/bin/svn-ask-username.sh
@@ -113,6 +123,8 @@ fi
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Thu Nov 19 2015 Chris Webster <cjw@ucar.edu> 1.21
+- Add .bashrc, .bash_profile, System.bashrc, and Jeffco_only.bashrc
 * Tue Jun 09 2015 Tom Baltzer <tbaltzer@ucar.edu> 1.20
 - Added EditTechProjNotes icon to desktop.
 - Corrected Calibration Database Editor icon.
