@@ -1,8 +1,5 @@
 # .bashrc
 
-# bail if not an interactive shell (scp fails without this).
-if [[ $- != *i* ]]; then return; fi
-
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
@@ -66,10 +63,10 @@ alias maek='make'
 alias mkae='make'
 alias mv='mv -i'
 alias pgrnd='psql -h eol-rt-data.fl-ext.ucar.edu -d $PGGRND'
-alias psg='ps ax | grep \!*'
+alias psg='ps ax | grep'
 # ps which lists threads and real-time priority
 alias psrt='ps -eLo pid,tid,class,rtprio,ni,pri,psr,pcpu,stat,wchan:14,comm'
-alias psrtg='psrt | grep \!*'
+alias psrtg='psrt | grep'
 alias scons='nice scons -j4'
 alias socsh='source ~/.cshrc'
 alias svn='$HOME/bin/svn-ask-username.sh'
@@ -88,7 +85,7 @@ alias hp='cd /home/local/aeros/source/\!*'
 alias nids='cd /home/local/nidas/src/\!*'
 alias raf='cd /home/local/raf'
 alias dat='cd $DATA_DIR/\!*'
-alias rdat='cd $RAW_DATA_DIR/$PROJECT\!*'
+alias rdat='cd $RAW_DATA_DIR/$PROJECT/\!*'
 
 alias dumpiwg='sudo tcpdump -i eth0 -A -s 1024 udp and dst port 7071'
 

@@ -26,9 +26,8 @@ export XKEYSYMDB=/usr/share/X11/XKeysymDB
 
 export PATH=/usr/kerberos/bin:/bin:/usr/bin:/usr/X11R6/bin:/opt/local/bin
 
-echo $-
-if [ -z "$USER" ]; then exit; fi
-if [[ $- != *i* ]]; then exit; fi
+#if [ -z "$USER" ]; then exit; fi
+#if [[ $- != *i* ]]; then exit; fi
 
 #
 # System-wide/other environment variables
@@ -54,5 +53,3 @@ alias lss='ls -Fal \!* | sort -r +3 | more'
 alias ll='ls -la \!* | more'
 alias lg='ls -lag \!* | more'
 alias lt='ls -alt \!* | more'
-
-echo end system
