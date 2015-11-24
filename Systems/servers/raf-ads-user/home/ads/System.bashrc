@@ -27,7 +27,6 @@ export XKEYSYMDB=/usr/share/X11/XKeysymDB
 export PATH=/usr/kerberos/bin:/bin:/usr/bin:/usr/X11R6/bin:/opt/local/bin
 
 #if [ -z "$USER" ]; then exit; fi
-#if [[ $- != *i* ]]; then exit; fi
 
 #
 # System-wide/other environment variables
@@ -49,7 +48,7 @@ alias help="man man"
 alias h='history | more '
 alias ..='set dot=$cwd ; cd ..'
 alias ,='set dot=$cwd ; cd $dot '
-alias lss='ls -Fal \!* | sort -r +3 | more'
-alias ll='ls -la \!* | more'
-alias lg='ls -lag \!* | more'
-alias lt='ls -alt \!* | more'
+function lss() { ls -Fal "$@" | sort -r +3 | more ;}
+function ll() { ls -la "$@" | more ;}
+function lg() { ls -lag "$@" | more ;}
+function lt() { ls -alt "$@" | more ;}

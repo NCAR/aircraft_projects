@@ -30,9 +30,6 @@ unset LD_LIBRARY_PATH
 
 export MANPATH=/usr/share/man:/opt/local/man
 
-alias cd='set dot=$cwd; /bin/cd'
-alias ,='set odot=$cwd; /bin/cd $dot; set dot=$odot; pwd'
-
 if [ -z "$TERM" -a $OSTYPE == linux ]; then
   alias ls='ls --color=tty'
   if [ $AIRCRAFT == "Lab_N600" ]; then
@@ -42,36 +39,36 @@ if [ -z "$TERM" -a $OSTYPE == linux ]; then
   fi
 fi
 
-alias ,='set odot=$cwd; chdir $dot; set dot=$odot; pwd'
+alias ,='cd $OLDPWD'
 alias ..='cd ..'
 alias clr='clear'
 alias cls='clear; ls'
 alias cp='cp -i'
 alias ctagit='ctags --extra=fq -eRo tags .'
-alias dir='ls -l \!* | more'
+function dir() { ls -l "$1" | more ;}
 alias empty='/bin/cp /dev/null'
-alias ff='find . -name \!* -print'
+function ff() { find . -name "$1" -print ;}
 alias ftp='ftp -i'
 alias gerp='grep'
 alias h=history
 alias hyper='ssh -Y ads@hyper.raf-guest.ucar.edu'
 alias herc='ssh -Y ads@hercules.ext-guest.ucar.edu'
-alias lman='nroff -man \!* | $PAGER'
-alias lookup='grep \!* /usr/dict/words'
-alias lpr4='expand -4 \!* | lpr'
+function lman() { nroff -man "$1" | $PAGER ;}
+function lookup() { grep "$1" /usr/dict/words ;}
+function lpr4() { expand -4 "$1" | lpr ;}
 alias maek='make'
 alias mkae='make'
 alias mv='mv -i'
 alias pgrnd='psql -h eol-rt-data.fl-ext.ucar.edu -d $PGGRND'
-alias psg='ps ax | grep'
+alias psg='ps ax | grep '
 # ps which lists threads and real-time priority
 alias psrt='ps -eLo pid,tid,class,rtprio,ni,pri,psr,pcpu,stat,wchan:14,comm'
-alias psrtg='psrt | grep'
+alias psrtg='psrt | grep '
 alias scons='nice scons -j4'
-alias socsh='source ~/.cshrc'
+alias socsh='source ~/.bashrc'
 alias svn='$HOME/bin/svn-ask-username.sh'
 alias svndiff='svn diff --diff-cmd /home/ads/bin/sh.svndiff'
-alias vh='$PAGER /usr/include/\!*.h'
+function vh() { $PAGER /usr/include/"$1".h ;}
 alias vhdr='$PAGER $JLOCAL/include/header.h'
 alias vi='vim'
 #alias vpn='/usr/local/bin/vpnclient connect ucar'
@@ -79,13 +76,13 @@ alias vpn='sudo vpnc /etc/vpnc/eol.conf'
 alias x='chmod +x'
 alias e='xemacs -fg LightBlue -bg Maroon -geometry 90x46 &'
 
-alias proj='cd ${PROJ_DIR}/\!*'
-alias fl='cd /var/www/html/flight_data/\!*'
-alias hp='cd /home/local/aeros/source/\!*'
-alias nids='cd /home/local/nidas/src/\!*'
-alias raf='cd /home/local/raf'
-alias dat='cd $DATA_DIR/\!*'
-alias rdat='cd $RAW_DATA_DIR/$PROJECT/\!*'
+function proj() { cd ${PROJ_DIR}/"$1" ;}
+function fl() { cd /var/www/html/flight_data/"$1" ;}
+function hp() { cd /home/local/aeros/source/"$1" ;}
+function nids() { cd /home/local/nidas/src/"$1" ;}
+function raf() { cd /home/local/raf"$1" ;}
+function dat() { cd $DATA_DIR/"$1" ;}
+function rdat() { cd $RAW_DATA_DIR/$PROJECT/"$1" ;}
 
 alias dumpiwg='sudo tcpdump -i eth0 -A -s 1024 udp and dst port 7071'
 
