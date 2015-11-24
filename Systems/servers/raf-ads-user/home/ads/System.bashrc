@@ -44,11 +44,11 @@ export HISTSIZE=1000			# big big history
 export HISTFILESIZE=10000		# big big history
 shopt -s histappend			# append to history, don't overwrite it
 
-alias help="man man"
-alias h='history | more '
-alias ..='set dot=$cwd ; cd ..'
-alias ,='set dot=$cwd ; cd $dot '
-function lss() { ls -Fal "$@" | sort -r +3 | more ;}
-function ll() { ls -la "$@" | more ;}
-function lg() { ls -lag "$@" | more ;}
-function lt() { ls -alt "$@" | more ;}
+alias help='man man'
+alias h='history | $PAGER'
+alias ..='cd ..'
+alias ,='cd $OLDPWD'
+function lss() { ls -Fal "$@" | sort -r +3 | $PAGER ;}
+function ll() { ls -la "$@" | $PAGER ;}
+function lg() { ls -lag "$@" | $PAGER ;}
+function lt() { ls -alt "$@" | $PAGER ;}

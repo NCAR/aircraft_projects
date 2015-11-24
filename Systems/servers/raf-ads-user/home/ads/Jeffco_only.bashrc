@@ -51,6 +51,6 @@ alias view="vi -R"
 
 export PATH=$PATH:$JLOCAL/scripts
 
-function hl() { set dot=$cwd ; cd /home/local/"$1" ;}
-function ninc() { set dot=$cwd ; cd /home/local/raf/nimbus/include/"$1" ;}
-function nsrc() { set dot=$cwd ; cd /home/local/raf/nimbus/src/"$1" ;}
+function hl() { cd /home/local/"$1" ;}
+function ninc() { cd /home/local/raf/nimbus/include/"$1" ;}
+function nsrc() { cd /home/local/raf/nimbus/src/"$1" ;}
