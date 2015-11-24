@@ -13,9 +13,9 @@
 
 <sensorcatalog>
     <sensor ID="IRIG" class="raf.IRIGSensor">
-        <sample id="1" process="false">
-            <variable name="Clock" units="msec"
-                    longname="milliseconds since 1970 Jan 01 00:00 +0"/>
+        <sample id="1">
+            <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
+            <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
         </sample>
     </sensor>
 
@@ -523,7 +523,7 @@
     </server>
 
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
@@ -591,7 +591,7 @@
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/ttyS5" id="110">
@@ -680,7 +680,7 @@ Engineering unit calibrations for RTFR, RTHR1, RTHR2 are based on 19 Mar 2009 ha
     </dsm>
    
     <dsm name="dsm313" location="MTP Rack R-4" id="13" rserialPort="30002" derivedData="sock::58800">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="130" suffix="_VXL"/>
   
@@ -806,7 +806,7 @@ Engineering unit calibrations for RTFR, RTHR1, RTHR2 are based on 19 Mar 2009 ha
     </dsm>
 
     <dsm name="dsm312" location="TDL Rack L-1" id="12" rserialPort="30002">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_312"/>
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
         <sensor IDREF="NOAAUCATS" id="120" suffix="_GMD"/>
@@ -844,7 +844,7 @@ Engineering unit calibrations for RTFR, RTHR1, RTHR2 are based on 19 Mar 2009 ha
     </dsm>
 
     <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::58800">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_IRIG"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="CDP016"/>
@@ -880,7 +880,7 @@ Engineering unit calibrations for RTFR, RTHR1, RTHR2 are based on 19 Mar 2009 ha
     </dsm>
 
     <dsm name="dsmRWO" location="RWO" id="47" rserialPort="30002">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="RWO"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
 
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <parameter name="rate" value="500" type="int"/>
