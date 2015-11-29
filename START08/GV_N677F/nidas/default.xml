@@ -168,8 +168,7 @@
         <message separator="\xaa\x44\x12" position="beg" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="Garmin_GPS" class="GPS_NMEA_Serial"
-        baud="4800" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="Garmin_GPS" class="GPS_NMEA_Serial" baud="4800" parity="none" databits="8" stopbits="1">
 
         <!-- GGA record -->
         <sample id="1" rate="1">
@@ -198,9 +197,8 @@
         <message separator="\n" position="end" length="0"/> 
     </serialSensor>
 
-    <serialSensor ID="DewPointer" class="DSMSerialSensor"
-        baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="%*d,%f" rate="1"/>
+    <serialSensor ID="DewPointer" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" scanfFormat="%f,%f,%*f,%*f,%f" rate="1"/>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
@@ -525,39 +523,10 @@
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
 
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
-          <sample id="0314" rate="25">
-            <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
-              <linear slope="1.0" intercept="0.0" units="degree_T"/>
-            </variable>
-          </sample>
-          <sample id="0324" rate="50">
-            <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.245" units="degree"/>
-            </variable>
-          </sample>
-        </arincSensor>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2">
-          <sample id="0314" rate="25">
-            <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
-              <linear slope="1.0" intercept="0.24" units="degree_T"/>
-            </variable>
-          </sample>
-          <sample id="0324" rate="50">
-            <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.04" units="degree"/>
-            </variable>
-          </sample>
-        </arincSensor>
-
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2"/>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A">
-          <sample id="0165" rate="1">
-            <variable name="VSPD" units="m/s" longname="Avionics GPS Vertical Velocity">
-              <linear slope="1.0" intercept="-0.06" units="m/s"/>
-            </variable>
-          </sample>
-        </arincSensor>
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A"/>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/dsmser0" id="110">
 	    <sample id="1">
@@ -567,17 +536,17 @@
 
         <serialSensor IDREF="DewPointer" devicename="/dev/dsmser1" id="120" suffix="_DPL">
 	    <sample id="1">
-                <variable name="MIRRTMP" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left">
-                    <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
-                </variable>
+                <variable name="BALNC" units="unk" longname="Dew/Frost Point Balance, Fuselage Left"/>
+                <variable name="MIRRTMP" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Left"/>
+                <variable name="TEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Left"/>
 	    </sample>
         </serialSensor>
 
         <serialSensor IDREF="DewPointer" devicename="/dev/dsmser2" id="130" suffix="_DPR">
 	    <sample id="1">
-                <variable name="MIRRTMP" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right">
-                    <linear slope="1.02906" intercept="-0.0457" units="deg_C"/>
-                </variable>
+                <variable name="BALNC" units="unk" longname="Dew/Frost Point Balance, Fuselage Right"/>
+                <variable name="MIRRTMP" units="deg_C" longname="Raw Dew/Frost Point Temperature, Fuselage Right"/>
+                <variable name="TEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Right"/>
 	    </sample>
         </serialSensor>
 
@@ -596,36 +565,27 @@
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/ttyS5" id="110">
             <sample id="1">
-                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage">
-                <linear slope="1.0014" intercept="-0.56122" units="hPa"/>
-                </variable>
+                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/ttyS6" id="112">
             <sample id="1">
-                <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome">
-                <linear slope="1.0006" intercept="-0.46287" units="hPa"/>
-                </variable>
+                <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome"/>
             </sample>
         </serialSensor>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/ttyS7" id="114">
             <sample id="1">
-                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome">
-                <linear slope="1.0004" intercept="-0.75019" units="hPa"/>
-                </variable>
+                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome"/>
             </sample>
         </serialSensor>
 
-        <serialSensor IDREF="Mensor_6100"
-                devicename="/dev/ttyS8" id="116">
+        <serialSensor IDREF="Mensor_6100" devicename="/dev/ttyS8" id="116">
             <sample id="1">
-                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome">
-                <linear slope="1.0003" intercept="-0.50418" units="hPa"/>
-                </variable>
+                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome"/>
             </sample>
         </serialSensor>
 
@@ -683,9 +643,7 @@ Engineering unit calibrations for RTFR, RTHR1, RTHR2 are based on 19 Mar 2009 ha
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_313"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="130" suffix="_VXL"/>
-  
         <serialSensor IDREF="NOAA_CSD_O3" devicename="/dev/ttyS6" id="140" suffix="_CSD"/>
-  
         <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS7" id="150" suffix="_WCN"/>
 
 
