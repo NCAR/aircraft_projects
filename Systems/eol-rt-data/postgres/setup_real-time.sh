@@ -33,4 +33,4 @@ if [ -z "$AIRCRAFT" ]
     exit 1
 fi
 
-cat real-time-init.sql | sed s/PROJECT/$PROJECT/ | sed s/FLIGHTNUM/$FLIGHT/ | sed s/PLATFORM/$AIRCRAFT/ | psql -h $HOST -U data -d real-time-$AIRCRAFT
+cat real-time-init.sql | sed s/PROJECT/$PROJECT/ | sed s/FLIGHTNUM/$FLIGHT/ | sed s/PLATFORM/$AIRCRAFT/ | psql -h $HOST -U ads -d real-time-$AIRCRAFT
