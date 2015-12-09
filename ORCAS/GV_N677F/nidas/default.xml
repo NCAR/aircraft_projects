@@ -1217,6 +1217,12 @@
         <variable longname="NOAA PANTHER Methane" name="CH4" units="ppbv"/>
       </sample>
     </sensor>
+    <sensor ID="AWAS" class="UDPSocketSensor" devicename="usock::30131" suffix="_AWAS">
+        <sample id="1" rate="1" scanfFormat="AWAS,%*dT%*d,%f,%f">
+            <variable longname="AWAS Sheath Flow" name="AWAS1" units="L/min"/>
+            <variable longname="AWAS DMA Temperature" name="AWAS2" units="deg_C"/>
+        </sample>
+    </sensor>
     <sensor ID="SMPS" class="UDPSocketSensor" devicename="usock::30104" suffix="_SMPS">
         <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
@@ -1738,6 +1744,7 @@
       <sensor IDREF="SMPS" devicename="usock::30104" id="180" suffix="_SMPS"/>
       <sensor IDREF="MTP" devicename="usock::30101" id="300" suffix="_MTP"/>
       <sensor IDREF="GHUHSAS" devicename="usock::30117" id="400" suffix="_USAS"/>
+      <sensor IDREF="AWAS" devicename="usock::30131" id="500" suffix="_AWAS"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
