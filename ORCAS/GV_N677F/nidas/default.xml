@@ -1737,14 +1737,8 @@
     </server>
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
-      <sensor IDREF="ACDFO3" devicename="usock::30107" id="2700" suffix="_ACD"/>
-      <sensor IDREF="NOAAPANTHER" devicename="usock::30103" id="120" suffix="_PAN"/>
-      <sensor IDREF="NOAASP2" devicename="usock::30105" id="140" suffix="_SP2"/>
-      <sensor IDREF="NOAAUCATS" devicename="usock::30102" id="160" suffix="_GMD"/>
-      <sensor IDREF="SMPS" devicename="usock::30104" id="180" suffix="_SMPS"/>
-      <sensor IDREF="MTP" devicename="usock::30101" id="300" suffix="_MTP"/>
-      <sensor IDREF="GHUHSAS" devicename="usock::30117" id="400" suffix="_USAS"/>
-      <sensor IDREF="AWAS" devicename="usock::30131" id="500" suffix="_AWAS"/>
+      <sensor IDREF="TOGA" devicename="usock::30120" id="500" suffix="_TOGA"/>
+      <sensor IDREF="AWAS" devicename="usock::30131" id="600" suffix="_AWAS"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -1754,6 +1748,9 @@
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
       <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
       <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A2"/>
+      <serialSensor IDREF="UHSAS" devicename="/dev/ttyS4" id="600" suffix="_RWO">
+        <parameter name="SerialNumber" type="string" value="UHSAS001"/>
+      </serialSensor>
       <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="160"/>
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="170"/>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS8" id="200" suffix="_DPR"/>
