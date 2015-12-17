@@ -1217,8 +1217,21 @@
         <variable longname="NOAA PANTHER Methane" name="CH4" units="ppbv"/>
       </sample>
     </sensor>
+
+    <sensor ID="MEDUSA" class="UDPSocketSensor" devicename="usock::30130" suffix="_MED">
+        <sample id="1" rate="1" scanfFormat="MED,,%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="MEDUSA Channel 1" name="CHAN1" units="torr"/>
+            <variable longname="MEDUSA Channel 2" name="CHAN2" units="torr"/>
+            <variable longname="MEDUSA Channel 3" name="CHAN3" units="torr"/>
+            <variable longname="MEDUSA Channel 4" name="CHAN4" units="sccm"/>
+            <variable longname="MEDUSA Channel 5" name="CHAN5" units="ppm"/>
+            <variable longname="MEDUSA Channel 6" name="CHAN6" units="V"/>
+            <variable longname="MEDUSA Channel 7" name="CHAN7" units="V"/>
+        </sample>
+    </sensor>
+
     <sensor ID="AWAS" class="UDPSocketSensor" devicename="usock::30131" suffix="_AWAS">
-        <sample id="1" rate="1" scanfFormat="AWAS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <sample id="1" rate="1" scanfFormat="AWAS_STATUS,%*d/%*d/%*dT%*d:%*d:%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="AWAS Can Number" name="CANNUM" units="number"/>
             <variable longname="AWAS Manifold Pressure" name="MANP" units="psia"/>
             <variable longname="AWAS Pneumatic Pressure" name="PNEUP" units="psia"/>
@@ -1753,6 +1766,7 @@
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="TOGA" devicename="usock::30120" id="500" suffix="_TOGA"/>
+      <sensor IDREF="MEDUSA" devicename="usock::30130" id="550" suffix="_MED"/>
       <sensor IDREF="AWAS" devicename="usock::30131" id="600" suffix="_AWAS"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
