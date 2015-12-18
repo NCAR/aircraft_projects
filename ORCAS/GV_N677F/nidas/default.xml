@@ -1598,6 +1598,17 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+
+    <serialSensor ID="PIC2401_CO2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_NOAA">
+      <sample id="1" rate="1" scanfFormat="%*f %*f %*f %*f %*f %*f %*f %*f %*f %*f %f %*f %f %*f %f %f %*f %*f %*f %*f %*f">
+        <variable longname="Picarro Carbon Monoxied Mixing Ratio" name="CO" units="ppmv"/> <!-- 11-->
+        <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/> <!-- 13-->
+        <variable longname="Picarro Methane Mixing Ratio" name="CH4" units="ppmv"/> <!-- 15-->
+        <variable longname="Picarro H2O Mixing Ratio" name="MR" units="%"/> <!-- 16-->
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
+
     <serialSensor ID="PIC_H2O" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PICCU">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %f %*d %*f">
         <variable longname="Picarro Water Mixing Ratio" name="H2O" units="ppmv"/>
@@ -2042,8 +2053,14 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
+        <sample id="1" rate="100">
+          <variable count="true" longname="TSI CN Counter Output" name="CNTS" units="count"/>
+        </sample>
+      </sensor>
       <serialSensor IDREF="QCLS" devicename="/dev/ttyS5" id="300"/>
       <serialSensor IDREF="VCSEL" devicename="/dev/ttyS6" id="500" suffix="_VXL"/>
+      <serialSensor IDREF="PIC2401_CO2" devicename="/dev/ttyS7" id="600" suffix="_NOAA"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="700">
         <calfile file="A2D011.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
