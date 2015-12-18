@@ -1,0 +1,15 @@
+#!/bin/csh
+
+#/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf01/forward/" "-proj:ICE-T" "-s:5"
+#/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf02/forward/" "-proj:ICE-T" "-s:5"
+#/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf03/forward/" "-proj:ICE-T" "-s:5"
+/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf04/forward/" "-proj:ICE-T" "-s:5"
+/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf05/forward/" "-proj:ICE-T" "-s:5"
+/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf06/forward/" "-proj:ICE-T" "-s:5"
+/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf07/forward/" "-proj:ICE-T" "-s:5"
+/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf08/forward/" "-proj:ICE-T" "-s:5"
+/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf09/forward/" "-proj:ICE-T" "-s:5"
+/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf10/forward/" "-proj:ICE-T" "-s:5"
+/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf11/forward/" "-proj:ICE-T" "-s:5"
+/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf12/forward/" "-proj:ICE-T" "-s:5"
+/net/work/bin/converters/ImageFilter/Image_Filter.pl "/scr/raf/Raw_Data/ICE-T/Cameras/flight_number_rf13/forward/" "-proj:ICE-T" "-s:5"

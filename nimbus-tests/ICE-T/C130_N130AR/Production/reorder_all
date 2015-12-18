@@ -1,0 +1,15 @@
+#!/bin/csh
+
+set user = `whoami`
+if ($user == 'nimbus') then
+        cd /scr/raf/local_productiondata
+else
+        cd ${DATA_DIR}
+endif
+
+foreach file ( ICE-T?f??.nc )
+  echo $file
+  ncReorder $file temp_ice.nc
+  mv -f temp_ice.nc $file
+  chmod g+w $file
+end
