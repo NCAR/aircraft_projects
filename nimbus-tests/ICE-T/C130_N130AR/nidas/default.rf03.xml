@@ -830,7 +830,7 @@
         <prompt rate="5" string="SIG?\r"/>
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
-    <sensor ID="ACDFO3" class="raf.UDPSocketSensor" devicename="inet::20000">
+    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="inet::20000">
         <sample id="1" rate="10" scanfFormat="O3,%f">
             <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
         </sample>
@@ -923,7 +923,8 @@
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-    <serialSensor ID="SP2-ref" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+<!--
+    <serialSensor ID="SP2" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%f %f %f">
             <variable longname="SP2 Concentration Incand Particles" name="CIP" units="#/cm3"/>
             <variable longname="SP2 YAG Power" name="YAGP" units="V"/>
@@ -931,6 +932,7 @@
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+-->
     <serialSensor ID="TDLH2O" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="20" scanfFormat="%*f %*f %*f %*f %*f %*f %f %f %f %f %f %f %f %f">
             <variable longname="2f Signal Amplitude, TDL Short Path" name="PP2FS" units="count"/>
@@ -1246,13 +1248,13 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="199.3 188.86 0.0034" units="hPa"/>
           </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="RTHR1" units="V">
+          <variable longname="Recovery Temperature, Deiced Right, HARCO" name="RTH1" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly coefs="-93.032 28.854 -0.0988" units="deg_C"/>
           </variable>
-          <variable longname="Total Temperature, Deiced Right, HARCO" name="RTHR2" units="V">
+          <variable longname="Recovery Temperature, Deiced Right, HARCO" name="RTH2" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
@@ -1638,7 +1640,7 @@
     </dsm>
     <dsm id="35" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="ACDFO3" devicename="inet::20000" id="1000" suffix="_ACD"/>
-      <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::41003" id="1600">
+      <sensor ID="PARCELS" class="UDPSocketSensor" devicename="inet::41003" id="1600">
 
 <!--
            *******   DO NOT uncomment this  ************
@@ -1648,7 +1650,7 @@
         </sample>
         -->
       </sensor>
-      <sensor ID="GHUHSAS" class="raf.UDPSocketSensor" devicename="inet::30033" id="1700" suffix="_GH">
+      <sensor ID="GHUHSAS" class="UDPSocketSensor" devicename="inet::30033" id="1700" suffix="_GH">
         <parameter name="SerialNumber" type="string" value="UHSAS003"/>
         <parameter name="sendInit" type="bool" value="false"/>
 
@@ -1675,7 +1677,7 @@
             <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
         </sample>
       </sensor>
-      <sensor ID="SP2" class="raf.UDPSocketSensor" devicename="inet::30034" id="1800" suffix="_SP2">
+      <sensor ID="SP2" class="UDPSocketSensor" devicename="inet::30034" id="1800" suffix="_SP2">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f">
             <variable longname="SP2 Sample Flow Rate" name="FS2" units="vccm"/>
             <variable longname="SP2 Black Carbon" name="BC" units="#/cc"/>

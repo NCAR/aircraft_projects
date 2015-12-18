@@ -829,7 +829,7 @@
         <prompt rate="5" string="SIG?\r"/>
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
-    <sensor ID="ACDFO3" class="raf.UDPSocketSensor" devicename="inet::20000">
+    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="inet::20000">
         <sample id="1" rate="10" scanfFormat="O3,%f">
             <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
         </sample>
@@ -922,6 +922,7 @@
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+<!--
     <serialSensor ID="SP2" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%f %f %f">
             <variable longname="SP2 Concentration Incand Particles" name="CIP" units="#/cm3"/>
@@ -930,6 +931,7 @@
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+-->
     <serialSensor ID="TDLH2O" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="20" scanfFormat="%*f %*f %*f %*f %*f %*f %f %f %f %f %f %f %f %f">
             <variable longname="2f Signal Amplitude, TDL Short Path" name="PP2FS" units="count"/>
@@ -1613,7 +1615,7 @@
       <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS6" id="900" suffix="_CLHWCN"/>
       <serialSensor IDREF="Butanol_CN_Counter_3025" devicename="/dev/ttyS5" id="1100" suffix="_CLBSI3025"/>
       <serialSensor IDREF="Butanol_CN_Counter" devicename="/dev/ttyS7" id="1300" suffix="_CLSMAI3760a"/>
-      <socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="1500" timeout="10">
+      <serialSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="1500" timeout="10">
         <sample id="1" rate="10">
           <variable length="1" longname="Pressure Scanner dynamic pressure, port 0" name="PSCAN_0" units="hPa"/>
           <variable length="1" longname="Pressure Scanner dynamic pressure, port 1" name="PSCAN_1" units="hPa"/>
@@ -1633,11 +1635,11 @@
           <variable length="1" longname="Pressure Scanner dynamic pressure, port 15" name="PSCAN_15" units="hPa"/>
         </sample>
         <message length="70" position="beg" separator="\x01"/>
-      </socketSensor>
+      </serialSensor>
     </dsm>
     <dsm id="35" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="ACDFO3" devicename="inet::20000" id="1000" suffix="_ACD"/>
-      <sensor ID="PARCELS" class="raf.UDPSocketSensor" devicename="inet::41003" id="1600">
+      <sensor ID="PARCELS" class="UDPSocketSensor" devicename="inet::41003" id="1600">
 
 <!--
            *******   DO NOT uncomment this  ************
@@ -1647,7 +1649,7 @@
         </sample>
         -->
       </sensor>
-      <sensor ID="GHUHSAS" class="raf.UDPSocketSensor" devicename="inet::30033" id="1700" suffix="_GH">
+      <sensor ID="GHUHSAS" class="UDPSocketSensor" devicename="inet::30033" id="1700" suffix="_GH">
         <parameter name="SerialNumber" type="string" value="UHSAS003"/>
         <parameter name="sendInit" type="bool" value="false"/>
 
@@ -1674,7 +1676,7 @@
             <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
         </sample>
       </sensor>
-      <sensor ID="SP2" class="raf.UDPSocketSensor" devicename="inet::30034" id="1800" suffix="_SP2">
+      <sensor ID="SP2" class="UDPSocketSensor" devicename="inet::30034" id="1800" suffix="_SP2">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f">
             <variable longname="SP2 Sample Flow Rate" name="FS2" units="vccm"/>
             <variable longname="SP2 Black Carbon" name="BC" units="#/cc"/>
@@ -1841,7 +1843,7 @@
        <serialSensor IDREF="PIC_H2O" devicename="/dev/ttyS8" id="70" suffix="_CVIP"/>
 
 <!-- input from LabView via socket -->
-        <socketSensor class="raf.CVI_LV_Input" devicename="inet::30006" id="60">
+        <serialSensor class="raf.CVI_LV_Input" devicename="inet::30006" id="60">
 
 <!-- 0.000,0.000,0.000,0.000,0.000,0,0,0,0,0,0,0,10.000,16784.917,8.434,3.668,5.609\r\n -->
             <sample id="1" rate="1" scanfFormat="%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%f,%f,%f,%f,%f">
@@ -1868,7 +1870,7 @@
                 <variable longname="CVI cloud condensed water content" name="CVCWC" units="g/m^3"/>
             </sample>
             <message length="0" position="end" separator="\n"/>
-        </socketSensor>
+        </serialSensor>
         <output class="RawSampleOutputStream">
             <socket port="30000" type="server"/>
         </output>
