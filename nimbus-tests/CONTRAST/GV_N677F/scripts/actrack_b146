@@ -1,0 +1,45 @@
+#! /bin/sh
+
+. /etc/init.d/functions
+
+prog=/home/local/raf/kml_tools/acTrack2kml-contrast/acTrack2kml
+pid=`pidof -s $prog`
+
+start()
+{
+    if [ -n "$pid" ]; then
+	echo "$prog already running, pid=$pid"
+    else
+	nohup $prog -p B146 -o -v >& /tmp/actrack_b146.log &
+    fi
+}
+
+stop()
+{
+    killproc $prog
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+	if [ -n "$pid" ]; then
+	    ps ufp $pid
+	    tail -20 /tmp/actrack_b146.log
+	else
+	    echo "Not running."
+	fi
+	;;
+  restart)
+	stop
+	start
+	;;
+  *)
+	echo $"Usage: $0 {start|stop|status|restart}"
+	exit 2
+esac

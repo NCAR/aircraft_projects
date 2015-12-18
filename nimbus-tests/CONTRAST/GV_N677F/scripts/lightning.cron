@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#
+# copy world file (tmp_light.gfw) to /tmp
+#
+
+logfile="/tmp/osm_images.log"
+echo "" > $logfile 
+
+# get latest conus radar from NWS
+/usr/bin/curl -s http://www.soest.hawaii.edu/met/Students/ter/contrast/latest_lightning.png -o /tmp/tmp_light.png >> $logfile 2>&1
+
+convert -transparent black -sample 100% /tmp/tmp_light.png -background black -flatten +matte /tmp/tmp_light.gif
+
+# convert latest conus light from rectangular to sm
+gdalwarp -rn -s_srs EPSG:4326 -t_srs '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs' /tmp/tmp_light.gif /tmp/tmp_light.tiff >> $logfile 2>&1
+
+# convert to png, and add transparency back in
+/usr/bin/convert -transparent black /tmp/tmp_light.tiff /tmp/tmp_light.png >> $logfile 2>&1
+
+# copy to webdir and cleanup.
+/bin/cp /tmp/tmp_light.png /net/www/docs/flight_data/GV/images/lightning.png >> $logfile 2>&1
+/bin/rm -f /tmp/tmp_light.{gif,tiff,png} >> $logfile 2>&1

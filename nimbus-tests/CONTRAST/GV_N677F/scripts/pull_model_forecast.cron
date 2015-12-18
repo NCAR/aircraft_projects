@@ -1,0 +1,26 @@
+#!/bin/sh -f
+
+# Needs to operate on-board and in-house.  cd to appropriate directory.
+#
+cd_flight_data_images()
+{
+    if expr `hostname` : acserver ; then
+	cd /var/www/html/flight_data/images/
+    else
+	cd /net/www/docs/flight_data/GV/images/
+    fi
+}
+
+get_image() # url-directory image
+{
+    url="$1"
+    image="$2"
+    # wget "$url/$image" -O "${image}.tmp" && mv -f "${image}.tmp" "$image"
+    wget -N "$url/$image"
+}
+
+cd_flight_data_images
+url="http://www.acd.ucar.edu/~chomeyer/camchem"
+for chem in CO O3 BrO CHBr3 ; do
+    get_image "$url" ${chem}.png
+done

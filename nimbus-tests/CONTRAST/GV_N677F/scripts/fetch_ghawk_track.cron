@@ -1,0 +1,12 @@
+#!/bin/csh -f
+
+# Needs to operate on-board and in-house.  cd to appropriate directory.
+#
+expr `hostname` : acserver
+if ($status) then
+  cd /net/www/docs/flight_data/GV/GE/
+else
+  cd /var/www/html/flight_data/GE/
+endif
+
+wget http://asp-interface-2.arc.nasa.gov/cached_data/N872NA_CurrentTrack.kml -O ghawk.kml

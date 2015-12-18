@@ -1,0 +1,23 @@
+#! /bin/sh
+
+cd_flight_data_images()
+{
+    if expr `hostname` : acserver ; then
+	cd /var/www/html/flight_data/images/
+    else
+	cd /net/www/docs/flight_data/GV/images/
+    fi
+}
+
+get_image() # url-directory image
+{
+    url="$1"
+    image="$2"
+    # wget "$url/$image" -O "${image}.tmp" && mv -f "${image}.tmp" "$image"
+    wget -N "$url/$image"
+}
+
+
+cd /var/www/html/flight_data/images
+get_image http://www.eol.ucar.edu/flight_data/GV/images lightning.png
+

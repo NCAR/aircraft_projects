@@ -1,0 +1,10 @@
+#!/bin/csh
+
+cd ${DAT}
+
+foreach file ( CONTRAST?f*.nc )
+  echo $file
+  ncReorder $file temp1.nc
+  mv -f temp1.nc $file
+  chmod g+w $file
+end
