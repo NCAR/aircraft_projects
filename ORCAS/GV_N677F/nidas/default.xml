@@ -1599,12 +1599,33 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
-    <serialSensor ID="PIC2401_CO2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_NOAA">
-      <sample id="1" rate="1" scanfFormat="%*f %*f %*f %*f %*f %*f %*f %*f %*f %*f %f %*f %f %*f %f %f %*f %*f %*f %*f %*f">
-        <variable longname="Picarro Carbon Monoxied Mixing Ratio" name="CO" units="ppmv"/> <!-- 11-->
-        <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/> <!-- 13-->
-        <variable longname="Picarro Methane Mixing Ratio" name="CH4" units="ppmv"/> <!-- 15-->
-        <variable longname="Picarro H2O Mixing Ratio" name="MR" units="%"/> <!-- 16-->
+    <serialSensor ID="PIC2401_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_NOAA">
+      <sample id="1" rate="1" scanfFormat="%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
+        <variable longname="Picarro Epoch Time"		name="EPOCH" units="seconds"/>
+        <variable longname="Picarro Date"		name="DATE" units=""/>
+        <variable longname="Picarro Time"		name="TIME" units=""/>
+        <variable longname="Picarro Ambient Pressure"	name="PS" units="torr"/>
+        <variable longname="Picarro Cavity Pressure"	name="CAVP" units="torr"/>
+        <variable longname="Picarro Cavity Temperature"	name="CAVT" units="deg_C"/>
+        <variable longname="Picarro Das Temperature"	name="DAST" units="deg_C"/>
+        <variable longname="Picarro Etalon Temperature" name="ETALONT" units="deg_C"/>
+        <variable longname="Picarro Warm Box Temperature" name="WBOXT" units="deg_C"/>
+        <variable longname="Picarro Species"		name="SPECIES" units=""/>
+        <variable longname="Picarro MPV Position"	name="MPVPOS" units=""/>
+        <variable longname="Picarro Inlet Valve"	name="INVLV" units=""/>
+        <variable longname="Picarro Outlet Valve"	name="OUTVLV" units=""/>
+        <variable longname="Picarro Carbon Monoxied Mixing Ratio"	name="CO" units="ppmv"/>
+        <variable longname="Picarro Carbon Dioxide Mixing Ratio"	name="CO2" units="ppmv"/>
+        <variable longname="Picarro Carbon Monoxied Mixing Ratio, Dry"	name="CODRY" units="ppmv"/>
+        <variable longname="Picarro Carbon Dioxide Mixing Ratio, Dry"	name="CO2DRY" units="ppmv"/>
+        <variable longname="Picarro Methane Mixing Ratio"		name="CH4" units="ppmv"/>
+        <variable longname="Picarro Methane Mixing Ratio, Dry"		name="CH4DRY" units="ppmv"/>
+        <variable longname="Picarro H2O Mixing Ratio"			name="H2O" units="%"/>
+        <variable longname="Picarro H2O Raw Mixing Ratio"		name="H2ORAW" units="%"/>
+        <variable longname="Picarro H2O B Mixing Ratio"			name="H2OB" units="%"/>
+        <variable longname="Picarro Peak 14"				name="PEAK14" units=""/>
+        <variable longname="Picarro Peak 84, Raw"			name="PEAK84" units=""/>
+        <variable longname="Picarro Flow"				name="FLOW" units="sccm"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
