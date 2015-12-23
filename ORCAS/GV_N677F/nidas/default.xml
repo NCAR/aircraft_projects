@@ -673,6 +673,14 @@
             <variable longname="NIRZ 2000 nm Counts" name="NIRZ2000" units="count"/>
         </sample>
     </sensor>
+    <sensor ID="CUTWC" class="UDPSocketSensor" devicename="usock::30129" suffix="_CLH">
+      <sample id="1" rate="1" scanfFormat="CUTWC,%*f,%f,%f,%f,%f">
+        <variable longname="CU Total Water Maximum Detector Voltage" name="RENDPT" units="V"/>
+        <variable longname="CU Total Water Cell Temperature" name="TEMP" units="deg_C"/>
+        <variable longname="CU Total Water Cell Pressure" name="PRESS" units="hPa"/>
+        <variable longname="CU Total Water Uncorrected VMR" name="VMR" units="ppmv"/>
+      </sample>
+    </sensor>
     <sensor ID="TOGA" class="UDPSocketSensor" devicename="usock::30120" suffix="_TOGA">
       <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="TOGA HCN" name="HCN" units="pptv"/>
@@ -1798,6 +1806,7 @@
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="TOGA" devicename="usock::30120" id="500" suffix="_TOGA"/>
+      <sensor IDREF="CUTWC" devicename="usock::30129" id="660" suffix="_CLH"/>
       <sensor IDREF="MEDUSA" devicename="usock::30130" id="550" suffix="_MED"/>
       <sensor IDREF="AWAS" devicename="usock::30131" id="600" suffix="_AWAS"/>
       <output class="RawSampleOutputStream">
