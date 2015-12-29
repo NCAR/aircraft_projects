@@ -20,7 +20,7 @@
 #    subnets can have restricted access to the internet.
 #    One can control which internal hosts can connect, which
 #    services (ports) and where they can connect to.
-#    The idea here is to save $$ and control bandwidth on the satcom. 
+#    The idea here is to save $$ and control bandwidth on the satcom.
 # 5. it can provide port forwarding (DNAT), to allow outside
 #    systems to connect to specific systems on the internal
 #    subnets using a special port (an outside user could access
@@ -31,7 +31,7 @@
 # Running this script sets the current iptables firewall rules, and
 # saves them the /etc/sysconfig/iptables, so they will be
 # in effect after the next boot.
-#		
+#
 # Much of this was taken from
 #	http://www.cs.princeton.edu/~jns/security/iptables
 # a few years back.
@@ -41,7 +41,7 @@
 
 # set -x
 
-# quit immediately on error, otherwise error messages tend to be missed                 
+# quit immediately on error, otherwise error messages tend to be missed
 set -e
 # but return firewall to open state on error (in case one is testing from off site)
 trap "{ /etc/init.d/iptables stop; }" ERR
@@ -97,7 +97,7 @@ UNSAFE_EXT_IFS=(${CHEAP_UNSAFE_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]})
 EXT_IFS=(${CHEAP_UNSAFE_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]} ${SAFE_EXT_IFS[*]})
 
 # Set the interfaces on which IP masquerading should be enabled.  The SATCOM
-# interface does not need it when there is a PPPoE router doing it, while the 
+# interface does not need it when there is a PPPoE router doing it, while the
 # other external interfaces do, assuming forwarding is enabled.
 MASQUERADE_IFS=(${SAFE_EXT_FS[*]})
 
@@ -116,7 +116,7 @@ UCAR_128=128.117.0.0/16
 PRIV_HOSTS_DISP=192.168.84.0/26
 PRIV_HOSTS_DATA=192.168.184.0/26
 
-# Add udp ports to forward from external interfaces 
+# Add udp ports to forward from external interfaces
 # (both UNSAFE_EXT_IFS and SAFE_EXT_IFS) to machines on
 # the internal interfaces (INT_IFS)
 # UDP ports are often blocked by firewalls. According to David Mitchell,
@@ -252,6 +252,10 @@ iptables -P FORWARD DROP
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A OUTPUT -o lo -j ACCEPT
 
+# allow anything on docker0, for Docker, Field-Catalog apps
+iptables -A INPUT -i docker0 -j ACCEPT
+iptables -A OUTPUT -o docker0 -j ACCEPT
+
 # allow anything on trusted interfaces
 for iif in ${INT_IFS[*]} ${SAFE_EXT_IFS[*]}; do
     iptables -A INPUT -i $iif -j ACCEPT
@@ -259,7 +263,7 @@ for iif in ${INT_IFS[*]} ${SAFE_EXT_IFS[*]}; do
 done
 
 # Allow anything between the server and the router network.  I think
-# this still prevents other internal hosts from reaching the router (ie, 
+# this still prevents other internal hosts from reaching the router (ie,
 # the web admin interface), but that should be tested, assuming that's
 # desirable.
 iptables -A INPUT -s $ROUTER_NET -j ACCEPT
@@ -454,7 +458,7 @@ filter_ip()
     # good reference:
     #	http://www.sns.ias.edu/~jns/security/iptables/iptables_conntrack.html
     # starting ftp connection
-    iptables -A OUTPUT -o $eif -p tcp --dport 21 -m state --state NEW -j ACCEPT 
+    iptables -A OUTPUT -o $eif -p tcp --dport 21 -m state --state NEW -j ACCEPT
     if [ $forward -eq 1 ]; then
 	iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DISP -p tcp --dport 21 -m state --state NEW -j ACCEPT
 	iptables -A FORWARD -o $eif -s $PRIV_HOSTS_DATA -p tcp --dport 21 -m state --state NEW -j ACCEPT
@@ -487,12 +491,12 @@ filter_ip()
 
     # Outgoing postgres
     iptables -A OUTPUT -o $eif -d $UCAR_128 -p tcp --dport postgres -j ACCEPT
-  
+
     for host in ${LDM_IN_OUT[*]}; do
 	iptables -A INPUT -i $eif -s $host -p tcp --dport $ldmport -m state --state NEW -j ACCEPT
 	iptables -A OUTPUT -o $eif -d $host -p tcp --dport $ldmport -m state --state NEW -j ACCEPT
     done
-  
+
     # outgoing imap
     iptables -A OUTPUT -o $eif -p tcp --dport imap -m state --state NEW -j ACCEPT
     if [ $forward -eq 1 ]; then
@@ -651,11 +655,11 @@ filter_ip()
     # The reply to a traceroute is an icmp time-exceeded which is
     # allowed by icmp-in
     iptables -A OUTPUT -o $eif -p udp --dport $TR_DEST_PORTS \
-	-m state --state NEW -j ACCEPT 
+	-m state --state NEW -j ACCEPT
 
     # Accept incoming traceroutes from anywhere.
     iptables -A INPUT -i $eif -p udp --dport $TR_DEST_PORTS \
-	-m state --state NEW -j ACCEPT 
+	-m state --state NEW -j ACCEPT
 
     # Allow UDP data feed to UCAR
     iptables -A OUTPUT -o $eif -p udp --dport 31007 -d $UCAR_128 -j ACCEPT
