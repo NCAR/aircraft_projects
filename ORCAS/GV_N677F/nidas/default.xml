@@ -1225,7 +1225,6 @@
         <variable longname="NOAA PANTHER Methane" name="CH4" units="ppbv"/>
       </sample>
     </sensor>
-
     <sensor ID="MEDUSA" class="UDPSocketSensor" devicename="usock::30130" suffix="_MED">
         <sample id="1" rate="1" scanfFormat="MED,,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="MEDUSA Channel 1" name="CHAN1" units="torr"/>
@@ -1237,7 +1236,6 @@
             <variable longname="MEDUSA Channel 7" name="CHAN7" units="V"/>
         </sample>
     </sensor>
-
     <sensor ID="AWAS" class="UDPSocketSensor" devicename="usock::30131" suffix="_AWAS">
         <sample id="1" rate="1" scanfFormat="AWAS_STATUS,%*d/%*d/%*dT%*d:%*d:%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="AWAS Can Number" name="CANNUM" units="number"/>
@@ -1606,37 +1604,35 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-
     <serialSensor ID="PIC2401_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_NOAA">
       <sample id="1" rate="1" scanfFormat="%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
-        <variable longname="Picarro Epoch Time"		name="EPOCH" units="seconds"/>
-        <variable longname="Picarro Date"		name="DATE" units="yymmdd"/>
-        <variable longname="Picarro Time"		name="TIME" units="hhmmss"/>
-        <variable longname="Picarro Ambient Pressure"	name="PS" units="torr"/>
-        <variable longname="Picarro Cavity Pressure"	name="CAVP" units="torr"/>
-        <variable longname="Picarro Cavity Temperature"	name="CAVT" units="deg_C"/>
-        <variable longname="Picarro Das Temperature"	name="DAST" units="deg_C"/>
+        <variable longname="Picarro Epoch Time" name="EPOCH" units="seconds"/>
+        <variable longname="Picarro Date" name="DATE" units="yymmdd"/>
+        <variable longname="Picarro Time" name="TIME" units="hhmmss"/>
+        <variable longname="Picarro Ambient Pressure" name="PS" units="torr"/>
+        <variable longname="Picarro Cavity Pressure" name="CAVP" units="torr"/>
+        <variable longname="Picarro Cavity Temperature" name="CAVT" units="deg_C"/>
+        <variable longname="Picarro Das Temperature" name="DAST" units="deg_C"/>
         <variable longname="Picarro Etalon Temperature" name="ETALONT" units="deg_C"/>
         <variable longname="Picarro Warm Box Temperature" name="WBOXT" units="deg_C"/>
-        <variable longname="Picarro Species"		name="SPECIES" units=""/>
-        <variable longname="Picarro MPV Position"	name="MPVPOS" units=""/>
-        <variable longname="Picarro Inlet Valve"	name="INVLV" units=""/>
-        <variable longname="Picarro Outlet Valve"	name="OUTVLV" units=""/>
-        <variable longname="Picarro Carbon Monoxide Mixing Ratio"	name="CO" units="ppm"/>
-        <variable longname="Picarro Carbon Dioxide Mixing Ratio"	name="CO2" units="ppm"/>
-        <variable longname="Picarro Carbon Dioxide Mixing Ratio, Dry"	name="CO2DRY" units="ppm"/>
-        <variable longname="Picarro Methane Mixing Ratio"		name="CH4" units="ppm"/>
-        <variable longname="Picarro Methane Mixing Ratio, Dry"		name="CH4DRY" units="ppm"/>
-        <variable longname="Picarro H2O Mixing Ratio"			name="H2O" units="%"/>
-        <variable longname="Picarro H2O Raw Mixing Ratio"		name="H2ORAW" units="%"/>
-        <variable longname="Picarro H2O B Mixing Ratio"			name="H2OB" units="%"/>
-        <variable longname="Picarro Peak 14"				name="PEAK14" units=""/>
-        <variable longname="Picarro Peak 84, Raw"			name="PEAK84" units=""/>
-        <variable longname="Picarro Flow"				name="FLOW" units="sccm"/>
+        <variable longname="Picarro Species" name="SPECIES" units=""/>
+        <variable longname="Picarro MPV Position" name="MPVPOS" units=""/>
+        <variable longname="Picarro Inlet Valve" name="INVLV" units=""/>
+        <variable longname="Picarro Outlet Valve" name="OUTVLV" units=""/>
+        <variable longname="Picarro Carbon Monoxide Mixing Ratio" name="CO" units="ppm"/>
+        <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppm"/>
+        <variable longname="Picarro Carbon Dioxide Mixing Ratio, Dry" name="CO2DRY" units="ppm"/>
+        <variable longname="Picarro Methane Mixing Ratio" name="CH4" units="ppm"/>
+        <variable longname="Picarro Methane Mixing Ratio, Dry" name="CH4DRY" units="ppm"/>
+        <variable longname="Picarro H2O Mixing Ratio" name="H2O" units="%"/>
+        <variable longname="Picarro H2O Raw Mixing Ratio" name="H2ORAW" units="%"/>
+        <variable longname="Picarro H2O B Mixing Ratio" name="H2OB" units="%"/>
+        <variable longname="Picarro Peak 14" name="PEAK14" units=""/>
+        <variable longname="Picarro Peak 84, Raw" name="PEAK84" units=""/>
+        <variable longname="Picarro Flow" name="FLOW" units="sccm"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-
     <serialSensor ID="PIC_H2O" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PICCU">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %f %*d %*f">
         <variable longname="Picarro Water Mixing Ratio" name="H2O" units="ppmv"/>
@@ -1940,6 +1936,7 @@
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
+
 <!--
             <poly units="V">
               <calfile file="MEDFLOW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/MEDUSA:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/MEDUSA"/>
@@ -2169,7 +2166,7 @@
         </sample>
       </sensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="900">
-        <calfile file="A2D1701.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <calfile file="A2D1605.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
