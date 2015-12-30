@@ -154,7 +154,7 @@ if latest in listing:
     ftp.quit()
     sys.exit(1)
 
-# Get the latest image and it's label
+# Get the latest image and its label
 try:
     command = "wget ftp://"+ftp_site+":"+ftp_dir+latest
     os.system(command)
@@ -162,10 +162,18 @@ try:
     print 'setting it as overlay image for OSM.'
     command = "cp "+latest+" "+osm_file_name
     os.system(command)
-# Using make_label.py now.
-#    command = "wget ftp://"+ftp_site+":"+ftp_dir+label+" -O " + label
-#    os.system(command)
-#    print 'obtained image label: '+label
+    # Using make_label.py now.
+    #    command = "wget ftp://"+ftp_site+":"+ftp_dir+label+" -O " + label
+    #    os.system(command)
+    #    print 'obtained image label: '+label
+
+    #
+    # copy to CatalogIngest
+    #
+    catalog_ingest_dir = '/home/catalog/products/incoming/' + plane.lower()
+    if os.path.isdir(catalog_ingest_dir)
+        command = "cp "+latest+" "+catalog_ingest_dir
+        os.system(command)
 
 except:
     print "problems getting file, exiting."
