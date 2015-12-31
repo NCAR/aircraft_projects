@@ -1,7 +1,7 @@
 Summary: Iptables configuration for RAF aircraft server
 Name: raf-ac-firewall
 Version: 1.0
-Release: 8
+Release: 9
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -88,6 +88,11 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ac-firewall/iptables-setup.sh
 
 %changelog
+* Wed Dec 30 2015 Gary Granger <granger@ucar.edu> 1.0-9
+- on C130, use pppoe router on eth3 as the satcom interface, GV retains ppp+
+- allow all traffic to and from docker0 interface for field catalog apps
+- restrict ssh incoming to 128.117/16
+- open VNC ports between UCAR nets and toga-pc
 * Thu Jan 31 2013 Gordon Maclean <maclean@ucar.edu> 1.0-8
 - Added UDP ports for RemoteInstrumentControl
 - HTTP_CLNTS is now an empty array. It was $ANYHOST, allowing any
