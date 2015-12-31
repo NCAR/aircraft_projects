@@ -39,7 +39,10 @@
 # In general we try to log blocked packets before doing a DROP, or REJECT,
 # so that we have a change to figure out what is going on.
 
+# Uncomment these lines for debugging, and set AIRCRAFT with env:
 # set -x
+# alias iptables=true
+# alias iptables-save=true
 
 # quit immediately on error, otherwise error messages tend to be missed
 set -e
@@ -52,7 +55,7 @@ IPTABLES=iptables
 IPTABLES_MODULES=""
 IPTABLES_CONFIG=/etc/sysconfig/${IPTABLES}-config
 # Load firewall configuration.
-[ -f "$IPTABLES_CONFIG" ] && . "$IPTABLES_CONFIG"
+[ -r "$IPTABLES_CONFIG" ] && . "$IPTABLES_CONFIG"
 # Load additional modules (helpers)
 if [ -n "$IPTABLES_MODULES" ]; then
     for mod in $IPTABLES_MODULES; do
@@ -88,18 +91,48 @@ SAFE_EXT_IFS=(cipsec+ tun+ eth2)
 CHEAP_UNSAFE_EXT_IFS=()
 
 # Slow and expensive external interfaces.
-# Add eth3 if one activates Inmarsat ISDN
-SATCOM_EXT_IFS=(eth3)
+# Add eth3 if one activates Inmarsat ISDN.
+#
+# The GV still uses pppoe to the ISDN modem, so ppp+ is the satcom
+# interface.  The C130 routes Internet traffic through a pppoe router on
+# eth3, so eth3 is the actual satcom interface.
+#
+# IP masquerading should be enabled on all the external interfaces,
+# including the ppp+ SATCOM interfaces, except eth3 does not need it when a
+# PPPoE router is doing it.  There's no harm enabling masquerading on ppp+
+# even when ppp will not be used, so it's always included by default.
+#
+# The only difference in this script between the planes is the choice of
+# SATCOM_EXT_IFS.  It's possible even that difference could be eliminated
+# by applying all the same rules to both eth3 and ppp+, since the firewall
+# does not specify the actual default route, only the filtering between
+# interfaces.  However, since that has not been tested, for now we stick
+# with the distinction that's currently in use.
+#
+# The determination of the plane comes from the ads user's environment
+# settings.  This is not exactly secure, so someday the setting should be
+# queried in some safer way.
+
+[ -r /home/ads/ads3_environment.sh ] && . /home/ads/ads3_environment.sh
+SATCOM_EXT_IFS=(ppp+)
+case "$AIRCRAFT" in
+    GV_N677F)
+	SATCOM_EXT_IFS=(ppp+)
+	;;
+    C130_N130AR)
+	SATCOM_EXT_IFS=(eth3)
+	;;
+    *)
+	echo "# *** AIRCRAFT setting not recognized: $AIRCRAFT ***"
+	exit 1
+	;;
+esac
+MASQUERADE_IFS=(${SAFE_EXT_FS[*]} ppp+)
 
 UNSAFE_EXT_IFS=(${CHEAP_UNSAFE_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]})
 
 # All external (WAN) interfaces
 EXT_IFS=(${CHEAP_UNSAFE_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]} ${SAFE_EXT_IFS[*]})
-
-# Set the interfaces on which IP masquerading should be enabled.  The SATCOM
-# interface does not need it when there is a PPPoE router doing it, while the
-# other external interfaces do, assuming forwarding is enabled.
-MASQUERADE_IFS=(${SAFE_EXT_FS[*]})
 
 # Internal trusted interfaces. Forwarding is done between first two
 INT_IFS=(eth0 eth1)
