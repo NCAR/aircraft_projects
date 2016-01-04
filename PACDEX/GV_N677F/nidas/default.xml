@@ -90,7 +90,7 @@
         <sample id="0205" rate="8"><variable name="MACH" units="none" longname="ADC Mach Number"/></sample>
         <sample id="0206" rate="8"><variable name="CAS" units="m/s" longname="ADC Computed Air Speed"/></sample>
         <sample id="0210" rate="16"><variable name="TAS" units="m/s" longname="ADC True Air Speed"/></sample>
-        <sample id="0211" rate="2"><variable name="TT" units="deg_C" longname="ADC Total Air Temperature"/></sample>
+        <sample id="0211" rate="2"><variable name="RT" units="deg_C" longname="ADC Recovery Air Temperature"/></sample>
         <sample id="0213" rate="2"><variable name="AT" units="deg_C" longname="ADC Ambient Air Temperature"/></sample>
         <sample id="0215" rate="8"><variable name="QC" units="hPa" longname="ADC Impact Pressure"/></sample>
         <sample id="0217" rate="8"><variable name="PS" units="hPa" longname="ADC Static Pressure"/></sample>
@@ -194,10 +194,13 @@
         <message separator="\n" position="end" length="0"/> 
     </serialSensor>
 
-    <serialSensor ID="DewPointer" class="DSMSerialSensor"
-        baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="%*d,%f" rate="1"/>
-        <message separator="\n" position="end" length="0"/>
+    <serialSensor ID="DewPointer" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="%f,%f,%*f,%*f,%f">
+        <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+        <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
+        <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
     </serialSensor>
 
     <serialSensor ID="Mensor_6100" class="DSMSerialSensor"
@@ -432,54 +435,19 @@
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
-          <sample id="0314" rate="25">
-            <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
-              <linear slope="1.0" intercept="0.0" units="degree_T"/>
-            </variable>
-          </sample>
-          <sample id="0324" rate="50">
-            <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.38" units="degree"/>
-            </variable>
-          </sample>
-        </arincSensor>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2">
-          <sample id="0314" rate="25">
-            <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
-              <linear slope="1.0" intercept="0.24" units="degree_T"/>
-            </variable>
-          </sample>
-          <sample id="0324" rate="50">
-            <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.04" units="degree"/>
-            </variable>
-          </sample>
-        </arincSensor>
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2"/>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A"/>
 
-        <serialSensor IDREF="Paro_DigiQuartz_1000"
-                devicename="/dev/dsmser0" id="110">
+        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/dsmser0" id="110">
 	    <sample id="1">
                 <variable name="PSF" units="hPa" longname="Raw Static Pressure, Fuselage"/>
 	    </sample>
         </serialSensor>
 
-        <serialSensor IDREF="DewPointer"
-                devicename="/dev/dsmser1" id="130" suffix="_DPL">
-	    <sample id="1">
-                <variable name="MIRRTMP" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Left"/>
-	    </sample>
-        </serialSensor>
-
-        <serialSensor IDREF="DewPointer"
-                devicename="/dev/dsmser2" id="140" suffix="_DPR">
-	    <sample id="1">
-                <variable name="MIRRTMP" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Right"/>
-	    </sample>
-        </serialSensor>
-
+        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser1" id="130" suffix="_DPL"/>
+        <serialSensor IDREF="DewPointer" devicename="/dev/dsmser2" id="140" suffix="_DPR"/>
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/dsmser5" id="120"/>
 
         <output class="RawSampleOutputStream">
@@ -526,21 +494,21 @@
                     <parameter name="corSlope" value="1.0" type="float"/>
                     <parameter name="corIntercept" value="0.0" type="float"/>
                 </variable>
-                <variable name="TTFR" units="V" longname="Total Temperature, Radome Left">
+                <variable name="RTF1" units="V" longname="Total Temperature, Radome Left">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.20597" type="float"/>
                     <parameter name="corIntercept" value="-0.319817" type="float"/>
                     <poly coefs="-86.08 23.909 0.14844" units="deg_C"/>
                 </variable>
-                <variable name="TTHR2" units="V" longname="Total Temperature, Deiced Right">
+                <variable name="RTH2" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.19836" type="float"/>
                     <parameter name="corIntercept" value="-0.270368" type="float"/>
                     <poly coefs="-89.336 25.588 0.01" units="deg_C"/>
                 </variable>
-                <variable name="TTHR1" units="V" longname="Total Temperature, Deiced Right">
+                <variable name="RTH1" units="V" longname="Total Temperature, Deiced Right">
                     <parameter name="gain" value="4" type="float"/>
                     <parameter name="bipolar" value="false" type="bool"/>
                     <parameter name="corSlope" value="1.18032" type="float"/>
