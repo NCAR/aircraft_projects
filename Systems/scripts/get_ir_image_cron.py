@@ -52,9 +52,9 @@ ftp_site         = 'catalog.eol.ucar.edu'
 ftp_login        = 'anonymous'
 ftp_passwd       = ''
 ftp_dir          = '/pub/incoming/OSM/'+plane+'/'
-label            = 'sat_ir_5km_label.jpg'
+label            = 'sat_ir_4km_label.jpg'
 #Assumes filename form is prefixYYYYMMDD*postfix
-prefix           = 'satellite.GOES-15.'  
+prefix           = 'satellite.GOES-13.'  
 #postfix		 = '*_C4C.jpg' 
 # Temp suffix for rf04
 postfix		 = '*thermal-IR.jpg' 
@@ -151,8 +151,6 @@ print "last file on ftp site is: " + latest
 if latest in listing:
     print "Already have file" + latest
     os.remove(busy_file)
-    ftp.quit()
-    sys.exit(1)
 
 # Get the latest image and its label
 try:
@@ -171,7 +169,7 @@ try:
     # copy to CatalogIngest
     #
     catalog_ingest_dir = '/home/catalog/products/incoming/' + plane.lower()
-    if os.path.isdir(catalog_ingest_dir)
+    if os.path.isdir(catalog_ingest_dir):
         command = "cp "+latest+" "+catalog_ingest_dir
         os.system(command)
 
