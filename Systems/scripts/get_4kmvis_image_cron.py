@@ -162,7 +162,7 @@ try:
     # copy to CatalogIngest
     #
     catalog_ingest_dir = '/home/catalog/products/incoming/' + plane.lower()
-    if os.path.isdir(catalog_ingest_dir)
+    if os.path.isdir(catalog_ingest_dir):
         command = "cp "+latest+" "+catalog_ingest_dir
         os.system(command)
 
