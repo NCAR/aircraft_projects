@@ -36,7 +36,7 @@ SHELL=/bin/csh
 * * * * * /home/local/Systems/scripts/copy_flight_geo_to_catalog.cron >>& /tmp/copy_flight_geo_to_catalog.log
 
 # Cleanup old Catalog files from filesystem and database via DockerCompose
-1 */2 * * * CATALOG_MAPS_FILE_DELETE_CONFIRMATION_HASH=6d854e052d3f061918af6fa8ed0e0f209b6893793813aaac4dd952d8bb1ed9a6 sudo /usr/local/bin/docker-compose -f /home/catalog/catalog-maps/docker-compose.yml run -e CATALOG_MAPS_FILE_DELETE_CONFIRMATION_HASH=$CATALOG_MAPS_FILE_DELETE_CONFIRMATION_HASH maps ./bin/rails runner etc/acserver/delete-catalog-files.rb >>& /tmp/catalog_delete_files.log
+1 */2 * * * sudo /home/local/Systems/scripts/catalog_delete_files.cron >>& /tmp/catalog_delete_files.log
 
 # IRC and IRC bot
 @reboot /home/ads/ircd/Unreal3.2/unreal start >& /dev/null
