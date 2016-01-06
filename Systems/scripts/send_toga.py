@@ -1,3 +1,4 @@
+#! /usr/bin/python
 # -*- python -*-
 
 # Run this script from cron something like this:
