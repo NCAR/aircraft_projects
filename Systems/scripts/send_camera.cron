@@ -31,11 +31,11 @@ camera_image_to_iso_time() # camera_filename
     date --date="$timestring" +"%Y%m%dT%H%M%S"
 }
 
-camera_image_to_catalog_iso_time() # camera_filename
+camera_image_to_catalog_time() # camera_filename
 {
     timestring=`echo "$1" | sed -e \
   's/\([0-9][0-9]\)\([0-9][0-9]\)\([0-9][0-9]\)-\([0-9][0-9]\)\([0-9][0-9]\)\([0-9][0-9]\).jpg/20\1-\2-\3 \4:\5:\6/'`
-    date --date="$timestring" +"%Y%m%dT%H%M"
+    date --date="$timestring" +"%Y%m%d%H%M"
 }
 
 get_altitude() # time
@@ -156,5 +156,5 @@ plane=`echo $AIRCRAFT | cut -d _ -f 1`
 catalog_ingest_dir=/home/catalog/products/incoming/${plane,,}
 
 if [ -d $catalog_ingest_dir ]; then
-  cp ../sent/$key$file $catalog_ingest_dir/aircraft.NSF_NCAR_$plane.`camera_image_to_catalog_iso_time $file`.forward_camera.jpg
+  cp ../sent/$key$file $catalog_ingest_dir/aircraft.NSF_NCAR_$plane.`camera_image_to_catalog_time $file`.forward_camera.jpg
 fi
