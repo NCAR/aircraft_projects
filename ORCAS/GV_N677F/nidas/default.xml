@@ -693,7 +693,7 @@
         <variable longname="TOGA Toluene" name="TOLUENE" units="pptv"/>
         <variable longname="TOGA Acetonitrile" name="ACETONITRILE" units="pptv"/>
         <variable longname="TOGA CH2Br2" name="CH2BR2" units="pptv"/>
-        <variable longname="TOGA Ethonal" name="ETHANOL" units="pptv"/>
+        <variable longname="TOGA Ethanol" name="ETHANOL" units="pptv"/>
         <variable longname="TOGA Methyl Ethyl Ketone" name="MEK" units="pptv"/>
       </sample>
     </sensor>
@@ -1739,6 +1739,9 @@
     </serialSensor>
 
 <!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
+    <sensor ID="GNI" class="UDPSocketSensor" devicename="usock::32100">
+    </sensor>
+
     <sensor ID="PARCELS" class="UDPSocketSensor" devicename="usock::30100">
 
 <!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
@@ -1804,6 +1807,7 @@
       <sensor IDREF="CUTWC" devicename="usock::30129" id="660" suffix="_CLH"/>
       <sensor IDREF="MEDUSA" devicename="usock::30130" id="550" suffix="_MED"/>
       <sensor IDREF="AWAS" devicename="usock::30131" id="600" suffix="_AWAS"/>
+      <sensor IDREF="GNI" devicename="usock::32102" id="400" suffix="_GNI"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -2086,7 +2090,7 @@
           <variable count="true" longname="TSI CN Counter Output" name="CNTS" units="count"/>
         </sample>
       </sensor>
-      <serialSensor IDREF="QCLS" devicename="/dev/ttyS5" id="300"/>
+      <serialSensor IDREF="QCLS" devicename="/dev/ttyS5" id="300" suffix="_QCLS"/>
       <serialSensor IDREF="VCSEL" devicename="/dev/ttyS6" id="500" suffix="_VXL"/>
       <serialSensor IDREF="PIC2401_CO2" devicename="/dev/ttyS7" id="600" suffix="_NOAA"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="700">
