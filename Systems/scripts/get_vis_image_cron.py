@@ -216,6 +216,7 @@ print 'Checking on images earlier in time.'
 got_old='false'
 i=2
 filename=filelist[len(filelist)-i]
+num_imgs_to_get = min(num_imgs_to_get, len(filelist))
 while i<num_imgs_to_get:
     if filename not in listing:
         print "Don't have earlier image:"+filename
