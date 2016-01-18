@@ -1,0 +1,11 @@
+#!/bin/csh
+
+# Adapt on a per project basis.
+
+cd /var/www/html/flight_data/GE
+
+# Sounding, Proj=ADELE, Jacksonville Florida
+wget -q -r  http://www.eol.ucar.edu/flight_data/GV/GE/LMGould.kml -O tmp.kml
+if (-s tmp.kml) then
+ /bin/mv tmp.kml LMGould.kml
+endif
