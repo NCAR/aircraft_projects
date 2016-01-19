@@ -149,11 +149,11 @@ print "last file on ftp site is: " + latest
 
 # Check to see if we've got the most recent file
 if latest in listing:
-    print "Already have file" + latest
-    os.remove(busy_file)
-
+  print "Already have file: " + latest
+#    os.remove(busy_file)
+else:
 # Get the latest image and its label
-try:
+  try:
     command = "wget ftp://"+ftp_site+":"+ftp_dir+latest
     os.system(command)
     print 'file retrieved: '+latest
@@ -173,7 +173,7 @@ try:
         command = "cp "+latest+" "+catalog_ingest_dir
         os.system(command)
 
-except:
+  except:
     print "problems getting file, exiting."
     os.remove(busy_file)
     ftp.quit()
@@ -185,9 +185,9 @@ got_old='false'
 i=2
 filename=filelist[len(filelist)-i]
 num_imgs_to_get = min(num_imgs_to_get, len(filelist))
-while i < num_imgs_to_get:
+while i<num_imgs_to_get:
     if filename not in listing:
-        print "Don't have earlier image:"+filename
+        print "Don't have earlier image: "+filename
         try:
             command = "wget ftp://"+ftp_site+":"+ftp_dir+filename
             os.system(command)
