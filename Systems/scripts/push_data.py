@@ -37,8 +37,8 @@ from email.mime.text import MIMEText
 #   The RStudio piece seems to need special setup for each project
 #
 #  NOTE: assumes that Raw_Data is subdirectory of data_dir + project
+#
 #  TODO: project should be pulled from environment variable(?)
-
 project =        'ICEBRIDGE2015'
 data_dir =       '/home/data/'
 rstudio_dir =    '/home/ads/RStudio/'
@@ -483,6 +483,9 @@ if process == "true":
   command = "/bin/mv tmp.nc "+ncfile;
   print "about to execute : "+command
   if os.system(command) == 0:
+    proc_nc_file  =    'Yes'
+  else:
+    print "ERROR: NC Reorder failed! But NetCDF file should be fine"
     proc_nc_file  =    'Yes'
 
   if nc2iwg == 'true':
