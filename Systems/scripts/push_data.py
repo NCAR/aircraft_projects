@@ -39,13 +39,14 @@ from email.mime.text import MIMEText
 #  NOTE: assumes that Raw_Data is subdirectory of data_dir + project
 #
 #  TODO: project should be pulled from environment variable(?)
-project =        'ICEBRIDGE2015'
-data_dir =       '/home/data/'
-rstudio_dir =    '/home/ads/RStudio/'
+project =	'ORCAS'
+aircraft =	'GV_N677F'
+data_dir =	'/home/data/'
+rstudio_dir =	'/home/ads/RStudio/'
 
 # Instruments, true or false depending on if instrument is on project
+twoD      =      'true'
 threeVCPI =      'false'
-twoD      =      'false'
 
 NAS =            'false'
 nas_url =        '192.168.1.30:/data'
@@ -74,12 +75,11 @@ raircraft      = 'aircraft.NSF_NCAR_GV.'
 
 # Products set to true if you want 'em
 nc2asc = 'true'
-nc2ascBatch = '/home/data/WINTER/nc2asc.bat'
+nc2ascBatch = '/home/local/projects/' + project + '/' + aircraft + '/Production/nc2asc.bat'
 
-nc2iwg = 'true'
+nc2iwg = 'false'
 
 translate2ds = '/home/local/raf/instruments/3v-cpi/translate2ds/translate2ds '
-twods_aircraft = 'GV_N677F'
 
 catalog = 'false'
 # ******************  End of Modification Section ****************
@@ -414,7 +414,7 @@ if process == "true":
         os.system(command)
   
       command = translate2ds + '-project ' + project + ' -flight ' + flight \
-                +' -platform '+twods_aircraft + ' -sn SPEC001 -f ' + catted_file + ' -o .'
+                +' -platform '+aircraft + ' -sn SPEC001 -f ' + catted_file + ' -o .'
       print ' 3v-cpi command:' + command
       os.system(command)
       
