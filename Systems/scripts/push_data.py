@@ -68,8 +68,8 @@ qc_ftp_dir =     '/pub/incoming/catalog/'+ project.lower()
 #local_user     = 'anonymous'
 #local_password = 'cjw@ucar.edu'
 
-local_ftp_dir  = '/FieldStorage/FieldProjects/WINTER/C130nc'
-rlocal_ftp_dir = '/FieldStorage/FieldProjects/WINTER/RAFqc'
+local_ftp_dir  = '/FieldStorage/FieldProjects/' + project + '/C130nc'
+rlocal_ftp_dir = '/FieldStorage/FieldProjects/' + project + '/RAFqc'
 raircraft      = 'aircraft.NSF_NCAR_GV.'
 #local_ftp_dir  = '/FieldStorage/Temporary Items'
 
