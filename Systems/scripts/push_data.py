@@ -150,7 +150,7 @@ elif nclist.__len__() == 0:
   print "No files found matching form: "+nc_dir+'*'+flight+'*.nc'
   print "We must process!"
   process = "true"
-  ncfile = nc_dir+project+'_'+flight+".nc"
+  ncfile = nc_dir+project+flight+".nc"
 else:
   print "More than one netCDF file found."
   print "Stepping through files, please select the right one"
