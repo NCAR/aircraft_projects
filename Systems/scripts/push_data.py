@@ -412,6 +412,7 @@ if rstudiofileHTML == '' :
 
 ###################  Beginning of Processing ##############################
 threevcpi2d_file = ''
+
 # Run nimbus to generate first look product
 # Use a configuration file
 if process == "true":
@@ -438,7 +439,7 @@ if process == "true":
 
 # 3VCPI 
 # Convert SPEC file form to oap file form
-  if threeVCPI=='true':
+  if threeVCPI == 'true':
     print "\n\n *****************  3VCPI **************************\n"
     mkdir_fail = 'false'
     first_base_file = ''
@@ -487,37 +488,28 @@ if process == "true":
         if os.system(command) == 0:
           proc_3vcpi_files = 'Yes'
 
-# 2D data
-  if twoD=='true':
-    mkdir_fail = 'false'
-    if not os.path.isdir(twodfile_dir): 
-      try:
-        os.mkdir(twodfile_dir)
-      except:
-        message = "\nERROR: Could not make 2D file directory:"+twodfile_dir
-        message = message + "\n - skipping 2d file extract\n"
-        print message
-        final_message = final+message + message
-        mkdir_fail = 'true'
-    if not mkdir_fail == 'true':
+  # Fast 2D data, extract first, then process.
+  if twoD == 'true':
+    ensure_dir(twodfile_dir)
+    if os.path.exists(twodfile_dir):
       filename = rawfile.split(raw_dir)[1]
-      fileelts = filename.split('_')
-      twoDfile = twodfile_dir+fileelts[0]+'_'+fileelts[1]+'_'+flight+'.2d'
+      fileelts = filename.split('.')
+      twoDfile = twodfile_dir + fileelts[0] + '.2d'
       command = 'extract2d '+twoDfile+' '+rawfile
       message = '\nExtracting 2D from ads:'+command+'\n'
       print message
       os.system(command)
 
-    # merge 2D data into netCDF file
-    command = 'process2d '+twoDfile+' -o '+ncfile
-    print '2D merge command: '+command
-    if os.system(command) == 0:
-      proc_2d_files = 'Yes'
-      ship_2d_files = 'ads&NC '
-      stor_2d_files = 'ads&NC '
-    else:
-      ship_2d_files = 'ads    '
-      ship_2d_files = 'ads    '
+      # merge 2D data into netCDF file
+      command = 'process2d '+twoDfile+' -o '+ncfile
+      print '2D merge command: '+command
+      if os.system(command) == 0:
+        proc_2d_files = 'Yes'
+        ship_2d_files = 'ads&NC '
+        stor_2d_files = 'ads&NC '
+      else:
+        ship_2d_files = 'ads    '
+        ship_2d_files = 'ads    '
 
   
 # NetCDF utility work - Reorder, generate Iwg ascii and ICARTT ascii
@@ -546,8 +538,8 @@ if process == "true":
       proc_asc_file = 'Yes'
 
 # Run Al Cooper's R code for QA/QC production
-  os.chdir("/home/ads/RStudio/"+project)
-  command = "Rscript /home/ads/RStudio/"+project+"/Review.R "+flight
+  os.chdir(rstudio_dir)
+  command = "Rscript " + rstudio_dir + "/Review.R " + flight
   print "about to execute : "+command
   os.system(command)
 
