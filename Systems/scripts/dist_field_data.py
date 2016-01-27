@@ -23,8 +23,8 @@ reRawProjName = re.compile("project name: (\S+)")
 ##  Configuration for the distribution - modify the following
 NAS_in_field =    False                          # Set to false for ftp 
 temp_dir =        '/tmp/'                        # Where we unzip & put busy
-dat_parent_dir =  '/scr/raf_data/'               # Where nc files go
-rdat_parent_dir = '/scr/raf_Raw_Data/'           # where raw ads files go
+dat_parent_dir =  os.environ["DATA_DIR"] + '/' # Where nc files go
+rdat_parent_dir = os.environ["RAW_DATA_DIR"] + '/' # where raw ads files go
 ftp_parent_dir =  '/net/ftp/pub/data/download/'  # Where nc files go for PIs
 ##  End of Configuration
 
