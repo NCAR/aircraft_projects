@@ -25,6 +25,23 @@ import smtplib
 from email.mime.text import MIMEText
 
 
+# Products set to true if you want 'em
+nc2asc = 'true'
+nc2iwg = 'false'
+catalog = 'false'
+
+#
+# Do we have local SWIG RAID storage.
+NAS =            'false'
+
+#
+# Instrument specific processing, true or false depending on if instrument is on project.
+twoD      =      'true'
+threeVCPI =      'false'
+
+nc2ascBatch =	os.environ["PROJ_DIR"] +'/'+ project +'/'+ aircraft
+		+ '/Production/nc2asc.bat'
+
 # Initialization 
 #  *******************  Modify The Following *********************
 #  NOTE: Be sure to ask the systems group to create a directory:
@@ -53,18 +70,19 @@ except KeyError:
   sys.exit(1)
 
 try:
-  data_dir =	os.environ["DATA_DIR"]
+  data_dir =	os.environ["DATA_DIR"] + '/' + project + '/'
 except KeyError:
   print "Please set the environment variable DATA_DIR."
   sys.exit(1)
 
+try:
+  raw_dir       = os.environ["RAW_DATA_DIR"] + '/' + project + '/'
+except KeyError:
+  print "Please set the environment variable RAW_DATA_DIR."
+  sys.exit(1)
+
 rstudio_dir =	'/home/ads/RStudio/'
 
-# Instruments, true or false depending on if instrument is on project
-twoD      =      'true'
-threeVCPI =      'false'
-
-NAS =            'false'
 nas_url =        '192.168.1.30:/data'
 nas_mnt_pt =     '/mnt/Data/'
 nas_sync_dir =   nas_mnt_pt + '/data/synced_data/ads/'
@@ -89,15 +107,8 @@ rlocal_ftp_dir = '/FieldStorage/FieldProjects/' + project + '/RAFqc'
 raircraft      = 'aircraft.NSF_NCAR_GV.'
 #local_ftp_dir  = '/FieldStorage/Temporary Items'
 
-# Products set to true if you want 'em
-nc2asc = 'true'
-nc2ascBatch = os.environ["PROJ_DIR"] +'/'+ project +'/'+ aircraft + '/Production/nc2asc.bat'
-
-nc2iwg = 'false'
-
 translate2ds = '/home/local/raf/instruments/3v-cpi/translate2ds/translate2ds '
 
-catalog = 'false'
 
 # Echo conifguration:
 print 'Processing ' + project + ' from ' + aircraft + '.'
@@ -112,8 +123,8 @@ print flight
 email = raw_input('Input email address to send results:')
 
 
-nc_dir        = data_dir + project + '/'
-raw_dir       = data_dir + 'Raw_Data/' + project + '/'
+file_prefix =	project + flight
+
 twods_raw_dir = raw_dir+'3v_cpi/2DS/'+ string.upper(project) +'_'+ string.upper(flight) + '/'
 oapfile_dir   = raw_dir+'3v_cpi/oapfiles/'
 twodfile_dir  = raw_dir+'PMS2D/'
@@ -157,7 +168,7 @@ final_message = final_message + '  Flight:'+flight+'\r\n\r\n'
 
 # Get the netCDF, kml, icartt, IWG1 and raw ADS files for working with
 # First netCDF
-nclist = glob.glob(nc_dir+'*'+flight+'*.nc')
+nclist = glob.glob(data_dir+'*'+flight+'*.nc')
 if nclist.__len__() == 1:
   ncfile = nclist[0]
   print "Found a netCDF file: "+ncfile
@@ -169,10 +180,10 @@ if nclist.__len__() == 1:
   else:
     process = "false"
 elif nclist.__len__() == 0:
-  print "No files found matching form: "+nc_dir+'*'+flight+'*.nc'
+  print "No files found matching form: "+data_dir+'*'+flight+'*.nc'
   print "We must process!"
   process = "true"
-  ncfile = nc_dir+project+flight+".nc"
+  ncfile = data_dir+file_prefix+".nc"
 else:
   print "More than one netCDF file found."
   print "Stepping through files, please select the right one"
@@ -193,14 +204,14 @@ if ncfile == '' :
   #sys.exit(0)
 
 #KML file
-kmllist = glob.glob(nc_dir+'*'+flight+'.kml')
+kmllist = glob.glob(data_dir+'*'+flight+'.kml')
 if kmllist.__len__() == 1:
   kmlfile = kmllist[0]
 elif kmllist.__len__() == 0:
-  print "No files found matching form: "+nc_dir+'*'+flight+'*.kml'
+  print "No files found matching form: "+data_dir+'*'+flight+'*.kml'
   if process == "true":
     print "We are scheduled to process all is good"
-    kmlfile = nc_dir+project+flight+".kml"
+    kmlfile = data_dir+file_prefix+".kml"
   else:
     print "We have nc file but not kml file....  aborting..."
     #sys.exit(0)
@@ -223,14 +234,14 @@ if kmlfile == '' :
 
 #nc2asc file
 icarttfile = ''
-icarttlist = glob.glob(nc_dir+'*'+flight+'.asc')
+icarttlist = glob.glob(data_dir+'*'+flight+'.asc')
 if icarttlist.__len__() == 1:
   icarttfile = icarttlist[0]
 elif icarttlist.__len__() == 0:
-  print "No files found matching form: "+nc_dir+'*'+flight+'*.asc'
+  print "No files found matching form: "+data_dir+'*'+flight+'*.asc'
   if process == "true":
     print "We are scheduled to process all is good"
-    icarttfile = nc_dir+project+flight+".asc"
+    icarttfile = data_dir+file_prefix+".asc"
   else:
     print "We have nc file but not ASCII file....  aborting..."
     #sys.exit(0)
@@ -252,14 +263,14 @@ if icarttfile == '' :
   #sys.exit(0)
 
 #IWG1 file
-iwg1list = glob.glob(nc_dir+'*'+flight+'.iwg1')
+iwg1list = glob.glob(data_dir+'*'+flight+'.iwg1')
 if iwg1list.__len__() == 1:
   iwg1file = iwg1list[0]
 elif iwg1list.__len__() == 0:
-  print "No files found matching form: "+nc_dir+'*'+flight+'*.iwg1'
+  print "No files found matching form: "+data_dir+'*'+flight+'*.iwg1'
   if process == "true":
     print "We are scheduled to process all is good"
-    iwg1file = nc_dir+project+flight+".iwg1"
+    iwg1file = data_dir+file_prefix+".iwg1"
   else:
     print "We have nc file but not iwg1 file....  aborting..."
     #sys.exit(0)
@@ -625,7 +636,7 @@ if NAS == 'true':
     final_message = final_message + message
 
 emailfilename = 'email.addr.txt'
-emailfile = nc_dir+emailfilename
+emailfile = data_dir+emailfilename
 command = 'rm '+emailfile
 os.system(command)
 fo = open(emailfile, 'w+')
@@ -908,7 +919,7 @@ final_message = final_message + 'FileType  Proc Stor     Ship\n'
 final_message = final_message + 'Raw       '+proc_raw_file+'  '+stor_raw_file+'  '+ship_raw_file+'\n'
 final_message = final_message + '3VCPI     '+proc_3vcpi_files+'  '+stor_3vcpi_files+'  '+ship_3vcpi_files+'\n'
 final_message = final_message + '2D        '+proc_2d_files+'  '+stor_2d_files+'  '+ship_2d_files+'\n'
-final_message = final_message + 'NetCDF    '+proc_nc_file+'  '+stor_nc_file+'  '+ship_nc_file+'\n'
+final_message = final_message + 'NetCDF    '+proc_nc_file +'  '+stor_nc_file +'  '+ship_nc_file+'\n'
 final_message = final_message + 'KML       '+proc_kml_file+'  '+stor_kml_file+'  '+ship_kml_file+'\n'
 final_message = final_message + 'ASCII     '+proc_asc_file+'  '+stor_asc_file+'  '+ship_asc_file+'\n'
 final_message = final_message + 'IWG       '+proc_iwg_file+'  '+stor_iwg_file+'  '+ship_iwg_file+'\n'
