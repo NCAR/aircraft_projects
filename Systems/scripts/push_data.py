@@ -78,7 +78,7 @@ except KeyError:
   print "Please set the environment variable RAW_DATA_DIR."
   sys.exit(1)
 
-rstudio_dir =	'/home/ads/RStudio/'
+rstudio_dir =	'/home/ads/RStudio/' + project + '/'
 
 nc2ascBatch =	os.environ["PROJ_DIR"] +'/'+ project +'/'+ aircraft + '/Production/nc2asc.bat'
 
@@ -112,6 +112,8 @@ translate2ds = '/home/local/raf/instruments/3v-cpi/translate2ds/translate2ds '
 # Echo configuration:
 print
 print 'Processing ' + project + ' from ' + aircraft + '.   If incorrect, edit ~/ads3_environment.'
+print
+print 'Expecting to find .ads files in ' + raw_dir + '.'
 print
 
 # ******************  End of Modification Section ****************
@@ -164,6 +166,14 @@ final_message = final_message + '  Flight:'+flight+'\r\n\r\n'
 
 
 ##############   Beginning of Setup ######################################
+
+def ensure_dir(f):
+    d = os.path.dirname(f)
+    print d
+    if not os.path.exists(d):
+        os.makedirs(d)
+
+ensure_dir(data_dir)
 
 # Get the netCDF, kml, icartt, IWG1 and raw ADS files for working with
 # First netCDF
@@ -317,12 +327,14 @@ if rawfile == '' :
 
 # RStudio PDF file
 
+ensure_dir(rstudio_dir)
+
 #Include time in RStudio filename so can load into field catalog
 filename = rawfile.split(raw_dir)[1]
 time = filename.split(".")[0].replace('_','')
-FCfilename = rstudio_dir+project+'/'+raircraft+time[0:12]+'.RAF_QC_plots_hires.pdf'
-RStudio_outfile = rstudio_dir+project+'/'+project+flight+'Plots.pdf'
-#filename = rstudio_dir+project+'/'+project+flight+'Plots.pdf'
+FCfilename = rstudio_dir+raircraft+time[0:12]+'.RAF_QC_plots_hires.pdf'
+RStudio_outfile = rstudio_dir+file_prefix+'Plots.pdf'
+#filename = rstudio_dir+file_prefix+'Plots.pdf'
 
 rstudiolist = glob.glob(FCfilename)
 #rstudiolist = glob.glob(filename)
@@ -362,8 +374,8 @@ if rstudiofile == '' :
 #Include time in RStudio filename so can load into field catalog
 filename = rawfile.split(raw_dir)[1]
 time = filename.split(".")[0].replace('_','')
-FCfilenameHTML = rstudio_dir+project+'/'+raircraft+time[0:12]+'.RAF_QC_plots.html'
-RStudio_outfileHTML = rstudio_dir+project+'/'+project+flight+'Plots.html'
+FCfilenameHTML = rstudio_dir+raircraft+time[0:12]+'.RAF_QC_plots.html'
+RStudio_outfileHTML = rstudio_dir+file_prefix+'Plots.html'
 
 rstudiolist = glob.glob(FCfilenameHTML)
 
@@ -582,25 +594,34 @@ if NAS == 'true':
   command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
   print 'Mounting nas: '+command
   os.system(command)
-  command = 'rsync '+ncfile+" "+nas_data_dir+"/nc/"
+
+  nc_out_dir = nas_data_dir+"/nc/"
+  qc_out_dir = nas_data_dir+"/qc/"
+  raw_out_dir = nas_data_dir+"/raw/"
+
+  ensure_dir(nc_out_dir)
+  ensure_dir(qc_out_dir)
+  ensure_dir(raw_out_dir)
+
+  command = 'rsync '+ncfile+" "+nc_out_dir
   if os.system(command) == 0:
     stor_nc_file = 'Yes-NAS'
   else: 
     message = '\nERROR!: syncing file: '+command
     print message
     final_message = final_message + message
-  command = 'rsync '+kmlfile+" "+nas_data_dir+"/nc/"
+  command = 'rsync '+kmlfile+" "+nc_out_dir
   if os.system(command) == 0:
     stor_kml_file = 'Yes-NAS'
   else:
     message = '\nERROR!: syncing file: '+command
     print message
     final_message = final_message + message
-  command = 'rsync '+iwg1file+" "+nas_data_dir+"/nc/"
+  command = 'rsync '+iwg1file+" "+nc_out_dir
   if os.system(command) == 0:
     stor_iwg_file = 'Yes-NAS'
     print 'ERROR!: Syncing file: '+command
-  command = 'rsync '+icarttfile+" "+nas_data_dir+"/nc/"
+  command = 'rsync '+icarttfile+" "+nc_out_dir
   if os.system(command) == 0:
     stor_asc_file = 'Yes-NAS'
   else:
@@ -608,7 +629,7 @@ if NAS == 'true':
     print message
     final_message = final_message + message
 
-  command = 'rsync '+rstudiofile+" "+nas_data_dir+"/qc/"
+  command = 'rsync '+rstudiofile+" "+qc_out_dir
   print 'Syncing file: '+command
   if os.system(command) == 0:
     stor_qc_files = 'Yes-NAS'
@@ -616,7 +637,7 @@ if NAS == 'true':
     message = '\nERROR!: syncing file: '+command
     print message
     final_message = final_message + message
-  command = 'rsync '+rstudiofileHTML+" "+nas_data_dir+"/qc/"
+  command = 'rsync '+rstudiofileHTML+" "+qc_out_dir
   print 'Syncing file: '+command
   if os.system(command) == 0:
     stor_qc_files = 'Yes-NAS'
@@ -625,7 +646,7 @@ if NAS == 'true':
     print message
     final_message = final_message + message
 
-  command = 'rsync '+rawfile+" "+nas_data_dir+"/raw/"
+  command = 'rsync '+rawfile+" "+raw_out_dir
   print 'Syncing file: '+command
   if os.system(command) == 0:
     stor_raw_file = 'Yes-NAS'
