@@ -21,7 +21,7 @@ reProdFile = re.compile("PROD_(\S+)_(\S+).zip")
 reRawProjName = re.compile("project name: (\S+)")
 
 ##  Configuration for the distribution - modify the following
-NAS_in_field =     'false'                        # Set to false for ftp 
+NAS_in_field =    False                          # Set to false for ftp 
 temp_dir =        '/tmp/'                        # Where we unzip & put busy
 dat_parent_dir =  '/scr/raf_data/'               # Where nc files go
 rdat_parent_dir = '/scr/raf_Raw_Data/'           # where raw ads files go
@@ -76,7 +76,7 @@ def dist_prod_file(fn):
     # Work in the /tmp dir - If we have a NAS in the field leave file in 
     # so BTSync doesn't keep replacing it, if move it so that ftp can 
     # replace it if they choose to reprocess in the field.
-    if NAS_in_field == 'true':
+    if NAS_in_field:
         command = 'cp -f '+fn+' '+temp_dir
         logging.info('copy file to temp dir: '+command)
     else: 
@@ -143,7 +143,7 @@ def dist_prod_file(fn):
     
     # if files are being ftp'd in, then remove it so newly processed file
     #   can be written to the directory.
-    if NAS_in_field != 'true':
+    if NAS_in_field != True:
         if os.path.isfile(fn):
             os.remove(fn)
 
