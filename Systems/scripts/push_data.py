@@ -25,21 +25,21 @@ from email.mime.text import MIMEText
 
 
 # Products set to true if you want 'em
-nc2asc = 'true'
-nc2iwg = 'false'
-catalog = 'false'
+nc2asc = True
+nc2iwg = False
+catalog = False
 
 #
 # Do we have local SWIG RAID storage.
-NAS =            'false'
+NAS =            False
 
 #
 # Instrument specific processing, true or false depending on if instrument is on project.
-twoD      =      'true'
-threeVCPI =      'false'
+twoD      =      True
+threeVCPI =      False
 
 # If doing a data_dump, please go to the datadump section below and set command as you want.
-datadump = 'false'
+datadump = False
 
 # Initialization 
 #  *******************  Modify The Following *********************
@@ -128,7 +128,7 @@ twods_raw_dir = raw_dir+'3v_cpi/2DS/'+ string.upper(project) +'_'+ string.upper(
 oapfile_dir   = raw_dir+'3v_cpi/oapfiles/'
 twodfile_dir  = raw_dir+'PMS2D/'
 cpi_raw_dir   = raw_dir+'3v_cpi/CPI/'+string.upper(project) + '_' + string.upper(flight) + '/'
-process   = "false"
+process   = False
 
 # End of Initialization section
 
@@ -183,13 +183,13 @@ if nclist.__len__() == 1:
   while reproc == '' and reproc != 'R' and reproc != 'S':
     reproc = raw_input('Reproces? (R) or Ship? (S):')
   if reproc == 'R': 
-    process = "true"
+    process = True
   else:
-    process = "false"
+    process = False
 elif nclist.__len__() == 0:
   print "No files found matching form: "+data_dir+'*'+flight+'*.nc'
   print "We must process!"
-  process = "true"
+  process = True
   ncfile = data_dir+file_prefix+".nc"
 else:
   print "More than one netCDF file found."
@@ -216,7 +216,7 @@ if kmllist.__len__() == 1:
   kmlfile = kmllist[0]
 elif kmllist.__len__() == 0:
   print "No files found matching form: "+data_dir+'*'+flight+'*.kml'
-  if process == "true":
+  if process:
     print "We are scheduled to process all is good"
     kmlfile = data_dir+file_prefix+".kml"
   else:
@@ -246,7 +246,7 @@ if icarttlist.__len__() == 1:
   icarttfile = icarttlist[0]
 elif icarttlist.__len__() == 0:
   print "No files found matching form: "+data_dir+'*'+flight+'*.asc'
-  if process == "true":
+  if process:
     print "We are scheduled to process all is good"
     icarttfile = data_dir+file_prefix+".asc"
   else:
@@ -275,7 +275,7 @@ if iwg1list.__len__() == 1:
   iwg1file = iwg1list[0]
 elif iwg1list.__len__() == 0:
   print "No files found matching form: "+data_dir+'*'+flight+'*.iwg1'
-  if process == "true":
+  if process:
     print "We are scheduled to process all is good"
     iwg1file = data_dir+file_prefix+".iwg1"
   else:
@@ -343,7 +343,7 @@ if rstudiolist.__len__() == 1:
 elif rstudiolist.__len__() == 0:
   print "No files found matching form: "+FCfilename
   #print "No files found matching form: "+filename
-  if process == "true":
+  if process:
     print "We are scheduled to process all is good"
     rstudiofile =  FCfilename
     #rstudiofile =  filename
@@ -382,7 +382,7 @@ if rstudiolist.__len__() == 1:
   rstudiofileHTML = rstudiolist[0]
 elif rstudiolist.__len__() == 0:
   print "No files found matching form: "+FCfilenameHTML
-  if process == "true":
+  if process:
     print "We are scheduled to process all is good"
     rstudiofileHTML =  FCfilenameHTML
   else:
@@ -412,7 +412,7 @@ threevcpi2d_file = ''
 
 # Run nimbus to generate first look product
 # Use a configuration file
-if process == "true":
+if process:
   nimConfFile = "/tmp/nimbConf.txt"
   command = "rm -f " + nimConfFile
   os.system(command)
@@ -436,9 +436,9 @@ if process == "true":
 
 # 3VCPI 
 # Convert SPEC file form to oap file form
-  if threeVCPI == 'true':
+  if threeVCPI:
     print "\n\n *****************  3VCPI **************************\n"
-    mkdir_fail = 'false'
+    mkdir_fail = False
     first_base_file = ''
     catted_file = 'base_'+flight+'all.2DSCPI'
     catted_2d_file = 'base_'+flight+'all.2d'
@@ -470,8 +470,8 @@ if process == "true":
           message= message +  "\n  - skipping 2d file gen/placement\n"
           print message
           final_message = final_message + message
-          mkdir_fail = 'true'
-      if not mkdir_fail == 'true':
+          mkdir_fail = True
+      if not mkdir_fail:
         twod_dir,fb_filename=os.path.split(first_base_file)
         datetime = fb_filename.split('.')[0].split('e')[1] #Pull out of base{datetime}.2d
         command = 'mv '+catted_2d_file+' '+oapfile_dir+'20'+datetime+'_'+flight+'.2d'
@@ -486,7 +486,7 @@ if process == "true":
           proc_3vcpi_files = 'Yes'
 
   # Fast 2D data, extract first, then process.
-  if twoD == 'true':
+  if twoD:
     ensure_dir(twodfile_dir)
     if os.path.exists(twodfile_dir):
       filename = rawfile.split(raw_dir)[1]
@@ -522,13 +522,13 @@ if process == "true":
     print "ERROR: NC Reorder failed! But NetCDF file should be fine"
     proc_nc_file  =    'Yes'
 
-  if nc2iwg == 'true':
+  if nc2iwg:
     command = "nc2iwg1 "+ncfile+" > "+iwg1file;
     print "about to execute : "+command
     if os.system(command) == 0:
       proc_iwg_file = 'Yes'
 
-  if nc2asc == 'true':
+  if nc2asc:
     command = "nc2asc -b "+nc2ascBatch+" -i "+ncfile+" -o "+icarttfile;
     print "about to execute : "+command
     if os.system(command) == 0:
@@ -579,7 +579,7 @@ if threevcpi2d_file != '':
 print "**************************"
 print ""
 
-if NAS == 'true':
+if NAS:
   # Put copies of files to local store
   command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
   print 'Mounting nas: '+command
@@ -674,7 +674,7 @@ print "RStudiofilenamePDF = "+rstudiofilename
 print "RStudiofilenameHTML = "+rstudiofilenameHTML
 
 # datadump section
-if datadump == 'true':
+if datadump:
 #  ddfilename = file_prefix+'.PDC'
   ddfilename = 'picarro_'+flight+'.asc'
   command = 'data_dump -i 10,600 -A '+rawfile+' > '+data_dir+'/'+ddfilename
@@ -691,7 +691,7 @@ if os.system(command) != 0:
   final_message = final_message + message
 
 # Put QC files into catalog and to the NAS if it exists
-if catalog=='true':
+if catalog:
   try:
     print 'opening FTP connection to: ' + qc_ftp_site
     print '- putting QC data in directory: ' + qc_ftp_dir
@@ -726,7 +726,7 @@ if catalog=='true':
       print e
 #  sys.exit(1)
 
-#if NAS == 'true':
+#if NAS:
   # mount the NAS and put QC files to it
 #  os.chdir(rdata_dir)
 #  command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
@@ -743,7 +743,7 @@ if catalog=='true':
 #  os.system(command)
 #
 # Put zipped files to EOL server
-if NAS != 'true':
+if NAS != True:
   try:
     print 'opening FTP connection to: ' + ftp_site
 
