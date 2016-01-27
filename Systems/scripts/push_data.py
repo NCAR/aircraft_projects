@@ -110,9 +110,9 @@ raircraft      = 'aircraft.NSF_NCAR_GV.'
 translate2ds = '/home/local/raf/instruments/3v-cpi/translate2ds/translate2ds '
 
 
-# Echo conifguration:
-print 'Processing ' + project + ' from ' + aircraft + '.'
-print 'If incorrect, edit ~/ads3_environment.'
+# Echo configuration:
+print
+print 'Processing ' + project + ' from ' + aircraft + '.   If incorrect, edit ~/ads3_environment.'
 print
 
 # ******************  End of Modification Section ****************
