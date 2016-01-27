@@ -39,9 +39,25 @@ from email.mime.text import MIMEText
 #  NOTE: assumes that Raw_Data is subdirectory of data_dir + project
 #
 #  TODO: project should be pulled from environment variable(?)
-project =	'ORCAS'
-aircraft =	'GV_N677F'
-data_dir =	'/home/data/'
+#
+try:
+  project =	os.environ["PROJECT"]
+except KeyError:
+  print "Please set the environment variable PROJECT."
+  sys.exit(1)
+
+try:
+  aircraft =	os.environ["AIRCRAFT"]
+except KeyError:
+  print "Please set the environment variable AIRCRAFT."
+  sys.exit(1)
+
+try:
+  data_dir =	os.environ["DATA_DIR"]
+except KeyError:
+  print "Please set the environment variable DATA_DIR."
+  sys.exit(1)
+
 rstudio_dir =	'/home/ads/RStudio/'
 
 # Instruments, true or false depending on if instrument is on project
@@ -75,13 +91,19 @@ raircraft      = 'aircraft.NSF_NCAR_GV.'
 
 # Products set to true if you want 'em
 nc2asc = 'true'
-nc2ascBatch = '/home/local/projects/' + project + '/' + aircraft + '/Production/nc2asc.bat'
+nc2ascBatch = os.environ["PROJ_DIR"] +'/'+ project +'/'+ aircraft + '/Production/nc2asc.bat'
 
 nc2iwg = 'false'
 
 translate2ds = '/home/local/raf/instruments/3v-cpi/translate2ds/translate2ds '
 
 catalog = 'false'
+
+# Echo conifguration:
+print 'Processing ' + project + ' from ' + aircraft + '.'
+print 'If incorrect, edit ~/ads3_environment.'
+print
+
 # ******************  End of Modification Section ****************
 
 # Get the flight designation
