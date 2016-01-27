@@ -53,8 +53,6 @@ datadump = 'false'
 #
 #   The RStudio piece seems to need special setup for each project
 #
-#  NOTE: assumes that Raw_Data is subdirectory of data_dir + project
-#
 #  TODO: project should be pulled from environment variable(?)
 #
 try:
