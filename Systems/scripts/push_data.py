@@ -39,9 +39,6 @@ NAS =            'false'
 twoD      =      'true'
 threeVCPI =      'false'
 
-nc2ascBatch =	os.environ["PROJ_DIR"] +'/'+ project +'/'+ aircraft
-		+ '/Production/nc2asc.bat'
-
 # Initialization 
 #  *******************  Modify The Following *********************
 #  NOTE: Be sure to ask the systems group to create a directory:
@@ -82,6 +79,8 @@ except KeyError:
   sys.exit(1)
 
 rstudio_dir =	'/home/ads/RStudio/'
+
+nc2ascBatch =	os.environ["PROJ_DIR"] +'/'+ project +'/'+ aircraft + '/Production/nc2asc.bat'
 
 nas_url =        '192.168.1.30:/data'
 nas_mnt_pt =     '/mnt/Data/'
