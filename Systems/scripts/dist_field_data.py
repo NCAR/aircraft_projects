@@ -6,7 +6,7 @@ the creation of new files that are created in the
 incoming data' folder.  When a new file is detected it
 is handled according to the type of file it is:
     Raw Data
-    Product Data - form PROD_<PROJECT><FL##>.zip
+    Product Data - form PROD_<PROJECT>_<FL##>.zip
     Camera images
 
 """

@@ -1,11 +1,10 @@
 #!/usr/bin/python
 #
-# This script is specific to the WINTER project.
 # It takes a flight number designation and then using it gets raw ads 
 # file, netCDF file and kml file for that flight number (verifying with the 
 # user where needed) and does several things:
 #  1: zips up the nc, kml, and iwg1 files into a single zip file 
-#  2: zips up the ads file - commented out for WINTER
+#  2: zips up the ads file
 #  3: Creates plots using an Rstudio script
 #  4: copies nc, kml, plots to local FTP site for readynas to sync to Boulder
 #  4: FTPs the nc and kml files to a local server in the WINTER Ops center 
@@ -52,8 +51,6 @@ datadump = 'false'
 #   case version of the project name e.g. icebridge2015 not ICEBRIDGE2015
 #
 #   The RStudio piece seems to need special setup for each project
-#
-#  TODO: project should be pulled from environment variable(?)
 #
 try:
   project =	os.environ["PROJECT"]
