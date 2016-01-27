@@ -171,14 +171,14 @@ if ncfile == '' :
   #sys.exit(0)
 
 #KML file
-kmllist = glob.glob(nc_dir+'*'+'_'+flight+'.kml')
+kmllist = glob.glob(nc_dir+'*'+flight+'.kml')
 if kmllist.__len__() == 1:
   kmlfile = kmllist[0]
 elif kmllist.__len__() == 0:
-  print "No files found matching form: "+nc_dir+'*'+'_'+flight+'*.kml'
+  print "No files found matching form: "+nc_dir+'*'+flight+'*.kml'
   if process == "true":
     print "We are scheduled to process all is good"
-    kmlfile = nc_dir+project+'_'+flight+".kml"
+    kmlfile = nc_dir+project+flight+".kml"
   else:
     print "We have nc file but not kml file....  aborting..."
     #sys.exit(0)
@@ -201,14 +201,14 @@ if kmlfile == '' :
 
 #nc2asc file
 icarttfile = ''
-icarttlist = glob.glob(nc_dir+'*'+'_'+flight+'.asc')
+icarttlist = glob.glob(nc_dir+'*'+flight+'.asc')
 if icarttlist.__len__() == 1:
   icarttfile = icarttlist[0]
 elif icarttlist.__len__() == 0:
-  print "No files found matching form: "+nc_dir+'*'+'_'+flight+'*.asc'
+  print "No files found matching form: "+nc_dir+'*'+flight+'*.asc'
   if process == "true":
     print "We are scheduled to process all is good"
-    icarttfile = nc_dir+project+"_"+'_'+flight+".asc"
+    icarttfile = nc_dir+project+flight+".asc"
   else:
     print "We have nc file but not ASCII file....  aborting..."
     #sys.exit(0)
@@ -230,14 +230,14 @@ if icarttfile == '' :
   #sys.exit(0)
 
 #IWG1 file
-iwg1list = glob.glob(nc_dir+'*'+'_'+flight+'.iwg1')
+iwg1list = glob.glob(nc_dir+'*'+flight+'.iwg1')
 if iwg1list.__len__() == 1:
   iwg1file = iwg1list[0]
 elif iwg1list.__len__() == 0:
-  print "No files found matching form: "+nc_dir+'*'+'_'+flight+'*.iwg1'
+  print "No files found matching form: "+nc_dir+'*'+flight+'*.iwg1'
   if process == "true":
     print "We are scheduled to process all is good"
-    iwg1file = nc_dir+project+'_'+flight+".iwg1"
+    iwg1file = nc_dir+project+flight+".iwg1"
   else:
     print "We have nc file but not iwg1 file....  aborting..."
     #sys.exit(0)
@@ -289,7 +289,7 @@ if rawfile == '' :
 filename = rawfile.split(raw_dir)[1]
 time = filename.split(".")[0].replace('_','')
 FCfilename = rstudio_dir+project+'/'+raircraft+time[0:12]+'.RAF_QC_plots_hires.pdf'
-RStudio_outfile = rstudio_dir+project+'/'+project+'_'+flight+'Plots.pdf'
+RStudio_outfile = rstudio_dir+project+'/'+project+flight+'Plots.pdf'
 #filename = rstudio_dir+project+'/'+project+flight+'Plots.pdf'
 
 rstudiolist = glob.glob(FCfilename)
@@ -331,7 +331,7 @@ if rstudiofile == '' :
 filename = rawfile.split(raw_dir)[1]
 time = filename.split(".")[0].replace('_','')
 FCfilenameHTML = rstudio_dir+project+'/'+raircraft+time[0:12]+'.RAF_QC_plots.html'
-RStudio_outfileHTML = rstudio_dir+project+'/'+project+'_'+flight+'Plots.html'
+RStudio_outfileHTML = rstudio_dir+project+'/'+project+flight+'Plots.html'
 
 rstudiolist = glob.glob(FCfilenameHTML)
 
