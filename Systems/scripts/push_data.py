@@ -39,6 +39,9 @@ NAS =            'false'
 twoD      =      'true'
 threeVCPI =      'false'
 
+# If doing a data_dump, please go to the datadump section below and set command as you want.
+datadump = 'false'
+
 # Initialization 
 #  *******************  Modify The Following *********************
 #  NOTE: Be sure to ask the systems group to create a directory:
@@ -683,10 +686,11 @@ print "icarttfilename = "+icarttfilename
 print "RStudiofilenamePDF = "+rstudiofilename
 print "RStudiofilenameHTML = "+rstudiofilenameHTML
 
-#ICEBRIDGE special request for raw DGPS Data
-if project == 'ICEBRIDGE2015':
-  pcdfilename = project+'_'+flight+'.PDC'
-  command = 'data_dump -i 3,160 -n '+rawfile+'> '+data_dir+'/'+pcdfilename
+# datadump section
+if datadump == 'true':
+#  ddfilename = file_prefix+'.PDC'
+  ddfilename = 'picarro_'+flight+'.asc'
+  command = 'data_dump -i 10,600 -A '+rawfile+' > '+data_dir+'/'+ddfilename
   os.system(command)
 
 # Make sure that there is not a zip file already there ("overwrite")
