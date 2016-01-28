@@ -781,23 +781,20 @@ if NAS != True:
 # put zipped file onto NAS for BT-syncing back home.
 else:
 
-  # Now ZiP up the rawfile - since bzip2 overwrites raw file, do in /tmp
+  # Now ZiP up the rawfile.
   raw_dir,rawfilename = os.path.split(rawfile)
-  zip_raw_file = '/tmp/'+rawfilename+".bz2"
+  zip_raw_file = rawfile + '.bz2'
   print "rawfilename = "+rawfilename
-  # remove zip file if it exists
-  os.chdir('/tmp')
-  command = 'cp -f '+rawfile+ ' .'
-  print "copy rawfile to temp: "+command
-  os.system(command)
-  command = "rm -f "+zip_raw_file
-  print "remove any old copies of bz file: "+command
-  os.system(command)
-  command = "bzip2 " +rawfilename
-  print ""
-  print "Zipping up raw data file with command:"
-  print command
-  os.system(command)
+  os.chdir(raw_dir)
+  if not os.path.exists(zip_raw_file):
+    command = "bzip2 -k " + rawfilename
+    os.system(command)
+    print ""
+    print "Zipping up raw data file with command:"
+    print command
+  else:
+    print 'Compressed ADS image already exists.'
+
 
   # mount the NAS and put zipped raw file to it
   command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
