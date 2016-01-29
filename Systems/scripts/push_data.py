@@ -78,7 +78,7 @@ except KeyError:
 
 rstudio_dir =	'/home/ads/RStudio/' + project + '/'
 
-nc2ascBatch =	os.environ["PROJ_DIR"] +'/'+ project +'/'+ aircraft + '/Production/nc2asc.bat'
+nc2ascBatch =	os.environ["PROJ_DIR"] +'/'+ project +'/'+ aircraft + '/scripts/nc2asc.bat'
 
 # Don't make it Raw_Data/proj.
 zip_dir = '/tmp/'
