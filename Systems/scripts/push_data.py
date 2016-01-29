@@ -432,6 +432,7 @@ if process:
 
   res = os.system(command)
   print 'result of nimbus call = '+str(res)
+  print
 
   if res == 0:
     proc_raw_file =    'Yes'
@@ -502,7 +503,7 @@ if process:
       os.system(command)
 
     if os.path.exists(twoDfile):
-      # merge 2D data into netCDF file
+      # process 2D data into netCDF file
       command = 'process2d '+twoDfile+' -o '+ncfile
       print '2D merge command: '+command
       if os.system(command) == 0:
@@ -512,8 +513,9 @@ if process:
       else:
         ship_2d_files = 'ads    '
         ship_2d_files = 'ads    '
+    print
 
-  
+
 # NetCDF utility work - Reorder, generate Iwg ascii and ICARTT ascii
   command = "ncReorder "+ncfile+" tmp.nc";
   print "about to execute : "+command
