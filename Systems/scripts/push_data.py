@@ -491,15 +491,17 @@ if process:
   # Fast 2D data, extract first, then process.
   if twoD:
     ensure_dir(twodfile_dir)
-    if os.path.exists(twodfile_dir):
-      filename = rawfile.split(raw_dir)[1]
-      fileelts = filename.split('.')
-      twoDfile = twodfile_dir + fileelts[0] + '.2d'
+
+    filename = rawfile.split(raw_dir)[1]
+    fileelts = filename.split('.')
+    twoDfile = twodfile_dir + fileelts[0] + '.2d'
+    if not os.path.exists(twoDfile):
       command = 'extract2d '+twoDfile+' '+rawfile
       message = '\nExtracting 2D from ads:'+command+'\n'
       print message
       os.system(command)
 
+    if os.path.exists(twoDfile):
       # merge 2D data into netCDF file
       command = 'process2d '+twoDfile+' -o '+ncfile
       print '2D merge command: '+command
