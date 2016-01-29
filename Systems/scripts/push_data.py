@@ -80,6 +80,9 @@ rstudio_dir =	'/home/ads/RStudio/' + project + '/'
 
 nc2ascBatch =	os.environ["PROJ_DIR"] +'/'+ project +'/'+ aircraft + '/Production/nc2asc.bat'
 
+# Don't make it Raw_Data/proj.
+zip_dir = '/tmp/'
+
 nas_url =        '192.168.1.30:/data'
 nas_mnt_pt =     '/mnt/Data/'
 nas_sync_dir =   nas_mnt_pt + '/data/synced_data/ads/'
@@ -783,11 +786,11 @@ else:
 
   # Now ZiP up the rawfile.
   raw_dir,rawfilename = os.path.split(rawfile)
-  zip_raw_file = rawfile + '.bz2'
+  zip_raw_file = zip_dir + rawfilename + '.bz2'
   print "rawfilename = "+rawfilename
   os.chdir(raw_dir)
   if not os.path.exists(zip_raw_file):
-    command = "bzip2 -k " + rawfilename
+    command = "bzip2 -kc " + rawfilename + " > " + zip_raw_file
     os.system(command)
     print ""
     print "Zipping up raw data file with command:"
