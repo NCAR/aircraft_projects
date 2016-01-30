@@ -1,8 +1,11 @@
 #ORCAS
-*/3 * * * * /home/local/projects/ORCAS/GV_N677F/scripts/get_ship
-15 */3 * * * /home/local/projects/ORCAS/GV_N677F/scripts/get_ice
+8 * * * * /home/local/projects/ORCAS/GV_N677F/scripts/get_ship >& /tmp/get_ship.log
+15 */3 * * * /home/local/projects/ORCAS/GV_N677F/scripts/get_ice >& /tmp/get_ice.log
+*/15 * * * * /home/local/Systems/scripts/get_alt.csh >& /tmp/alt.log
+*/15 * * * * /home/local/Systems/scripts/get_alt2.csh >& /tmp/alt2.log
 
 # New satellite script
 26,41 * * * * /home/local/Systems/scripts/get_ir_image_cron.py >>& /tmp/get_ir_image.log 
+27,42 * * * * /home/local/Systems/scripts/get_wv_image_cron.py >>& /tmp/get_wv_image.log 
 25,40 * * * * /home/local/Systems/scripts/get_4kmvis_image_cron.py >>& /tmp/get_4kmvis_image.log 
 
