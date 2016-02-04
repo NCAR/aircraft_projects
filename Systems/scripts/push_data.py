@@ -490,6 +490,7 @@ if process:
           proc_3vcpi_files = 'Yes'
 
   # Fast 2D data, extract first, then process.
+  #
   if twoD:
     ensure_dir(twodfile_dir)
 
@@ -497,13 +498,17 @@ if process:
     fileelts = filename.split('.')
     twoDfile = twodfile_dir + fileelts[0] + '.2d'
     if not os.path.exists(twoDfile):
+      # General form of extract2d from RAW_DATA_DIR is:
+      #   extract2d PMS2D/output.2d input.ads
       command = 'extract2d '+twoDfile+' '+rawfile
       message = '\nExtracting 2D from ads:'+command+'\n'
       print message
       os.system(command)
 
     if os.path.exists(twoDfile):
-      # process 2D data into netCDF file
+      # Process 2D data into netCDF file.  General form is:
+      #   process2d $RAW_DATA_DIR/$proj/PMS2D/input.2d -o $DATA_DIR/$proj/output.nc
+      #
       command = 'process2d '+twoDfile+' -o '+ncfile
       print '2D merge command: '+command
       if os.system(command) == 0:
@@ -516,7 +521,7 @@ if process:
     print
 
 
-# NetCDF utility work - Reorder, generate Iwg ascii and ICARTT ascii
+# NetCDF utility work - Reorder, generate IWG ascii and/or ICARTT ascii
   command = "ncReorder "+ncfile+" tmp.nc";
   print "about to execute : "+command
   os.system(command)
@@ -541,7 +546,18 @@ if process:
     if os.system(command) == 0:
       proc_asc_file = 'Yes'
 
+#
 # Run Al Cooper's R code for QA/QC production
+#
+# Currently requires being run from the ~/RSudio/DataReview directory.
+# Run as: "Rscript Review.R ##"
+#  without the 'rf', 'tf', or 'ff' at this time.
+#
+# If R is not installed or working, documentation is in:
+#  RStudio/Randadu/RanaduManual.pdf (git clone https://github.com/WilliamCooper/Ranadu)
+# also see:
+#  RStudio/DataReview/DataReviewManual.pdf
+#
   os.chdir(rstudio_dir)
   command = "Rscript " + rstudio_dir + "/Review.R " + flight
   print "about to execute : "+command
@@ -680,13 +696,20 @@ print "icarttfilename = "+icarttfilename
 print "RStudiofilenamePDF = "+rstudiofilename
 print "RStudiofilenameHTML = "+rstudiofilenameHTML
 
-# datadump section
+#
+# data_dump section
+#
+# Project specific data_dump's for indivual users.
+#
 if datadump:
 #  ddfilename = file_prefix+'.PDC'
   ddfilename = 'picarro_'+flight+'.asc'
   command = 'data_dump -i 10,600 -A '+rawfile+' > '+data_dir+'/'+ddfilename
   os.system(command)
 
+#
+# Zip up netCDF and products into a single file
+#
 # Make sure that there is not a zip file already there ("overwrite")
 command = "cd "+data_dir+"; rm "+zip_data_filename
 os.system(command)
