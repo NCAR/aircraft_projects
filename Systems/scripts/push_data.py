@@ -170,7 +170,6 @@ final_message = final_message + '  Flight:'+flight+'\r\n\r\n'
 
 def ensure_dir(f):
     d = os.path.dirname(f)
-    print d
     if not os.path.exists(d):
         os.makedirs(d)
 
