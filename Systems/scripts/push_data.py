@@ -327,85 +327,80 @@ if rawfile == '' :
 
 # RStudio PDF file
 
-ensure_dir(rstudio_dir)
-
-#Include time in RStudio filename so can load into field catalog
-filename = rawfile.split(raw_dir)[1]
-time = filename.split(".")[0].replace('_','')
-FCfilename = rstudio_dir+raircraft+time[0:12]+'.RAF_QC_plots_hires.pdf'
-RStudio_outfile = rstudio_dir+file_prefix+'Plots.pdf'
-#filename = rstudio_dir+file_prefix+'Plots.pdf'
-
-rstudiolist = glob.glob(FCfilename)
-#rstudiolist = glob.glob(filename)
-
-rstudiofile = ''
-if rstudiolist.__len__() == 1:
-  rstudiofile = rstudiolist[0]
-elif rstudiolist.__len__() == 0:
-  print "No files found matching form: "+FCfilename
-  #print "No files found matching form: "+filename
-  if process:
-    print "We are scheduled to process all is good"
-    rstudiofile =  FCfilename
-    #rstudiofile =  filename
-  else:
-    print "We have nc file but not rstudio file....  aborting..."
-    #sys.exit(0)
+if not os.path.exists(rstudio_dir):
+  print 'RStudio DataReview has not been checked out at : '+ rstudio_dir
+  print 'No plots being generated.'
 else:
-  print "More than one file found.  Stepping through files, please select the right one"
+  #Include time in RStudio filename so can load into field catalog
+  filename = rawfile.split(raw_dir)[1]
+  time = filename.split(".")[0].replace('_','')
+  FCfilename = rstudio_dir+raircraft+time[0:12]+'.RAF_QC_plots_hires.pdf'
+  RStudio_outfile = rstudio_dir+file_prefix+'Plots.pdf'
+
+  rstudiolist = glob.glob(FCfilename)
+
   rstudiofile = ''
-  i = 0
-  while rstudiofile == '' :
-    ans = raw_input(rstudiolist[i]+'? (Y/N)')
-    if ans == 'Y' or ans == 'y':
-      rstudiofile = rstudiolist[i]
-    if i < rstudiolist.__len__() - 1: 
-      i = i + 1
+  if rstudiolist.__len__() == 1:
+    rstudiofile = rstudiolist[0]
+  elif rstudiolist.__len__() == 0:
+    print "No files found matching form: "+FCfilename
+    if process:
+      print "We are scheduled to process all is good"
+      rstudiofile =  FCfilename
     else:
-      i = 0
-if rstudiofile == '' :
-  print "No RStudio file identified!"
-  print "Aborting..."
-  #sys.exit(0)
-
-# RStudio HTML file
-
-#Include time in RStudio filename so can load into field catalog
-filename = rawfile.split(raw_dir)[1]
-time = filename.split(".")[0].replace('_','')
-FCfilenameHTML = rstudio_dir+raircraft+time[0:12]+'.RAF_QC_plots.html'
-RStudio_outfileHTML = rstudio_dir+file_prefix+'Plots.html'
-
-rstudiolist = glob.glob(FCfilenameHTML)
-
-rstudiofileHTML = ''
-if rstudiolist.__len__() == 1:
-  rstudiofileHTML = rstudiolist[0]
-elif rstudiolist.__len__() == 0:
-  print "No files found matching form: "+FCfilenameHTML
-  if process:
-    print "We are scheduled to process all is good"
-    rstudiofileHTML =  FCfilenameHTML
+      print "We have nc file but not rstudio file....  aborting..."
   else:
-    print "We have nc file but not rstudio file....  aborting..."
-    #sys.exit(0)
-else:
-  print "More than one file found.  Stepping through files, please select the right one"
+    print "More than one file found.  Stepping through files, please select the right one"
+    rstudiofile = ''
+    i = 0
+    while rstudiofile == '' :
+      ans = raw_input(rstudiolist[i]+'? (Y/N)')
+      if ans == 'Y' or ans == 'y':
+        rstudiofile = rstudiolist[i]
+      if i < rstudiolist.__len__() - 1:
+        i = i + 1
+      else:
+        i = 0
+  if rstudiofile == '' :
+    print "No RStudio file identified!"
+    print "Aborting..."
+
+  # RStudio HTML file
+
+  #Include time in RStudio filename so can load into field catalog
+  filename = rawfile.split(raw_dir)[1]
+  time = filename.split(".")[0].replace('_','')
+  FCfilenameHTML = rstudio_dir+raircraft+time[0:12]+'.RAF_QC_plots.html'
+  RStudio_outfileHTML = rstudio_dir+file_prefix+'Plots.html'
+
+  rstudiolist = glob.glob(FCfilenameHTML)
+
   rstudiofileHTML = ''
-  i = 0
-  while rstudiofileHTML == '' :
-    ans = raw_input(rstudiolist[i]+'? (Y/N)')
-    if ans == 'Y' or ans == 'y':
-      rstudiofileHTML = rstudiolist[i]
-    if i < rstudiolist.__len__() - 1: 
-      i = i + 1
+  if rstudiolist.__len__() == 1:
+    rstudiofileHTML = rstudiolist[0]
+  elif rstudiolist.__len__() == 0:
+    print "No files found matching form: "+FCfilenameHTML
+    if process:
+      print "We are scheduled to process all is good"
+      rstudiofileHTML =  FCfilenameHTML
     else:
-      i = 0
-if rstudiofileHTML == '' :
-  print "No RStudio file identified!"
-  print "Aborting..."
-  #sys.exit(0)
+      print "We have nc file but not rstudio file....  aborting..."
+  else:
+    print "More than one file found.  Stepping through files, please select the right one"
+    rstudiofileHTML = ''
+    i = 0
+    while rstudiofileHTML == '' :
+      ans = raw_input(rstudiolist[i]+'? (Y/N)')
+      if ans == 'Y' or ans == 'y':
+        rstudiofileHTML = rstudiolist[i]
+      if i < rstudiolist.__len__() - 1:
+        i = i + 1
+      else:
+        i = 0
+  if rstudiofileHTML == '' :
+    print "No RStudio file identified!"
+    print "Aborting..."
+
 
 #########################  End of Setup ###################################
 
