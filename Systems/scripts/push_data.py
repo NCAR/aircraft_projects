@@ -558,7 +558,8 @@ if process:
 #  RStudio/DataReview/DataReviewManual.pdf
 #
   os.chdir(rstudio_dir)
-  command = "Rscript " + rstudio_dir + "/Review.R " + flight
+  fl_num = flight[2:]  # This will probably change in the future...
+  command = "Rscript " + rstudio_dir + "/Review.R " + fl_num
   print "about to execute : "+command
   os.system(command)
 
