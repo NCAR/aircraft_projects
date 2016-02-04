@@ -704,7 +704,9 @@ print "RStudiofilenameHTML = "+rstudiofilenameHTML
 if datadump:
 #  ddfilename = file_prefix+'.PDC'
   ddfilename = 'picarro_'+flight+'.asc'
-  command = 'data_dump -i 10,600 -A '+rawfile+' > '+data_dir+'/'+ddfilename
+  command = 'data_dump -i 10,600 -A '+rawfile+' > '+data_dir+ddfilename
+  os.system(command)
+  command = 'zip '+data_dir+ddfilename+'.zip '+nas_sync_dir+ddfilename
   os.system(command)
 
 #
