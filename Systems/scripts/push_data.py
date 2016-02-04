@@ -819,11 +819,11 @@ else:
   print "rawfilename = "+rawfilename
   os.chdir(raw_dir)
   if not os.path.exists(zip_raw_file):
+    print "Compressing ADS file with command:"
+    print command
     command = "bzip2 -kc " + rawfilename + " > " + zip_raw_file
     os.system(command)
     print ""
-    print "Zipping up raw data file with command:"
-    print command
   else:
     print 'Compressed ADS image already exists.'
 
