@@ -76,7 +76,8 @@ except KeyError:
   print "Please set the environment variable RAW_DATA_DIR."
   sys.exit(1)
 
-rstudio_dir =	'/home/ads/RStudio/' + project + '/'
+# DataReview is in github.  https://github/WilliamCooper/DataReview.git
+rstudio_dir =   '/home/ads/RStudio/DataReview/'
 
 nc2ascBatch =	os.environ["PROJ_DIR"] +'/'+ project +'/'+ aircraft + '/scripts/nc2asc.bat'
 
@@ -543,16 +544,15 @@ if process:
 #
 # Run Al Cooper's R code for QA/QC production
 #
-# Currently requires being run from the ~/RSudio/DataReview directory.
-# Run as: "Rscript Review.R ##"
-#  without the 'rf', 'tf', or 'ff' at this time.
+# Currently requires being run from the ~/RStudio/DataReview directory.
+# Run as: "Rscript Review.R ##", without the 'rf', 'tf', or 'ff' at this time.
 #
 # If R is not installed or working, documentation is in:
 #  RStudio/Randadu/RanaduManual.pdf (git clone https://github.com/WilliamCooper/Ranadu)
 # also see:
 #  RStudio/DataReview/DataReviewManual.pdf
 #
-  os.chdir(rstudio_dir)
+  os.chdir(data_dir)
   fl_num = flight[2:]  # This will probably change in the future...
   command = "Rscript " + rstudio_dir + "/Review.R " + fl_num
   print "about to execute : "+command
@@ -560,13 +560,15 @@ if process:
 
   # rename Rstudio output files to name with time so can input into
   # field catalog
-  command = "/bin/mv " + RStudio_outfile + " " + rstudiofile;
-  print "about to execute : "+command
-  os.system(command)
-  command = "/bin/mv " + RStudio_outfileHTML + " " + rstudiofileHTML;
+  command = "/bin/cp " + RStudio_outfile + " " + rstudiofile;
   print "about to execute : "+command
   if os.system(command) == 0:
     proc_qc_files = "Yes"
+
+# The R scripts are producing HTML outpout anymore.  cjw / ORCAS.
+#  command = "/bin/cp " + RStudio_outfileHTML + " " + rstudiofileHTML;
+#  print "about to execute : "+command
+#  if os.system(command) == 0:
 
 else:
   print "Processing already done, skipping nimbus command"
@@ -708,9 +710,10 @@ if datadump:
 # Zip up netCDF and products into a single file
 #
 # Make sure that there is not a zip file already there ("overwrite")
-command = "cd "+data_dir+"; rm "+zip_data_filename
+os.chdir(data_dir)
+command = "rm "+zip_data_filename
 os.system(command)
-command = "cd "+data_dir+"; zip " + zip_data_filename + " " + ncfilename + " " + kmlfilename + " " + iwg1filename + " " + icarttfilename + " " + emailfilename
+command = "zip " + zip_data_filename + " " + ncfilename + " " + kmlfilename + " " + iwg1filename + " " + icarttfilename + " " + RStudio_outfile + " " + emailfilename
 if os.system(command) != 0:
   message =  "\nERROR!: Zipping up netCDF, IWG1, ASCII and KML files with command:\n  "
   message = message + command
