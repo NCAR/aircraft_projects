@@ -335,8 +335,8 @@ else:
   #Include time in RStudio filename so can load into field catalog
   filename = rawfile.split(raw_dir)[1]
   time = filename.split(".")[0].replace('_','')
-  FCfilename = rstudio_dir+raircraft+time[0:12]+'.RAF_QC_plots_hires.pdf'
-  RStudio_outfile = rstudio_dir+file_prefix+'Plots.pdf'
+  FCfilename = data_dir+raircraft+time[0:12]+'.RAF_QC_plots_hires.pdf'
+  RStudio_outfile = data_dir+file_prefix+'Plots.pdf'
 
   rstudiolist = glob.glob(FCfilename)
 
