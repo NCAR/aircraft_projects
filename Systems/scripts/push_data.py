@@ -371,8 +371,8 @@ else:
   #Include time in RStudio filename so can load into field catalog
   filename = rawfile.split(raw_dir)[1]
   time = filename.split(".")[0].replace('_','')
-  FCfilenameHTML = rstudio_dir+raircraft+time[0:12]+'.RAF_QC_plots.html'
-  RStudio_outfileHTML = rstudio_dir+file_prefix+'Plots.html'
+  FCfilenameHTML = data_dir+raircraft+time[0:12]+'.RAF_QC_plots.html'
+  RStudio_outfileHTML = data_dir+file_prefix+'Plots.html'
 
   rstudiolist = glob.glob(FCfilenameHTML)
 
@@ -735,10 +735,10 @@ if catalog:
     file = open(rstudiofilename, 'r')
     ftp.storbinary('STOR ' + rstudiofilename, file)
     file.close()
-    print "Putting file:"+rstudiofilenameHTML
-    file = open(rstudiofilenameHTML, 'r')
-    ftp.storbinary('STOR ' + rstudiofilenameHTML, file)
-    file.close()
+#    print "Putting file:"+rstudiofilenameHTML
+#    file = open(rstudiofilenameHTML, 'r')
+#    ftp.storbinary('STOR ' + rstudiofilenameHTML, file)
+#    file.close()
     print "Finished putting QC files"
     print ""
     ftp.quit()
