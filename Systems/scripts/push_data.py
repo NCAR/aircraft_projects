@@ -27,11 +27,14 @@ from email.mime.text import MIMEText
 # Products set to true if you want 'em
 nc2asc = True
 nc2iwg = False
-catalog = False
+catalog = True
 
 #
 # Do we have local SWIG RAID storage.
-NAS =            False
+NAS =            True
+# Does NAS have a permanent mount?
+NAS_permanent_mount = True
+
 
 #
 # Instrument specific processing, true or false depending on if instrument is on project.
@@ -39,7 +42,7 @@ twoD      =      True
 threeVCPI =      False
 
 # If doing a data_dump, please go to the datadump section below and set command as you want.
-datadump = False
+datadump = True
 
 # Initialization 
 #  *******************  Modify The Following *********************
@@ -86,8 +89,8 @@ zip_dir = '/tmp/'
 
 nas_url =        '192.168.1.30:/data'
 nas_mnt_pt =     '/mnt/Data/'
-nas_sync_dir =   nas_mnt_pt + '/data/synced_data/ads/'
-nas_data_dir =   nas_mnt_pt + '/data/scr_data/ads/'
+nas_sync_dir =   nas_mnt_pt + '/data/synced_data/'
+nas_data_dir =   nas_mnt_pt + '/data/scr_data/'
 
 ftp_site =       'ftp.eol.ucar.edu'
 user =           'anonymous'
@@ -600,11 +603,13 @@ print "**************************"
 print ""
 
 if NAS:
-  # Put copies of files to local store
-  command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
-  print 'Mounting nas: '+command
-  os.system(command)
+  if NAS_permanent_mount == False:
+     # Mount NAS
+     command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
+     print 'Mounting nas: '+command
+     os.system(command)
 
+  # Put copies of files to local store
   nc_out_dir = nas_data_dir+"/nc/"
   qc_out_dir = nas_data_dir+"/qc/"
   raw_out_dir = nas_data_dir+"/raw/"
@@ -699,20 +704,29 @@ print "RStudiofilenameHTML = "+rstudiofilenameHTML
 # Project specific data_dump's for indivual users.
 #
 if datadump:
-#  ddfilename = file_prefix+'.PDC'
+
+  # PICARRO data - extract and write to nas_sync_dir
   ddfilename = 'picarro_'+flight+'.asc'
   command = 'data_dump -i 10,600 -A '+rawfile+' > '+data_dir+ddfilename
   os.system(command)
-  command = 'zip '+data_dir+ddfilename+'.zip '+nas_sync_dir+ddfilename
+  command = 'zip '+nas_sync_dir+ddfilename +'.zip '+data_dir+ddfilename
   os.system(command)
 
 #
-# Zip up netCDF and products into a single file
+# Zip up netCDF and products individually, then into a single file
 #
 # Make sure that there is not a zip file already there ("overwrite")
 os.chdir(data_dir)
 command = "rm "+zip_data_filename
 os.system(command)
+for file in [ncfilename,kmlfilename,iwg1filename,icarttfilename,RStudio_outfile,emailfilename]
+    command = "zip " + file + ".zip " + file
+    if os.system(command) != 0:
+      message =  "\nERROR!: Zipping up " + file + " with command:\n  "
+      message = message + command
+      print message
+      final_message = final_message + message
+
 command = "zip " + zip_data_filename + " " + ncfilename + " " + kmlfilename + " " + iwg1filename + " " + icarttfilename + " " + RStudio_outfile + " " + emailfilename
 if os.system(command) != 0:
   message =  "\nERROR!: Zipping up netCDF, IWG1, ASCII and KML files with command:\n  "
@@ -827,9 +841,11 @@ else:
 
 
   # mount the NAS and put zipped raw file to it
-  command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
-  print 'Mounting nas: '+command
-  os.system(command)
+  if NAS_permanent_mount == False:
+     # Mount NAS
+     command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
+     print 'Mounting nas: '+command
+     os.system(command)
 
   os.chdir(data_dir)
   command = 'rsync '+zip_data_filename+" "+nas_sync_dir
