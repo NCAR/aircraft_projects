@@ -1,4 +1,6 @@
 #!/usr/bin/python
+#
+# Runs in cron on tikal as user ads
 
 """
 This script uses the pyinotify module to monitor
@@ -21,7 +23,7 @@ reProdFile = re.compile("PROD_(\S+)_(\S+).zip")
 reRawProjName = re.compile("project name: (\S+)")
 
 ##  Configuration for the distribution - modify the following
-NAS_in_field =    False                          # Set to false for ftp 
+NAS_in_field =    True                          # Set to false for ftp 
 temp_dir =        '/tmp/'                        # Where we unzip & put busy
 dat_parent_dir =  os.environ["DATA_DIR"] + '/' # Where nc files go
 rdat_parent_dir = os.environ["RAW_DATA_DIR"] + '/' # where raw ads files go
@@ -41,7 +43,7 @@ ftp_parent_dir =  '/net/ftp/pub/data/download/'  # Where nc files go for PIs
 #  If the files have been ftp'd over, they will be removed so that the
 #  production scripts can be rerun, generate and ftp over new ones.  If not 
 #  then they won't so that the Sync function doesn't just write them again. 
-#  Sync in the field will update them in the case of rerunning prduction in
+#  Sync in the field will update them in the case of rerunning production in
 #  the field.
 ##############################################################################
 def dist_prod_file(fn):
@@ -259,7 +261,8 @@ if __name__ == '__main__':
 
     except IndexError:
         print "\nUsage: %s path logfile" % sys.argv[0]
-        print "    path    - path to data files  (i.e. /net/ftp/pub/data/ads/ads)"
+        print "    path    - path to data files  (i.e.
+	/net/iftp2/pub/incoming/<project>/synced_data)"
         print "    logfile - logfile name (i.e. /tmp/ads_data_catcher.log)"
         print "\nThe logfile is rotated every 8192 bytes with a backup count of 10."
         os.remove(busy_file)
