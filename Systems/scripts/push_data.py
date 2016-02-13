@@ -24,31 +24,30 @@ import smtplib
 from email.mime.text import MIMEText
 
 
-# Products set to true if you want 'em
+# Products - set to true if you want 'em
 nc2asc = True
 nc2iwg = False
 catalog = True
 
-#
 # Do we have local SWIG RAID storage.
 NAS =            True
 # Does NAS have a permanent mount?
 NAS_permanent_mount = True
 
-
-#
-# Instrument specific processing, true or false depending on if instrument is on project.
+# Instrument specific processing
+# - true or false depending on if instrument is on project.
 twoD      =      True
 threeVCPI =      False
 
-# If doing a data_dump, please go to the datadump section below and set command as you want.
+# If doing a project specific data_dump for a user, please go to the datadump 
+# section below and set command as you want.
 datadump = True
 
 # Initialization 
 #  *******************  Modify The Following *********************
 #  NOTE: Be sure to ask the systems group to create a directory:
-#   /net/ftp/pub/data/download/project_name
-#   and that it be owned by the ads user.
+#   /net/iftp2/pub/incoming/<project>/synced_data. If NAS_permanent_mount
+#   then NAS will copy files to that dir.
 #   Note that the CWIG standard and the standard expected by the 
 #   catcher script will be that project_name above will be the lower
 #   case version of the project name e.g. icebridge2015 not ICEBRIDGE2015
@@ -92,10 +91,10 @@ nas_mnt_pt =     '/mnt/Data/'
 nas_sync_dir =   nas_mnt_pt + '/data/synced_data/'
 nas_data_dir =   nas_mnt_pt + '/data/scr_data/'
 
-ftp_site =       'ftp.eol.ucar.edu'
-user =           'anonymous'
-password =       ''
-ftp_data_dir =   '/pub/data/incoming/ads/ads'
+ftp_site =       'data.eol.ucar.edu'
+user =           'orcas'
+password =       'all4thepod'
+ftp_data_dir =   'synced_data'
 
 qc_ftp_site =    'catalog.eol.ucar.edu'
 qc_ftp_dir =     '/pub/incoming/catalog/'+ project.lower()
@@ -707,9 +706,9 @@ if datadump:
 
   # PICARRO data - extract and write to nas_sync_dir
   ddfilename = 'picarro_'+flight+'.asc'
-  command = 'data_dump -i 10,600 -A '+rawfile+' > '+data_dir+ddfilename
+  command = 'data_dump -i 10,600 -A '+rawfile+' > '+data_dir+'/'+ddfilename
   os.system(command)
-  command = 'zip '+nas_sync_dir+ddfilename +'.zip '+data_dir+ddfilename
+  command = 'zip '+nas_sync_dir+ddfilename +'.zip '+data_dir++'/'+ddfilename
   os.system(command)
 
 #
@@ -719,7 +718,7 @@ if datadump:
 os.chdir(data_dir)
 command = "rm "+zip_data_filename
 os.system(command)
-for file in [ncfilename,kmlfilename,iwg1filename,icarttfilename,RStudio_outfile,emailfilename]
+for file in [ncfilename,kmlfilename,iwg1filename,icarttfilename,RStudio_outfile,emailfilename]:
     command = "zip " + file + ".zip " + file
     if os.system(command) != 0:
       message =  "\nERROR!: Zipping up " + file + " with command:\n  "
