@@ -28,7 +28,12 @@ temp_dir =        '/tmp/'                        # Where we unzip & put busy
 dat_parent_dir =  os.environ["DATA_DIR"] + '/' # Where nc files go
 rdat_parent_dir = os.environ["RAW_DATA_DIR"] + '/' # where raw ads files go
 ftp_parent_dir =  '/net/ftp/pub/data/download/'  # Where nc files go for PIs
+busy_file = temp_dir+'DIST_PROD'               # temp file that exists if prog 
+                            #is running. Allows script to not clobber itself
 ##  End of Configuration
+final_message = ""
+project = ""
+flight = ""
 
 
 ###############################################################################
@@ -50,7 +55,6 @@ def dist_prod_file(fn):
 
     final_message = "Starting distribution of RAF Field Production Data\n"
     # This script is not re-entrant - bail if running
-    busy_file = temp_dir+'DIST_PROD'
     if os.path.isfile(busy_file):
         st=os.stat(busy_file)
         bfiletime = st.st_mtime
@@ -60,7 +64,7 @@ def dist_prod_file(fn):
             os.remove(busy_file)
         else:
             logging.info("  Product Dist busy file:"+busy_file+" exists. Exiting")
-            sys.exit(0)
+            send_mail_and_die()
     command = 'touch '+busy_file
     os.system(command)
 
@@ -70,7 +74,7 @@ def dist_prod_file(fn):
     if not file_name.startswith('PROD_') or not file_name.endswith('.zip'):
         logging.error("Error - called w/non-product file:"+fn)
         os.remove(busy_file)
-        sys.exit(1)
+        send_mail_and_die()
     message = "Got an ADS Product file:"+fn
     final_message = final_message + message + '\n'
     logging.info(message)
@@ -98,8 +102,7 @@ def dist_prod_file(fn):
         logging.error('Filename does not match expected pattern!!')
         logging.error('Bailing out!')
         os.remove(busy_file)
-        sys.exit(1)
-        
+        send_mail_and_die()
 
     #Make sure raf data directory exists
     if os.path.isdir(dat_parent_dir+project):
@@ -114,10 +117,10 @@ def dist_prod_file(fn):
             logging.error('Could not make product directory:'+dat_dir)
             logging.error('Bailing out')
             os.remove(busy_file)
-            sys.exit(1)
+            send_mail_and_die()
 
     logging.info('Data dir: '+dat_dir)
-    command = 'cp -f '+project+'_'+flight+'* '+dat_dir
+    command = 'cp -f '+project+flight+'* '+dat_dir
     logging.info('Copying to raf data:'+command)
     os.system(command)
 
@@ -133,11 +136,12 @@ def dist_prod_file(fn):
         except:
             logging.error('Could not make ftp directory:'+ftp_dir)
             logging.error('Bailing out')
-            os.remove(busy_file)
-            sys.exit(1)
+            if os.path.isfile(busy_file):
+                os.remove(busy_file)
+            send_mail_and_die()
 
     logging.info('FTP dir: ' + ftp_dir)
-    command = 'cp -f '+project+'_'+flight+'* '+ftp_dir
+    command = 'cp -f '+project+flight+'* '+ftp_dir
     message = "Moving files to ftpdir:"+command
     final_message = final_message+message+'\n'
     logging.info(message)
@@ -149,27 +153,7 @@ def dist_prod_file(fn):
         if os.path.isfile(fn):
             os.remove(fn)
 
-    emailfilename = 'email.addr.txt'
-    fo = open(emailfilename, 'r+')
-    email = fo.readline()
-    fo.close()
-    message = "About to send e-mail to:"+email
-    logging.info(message)
-    msg = MIMEText(final_message)
-    msg['Subject'] = 'Receive and Disribute message for:'+project+'  flight:'+flight
-    msg['From'] = 'ads@groundstation'
-    msg['To'] = email
-
-    s = smtplib.SMTP('localhost')
-    s.sendmail('ads@tikal.eol.ucar.edu',email,msg.as_string())
-
-    logging.info("Message: "+msg.as_string())
-    s.quit()
-    os.remove(emailfilename)
-    os.remove(busy_file)
-    os.remove(project+'_'+flight+'*')
-    sys.exit(0)
-
+    send_mail_and_die()
 ##   End of dist_prod_file
 
 ###############################################################################
@@ -194,7 +178,7 @@ def dist_raw_file(fn):
     if os.path.isfile(busy_file):
         logging.info("  Product Dist busy file:"+busy_file+" exists. Exiting")
         os.remove(busy_file)
-        sys.exit(0)
+        send_mail_and_die()
     command = 'touch '+busy_file
     os.system(command)
 
@@ -234,7 +218,7 @@ def dist_raw_file(fn):
             logging.error('Could not make ftp directory:'+ftp_dir)
             logging.error('Bailing out')
             os.remove(busy_file)
-            sys.exit(1)
+            send_mail_and_die()
 
     logging.info('Raw Data Dir: '+raw_ads_dir)
     command = 'mv -f '+filename+' '+raw_ads_dir
@@ -243,6 +227,37 @@ def dist_raw_file(fn):
     os.remove(busy_file)
 ## End of dist_raw_data  ###
 
+##############################################################################
+def send_mail_and_die():
+
+    emailfilename = 'email.addr.txt'
+    fo = open(path+"/"+emailfilename, 'r+')
+    email = fo.readline()
+    fo.close()
+    message = "About to send e-mail to:"+email
+    logging.info(message)
+    msg = MIMEText(final_message)
+    msg['Subject'] = 'Receive and Disribute message for:'+project+'  flight:'+flight
+    msg['From'] = 'ads@groundstation'
+    msg['To'] = email
+    msg['Body'] = 'See /tmp/ads_data_catcher.log'
+
+    s = smtplib.SMTP('localhost')
+    s.sendmail("ads@groundstation",email,msg.as_string())
+
+    logging.info("Message: "+msg.as_string())
+    s.quit()
+    os.remove(emailfilename)
+    if os.path.isfile(busy_file):
+        os.remove(busy_file)
+    if os.path.isfile(project+flight+'*'):
+        os.remove(project+flight+'*')
+
+    exit(1)
+
+## End of send_mail_and_die ##
+
+##############################################################################
 
 if __name__ == '__main__':
     try:
@@ -261,22 +276,22 @@ if __name__ == '__main__':
 
     except IndexError:
         print "\nUsage: %s path logfile" % sys.argv[0]
-        print "    path    - path to data files  (i.e.
-	/net/iftp2/pub/incoming/<project>/synced_data)"
+        print "    path    - path to data files  (i.e. /net/iftp2/pub/incoming/<project>/synced_data)"
         print "    logfile - logfile name (i.e. /tmp/ads_data_catcher.log)"
         print "\nThe logfile is rotated every 8192 bytes with a backup count of 10."
-        os.remove(busy_file)
-        sys.exit(1)
+        if os.path.isfile(busy_file):
+            os.remove(busy_file)
+        send_mail_and_die()
 
     if not os.path.isdir(path):
         logging.critical("exiting, folder: '%s' does not exist." % path)
         os.remove(busy_file)
-        sys.exit(1)
+        send_mail_and_die()
 
     # Look for files > 1 minute old and < 11 minutes old
      
     one_min_ago = time.time() - 60
-    one_hour_ago = time.time() - 3600
+    one_hour_ago = time.time() - 360000
     logging.info('Looking for new files in:'+path)
     for file in os.listdir(path):
         fullfile = path+file
@@ -305,5 +320,6 @@ if __name__ == '__main__':
                         logging.info("parent: %d, child: %d" % pids)
 
                 else:
-                    logging.info('  - Does not match naming convetions')
+                    logging.info('  - Does not match naming conventions')
                     logging.info('  - skipping')
+
