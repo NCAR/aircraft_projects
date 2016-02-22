@@ -516,6 +516,8 @@ if NAS:
   stor_kml_file = rsync_file(kmlfile,nc_out_dir)
   if nc2iwg:
     stor_iwg_file = rsync_file(iwg1file,nc_out_dir)
+  if nc2asc:
+    stor_asc_file = rsync_file(icarttfile,nc_out_dir)
   stor_qc_file = rsync_file(rstudiofile,qc_out_dir)
   if RstudioHTML:
     stor_qchtml_file = rsync_file(rstudiofileHTML,qc_out_dir)
