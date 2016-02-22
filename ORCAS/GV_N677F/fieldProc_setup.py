@@ -14,7 +14,7 @@ HRT = True
 # If processing was already done, and now someone wants HRT data,
 # to avoid reprocessing LRT, regenerating plots, etc, set HRTonly to 
 # True
-HRTonly = True
+HRTonly = False
 
 ### NAS stuff ###
 # Do we have local SWIG RAID storage.
