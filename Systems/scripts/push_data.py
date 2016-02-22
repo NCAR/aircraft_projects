@@ -23,98 +23,44 @@ import string
 import smtplib
 from email.mime.text import MIMEText
 
-##############   Beginning of Setup ######################################
+def read_env(env_var):
+  try:
+    var =	os.environ[env_var]
+    return(var)
+  except KeyError:
+    print "Please set the environment variable "+env_var
+    sys.exit(1)
 
-# Products - set to true if you want 'em
-nc2asc = True
-nc2iwg = False
-catalog = True
-
-# Do we have local SWIG RAID storage.
-NAS =            True
-# Does NAS have a permanent mount?
-NAS_permanent_mount = True
-# Is Rstudio generating HTML files?
-RstudioHTML = False
-
-# Instrument specific processing
-# - true or false depending on if instrument is on project.
-twoD      =      True
-threeVCPI =      False
-
-# If doing a project specific data_dump for a user, please go to the datadump 
-# section below and set command as you want.
-datadump = True
+project = read_env("PROJECT")
+aircraft = read_env("AIRCRAFT")
+data_dir = read_env("DATA_DIR") + '/' + project + '/'
+raw_dir  = read_env("RAW_DATA_DIR") + '/' + project + '/'
+proj_dir  = read_env("PROJ_DIR") + '/' + project + '/' + aircraft
 
 # Initialization 
-#  *******************  Modify The Following *********************
-#  NOTE: Be sure to ask the systems group to create a directory:
-#   /net/iftp2/pub/incoming/<project>/synced_data. If NAS_permanent_mount
-#   then NAS will copy files to that dir.
-#   Note that the CWIG standard and the standard expected by the 
-#   catcher script will be that <project> above will be the lower
-#   case version of the project name e.g. icebridge2015 not ICEBRIDGE2015
-#
 #   The RStudio piece seems to need special setup for each project
-#
-try:
-  project =	os.environ["PROJECT"]
-except KeyError:
-  print "Please set the environment variable PROJECT."
-  sys.exit(1)
+sys.path.insert(0,proj_dir)
+from fieldProc_setup import *
 
-try:
-  aircraft =	os.environ["AIRCRAFT"]
-except KeyError:
-  print "Please set the environment variable AIRCRAFT."
-  sys.exit(1)
-
-try:
-  data_dir =	os.environ["DATA_DIR"] + '/' + project + '/'
-except KeyError:
-  print "Please set the environment variable DATA_DIR."
-  sys.exit(1)
-
-try:
-  raw_dir       = os.environ["RAW_DATA_DIR"] + '/' + project + '/'
-except KeyError:
-  print "Please set the environment variable RAW_DATA_DIR."
-  sys.exit(1)
-
-# DataReview is in github.  https://github/WilliamCooper/DataReview.git
-rstudio_dir =   '/home/ads/RStudio/DataReview/'
-
-nc2ascBatch =	os.environ["PROJ_DIR"] +'/'+ project +'/'+ aircraft + '/scripts/nc2asc.bat'
+##############   Beginning of Setup ######################################
+nc2ascBatch =	proj_dir + '/scripts/nc2asc.bat'
 
 # Don't make it Raw_Data/proj.
 zip_dir = '/tmp/'
 
-nas_url =        '192.168.1.30:/data'
-nas_mnt_pt =     '/mnt/Data/'
-nas_sync_dir =   nas_mnt_pt + '/data/synced_data/'
-nas_data_dir =   nas_mnt_pt + '/data/scr_data/'
-
-ftp_site =       'data.eol.ucar.edu'
-user =           'orcas'
-password =       'all4thepod'
-ftp_data_dir =   'synced_data'
-
+# Catalog setup should not need to change - they are cery consistent
+# so leave this here, rather than in project-specific setup file
 qc_ftp_site =    'catalog.eol.ucar.edu'
 qc_ftp_dir =     '/pub/incoming/catalog/'+ project.lower()
-#backup_raw_dir = '/mnt/opsdisk'
-#backup_raw_dir2 = '/media/Seagate\ Expansion\ Drive/deepwave/'
-
-#local_ftp_site = '192.168.1.10'
-#local_user     = 'anonymous'
-#local_password = 'cjw@ucar.edu'
-
-local_ftp_dir  = '/FieldStorage/FieldProjects/' + project + '/C130nc'
-rlocal_ftp_dir = '/FieldStorage/FieldProjects/' + project + '/RAFqc'
-raircraft      = 'aircraft.NSF_NCAR_GV.'
-#local_ftp_dir  = '/FieldStorage/Temporary Items'
+if aircraft == "GV_N677F":
+  raircraft      = 'aircraft.NSF_NCAR_GV.'
+elif aircraft == "C130_N130AR":
+  raircraft      = 'aircraft.NSF_NCAR_C130.'
+else:
+  print "Unknown aircraft "+aircraft+" Update code\n"
+  sys.exit(1)
 
 translate2ds = '/home/local/raf/instruments/3v-cpi/translate2ds/translate2ds '
-
 
 # Echo configuration:
 print
@@ -174,13 +120,15 @@ final_message = final_message + '  Flight:'+flight+'\r\n\r\n'
 
 ####################   End of Setup ######################################
 
+####################   Begin function definitions ########################
 def ensure_dir(f):
     d = os.path.dirname(f)
     if not os.path.exists(d):
         os.makedirs(d)
 
 # If you print an error message to the screen, also print it to the email.
-def print_message(message,final_message):
+def print_message(message):
+    global final_message
     print message
     final_message = final_message + message
 
@@ -188,250 +136,58 @@ def print_message(message,final_message):
 def rsync_file(file,out_dir):
   command = 'rsync '+file+" "+out_dir
   if os.system(command) == 0:
-    stor_file = 'Yes-NAS'
-    return(str(stor_file));
+    proc_file = 'Yes-NAS'
+    return(str(proc_file));
   else: 
     message = '\nERROR!: syncing file: '+command
-    print_message(message,final_message)
+    print_message(message)
 
-ensure_dir(data_dir)
-
-# Get the netCDF, kml, icartt, IWG1 and raw ADS files for working with
-# First netCDF
-nclist = glob.glob(data_dir+'*'+flight+'*.nc')
-if nclist.__len__() == 1:
-  ncfile = nclist[0]
-  print "Found a netCDF file: "+ncfile
-  reproc = ''
-  while reproc == '' and reproc != 'R' and reproc != 'S':
-    reproc = raw_input('Reprocess? (R) or Ship? (S):')
-  if reproc == 'R': 
-    process = True
-  else:
-    process = False
-elif nclist.__len__() == 0:
-  print "No files found matching form: "+data_dir+'*'+flight+'*.nc'
-  print "We must process!"
-  process = True
-  ncfile = data_dir+file_prefix+".nc"
-else:
-  print "More than one netCDF file found."
-  print "Stepping through files, please select the right one"
-#  print nclist
-  ncfile = ''
-  i = 0
-  while ncfile == '' :
-    ans = raw_input(nclist[i]+'? (Y/N)')
-    if ans == 'Y' or ans == 'y':
-      ncfile = nclist[i]
-    if i < nclist.__len__() - 1: 
-      i = i + 1
-    else:
-      i = 0
-if ncfile == '' : 
-  print "No NetCDF file identified!"
-  print "Aborting"
-  #sys.exit(0)
-
-#KML file
-kmllist = glob.glob(data_dir+'*'+flight+'.kml')
-if kmllist.__len__() == 1:
-  kmlfile = kmllist[0]
-elif kmllist.__len__() == 0:
-  print "No files found matching form: "+data_dir+'*'+flight+'*.kml'
-  if process:
-    print "We are scheduled to process all is good"
-    kmlfile = data_dir+file_prefix+".kml"
-  else:
-    print "We have nc file but not kml file....  aborting..."
-    sys.exit(0)
-else:
-  print "More than one KML file found.  Stepping through files, please select the right one"
-  kmlfile = ''
-  i = 0
-  while kmlfile == '' :
-    ans = raw_input(kmllist[i]+'? (Y/N)')
-    if ans == 'Y' or ans == 'y':
-      kmlfile = kmllist[i]
-    if i < kmllist.__len__() - 1: 
-      i = i + 1
-    else:
-      i = 0
-if kmlfile == '' :
-  print "No KML file identified!"
-  print "Aborting..."
-  #sys.exit(0)
-
-#nc2asc file
-icarttfile = ''
-icarttlist = glob.glob(data_dir+'*'+flight+'.asc')
-if icarttlist.__len__() == 1:
-  icarttfile = icarttlist[0]
-elif icarttlist.__len__() == 0:
-  print "No files found matching form: "+data_dir+'*'+flight+'*.asc'
-  if process:
-    print "We are scheduled to process all is good"
-    icarttfile = data_dir+file_prefix+".asc"
-  else:
-    print "We have nc file but not ASCII file....  aborting..."
-    #sys.exit(0)
-else:
-  print "More than one asc file found.  Stepping through files, please select the right one"
-  icarttfile = ''
-  i = 0
-  while icarttfile == '' :
-    ans = raw_input(icarttlist[i]+'? (Y/N)')
-    if ans == 'Y' or ans == 'y':
-      icarttfile = icarttlist[i]
-    if i < icarttlist.__len__() - 1: 
-      i = i + 1
-    else:
-      i = 0
-if icarttfile == '' :
-  print "No ASCII file identified!"
-  print "Aborting..."
-  #sys.exit(0)
-
-#IWG1 file
-if nc2iwg:
-  iwg1list = glob.glob(data_dir+'*'+flight+'.iwg1')
-  if iwg1list.__len__() == 1:
-    iwg1file = iwg1list[0]
-  elif iwg1list.__len__() == 0:
-    print "No files found matching form: "+data_dir+'*'+flight+'*.iwg1'
-    if process:
-      print "We are scheduled to process all is good"
-      iwg1file = data_dir+file_prefix+".iwg1"
-    else:
-      print "We have nc file but not iwg1 file....  aborting..."
+def find_file(data_dir,flight,file_prefix,filetype):
+  datafile = ''
+  datalist = glob.glob(data_dir+'*'+flight+'.'+filetype)
+  if datalist.__len__() == 1:
+    datafile = datalist[0]
+  elif datalist.__len__() == 0:
+    print "No files found matching form: "+data_dir+'*'+flight+'*.'+filetype
+    if filetype == 'ads':
+      print "Aborting..."
       sys.exit(0)
-  else:
-    print "More than one iwg1 file found.  Stepping through files, please select the right one"
-    iwg1file = ''
-    i = 0
-    while iwg1file == '' :
-      ans = raw_input(iwg1list[i]+'? (Y/N)')
-      if ans == 'Y' or ans == 'y':
-        iwg1file = iwg1list[i]
-      if i < iwg1list.__len__() - 1: 
-        i = i + 1
-      else:
-        i = 0
-  if iwg1file == '' :
-    print "No IWG1 file identified!"
-    print "Aborting..."
-    #sys.exit(0)
-
-#Raw Data File
-rawlist = glob.glob(raw_dir+'*'+flight+'*.ads')
-if rawlist.__len__() == 1:
-  rawfile = rawlist[0]
-elif rawlist.__len__() == 0:
-  print "No Raw files found matching the form: raw_dir+'*'+flight+'*.ads'"
-  print "aborting..."
-  #sys.exit(0)
-else:
-  print "More than one ads file found.  Stepping through files, please select the right one"
-  rawfile = ''
-  i = 0
-  while rawfile == '' :
-    ans = raw_input(rawlist[i]+'? (Y/N)')
-    if ans == 'Y' or ans == 'y':
-      rawfile = rawlist[i]
-    if i < rawlist.__len__() - 1:
-      i = i + 1
     else:
-      i = 0
-if rawfile == '' :
-  print "No Raw file identified!"
-  print "Aborting! "
-  #sys.exit(0)
-
-# RStudio PDF file
-
-if not os.path.exists(rstudio_dir):
-  print 'RStudio DataReview has not been checked out at : '+ rstudio_dir
-  print 'No plots being generated.'
-else:
-  #Include time in RStudio filename so can load into field catalog
-  filename = rawfile.split(raw_dir)[1]
-  time = filename.split(".")[0].replace('_','')
-  FCfilename = data_dir+raircraft+time[0:12]+'.RAF_QC_plots_hires.pdf'
-  RStudio_outfile = data_dir+file_prefix+'Plots.pdf'
-
-  rstudiolist = glob.glob(FCfilename)
-
-  rstudiofile = ''
-  if rstudiolist.__len__() == 1:
-    rstudiofile = rstudiolist[0]
-  elif rstudiolist.__len__() == 0:
-    print "No files found matching form: "+FCfilename
-    if process:
-      print "We are scheduled to process all is good"
-      rstudiofile =  FCfilename
-    else:
-      print "We have nc file but not rstudio file....  aborting..."
-  else:
-    print "More than one file found.  Stepping through files, please select the right one"
-    rstudiofile = ''
-    i = 0
-    while rstudiofile == '' :
-      ans = raw_input(rstudiolist[i]+'? (Y/N)')
-      if ans == 'Y' or ans == 'y':
-        rstudiofile = rstudiolist[i]
-      if i < rstudiolist.__len__() - 1:
-        i = i + 1
-      else:
-        i = 0
-  if rstudiofile == '' :
-    print "No RStudio file identified!"
-    print "Aborting..."
-
-  # RStudio HTML file
-  if RstudioHTML:
-    #Include time in RStudio filename so can load into field catalog
-    filename = rawfile.split(raw_dir)[1]
-    time = filename.split(".")[0].replace('_','')
-    FCfilenameHTML = data_dir+raircraft+time[0:12]+'.RAF_QC_plots.html'
-    RStudio_outfileHTML = data_dir+file_prefix+'Plots.html'
-
-    rstudiolist = glob.glob(FCfilenameHTML)
-
-    rstudiofileHTML = ''
-    if rstudiolist.__len__() == 1:
-      rstudiofileHTML = rstudiolist[0]
-    elif rstudiolist.__len__() == 0:
-      print "No files found matching form: "+FCfilenameHTML
       if process:
         print "We are scheduled to process all is good"
-        rstudiofileHTML =  FCfilenameHTML
+        datafile = data_dir+file_prefix+'.'+filetype
       else:
-        print "We have nc file but not rstudio file....  aborting..."
+        print "We have nc file but not "+filetype+" file....  aborting..."
+        sys.exit(0)
+  else:
+    print "More than one "+filetype+" file found."
+    datafile=step_through_files(datalist)
+
+  if datafile == '' :
+    print "No "+datafile+" file identified!"
+    print "Aborting..."
+    sys.exit(0)
+
+  return(datafile)
+
+def step_through_files(datalist):
+  print "Stepping through files, please select the right one."
+  datafile = ''
+  i = 0
+  while datafile == '' :
+    ans = raw_input(datalist[i]+'? (Y/N)')
+    if ans == 'Y' or ans == 'y':
+      datafile = datalist[i]
+    if i < datalist.__len__() - 1: 
+      i = i + 1
     else:
-      print "More than one file found.  Stepping through files, please select the right one"
-      rstudiofileHTML = ''
       i = 0
-      while rstudiofileHTML == '' :
-        ans = raw_input(rstudiolist[i]+'? (Y/N)')
-        if ans == 'Y' or ans == 'y':
-          rstudiofileHTML = rstudiolist[i]
-        if i < rstudiolist.__len__() - 1:
-          i = i + 1
-        else:
-          i = 0
-    if rstudiofileHTML == '' :
-      print "No RStudio file identified!"
-      print "Aborting..."
+  return(datafile)
 
+def process_netCDF(rawfile,ncfile,HRT):
+  proc_raw_file =    'No'
+  proc_kml_file =    'No'
 
-#########################  End of Setup ###################################
-
-###################  Beginning of Processing ##############################
-threevcpi2d_file = ''
-
-# Run nimbus to generate first look product
-# Use a configuration file
-if process:
   nimConfFile = "/tmp/nimbConf.txt"
   command = "rm -f " + nimConfFile
   os.system(command)
@@ -441,6 +197,13 @@ if process:
   cf.write(str(line))
   line = "of="+ncfile+'\n'
   cf.write(str(line))
+  if flight in ti.keys():
+    line = 'ti='+ti[flight]+'\n'
+    cf.write(str(line))
+  if HRT == True:
+    line = "pr=25\n"
+    cf.write(str(line))
+
   cf.close()
 
   command = "/opt/local/bin/nimbus -b "+nimConfFile
@@ -454,9 +217,9 @@ if process:
     proc_raw_file =    'Yes'
     proc_kml_file =    'Yes'
 
-# 3VCPI 
-# Convert SPEC file form to oap file form
-  if threeVCPI:
+  return(proc_raw_file, proc_kml_file)
+
+def process_threeVCPI(aircraft,project,flight,twods_raw_dir,oapfile_dir):
     print "\n\n *****************  3VCPI **************************\n"
     mkdir_fail = False
     first_base_file = ''
@@ -481,14 +244,14 @@ if process:
       print ' 3v-cpi command:' + command
       os.system(command)
       
-      # move 2D file to the RAF naming convention and location
+      # move 2DS file to the RAF naming convention and location
       if not os.path.isdir(oapfile_dir):
         try:
           os.mkdir(oapfile_dir)
         except:
           message= "\nERROR: Could not make oapfile directory:"+oapfile_dir
           message= message +  "\n  - skipping 2d file gen/placement\n"
-          print_message(message,final_message)
+          print_message(message)
           mkdir_fail = True
       if not mkdir_fail:
         twod_dir,fb_filename=os.path.split(first_base_file)
@@ -504,6 +267,140 @@ if process:
         if os.system(command) == 0:
           proc_3vcpi_files = 'Yes'
 
+def reorder_nc(ncfile):
+  command = "ncReorder "+ncfile+" tmp.nc";
+  print "about to execute : "+command
+  os.system(command)
+
+  command = "/bin/mv tmp.nc "+ncfile;
+  print "about to execute : "+command
+  if os.system(command) == 0:
+    proc_nc_file  =    'Yes'
+  else:
+    message= "ERROR: NC Reorder failed! But NetCDF file should be fine"
+    print_message(message)
+    proc_nc_file  =    'Yes'
+  return(proc_nc_file)
+
+def zip_file(file):
+    command = "zip " + file + ".zip " + file
+    if os.system(command) != 0:
+      message =  "\nERROR!: Zipping up " + file + " with command:\n  "
+      message = message + command
+      print_message(message)
+
+####################   End function definitions ##########################
+
+ensure_dir(data_dir)
+
+# Get the netCDF, kml, icartt, IWG1 and raw ADS files for working with
+# First netCDF
+filetype = 'nc'
+nclist = glob.glob(data_dir+'*'+flight+'.'+filetype)
+if nclist.__len__() == 1:
+  ncfile = nclist[0]
+  print "Found a netCDF file: "+ncfile
+  reproc = ''
+  while reproc == '' and reproc != 'R' and reproc != 'S':
+    reproc = raw_input('Reprocess? (R) or Ship? (S):')
+  if reproc == 'R': 
+    process = True
+  else:
+    process = False
+elif nclist.__len__() == 0:
+  print "No files found matching form: "+data_dir+'*'+flight+'.'+filetype
+  print "We must process!"
+  process = True
+  ncfile = data_dir+file_prefix+".nc"
+else:
+  print "More than one "+filetype+" file found."
+  ncfile=step_through_files(nclist)
+
+if ncfile == '' : 
+  print "No NetCDF file identified!"
+  print "Aborting"
+  #sys.exit(0)
+
+# HRT
+if process:
+  if (HRT == False):
+    nclist = glob.glob(data_dir+'*'+flight+'h.'+filetype)
+    if nclist.__len__() == 1:
+      reproc = raw_input('Found a HRT file: nclist[0]. Reprocess HRT as well as LRT?(Y/N)')
+      if reproc == 'Y':
+        HRT = True
+
+# KML
+kmlfile=find_file(data_dir,flight,file_prefix,'kml')
+# asc
+icarttfile=find_file(data_dir,flight,file_prefix,'asc')
+# iwg
+if nc2iwg:
+  iwg1file=find_file(data_dir,flight,file_prefix,'iwg1')
+# ads
+rawfile=find_file(raw_dir,flight,file_prefix,'ads')
+
+
+# RStudio plotting
+if not os.path.exists(rstudio_dir):
+  print 'RStudio DataReview has not been checked out at : '+ rstudio_dir
+  print 'No plots being generated.'
+else:
+  #Include time in RStudio filename so can load into field catalog
+  filename = rawfile.split(raw_dir)[1]
+  time = filename.split(".")[0].replace('_','')
+
+  # RStudio PDF file
+  RStudio_outfile = data_dir+file_prefix+'Plots.pdf'
+  rstudiofile=find_file(data_dir,raircraft+time[0:12],raircraft+time[0:12],'RAF_QC_plots_hires.pdf')
+
+  # RStudio HTML file
+  if RstudioHTML:
+    RStudio_outfileHTML = data_dir+file_prefix+'Plots.html'
+    rstudiofileHTML=find_file(data_dir,raircraft+time[0:12],raircraft+time[0:12],'RAF_QC_plots.html')
+
+###################  Beginning of Processing ##############################
+# 3VCPI 
+threevcpi2d_file = ''
+
+# Run nimbus to generate first look product
+# Use a configuration file
+if process:
+  if HRTonly != True:
+    # Process LRT
+    (proc_raw_file,proc_kml_file)=process_netCDF(rawfile,ncfile,'False')
+  if (HRT):
+    # Process HRT
+    nchfile = data_dir+file_prefix+"h.nc"
+    (proc_rawh_file,proc_kmlh_file)=process_netCDF(rawfile,nchfile, HRT)
+    # Reorder HRT
+    proc_nch_file = reorder_nc(nchfile)
+    if HRTonly:
+      sys.exit(1)
+
+
+  # LRT NetCDF utility work - Reorder, generate IWG ascii and/or ICARTT ascii
+  proc_nc_file = reorder_nc(ncfile)
+
+  if nc2iwg:
+    command = "nc2iwg1 "+ncfile+" > "+iwg1file;
+    print "about to execute : "+command
+    if os.system(command) == 0:
+      proc_iwg_file = 'Yes'
+
+  if nc2asc:
+    command = "nc2asc -b "+nc2ascBatch+" -i "+ncfile+" -o "+icarttfile;
+    print "about to execute : "+command
+    if os.system(command) == 0:
+      proc_asc_file = 'Yes'
+
+  #
+  # Convert SPEC file form to oap file form
+  #
+  if threeVCPI:
+    process_threeVCPI(aircraft,project,flight,twods_raw_dir,oapfile_dir)
+
+  #
   # Fast 2D data, extract first, then process.
   #
   if twoD:
@@ -536,43 +433,17 @@ if process:
     print
 
 
-# NetCDF utility work - Reorder, generate IWG ascii and/or ICARTT ascii
-  command = "ncReorder "+ncfile+" tmp.nc";
-  print "about to execute : "+command
-  os.system(command)
-
-  command = "/bin/mv tmp.nc "+ncfile;
-  print "about to execute : "+command
-  if os.system(command) == 0:
-    proc_nc_file  =    'Yes'
-  else:
-    message= "ERROR: NC Reorder failed! But NetCDF file should be fine"
-    print_message(message,final_message)
-    proc_nc_file  =    'Yes'
-
-  if nc2iwg:
-    command = "nc2iwg1 "+ncfile+" > "+iwg1file;
-    print "about to execute : "+command
-    if os.system(command) == 0:
-      proc_iwg_file = 'Yes'
-
-  if nc2asc:
-    command = "nc2asc -b "+nc2ascBatch+" -i "+ncfile+" -o "+icarttfile;
-    print "about to execute : "+command
-    if os.system(command) == 0:
-      proc_asc_file = 'Yes'
-
-#
-# Run Al Cooper's R code for QA/QC production
-#
-# Currently requires being run from the ~/RStudio/DataReview directory.
-# Run as: "Rscript Review.R ##", without the 'rf', 'tf', or 'ff' at this time.
-#
-# If R is not installed or working, documentation is in:
-#  RStudio/Randadu/RanaduManual.pdf (git clone https://github.com/WilliamCooper/Ranadu)
-# also see:
-#  RStudio/DataReview/DataReviewManual.pdf
-#
+  #
+  # Run Al Cooper's R code for QA/QC production
+  #
+  # Currently requires being run from the ~/RStudio/DataReview directory.
+  # Run as: "Rscript Review.R ##", without the 'rf', 'tf', or 'ff' at this time.
+  #
+  # If R is not installed or working, documentation is in:
+  #  RStudio/Randadu/RanaduManual.pdf (git clone https://github.com/WilliamCooper/Ranadu)
+  # also see:
+  #  RStudio/DataReview/DataReviewManual.pdf
+  #
   os.chdir(data_dir)
   fl_num = flight[2:]  # This will probably change in the future...
   command = "Rscript " + rstudio_dir + "/Review.R " + fl_num
@@ -597,7 +468,7 @@ else:
   print "Processing already done, skipping nimbus command"
 
 
-print "**************************"
+print "************************** Begin Shipping Data ***************"
 print "NetCDF file = "+ncfile
 print os.system("ls -l "+ncfile)
 print "KML file = "+kmlfile
@@ -605,8 +476,9 @@ print os.system("ls -l "+kmlfile)
 if nc2iwg:
   print "IWG1 file = "+iwg1file
   print os.system("ls -l "+iwg1file)
-print "ASCII file = "+icarttfile
-print os.system("ls -l "+icarttfile)
+if nc2asc:
+  print "ASCII file = "+icarttfile
+  print os.system("ls -l "+icarttfile)
 print "RStudio PDF file = "+rstudiofile
 print os.system("ls -l "+rstudiofile)
 print "RStudio PDF outfile = "+RStudio_outfile
@@ -665,19 +537,19 @@ data_dir,ncfilename = os.path.split(ncfile)
 data_dir,kmlfilename = os.path.split(kmlfile)
 if nc2iwg:
   data_dir,iwg1filename = os.path.split(iwg1file)
-data_dir,icarttfilename = os.path.split(icarttfile)
+if nc2asc:
+  data_dir,icarttfilename = os.path.split(icarttfile)
 rdata_dir,rstudiofilename = os.path.split(rstudiofile)
 if RstudioHTML:
   rdata_dir,rstudiofilenameHTML = os.path.split(rstudiofileHTML)
 
-zip_data_filename = "PROD_"+project+"_"+flight+".zip"
-zip_data_file = data_dir+"/"+zip_data_filename
 print "data_dir = "+data_dir
 print "ncfilename = "+ncfilename
 print "kmlfilename = "+kmlfilename
 if nc2iwg:
   print "iwg1filename = "+iwg1filename
-print "icarttfilename = "+icarttfilename
+if nc2asc:
+  print "icarttfilename = "+icarttfilename
 print "RStudiofilenamePDF = "+rstudiofilename
 if RstudioHTML:
   print "RStudiofilenameHTML = "+rstudiofilenameHTML
@@ -697,25 +569,18 @@ if datadump:
   os.system(command)
 
 #
-# Zip up netCDF and products individually, then into a single file
-# Make sure that there is not a zip file already there ("overwrite")
+# Zip up netCDF and products individually 
 os.chdir(data_dir)
-command = "rm "+zip_data_filename
-os.system(command)
-#for file in [ncfilename,kmlfilename,iwg1filename,icarttfilename,RStudio_outfile,emailfilename]:
-for file in [ncfilename,kmlfilename,icarttfilename,RStudio_outfile,emailfilename]:
-    command = "zip " + file + ".zip " + file
-    if os.system(command) != 0:
-      message =  "\nERROR!: Zipping up " + file + " with command:\n  "
-      message = message + command
-      print_message(message,final_message)
+zip_file(ncfilename)
+zip_file(kmlfilename)
+if nc2iwg:
+  zip_file(iwg1filename)
+if nc2asc:
+  zip_file(icarttfilename)
+zip_file(RStudio_outfile)
+if RstudioHTML:
+  zip_file(Rstudio_outfileHTML)
 
-#command = "zip " + zip_data_filename + " " + ncfilename + ".zip " + kmlfilename + ".zip " + iwg1filename + ".zip " + icarttfilename + ".zip " + RStudio_outfile + " " + emailfilename
-command = "zip " + zip_data_filename + " " + ncfilename + ".zip " + kmlfilename + ".zip " + icarttfilename + ".zip " + RStudio_outfile + " " + emailfilename
-if os.system(command) != 0:
-  message =  "\nERROR!: Zipping up netCDF, IWG1, ASCII and KML files with command:\n  "
-  message = message + command
-  print_message(message,final_message)
 
 # Put QC files into catalog and to the NAS if it exists
 if catalog:
@@ -732,10 +597,11 @@ if catalog:
     file = open(rstudiofilename, 'r')
     ftp.storbinary('STOR ' + rstudiofilename, file)
     file.close()
-#    print "Putting file:"+rstudiofilenameHTML
-#    file = open(rstudiofilenameHTML, 'r')
-#    ftp.storbinary('STOR ' + rstudiofilenameHTML, file)
-#    file.close()
+    if RstudioHTML:
+      print "Putting file:"+rstudiofilenameHTML
+      file = open(rstudiofilenameHTML, 'r')
+      ftp.storbinary('STOR ' + rstudiofilenameHTML, file)
+      file.close()
     print "Finished putting QC files"
     print ""
     ftp.quit()
@@ -750,24 +616,7 @@ if catalog:
     except ftplib.all_errors as e:
       print 'Could not close ftp connection:'
       print e
-#  sys.exit(1)
 
-#if NAS:
-  # mount the NAS and put QC files to it
-#  os.chdir(rdata_dir)
-#  command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
-#  print 'Mounting nas: '+command
-#  os.system(command)
-#  command = 'rsync '+rstudiofilename+" "+nas_data_dir+" qc/"
-#  print 'Syncing QC file: '+command
-#  os.system(command)
-#  command = 'rsync '+rstudiofilenameHTML+" "+nas_data_dir+" qc/"
-#  print 'Syncing QC file: '+command
-#  os.system(command)
-#  command = "sudo /bin/umount "+nas_mnt_pt
-#  print 'Unmounting nas: ' + command
-#  os.system(command)
-#
 # Put zipped files to EOL server
 if NAS != True:
   try:
@@ -831,39 +680,26 @@ else:
      os.system(command)
 
   os.chdir(data_dir)
-  #command = 'rsync '+zip_data_file+" "+nas_sync_dir
-  command = 'unzip '+zip_data_file+" -d  "+nas_sync_dir
-  if os.system(command) == 0:
-    if ncfilename: 
-      ship_nc_file = 'Yes-NAS'
-    if kmlfilename:
-      ship_kml_file = 'Yes-NAS'
-    if nc2iwg:
-      if iwg1filename != '':
-        ship_iwg_file = 'Yes-NAS'
-    if icarttfilename:
-      ship_asc_file = 'Yes-NAS'
-  else:
-    message='ERROR!: syncing zipfile:'+command
-    print_message(message,final_message)
+  ship_nc_file = rsync_file(ncfilename,nas_sync_dir)
+  ship_kml_file = rsync_file(kmlfilename,nas_sync_dir)
+  if nc2iwg:
+    ship_iwg_file = rsync_file(iwg1filename,nas_sync_dir)
+  if nc2asc:
+    ship_asc_file = rsync_file(icarttfilename,nas_sync_dir)
     
-  command = 'rsync '+zip_raw_file+" "+nas_sync_dir
-  if os.system(command) == 0:
-    ship_raw_file = 'Yes-NAS'
-  else:
-    message='ERROR!: Syncing zipfile: '+command
-    print_message(message,final_message)
-
-  command = 'unzip '+nas_sync_dir+'/'+zip_data_filename
+  ship_raw_file = rsync_file(zip_raw_file,nas_sync_dir)
+  
+  command = 'unzip '+nas_sync_dir+'/'+zip_raw_file
   if os.system(command) == 0:
     unzip_raw_file = 'Yes-NAS'
   else:
     message='ERROR!: unzipping zipfile: '+command
-    print_message(message,final_message)
+    print_message(message)
 
-#  command = "sudo /bin/umount "+nas_mnt_pt
-#  print 'Unmounting nas: ' + command
-#  os.system(command)
+#  if NAS_permanent_mount == False:
+#    command = "sudo /bin/umount "+nas_mnt_pt
+#    print 'Unmounting nas: ' + command
+#    os.system(command)
 
 
 # Put zipped raw files to backup disk as well (two copies)
