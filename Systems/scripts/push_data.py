@@ -188,23 +188,25 @@ def process_netCDF(rawfile,ncfile,HRT):
   proc_raw_file =    'No'
   proc_kml_file =    'No'
 
-  nimConfFile = "/tmp/nimbConf.txt"
-  command = "rm -f " + nimConfFile
-  os.system(command)
+  # If there is a setup file for this flight in proj_dir/Production
+  # use that. If not, create one.
 
-  cf = open(nimConfFile, 'w')
-  line = 'if='+rawfile+'\n'
-  cf.write(str(line))
-  line = "of="+ncfile+'\n'
-  cf.write(str(line))
-  if flight in ti.keys():
-    line = 'ti='+ti[flight]+'\n'
-    cf.write(str(line))
   if HRT == True:
-    line = "pr=25\n"
-    cf.write(str(line))
+    nimConfFile = proj_dir+"/Production/setup_"+flight_HRT
+  else:
+    nimConfFile = proj_dir+"/Production/setup_"+flight
 
-  cf.close()
+  if not os.path.exists(nimConfFile):
+
+    cf = open(nimConfFile, 'w')
+    line = 'if='+rawfile+'\n'
+    cf.write(str(line))
+    line = "of="+ncfile+'\n'
+    cf.write(str(line))
+    if HRT == True:
+      line = "pr=25\n"
+      cf.write(str(line))
+    cf.close()
 
   command = "/opt/local/bin/nimbus -b "+nimConfFile
   print "about to execute nimbus I hope: "+command
@@ -305,6 +307,7 @@ if nclist.__len__() == 1:
     reproc = raw_input('Reprocess? (R) or Ship? (S):')
   if reproc == 'R': 
     process = True
+    reprocess = True
   else:
     process = False
 elif nclist.__len__() == 0:
@@ -521,7 +524,8 @@ if NAS:
   stor_qc_file = rsync_file(rstudiofile,qc_out_dir)
   if RstudioHTML:
     stor_qchtml_file = rsync_file(rstudiofileHTML,qc_out_dir)
-  stor_raw_file = rsync_file(rawfile,raw_out_dir)
+  if not reprocess:
+    stor_raw_file = rsync_file(rawfile,raw_out_dir)
 
 emailfilename = 'email.addr.txt'
 emailfile = data_dir+emailfilename
@@ -659,22 +663,25 @@ if NAS != True:
 # put zipped file onto NAS for BT-syncing back home.
 else:
 
-  # Now ZiP up the rawfile.
-  raw_dir,rawfilename = os.path.split(rawfile)
-  zip_raw_file = zip_dir + rawfilename + '.bz2'
-  print "rawfilename = "+rawfilename
-  os.chdir(raw_dir)
-  if not os.path.exists(zip_raw_file):
-    print "Compressing ADS file with command:"
-    print command
-    command = "bzip2 -kc " + rawfilename + " > " + zip_raw_file
-    os.system(command)
-    print ""
+  if not reprocess:  
+    # Now ZiP up the rawfile.
+    raw_dir,rawfilename = os.path.split(rawfile)
+    zip_raw_file = zip_dir + rawfilename + '.bz2'
+    print "rawfilename = "+rawfilename
+    os.chdir(raw_dir)
+    if not os.path.exists(zip_raw_file):
+      print "Compressing ADS file with command:"
+      print command
+      command = "bzip2 -kc " + rawfilename + " > " + zip_raw_file
+      os.system(command)
+      print ""
+    else:
+      print 'Compressed ADS image already exists.'
   else:
-    print 'Compressed ADS image already exists.'
+    print 'Reprocessing so assume ADS already shipped during first processing'
 
 
-  # mount the NAS and put zipped raw file to it
+  # mount the NAS and put zipped files to it
   if NAS_permanent_mount == False:
      # Mount NAS
      command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
@@ -688,15 +695,14 @@ else:
     ship_iwg_file = rsync_file(iwg1filename,nas_sync_dir)
   if nc2asc:
     ship_asc_file = rsync_file(icarttfilename,nas_sync_dir)
-    
-  ship_raw_file = rsync_file(zip_raw_file,nas_sync_dir)
-  
-  command = 'unzip '+nas_sync_dir+'/'+zip_raw_file
-  if os.system(command) == 0:
-    unzip_raw_file = 'Yes-NAS'
-  else:
-    message='ERROR!: unzipping zipfile: '+command
-    print_message(message)
+  if not reprocess:  
+    ship_raw_file = rsync_file(zip_raw_file,nas_sync_dir)
+    command = 'unzip '+nas_sync_dir+'/'+zip_raw_file
+    if os.system(command) == 0:
+      unzip_raw_file = 'Yes-NAS'
+    else:
+      message='ERROR!: unzipping zipfile: '+command
+      print_message(message)
 
 #  if NAS_permanent_mount == False:
 #    command = "sudo /bin/umount "+nas_mnt_pt
