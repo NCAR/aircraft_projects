@@ -132,6 +132,1326 @@ Take off 1859
 
 
 
+11JAN16
+
+FF01
+
+Takeoff: 15:06
+Landing in Laredo,TX: 17:02
+Takeoff: 17:55
+Landing in Arica: 01:19
+
+16:09 DSM 310 Analog A1 card stopped working. Rebooted the DSM and this fixed it. Worked the rest of the flight.
+
+DPR got saturated while passing through clouds on our desent into Loredo. Recovered after takeoff.
+
+
+
+12JAN16
+
+FF02
+
+Takeoff from Arica: 15:57
+Landing in Punta Arenas: 20:52 
+
+Prior to takeoff, had a hard time bringing up satcom.  Just kept stopping MPDS and restarting.  Tried stopping MPDS a few times and this seem to help.  Maybe a process is not closing out at shutdown.  Chris W is aware and we will hopefully look at it in Punta Arenas.
+
+Need to realign the 2D probe.  End diode voltages are creeping down.
+
+Will install spare dewpointer in the DPL position on the first maintenance day.
+
+
+
+13JAN16 Maintenance Day
+
+Installed spare dewpoint indicator and blue box.  Waiting on screws for sensor head.
+
+Swapped out 2DC-10 with 2DC-25 S/N 001.
+
+Tested satcom and it worked.
+
+
+
+14Jan16 Maintenance Day
+
+Chris W changed header to accept the 2DC-25 S/N 001 probe.
+
+Chris W looked into MPDS startup issue and agnologizes an issue and will look further into it some other time.
+
+
+16Jan16 Maintenance Day
+
+Replaced slot A1 analog card s/n 1605 with s/n 012 in DSM 310.  Could not find problem looking at data.  Had Chris W look at logs and there is a FIFO filling up and fails to reset.  Header was changed.
+
+Auto A/D Cal performed after replacing card in DSM 310. Still getting error about Ch.3 on DSM 310 (A0) reading only -8.89V with a -10V input. All Auto Cal results are within acceptable range, including the newly installed S/N 012.
+
+
+
+18Jan16
+
+RF02
+
+Takeoff: 14:51
+Landing: 21:40
+
+Started on APU.  At 90 minutes, we taxied over to the teminal.  Only people who can sit down and put on seatbelts were allowed to taxi over.  No power interrupts.  The rest of preflight was at the terminal.  
+
+2D diode voltages are low.  Will clean during next maintenance day.
+
+No counts on CN preflight.  Ohmed out cabling during flight and all is good.  Counter card looks good.
+Must be a cable inside the dsm.
+
+Jorgen had me cycle power on GNI once, then shut it down for the rest of the flight.
+
+RICE is still noisy at times during flight.  We will check cabling and clean with electronic cleaner when possible.  Ran into some icing during initial ascent and RICE operated properly.  Camera froze over for a bit during that time. 17:09 RICE cleaned up and operated properly when passing through a cloud deck.  Had a chance to look at data from past flights during this flight.  It appears this has been doing this since the test flights. 19:57 is another example of it working properly.
+
+Around 17:40 during descent through cloud we may have iced up our non heated temp probe. Off 2 degrees since the incident.  18:34 it came back in line with the others.  Must have had some ice on it and it finally wore off.  Appears to have survived.
+
+Britt was concerned with THETAE.  I discovered it was using DPR in the EWX part of its derived variable.  Had Chris W change EWX and DPXC to use VXL.  Should be good from here on out.
+
+
+
+19Jan16  Maintenance Day
+
+Cleaned 2D mirrors and this brought the end diode voltages up.
+
+Verified pulses were coming out of the CN counter.  ~15 Volts in amplitude and ~300ns wide.  Chris W looked and made sure drivers, etc. were loading correctly.  Changed out the daughter card with no success.  
+
+Installed spare dewpoint sensor in the DPL location.  Put blankoff plate for that location in Box #1 in the baggage pit.
+
+
+
+20Jan16 Maintenance Day
+
+Verified the latch out from the timing card is good.  Alternating at 5ms high and 5ms low with an amplitude of ~5V.  Probe ground hooked to the analog card ground test point.  Still no counts.  Gonna wait on Anything I/O being shipped from RAF.
+
+Removed RWO DSM, took apart, cleaned, and reinstalled.  Removed RICE and inspected.  All looks good.  Gonna pay extra attention preflight to see if we see any indicators when users are turning on instruments.  At the end of the day,  had an idea of not turning on the 400Hz to RICE.  I collected about 45 minutes of data in which I saw some noise come and go.  Need some more of this.  Will try periodically during preflight.  Can't do it too much because UHSAS shares the same power.  On the next maintenance day, we will be able to pull UHSAS and try this for long periods of time.  If we see it without RICE power then it will point towards the dsm.  We are seeing spikes in IRIG status during these noise times too.  Something could be affecting the whole DSM.
+  
+Broke a screw head on the RWO DSM cover.
+
+
+
+22Jan16 Maintenance Day
+
+Pulled UHSAS.  Removed RICE.  Started RWO DSM and let run for about an hour.  No noise.  Plugged in RICE with no power and noise appeared.  Repeated process with same results.  Took apart RICE and found green(N/U) and blue(Pin E, Sig Out +) wires pinched between back RICE housing and RICE itself.  Toned out wires and they are fine.  Plugged it in without housing and wires separated and still see the noise.  Checked connector in pylon and all looks fine.  Checked out wiring in pylon and it is wired per the drawing Kurt sent in an email.  Injected a voltage with voltage generator into that channel and it look nice and clean.  Put RICE back together and installed.  Appears the problem is the rice probe itself.
+
+QCR froze up a couple times on RF03.  Actually looked good at the end of the flight.  Was going to open up radome and drain lines but too windy to open up radome.  Most likely evacuating to Puerta Montt tomorrow.  Will do there.
+
+Chris looked at DSM 310 log.  During  RF03, there was a drop out in analog and tdiff from 17:37 to 17:38.  Serials were fine.  Saw a FIFO full level 5.  Mentioned there is only 1 thru 4 level FIFO errors.  He logged it in software land and do nothing for now.
+
+Stuart had us bring up VCSEL and report some values to him.  He is concerned that the Laser Intensity is a little high and responded to leave it alone for now.
+
+Helped Jorgen with some connector issue with his GNI plugging into the laptop.
+
+
+
+23Jan16  RF04
+
+Takeoff from Punta Arenas: 15:12
+Landing in Puerta Montt: 20:42
+
+No CN this flight.  Waiting on Anything I/O card from RAF.
+
+Raining at takeoff.  Rebooted VCSEL after takeoff.  Turns out I didn't need to.  Soon as I got up and turned around to reboot, it gave us a DP.  Didn't see it in time and rebooted anyways.
+
+Just after takeoff.  We lost the novatel.  Checked connections and cycled power with no success.  It just came back on its own. Less than 4 satellites, it stops reporting.  If you look at data, we had less than 4 just after takeoff until we leveled out.  Was raining at takeoff.  Could have iced up a bit or heading related. 
+
+Lost Satcom a few times during this flight for short periods of time. Doesn't like this part of the world.
+
+Clouds messing with the unheated temp probe around 17:34. May have happened a little more throughout flight.  Tracking with the others at the end of the flight.
+
+At 19:41 CLH2 stopped reporting.  Bryan had me run their script to copy data and wipe disc clean.  After that, recycled power and it started working.
+
+
+25Jan16  RF05
+
+Takeoff from Puerta Montt: 11:58 
+Landing in Punta Arenas: 13:50
+
+No CN this flight.  Waiting on Anything I/O card from RAF.
+
+QCLS, AWAS, and TOGA not operating for this flight.
+
+QCR is not matching up with QCF.  Probably water in the tubing.  Will have to drain before RF06 which is scheduled to takeoff 3 hours after we land.
+
+
+
+26Jan16 Maintenance Day
+
+Replaced Anything I/O card in DSM 310. This fixed it. CN is operational again.
+Took out S/N: 826-25
+Put in S/N: 826-21
+
+Blew out dewpointers.  Turned them on and they look good.
+
+Played with RICE again with no consistant results.  Twinax center pin(Sig Out +) to center pin, with Sig Out - disconnect, created noise.  Sig Out - connected, without Sig Out + connected, created noise.  We have some more ideas and will play some more tomorrow.
+
+Cleaned the 2D mirrors.
+
+Topped off CN Butanol.
+
+During RF06, LWO just shutdown when the 2D probe was firing off.  Reboot fixed it.  Inspected and all look good.  Powered up and tested everything and it all works.  This stuff here implies possible probe runaway:  
+Fast2D_LWO overload at : 22:30:28.387300, duration 0
+Fast2D_LWO overload at : 22:30:32.246800, duration 0
+Fast2D_LWO overload at : 22:35:37.166300, duration 29165
+Fast2D_LWO overload at : 22:35:37.166300, duration 155274
+Fast2D_LWO overload at : 22:36:33.858000, duration 0
+
+After looking at data, we lost the Novatel again this flight for a short period of time.  18:56ish to 18:58ish.  Gonna let Stuart Beaton analyze this one.  When it sees less than 4 satellites, it stops sending data.  Doesn't do this instantaneously.  There is some lag time. 
+
+Chris and Stuart, this is the whole flight for gps:
+
+14:20:58: latc: GPS disabled, status reject gstat=0, gmode=0.
+14:20:59: latc: GPS disabled, status reject gstat=0, gmode=0.
+14:21:00: latc: GPS disabled, status reject gstat=0, gmode=0.
+14:21:01: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:00:58: latc: GPS disabled, status reject gstat=1, gmode=0.
+15:00:59: latc: GPS disabled, status reject gstat=2, gmode=0.
+15:05:37: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:08:22: latc: GPS disabled, status reject gstat=1, gmode=0.
+15:08:23: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:10:40: latc: GPS disabled, status reject gstat=1, gmode=0.
+15:10:41: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:11:03: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:11:04: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:12:01: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:14:22: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:14:23: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:14:24: latc: GPS disabled, status reject gstat=0, gmode=0.
+2016-01-26,13:46:41|WARNING|UHSAS: dsm303:/dev/ttyS4: 15:32:45.464 Histogram length=202 bytes, expected 200
+15:52:19: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:52:20: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:52:50: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:52:51: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:52:52: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:52:53: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:55:32: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:55:33: latc: GPS disabled, status reject gstat=2, gmode=0.
+15:55:53: latc: GPS disabled, status reject gstat=1, gmode=0.
+15:55:54: latc: GPS disabled, status reject gstat=0, gmode=0.
+15:59:31: latc: GPS disabled, status reject gstat=2, gmode=0.
+16:22:18: latc: GPS disabled, status reject gstat=0, gmode=0.
+2016-01-26,13:47:09|WARNING|dsm303:/dev/ttyS7: bad Novatel checksum at 2016 01 25 16:28:50.326, #bad=101
+2016-01-26,13:47:13|WARNING|SyncRecordSource: sample timetag (2016-01-25 16:16:59.0000) < syncTime (2016-01-25 16:35:45.0000) by 1126.000000 sec, dsm=83, id=502
+
+2016-01-26,13:48:16|WARNING|dsm303:/dev/ttyS7: bad Novatel checksum at 2016 01 25 18:29:01.926, #bad=201
+18:28:08: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:28:09: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:28:10: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:28:11: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:28:12: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:28:13: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:28:14: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:28:15: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:28:16: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:28:17: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:36: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:37: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:38: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:39: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:40: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:41: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:42: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:43: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:44: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:45: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:46: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:47: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:48: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:49: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:50: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:51: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:52: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:53: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:54: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:55: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:56: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:57: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:58: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:54:59: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:00: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:01: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:02: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:03: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:04: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:05: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:06: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:07: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:08: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:09: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:10: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:11: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:12: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:13: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:14: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:15: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:16: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:17: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:18: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:19: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:20: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:21: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:22: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:23: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:24: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:25: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:26: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:27: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:28: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:29: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:30: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:31: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:32: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:33: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:34: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:35: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:36: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:37: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:38: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:39: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:40: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:41: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:42: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:43: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:44: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:45: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:46: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:47: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:48: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:49: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:50: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:51: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:52: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:53: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:54: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:55: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:56: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:57: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:58: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:55:59: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:00: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:01: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:02: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:03: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:04: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:05: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:06: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:07: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:08: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:09: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:10: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:11: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:12: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:13: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:14: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:15: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:16: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:17: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:18: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:19: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:20: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:21: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:22: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:23: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:24: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:25: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:26: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:27: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:28: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:29: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:30: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:31: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:32: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:33: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:34: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:35: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:36: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:37: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:38: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:39: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:40: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:41: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:42: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:43: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:44: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:45: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:46: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:47: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:48: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:49: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:50: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:51: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:52: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:53: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:54: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:55: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:56: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:57: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:58: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:56:59: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:00: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:01: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:02: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:03: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:04: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:05: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:06: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:07: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:08: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:09: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:10: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:11: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:12: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:13: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:14: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:15: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:16: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:17: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:18: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:19: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:20: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:21: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:22: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:23: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:24: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:25: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:26: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:27: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:28: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:29: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:30: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:31: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:32: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:33: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:34: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:35: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:36: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:37: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:38: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:39: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:40: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:41: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:42: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:43: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:44: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:45: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:46: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:47: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:48: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:49: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:50: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:51: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:52: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:53: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:54: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:55: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:56: latc: GPS disabled, status reject gstat=1, gmode=0.
+18:57:57: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:58: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:57:59: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:58:00: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:58:01: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:58:02: latc: GPS disabled, status reject gstat=0, gmode=0.
+18:58:03: latc: GPS disabled, status reject gstat=0, gmode=0.
+20:07:39: latc: GPS disabled, status reject gstat=0, gmode=0.
+20:07:40: latc: GPS disabled, status reject gstat=0, gmode=0.
+20:07:41: latc: GPS disabled, status reject gstat=0, gmode=0.
+20:42:30: latc: GPS disabled, status reject gstat=0, gmode=0.
+20:42:31: latc: GPS disabled, status reject gstat=0, gmode=0.
+20:42:33: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:47: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:48: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:49: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:50: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:51: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:52: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:53: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:54: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:55: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:56: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:57: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:58: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:06:59: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:00: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:01: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:02: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:03: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:04: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:05: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:06: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:07: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:08: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:09: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:10: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:11: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:12: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:13: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:14: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:15: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:16: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:17: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:18: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:19: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:20: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:21: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:22: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:23: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:24: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:25: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:26: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:27: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:28: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:29: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:30: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:31: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:32: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:33: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:34: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:07:35: latc: GPS disabled, status reject gstat=0, gmode=0.
+2016-01-26,13:49:50|WARNING|dsm303:/dev/ttyS7: bad Novatel checksum at 2016 01 25 21:11:39.329, #bad=301
+21:17:46: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:47: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:48: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:49: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:50: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:51: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:52: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:53: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:54: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:55: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:56: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:57: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:58: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:17:59: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:00: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:01: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:02: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:03: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:04: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:05: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:06: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:07: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:08: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:09: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:10: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:11: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:12: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:13: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:14: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:15: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:16: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:17: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:18: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:19: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:20: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:21: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:22: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:23: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:24: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:25: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:26: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:27: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:28: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:29: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:30: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:31: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:32: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:33: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:34: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:43: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:44: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:45: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:46: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:51: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:52: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:53: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:54: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:55: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:56: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:57: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:58: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:18:59: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:00: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:01: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:02: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:03: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:04: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:05: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:06: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:07: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:08: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:09: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:10: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:11: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:12: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:13: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:14: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:15: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:16: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:17: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:18: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:19: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:20: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:21: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:22: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:23: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:24: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:25: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:26: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:27: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:28: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:29: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:30: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:31: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:32: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:33: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:34: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:35: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:36: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:37: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:38: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:39: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:40: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:41: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:42: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:43: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:44: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:45: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:46: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:47: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:48: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:49: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:50: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:51: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:52: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:53: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:54: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:55: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:56: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:57: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:58: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:19:59: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:00: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:01: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:02: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:03: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:04: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:05: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:06: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:07: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:08: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:09: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:10: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:11: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:12: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:13: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:14: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:15: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:16: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:17: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:18: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:19: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:20: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:21: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:22: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:20:23: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:15: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:16: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:17: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:18: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:19: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:20: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:21: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:22: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:23: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:24: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:25: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:26: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:27: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:28: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:29: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:30: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:31: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:32: latc: GPS disabled, status reject gstat=0, gmode=0.
+21:21:33: latc: GPS disabled, status reject gstat=0, gmode=0.
+22:20:39: latc: GPS disabled, status reject gstat=0, gmode=0.
+22:20:40: latc: GPS disabled, status reject gstat=0, gmode=0.
+Fast2DC_LWO thisParticleTime in the future, not calling createSamples()
+  16/01/25 22:23:16.45900016/01/25 22:23:23.084869
+22:24:34: latc: GPS disabled, status reject gstat=0, gmode=0.
+22:24:35: latc: GPS disabled, status reject gstat=0, gmode=0.
+22:26:24: latc: GPS disabled, status reject gstat=0, gmode=0.
+
+
+If you analyze the net cdf file, the data doesn't stop right away.  It appears that if we recover ggsat numbers 4 and above fast enough, the serial stream doesn't stop and the data doesn't drop out.  As I mentioned before, there is some lag time. 
+
+
+
+27Jan16 Maintenance Day
+
+Turns out we should ignore the reports that look this:
+22:26:24: latc: GPS disabled, status reject gstat=0, gmode=0.
+Some artifact of merging GPS and INS data.
+
+Concentrated on RICE today.  Anaylyzed jumpers on the Diamond A2D card and all seems good.  There is a twinax cable out of the RICE probe to twinax connectors, to mini molex connectors, and finally into the DSM through its IDC connector.  We eliminated the mini molex connectors and soldered the wires together.  Noise is not there when all is hooked up.  Applied 400Hz power and no noise.  We applied WOW 28VDC power while grabbing the probe with a wet towel.  The probe reacted as suspected and the test was successful.  Still no noise.  This may have fixed it.  Find out next flight.
+
+Put the Data System drawings on the server today.
+
+Jorgen seemed pretty happy with GNI today.  
+
+
+
+29Jan16 Maintenance Day
+
+Brought up data system and all looks good.  Ready for flight.
+
+Did a CDP calibration with Jorgen.  It was successful with a 25mph'ish wind blowing directly into the probe.  Cross wind might be more difficult but don't see that much here.  Did 50,40,30,20,15,10,& 5um bead sizes.  He likes them in this order.  From largest to smallest.  Clean bottle and probe bracket tube before and after each bead size.  Took screen shots and labeled them with the Cal Flight number, size, and date.  Placed screen shots in a folder on the desktop labeled ORCAS CDP Cals.  Also, processed CF05 and placed it in that same folder.  Gave a copy of the folder to Jorgen.
+
+
+
+30Jan16 RF07
+
+Takeoff: 16:09
+Landing: 23:27
+
+Medusa seat needs to be looked at.  Having issues locking it into position.  Will have mechs look at it next maintenance day.
+
+The RWO DSM rebooted a couple times on rapid ascents and descents.  Will check connections next maintenance day.  
+
+It appears like we have tackled the RICE noise issue with the removal of the mini molex connector.
+
+2D probe had a minor issue this flight that was induced by my impatience.  I thought we should have seen returns in a cloud, recycled power, and the end diode voltages had gone down to 0.  Cycled power multiple times and finally down at low altitude with warm temps outside, it finally came back.  Something didn't like the cold temp reboot early on in flight. Most likely the laser power supply. Worked the rest of the flight.  Saw great returns and real time images in a cloud layer during the last dip portion of the flight.
+
+Saw GGSAT numbers drop down this flight again.  Checked all connections in the ADS rack and they looked good.  The antenna connector was a little loose and very cold.  Will play with this during the next maintenance day.
+
+Jorgen wrote in a Xchat channel that the Auto GNI hung after 18 slides.
+
+
+
+1Feb16 Maintenance Day
+
+Cleaned 2D mirrors.  End diode voltages are back up.
+
+Blew out dewpointers.  Tested and they look good.
+
+Attempted to recreate GGNSAT number issue.  Could not recreate.  Removed the interior cover and placed it in Pump Rack Drawer #1.  This may help by allowing cabin heat to get to those connectors.  
+
+Looked at RWO DSM power connector and all looks good.  After installing the DSM, the RICE noise was back.  After further inspection we found the problem.  We were pinching the ribbon cable between the DC to DC board and the threaded nut piece that the DSM screws into.  It wasn't the mini molex connector after all.  Just so happens, after the mini molex removal, we installed the DSM without pinching the cable and thought it was the removal of the mini molex that fixed it.  Unlucky us, the RICE signal is on that end of the ribbon cable.  Problem solved.
+
+
+
+
+2/6/16 Maintenance day crew turn over.
+
+Removed dew point flags and blew out dew point sensors. No water came out.
+
+Opened radome and found water in QCR and ADIF top lines.  Broke lines at transducers and back blew because QCR froze last flight. Did not get any more water out with the airjet. 
+
+Looked into PLWCC issue and were informed that if PLWC is less than 10V the software makes PLWCC NAN.  Flying at high altitude PLWC is about 7V which makes sense with when PLWCC was NAN. 
+
+cleanning the mirrors of 2DC probe was able bring up diode voltage to .8v ( before cleanning diodes voltage show only .4v )
+
+Verified that the VCSEL, CN counter and UHSAS were working and ready for the next flight.  Looks good at this point.
+
+2/8/16 RF09.
+take off :12:05 am
+landed   :04:24 pm
+12 :10 am we lost chat after took off and this is what I have tried :stop mpds icon and restart mpds icon several times but still no luck ,I finally open terminal window and typing :launch_mpds and able to bring chat alive. ( lost chat communication about 45 minutes )
+plwc seem low:5.8 volt , however when we fly through the cloud with alt : 40.000 feet I see plwc voltage jump up from 5.8 to 11 volt,after landed I did pour some clean water to entire element to wash out some salt water, will check again on the way fly back home on wednesday.
+GNI still have some problem and did turn of after several try to reset system.
+all aircraft system behave well.
+Ta
+
+2/10/16  RF10
+Take off :09:46 am
+Landed   :11:36 am
+This is only 02 hrs ferrry back to home base Punta Arenas,but they still decide call it RF10 .
+- After take off VCSEL quit woking ( show nan value ) later on I decide reset power & computer and VCSEL comming back to work,
+-10:32am RICE quit working ,I reset CB 400HZ ,no luck, due to a short flight ,Cowan & I decide no need to reset RW DSM.(After landed we reset RW DSM and RICE work fine )
+2DC : Diodes voltage reading low,however they are coming back later in flight.
+That's it for this flight,we do mainternant after we landed,
+Ta
+
+
+2/10/16 Post flight
+We conducted maintenance until 1700.  We looked at RICE after restarting the data system and it was okay.  We suspect that the DSM hung during flight.
+
+2/11/16
+Maintenance day
+Looked at new plwc element and measured resistance of a couple fo them  Looks like slaves are 1.2 ohms with masters of 2.2 ohms on the new ones.  Removed the current PLWC element and it is well used.  There is no laquer covering the wires on the front side. The current element read 1.4 ohm and 1.3 ohms on the slaves with a master of 2.3 ohms.  Not enough to be bad but still different.  It is very hard to get accurate reading with the meters and leads that we have here.  we might want to look for a better meter and put it in either the tool kit or the drawer in the future. We have replaced the element for the next flight.  I wrote the dat on this elemant so we will know how long it flies.
+
+Worked with Jorgan on the AutoGNI and it's software issues. The fix seems to have worked and the error messages have stopped.
+
+Looked at data from RF09 to see if everything was looking okay. Things looking okay.  Dew Points were as expected so no reaon to mess with them. End diodes look good also.
+
+ 
+2/12/16
+RF 11
+Everything looking okay in preflight.
+
+Block out 1456
+Takeoff 1459
+
+1512 Rebooted VCSEL just after takeoff as it did not look like it was following the other DP's.  It is still high but unless I can get someone else to confirm it I will leave it now.
+
+Getting some 2D images as we approach the bottoms of these cloulds.
+
+1516 bunches of 2d data.
+
+1543 PLWC is about 7V at 41K.  That seems lower then CSET but better than last flight.  We \went through some clouds so if we can get someone to look at plwcc after the flight and see if it is okay that would be good. Had CDP and PLWC event at 1503.  Both went up 0.3 g/cm so looks good to me.
+
+1616 Lost chat in a turn.  Hopefully it will come back. It came back in a few minutes.
+
+1737 2 min chat drop during decent at 72S.
+
+From 1800 to 1820 while on the low level leg over the ice, DPL hunted instead of getting a constant dew point.  I do not think it needs to be cleaned  if anything contaminated more.  Will watch it the rest of the flight at low level to see what it does.
+
+1824 Server had ambiant temp fault amber message.  Raised cabin temp to 61 from full cold.  Will leave it there.  Happened during low level leg.
+
+1931 DPR was almost a flat line from 1850 to 1900 on the last low level leg.  Could the flag be getting frozen? DPR has a 50 mb increase in cav pressure over DPL is that normal? The Banalnce numbers are also different by about 500? Will look at tomorrow.
+
+2022 DPR seems stuck when we climbed to 5000 it did not move yet the balalnce number went to 35000.  That should force it to move.
+
+2024 cycle power DPR
+
+2027 Liquid water and Icing event.
+
+2033  DPR now working needed 2 resets
+
+
+2128 to 2133 GGNSATS down to 4.
+
+Land 2307
+Block in 2309
+
+Power Readings at 1645 @45K for about 1.5 hours.
+Left Side A Bus
+400 Hz
+Phase A 8.3A   116V
+Phase B 11.8A  117V
+Phase C 13.2A  115V
+
+Anti Ice
+Phase A 0.0A   116V
+Phase B 0.0A   117V
+Phase C 0.0A   115V
+
+60 Hz 24A   116V
+
+Right Side B Bus
+400 Hz
+Phase A 9.9A   115V
+Phase B 13.1A  113V
+Phase C 10.0A  116V
+
+Anti Ice
+Phase A 0.0A   115V
+Phase B 3.8A   113V
+Phase C 0.0A   115V
+
+60 Hz 14A   116V
+
+Wing 28AI  13A  28.6V
+
+
+
+
+
+Next maintanence day
+Look at past rice data for little spikes.
+
+
+02/13/16
+Maintenance
+-replaced batteries for all headsets
+-clean 2DC mirrors
+-clean camera window
+-Clean DPR
+-Drained radome lines, Center top had water.  Back blew top to get all the water out.
+Noticed that the 2DC heaters do not have any thermal compound on them.  There is no thermal compond here.  We are looking to see if some can be aquired locally.  Matt suspects that mirrors might be icing at high altitude accounting for the lower end diode readings there.
+DPR might have been a bit dirty, we will see if cleaning it helps any.
+We were going to do a CDP cal but the winds came up.  Maybe tomorrow.
+Looked at RICE data, the noise is small and might be because of the damamged cable.  Since it is so small at this point we recommend leaving it and replacing the cable back at jeffco. These spikes are not seen on the ground (RF11 preflight).
+
+
+2/14/16 maintance
+
+As many of you know the time server on the GV would not go to Stratum 1 today. Here is a summery of what was tried and what we see:
+
+Once power was on the plan we waited about 20 min and the time server did not go to stratum 1.  We checked the reference position and found that it was correct for the airport.  We updated that position about 3 times trying to make sure it was not hung up some place and it is correct.  We also took apart and cleaned all the GPS connections from the antenna to the time server.  We replaced the 90 deg TNC adapter at the bottom of the GPS going to the splitter.  All of this did not fix the problem.  Looking at the front panel of the Timeserver the is a place you can find the receiver status.  This showed 8 satellites all day long with 42.3 dB Signal o noise ration which should be good.  If we disconnected the antenna satellites went to 0, when we hooked it back up satellites went to 8.  At this point we thought it must be something in software and contact Janine.  
+
+She came out and we continued to work with the unit.  Once we had the password and were able to log in we we began to look at config files.  We have also noticed that the web interface does not work and we cannot get to the web page.  That might be a symptom or a coincidence. The manual says you cannot adjust a configuration on the web page just look at stuff. As we dug through the manual and things we went back to the front panel and looked at what is was showing us.
+I began to compare the manual entries to what we were seeing.  On the NTP status (page 41 of the manual which is attached) it said the source should be GPS, our timeserver says 73.78.73.84.  That is an IP address and means that somehow the timeserver is looking for a Startum 1 time server at that IP meaning it is set up as a stratum 2 timeserver right now. Also the LI Bits has Fault instead of None as in the manual.  Not sure if that is because it cannot reach the IP or what.  On the same scree the OFFSET is also "out f range" which is different than the manual.
+
+We looked in the manual and found where you can configure the timeserver for Stratum 2 (Manual page 18) and then we looked at the ntp.conf file.  There was no entry in the file for the secondary time server like we expected.  We did see that there was not ntp.conf file in the \boot directory and we placed the one a copy of this one there as the manual instructed.
+
+We continued to work but could not find any way to get the web interface on or any other config file that would set the source to gps.
+
+The current plan is to have Janine call Endrun tomorrow and see if they know what is going on.  Hopefully they will give us a fix.  If not we should know by the afternoon and other strategies can be addressed.  During the reposition flight tomorrow I will run the data system and see if we can get any data with it in this condition in case there is something else wrong and we have to wait for one to get here.
+
+One question is will we get any data with the timeserver at stratum 16?  Will serial work, analog anything? We ask this because the science team will consider flying if they can get data in this mode. 
+
+Does anyone have any other suggestions as to what might be wrong?  Any other way that to change and get the source as GPS?
+
+Sorry for such a long message. Thanks for any help you can give us.
+
+John
+
+Attaching Page 18 and page 41 so it does not have to be viewed with a pdf reader.
+
+Page 18
+Configuring the Tempus LX as a Stratum 2 Server
+Operating the Tempus LX as a Stratum 1 Server is the recommended mode. You may operate the unit
+as a Stratum 2 server but since there are innumerable ways to configure your network with Stratum 2
+servers, specific insructions for how to do that are beyond the scope of this manual. General instructions
+are:
+Edit NTP.CONF
+You must edit the ntp.conf file in order to point your Stratum 2 server at a Stratum 1 server. Edit
+/etc/ntp.conf and add your server line(s). (See Using Edit below.) Here is an example:
+server 192.168.1.1
+Or, if you set up a domain name server via netconfig, here is another example:
+server your.timeserver.com
+IMPORTANT
+Now save the edited file and copy it to the non-volatile flash partition with this command:
+cp -p /etc/ntp.conf /boot/etc
+
+
+Page 41
+
+NTP Status
+This display provides information associated with the NTP Subsystem.
+Source - GPS LI Bits - None
+NTP STATUS Stratum - 1 Offset - +0.0000007 sec
+Stratum: This stratum field has three possible values:
+Stratum 1: The server is fully synchronized and accurate.
+Stratum 2: The server is synchronized to a stratum 1 server with IP address shown
+in Source.
+Stratum 16: The server is unsynchronized. NTP clients will not use a Stratum 16
+server.
+Source: The synchronization source is named here. For the Tempus LX GPS the source is GPS,
+IP address of upstream source, or none.
+Offset: The NTP offset indicates the accuracy of the NTP system clock relative to the GPS
+Subsystem clock. Initially, if the offset between the NTP system clock and the GPS
+Subsystem clock is large the display will indicate “not available”. After the GPS
+Subsystem locks, the NTP clock will synchronize to the GPS Subsystem. Once
+synchronization is complete, the typical offsets will range over approximately
++/- 1 microsecond.
+LI Bits: Shows the status of the leap indicator bits as sent by the Tempus LX time server to the
+clients in the NTP reply packets. Descriptions of the leap indicator are:
+00 - None: No fault and no pending leap second.
+01 - Insert Pending: No fault and a leap second insertion is pending.
+10 - Delete Pending: No fault and a leap second deletion is pending.
+11 - Fault: Unsynchronized fault condition exists.
+
+Over night we found out that it might be a firmware issue from the manufacturer. We will know if they have a fix soon.
+
+
+2/15/16
+RF12  Evanc to Valdivia which is north of Pueto Montt.
+Data system on but all varibales are NAN.  Running probes for anit-ice. 
+
+Looked at Timeserver NTP source just after it booted and it was still the IP address.  It never changes to GPS.
+
+Block out 1241
+Takeoff 1243
+
+Looking at the irig on the status page the card is reporting that everything is okay except for the IRIG-UNIX.  That has a value of 15768584.0000 seconds.  Also the the DSM's are running 2 different dates and times.  Wings are 01/01/1970, cabin dsm's are 01/01/2000.  Times are off by the 10 minutes that I took between turning on the cabin and the wings.  Also the DSM server data time is flipping back and forth between those 2 times.  I will attach a screen shot of the status page.  Giving this information in case some kind of a work around is requested.
+
+Eveything contunied to not work as expected during the rest of the flight.
+
+Land  
+Block In
+
+Power Readings at 1416 @40K for about 1 hour.
+Left Side A Bus
+400 Hz
+Phase A 5.3A   116V
+Phase B 6.1A  117V
+Phase C 6.4A  115V
+
+Anti Ice
+Phase A 0.0A   116V
+Phase B 0.0A   117V
+Phase C 0.0A   115V
+
+60 Hz 10A   116V
+
+Right Side B Bus
+400 Hz
+Phase A 6.6A   115V
+Phase B 10.4A  113V
+Phase C 6.5A  116V
+
+Anti Ice
+Phase A 0.0A   115V
+Phase B 4A   113V
+Phase C 0.0A   115V
+
+60 Hz 6A   116V
+
+Wing 28AI  13A  28.6V
+
+Picarro in L-1 running and ADS in R-6 running.  Everything else was off.
+
+
+RF12 post flight for Timeserver.
+
+As Gordon suggested we are going to try and configuar our time server to look off the plane to a public timeserver instead of the GPS.  This may give us a work around for this issue.
+First attempt source is still set the same IP as yesterday.
+
+RF13
+2/17/16
+Return from Valdivia
+Started plane and stacoM for Timeserver fix and Picarro warmup.
+
+Block out 0942
+Takeoff 0951
+
+Still trying to upgrade time server.
+
+1419 Cycle VCSEL power it was NAN.
+1421 Reboot dsm310 because analog card 0 did not boot correctly.
+
+Everything seems to be working now.
+
+Land 1453
+Block In 1455
+
+Post flight.  Supported users.  Added some Beutonal to the CN counter.  Every thing worked on the flight so we should be good to go.
+ 
+RF14
+02/18/16
+Take off :12:38 PM
+Landed   :08:11 PM
+Take off for this flight was delay 30 minutes due to air traffic at airport.
+This flight went smoothly for me without any problem.
+-Dewpoint Right still have oscillation problem at high alt,however temperature reading pretty close when I compare with VXL instrument,for examble :
+DPR= -80F and VXL= -82F,
+-Chat system work very well,0 drop-out for this flight.
+-Time-server stay up all the time although times to get stratum 1 took a little longer than usual (could be cause by a new firmware up date )
+- Like the other flight ADS operator keep busy with GNI instrument
+- All PMS probes work fine whenever we go through the clouds
+That's it for this flight
+Ta
+
+2/19/16
+Maintenance Day
+Removed the CLH-2 probe so that it could be looked at.  Saw no obvious issues.  Re Installed and pulled a data file.
+
+Cleaned 2DC mirrors.
+
+RAF Power cart died, rented one from LAN for the rest of the day.
+
+Janine was working on the Timeserver trying to make it so that it can be seen on the network by MEDUSA and AO2.
+
+Wind came up strong so we were unable to open the radome or do a CDP calibration.
+
+Shut down maintenace early due to possible early evacuation/RF tomorrow morning.
+
+RF15
+Evac 2/19/16
+Minimum start time flight going to Puerto Montt. About 40 min warm up.
+
+Block Out 2053
+Take Off 2055
+
+2101 some 2DC date from a cloud.
+2103 decent 2DC data all cloud probes.
+2123 Saw some wierd timing thing at this time.  I have seen it before here but not with any regularity.  Shortly after this the GGQUAL also dropped. This may have been attributed to Janine resetting the time server.  We saw the same signature in RF18 preflight.
+2222 Seeing probe data on the way down through clouds.
+
+
+Land 2250
+
+Block In 2255
+
+
+Power Readings at 2155 @40K for about 1 hour.
+Left Side A Bus
+400 Hz
+Phase A 4.6A  116V
+Phase B 5.3A  117V
+Phase C 5.1A  115V
+
+Anti Ice
+Phase A 0.0A   116V
+Phase B 0.0A   117V
+Phase C 0.0A   115V
+
+60 Hz 8A   116V
+
+Right Side B Bus
+400 Hz
+Phase A 6.9A   115V
+Phase B 10.2A  113V
+Phase C 6.5A  116V
+
+Anti Ice
+Phase A 0.0A   115V
+Phase B 3.9A   113V
+Phase C 0.0A   115V
+
+60 Hz 7A   116V
+
+Wing 28AI  13A  28.6V
+
+Picarro, CN, UHSAS, and VCSEL running besides ADS rack.  Find the change in Left side from the last evacuation flight interesting.  I wonder what was on?
+
+2/22/16
+RF16
+
+On initial check most DSM varaibales on all DSM's were NAN.  Rebooted all DSM's/  I might have trie to push things a little to fast.
+Yep did not start NIMBUS, that will do it. rest of preflight went smooth with no issues.
+
+
+Block Out 2308
+Take Off 2312
+
+Everything looking okay so far.
+
+
+Land 0100
+Block In 0105
+
+Power Readings at 0010 @40K for about 1 hour.
+Left Side A Bus
+400 Hz
+Phase A 4.6A  116V
+Phase B 4.5A  117V
+Phase C 5.2A  115V
+
+Anti Ice
+Phase A 0.0A   116V
+Phase B 0.0A   117V
+Phase C 0.0A   115V
+
+60 Hz 8A   116V
+
+Right Side B Bus
+400 Hz
+Phase A 7.0A   116V
+Phase B 10.2A  113V
+Phase C 6.3A  116V
+
+Anti Ice
+Phase A 0.0A   115V
+Phase B 3.9A   113V
+Phase C 0.0A   115V
+
+60 Hz 7A   116V
+
+Wing 28AI  13A  28.6V
+
+Maintenance 2/23/16
+Did a CDP calibration.  Processed file and gave it to Janine.  Wind was blowing pretty hard.  the 2um beads were very clumpy so I do not know how that calibration will turn out.  Placed all the files in the same diectory as the other calibration but in a different folder.
+
+Noticed that the voltage on the Left side 60 Hz was low.  I thumped the panel and it can up to 116V.  Suspect that there is a loose wire back there again.  As long as we read a voltage may let it go at this point unless I can get some time with power off the plane to work on it.
+
+Unable to open the radome due to to much wind and it being a bit of a cross wind.  Hopefully in the next 2 pre-flight it will be less.  Since we flew back okay yesterday I am not overly concerned about it but a check would be good.
+
+After everyone left we looked at the connection to the left side volt meter.  We tightened the connectones (they were all tight) and made sure the wires were secure.  On power up the meter read correctly.  
+
+RF 17 preflight
+Picarro computer had issue.  Needed monitor and mouse.  Maybe we should carry.
+GNI computer ads password has been changed. It is now ads.
+
+
+RF17,Western Survey
+Take off : 11:30 AM
+Landed  :  06:55 PM
+ This Flight is fly to South -west of South-pole Area. for 7.5 hrs without any major problem.
+-Pre- flight double check left side converter 116 VAC hold steady voltage 116V .no dropout with current constant 18 amps.
+-VCSEL show NAN value before take off.reset VCSEL computer was able bring VCSEL back for entire flight.
+- All PMS probes working ,we went to a lot off clouds today
+-In flight Janine notify me the flight number not correct from her end ,however it was show flight # correct from DSM_ Nimbus window. however she did correct the problem after we landed. hopefully won't be any problem for tomorrow flight.
+we spend 9-10 minutes on low level flight-to observe some ice-berg  and head back to North.to finish the remain legs.That's it for this flight.
+
+RF18
+022516
+Pre-flight
+
+Extended pre-flight for flask change out.  Opened radome and drained water from the center and top lines.  Opened the box with the transducers and disconnected the top line at the transducer and back blew it.  Got some water out each time.  Not sure how to deal with the top line since gravity does not seem to help much in getting the water into the drain side.  It seems to stick in the T.
+
+Janine fixed the last timesever issue, AO2 and MEDUSA can now get time.
+
+End diodes are a little (0.42 to 0.61)low but within tolerance.  If they stay that way will need to clean before next flight.
+
+
+Block out 1625
+Takeoff 1628
+
+1637 Some small clouds on climb out.
+1748 Server had ambiant temp fault.  Raised the temp and it cleared.
+1749 Passing power panel and saw Left Side (top row) 60 Hz volts meter reading 106 V.  Tapped the panel with my finger a couple of time and came back to 115V.
+1803 Picking up some cloud particles as we go down. got data on all cloud and water probes.
+
+Cloud probes saw all dips with clouds.
+
+2027 GGNSAT is bouncing between 9 and 4 sats.  Has been doing this for a while but should have cleared by now.
+
+Land
+Block In
+
+Power Readings at 2010 between 24K and 34K doing dips
+Left Side A Bus
+400 Hz
+Phase A 8.3A  116V
+Phase B 9.9A  117V
+Phase C 12.5A  115V
+
+Anti Ice
+Phase A 0.0A   116V
+Phase B 0.0A   117V
+Phase C 0.0A   115V
+
+60 Hz 21A   115V
+
+Right Side B Bus
+400 Hz
+Phase A 9.5A   116V
+Phase B 13.3A  113V
+Phase C 8.4A   116V
+
+Anti Ice
+Phase A 0.0A   116V
+Phase B 4.1A   113V
+Phase C 0.0A   116V
+
+60 Hz 14A   115V
+
+Wing 28AI  14A  28.6V
+
+
+02/26/16
+packing day + Maintenance .
+-clean 2CD mirrors able to bring diodes voltage up to .8-.9 volts
+
+2/28/16
+Powered up to verify that AWAS was repaired.  We moved a wire to bypass the pump delay circuit.  They will use a cicuit breaker as a manual dealy for the Ferry Home.
+
+  
+
+2/29/16
+RF19
+From Punta Arenas to Arica
+
+Block Out 1351
+Take Off 1355
+
+1413 GGNSATS is bouncing around a lot.  I have seen this a few times.  Not sure why this occurs since it looks fine on the ground.
+1443 2DC images that are real but no clouds in the area at FL410.  Strange. Looks like CDP also saw it. There were a couple of others for about 10 min prior.
+1451 ADIFR froze and went to NAN when we started down.
+1454 Weird change in palt during desent. This is related to ADIFR. another wierd step when ADIFR came back.
+1515 ADIFR is back.  Hopefully it burped and removed the bubble.
+1645 Getting the occasional NOPPS stats on DSM 303.  Guessing it needs cleaned after the project.
+1902 ADIFR working on the descent into Arica.  I think it has cleared the problem.
+1914 2DC end Diodes down to 0.002  Suspect mirros are iced.
+
+Land 1938
+Block In 1940
+
+
+Power Readings at 1752 at FL400 for over and hour.
+Left Side A Bus
+400 Hz
+Phase A 9.0A  116V
+Phase B 10.9A  117V
+Phase C 13.0A  115V
+
+Anti Ice
+Phase A 0.0A   117V
+Phase B 0.0A   117V
+Phase C 0.0A   117V
+
+60 Hz 22A   115V
+
+Right Side B Bus
+400 Hz
+Phase A 9.1A   116V
+Phase B 12.6A  113V
+Phase C 9.0A   116V
+
+Anti Ice
+Phase A 0.0A   115V
+Phase B 3.8A   113V
+Phase C 0.0A   115V
+
+60 Hz 14A   115V
+
+Wing 28AI  13A  28.6V
+
+
+3/01/16
+FF03
+Ferry from Arica to Jeffco
+
+Timeserver seemed to take about 10 min to get stratum 1.  It did have the correct position.  The new firmware may have fixed the posiion problems, we will see once we get to Jeffco.  It does seem to take longer to get stratum 1 though.
+
+Block Out 1320 
+Takeoff 1329
+
+1341 Looks like 2DC is running away.  Will try a reboot. End diodes are NAN. Mirrors iced again I would guess. Resetting breaker did not fix probe.  Secured power.  Might try again in a bit and see if ram heat will melt ice but not expecting much.
+
+1410 2DC Probe back on.  In a cloud up here.  It is seeing particles correctly now.  End Diodes correct now and not NAN.
+
+1422 Cloud probes seeing data at this time.
+
+2214 Everything looks like it is working as we head down.
+
+Land 
+Block In 
+
+Went to customs and shutdown there.
+
+Power Readings at 1537 at FL400 for 2 hours.
+Limited equipment running on this flight.
+Left Side A Bus
+400 Hz
+Phase A 6.8A  116V
+Phase B 8.8A  117V
+Phase C 7.6A  115V
+
+Anti Ice
+Phase A 0.0A   116V
+Phase B 0.0A   117V
+Phase C 0.0A   115V
+
+60 Hz 17A   116V
+
+Right Side B Bus
+400 Hz
+Phase A 7.4A   116V
+Phase B 10.8A  113V
+Phase C 6.8A   116V
+
+Anti Ice
+Phase A 0.0A   116V
+Phase B 3.8A   113V
+Phase C 0.0A   116V
+
+60 Hz 9A   115V
+
+Wing 28AI  13A  28.6V
+
+3/2/16
+Post project download starts
+
+Ran Auto cal on A/D boards
+
+Warning message A2D011 Ch3 -10V is measuring -8.89037
+All voltages within 5mv of prior calibration.
+All temps were in the low to mid 30's
+
+Ran a second time with DSM's at 40 C
+
+Same message A2D011
+All voltages are still withing spec.
+
+
+
+
+
+
 
 
 
