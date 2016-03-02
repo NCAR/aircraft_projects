@@ -55,8 +55,8 @@ threeVCPI =      False
 # section of push_data and set command as you want.
 datadump = True
 
-# Enter times here to trim flights when processing
-ti = {'rf05':'11:58:00-13:50:00'}
+# To trim flights when processing, create a setup file for the flight under
+# Production. The process script will read that if it exists.
 
 #backup_raw_dir = '/mnt/opsdisk'
 #backup_raw_dir2 = '/media/Seagate\ Expansion\ Drive/deepwave/'
