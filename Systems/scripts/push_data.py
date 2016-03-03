@@ -192,7 +192,7 @@ def process_netCDF(rawfile,ncfile,HRT):
   # use that. If not, create one.
 
   if HRT == True:
-    nimConfFile = proj_dir+"/Production/setup_"+flight_HRT
+    nimConfFile = proj_dir+"/Production/setup_"+flight+"_HRT"
   else:
     nimConfFile = proj_dir+"/Production/setup_"+flight
 
