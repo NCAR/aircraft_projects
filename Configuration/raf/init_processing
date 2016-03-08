@@ -115,8 +115,8 @@ end
 foreach file (${RAW_DATA_DIR}/$proj/*[rf]f*.ads)
   set bfname=`basename $file`
   set flight=`echo $bfname | cut -b 17-20`
-  echo "if="$file > setup_$flight
-  echo "of="${dat}/${proj}${flight}.nc >> setup_$flight
+  echo 'if=${RAW_DATA_DIR}/'$proj'/'$bfname > setup_$flight
+  echo 'of=${DATA_DIR}/'${proj}'/'${proj}${flight}.nc >> setup_$flight
 end
 
 
