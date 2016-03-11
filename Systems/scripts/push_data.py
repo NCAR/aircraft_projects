@@ -635,23 +635,23 @@ if NAS != True:
     os.chdir(data_dir)
     if ncfilename != '': 
       file = open(ncfilename, 'r')
-      ftp.storbinary('STOR ' + ncfilename.zip, file)
+      ftp.storbinary('STOR ' + ncfilename+".zip", file)
       file.close()
       ship_nc_file = 'Yes-FTP'
     if kmlfilename != '':
       file = open(kmlfilename, 'r')
-      ftp.storbinary('STOR ' + kmlfilename.zip, file)
+      ftp.storbinary('STOR ' + kmlfilename+".zip", file)
       file.close()
       ship_kml_file = 'Yes-FTP'
     if nc2iwg:
       if iwg1filename != '':
         file = open(iwg1filename, 'r')
-        ftp.storbinary('STOR ' + iwg1filename.zip, file)
+        ftp.storbinary('STOR ' + iwg1filename+".zip", file)
         file.close()
         ship_iwg_file = 'Yes-FTP'
     if icarttfilename != '':
       file = open(icarttfilename, 'r')
-      ftp.storbinary('STOR ' + icarttfilename.zip, file)
+      ftp.storbinary('STOR ' + icarttfilename+".zip", file)
       file.close()
       ship_asc_file = 'Yes-FTP'
     print datetime.datetime.now().time()
