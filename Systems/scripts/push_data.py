@@ -60,8 +60,6 @@ else:
   print "Unknown aircraft "+aircraft+" Update code\n"
   sys.exit(1)
 
-translate2ds = '/home/local/raf/instruments/3v-cpi/translate2ds/translate2ds '
-
 # Echo configuration:
 print
 print 'Processing ' + project + ' from ' + aircraft + '.   If incorrect, edit ~/ads3_environment.'
@@ -633,29 +631,38 @@ if NAS != True:
     ftp.cwd(ftp_data_dir)
     print ""
     print datetime.datetime.now().time()
-    print "Putting file:"+zip_data_filename
+    print "Putting files:"+ncfilename+" "+kmlfilename+" "+iwg1filename+" "+icarttfilename
     os.chdir(data_dir)
-    file = open(zip_data_filename, 'r')
-    ftp.storbinary('STOR ' + zip_data_filename, file)
-    file.close()
+    if ncfilename != '': 
+      file = open(ncfilename, 'r')
+      ftp.storbinary('STOR ' + ncfilename.zip, file)
+      file.close()
+      ship_nc_file = 'Yes-FTP'
+    if kmlfilename != '':
+      file = open(kmlfilename, 'r')
+      ftp.storbinary('STOR ' + kmlfilename.zip, file)
+      file.close()
+      ship_kml_file = 'Yes-FTP'
+    if nc2iwg:
+      if iwg1filename != '':
+        file = open(iwg1filename, 'r')
+        ftp.storbinary('STOR ' + iwg1filename.zip, file)
+        file.close()
+        ship_iwg_file = 'Yes-FTP'
+    if icarttfilename != '':
+      file = open(icarttfilename, 'r')
+      ftp.storbinary('STOR ' + icarttfilename.zip, file)
+      file.close()
+      ship_asc_file = 'Yes-FTP'
     print datetime.datetime.now().time()
     print "Finished putting data file"
     print ""
     ftp.quit()
 
-    if ncfilename != '': 
-      ship_nc_file = 'Yes-FTP'
-    if kmlfilename != '':
-      ship_kml_file = 'Yes-FTP'
-    if nc2iwg:
-      if iwg1filename != '':
-        ship_iwg_file = 'Yes-FTP'
-    if icarttfilename != '':
-      ship_asc_file = 'Yes-FTP'
 
   except ftplib.all_errors as e:
     print ""
-    print 'Error writing nc/kml data file to eol server'
+    print 'Error writing nc/kml/iwg1/icartt data file to eol server'
     print e
     ftp.quit()
 #    sys.exit(1)
