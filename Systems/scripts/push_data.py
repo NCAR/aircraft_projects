@@ -35,7 +35,7 @@ project = read_env("PROJECT")
 aircraft = read_env("AIRCRAFT")
 data_dir = read_env("DATA_DIR") + '/' + project + '/'
 raw_dir  = read_env("RAW_DATA_DIR") + '/' + project + '/'
-proj_dir  = read_env("PROJ_DIR") + '/' + project + '/' + aircraft
+proj_dir  = read_env("PROJ_DIR") + '/' + project + '/' + aircraft + '/'
 
 # Initialization 
 #   The RStudio piece seems to need special setup for each project
@@ -43,7 +43,7 @@ sys.path.insert(0,proj_dir)
 from fieldProc_setup import *
 
 ##############   Beginning of Setup ######################################
-nc2ascBatch =	proj_dir + '/scripts/nc2asc.bat'
+nc2ascBatch =	proj_dir + 'scripts/nc2asc.bat'
 
 # Don't make it Raw_Data/proj.
 zip_dir = '/tmp/'
@@ -190,9 +190,9 @@ def process_netCDF(rawfile,ncfile,HRT):
   # use that. If not, create one.
 
   if HRT == True:
-    nimConfFile = proj_dir+"/Production/setup_"+flight+"_HRT"
+    nimConfFile = proj_dir+"Production/setup_"+flight+"_HRT"
   else:
-    nimConfFile = proj_dir+"/Production/setup_"+flight
+    nimConfFile = proj_dir+"Production/setup_"+flight
 
   if not os.path.exists(nimConfFile):
 
