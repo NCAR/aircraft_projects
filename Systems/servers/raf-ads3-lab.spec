@@ -1,7 +1,7 @@
 Summary: Metapackage for all server and satcom packages needed on lab systems.
 Name: raf-ads3-lab
 Version: 1.0
-Release: 7
+Release: 8
 License: GPL
 Group: System Environment
 
@@ -9,7 +9,7 @@ Requires: raf-ads3-syslog
 Requires: raf-ads-user
 Requires: raf-lab-dhcp
 Requires: raf-lab-named
-Requires: raf-lab-ntp
+Requires: raf-ac-chrony
 Requires: ael-local-dpkgs
 Requires: raf-ads3-sudoers
 Requires: minicom
@@ -25,6 +25,8 @@ Metapackage for all server and satcom packages needed on lab systems.
 %files 
 
 %changelog
+* Wed Apr 6 2015 Chris Webster <cjw@ucar.edu> 1.0-8
+- Change raf-ac-ntp to raf-ac-chrony for RHEL7 migration.
 * Wed Nov 4 2015 Chris Webster <cjw@ucar.edu> 1.0-7
 - Added Requires: minicom & kde-baseapps
 * Tue Jul 13 2010 Gordon Maclean <maclean@ucar.edu> 1.0-6

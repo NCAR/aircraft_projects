@@ -1,14 +1,14 @@
 Summary: Metapackage for all server and satcom packages needed on GV
 Name: raf-gv
 Version: 1.0
-Release: 13
+Release: 14
 License: GPL
 Group: System Environment
 
 Requires: raf-ads3-syslog
 Requires: raf-ads3-sysctl
 Requires: raf-ads-user
-Requires: raf-ac-ntp
+Requires: raf-ac-chrony
 Requires: raf-ac-nagios
 Requires: raf-ac-firewall
 Requires: raf-gv-dhcp
@@ -45,6 +45,8 @@ Metapackage for all server and satcom packages needed on GV.
 %files 
 
 %changelog
+* Tue Apr 5 2016 Chris Webster <cjw@ucar.edu> 1.0-14
+- Change raf-ac-ntp to raf-ac-chrony for RHEL7.
 * Tue Nov 4 2015 Chris Webster <cjw@ucar.edu> 1.0-14
 - Updated Requires kde-baseapps (kdialog).
 * Thu May 16 2013 Chris Webster <cjw@ucar.edu> 1.0-13
