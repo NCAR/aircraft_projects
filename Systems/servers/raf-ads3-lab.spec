@@ -28,8 +28,9 @@ Metapackage for all server and satcom packages needed on lab systems.
 %files 
 
 %changelog
-* Wed Apr 6 2016 Chris Webster <cjw@ucar.edu> 1.0-8
+* Mon Apr 11 2016 Chris Webster <cjw@ucar.edu> 1.0-8
 - Change raf-ac-ntp to raf-ac-chrony for RHEL7 migration.
+- add raf-ac-gdm : auto-login.
 - Require eol-devel, postgresql-server.
 * Wed Nov 4 2015 Chris Webster <cjw@ucar.edu> 1.0-7
 - Added Requires: minicom & kde-baseapps
