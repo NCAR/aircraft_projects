@@ -1,7 +1,7 @@
 Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
-Release: 21
+Release: 22
 Group: User/Environment
 Source: %{name}-%{version}.tar.gz
 License: none
@@ -13,12 +13,24 @@ Requires: xchat
 Requires: firefox
 
 %description
+Makes sure ads:ads exists in /etc files.  Password needs to be set manually at this time.
 Provides the 'ads' user csh & bash logins, and icons files.
 
 %prep
 %setup -n %{name}
 
 %install
+cf=/etc/group
+if [! egrep -q "ads" $cf]; then 
+  echo "ads:x:1318:" >> /etc/group
+fi
+
+cf=/etc/passwd
+if [! egrep -q "ads" $cf]; then 
+  adsuser -g ads -i 12900 ads
+fi
+
+
 rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}/home/ads/bin
 mkdir -p ${RPM_BUILD_ROOT}/home/ads/Desktop
@@ -124,6 +136,8 @@ fi
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Mon Apr 11 2016 Chris Webster <cjw@ucar.edu> 1.22
+- Add ads:ads to /etc passwd:group files
 * Fri Nov 20 2015 Tom Baltzer <tbaltzer@ucar.edu> 1.21
 - Added two new iridium icons and deleted the old one
 * Thu Nov 19 2015 Chris Webster <cjw@ucar.edu> 1.21
