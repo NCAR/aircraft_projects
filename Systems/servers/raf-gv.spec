@@ -8,6 +8,7 @@ Group: System Environment
 Requires: raf-ads3-syslog
 Requires: raf-ads3-sysctl
 Requires: raf-ads-user
+Requires: raf-ac-gdm
 Requires: raf-ac-chrony
 Requires: raf-ac-nagios
 Requires: raf-ac-firewall
