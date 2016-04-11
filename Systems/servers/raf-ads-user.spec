@@ -20,17 +20,6 @@ Provides the 'ads' user csh & bash logins, and icons files.
 %setup -n %{name}
 
 %install
-cf=/etc/group
-if [! egrep -q "ads" $cf]; then 
-  echo "ads:x:1318:" >> /etc/group
-fi
-
-cf=/etc/passwd
-if [! egrep -q "ads" $cf]; then 
-  adsuser -g ads -i 12900 ads
-fi
-
-
 rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}/home/ads/bin
 mkdir -p ${RPM_BUILD_ROOT}/home/ads/Desktop
@@ -60,6 +49,18 @@ group=`id -gn ads`
 if [ -n "$group" ]; then
     chgrp -R $group %{_localstatedir}/run/nidas
 fi
+
+%post
+cf=/etc/group
+if [! egrep -q "ads" $cf]; then 
+  echo "ads:x:1318:" >> /etc/group
+fi
+
+cf=/etc/passwd
+if [! egrep -q "ads" $cf]; then 
+  adsuser -g ads -i 12900 ads
+fi
+
 
 %files
 %defattr(-,ads,ads)
