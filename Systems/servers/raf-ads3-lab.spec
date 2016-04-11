@@ -25,6 +25,21 @@ BuildArch: noarch
 %description
 Metapackage for all server and satcom packages needed on lab systems.
 
+
+%pre
+dir=/home/local
+if [ ! -d $dir ]; then
+  mkdir -p $dir/bin $dir/include $dir/lib
+  chown -R ads:ads $dir
+  chmod g+w $dir/bin $dir/include $dir/lib
+  ln -s $dir /opt/local
+fi
+
+dir=/home/data
+if [ ! -d $dir ]; then
+  mkdir -p $dir
+fi
+
 %files 
 
 %changelog
@@ -32,6 +47,8 @@ Metapackage for all server and satcom packages needed on lab systems.
 - Change raf-ac-ntp to raf-ac-chrony for RHEL7 migration.
 - add raf-ac-gdm : auto-login.
 - Require eol-devel, postgresql-server.
+- Create some /home/local/ directories
+- Check out subversion items.
 * Wed Nov 4 2015 Chris Webster <cjw@ucar.edu> 1.0-7
 - Added Requires: minicom & kde-baseapps
 * Tue Jul 13 2010 Gordon Maclean <maclean@ucar.edu> 1.0-6
