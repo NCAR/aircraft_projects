@@ -50,17 +50,6 @@ if [ -n "$group" ]; then
     chgrp -R $group %{_localstatedir}/run/nidas
 fi
 
-%post
-cf=/etc/group
-if [! egrep -q "ads" $cf]; then 
-  echo "ads:x:1318:" >> /etc/group
-fi
-
-cf=/etc/passwd
-if [! egrep -q "ads" $cf]; then 
-  adsuser -g ads -i 12900 ads
-fi
-
 
 %files
 %defattr(-,ads,ads)
@@ -112,7 +101,7 @@ fi
 
 $addeolgroup && /usr/sbin/groupadd -g 1342 -o eol
 $addadsgroup && /usr/sbin/groupadd -g 1318 -o ads
-$adduser && /usr/sbin/useradd  -u 12900 -N -g ads -G eol -s /bin/csh -c "ADS operator" -K PASS_MAX_DAYS=-1 ads || :
+$adduser && /usr/sbin/useradd  -u 12900 -N -g ads -G eol -s /bin/bash -c "ADS operator" -K PASS_MAX_DAYS=-1 ads || :
 
 if ! grep eol /etc/group | grep -q ads; then
     ypmatch eol group > /dev/null 2>&1 || usermod -G eol ads
@@ -121,8 +110,6 @@ fi
 %post
 chown -R ads:ads /home/ads/bin
 
-echo
-echo "  Make sure ads uid is 12900, and ads gid is 1318 !!"
 echo
 echo "  If your installing this on an aircraft then fix the AIRCRAFT and PROJECT"
 echo "  variables in ~/ads3_environment.csh !!!"
