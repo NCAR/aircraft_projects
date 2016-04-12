@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Start of a script for installing/updating software on an aircraft server.
+
+chdir /home/local
+
+dir=raf
+if [ ! -d $dir ]; then
+  svn co http://svn.eol.ucar.edu/svn/raf/trunk $dir
+else
+  svn update $dir
+fi
+
+dir=Systems
+if [ ! -d $dir ]; then
+  svn co http://svn.eol.ucar.edu/svn/Systems
+else
+  svn update $dir
+fi
+
+dir=projects
+if [ ! -d $dir ]; then
+  svn co --non-recursive http://svn.eol.ucar.edu/svn/projects
+  svn update projects/Configuration
+  svn update projects/RAF_Lab
+else
+  svn update $dir
+fi
+
+dir=nidas
+if [ ! -d $dir ]; then
+  # We need --recursive for nidas for the ARINC driver.
+  git clone --recursive https://github.com/ncareol/$dir
+else
+  cd $dir
+  git pull origin master
+fi
+
+dir=aeros
+if [ ! -d $dir ]; then
+  # We need --recursive for aeros to get eol_scons.
+  git clone --recursive https://github.com/ncareol/$dir
+else
+  cd $dir
+  git pull origin master
+fi
+
