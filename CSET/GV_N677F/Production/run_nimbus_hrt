@@ -1,0 +1,20 @@
+#!/bin/csh
+
+setenv DAT ${DATA_DIR}/CSET
+
+# Remove existing files.  Helps to avoid if a residual data if nimbus fails.
+/bin/rm ${DAT}/CSET?f??hrt.nc
+
+foreach setup_file ( setup_?f??_hrt )
+  nimbus -b $setup_file
+end
+
+
+cd ${DAT}
+
+foreach file ( CSET?f??hrt.nc )
+  echo $file
+  ncReorder $file temp1.nc
+  mv -f temp1.nc $file
+  chmod g+w $file
+end
