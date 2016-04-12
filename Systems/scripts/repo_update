@@ -2,7 +2,7 @@
 
 # Start of a script for installing/updating software on an aircraft server.
 
-chdir /home/local
+cd /home/local
 
 dir=raf
 if [ ! -d $dir ]; then
@@ -13,7 +13,7 @@ fi
 
 dir=Systems
 if [ ! -d $dir ]; then
-  svn co http://svn.eol.ucar.edu/svn/Systems
+  svn co http://svn.eol.ucar.edu/svn/raf/Systems
 else
   svn update $dir
 fi
