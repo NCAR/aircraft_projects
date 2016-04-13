@@ -12,6 +12,7 @@ Requires: raf-lab-dhcp
 Requires: raf-lab-named
 Requires: raf-ac-chrony
 Requires: raf-ac-gdm
+Requires: raf-ac-selinux
 Requires: ael-local-dpkgs
 Requires: raf-ads3-sudoers
 Requires: minicom
@@ -46,6 +47,7 @@ fi
 * Mon Apr 11 2016 Chris Webster <cjw@ucar.edu> 1.0-8
 - Change raf-ac-ntp to raf-ac-chrony for RHEL7 migration.
 - add raf-ac-gdm : auto-login.
+- add raf-ac-selinux : disable
 - Require eol-devel, postgresql-server.
 - Create some /home/local/ directories
 - Check out subversion items.

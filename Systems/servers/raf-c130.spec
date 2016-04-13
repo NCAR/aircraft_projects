@@ -9,6 +9,7 @@ Requires: raf-ads3-syslog
 Requires: raf-ads3-sysctl
 Requires: raf-ads-user
 Requires: raf-ac-gdm
+Requires: raf-ac-selinux
 Requires: raf-ac-chrony
 Requires: raf-ac-nagios
 Requires: raf-ac-firewall
@@ -46,7 +47,7 @@ Metapackage for all server and satcom packages needed on C130.
 
 %changelog
 * Tue Apr 5 2016 Chris Webster <cjw@ucar.edu> 1.0-14
-- Change raf-ac-ntp to raf-ac-chrony for RHEL7 migration.
+- Change raf-ac-ntp to raf-ac-chrony for RHEL7 migration.  Add gdm & selinux.
 * Tue Nov 4 2015 Chris Webster <cjw@ucar.edu> 1.0-14
 - Updated Requires kde-baseapps (kdialog).
 * Thu May 16 2013 Chris Webster <cjw@ucar.edu> 1.0-13
