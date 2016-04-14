@@ -1,4 +1,4 @@
-#!/bin/csh -x
+#!/bin/bash
 
 logger "start_cameras shell script called"
 
@@ -15,7 +15,7 @@ sudo modprobe firewire_ohci
 # Reset camera images symlink for camera web page display
 cd /var/www/html/camera
 rm camera_images
-set cam_path=`get_ac_config.py cameras.path`
+cam_path=`get_ac_config.py cameras.path`
 ln -s `dirname ${cam_path}`
 
 sleep 2
