@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/bash
 
 gnome-terminal --title "IRIDIUM LOG" -x /home/local/Systems/scripts/show_iridium_log.csh &
 
