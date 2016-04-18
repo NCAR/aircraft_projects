@@ -15,7 +15,7 @@ set PROJECT = "ICE-T"
 ### LRT - done 10/13/2011, final data updated 11/16/2011, added updated FSSP
 ### and SID2H 10/2/2012, fixed minor error in FSSP 10/30/2012
 #/net/work/bin/scripts/mass_store/archAC/archAC.py UNALTERED/LRT /scr/raf/Prod_Data/$PROJECT/orig nc EOL
-/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT \.nc EOL 
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT \.nc EOL 
 
 # HRT - done Jan 4, 2012, updated FSSP 10/30/2012
 #/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/ICE-T/HRT h.nc EOL
@@ -33,8 +33,8 @@ set PROJECT = "ICE-T"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -a . tar EOL 
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -a . tar.dir EOL 
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/Cameras/flight_number_ff02/down jpg EOL 
-#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/Cameras/flight_number_rf09/forward jpg EOL 
-#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/Cameras/flight_number_rf09/down jpg EOL 
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA /scr/raf/Raw_Data/$PROJECT/Cameras/flight_number_rf10/forward jpg EOL/2011
+/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA /scr/raf/Raw_Data/$PROJECT/Cameras/flight_number_tf02 jpg EOL/2011
 
 ### MOVIES
 ### Don't archive preliminary movies to MSS, but do put them in codiac and
