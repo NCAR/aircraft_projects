@@ -64,7 +64,7 @@ my %blankout1;
 my %blankout2;
 
 # Loop through variables to blank out
-foreach $varname (keys %vars) {
+foreach $varname (sort keys %vars) {
     #######################################################
     # Criteria can vary for each variable being blanked out
     # Calculate blankout criteria for current $varname
@@ -160,7 +160,7 @@ sub var_proc () {
     if ($dims == 1) {
 	$dimsize = 1;
     } elsif ($dims == 2) {
-        NetCDF::diminq($ncid,2,$dimname,$dimsize);
+        NetCDF::diminq($ncid,$dimids[1],$dimname,$dimsize);
     } else {
         &warn_dims();
     }

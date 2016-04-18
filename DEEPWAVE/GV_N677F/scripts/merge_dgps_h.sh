@@ -2,12 +2,12 @@
 
 exec > ./merge_dgps_h.log 2>&1
 
-for destfile in `ls -1 /scr/raf/Prod_Data/DEEPWAVE/DEEPWAVE*h.nc`
+for destfile in `ls -1 /scr/raf/Prod_Data/DEEPWAVE/HRT/DEEPWAVE*h.nc`
 do
     srcfile=`echo $destfile | sed 's/DEEPWAVE\(....\)h.nc/..\/MERGE\/DGPS\/\1_dgps.nc/'`
     if [ -f "$srcfile" ]; then
         echo "Merge $srcfile into $destfile"
-        ncmerge -v GGLAT_DGPS,GGLON_DGPS,GGALT_DGPS,GGLONSD_DGPS,GGLATSD_DGPS,GGALTSD_DGPS,GGVEW_DGPS,GGSVNS_DGPS,GGVSPD_DGPS $destfile $srcfile
+        ncmerge -v GGLAT_DGPS,GGLON_DGPS,GGALT_DGPS,GGLONSD_DGPS,GGLATSD_DGPS,GGALTSD_DGPS,GGVEW_DGPS,GGSVNS_DGPS,GGVSPD_DGPS -a $destfile $srcfile
     else
 	ncfillvar -v GGLAT_DGPS,GGLON_DGPS,GGALT_DGPS,GGLONSD_DGPS,GGLATSD_DGPS,GGALTSD_DGPS,GGVEW_DGPS,GGSVNS_DGPS,GGVSPD_DGPS -c GGLAT $destfile
         echo "Add blank DGPS to $destfile"
