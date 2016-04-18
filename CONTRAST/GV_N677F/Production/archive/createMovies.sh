@@ -1,0 +1,21 @@
+#!/bin/csh 
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf01
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf02
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf03
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf04
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf05
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf06
+#nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf07
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf08
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf09
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf10
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf11
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf12
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf13
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf14
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf15
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf16
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile rf17
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile tf01
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile tf02
+nice +19 /net/work/bin/converters/createMovies/combineCameras.pl CONTRAST.paramfile tf03

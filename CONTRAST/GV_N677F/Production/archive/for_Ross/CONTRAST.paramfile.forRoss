@@ -1,0 +1,55 @@
+includeData = no
+includeProjectName = yes
+netcdfFile = /scr/raf/Prod_Data/CONTRAST/CONTRAST####.nc 
+gravityD = East
+# Times will be determined from the images in the imageDirectory
+# All other image dirs will try to match these times.
+imageDir1 = for_Ross_Sal
+#gravity1 = West
+gravity1 = North
+movieDirectory = Movies 
+overlayImageTime = yes
+overlayImagePointing = yes
+numCameras = 1
+# If numCameras > 1, add additional dirs and cameras here:
+#imageDir2 = /scr/raf/Raw_Data/MPEX/camera_images/flight_number_####/left
+#gravity2 = SouthWest
+#gravity2 = West
+#imageDir3 = /scr/raf/Raw_Data/MPEX/camera_images/flight_number_####/right
+#gravity3 = SouthEast
+#gravity3 = East
+#imageDir2 = /scr/raf/Raw_Data/CONTRAST/camera_images/flight_number_####/down
+#gravity4 = NorthEast
+#gravity2 = South
+
+# For the moment, assume all cameras are the same type.
+cameraName = Flea
+
+# The outputResolution should be proportional to the scale:
+# For one image per frame, leave the ht and add 200 to the width
+# For two images, double the ht and add 50 or so padding, 
+#   and add 200 to the width
+# For three images, double the ht and width (plus padding).
+outputResolution=1536x768
+scale = 1536x768!
+#outputResolution=512x384
+#outputResolutionD=712x384
+#scale = 341x256!
+outputFrameRate = 15
+mp4BitRate = 1500000
+endParameters
+
+GGALT
+GGLAT
+GGLON
+ATX
+DPXC
+PSXC
+RHUM
+TASX
+THDG
+PITCH
+ROLL
+WSC
+WDC
+endVariablesLT
