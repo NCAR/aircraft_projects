@@ -1,0 +1,8 @@
+#!/bin/csh
+
+# Remove existing files.  Helps to avoid if a residual data if nimbus fails.
+/bin/rm ${DAT}/DC3-TEST?f??.nc
+
+foreach setup_file ( setup_?f?? )
+  nimbus -b $setup_file
+end

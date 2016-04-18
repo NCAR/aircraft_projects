@@ -1,0 +1,27 @@
+#!/bin/csh
+
+/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac :9 &
+set xvpid=$!
+onintr int
+sleep 2
+
+setenv DISPLAY :9.1
+
+if ($uid == 20000) then
+  setenv DAT /scr/raf/local_productiondata/
+else
+  setenv DAT ${DATA_DIR}/DC3-TEST
+endif
+
+mkdir ${DAT}
+
+nice ./run_nimbus
+nice ./reorder_all
+nice ./run_proc2d
+
+kill $xvpid
+exit 0
+
+int:
+  kill $xvpid
+  exit 1
