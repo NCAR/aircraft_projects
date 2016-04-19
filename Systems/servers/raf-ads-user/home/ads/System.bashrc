@@ -17,16 +17,7 @@
 export HOST=`uname -n`
 export LANG=C
 
-#
-# Linux
-#
-# This is for support of Motif applications.
-# See: http://ubuntuforums.org/showthread.php?t=82087
-export XKEYSYMDB=/usr/share/X11/XKeysymDB
-
-export PATH=/usr/kerberos/bin:/bin:/usr/bin:/usr/X11R6/bin:/opt/local/bin
-
-#if [ -z "$USER" ]; then exit; fi
+export PATH=/bin:/usr/bin:/usr/X11R6/bin:/opt/local/bin
 
 #
 # System-wide/other environment variables
