@@ -37,6 +37,18 @@ else
   cd ..
 fi
 
+# CMIGITS Code.  ITAR controlled.
+# git clone file:///net/cds/git/cmigits-nidas.git
+
+dir=ncplot
+if [ ! -d $dir ]; then
+  git clone https://github.com/ncareol/$dir
+else
+  cd $dir
+  git pull origin master
+  cd ..
+fi
+
 dir=aeros
 if [ ! -d $dir ]; then
   # We need --recursive for aeros to get eol_scons.
