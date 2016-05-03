@@ -975,6 +975,30 @@
       </sample>
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
     </serialSensor>
+
+    <serialSensor ID="BCPD" baud="57600" class="raf.BCPD_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
+      <parameter name="calfile" type="string" value="PMSspecs"/>
+      <parameter name="NCHANNELS" type="int" value="30"/>
+<!-- 
+        Thresholds not vetted yet, these are from our CDP!
+-->
+      <parameter name="THRESHOLD" type="int" value="60"/>
+      <parameter name="CHAN_THRESH" type="int" value="91 111 159 190 215 243 254 272 301 355 382 488 636 751 846 959 1070 1297 1452 1665 1851 2016 2230 2513 2771 3003 3220 3424 3660 4095"/>
+
+      <sample id="1">
+        <variable longname="BCPD P APD Voltage" name="BCPDPAPDV" units="V"/>
+        <variable longname="BCPD P APD Temperature" name="BCPDPAPDT" units="deg_C"/>
+        <variable longname="BCPD 5 Vdc Monitor" name="BCPD5VMON" units="Vdc"/>
+        <variable longname="BCPD Control Board Temperature" name="BCPDCBTMP" units="deg_C"/>
+        <variable longname="BCPD S APD Voltage" name="BCPDPAPDV" units="V"/>
+        <variable longname="BCPD S APD Temperature" name="BCPDPAPDT" units="deg_C"/>
+        <variable longname="BCPD Oversize Rejected" name="OVRSIZ" units="count"/>
+        <variable length="31" longname="BCPD Raw Accumulation (per cell)" name="ABCPD" units="count"/>
+        <variable longname="BCPD Time between last sample and this sample" name="DELTAT" units="msec"/>
+      </sample>
+      <prompt rate="10" string="\x1b\x02\x1d\x00"/>
+    </serialSensor>
+
     <serialSensor ID="UHSAS" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
         <parameter name="HSKP_SCALE" type="int" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000"/>
         <sample id="1" rate="10">
