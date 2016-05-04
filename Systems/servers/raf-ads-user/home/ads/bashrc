@@ -86,6 +86,6 @@ function rdat() { cd $RAW_DATA_DIR/$PROJECT/"$1" ;}
 
 alias dumpiwg='sudo tcpdump -i eth0 -A -s 1024 udp and dst port 7071'
 
-export CDPATH=$PROJ_DIR/$PROJECT/$AIRCRAFT
+export CDPATH=.:$PROJ_DIR/$PROJECT/$AIRCRAFT
 alias nerrt='tail --lines=+0 --follow=name /var/log/ads3.log | grep --line-buffered -e WARN -e ERROR -e CRIT -e ALERT -e EMERG'
 
