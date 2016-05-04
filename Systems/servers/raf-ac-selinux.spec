@@ -8,7 +8,6 @@ Url: http://www.eol.ucar.edu/
 Packager: Chris Webster <cjw@ucar.edu>
 Vendor: UCAR
 BuildArch: noarch
-Requires: selinux
 
 %description
 Disable SElinux.
@@ -20,8 +19,9 @@ Disable SElinux.
 # is already installed.
 
 cf=/etc/selinux/config
-sed -i -c 's/^SELINUX=enforcing/SELINUX=disabled/' $cf
-
+if [ -f $cf ]; then
+  sed -i -c 's/^SELINUX=enforcing/SELINUX=disabled/' $cf
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
