@@ -1605,8 +1605,10 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
     <serialSensor ID="PIC2401_CO2" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_NOAA">
-      <sample id="1" rate="1" scanfFormat="%*5c%f %*2c%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
-        <variable longname="Picarro Epoch Time" name="EPOCH" units="seconds"/>
+      <sample id="1" rate="1" scanfFormat="%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
+        <variable longname="Picarro Epoch Time" name="EPOCH" units="seconds">
+          <linear intercept="-1452000000" slope="1.0" units="seconds"/>
+        </variable>
         <variable longname="Picarro Date" name="DATE" units="yymmdd"/>
         <variable longname="Picarro Time" name="TIME" units="hhmmss"/>
         <variable longname="Picarro Ambient Pressure" name="PS" units="torr"/>
@@ -2115,7 +2117,7 @@
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="ppm">
+            <poly units="ppmv">
               <calfile file="AO2CO2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/AO2:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/AO2"/>
             </poly>
           </variable>
