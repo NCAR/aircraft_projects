@@ -35,6 +35,7 @@ cp home/ads/System.bashrc            ${RPM_BUILD_ROOT}/home/ads/.System.bashrc
 cp home/ads/Jeffco_only.bashrc       ${RPM_BUILD_ROOT}/home/ads/.Jeffco_only.bashrc
 cp home/ads/bashrc                   ${RPM_BUILD_ROOT}/home/ads/.bashrc
 cp home/ads/bash_profile             ${RPM_BUILD_ROOT}/home/ads/.bash_profile
+cp home/ads/gitconfig                ${RPM_BUILD_ROOT}/home/ads/.gitconfig
 cp home/ads/bin/*                    ${RPM_BUILD_ROOT}/home/ads/bin
 cp home/ads/Desktop/*                ${RPM_BUILD_ROOT}/home/ads/Desktop
 cp -r home/ads/.ssh                  ${RPM_BUILD_ROOT}/home/ads
@@ -64,6 +65,7 @@ fi
 %config /home/ads/.System.bashrc
 %config /home/ads/.bashrc
 %config /home/ads/.bash_profile
+%config /home/ads/.gitconfig
 %config %attr(0600,ads,ads) /home/ads/.ssh/config
 %attr(0775,ads,ads) /home/ads/bin/swcreate
 %attr(0775,ads,ads) /home/ads/bin/svn-ask-username.sh
@@ -126,6 +128,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %changelog
 * Mon Apr 11 2016 Chris Webster <cjw@ucar.edu> 1.22
 - Add ads:ads to /etc passwd:group files
+- Add .gitconfig file
 * Fri Nov 20 2015 Tom Baltzer <tbaltzer@ucar.edu> 1.21
 - Added two new iridium icons and deleted the old one
 * Thu Nov 19 2015 Chris Webster <cjw@ucar.edu> 1.21
