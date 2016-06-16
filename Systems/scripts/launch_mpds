@@ -1,26 +1,13 @@
 #!/bin/bash
 
-# Bring to known state, remove any residual ppp or ddclient stuff
-#sudo pkill ppp
-#sudo pkill ddclient
+sudo route delete default
 
-#ifdown eth2
+if [$AIRCRAFT == "C130_N130AR" ]; then
+  set GW=192.168.99.1
+fi
 
-# Reset eth3.  ifdown bgan does not seem to fully kill the connection.
-#ifdown eth3
-#sleep 3
-ifup eth3
+if [$AIRCRAFT == "GV_N677F" ]; then
+  set GW=192.168.1.1
+fi
 
-# sudo /usr/sbin/adsl-start
-
-# New way to start pppoe.  Uses options in
-# /etc/sysconfig/network-scripts/ifcfg-ppp0
-
-ifup bgan
- 
-gnome-terminal --title "INMARSAT Log" -x /home/local/Systems/scripts/show_mpds_log.sh
-
-gnome-terminal --title "PPPD Log" -x /home/local/Systems/scripts/show_pppd_log.sh
-# this was in a diff and overwritten....  cjw 3/19/2013
-# +tail -f /var/log/messages | grep -e ppp -e ddclient
-
+sudo route add default gw $GW

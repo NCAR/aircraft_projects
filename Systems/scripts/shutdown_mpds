@@ -1,16 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
-echo "Shutting down mpds connection ..."
-
-ifdown bgan
-
-ifdown eth3
-
-sudo pkill -INT -f "pppd plugin"
-# sudo pkill ddclient
-
-# ifdown ppp0
-ifup eth2
-
-echo "done"
-sleep 5
+sudo route delete default
+sudo route add default gw 128.117.44.251
