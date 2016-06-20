@@ -1614,6 +1614,14 @@
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH2" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="deg_C">
+              <calfile file="RTH2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
           <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="1"/>
@@ -1749,7 +1757,7 @@
             <variable longname="Temperature of BDIFR Probe" name="BDIFRTEMP" units="deg_C"/>
           </sample>
         </serialSensor>
-        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS6" id="170">
+        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS11" id="170">
           <sample id="1">
             <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="hPa"/>
           </sample>
@@ -1829,14 +1837,6 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
               <calfile file="RTH1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH2" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="RTH2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
           <variable longname="UV Hygrometer Pressure" name="XUVP" units="V">
