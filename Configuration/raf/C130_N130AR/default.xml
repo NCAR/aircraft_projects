@@ -1636,6 +1636,14 @@
 
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_319"/>
+        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS5" id="110">
+          <sample id="1">
+            <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="hPa"/>
+          </sample>
+          <sample id="2">
+            <variable longname="Temperature of QCF Probe" name="QCFTEMP" units="deg_C"/>
+          </sample>
+        </serialSensor>
         <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
             <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
@@ -1667,27 +1675,20 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_319" units="deg_C"/>
             </sample>
-        <sample id="2" rate="100">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="V">
-            <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="QCF.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Raw Dynamic Pressure, Fuselage" name="CAVP_DPB" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="CAVP_DPB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-        </sample>
+            <sample id="2" rate="10">
+              <parameter name="filter" type="string" value="boxcar"/>
+              <parameter name="numpoints" type="int" value="50"/>
+              <variable longname="Raw Dynamic Pressure, Fuselage" name="CAVP_DPB" units="V">
+                <parameter name="channel" type="int" value="1"/>
+                <parameter name="gain" type="float" value="4"/>
+                <parameter name="bipolar" type="bool" value="false"/>
+                <poly units="hPa">
+                  <calfile file="CAVP_DPB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+                </poly>
+              </variable>
+            </sample>
         </sensor>
+
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
@@ -1713,16 +1714,48 @@
         </arincSensor>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
         <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A2"/>
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="140" suffix="_DPT"/>
-        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS7" id="150">
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="110" suffix="_DPT"/>
+        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS6" id="120">
+          <sample id="1">
+            <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="hPa"/>
+          </sample>
+          <sample id="2">
+            <variable longname="Temperature of QCR Probe" name="QCRTEMP" units="deg_C"/>
+          </sample>
+        </serialSensor>
+        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS7" id="130">
             <sample id="1">
                 <variable longname="Raw Static Pressure, Fuselage" name="PSFD" units="hPa"/>
             </sample>
         </serialSensor>
-        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS8" id="160">
+        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS8" id="140">
             <sample id="1">
                 <variable longname="Raw Static Pressure, Fuselage" name="PSFRD" units="hPa"/>
             </sample>
+        </serialSensor>
+        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS9" id="150">
+          <sample id="1">
+            <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="hPa"/>
+          </sample>
+          <sample id="2">
+            <variable longname="Temperature of ADIFR Probe" name="ADIFRTEMP" units="deg_C"/>
+          </sample>
+        </serialSensor>
+        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS10" id="160">
+          <sample id="1">
+            <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="hPa"/>
+          </sample>
+          <sample id="2">
+            <variable longname="Temperature of BDIFR Probe" name="BDIFRTEMP" units="deg_C"/>
+          </sample>
+        </serialSensor>
+        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS6" id="170">
+          <sample id="1">
+            <variable longname="Raw Dynamic Pressure, Radome" name="QCFR" units="hPa"/>
+          </sample>
+          <sample id="2">
+            <variable longname="Temperature of QCFR Probe" name="QCFRTEMP" units="deg_C"/>
+          </sample>
         </serialSensor>
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D003.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
@@ -1734,44 +1767,12 @@
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="V">
-            <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="QCR.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="hPa">
-              <calfile file="ADIFR.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="V">
-            <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="hPa">
-              <calfile file="BDIFR.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
           <variable longname="Recovery Air Temperature, Radome Left" name="RTF1" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
               <calfile file="RTF1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="QCFR.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
           <variable longname="Dewpoint Cavity Pressure, Top" name="CAVP_DPT" units="V">
