@@ -37,6 +37,12 @@ SHELL=/bin/csh
 
 */1 * * * * python /home/local/Systems/scripts/router/logstatus.py
 
+# Copy flight_track and position to CatalogIngest
+* * * * * /home/local/Systems/scripts/copy_flight_geo_to_catalog.cron >>& /tmp/copy_flight_geo_to_catalog.log
+
+# Cleanup old Catalog files from filesystem and database via DockerCompose
+1 */2 * * * sudo /home/local/Systems/scripts/catalog_delete_files.cron >>& /tmp/catalog_delete_files.log
+
 # IRC and IRC bot
 @reboot /home/ads/ircd/unreal start >& /dev/null
 @reboot sleep 5; /home/ads/rbot/bin/rbot >& /dev/null
