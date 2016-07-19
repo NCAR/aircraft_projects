@@ -553,7 +553,9 @@
       <message length="0" position="beg" separator="\xff\x81"/>
     </serialSensor>
     <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-      <sample id="1" rate="1" scanfFormat="%*f,%f,%f,%*f,%*f,%f">
+
+<!--      <sample id="1" rate="1" scanfFormat="%*f,%f,%f,%*f,%*f,%f"> -->
+      <sample id="1" rate="1" scanfFormat="%f,%f,%*f,%*f,%f">
         <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
         <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
         <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
@@ -1315,7 +1317,7 @@
             <variable longname="MTP Scan Minute" name="SMIN" units="count"/>
             <variable longname="MTP Scan Second" name="SSEC" units="count"/>
 -->
-            <variable longname="MTHP Status Code" name="SAPITCH" units="bool"/>
+            <variable longname="MTHP Status Code" name="STATUS" units="bool"/>
             <variable longname="MTHP Ambient Target" name="AMBIENT" units="deg_C"/>
             <variable longname="MTHP Hot Target" name="HOT" units="deg_C"/>
             <variable longname="MTHP 60Ghz LO" name="LO60" units="deg_C"/>
@@ -1567,7 +1569,7 @@
                 <socket type="mcaccept"/>
             </output>
         </service>
-        <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.0">
+        <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.4" rawHeapMax="100M" rawSorterLength="0.0">
 
 <!-- 
                  input from every DSM on this aircraft that has
@@ -1957,7 +1959,6 @@
             <socket type="mcrequest"/>
         </output>
     </dsm>
-
     <dsm derivedData="sock::7071" id="22" location="Left Wing Pod" name="dsm322" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_322"/>
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300">
@@ -1991,13 +1992,12 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
-
     <dsm derivedData="sock::7071" id="23" location="AftOvrhd_L" name="dsm323" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_323"/>
         <serialSensor IDREF="CDP" devicename="/dev/ttyS11" id="420" suffix="_RWT">
           <parameter name="SerialNumber" type="string" value="CDP058"/>
         </serialSensor>
-        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS10" id="620" suffix="_LWT">
+        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS10" id="620" suffix="_LWI">
           <parameter name="SerialNumber" type="string" value="UHSAS001"/>
         </serialSensor>
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
