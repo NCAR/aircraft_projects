@@ -1253,7 +1253,7 @@
         </sample>
 -->
     </sensor>
-    <serialSensor ID="CFDC" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+    <sensor ID="CFDC" class="UDPSocketSensor" devicename="usock::30105" suffix="_CFDC">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
             <variable longname="CFDC Saturation Water" name="CT1" units="%"/>
             <variable longname="CFDC Aerosol Location Temperature" name="CT2" units="deg_C"/>
@@ -1263,8 +1263,7 @@
             <variable longname="CFDC Filter (ON=1)" name="CT7" units="bool"/>
             <variable longname="CFDC MSP (ON=1)" name="CT4" units="bool"/>
         </sample>
-        <message length="0" position="end" separator="\r\n"/>
-    </serialSensor>
+    </sensor>
     <serialSensor ID="CCN" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%f, %f, %f, %f, %f, %f, %f, %f, %f">
             <variable longname="CCN Sample Temperature" name="AT" units="deg_C"/>
@@ -1308,7 +1307,7 @@
     </sensor>
 
     <sensor ID="MTHP" class="UDPSocketSensor" devicename="usock::30101" suffix="_MTP">
-        <sample id="1" rate="1" scanfFormat="MTHP,%*s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <sample id="1" rate="1" scanfFormat="MTHP,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
 <!--
             <variable longname="MTP Scan Year" name="SYEAR" units="count"/>
             <variable longname="MTP Scan Month" name="SMONTH" units="count"/>
@@ -1334,6 +1333,28 @@
             <variable longname="MTHP Channel 9" name="CHAN9" units="count"/>
        </sample>
     </sensor>
+
+    <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41002">
+        <sample id="1" rate="100">
+            <variable longname="LAMS Sequence Number, Beam 1" name="SEQ1" units="none"/>
+            <variable length="512" longname="LAMS Histogram Averages, Beam 1" name="BEAM1" units="Mhz"/>
+        </sample>
+        <sample id="2" rate="100">
+            <variable longname="LAMS Sequence Number, Beam 2" name="SEQ2" units="none"/>
+            <variable length="512" longname="LAMS Histogram Maximums, Beam 2" name="BEAM2" units="Mhz"/>
+        </sample>
+        <sample id="3" rate="100">
+            <variable longname="LAMS Sequence Number, Beam 3" name="SEQ3" units="none"/>
+            <variable length="512" longname="LAMS Histogram Maximums, Beam 3" name="BEAM3" units="Mhz"/>
+        </sample>
+<!--
+        <sample id="4" rate="50">
+            <variable longname="LAMS Sequence Number, Beam 4" name="SEQ4" units="none"/>
+            <variable length="512" longname="LAMS Histogram Maximums, Beam 4" name="BEAM4" units="Mhz"/>
+        </sample>
+-->
+    </sensor>
+
 
     <sensor ID="SMPS" class="UDPSocketSensor" devicename="usock::30104" suffix="SMPS">
         <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
@@ -1614,10 +1635,12 @@
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="MTHP" devicename="usock::30101" id="200"/>
-      <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
       <sensor IDREF="SMPS" devicename="usock::30104" id="300" suffix="_SMPS"/>
-      <sensor IDREF="D_GPS" devicename="usock::30118" id="700"/>
+      <sensor IDREF="CFDC" devicename="usock::30105" id="400" suffix="_CFDC"/>
+      <sensor IDREF="LAMS3" devicename="usock::41002" id="500" suffix="_LAMS"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="600" suffix="_UDP"/>
+      <sensor IDREF="D_GPS" devicename="usock::30118" id="700"/>
+      <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -2104,7 +2127,7 @@
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_324"/>
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS5" id="110"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="120"/>
-        <serialSensor IDREF="CFDC" devicename="/dev/ttyS7" id="300" suffix="_CFDC"/>
+<!--        <serialSensor IDREF="CFDC" devicename="/dev/ttyS7" id="300" suffix="_CFDC"/> -->
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
             <parameter name="rate" type="int" value="500"/>
