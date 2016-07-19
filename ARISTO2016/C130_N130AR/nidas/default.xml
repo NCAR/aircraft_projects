@@ -1304,6 +1304,35 @@
         <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
     </sensor>
+
+    <sensor ID="MTHP" class="UDPSocketSensor" devicename="usock::30101" suffix="_MTP">
+        <sample id="1" rate="1" scanfFormat="MTHP,%*s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+<!--
+            <variable longname="MTP Scan Year" name="SYEAR" units="count"/>
+            <variable longname="MTP Scan Month" name="SMONTH" units="count"/>
+            <variable longname="MTP Scan Day" name="SDAY" units="count"/>
+            <variable longname="MTP Scan Hour" name="SHOUR" units="count"/>
+            <variable longname="MTP Scan Minute" name="SMIN" units="count"/>
+            <variable longname="MTP Scan Second" name="SSEC" units="count"/>
+-->
+            <variable longname="MTHP Status Code" name="SAPITCH" units="bool"/>
+            <variable longname="MTHP Ambient Target" name="AMBIENT" units="deg_C"/>
+            <variable longname="MTHP Hot Target" name="HOT" units="deg_C"/>
+            <variable longname="MTHP 60Ghz LO" name="LO60" units="deg_C"/>
+            <variable longname="MTHP 183GHz LO" name="LO183" units="deg_C"/>
+            <variable longname="MTHP Channel 0" name="CHAN0" units="count"/>
+            <variable longname="MTHP Channel 1" name="CHAN1" units="count"/>
+            <variable longname="MTHP Channel 2" name="CHAN2" units="count"/>
+            <variable longname="MTHP Channel 3" name="CHAN3" units="count"/>
+            <variable longname="MTHP Channel 4" name="CHAN4" units="count"/>
+            <variable longname="MTHP Channel 5" name="CHAN5" units="count"/>
+            <variable longname="MTHP Channel 6" name="CHAN6" units="count"/>
+            <variable longname="MTHP Channel 7" name="CHAN7" units="count"/>
+            <variable longname="MTHP Channel 8" name="CHAN8" units="count"/>
+            <variable longname="MTHP Channel 9" name="CHAN9" units="count"/>
+       </sample>
+    </sensor>
+
     <sensor ID="SMPS" class="UDPSocketSensor" devicename="usock::30104" suffix="SMPS">
         <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
@@ -1582,6 +1611,7 @@
 -->
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
+      <sensor IDREF="MTHP" devicename="usock::30101" id="200"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
       <sensor IDREF="SMPS" devicename="usock::30104" id="300" suffix="_SMPS"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="700"/>
