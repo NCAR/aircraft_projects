@@ -2017,11 +2017,15 @@
     </dsm>
     <dsm derivedData="sock::7071" id="23" location="AftOvrhd_L" name="dsm323" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_323"/>
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS11" id="420" suffix="_RWT">
-          <parameter name="SerialNumber" type="string" value="CDP058"/>
+        <serialSensor IDREF="UHSASCU" devicename="/dev/ttyS5" id="300" suffix="_CAB">
+          <!-- University of Wyoming -->
+          <parameter name="SerialNumber" type="string" value="UHSAS011"/>
         </serialSensor>
-        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS10" id="620" suffix="_LWI">
+        <serialSensor IDREF="UHSAS" devicename="/dev/ttyS10" id="400" suffix="_LWI">
           <parameter name="SerialNumber" type="string" value="UHSAS001"/>
+        </serialSensor>
+        <serialSensor IDREF="CDP" devicename="/dev/ttyS11" id="500" suffix="_RWT">
+          <parameter name="SerialNumber" type="string" value="CDP058"/>
         </serialSensor>
         <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
             <sample id="1" rate="100">
@@ -2099,10 +2103,7 @@
             </sample>
         </sensor>
 -->
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="400">
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="250">
         <calfile file="A2D1714.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
@@ -2122,6 +2123,9 @@
           </variable>
         </sample>
       </sensor>
+      <output class="RawSampleOutputStream">
+          <socket type="mcrequest"/>
+      </output>
     </dsm>
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_324"/>
