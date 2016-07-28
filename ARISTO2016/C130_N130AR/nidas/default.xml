@@ -1305,9 +1305,9 @@
         <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
     </sensor>
-
     <sensor ID="MTHP" class="UDPSocketSensor" devicename="usock::30101" suffix="_MTP">
         <sample id="1" rate="1" scanfFormat="MTHP,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+
 <!--
             <variable longname="MTP Scan Year" name="SYEAR" units="count"/>
             <variable longname="MTP Scan Month" name="SMONTH" units="count"/>
@@ -1333,7 +1333,6 @@
             <variable longname="MTHP Channel 9" name="CHAN9" units="count"/>
        </sample>
     </sensor>
-
     <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41002">
         <sample id="1" rate="100">
             <variable longname="LAMS Sequence Number, Beam 1" name="SEQ1" units="none"/>
@@ -1347,6 +1346,7 @@
             <variable longname="LAMS Sequence Number, Beam 3" name="SEQ3" units="none"/>
             <variable length="512" longname="LAMS Histogram Maximums, Beam 3" name="BEAM3" units="Mhz"/>
         </sample>
+
 <!--
         <sample id="4" rate="50">
             <variable longname="LAMS Sequence Number, Beam 4" name="SEQ4" units="none"/>
@@ -1354,8 +1354,6 @@
         </sample>
 -->
     </sensor>
-
-
     <sensor ID="SMPS" class="UDPSocketSensor" devicename="usock::30104" suffix="SMPS">
         <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
@@ -2018,7 +2016,8 @@
     <dsm derivedData="sock::7071" id="23" location="AftOvrhd_L" name="dsm323" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_323"/>
         <serialSensor IDREF="UHSASCU" devicename="/dev/ttyS5" id="300" suffix="_CAB">
-          <!-- University of Wyoming -->
+
+<!-- University of Wyoming -->
           <parameter name="SerialNumber" type="string" value="UHSAS011"/>
         </serialSensor>
         <serialSensor IDREF="UHSAS" devicename="/dev/ttyS10" id="400" suffix="_LWI">
@@ -2130,6 +2129,7 @@
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_324"/>
         <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="120"/>
+
 <!--        <serialSensor IDREF="CFDC" devicename="/dev/ttyS7" id="300" suffix="_CFDC"/> -->
         <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
             <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
@@ -2138,7 +2138,27 @@
                 <parameter name="temperature" type="bool" value="true"/>
                 <variable longname="A2D Temperature" name="A2DTEMP_AFTR0" units="deg_C"/>
             </sample>
-        <sample id="2" rate="100">
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Top Pyrgeometer Stabilized Platform Pitch Angle" name="SPTPITCH" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="degree">
+              <calfile file="SPTPITCH.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Top Pyrgeometer Stabilized Platform Roll Angle" name="SPTROLL" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="degree">
+              <calfile file="SPTROLL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
+        <sample id="3" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
           <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
