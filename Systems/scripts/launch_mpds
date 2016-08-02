@@ -2,12 +2,12 @@
 
 sudo route delete default
 
-if [$AIRCRAFT == "C130_N130AR" ]; then
-  set GW=192.168.99.1
+if [ $AIRCRAFT == "C130_N130AR" ]; then
+  GW=192.168.99.1
 fi
 
-if [$AIRCRAFT == "GV_N677F" ]; then
-  set GW=192.168.1.1
+if [ $AIRCRAFT == "GV_N677F" ]; then
+  GW=192.168.1.1
 fi
 
 sudo route add default gw $GW
