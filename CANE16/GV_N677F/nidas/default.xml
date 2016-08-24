@@ -1799,22 +1799,6 @@
               <calfile file="PCAB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
-          <variable longname="Pressure of instrument exhaust duct, right" name="PDUMPPR" units="V">
-            <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="PDUMPPR.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-          <variable longname="Pressure of instrument exhaust duct, left" name="PDUMPPL" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="PDUMPPL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
         </sample>
       </sensor>
       <output class="RawSampleOutputStream">
@@ -1853,7 +1837,6 @@
 	</sample>
       </serialSensor>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
-      <serialSensor IDREF="VCSEL" devicename="/dev/ttyS10" id="330" suffix="_VXL"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -1922,14 +1905,7 @@
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Recovery Air Temperature, Unheated" name="RTF1" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="RTF1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
+
           <variable longname="Recovery Air Temperature, Deiced Right, HARCO" name="RTH2" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
