@@ -6,10 +6,6 @@
 #
 # SMS text Chris that aircraft is up.
 #echo "$AIRCRAFT Datasystem is up" | mail -s "$AIRCRAFT is Online" 3038832241@txt.att.net
-#
-# SMS text Tom that aircraft is up.
-#echo "Datasystem is up" | mail -s "GV is Online"  7203631466@tmomail.net
-#echo "$AIRCRAFT Datasystem is up `date`" | mail -s "$AIRCRAFT is Online" 7203082385@txt.att.net
 
 #echo "setting up vcsel specturm stash"
 #
@@ -26,15 +22,6 @@
 /bin/rm -f /mnt/r1/send_to_grnd/D20*
 /bin/rm -f /tmp/avaps-rt
 /bin/rm /var/www/html/skewt/D*svg
-
-# Soundings for ADELE.  Grab latest at nimbus start, presumably
-# after SATCOM is up.  cron job will also run twice a day.
-#echo "\n\n  Fetching latest soundings...."
-#pkill get_sounding
-#/home/local/Systems/scripts/get_sounding &
-
-# Clear lightning table (ADELE specific).
-psql -c "DELETE FROM lightning; VACUUM full lightning;"
 
 # Fire up nimbus in real-time with transmit on.
 gnome-terminal --title NIMBUS -x nimbus -rt3 -x 5
