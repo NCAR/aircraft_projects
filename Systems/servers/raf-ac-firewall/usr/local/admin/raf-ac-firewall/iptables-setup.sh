@@ -114,19 +114,7 @@ CHEAP_UNSAFE_EXT_IFS=()
 # queried in some safer way.
 
 [ -r /home/ads/ads3_environment.sh ] && . /home/ads/ads3_environment.sh
-SATCOM_EXT_IFS=(ppp+)
-case "$AIRCRAFT" in
-    GV_N677F)
-	SATCOM_EXT_IFS=(ppp+)
-	;;
-    C130_N130AR)
-	SATCOM_EXT_IFS=(eth3)
-	;;
-    *)
-	echo "# *** AIRCRAFT setting not recognized: $AIRCRAFT ***"
-	exit 1
-	;;
-esac
+SATCOM_EXT_IFS=(eth3)
 MASQUERADE_IFS=(${SAFE_EXT_FS[*]} ppp+)
 
 UNSAFE_EXT_IFS=(${CHEAP_UNSAFE_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]})
@@ -251,7 +239,18 @@ CLASS_D_MULTICAST="224.0.0.0/4"
 CLASS_E_RESERVED_NET="240.0.0.0/5"
 PRIV_PORTS="0:1023"
 UPRIV_PORTS="1024:65535"
-ROUTER_NET="192.168.99.0/24"
+case "$AIRCRAFT" in
+    GV_N677F)
+	ROUTER_NET="192.168.0.0/24"
+	;;
+    C130_N130AR)
+	ROUTER_NET="192.168.99.0/24"
+	;;
+    *)
+	echo "# *** AIRCRAFT setting not recognized: $AIRCRAFT ***"
+	exit 1
+	;;
+esac
 
 # Look in /etc/services for ldm port
 if egrep -q ^unidata-ldm /etc/services; then
