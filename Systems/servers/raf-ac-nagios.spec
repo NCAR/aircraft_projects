@@ -70,7 +70,7 @@ rm -rf %{buildroot}
 %{_sysconfdir}/init.d/raf_nagios_init
 %{_sysconfdir}/nagios/raf_commands.cfg
 %{_sysconfdir}/nagios/raf_localhost.cfg
-/usr/lib/nagios/plugins/raf_*
+/usr/lib64/nagios/plugins/raf_*
 
 %changelog
 * Thu Nov 13 2014 Chris Webster <cjw@ucar.edu> - 1.0-13
