@@ -1773,6 +1773,11 @@
       <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="160"/>
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="170"/>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS8" id="200" suffix="_DPR"/>
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS9" id="110">
+        <sample id="1">
+          <variable longname="Interior Cabin Static Pressure" name="PCAB" units="hPa"/>
+	</sample>
+      </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="250">
         <calfile file="A2D1705.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
@@ -1791,6 +1796,7 @@
               <calfile file="TCAB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
+<!--
           <variable longname="Interior Cabin Static Pressure" name="PCAB" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="2"/>
@@ -1799,6 +1805,7 @@
               <calfile file="PCAB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
+-->
         </sample>
       </sensor>
       <output class="RawSampleOutputStream">
