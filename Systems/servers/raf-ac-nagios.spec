@@ -1,7 +1,7 @@
 Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
-Release: 12
+Release: 13
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -27,12 +27,12 @@ Configuration and additional plugins for RAF aircraft servers.
 rm -rf %{buildroot}
 install -d %{buildroot}%{_sysconfdir}/init.d
 install -d %{buildroot}%{_sysconfdir}/nagios
-install -d %{buildroot}/usr/lib/nagios/plugins
+install -d %{buildroot}/usr/lib64/nagios/plugins
 
 cp etc/init.d/raf_nagios_init   %{buildroot}%{_sysconfdir}/init.d
 cp etc/nagios/raf_commands.cfg  %{buildroot}%{_sysconfdir}/nagios
 cp etc/nagios/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios
-cp usr/lib/nagios/plugins/raf_* %{buildroot}/usr/lib/nagios/plugins
+cp usr/lib/nagios/plugins/raf_* %{buildroot}/usr/lib64/nagios/plugins
 
 %triggerin -- nagios
 # allow all access to nagios.
@@ -73,6 +73,8 @@ rm -rf %{buildroot}
 /usr/lib/nagios/plugins/raf_*
 
 %changelog
+* Thu Nov 13 2014 Chris Webster <cjw@ucar.edu> - 1.0-13
+- In EL7, the plugin directory /usr/lib/nagios moved to /usr/lib64/nagios
 * Thu Nov 13 2014 Chris Webster <cjw@ucar.edu> - 1.0-12
 - Change logging options in nagios.cfg.
 * Mon Mar 05 2012 John Wasinger <wasinger@ucar.edu> - 1.0-11
