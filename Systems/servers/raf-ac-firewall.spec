@@ -1,7 +1,7 @@
 Summary: Iptables configuration for RAF aircraft server
 Name: raf-ac-firewall
 Version: 1.0
-Release: 10
+Release: 11
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -88,6 +88,8 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ac-firewall/iptables-setup.sh
 
 %changelog
+* Wed Sep 14 2016 Janine Aquino <janine@ucar.edu> 1.0-11
+- Fix typo in variable name SAFE_EXT_IFS.
 * Fri Aug 26 2016 Chris Webster <cjw@ucar.edu> 1.0-10
 - GV now uses an exernal pppoe router.  Built into SATCOM system on the GV.
 - 192.168.0.0 for GV, and 192.168.99.0 for C130.

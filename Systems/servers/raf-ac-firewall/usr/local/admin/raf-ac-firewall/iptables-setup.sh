@@ -115,7 +115,7 @@ CHEAP_UNSAFE_EXT_IFS=()
 
 [ -r /home/ads/ads3_environment.sh ] && . /home/ads/ads3_environment.sh
 SATCOM_EXT_IFS=(eth3)
-MASQUERADE_IFS=(${SAFE_EXT_FS[*]} ppp+)
+MASQUERADE_IFS=(${SAFE_EXT_IFS[*]} ppp+)
 
 UNSAFE_EXT_IFS=(${CHEAP_UNSAFE_EXT_IFS[*]} ${SATCOM_EXT_IFS[*]})
 
