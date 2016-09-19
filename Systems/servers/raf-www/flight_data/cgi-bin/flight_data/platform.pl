@@ -17,7 +17,7 @@ if ($plat_vars{'platform'} eq "acserver") {
 }
 
 #set up db connection and request
-my $dbh = DBI->connect("dbi:Pg:database=platforms;host=eol-rt-data.guest.ucar.edu", "ads")
+my $dbh = DBI->connect("dbi:Pg:database=platforms;host=eol-rt-data.fl-ext.ucar.edu", "ads")
 	or die "Error connecting to db: " . DBI->errstr;
 my $sth = $dbh->prepare("SELECT platformid,tailnumber,flightnumber,projectname,status FROM platform_list ORDER BY platformid")
 	or die "Error preparing statement: " . DBI->errstr;

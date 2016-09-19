@@ -66,7 +66,7 @@ else {
 	$plat_vars{'href_path'}=$plat_vars{'base_path'}.$plat_vars{'platform'}."/";
 	$plat_vars{'docs_path'}="../../docs/flight_data/".$plat_vars{'platform'}."/";
 	$plat_vars{'dbname'}="real-time-".$plat_vars{'platform'};
-	$plat_vars{'dbhost'}="eol-rt-data.guest.ucar.edu";
+	$plat_vars{'dbhost'}="eol-rt-data.fl-ext.ucar.edu";
 }
 
 if ($header ne "") {
@@ -95,7 +95,7 @@ sub getCookie
 	}
 	
 	#set up db connection and request
-	my $dbh = DBI->connect("dbi:Pg:database=platforms;host=eol-rt-data.guest.ucar.edu", "ads")
+	my $dbh = DBI->connect("dbi:Pg:database=platforms;host=eol-rt-data.fl-ext.ucar.edu", "ads")
 		or die "Error connecting to db: " . DBI->errstr;
 	my $sth = $dbh->prepare("SELECT status FROM platform_list WHERE platformid = ?")
 		or die "Error preparing statement: " . DBI->errstr;
