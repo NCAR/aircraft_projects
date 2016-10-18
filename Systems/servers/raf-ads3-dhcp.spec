@@ -1,7 +1,7 @@
 Summary: DHCP configuration for server on RAF aircraft
 Name: raf-ads3-dhcp
 Version: 1.0
-Release: 31
+Release: 32
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -98,6 +98,8 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ads3-dhcp/triggerin.sh
 
 %changelog
+* Tue Oct 18 2016 Chris Webster <cjw@ucar.edu> 1.0-32
+- New motherboard for dsm305, remove dsmJDW.
 * Fri Jul 12 2013 John Wasinger <wasinger@ucar.edu> 1.0-30
 - Swapped dsm304's viper-01297 with viper-03248.  On viper-01297 both IRQs 10 and 12
   intermittently failed during overnight tests.
