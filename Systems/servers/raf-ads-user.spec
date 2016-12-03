@@ -70,6 +70,7 @@ fi
 %attr(0775,ads,ads) /home/ads/bin/swcreate
 %attr(0775,ads,ads) /home/ads/bin/svn-ask-username.sh
 %attr(0755,ads,ads) /home/ads/bin/foldertab
+%attr(0755,ads,ads) /home/ads/Desktop
 %attr(0755,ads,ads) /home/ads/Desktop/AutoCal.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/CalibrationDatabaseEditor.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/ConfigEditor.desktop
