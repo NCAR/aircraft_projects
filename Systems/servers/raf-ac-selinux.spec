@@ -1,7 +1,7 @@
 Summary: Configuration for selinux on RAF aircraft and labs.
 Name: raf-ac-selinux
 Version: 1.0
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -13,7 +13,7 @@ BuildArch: noarch
 Disable SElinux.
 
 
-%triggerin -- selinux
+%triggerin -- selinux-policy
 # %triggerin script is run when a given target package is installed or
 # upgraded, or when this package is installed or upgraded and the target
 # is already installed.
@@ -30,5 +30,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 
 %changelog
+* Sat Dec  3 2016 Chris Webster <cjw@ucar.edu>
+- Correct the triggerin required package
 * Wed Apr 13 2016 Chris Webster <cjw@ucar.edu>
 - initial version
