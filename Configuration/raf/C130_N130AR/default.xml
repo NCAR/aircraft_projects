@@ -1393,46 +1393,6 @@
          <message length="0" position="end" separator="\r\n"/>
      </serialSensor>
 
-<!-- UHSAS borrowed from Darrin Toohey @ CU.
-        Has different housekeeping scaling factors and output rate
-    -->
-     <serialSensor ID="UHSASCU" baud="9600" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
-        <parameter name="HSKP_SCALE" type="int" value="64000 12800 6400 6400 12800 6400 6400 12800 6400  6400 12800 6400"/>
-        <sample id="1" rate="2">
-            <variable length="100" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
-            <variable longname="Total Counts" name="TCNTSU" units="#/sec"/>
-            <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
-            <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
-            <variable longname="UHSAS Sample Flow" name="USMPFLW" units="V">
-                <linear intercept="0.0" slope="0.333" units="vccs"/>
-            </variable>
-            <variable longname="UHSAS Reference Intensity" name="UREF" units="V"/>
-            <variable longname="UHSAS Temperature in Canister, signal" name="UTEMP" units="V"/>
-            <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="V">
-                <poly coefs="115.42 -141.21 63.38" units="sccs"/>
-            </variable>
-            <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
-            <variable longname="UHSAS Temperature in Canister" name="UBTMP" units="V">
-                <linear intercept="0.0" slope="178.5714" units="K"/>
-            </variable>
-
-<!-- UPFLW is one of 3 variables not parsed from the housekeeping array
-            <variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
-                <linear slope="20" intercept="0.0" units="sccs"/>
-            </variable>
-            -->
-            <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="V">
-                <linear intercept="10.556" slope="22.222" units="kPa"/>
-            </variable>
-
-<!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
-
-<!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
-        </sample>
-
-<!-- look for ffff07 termination sequence after 220 bytes -->
-        <message length="220" position="end" separator="\xff\xff\x07"/>
-    </serialSensor>
     <serialSensor ID="OphirIII" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%*d %c %f %f %f %f %f %f %f %f %f">
 
