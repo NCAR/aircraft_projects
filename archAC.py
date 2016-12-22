@@ -266,14 +266,13 @@ class archRAFdata:
     def rename(self,sdir,sfile):
 	path = sdir + sfile
         dfile = ""
-
+        
 	# Get flight number
 	# from the filename if we can otherwise from the NetCDF header	
 	p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
 	p2 = subprocess.Popen(["grep","FlightNumber"], stdin=p1.stdout, stdout=subprocess.PIPE)
 	flightnum = string.upper(string.split(p2.communicate()[0],'"')[1])
-	
-	match = re.search('(\w(F|f)\d\d\w\d?)',sfile)
+	match = re.search('(\w(F|f)\d\d\w\w?\w?\d?\d?)',sfile)
 	if match:
 	    flightnum2 = match.group(0).upper()
 	    if len(flightnum) >= 4:
@@ -400,9 +399,9 @@ class archRAFdata:
 
 	    match = re.search(sdir,spath)
 	    if match:
-	    	command.append('/opt/local/bin/hsi put -P ' + options + spath + ' :' + mssroot + type + '/' + sfile) 
+	    	command.append('/opt/local/bin/hsi put -X1 -P ' + options + spath + ' :' + mssroot + type + '/' + sfile) 
 	    else: 
-	    	command.append('/opt/local/bin/hsi put -P ' + options + sdir + spath + ' :' + mssroot + type + '/' + sfile) 
+	    	command.append('/opt/local/bin/hsi put -X1 -P ' + options + sdir + spath + ' :' + mssroot + type + '/' + sfile) 
 
         for line in command:
 	    print line
