@@ -1,7 +1,7 @@
 Summary: Setup default NFS exports
 Name: raf-ac-nfs
 Version: 1
-Release: 1
+Release: 2
 License: GPL
 Group: System Environment/Daemons
 Url: http://www.eol.ucar.edu/
@@ -25,7 +25,12 @@ mkdir -p ${RPM_BUILD_ROOT}/mnt/r1/camera_images
 echo "/mnt/r1 192.168.0.0/16(rw,sync,root_squash,anonuid=12900,anongid=1318)" >> /etc/exports
 
 /usr/sbin/exportfs -a
+
+%if 0%{?rhel} >= 7
+/bin/systemctl enable nfs
+%else
 /sbin/chkconfig --levels 345 nfs on
+%endif
 
 
 %files
@@ -33,5 +38,7 @@ echo "/mnt/r1 192.168.0.0/16(rw,sync,root_squash,anonuid=12900,anongid=1318)" >>
 %dir %attr(0775,ads,ads) /mnt/r1/camera_images
 
 %changelog
+* Mon Jan 5 2017 Chris Webster <cjw@ucar.edu> - 1.0-2
+- Add systemectl for RH7.
 * Fri Aug 5 2011 Chris Webster <cjw@ucar.edu> - 1.0-1
 - initial version
