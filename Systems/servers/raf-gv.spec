@@ -26,7 +26,7 @@ Requires: ael-local-dpkgs
 Requires: raf-ac-nfs
 Requires: raf-ac-avaps
 Requires: raf-ac-mtp
-Requires: raf-www-camera.spec
+Requires: raf-www-camera
 Requires: GMT
 Requires: ruby
 Requires: chrony
