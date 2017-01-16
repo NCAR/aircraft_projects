@@ -59,10 +59,10 @@ if [ -f /etc/ppp/options ]; then
 fi
 touch /etc/ppp/options
 
-muser=`egrep  "^[:space:]*USER=" /etc/sysconfig/network-scripts/ifcfg-mpds | sed "s/.*=[\"']*\([^\"']*\)[\"']*/\1/"`
+muser=`egrep  "^[[:space:]]*USER=" /etc/sysconfig/network-scripts/ifcfg-mpds | sed "s/.*=[\"']*\([^\"']*\)[\"']*/\1/"`
 
 if [ -n $muser ]; then
-    if ! egrep "^[:space:]*[^#]" /etc/ppp/pap-secrets | fgrep -q $muser; then
+    if ! egrep "^[[:space:]]*[^#]" /etc/ppp/pap-secrets | fgrep -q $muser; then
         echo "###### from %{name}-%{version} ######
 ${muser} 	mpds 	None
 ###### end %{name}-%{version} ######" >> /etc/ppp/pap-secrets

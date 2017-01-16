@@ -56,7 +56,7 @@ touch /etc/ppp/options
 
 # Report if it looks like pap-secrets is missing an entry for the RAS
 # account.
-ent="`egrep '^[:space:]*[^#]' /etc/ppp/pap-secrets | egrep '^["]*raf'`"
+ent="`egrep '^[[:space:]]*[^#]' /etc/ppp/pap-secrets | egrep '^["]*raf'`"
 if [ -z "$ent" ]; then
     echo "###### from %{name}-%{version} ######
 raf 	iridium 	None-Yet
