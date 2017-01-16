@@ -32,11 +32,17 @@ Requires: chrony
 Requires: squid
 Requires: nagios
 Requires: nagios-plugins
+Requires: postgresql
+Requires: postgresql-devel
+Requires: postgresql-server
+Requires: qt-postgresql
 Requires: uucp
 Requires: minicom
 Requires: exiv2-devel
 Requires: libdc1394-devel
 Requires: kde-baseapps
+Requires: openmotif-devel
+Requires: flex-devel
 
 BuildArch: noarch
 

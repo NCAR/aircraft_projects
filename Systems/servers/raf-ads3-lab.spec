@@ -18,7 +18,11 @@ Requires: raf-ads3-sudoers
 Requires: minicom
 Requires: chrony
 Requires: openmotif-devel
+Requires: flex-devel
+Requires: postgresql
+Requires: postgresql-devel
 Requires: postgresql-server
+Requires: qt-postgresql
 Requires: kde-baseapps
 
 BuildArch: noarch
