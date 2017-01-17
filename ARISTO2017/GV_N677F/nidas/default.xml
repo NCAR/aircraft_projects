@@ -872,6 +872,37 @@
       <message length="220" position="end" separator="\xff\xff\x07"/>
     </serialSensor>
 
+
+<!-- Watlow CLS-208 sensor, added for ARISTO-2017 for ACOM -->
+    <serialSensor ID="WatlowCLS208" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" timeout="3.0">
+        <sample id="1">
+            <variable name="TIF" units="degC" longname="Temperature of loop 1"/>
+            <variable name="TIA" units="degC" longname="Temperature of loop 2"/>
+            <variable name="TENV" units="degC" longname="Temperature of loop 3"/>
+            <variable name="TTC" units="degC" longname="Temperature of loop 4"/>
+            <variable name="TTF" units="degC" longname="Temperature of loop 5"/>
+            <variable name="TTA" units="degC" longname="Temperature of loop 6"/>
+            <variable name="TFLT" units="degC" longname="Temperature of loop 7"/>
+            <variable name="TSA" units="degC" longname="Temperature of loop 8"/>
+            <prompt rate="5" string="\x01\x03\x01\x6B\x00\x08\x34\x2C"/>
+<!--            <message length="21"/> -->
+        </sample>
+        <sample id="2">
+            <variable name="THSET" units="degC" longname="Temperature of setup of loop 1"/>
+            <prompt rate="5" string="\x01\x03\x01\x4a\x00\x01\xa4\x20"/>
+<!--            <message length="7"/> -->
+        </sample>
+        <sample id="3">
+            <variable name="QFWD" units="degC" longname="Power output of loop 1"/>
+            <variable name="QAFT" units="degC" longname="Power output of loop 2"/>
+            <variable name="QENV" units="degC" longname="Power output of loop 3"/>
+            <variable name="QTT" units="degC" longname="Power output of loop 4"/>
+            <prompt rate="5" string="\x01\x03\x01\xce\x00\x04\x24\x0a"/>
+<!--            <message length="13"/> -->
+        </sample>
+    </serialSensor>
+
+
 <!-- CVI TDL original - on ICE-T a second instrument TDL_CVI2 was introduced -->
     <serialSensor ID="TDL_CVI1" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
 
