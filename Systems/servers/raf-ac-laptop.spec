@@ -7,6 +7,7 @@ Group: Systems
 
 Requires: raf-ac-chrony
 Requires: raf-ac-selinux
+Requires: raf-ac-gdm
 Requires: firefox
 Requires: xchat
 Requires: tigervnc
