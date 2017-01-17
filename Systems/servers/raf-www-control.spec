@@ -5,8 +5,8 @@ Release: 4
 Group: Applications/Engineering
 Source: %{name}-%{version}.tar.gz
 License: none
-Distribution: RHEL 5.3 Linux
-Requires: php php-xmlrpc php-pecl-json jquery
+Distribution: RHEL 7.3 Linux
+Requires: php php-xmlrpc php-pecl-json raf-jquery
 # BuildRoot is only needed by older rpm versions
 BuildRoot: %{_tmppath}/%{name}-root
 BuildArch: noarch

@@ -5,8 +5,8 @@ Release: 3
 Group: Applications/Web
 Source: %{name}-%{version}.tar.gz
 License: none
-Distribution: RHEL 6.5 Linux
-Requires: httpd php php-pgsql php-pecl-json jquery python-inotify
+Distribution: RHEL 7.3 Linux
+Requires: httpd php php-pgsql php-pecl-json raf-jquery python-inotify
 # BuildRoot is only needed by older rpm versions
 BuildRoot: %{_tmppath}/%{name}-root
 BuildArch: noarch
