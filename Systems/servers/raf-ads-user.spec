@@ -15,7 +15,7 @@ Makes sure ads:ads exists in /etc files.  Password needs to be set manually at t
 Provides the 'ads' user csh & bash logins, and icons files.
 
 %prep
-%setup -n %{name}
+%setup -q -n %{name}
 
 %install
 rm -rf ${RPM_BUILD_ROOT}
@@ -149,10 +149,10 @@ rm -rf ${RPM_BUILD_ROOT}
 * Fri Aug 5 2011 Chris Webster <cjw@ucar.edu> 1.15
 - Add Desktop and some icons.
 * Mon May 16 2011 Gordon Maclean <maclean@ucar.edu> 1.15
-- In %pre step add ads user and ads,eol groups if necessary.
+- In %%pre step add ads user and ads,eol groups if necessary.
 - nidas-bin package installs files writeable by eol group, so we'll want
 - ads to belong to eol group.
-* Thu Jul 30 2010 Chris Webster <cjw@ucar.edu> 1.13
+* Fri Jul 30 2010 Chris Webster <cjw@ucar.edu> 1.13
 - add env COIN_FULL_INDIRECT_RENDERING to avoid aeros track plot crash.
 * Thu Feb 18 2010 Chris Webster <cjw@ucar.edu> 1.12
 - Remove setl binary.  tcsh has options in prompt command to update title.
@@ -180,9 +180,9 @@ rm -rf ${RPM_BUILD_ROOT}
 * Mon Nov 30 2009 John Wasinger <wasinger@ucar.edu> 1.4
 - Now creates '.rpmsave' files to back up previous changes.
 - Fixed prompt string.
-* Thu Nov 23 2009 John Wasinger <wasinger@ucar.edu> 1.3
+* Mon Nov 23 2009 John Wasinger <wasinger@ucar.edu> 1.3
 - Added bin/svn-ask-username.sh
-* Thu Nov 23 2009 John Wasinger <wasinger@ucar.edu> 1.2
+* Mon Nov 23 2009 John Wasinger <wasinger@ucar.edu> 1.2
 - Added .login and ads3_environment.csh, clean up .my_defaults
 * Thu Nov 19 2009 John Wasinger <wasinger@ucar.edu> 1.1
 - Initial release

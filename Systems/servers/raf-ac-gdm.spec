@@ -18,7 +18,6 @@ TimedLogin=ads
 TimedLoginDelay=10
 
 %prep
-# %setup -n %{name}
 
 %build
 
@@ -26,12 +25,12 @@ TimedLoginDelay=10
 rm -fr $RPM_BUILD_ROOT
 
 %triggerin -- gdm
-# %triggerin script is run when a given target package is installed or
+# %%triggerin script is run when a given target package is installed or
 # upgraded, or when this package is installed or upgraded and the target
 # is already installed.
 
 cf=/etc/gdm/custom.conf
-if ! egrep -q "TimedLogin" $cf; then
+if ! grep -q "TimedLogin" $cf; then
   sed -i -c '/^server/d' $cf
   sed -i -c '/daemon/a TimedLoginEnable=true\nTimedLogin=ads\nTimedLoginDelay=10' $cf
 fi

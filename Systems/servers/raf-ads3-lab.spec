@@ -3,7 +3,6 @@ Name: raf-ads3-lab
 Version: 1.0
 Release: 9
 License: GPL
-Group: System Environment
 
 Requires: eol-devel
 Requires: raf-devel
@@ -70,13 +69,13 @@ fi
 - Added Requires: minicom & kde-baseapps
 * Tue Jul 13 2010 Gordon Maclean <maclean@ucar.edu> 1.0-6
 - Added Requires: chrony
-* Wed Nov 24 2009 John Wasinger <wasinger@ucar.edu> 1.0-5
+* Tue Nov 24 2009 John Wasinger <wasinger@ucar.edu> 1.0-5
 - Added raf-ads-user
-* Fri Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
+* Mon Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
 - Added raf-ads3-sudoers
 * Mon Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-3
 - Added ael-local-dpkgs, remove raf-ads3-rsyncd
 * Thu Nov 20 2008 Gordon Maclean <maclean@ucar.edu> 1.0-2
 - Added rad-ads3-rsyncd
-* Tue Oct 24 2008 Gordon Maclean <maclean@ucar.edu> 1.0-1
+* Fri Oct 24 2008 Gordon Maclean <maclean@ucar.edu> 1.0-1
 - initial

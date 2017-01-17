@@ -18,8 +18,9 @@ Requires: tigervnc
 This package is a meta-package.  Its purpose is to list packages
 required in the EOL computing environment, such as ntp, cups, and rsh.
 
+%prep
+
 %pre
-# Add an ads user and ads and eol groups to system
 
 adduser=false
 addeolgroup=false
@@ -37,6 +38,11 @@ if ! grep eol /etc/group | grep -q ads; then
 fi
 
 
+%build
+
+%install
+
+
 %post
 chown -R ads:ads /home/ads/bin
 
@@ -47,6 +53,6 @@ chown -R ads:ads /home/ads/bin
 %files
 
 %changelog
-* Tue Jan 16 2017 Chris Webster <cjw@ucar.edu> 1.1
+* Mon Jan 16 2017 Chris Webster <cjw@ucar.edu> 1.1
 - Initial check in.
 

@@ -11,9 +11,14 @@ BuildArch: noarch
 %description
 Disable SElinux.
 
+%prep
+
+%build
+
+%install
 
 %triggerin -- selinux-policy
-# %triggerin script is run when a given target package is installed or
+# %%triggerin script is run when a given target package is installed or
 # upgraded, or when this package is installed or upgraded and the target
 # is already installed.
 

@@ -15,7 +15,7 @@ Requires: nagios nagios-plugins python
 Configuration and additional plugins for RAF aircraft servers.
 
 %prep
-%setup -n %{name}
+%setup -q -n %{name}
 
 %build
 
@@ -40,19 +40,19 @@ sed -i 's/use_authentication=1/use_authentication=0/g' $cf
 %post
 # commands.cfg in fc11 will move into nagios/objects
 cf=/etc/nagios/nagios.cfg
-if ! egrep -q "/raf_commands.cfg" $cf; then
+if ! grep -q "/raf_commands.cfg" $cf; then
   sed -i 's/commands.cfg/commands.cfg\ncfg_file=\/etc\/nagios\/raf_commands.cfg/' $cf
 fi
-if ! egrep -q "/raf_localhost.cfg" $cf; then
+if ! grep -q "/raf_localhost.cfg" $cf; then
   sed -i 's/localhost.cfg/localhost.cfg\ncfg_file=\/etc\/nagios\/raf_localhost.cfg/' $cf
 fi
-if ! egrep -q "log_external_commands=1" $cf; then
+if ! grep -q "log_external_commands=1" $cf; then
   sed -i 's/log_external_commands=1/log_external_commands=0/' $cf
 fi
-if ! egrep -q "log_passive_checks=1" $cf; then
+if ! grep -q "log_passive_checks=1" $cf; then
   sed -i 's/log_passive_checks=1/log_passive_checks=0/' $cf
 fi
-if ! egrep -q "use_syslog=1" $cf; then
+if ! grep -q "use_syslog=1" $cf; then
   sed -i 's/use_syslog=1/use_syslog=0/' $cf
 fi
 
@@ -90,7 +90,7 @@ rm -rf %{buildroot}
 * Thu Feb 09 2012 John Wasinger <wasinger@ucar.edu> - 1.0-8
 - Fixed broken path for 64 bit systems.
 - Nagios on these systems defined '$USER1$' as /usr/lib64.
-- 'noarch' defaults '%{_libdir}' to '/usr/lib'.
+- 'noarch' defaults '%%{_libdir}' to '/usr/lib'.
 * Fri Dec 09 2011 John Wasinger <wasinger@ucar.edu> - 1.0-7
 - Now mentions DSM names that responded to pings.
 * Wed Nov 30 2011 John Wasinger <wasinger@ucar.edu> - 1.0-6
@@ -98,10 +98,10 @@ rm -rf %{buildroot}
 - Detect missing compact flash cards in DSMs.
 * Mon Jul 18 2011 Chris Webster <cjw@ucar.edu> - 1.0-5
 - Display satcom IP address in raf_check_ppp
-* Fri Feb 01 2010 Chris Webster <cjw@ucar.edu> - 1.0-4
+* Mon Feb 01 2010 Chris Webster <cjw@ucar.edu> - 1.0-4
 - check_ppp should check ppp1, not eth3.
 - Add raf_check_proc, check for a local process.  Needed because default check_proc can't find something run under python, because python is the process.
-* Fri Jan 26 2010 Chris Webster <cjw@ucar.edu> - 1.0-3
+* Tue Jan 26 2010 Chris Webster <cjw@ucar.edu> - 1.0-3
 - Re-arrange some things.  Add a nidas host to group things better.
 - Fix sed in spec to check if change exists first.
 - Add check for squid.

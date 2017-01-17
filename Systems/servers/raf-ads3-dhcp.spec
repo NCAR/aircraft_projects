@@ -13,7 +13,7 @@ BuildArch: noarch
 DHCP configuration for RAF aircraft server
 
 %prep
-%setup -n %{name}
+%setup -q -n %{name}
 
 # We're splitting this into two subpackages, for the GV and C130.
 # Since a dhcp config can have multiple entries with different MAC
@@ -106,9 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 - GV new motherboards.
 * Tue Apr 5 2011 Chris Webster <cjw@ucar.edu> 1.0-22
 - Add fixed IP addresses for CAMS instrument.
-* Tue Feb 21 2011 Gordon Maclean <maclean@ucar.edu> 1.0-21
+* Mon Feb 21 2011 Gordon Maclean <maclean@ucar.edu> 1.0-21
 - move config files to /etc/dhcp, which is where newer dhcp packages put them
-* Fri Sep 16 2010 Gordon Maclean <maclean@ucar.edu> 1.0-20
+* Thu Sep 16 2010 Gordon Maclean <maclean@ucar.edu> 1.0-20
 - added subnet 128.117.0.0 netmask 255.255.0.0 not authoritative
 * Fri Sep 3 2010 Gordon Maclean <maclean@ucar.edu> 1.0-19
 - Add a change to the trigger in script, deleting named .jnl files when the key changes.
@@ -130,7 +130,7 @@ rm -rf $RPM_BUILD_ROOT
 - In triggerin.sh, add more checks for good keys.
 * Tue Mar 24 2009 John Wasinger <wasinger@ucar.edu>
 - Added vulcan-00658
-* Fri Oct 30 2008 Gordon Maclean <maclean@ucar.edu>
+* Thu Oct 30 2008 Gordon Maclean <maclean@ucar.edu>
 - Added bind dependency so that the dndsec-keygen command is available
 - for the trigger script.
 * Fri Oct 24 2008 Gordon Maclean <maclean@ucar.edu>

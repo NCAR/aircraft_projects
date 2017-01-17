@@ -15,7 +15,7 @@ Requires: syslog
 Additions to syslog config for logging from NIDAS processes.
 
 %prep
-%setup -n %{name}
+%setup -q -n %{name}
 
 %build
 
@@ -25,7 +25,7 @@ install -d $RPM_BUILD_ROOT/etc
 cp -r etc/logrotate.d $RPM_BUILD_ROOT/etc
 
 %triggerin -- sysklogd rsyslog
-# %triggerin script is run when a given target package is installed or
+# %%triggerin script is run when a given target package is installed or
 # upgraded, or when this package is installed or upgraded and the target
 # is already installed.
 
@@ -34,7 +34,7 @@ cp -r etc/logrotate.d $RPM_BUILD_ROOT/etc
 
 cf=/etc/sysconfig/syslog
 if [ -f $cf ]; then
-    if ! egrep -q "^[[:space:]]*SYSLOGD_OPTIONS=" $cf; then
+    if ! grep -q "^[[:space:]]*SYSLOGD_OPTIONS=" $cf; then
         sed -i '${
 a###### start %{name}-%{version} ######
 aSYSLOGD_OPTIONS="-m 0 -r -s raf.ucar.edu:eol.ucar.edu"
@@ -58,7 +58,7 @@ fi
 # for /etc/sysconfig/rsyslog, add -s "" to -c 3.
 cf=/etc/sysconfig/rsyslog
 if [ -f $cf ]; then
-    if ! egrep -q "^[[:space:]]*SYSLOGD_OPTIONS=" $cf; then
+    if ! grep -q "^[[:space:]]*SYSLOGD_OPTIONS=" $cf; then
         sed -i '${
 a###### start %{name}-%{version} ######
 aSYSLOGD_OPTIONS="-c 3 -s raf.ucar.edu:eol.ucar.edu:atd.ucar.edu"
@@ -105,7 +105,7 @@ sed -i -r '/^\*\.info/{
 s/^([^[:space:]]+)/\1;local5.none/
 }' $cf
 
-if ! egrep -q "^local5" $cf; then
+if ! grep -q "^local5" $cf; then
 cat >> $cf << EOD
 local5.info			/var/log/ads3.log
 kern.info			/var/log/ads3_kernel.log
@@ -139,13 +139,13 @@ rm -rf $RPM_BUILD_ROOT
 - Removed .so from rsyslogd module's names.
 * Wed Oct 26 2011 Gordon Maclean <maclean@ucar.edu> 1.0-6
 - Removed  debug output to /var/log/ads3_debug.log and /var/log/ads3_kernel_debug.log
-* Tue Feb 9 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5
+* Tue Feb 10 2009 Gordon Maclean <maclean@ucar.edu> 1.0-5
 - sed 4.2 (Fedora) doesn't have -c option
 * Fri Jan 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
 - better support for rsyslog
 * Fri Oct 24 2008 Gordon Maclean <maclean@ucar.edu>  1.0-3
 - fixed mistakes in log file names
-* Sat Oct 12 2008 Gordon Maclean <maclean@ucar.edu>  1.0-2
+* Sat Oct 11 2008 Gordon Maclean <maclean@ucar.edu>  1.0-2
 - added etc/logrotate.d/ads3
 * Sun Feb 10 2008 Gordon Maclean <maclean@ucar.edu>
 - initial version

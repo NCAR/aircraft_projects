@@ -13,7 +13,6 @@ Requires: vsftpd python-inotify
 Setup for receiving MTP data from the mtp-pc.
 
 %prep
-# %setup -n %{name}
 
 %build
 

@@ -66,7 +66,7 @@ fi
 %changelog
 * Tue Apr 5 2016 Chris Webster <cjw@ucar.edu> 1.0-14
 - Change raf-ac-ntp to raf-ac-chrony for RHEL7 migration.  Add gdm & selinux.
-* Tue Nov 4 2015 Chris Webster <cjw@ucar.edu> 1.0-14
+* Tue Nov 3 2015 Chris Webster <cjw@ucar.edu> 1.0-14
 - Updated Requires kde-baseapps (kdialog).
 * Thu May 16 2013 Chris Webster <cjw@ucar.edu> 1.0-13
 - Updated Requires for new packages.
@@ -74,7 +74,7 @@ fi
 - Updated Requires for new nidas packages.
 * Fri Aug 5 2011 Chris Webster <cjw@ucar.edu> 1.0-11
 - Add raf-ac-nfs package.  Added GMT.
-* Wed Feb 21 2011 Gordon Maclean <maclean@ucar.edu> 1.0-11
+* Wed Feb 23 2011 Gordon Maclean <maclean@ucar.edu> 1.0-11
 - Added Requires: nidas-ael (cross compiling) and nidas-daq (udev rules)
 * Tue Jul 13 2010 Gordon Maclean <maclean@ucar.edu> 1.0-10
 - Added Requires: chrony

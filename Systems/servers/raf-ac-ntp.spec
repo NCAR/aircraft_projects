@@ -14,7 +14,6 @@ Requires: ntp
 Configuration for NTP on RAF aircraft server systems
 
 %prep
-# %setup -n %{name}
 
 %build
 
@@ -22,13 +21,13 @@ Configuration for NTP on RAF aircraft server systems
 rm -fr $RPM_BUILD_ROOT
 
 %triggerin -- ntp
-# %triggerin script is run when a given target package is installed or
+# %%triggerin script is run when a given target package is installed or
 # upgraded, or when this package is installed or upgraded and the target
 # is already installed.
 
 # Lab systems are broadcastclients, allow query from 192.168.0.0
 cf=/etc/ntp.conf
-if ! egrep -q "^[[:space:]]*server[[:space:]]+timeserver" $cf; then
+if ! grep -q "^[[:space:]]*server[[:space:]]+timeserver" $cf; then
     sed -i -c '${
 a###### start %{name}-%{version} ######
 # When not synced, poll every 2^4=16 seconds. Default minpoll is 2^6=64.
@@ -39,7 +38,7 @@ arestrict 192.168.0.0 mask 255.255.0.0 nomodify notrap
 a###### end %{name}-%{version} ######
 }' $cf
 fi
-if ! egrep -q "^[[:space:]]*restrict 192.168.0.0" $cf; then
+if ! grep -q "^[[:space:]]*restrict 192.168.0.0" $cf; then
     sed -i -c '${
 a###### start %{name}-%{version} ######
 arestrict 192.168.0.0 mask 255.255.0.0 nomodify notrap
@@ -48,11 +47,11 @@ a###### end %{name}-%{version} ######
 fi
 
 cf=/etc/ntp/step-tickers
-if ! egrep -q "^[[:space:]]*192.168.184.10" $cf; then
+if ! grep -q "^[[:space:]]*192.168.184.10" $cf; then
     echo "192.168.184.10" > $cf
 fi
 
-if ! { chkconfig --list ntpd | fgrep -q "5:on"; }; then
+if ! { chkconfig --list ntpd | grep -q "5:on"; }; then
     chkconfig --level 2345 ntpd on
 fi
 /etc/init.d/ntpd restart
@@ -66,7 +65,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Jan 31 2012 Tom Baltzer <tbaltzer@ucar.edu>
 - remove tardis.ucar.edu - don't want to use it on the planes.
-* Mon Mar 2 2010 Chris Webster <cjw@ucar.edu>
+* Tue Mar 2 2010 Chris Webster <cjw@ucar.edu>
 - Up version number for mod Gordon did to set minpoll and maxpoll
-* Sun Feb 29 2008 Gordon Maclean <maclean@ucar.edu>
+* Fri Feb 29 2008 Gordon Maclean <maclean@ucar.edu>
 - initial version

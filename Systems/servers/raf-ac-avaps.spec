@@ -22,7 +22,6 @@ and ftp's the file to the ground, runs Aspen to produce a Skewt which is placed 
 /var/www/html/skewt.
 
 %prep
-# %setup -n %{name}
 
 %build
 

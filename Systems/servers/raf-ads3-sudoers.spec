@@ -13,11 +13,11 @@ Requires: sudo
 %description
 Package containing updates for /etc/sudoers file for ADS3 data acquisition
 
-# %prep
+%prep
 
-# %build
+%build
 
-# %install
+%install
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -27,8 +27,8 @@ tmpsudo=/tmp/sudoers_$$
 cp /etc/sudoers $tmpsudo
 
 # add mkfs, tune2fs, dumpe2fs to STORAGE alias
-if egrep -q "^Cmnd_Alias STORAGE" $tmpsudo; then
-    if ! egrep "^Cmnd_Alias STORAGE" | fgrep -q mkfs $tmpsudo; then
+if grep -q "^Cmnd_Alias STORAGE" $tmpsudo; then
+    if ! grep "^Cmnd_Alias STORAGE" | grep -q mkfs $tmpsudo; then
         sed -i -r 's@^(Cmnd_Alias STORAGE.*)$@\1, /sbin/fsck, /sbin/fsck.ext3, /sbin/mkfs, /sbin/mkfs.ext3, /sbin/tune2fs, /sbin/dumpe2fs@' $tmpsudo
     fi
 else
@@ -36,8 +36,8 @@ else
 fi
 
 # add mkfs, tune2fs, dumpe2fs to STORAGE alias
-if egrep -q "^Cmnd_Alias DRIVERS" $tmpsudo; then
-    if ! egrep "^Cmnd_Alias DRIVERS" | fgrep -q mkfs $tmpsudo; then
+if grep -q "^Cmnd_Alias DRIVERS" $tmpsudo; then
+    if ! grep "^Cmnd_Alias DRIVERS" | grep -q mkfs $tmpsudo; then
         sed -i -r 's@^(Cmnd_Alias DRIVERS.*)$@\1, /sbin/modprobe, /sbin/rmmod@' $tmpsudo
     fi
 else
@@ -46,8 +46,8 @@ fi
 
 # Remove requiretty requirement for ads account so that we can
 # do sudo from bootup scripts.
-if egrep -q "^Defaults[[:space:]]+requiretty" $tmpsudo; then
-    if ! egrep -q '^Defaults[[:space:]]*:[[:space:]]*ads[[:space:]]*!requiretty' $tmpsudo; then
+if grep -q "^Defaults[[:space:]]+requiretty" $tmpsudo; then
+    if ! grep -q '^Defaults[[:space:]]*:[[:space:]]*ads[[:space:]]*!requiretty' $tmpsudo; then
         sed -i '
 /^Defaults[[:space:]]*requiretty/a\
 Defaults:ads !requiretty' $tmpsudo
@@ -55,13 +55,13 @@ Defaults:ads !requiretty' $tmpsudo
 fi
 
 # Add /opt/nidas/bin to secure_path
-if egrep -q "^Defaults[[:space:]]+secure_path" $tmpsudo; then
-    if ! egrep '^Defaults[[:space:]]+secure_path' $tmpsudo | egrep -q /opt/nidas/bin; then
+if grep -q "^Defaults[[:space:]]+secure_path" $tmpsudo; then
+    if ! grep '^Defaults[[:space:]]+secure_path' $tmpsudo | grep -q /opt/nidas/bin; then
        sed -i -r 's,(^Defaults[[:space:]]+secure_path[[:space:]]*=[[:space:]]*[^[:space:]]+),\1:/opt/nidas/bin,' $tmpsudo
        fi
 fi
 
-if ! fgrep -q dsm_server $tmpsudo; then
+if ! grep -q dsm_server $tmpsudo; then
 cat << \EOD >> $tmpsudo
 ads ALL=NOPASSWD: STORAGE,NETWORKING,DRIVERS
 ads ALL=NOPASSWD: /usr/sbin/tcpdump
@@ -71,7 +71,7 @@ ads ALL=NOPASSWD: SETENV: /opt/nidas/bin/dsm_server
 EOD
 fi
 
-if fgrep -q /opt/local/nidas/x86 $tmpsudo; then
+if grep -q /opt/local/nidas/x86 $tmpsudo; then
     sed -i s,/opt/local/nidas/x86,/opt/nidas,g $tmpsudo
 fi
 
@@ -85,10 +85,10 @@ rm -f $tmpsudo
 # fi
 
 # provide write access to /opt/ael-dpkgs
-if egrep -q "^ads" /etc/passwd; then
+if grep -q "^ads" /etc/passwd; then
     chown -R ads /opt/ael-dpkgs
 fi
-if egrep -q "^eol" /etc/group; then
+if grep -q "^eol" /etc/group; then
     chgrp -R eol /opt/ael-dpkgs
     chmod -R g+sw /opt/ael-dpkgs
 fi
@@ -98,7 +98,7 @@ fi
 %changelog
 * Thu May 16 2013 Chris Webster <cjw@ucar.edu> 1.0-4
 - Add firewire driver reload program (reload_fw) for cameras.
-* Thu Apr  7 2012 Gordon Maclean <maclean@ucar.edu> 1.0-3
+* Sat Apr  7 2012 Gordon Maclean <maclean@ucar.edu> 1.0-3
 - Updates for moves of nidas and ael-dpkgs from /opt/local to /opt.
 * Thu Mar 18 2010 Gordon Maclean <maclean@ucar.edu> 1.0-2
 - sed -ir should be sed -i -r

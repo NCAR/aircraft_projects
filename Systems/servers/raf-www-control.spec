@@ -14,7 +14,7 @@ Requires: php php-xmlrpc php-pecl-json raf-jquery
 Control and status pages for ACserver
 
 %prep
-%setup -n raf-www
+%setup -q -n raf-www
 
 %build
 
@@ -35,9 +35,9 @@ rm -rf $RPM_BUILD_ROOT
 %config /var/www/html/control/js/config.json
 
 %changelog
-* Tue Aug 1 2011 <cjw@ucar.edu> 1-4
+* Mon Aug 1 2011 <cjw@ucar.edu> 1-4
 - Remove $output into xmlrpc_encode_request() in utils.php
-* Thu May 31 2011 <cjw@ucar.edu> 1-3
+* Tue May 31 2011 <cjw@ucar.edu> 1-3
 - Support JQuery 1.5.1 and JQuery-ui 1.8.13.
 * Thu Jul 8 2010 <cjw@ucar.edu> 1-2
 - Fix some permissions

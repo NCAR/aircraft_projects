@@ -16,7 +16,7 @@ OpenStreetMaps tile-based javascript web-viewer.
 This package will install the openlayers webpage to display the tiles, using mod_tile w/ renderd to render the tiles on demand. 
 
 %prep
-%setup -n raf-www
+%setup -q -n raf-www
 
 # Work around for rpm thinking getCookie.pl is required rpm.
 cat << \EOF > %{name}-req
