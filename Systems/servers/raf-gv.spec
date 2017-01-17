@@ -1,6 +1,6 @@
 Name: raf-gv
 Version: 1.0
-Release: 14
+Release: 15
 Summary: Metapackage for all server and satcom packages needed on GV
 
 License: GPL
@@ -42,6 +42,7 @@ Requires: nidas-build
 Requires: nidas-buildeol
 Requires: nidas-ael
 Requires: ael-local-dpkgs
+Requires: nagircbot
 
 BuildArch: noarch
 
@@ -65,6 +66,8 @@ fi
 %files 
 
 %changelog
+* Mon Jan 16 2017 Chris Webster <cjw@ucar.edu> 1.0-15
+- Change raf-ac-ntp to raf-ac-chrony for RHEL7.  Add gdm and selinux.
 * Tue Apr 5 2016 Chris Webster <cjw@ucar.edu> 1.0-14
 - Change raf-ac-ntp to raf-ac-chrony for RHEL7.  Add gdm and selinux.
 * Tue Nov 4 2015 Chris Webster <cjw@ucar.edu> 1.0-14
