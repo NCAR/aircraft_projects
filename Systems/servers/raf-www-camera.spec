@@ -31,7 +31,12 @@ phpconf=`find /etc -name "php.conf"`
 echo "SetEnv PGHOST acserver" >> $phpconf
 echo "SetEnv PGUSER ads" >> $phpconf
 echo "SetEnv PGDATABASE real-time" >> $phpconf
+
+%if 0%{?rhel} < 7
 /sbin/service httpd restart
+%else
+/bin/systemctl restart httpd
+%endif
 
 %postun
 rm /var/www/html/camera/camera_images

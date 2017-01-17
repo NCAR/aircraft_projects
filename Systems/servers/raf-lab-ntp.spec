@@ -49,10 +49,15 @@ if ! grep -q "^[[:space:]]*128.117" $cf && \
     echo "syrah.eol.ucar.edu" > $cf
 fi
 
+%if 0%{?rhel} < 7
 if ! { chkconfig --list ntpd | grep -q "5:on"; }; then
     chkconfig --level 2345 ntpd on
 fi
 /etc/init.d/ntpd restart
+%else
+/bin/systemctl enable ntpd
+/bin/systemctl restart ntpd
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT

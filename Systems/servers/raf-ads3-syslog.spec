@@ -115,11 +115,17 @@ fi
 chmod +r /var/log/messages
 touch /var/log/ads3.log
 touch /var/log/ads3_kernel.log
+
+%if 0%{?rhel} < 7
 if [ -x /etc/init.d/syslog ]; then
         /etc/init.d/syslog restart
 else
         /etc/init.d/rsyslog restart
 fi
+%else
+/bin/systemctl restart rsyslog
+%endif
+
 
 %triggerin -- logrotate
 
