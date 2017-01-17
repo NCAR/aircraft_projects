@@ -1,13 +1,13 @@
-Summary: Configuration for chrony on RAF aircraft and labs.
 Name: raf-ac-chrony
 Version: 1.0
 Release: 1
+Summary: Configuration for chrony on RAF aircraft and labs.
+
 License: GPL
-Group: System Environment/Daemons
-Url: http://www.eol.ucar.edu/
 Packager: Chris Webster <cjw@ucar.edu>
 Vendor: UCAR
 BuildArch: noarch
+
 Requires: chrony
 
 %description

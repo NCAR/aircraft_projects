@@ -1,15 +1,13 @@
-Summary: Spec file for MTP instrument
 Name: raf-ac-mtp
 Version: 1 
 Release: 1
-Group: Applications/Engineering
-#Source: %{name}-%{version}.tar.gz
+Summary: Spec file for MTP instrument
+
 License: none
 Distribution: RHEL 5.3 Linux
-Requires: vsftpd python-inotify
-# BuildRoot is only needed by older rpm versions
-BuildRoot: %{_tmppath}/%{name}-root
 BuildArch: noarch
+
+Requires: vsftpd python-inotify
 
 %description
 Setup for receiving MTP data from the mtp-pc.

@@ -1,17 +1,15 @@
-Summary: Configuration and plugins for nagios
 Name: raf-ac-nagios
 Version: 1.0
 Release: 13
+Summary: Configuration and plugins for nagios
+
 License: GPL
-Group: System Environment/Daemons
-Url: http://www.eol.ucar.edu/
+Source: %{name}-%{version}.tar.gz
 Packager: Chris Webster <cjw@ucar.edu>
-# BuildRoot is only needed by older rpm versions
-BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
+
 Requires: nagios nagios-plugins python
-Source: %{name}-%{version}.tar.gz
 
 %description
 Configuration and additional plugins for RAF aircraft servers.

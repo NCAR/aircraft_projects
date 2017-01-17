@@ -1,10 +1,9 @@
-Summary: Configuration for selinux on RAF aircraft and labs.
 Name: raf-ac-selinux
 Version: 1.0
 Release: 2
+Summary: Configuration for selinux on RAF aircraft and labs.
+
 License: GPL
-Group: System Environment/Daemons
-Url: http://www.eol.ucar.edu/
 Packager: Chris Webster <cjw@ucar.edu>
 Vendor: UCAR
 BuildArch: noarch

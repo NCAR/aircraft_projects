@@ -12,14 +12,10 @@ Name: raf-ads3-named
 Version: 1.0
 Release: 19
 License: GPL
-Group: System Environment/Daemons
-Url: http://www.eol.ucar.edu/
+Source: %{name}-%{version}.tar.gz
 Packager: Gordon Maclean <maclean@ucar.edu>
-# BuildRoot is only needed by older rpm versions
-BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
-Source: %{name}-%{version}.tar.gz
 
 %description
 DNS/named configuration for RAF aircraft server

@@ -1,17 +1,14 @@
-Summary: triggerin script for sysctl.conf
 Name: raf-ads3-sysctl
 Version: 1.0
 Release: 3
+Summary: triggerin script for sysctl.conf
+
 License: GPL
-Group: System Environment/Daemons
-Url: http://www.eol.ucar.edu/
 Packager: Chris Webster <cjw@ucar.edu>
-# becomes RPM_BUILD_ROOT
-#BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
+
 Requires: initscripts
-#Source: %{name}-%{version}.tar.gz
 
 %description
 Modify sysctl.conf to engage IP forwarding, and allow Alt + SysRq + B to reboot the computer.

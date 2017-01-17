@@ -1,18 +1,17 @@
-Summary: Iptables configuration for RAF aircraft server
 Name: raf-ac-firewall
 Version: 1.0
 Release: 11
+Summary: Iptables configuration for RAF aircraft server
+
 License: GPL
-Group: System Environment/Daemons
-Url: http://www.eol.ucar.edu/
+Source: %{name}-%{version}.tar.gz
 Packager: Gordon Maclean <maclean@ucar.edu>
-# BuildRoot is only needed by older rpm versions
-BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
+
 # initscripts gives /etc/sysctl.conf, procps gives /sbin/sysctl
 Requires: iptables initscripts procps
-Source: %{name}-%{version}.tar.gz
+
 
 %description
 Iptables configuration for RAF aircraft server.

@@ -1,12 +1,10 @@
-Summary: 'ads' user files.
 Name: raf-ads-user
 Version: 1
 Release: 22
-Group: User/Environment
-Source: %{name}-%{version}.tar.gz
+Summary: 'ads' user files.
+
 License: none
-# BuildRoot is only needed by older rpm versions
-BuildRoot: %{_tmppath}/%{name}
+Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 
 Requires: xchat

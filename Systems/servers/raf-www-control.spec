@@ -1,15 +1,14 @@
-Summary: Control Page for AC services 
 Name: raf-www-control 
 Version: 1 
 Release: 4
-Group: Applications/Engineering
-Source: %{name}-%{version}.tar.gz
+Summary: Control Page for AC services 
+
 License: none
+Source: %{name}-%{version}.tar.gz
 Distribution: RHEL 7.3 Linux
-Requires: php php-xmlrpc php-pecl-json raf-jquery
-# BuildRoot is only needed by older rpm versions
-BuildRoot: %{_tmppath}/%{name}-root
 BuildArch: noarch
+
+Requires: php php-xmlrpc php-pecl-json raf-jquery
 
 %description
 Control and status pages for ACserver

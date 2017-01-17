@@ -1,16 +1,14 @@
-Summary: Setup acserver for AVAPS.
 Name: raf-ac-avaps
 Version: 1
 Release: 1
+Summary: Setup acserver for AVAPS.
+
 License: GPL
-Group: System Environment/Daemons
-Url: http://www.eol.ucar.edu/
 Packager: Chris Webster <cjw@ucar.edu>
-BuildRoot: %{_tmppath}/%{name}-root
 Vendor: UCAR
 BuildArch: noarch
+
 Requires: rsync crontabs python-inotify
-#Source: %{name}-%{version}.tar.gz
 
 %description
 Setup for AVAPS dropsonde data collection:

@@ -1,17 +1,15 @@
-Summary: Additions to syslog config for logging from NIDAS processes.
 Name: raf-ads3-syslog
 Version: 1.0
 Release: 7
+Summary: Additions to syslog config for logging from NIDAS processes.
+
 License: GPL
-Group: System Environment/Daemons
-Url: http://www.eol.ucar.edu/
+Source: %{name}-%{version}.tar.gz
 Packager: Gordon Maclean <maclean@ucar.edu>
-# BuildRoot is only needed by older rpm versions
-BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
+
 Requires: syslog
-Source: %{name}-%{version}.tar.gz
 
 %description
 Additions to syslog config for logging from NIDAS processes.

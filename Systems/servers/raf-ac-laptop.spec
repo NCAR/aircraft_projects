@@ -1,9 +1,10 @@
-Summary: Package far RAF aircraft display laptops
 Name: raf-ac-laptop
 Version: 1
 Release: 1
+Summary: Package far RAF aircraft display laptops
+
 License: GPL
-Group: Systems
+BuildArch: noarch
 
 Requires: raf-ac-chrony
 Requires: raf-ac-selinux
@@ -12,8 +13,6 @@ Requires: firefox
 Requires: xchat
 Requires: tigervnc
 
-BuildArch: noarch
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
 
 %description
 This package is a meta-package.  Its purpose is to list packages

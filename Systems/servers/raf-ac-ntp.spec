@@ -1,17 +1,14 @@
-Summary: Configuration for NTP on RAF aircraft server systems
 Name: raf-ac-ntp
 Version: 1.0
 Release: 3
+Summary: Configuration for NTP on RAF aircraft server systems
+
 License: GPL
-Group: System Environment/Daemons
-Url: http://www.eol.ucar.edu/
 Packager: Gordon Maclean <maclean@ucar.edu>
-# BuildRoot is only needed by older rpm versions
-BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
+
 Requires: ntp
-# Source: %{name}-%{version}.tar.gz
 
 %description
 Configuration for NTP on RAF aircraft server systems

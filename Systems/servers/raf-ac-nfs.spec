@@ -1,14 +1,13 @@
-Summary: Setup default NFS exports
 Name: raf-ac-nfs
 Version: 1
 Release: 2
+Summary: Setup default NFS exports
+
 License: GPL
-Group: System Environment/Daemons
-Url: http://www.eol.ucar.edu/
 Packager: Chris Webster <cjw@ucar.edu>
-BuildRoot: %{_tmppath}/%{name}-root
 Vendor: UCAR
 BuildArch: noarch
+
 Requires: nfs-utils
 
 %description

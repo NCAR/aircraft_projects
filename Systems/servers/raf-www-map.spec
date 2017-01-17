@@ -1,15 +1,14 @@
-Summary: OpenStreetMaps slippy map with OSM postGIS database and mapnik, renderd, mod_tile for rendering on demand
 Name: raf-www-map
 Version: 1 
 Release: 3
-Group: Applications/Engineering
-Source: %{name}-%{version}.tar.gz
+Summary: OpenStreetMaps slippy map with OSM postGIS database and mapnik, renderd, mod_tile for rendering on demand
+
 License: none
+Source: %{name}-%{version}.tar.gz
 Distribution: RHEL 7.3 Linux
-Requires: openlayers raf-jquery httpd php php-pgsql php-pecl-json perl perl-DBD-Pg
-# BuildRoot is only needed by older rpm versions
-BuildRoot: %{_tmppath}/%{name}-root
 BuildArch: noarch
+
+Requires: openlayers raf-jquery httpd php php-pgsql php-pecl-json perl perl-DBD-Pg
 
 %description
 OpenStreetMaps tile-based javascript web-viewer.

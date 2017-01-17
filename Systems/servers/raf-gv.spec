@@ -1,9 +1,9 @@
-Summary: Metapackage for all server and satcom packages needed on GV
 Name: raf-gv
 Version: 1.0
 Release: 14
+Summary: Metapackage for all server and satcom packages needed on GV
+
 License: GPL
-Group: System Environment
 
 Requires: raf-devel
 Requires: raf-ads3-syslog

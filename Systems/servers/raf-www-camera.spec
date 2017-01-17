@@ -1,15 +1,15 @@
-Summary: Web-based live camera image viewer (for use with capture program)
 Name: raf-www-camera
 Version: 1
 Release: 3
-Group: Applications/Web
-Source: %{name}-%{version}.tar.gz
+Summary: Web-based live camera image viewer (for use with capture program)
+
 License: none
+Source: %{name}-%{version}.tar.gz
 Distribution: RHEL 7.3 Linux
-Requires: httpd php php-pgsql php-pecl-json raf-jquery python-inotify
-# BuildRoot is only needed by older rpm versions
-BuildRoot: %{_tmppath}/%{name}-root
 BuildArch: noarch
+
+Requires: httpd php php-pgsql php-pecl-json raf-jquery python-inotify
+
 
 %description
 	This is the front-end viewer package that works with the ieee1394 capture program, and capture-camserver backend. This package will install files necissary for the website into /var/www/html/camera and should be accessable at http://localhost/camera.

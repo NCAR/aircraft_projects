@@ -1,16 +1,13 @@
-Summary: DHCP configuration for server on RAF aircraft
 Name: raf-ads3-dhcp
 Version: 1.0
 Release: 32
+Summary: DHCP configuration for server on RAF aircraft
+
 License: GPL
-Group: System Environment/Daemons
-Url: http://www.eol.ucar.edu/
+Source: %{name}-%{version}.tar.gz
 Packager: Gordon Maclean <maclean@ucar.edu>
-# BuildRoot is only needed by older rpm versions
-BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Vendor: UCAR
 BuildArch: noarch
-Source: %{name}-%{version}.tar.gz
 
 %description
 DHCP configuration for RAF aircraft server
