@@ -15,17 +15,23 @@ Requires: raf-ac-chrony
 Requires: raf-ac-nagios
 Requires: raf-lab-dhcp
 Requires: raf-lab-named
-Requires: ael-local-dpkgs
 Requires: raf-ads3-sudoers
-Requires: nidas-buildeol
-Requires: nidas-ael
-Requires: nidas-daq
-Requires: nidas-modules
 Requires: raf-www-control
 Requires: raf-postgresql
 Requires: GMT
 Requires: postgresql-server
 Requires: kde-baseapps
+Requires: nidas-min
+Requires: nidas-libs
+Requires: nidas-modules
+Requires: nidas-autocal
+Requires: nidas-configedit
+Requires: nidas-daq
+Requires: nidas-devel
+Requires: nidas-build
+Requires: nidas-buildeol
+Requires: nidas-ael
+Requires: ael-local-dpkgs
 
 BuildArch: noarch
 

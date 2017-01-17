@@ -20,11 +20,6 @@ Requires: raf-c130-ddclient
 Requires: raf-satcom
 Requires: raf-satcom-bgan
 Requires: raf-ads3-sudoers
-Requires: nidas-buildeol
-Requires: nidas-ael
-Requires: nidas-daq
-Requires: nidas-modules
-Requires: ael-local-dpkgs
 Requires: raf-ac-nfs
 Requires: raf-ac-avaps
 Requires: raf-www-control
@@ -35,6 +30,17 @@ Requires: ruby
 Requires: squid
 Requires: libdc1394-devel
 Requires: kde-baseapps
+Requires: nidas-min
+Requires: nidas-libs
+Requires: nidas-modules
+Requires: nidas-autocal
+Requires: nidas-configedit
+Requires: nidas-daq
+Requires: nidas-devel
+Requires: nidas-build
+Requires: nidas-buildeol
+Requires: nidas-ael
+Requires: ael-local-dpkgs
 
 BuildArch: noarch
 
