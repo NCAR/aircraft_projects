@@ -5,6 +5,7 @@ Release: 14
 License: GPL
 Group: System Environment
 
+Requires: raf-devel
 Requires: raf-ads3-syslog
 Requires: raf-ads3-sysctl
 Requires: raf-ads-user
@@ -22,32 +23,37 @@ Requires: raf-ads3-sudoers
 Requires: nidas-buildeol
 Requires: nidas-ael
 Requires: nidas-daq
+Requires: nidas-modules
 Requires: ael-local-dpkgs
-Requires: raf-ac-avaps
 Requires: raf-ac-nfs
-Requires: capture-camserver
+Requires: raf-ac-avaps
+Requires: raf-www-control
+Requires: raf-www-camera
+Requires: raf-postgresql
 Requires: GMT
 Requires: ruby
-Requires: chrony
 Requires: squid
-Requires: nagios
-Requires: nagios-plugins
-Requires: postgresql
-Requires: postgresql-devel
-Requires: postgresql-server
-Requires: qt-postgresql
-Requires: uucp
-Requires: minicom
-Requires: exiv2-devel
 Requires: libdc1394-devel
 Requires: kde-baseapps
-Requires: openmotif-devel
-Requires: flex-devel
 
 BuildArch: noarch
 
 %description
 Metapackage for all server and satcom packages needed on C130.
+
+%pre
+dir=/home/local
+if [ ! -d $dir ]; then
+  mkdir -p $dir/bin $dir/include $dir/lib
+  chown -R ads:ads $dir
+  chmod g+w $dir/bin $dir/include $dir/lib
+  ln -s $dir /opt/local
+fi
+
+dir=/home/data
+if [ ! -d $dir ]; then
+  mkdir -p $dir
+fi
 
 %files 
 

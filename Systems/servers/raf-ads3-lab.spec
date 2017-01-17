@@ -1,28 +1,30 @@
 Summary: Metapackage for all server and satcom packages needed on lab systems.
 Name: raf-ads3-lab
 Version: 1.0
-Release: 8
+Release: 9
 License: GPL
 Group: System Environment
 
 Requires: eol-devel
+Requires: raf-devel
 Requires: raf-ads3-syslog
 Requires: raf-ads-user
-Requires: raf-lab-dhcp
-Requires: raf-lab-named
-Requires: raf-ac-chrony
 Requires: raf-ac-gdm
 Requires: raf-ac-selinux
+Requires: raf-ac-chrony
+Requires: raf-ac-nagios
+Requires: raf-lab-dhcp
+Requires: raf-lab-named
 Requires: ael-local-dpkgs
 Requires: raf-ads3-sudoers
-Requires: minicom
-Requires: chrony
-Requires: openmotif-devel
-Requires: flex-devel
-Requires: postgresql
-Requires: postgresql-devel
+Requires: nidas-buildeol
+Requires: nidas-ael
+Requires: nidas-daq
+Requires: nidas-modules
+Requires: raf-www-control
+Requires: raf-postgresql
+Requires: GMT
 Requires: postgresql-server
-Requires: qt-postgresql
 Requires: kde-baseapps
 
 BuildArch: noarch
@@ -48,6 +50,9 @@ fi
 %files 
 
 %changelog
+* Mon Jan 16 2017 Chris Webster <cjw@ucar.edu> 1.0-9
+- Updates for RHEL7.
+- Addition of raf-devel.
 * Mon Apr 11 2016 Chris Webster <cjw@ucar.edu> 1.0-8
 - Change raf-ac-ntp to raf-ac-chrony for RHEL7 migration.
 - add raf-ac-gdm : auto-login.
