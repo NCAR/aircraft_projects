@@ -1,0 +1,11 @@
+#!/bin/csh
+
+# Start the Remote Instrument Control aircraft switch
+# It will read its configuration from ~/.ric/Switch.ini
+ps ax | grep ric_switch | grep -qv grep
+if ($status) then
+    /home/ads/ric/src/switch/ric_switch -v  >& /tmp/ric_switch.log &
+    # (Temporarily) Start a second embedded proxy switch, to provide heartbeats to the SSL switch
+    # This needs to be removed when we go live.
+    # /home/ads/ric/src/switch/ric_switch -c ~/.ric/ACtestSwitch.ini >& /tmp/ric_switch2.log &
+endif
