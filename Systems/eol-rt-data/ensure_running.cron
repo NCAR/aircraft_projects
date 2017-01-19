@@ -10,12 +10,13 @@ endif
 #  /home/local/Systems/eol-rt-data/killIITdaemon.py
 #endif
 
+#### RIC has been moved to it's own exposed host: eol-ric.ucar.edu
 # Start the Remote Instrument Control aircraft switch
 # It will read its configuration from ~/.ric/Switch.ini
-ps ax | grep ric_switch | grep -qv grep
-if ($status) then
-    /home/local/RIC/switch/ric_switch >& /tmp/ric_switch.log &
-    # (Temporarily) Start a second embedded proxy switch, to provide heartbeats to the SSL switch
-    # This needs to be removed when we go live.
-    /home/local/RIC/switch/ric_switch -c ~/.ric/ACtestSwitch.ini >& /tmp/ric_switch2.log &
-endif
+#ps ax | grep ric_switch | grep -qv grep
+#if ($status) then
+#    /home/local/ric/switch/ric_switch -v >& /tmp/ric_switch.log &
+    # Start a second embedded proxy switch, to provide heartbeats to the SSL switch
+    # Comment out when we are operational.
+    # /home/local/ric/switch/ric_switch -c ~/.ric/ACtestSwitch.ini >& /tmp/ric_switch2.log &
+#endif
