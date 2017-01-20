@@ -9,7 +9,7 @@ Packager: Chris Webster <cjw@ucar.edu>
 Vendor: UCAR
 BuildArch: noarch
 
-Requires: nagios nagios-plugins python
+Requires: httpd nagios nagios-plugins python
 
 %description
 Configuration and additional plugins for RAF aircraft servers.
@@ -23,14 +23,16 @@ Configuration and additional plugins for RAF aircraft servers.
 
 %install
 rm -rf %{buildroot}
-install -d %{buildroot}%{_sysconfdir}/init.d
+#install -d %{buildroot}%{_sysconfdir}/init.d
 install -d %{buildroot}%{_sysconfdir}/nagios
 install -d %{buildroot}/usr/lib64/nagios/plugins
+install -d %{buildroot}%{_sysconfdir}/httpd/conf.d
 
-cp etc/init.d/raf_nagios_init   %{buildroot}%{_sysconfdir}/init.d
+#cp etc/init.d/raf_nagios_init   %{buildroot}%{_sysconfdir}/init.d
 cp etc/nagios/raf_commands.cfg  %{buildroot}%{_sysconfdir}/nagios
 cp etc/nagios/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios
 cp usr/lib/nagios/plugins/raf_* %{buildroot}/usr/lib64/nagios/plugins
+cp etc/httpd/conf.d/nagios.conf             %{buildroot}%{_sysconfdir}/httpd/conf.d             
 
 %triggerin -- nagios
 # allow all access to nagios.
@@ -56,19 +58,19 @@ if ! grep -q "use_syslog=1" $cf; then
   sed -i 's/use_syslog=1/use_syslog=0/' $cf
 fi
 
-/sbin/chkconfig --level 345 nagios on
-/sbin/chkconfig --add raf_nagios_init
-/etc/init.d/nagios restart
+/sbin/systemctl enable nagios #--level 345 nagios on
+/sbin/systemctl restart nagios# --add raf_nagios_init
 
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%{_sysconfdir}/init.d/raf_nagios_init
+#%{_sysconfdir}/init.d/raf_nagios_init
 %{_sysconfdir}/nagios/raf_commands.cfg
 %{_sysconfdir}/nagios/raf_localhost.cfg
 /usr/lib64/nagios/plugins/raf_*
+%{_sysconfdir}/httpd/conf.d/nagios.conf
 
 %changelog
 * Thu Nov 13 2014 Chris Webster <cjw@ucar.edu> - 1.0-13
