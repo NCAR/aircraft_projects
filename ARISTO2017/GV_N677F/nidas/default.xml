@@ -681,6 +681,22 @@
         <variable longname="CU Total Water Uncorrected VMR" name="VMR" units="ppmv"/>
       </sample>
     </sensor>
+    <sensor ID="OP1" class="UDPSocketSensor" devicename="usock::31222" suffix="_OP1">
+      <sample id="1" rate="1" scanfFormat="OP1,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable longname="OP1 time stamp" name="TimeStamp" units="seconds"/>
+        <variable longname="OP1 channel A signal" name="CHANA" units="nV"/>
+        <variable longname="OP1 channel B signal" name="CHANB" units="nV"/>
+        <variable longname="OP1 AD bias channel A" name="BIASA" units="int"/>
+        <variable longname="OP1 AD bias channel B" name="BIASB" units="int"/>
+        <variable longname="OP1 air temperature channel A" name="TOUTA" units="deg_C"/>
+        <variable longname="OP1 air temperature channel B" name="TOUTB" units="deg_C"/>
+        <variable longname="OP1 cell pressure channel A" name="PRESA" units="hPa"/>
+        <variable longname="OP1 cell pressure channel B" name="PRESB" units="hPa"/>
+        <variable longname="OP1 stream selection valve position" name="SELPOS" units="int"/>
+        <variable longname="OP1 Sample Air Flow" name="FLOW" units="slpm"/>
+        <variable longname="OP1 flow setpoint" name="FLOWSP" units="V"/>
+      </sample>
+    </sensor>
     <sensor ID="TOGA" class="UDPSocketSensor" devicename="usock::30120" suffix="_TOGA">
       <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="TOGA HCN" name="HCN" units="pptv"/>
@@ -1718,6 +1734,35 @@
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
+    <sensor ID="MTHP" class="UDPSocketSensor" devicename="usock::30101" suffix="_MTHP">
+        <sample id="1" rate="1" scanfFormat="MTHP,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+
+<!--
+            <variable longname="MTP Scan Year" name="SYEAR" units="count"/>
+            <variable longname="MTP Scan Month" name="SMONTH" units="count"/>
+            <variable longname="MTP Scan Day" name="SDAY" units="count"/>
+            <variable longname="MTP Scan Hour" name="SHOUR" units="count"/>
+            <variable longname="MTP Scan Minute" name="SMIN" units="count"/>
+            <variable longname="MTP Scan Second" name="SSEC" units="count"/>
+-->
+            <variable longname="MTHP Status Code" name="STATUS" units="bool"/>
+            <variable longname="MTHP Ambient Target" name="AMBIENT" units="deg_C"/>
+            <variable longname="MTHP Hot Target" name="HOT" units="deg_C"/>
+            <variable longname="MTHP 60Ghz LO" name="LO60" units="deg_C"/>
+            <variable longname="MTHP 183GHz LO" name="LO183" units="deg_C"/>
+            <variable longname="MTHP Channel 0" name="CHAN0" units="count"/>
+            <variable longname="MTHP Channel 1" name="CHAN1" units="count"/>
+            <variable longname="MTHP Channel 2" name="CHAN2" units="count"/>
+            <variable longname="MTHP Channel 3" name="CHAN3" units="count"/>
+            <variable longname="MTHP Channel 4" name="CHAN4" units="count"/>
+            <variable longname="MTHP Channel 5" name="CHAN5" units="count"/>
+            <variable longname="MTHP Channel 6" name="CHAN6" units="count"/>
+            <variable longname="MTHP Channel 7" name="CHAN7" units="count"/>
+            <variable longname="MTHP Channel 8" name="CHAN8" units="count"/>
+            <variable longname="MTHP Channel 9" name="CHAN9" units="count"/>
+       </sample>
+    </sensor>
+
 <!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
     <sensor ID="PARCELS" class="UDPSocketSensor" devicename="usock::30100">
 
@@ -1726,6 +1771,9 @@
           <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
         </sample>
       -->
+    </sensor>
+
+    <sensor ID="GNI" class="UDPSocketSensor" devicename="usock::32100">
     </sensor>
 
 <!-- Specialized UDP Packets indicating that Mission Controller is asking for instruments to behave in
@@ -1778,14 +1826,23 @@
         </processor>
       </service>
     </server>
+
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
-      <serialSensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
-      <serialSensor IDREF="Novatel_GPS" devicename="usock::30116" id="150" suffix="_UDP"/>
+      <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
+      <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150" suffix="_UDP"/>
+      <sensor IDREF="MTHP" devicename="usock::30101" id="120"/>
+      <sensor IDREF="CFDC" devicename="usock::30105" id="200" suffix="_CFDC"/>
+      <sensor IDREF="CUTWC" devicename="usock::30129" id="300" suffix="_CLH"/>
+      <sensor IDREF="OP1" devicename="usock::31222" id="400"/>
+      <sensor IDREF="GNI" devicename="usock::32102" id="500" suffix="_GNI"/>
+      <sensor IDREF="LAMS3" devicename="usock::41002" id="600" suffix="_LAMS"/>
+
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
     </dsm>
+
     <dsm derivedData="sock::7071" id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
@@ -1870,6 +1927,7 @@
 	</sample>
       </serialSensor>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
+      <serialSensor IDREF="VCSEL" devicename="/dev/ttyS9" id="200" suffix="_VXL2"/>
       <serialSensor IDREF="VCSEL" devicename="/dev/ttyS10" id="330" suffix="_VXL"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
@@ -1884,12 +1942,28 @@
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="Facilitate delivery of A2D Temperature data" name="DUMMY_MPDB0" units="V">
+          <variable longname="Cavity Relative Humidity" name="CAVRH_GNI" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="">
-              <calfile file="DUMMY_MPDB0.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            <poly units="%">
+              <calfile file="CAVRH_GNI.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/GNI:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/GNI"/>
+            </poly>
+          </variable>
+          <variable longname="Cavity Temperature" name="CAVT_GNI" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="deg_C">
+              <calfile file="CAVT_GNI.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/GNI:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/GNI"/>
+            </poly>
+          </variable>
+          <variable longname="Dewpoint Cavity Pressure" name="CAVP_GNI" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="hPa">
+              <calfile file="CAVP_GNI.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/GNI:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/GNI"/>
             </poly>
           </variable>
         </sample>
@@ -1929,6 +2003,22 @@
           <variable longname="Temperature of BDIFR Probe" name="BDIFRTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS10" id="150">
+        <sample id="1">
+          <variable longname="Raw Dynamic Pressure, Windscreen" name="QCBS" units="hPa"/>
+        </sample>
+        <sample id="2">
+          <variable longname="Temperature of QCBS Probe" name="QCBSTEMP" units="deg_C"/>
+        </sample>
+      </serialSensor>
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS11" id="160">
+        <sample id="1">
+          <variable longname="Raw Static Pressure, Windscreen" name="PSBS" units="hPa"/>
+        </sample>
+        <sample id="2">
+          <variable longname="Temperature of PSBS Probe" name="PSBSTEMP" units="deg_C"/>
+        </sample>
+      </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
         <calfile file="A2D1706.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
@@ -1939,14 +2029,6 @@
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Recovery Air Temperature, Unheated" name="RTF1" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="RTF1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
           <variable longname="Recovery Air Temperature, Deiced Right, HARCO" name="RTH2" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
@@ -2357,6 +2439,103 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="">
               <calfile file="VOLTS.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
+
+    <dsm derivedData="sock::7071" id="25" location="Left Wing Pod" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
+      <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS5" id="350" suffix="_LAMS">
+          <parameter name="INSTRUMENT" type="string" value="LAMS"/>
+          <parameter name="LEVER_ARM_X" type="int" value="564"/>
+          <parameter name="LEVER_ARM_Y" type="int" value="730"/>
+          <parameter name="LEVER_ARM_Z" type="int" value="-284"/>
+      </serialSensor>
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="700">
+        <parameter name="SerialNumber" type="string" value="W477513"/>
+        <parameter name="rate" type="int" value="100"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_LWI" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="W">
+              <calfile file="PLWC.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+    </dsm>
+
+    <dsm derivedData="sock::7071" id="30" location="RWI" name="dsmRWI" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWI"/>
+      <serialSensor IDREF="CDP" devicename="/dev/ttyS11" id="400" suffix="_RWII">
+        <parameter name="SerialNumber" type="string" value="CDP058"/>
+      </serialSensor>
+      <serialSensor IDREF="CDP" devicename="/dev/ttyS12" id="500" suffix="_RWIO">
+        <parameter name="SerialNumber" type="string" value="CDP016"/>
+      </serialSensor>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+    </dsm>
+
+    <dsm derivedData="sock::7071" id="83" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="500" suffix="_RWO">
+        <parameter name="SerialNumber" type="string" value="F2DC002"/>
+        <parameter name="RESOLUTION" type="int" value="10"/>
+      </sensor>
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="700">
+        <parameter name="SerialNumber" type="string" value="A149505"/>
+        <parameter name="rate" type="int" value="100"/>
+        <sample id="1" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="10"/>
+          <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="RICE.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_RWO" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="F2DIO1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_RWO" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="F2DIO32.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_RWO" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="F2DIO64.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
         </sample>
