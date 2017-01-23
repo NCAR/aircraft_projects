@@ -1020,6 +1020,39 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
+    <serialSensor ID="VCSEL2" baud="38400" class="raf.VCSEL2_Serial" databits="8" parity="none" stopbits="1">
+
+<!-- 3463862268.562111 0.000000 1994.000000 0.917325 1512.117696 316.004962 5.654814 -0.000032 3.271435 3.791543 0.204804 -0.004286 8.489168 0.890000 14.774336 -15.226784 11.835236 4.981973 \r\n -->
+      <sample id="1" rate="1" scanfFormat="VXL2,%*fT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+
+<!--        <variable longname="VXL2 Time" name="TIME" units="seconds"/> -->
+        <variable longname="VXL2 Mode" name="MODE" units="none"/>
+        <variable longname="VXL2 Ref Peak Location" name="RPL" units="none"/>
+        <variable longname="VXL2 Ref Peak Amplitude" name="RPA" units="none"/>
+        <variable longname="VXL2 PT Height" name="PTHGT" units="none"/>
+        <variable longname="VXL2 Trough Width" name="TRWID" units="none"/>
+        <variable longname="VXL2 Trough Difference" name="TRDIFF" units="none"/>
+        <variable longname="VXL2 Ambient DC Zero" name="AMZERO" units="V"/>
+        <variable longname="VXL2 Ambient Laser Power" name="AMPOW" units="V"/>
+        <variable longname="VXL2 Pressure" name="PRESS" units="V"/>
+        <variable longname="VXL2 Air Temperature" name="AT" units="V"/>
+        <variable longname="VXL2 Wall Temperature" name="WT" units="V"/>
+        <variable longname="VXL2 Laser Temperature" name="LASERT" units="V"/>
+        <variable longname="VXL2 Laser Setpoint" name="LASERSET" units="V"/>
+        <variable longname="VXL2 15PV" name="HK15PV" units="V"/>
+        <variable longname="VXL2 15MV" name="HK15MV" units="V"/>
+        <variable longname="VXL2 12V" name="HK12V" units="V"/>
+        <variable longname="VXL2 5V" name="HK5V" units="V"/>
+        <variable longname="VXL2 Direct Abs Amplitude" name="DAAMP" units="none"/>
+        <variable longname="VXL2 Direct Abs Location" name="DALOC" units="none"/>
+        <variable longname="VXL2 Size of Queue 1" name="Q1" units="none"/>
+        <variable longname="VXL2 Size of Queue 2" name="Q2" units="none"/>
+        <variable longname="VXL2 Size of Queue 3" name="Q3" units="none"/>
+        <variable longname="VXL2 Dew Point" name="DP" units="none"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
+
 <!--  
       The AeroLaser instrument can provide both CO Mixing Ratio and Raw CO values
       Unfortunately, it does not tag these values and does not guarentee delivery of the values in the same
@@ -1927,7 +1960,7 @@
 	</sample>
       </serialSensor>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
-      <serialSensor IDREF="VCSEL" devicename="/dev/ttyS9" id="200" suffix="_VXL2"/>
+      <serialSensor IDREF="VCSEL2" devicename="/dev/ttyS9" id="200" suffix="_VXL2"/>
       <serialSensor IDREF="VCSEL" devicename="/dev/ttyS10" id="330" suffix="_VXL"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
@@ -2011,12 +2044,9 @@
           <variable longname="Temperature of QCBS Probe" name="QCBSTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
-      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS11" id="160">
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS11" id="160">
         <sample id="1">
-          <variable longname="Raw Static Pressure, Windscreen" name="PSBS" units="hPa"/>
-        </sample>
-        <sample id="2">
-          <variable longname="Temperature of PSBS Probe" name="PSBSTEMP" units="deg_C"/>
+          <variable longname="Raw Static Pressure, Fuselage" name="PSBS" units="hPa"/>
         </sample>
       </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
