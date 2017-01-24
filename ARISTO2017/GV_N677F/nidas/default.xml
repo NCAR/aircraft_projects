@@ -947,6 +947,18 @@
         <message separator="\x01\x03\x10" length="38" position="beg"/>
     </serialSensor>
 
+<!-- Faulhaber MCBL3006SEARS motion controller. -->
+    <serialSensor ID="MCBL3006SEARS" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" scanfFormat="%f">
+        <variable longname="Motor Controller Position" name="SCANP" units="count"/>
+        <prompt rate="5" string="POS\r"/>
+      </sample>
+      <sample id="2" scanfFormat="%f">
+        <variable longname="Motor Controller Status" name="SCANS" units="none"/>
+        <prompt rate="2" string="OST\r"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
 
 <!-- CVI TDL original - on ICE-T a second instrument TDL_CVI2 was introduced -->
     <serialSensor ID="TDL_CVI1" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
@@ -1587,6 +1599,7 @@
         </variable>
       </sample>
     </sensor>
+
     <serialSensor ID="HoneywellPPT" baud="19200" class="raf.PPT_Serial" databits="8" parity="none" stopbits="1">
       <sample id="1" scanfFormat="?%*2dCP=%f">
         <variable longname="Raw Dynamic Pressure" name="PA" units="hPa"/>
@@ -1598,9 +1611,9 @@
       </sample>
       <message length="0" position="end" separator="\r"/>
     </serialSensor>
+
     <serialSensor ID="QCLS" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="a%*f,%f,%f,%f,,,,,">
-	
 
 <!-- <variable name="Igortime" units = "seconds since 1/1/1904 UTC"/> -->
         <variable longname="Methane" name="CH4" units="ppb"/>
@@ -1608,7 +1621,6 @@
         <variable longname="Carbon Monoxide" name="CO" units="ppb"/>
       </sample>
       <sample id="2" rate="1" scanfFormat="t=%*f m=%f M=%*f">
-	
 
 <!-- <variable name="Igortime" units = "seconds since 1/1/1904 UTC"/> -->
         <variable longname="Carbon Dioxide" name="CO2" units="ppb"/>
@@ -2325,6 +2337,10 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+
+      <serialSensor IDREF="WatlowCLS208" devicename="/dev/ttyS5" id="600" suffix="_GPIT"/>
+      <serialSensor IDREF="MCBL3006SEARS" devicename="/dev/ttyS6" id="700" suffix="_GPIT"/>
+
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
         <calfile file="A2D1707.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
