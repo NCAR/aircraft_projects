@@ -58,8 +58,13 @@ if ! grep -q "use_syslog=1" $cf; then
   sed -i 's/use_syslog=1/use_syslog=0/' $cf
 fi
 
-/sbin/systemctl enable nagios #--level 345 nagios on
-/sbin/systemctl restart nagios# --add raf_nagios_init
+%if 0%{?rhel} >= 7
+  /bin/systemctl enable nagios
+  /bin/systemctl restart nagios 
+  %else
+   /sbin/chkconfig --levels 345 nagios on
+   /sbin/chkconfig --add raf_nagios_init
+ %endif
 
 %clean
 rm -rf %{buildroot}
