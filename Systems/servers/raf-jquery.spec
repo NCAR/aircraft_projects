@@ -7,8 +7,10 @@ License: GPL
 Source: %{name}-%{version}.tar.gz
 Distribution: RHEL 7.3 Linux
 BuildArch: noarch
+Requires: httpd
 
 %description
+
 This package will install the jquery library
 
 To get custom zip file:  Goto jquery-ui.com/download and build the custom .zip file.
@@ -47,6 +49,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/httpd/conf.d/jQuery.conf
 
 %changelog
+* Tue Jan 24 2017 <cdewerd@ucar.edu>
+- Added require httpd, source as a tar
 * Sat Dec  3 2016 <cjw@ucar.edu>
 - Rename from jquery to raf-jquery...notloading under CentOS7.
 * Tue May 17 2011 <cjw@ucar.edu>
