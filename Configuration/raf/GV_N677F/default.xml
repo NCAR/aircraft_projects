@@ -981,18 +981,20 @@
       </sample>
       <message length="0" position="end" separator="#\r\n"/>
     </serialSensor>
-    <serialSensor ID="CFDC" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-      <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
-        <variable longname="CFDC Saturation Water" name="CT1" units="%"/>
-        <variable longname="CFDC Aerosol Location Temperature" name="CT2" units="deg_C"/>
-        <variable longname="CFDC Concentration" name="CT3" units="#/cm3"/>
-        <variable longname="CFDC MCA Live Time" name="CT5" units="seconds"/>
-        <variable longname="CFDC Pressure" name="CT6" units="hPa"/>
-        <variable longname="CFDC Filter (ON=1)" name="CT7" units="bool"/>
-        <variable longname="CFDC MSP (ON=1)" name="CT4" units="bool"/>
-      </sample>
-      <message length="0" position="end" separator="\r\n"/>
-    </serialSensor>
+
+    <sensor ID="CFDC" class="UDPSocketSensor" devicename="usock::30105" suffix="_CFDC">
+        <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
+            <variable longname="CFDC IN Count" name="INC" units="counts/sec"/>
+            <variable longname="CFDC Total Count" name="CNTS" units="counts/sec"/>
+            <variable longname="CFDC Saturation Water" name="SAT" units="%"/>
+            <variable longname="CFDC Aerosol Location Temperature" name="CT2" units="deg_C"/>
+            <variable longname="CFDC Pressure" name="P" units="hPa"/>
+            <variable longname="CFDC Total Flow" name="TFLOW" units="L/min"/>
+            <variable longname="CFDC Sheath Flow" name="SFLOW" units="L/min"/>
+            <variable longname="CFDC Filter (ON=1)" name="FILTER" units="bool"/>
+        </sample>
+    </sensor>
+
     <serialSensor ID="CCN" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="%f, %f, %f, %f, %f, %f, %f, %f, %f">
         <variable longname="CCN Sample Temperature" name="AT" units="deg_C"/>
@@ -1456,6 +1458,30 @@
         <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
     </sensor>
+
+    <serialSensor ID="CUUHSAS" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <parameter name="SerialNumber" type="string" value="UHSAS002"/>
+
+      <!-- Time Format is mm/dd/yyyy hh:mm:ss.msec pm -->
+      <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
+        <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
+        <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
+        <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
+        <variable longname="UHSAS Sample Flow" name="USMPFLW" units="sccm"/>
+        <variable longname="UHSAS Reference Intensity" name="UREF" units="V"/>
+        <variable longname="UHSAS Laser Temperature" name="ULSRTEMP" units="V"/>
+        <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="sccm"/>
+        <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
+        <variable longname="UHSAS Temperature in Canister" name="UTMP" units="K"/>
+        <variable longname="UHSAS Purge Flow" name="UPRGFLW" units="sccm"/>
+        <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="kPa"/>
+        <variable longname="UHSAS Auxilliary" name="UAUX" units="V"/>
+        <variable longname="UHSAS Flow" name="UFLW" units="sccm"/>
+        <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
+
     <serialSensor ID="SP2" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="%f %f %f">
         <variable longname="SP2 Concentration Incand Particles" name="CIP" units="#/cm3"/>
