@@ -1,12 +1,13 @@
 Name: raf-ac-mtp
 Version: 1 
-Release: 1
+Release: 2
 Summary: Spec file for MTP instrument
 
 License: none
-Distribution: RHEL 5.3 Linux
+Distribution: RHEL 7.3 Linux
 BuildArch: noarch
 
+Requires: raf-ads-user
 Requires: vsftpd python-inotify
 
 %description
@@ -34,5 +35,7 @@ rm -rf $RPM_BUILD_ROOT
 /var/www/html/mtp
 
 %changelog
+* Wed Feb 1 2017 <cjw@ucar.edu> 1-2
+- created initial package 
 * Sat Aug 7 2010 <cjw@ucar.edu> 1-1
 - created initial package 

@@ -8,6 +8,7 @@ Source: %{name}-%{version}.tar.gz
 Distribution: RHEL 7.3 Linux
 BuildArch: noarch
 
+Requires: raf-ads-user
 Requires: php php-xmlrpc php-pecl-json raf-jquery
 
 %description

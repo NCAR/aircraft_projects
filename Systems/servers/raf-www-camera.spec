@@ -8,6 +8,7 @@ Source: %{name}-%{version}.tar.gz
 Distribution: RHEL 7.3 Linux
 BuildArch: noarch
 
+Requires: raf-ads-user
 Requires: httpd php php-pgsql php-pecl-json raf-jquery python-inotify
 
 

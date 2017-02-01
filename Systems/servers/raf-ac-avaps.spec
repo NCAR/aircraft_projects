@@ -1,6 +1,6 @@
 Name: raf-ac-avaps
 Version: 1
-Release: 1
+Release: 2
 Summary: Setup acserver for AVAPS.
 
 License: GPL
@@ -8,6 +8,7 @@ Packager: Chris Webster <cjw@ucar.edu>
 Vendor: UCAR
 BuildArch: noarch
 
+Requires: raf-ads-user
 Requires: rsync crontabs python-inotify
 
 %description
@@ -58,5 +59,7 @@ fi
 /var/www/html/skewt
 
 %changelog
+* Wed Feb 1 2017 Chris Webster <cjw@ucar.edu> - 1.0-2
+- Add requires ads-user package...since we do chown.
 * Sat Aug 7 2010 Chris Webster <cjw@ucar.edu> - 1.0-1
 - initial version; AVAPS

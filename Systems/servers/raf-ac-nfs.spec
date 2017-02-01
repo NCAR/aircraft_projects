@@ -8,6 +8,7 @@ Packager: Chris Webster <cjw@ucar.edu>
 Vendor: UCAR
 BuildArch: noarch
 
+Requires: raf-ads-user
 Requires: nfs-utils
 
 %description
