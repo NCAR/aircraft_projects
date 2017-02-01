@@ -9,7 +9,7 @@ Packager: Chris Webster <cjw@ucar.edu>
 Vendor: UCAR
 BuildArch: noarch
 
-Requires: httpd nagios nagios-plugins python
+Requires: nagios nagios-plugins python
 
 %description
 Configuration and additional plugins for RAF aircraft servers.
@@ -26,13 +26,13 @@ rm -rf %{buildroot}
 #install -d %{buildroot}%{_sysconfdir}/init.d
 install -d %{buildroot}%{_sysconfdir}/nagios
 install -d %{buildroot}/usr/lib64/nagios/plugins
-install -d %{buildroot}%{_sysconfdir}/httpd/conf.d
+#install -d %{buildroot}%{_sysconfdir}/httpd/conf.d #file no longer exists
 
 #cp etc/init.d/raf_nagios_init   %{buildroot}%{_sysconfdir}/init.d
 cp etc/nagios/raf_commands.cfg  %{buildroot}%{_sysconfdir}/nagios
 cp etc/nagios/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios
 cp usr/lib/nagios/plugins/raf_* %{buildroot}/usr/lib64/nagios/plugins
-cp etc/httpd/conf.d/nagios.conf             %{buildroot}%{_sysconfdir}/httpd/conf.d             
+#cp etc/httpd/conf.d/nagios.conf             %{buildroot}%{_sysconfdir}/httpd/conf.d             
 
 %triggerin -- nagios
 # allow all access to nagios.
@@ -71,13 +71,15 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-#%{_sysconfdir}/init.d/raf_nagios_init
+#%{_sysconfdir}/init.d/raf_nagios_init #this one still exists
 %{_sysconfdir}/nagios/raf_commands.cfg
 %{_sysconfdir}/nagios/raf_localhost.cfg
 /usr/lib64/nagios/plugins/raf_*
-%{_sysconfdir}/httpd/conf.d/nagios.conf
+#%{_sysconfdir}/httpd/conf.d/nagios.conf
 
 %changelog
+* Wed Feb 1 2017 Catherine Dewerd <cdewerd@ucar.edu> - 1.0.14
+- removed httpd dependancy because httpd/conf.d/nagios.conf no longer exists
 * Thu Nov 13 2014 Chris Webster <cjw@ucar.edu> - 1.0-13
 - In EL7, the plugin directory /usr/lib/nagios moved to /usr/lib64/nagios
 * Thu Nov 13 2014 Chris Webster <cjw@ucar.edu> - 1.0-12
