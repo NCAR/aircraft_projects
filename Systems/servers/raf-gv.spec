@@ -25,7 +25,8 @@ Requires: raf-ac-avaps
 Requires: raf-ac-mtp
 Requires: raf-www-control
 Requires: raf-www-camera
-Requires: raf-postgresql
+# Not finished.
+#Requires: raf-postgresql
 Requires: GMT
 Requires: ruby
 Requires: squid
@@ -50,6 +51,9 @@ BuildArch: noarch
 Metapackage for all server and satcom packages needed on GV.
 
 %pre
+/usr/bin/hostnamectl set-hostname acserver.raf.ucar.edu
+/usr/bin/timedatectl set-timezone UTC
+
 dir=/home/local
 if [ ! -d $dir ]; then
   mkdir -p $dir/bin $dir/include $dir/lib
@@ -61,6 +65,7 @@ fi
 dir=/home/data
 if [ ! -d $dir ]; then
   mkdir -p $dir
+  chown -R ads:ads $dir
 fi
 
 %files 
