@@ -62,3 +62,14 @@ else
   cd ..
 fi
 
+dir=ric
+if [ ! -d $dir ]; then
+  # We need --recursive for aeros to get eol_scons.
+  git clone --recursive https://github.com/ncareol/$dir
+else
+  cd $dir
+  git pull origin master
+  git submodule update --init
+  cd ..
+fi
+
