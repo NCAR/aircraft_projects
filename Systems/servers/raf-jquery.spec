@@ -47,7 +47,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,ads,ads)
 %dir %attr(0775, ads,ads) %_libdir/jQuery
 %_libdir/jQuery/*
-%config /etc/httpd/conf.d/jQuery.conf
+%config %attr(0644,root,root) /etc/httpd/conf.d/jQuery.conf
 
 %changelog
 * Wed Feb  8 2017 <cjw@ucar.edu>
