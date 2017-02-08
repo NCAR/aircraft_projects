@@ -82,6 +82,7 @@ fi
 %attr(0755,ads,ads) /home/ads/Desktop/stop_data_acq.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/stop_mpds.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/stop_iridium.desktop
+%attr(0700,ads,ads) /home/ads/.ssh
 
 %pre
 # Add an ads user and ads and eol groups to system
