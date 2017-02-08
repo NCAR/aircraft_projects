@@ -1,6 +1,6 @@
 Name: raf-jquery 
 Version: 1.5.1 
-Release: 1
+Release: 2
 Summary: jQuery js library
 
 License: GPL 
@@ -37,6 +37,7 @@ conf=$RPM_BUILD_ROOT/etc/httpd/conf.d/jQuery.conf
 echo "Alias /jQuery %_libdir/jQuery" > $conf
 echo "<Directory %_libdir/jQuery>" >> $conf
 echo -e "\tOptions None" >> $conf
+echo -e "\tRequire all granted" >> $conf
 echo "</Directory>" >> $conf
 
 %clean
@@ -49,6 +50,8 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/httpd/conf.d/jQuery.conf
 
 %changelog
+* Wed Feb  8 2017 <cjw@ucar.edu>
+- Apache 2.4 requires a 'Require all granted' for all conf.d files.
 * Tue Jan 24 2017 <cdewerd@ucar.edu>
 - Added require httpd, source as a tar
 * Sat Dec  3 2016 <cjw@ucar.edu>
