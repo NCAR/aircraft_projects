@@ -11,9 +11,10 @@ require(grid)
 require(ggthemes)
 require(ncdf4)
 run.args <- commandArgs (TRUE)
+Directory <- "/scr/raf/Prod_Data/"
 Flight <- "rf02" 		  # XXX change this or use command arguments
 Project = "HIPPO-5"		 # XXX change this or use command arguments
-ProjectDir <- "/scr/raf/Prod_Data/HIPPO"
+ProjectDir <- "HIPPO"
 Wchoice <- "WIF"                #default choice for WIX is WIF
 if (length (run.args) > 0) {Project <- run.args[1]}
 if (length (run.args) > 1) {Flight <- run.args[2]}
@@ -25,8 +26,8 @@ if (!Wchoice %in% c("WIF", "WIC")) {
 }
 CutoffFreq <- 600
 if (length (run.args) > 3) {CutoffFreq <- numeric(run.args[4])}
-fname = sprintf("%s/%s%s.nc", ProjectDir,Project,Flight)
-fnew  = sprintf("%s/%s%sF.nc", ProjectDir,Project,Flight)
+fname = sprintf("%s/%s/%s%s.nc", Directory,ProjectDir,Project,Flight)
+fnew  = sprintf("%s/%s/%s%sF.nc", Directory,ProjectDir,Project,Flight)
 
 ## beware: overwrites without warning!!
 Z <- file.copy (fname, fnew, overwrite=TRUE)  ## BEWARE: overwrites without warning!!

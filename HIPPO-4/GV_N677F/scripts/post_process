@@ -1,0 +1,15 @@
+#!/bin/csh
+
+# Run FilterForWIC first
+nice ./AddWIF HIPPO-4
+
+# Then run terrain Ht
+nice ./AddHtTerrain HIPPO-4 -65 85 -170 -80 no
+# (Yes will download the terrain ht db. It takes forever. Change to no 
+# after first run to speed things up.)
+
+# Then remove 1DC vars
+foreach file (`ls *FZ.nc`)
+  set newfile = echo $file | sed `s/FZ/FZ.no1DC/`
+  ncks -a -v '^.*1DC.*$' -x $file $newfile
+end

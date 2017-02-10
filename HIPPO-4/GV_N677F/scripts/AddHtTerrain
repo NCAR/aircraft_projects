@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# FilterForWIC adds an F to the filename before the .nc. This script differs 
+# from the generic one in the HeightOfTerrain repo in that it accounts for 
+# this. Note that the F must be included as part of the flight number for 
+# HeightOfTerrain.R to run correctly.
+#
+
+Rscript -e "library(knitr); knitr::purl('/h/eol/janine/Rstudio/HeightOfTerrain/HeightOfTerrain.Rnw')"
+
+if [ "$1" == "" ]; then
+   echo "Must include project name on command-line, e.g. AddHtTerrain FRAPPE"
+   exit
+fi
+
+project=$1
+lt_s=$2
+lt_n=$3
+lg_w=$4
+lg_e=$5
+Tdb=$6
+
+echo "Adding Terrain Ht vars to production netCDF files for project $project"
+echo "Using lat/long range $lt_s - $lt_n, $lg_w - $lg_e"
+
+for file in `ls /scr/raf/Prod_Data/${project}/${project}[rtf]f??F.nc`
+do
+    flight=${file:(-8):5}
+    Rscript ./HeightOfTerrain.R $project $flight $lt_s $lt_n $lg_w $lg_e $Tdb
+done
