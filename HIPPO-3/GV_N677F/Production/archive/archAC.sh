@@ -12,9 +12,9 @@ set PROJECT = "HIPPO-3"
 #### ADS
 ##/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads RAF
 #
-### LRT - done 6/14/2010
+### LRT - done 6/14/2010, V3 Dec 2012, V4 Nov 2016
 #/net/work/bin/scripts/mass_store/archAC/archAC.py UNALTERED/LRT /scr/raf/Prod_Data/$PROJECT nc RAF
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT \.nc EOL
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT \.nc EOL/2010 janine@ucar.edu
 #
 #### CHAT
 ##/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
@@ -47,10 +47,10 @@ set PROJECT = "HIPPO-3"
 #### VCSEL
 
 ###KML - done
-/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/kml kml EOL/2010
+#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/kml/V4_20161109 kml EOL/2010
 
 ### NASA_AMES
-#/net/work/bin/scripts/mass_store/archAC/archAC.py NASA_AMES /scr/raf/Prod_Data/$PROJECT/NASA_AMES gz EOL stroble@ucar.edu
+/net/work/bin/scripts/mass_store/archAC/archAC.py NASA_AMES /scr/raf/Prod_Data/$PROJECT 1DC.asc EOL/2010 janine@ucar.edu
 
 ### MTP
 #/net/work/bin/scripts/mass_store/archAC/archAC.py MTP /scr/raf/Prod_Data/$PROJECT/mtp NGV EOL janine@ucar.edu
