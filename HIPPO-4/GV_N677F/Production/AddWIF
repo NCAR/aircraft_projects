@@ -3,18 +3,18 @@
 Rscript -e "library(knitr); knitr::purl('/h/eol/janine/Rstudio/Reprocessing/FilterForWIC.Rnw')"
 
 if [ "$1" == "" ]; then
-   echo "Must include project name on command-line, e.g. AddWIC HIPPO-3"
+   echo "Must include project name on command-line, e.g. AddWIC HIPPO-4"
    exit
 fi
 
 project=$1
-projDir=$2
-flight=$3
+flight=$2
+projDir=$3
 
 echo "Adding WIF to production netCDF files for project $project"
 
-for file in `ls ${projDir}/${project}[rtf]f[0-9][0-9].nc`
+for file in `ls /scr/raf/Prod_Data/${project}/${project}[rtf]f[0-9][0-9].nc`
 do
     flight=${file:(-7):4}
-    Rscript FilterForWIC.R $project $flight $projDir
+    Rscript FilterForWIC.R $project $flight $project
 done
