@@ -12,8 +12,8 @@ set PROJECT = "HIPPO-5"
 #### ADS - done 1/25/2012
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads EOL janine@ucar.edu
 #
-### LRT - done 5/16/2012, redone 6/25/2012
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT \.nc EOL janine@ucar.edu
+### LRT - done 5/16/2012, redone 6/25/2012 reprocessing Jul 28, 2016
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc EOL/2011 janine@ucar.edu
 #
 #### CHAT
 ##/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
@@ -38,7 +38,7 @@ set PROJECT = "HIPPO-5"
 #### VCSEL
 
 ###KML - done 5/16/2012, redone 6/25/2012
-/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/kml kml EOL/2011
+#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/kml kml EOL/2011
 
 ### NASA_AMES
 #/net/work/bin/scripts/mass_store/archAC/archAC.py NASA_AMES /scr/raf/Prod_Data/$PROJECT/NASA_AMES gz EOL stroble@ucar.edu

@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# By default processes files in local_productiondata. If want to run on files in
+# another dir, enter it on the command line after the project.
+
+if [ "$1" == "" ]; then
+   echo "Must include project name on command-line, e.g. rm_1DC HIPPO-3"
+   exit
+fi
+
+project=$1
+
+
+echo "removing 1DC vars from production netCDF files for project $project"
+
+for file in `ls ${DAT}/${project}[rtf]f[0-9][0-9]FZ.nc`
+do
+    echo $file
+    ncdump -h $file | grep float | grep 1DC
+    newfile=`echo $file | sed 's/FZ/FZ.no1DC/'`
+    echo $newfile
+    ncks -a -v '^.*1DC.*$' -x $file $newfile
+    ncdump -h $newfile | grep float | grep 1DC
+    echo ""
+done
