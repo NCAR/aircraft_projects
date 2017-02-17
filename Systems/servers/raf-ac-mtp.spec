@@ -22,7 +22,11 @@ mkdir -p ${RPM_BUILD_ROOT}/var/r1/mtp
 mkdir -p ${RPM_BUILD_ROOT}/var/www/html/mtp
 
 %post
+%if 0%{?rhel} < 7
 /sbin/chkconfig --level 345 vsftpd on
+%else
+/bin/systemctl enable vsftpd
+$endif
 
 echo "*/3 * * * * /home/local/Systems/scripts/send_MTP.cron > /tmp/send_mtp.log 2>&1" >> /var/spool/cron/ads
 
@@ -36,6 +40,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Wed Feb 1 2017 <cjw@ucar.edu> 1-2
-- created initial package 
+- Updates for rhel 7
 * Sat Aug 7 2010 <cjw@ucar.edu> 1-1
 - created initial package 
