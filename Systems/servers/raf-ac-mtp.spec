@@ -18,7 +18,7 @@ Setup for receiving MTP data from the mtp-pc.
 %build
 
 %install
-mkdir -p ${RPM_BUILD_ROOT}/mnt/r1/mtp
+mkdir -p ${RPM_BUILD_ROOT}/var/r1/mtp
 mkdir -p ${RPM_BUILD_ROOT}/var/www/html/mtp
 
 %post
@@ -31,7 +31,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,ads,ads)
-/mnt/r1/mtp
+/var/r1/mtp
 /var/www/html/mtp
 
 %changelog
