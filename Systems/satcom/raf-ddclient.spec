@@ -46,13 +46,11 @@ cp -r etc $RPM_BUILD_ROOT
 cp -r usr $RPM_BUILD_ROOT
 
 %post -n raf-gv-ddclient
-# rp-pppoe not used anymore.
-#sed -i 's,^SYSNAME=.*,SYSNAME=gv,' /etc/ppp/run_ddclient.sh
+sed -i 's,^SYSNAME=.*,SYSNAME=gv,' /etc/ppp/run_ddclient.sh
 echo "*/5 * * * * /usr/sbin/ddclient -verbose -file /etc/ddclient/gv.conf >> /tmp/ddclient.log 2>&1" >> /var/spool/cron/root
 
 %post -n raf-c130-ddclient
-# rp-pppoe not used anymore.
-#sed -i 's,^SYSNAME=.*,SYSNAME=c130,' /etc/ppp/run_ddclient.sh
+sed -i 's,^SYSNAME=.*,SYSNAME=c130,' /etc/ppp/run_ddclient.sh
 echo "*/5 * * * * /usr/sbin/ddclient -verbose -file /etc/ddclient/c130.conf >> /tmp/ddclient.log 2>&1" >> /var/spool/cron/root
 
 %clean
