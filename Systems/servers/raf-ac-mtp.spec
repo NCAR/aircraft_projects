@@ -26,7 +26,7 @@ mkdir -p ${RPM_BUILD_ROOT}/var/www/html/mtp
 /sbin/chkconfig --level 345 vsftpd on
 %else
 /bin/systemctl enable vsftpd
-$endif
+%endif
 
 echo "*/3 * * * * /home/local/Systems/scripts/send_MTP.cron > /tmp/send_mtp.log 2>&1" >> /var/spool/cron/ads
 
