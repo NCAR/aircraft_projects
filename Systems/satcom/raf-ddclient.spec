@@ -46,10 +46,14 @@ cp -r etc $RPM_BUILD_ROOT
 cp -r usr $RPM_BUILD_ROOT
 
 %post -n raf-gv-ddclient
-sed -i 's,^SYSNAME=.*,SYSNAME=gv,' /etc/ppp/run_ddclient.sh
+# rp-pppoe not used anymore.
+#sed -i 's,^SYSNAME=.*,SYSNAME=gv,' /etc/ppp/run_ddclient.sh
+echo "*/5 * * * * /usr/sbin/ddclient -verbose -file /etc/ddclient/gv.conf >> /tmp/ddclient.log 2>&1" >> /var/spool/cron/root
 
 %post -n raf-c130-ddclient
-sed -i 's,^SYSNAME=.*,SYSNAME=c130,' /etc/ppp/run_ddclient.sh
+# rp-pppoe not used anymore.
+#sed -i 's,^SYSNAME=.*,SYSNAME=c130,' /etc/ppp/run_ddclient.sh
+echo "*/5 * * * * /usr/sbin/ddclient -verbose -file /etc/ddclient/c130.conf >> /tmp/ddclient.log 2>&1" >> /var/spool/cron/root
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -75,6 +79,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/run_ddclient.sh
 
 %changelog
+* Fri Feb 17 2017 Chris Webster <cjw@ucar.edu> 1.0-6
+- Add cron entry.
 * Thu Apr  5 2012 Chris Webster <cjw@ucar.edu> 1.0-6
 - New DynDNS account.
 * Sat Jan 23 2010 Gordon Maclean <maclean@ucar.edu> 1.0-5
