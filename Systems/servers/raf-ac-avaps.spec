@@ -18,7 +18,7 @@ Setup for AVAPS dropsonde data collection:
   - script that cron entry runs to check for new files and ftp them out.
 
 AVAPS process works as follows.  The AVAPS computer rsync's D-files to our computer
-after a drop in /mnt/r1/dropsondes.  The cron entry to run send_avaps.cron.py runs
+after a drop in /var/r1/dropsondes.  The cron entry to run send_avaps.cron.py runs
 and ftp's the file to the ground, runs Aspen to produce a Skewt which is placed in
 /var/www/html/skewt.
 
@@ -27,7 +27,7 @@ and ftp's the file to the ground, runs Aspen to produce a Skewt which is placed 
 %build
 
 %install
-mkdir -p ${RPM_BUILD_ROOT}/mnt/r1/dropsondes/tmp
+mkdir -p ${RPM_BUILD_ROOT}/var/r1/dropsondes/tmp
 mkdir -p ${RPM_BUILD_ROOT}/var/www/html/skewt
 
 %post
@@ -39,12 +39,13 @@ echo "*/2 * * * * /home/local/Systems/scripts/send_avaps.cron.py 2>&1 /tmp/send_
 cf=/etc/rsyncd.conf
 if [ -f $cf ]; then
     cat >> $cf << EOD
+
 # suppress log messages
 log file = /dev/null
 
 [dropsondes]
     comment = Dropsonde delivery folder
-    path = /mnt/r1/dropsondes
+    path = /var/r1/dropsondes
     uid = ads
     gid = ads
     read only = no
@@ -55,11 +56,12 @@ fi
 
 %files
 %defattr(-,ads,ads)
-/mnt/r1/dropsondes
+/var/r1/dropsondes
 /var/www/html/skewt
 
 %changelog
 * Wed Feb 1 2017 Chris Webster <cjw@ucar.edu> - 1.0-2
 - Add requires ads-user package...since we do chown.
+- Change /mnt/r1 to /var/r1
 * Sat Aug 7 2010 Chris Webster <cjw@ucar.edu> - 1.0-1
 - initial version; AVAPS
