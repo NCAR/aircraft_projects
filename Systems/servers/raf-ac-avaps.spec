@@ -32,7 +32,7 @@ mkdir -p ${RPM_BUILD_ROOT}/var/www/html/skewt
 
 %post
 
-echo "*/2 * * * * /home/local/Systems/scripts/send_avaps.cron.py 2>&1 /tmp/send_avaps.log" >> /var/spool/cron/ads
+echo "*/2 * * * * /home/local/Systems/scripts/avaps_proc.cron.py > /tmp/send_avaps.log 2>&1" >> /var/spool/cron/ads
 
 
 %triggerin -- rsync
@@ -63,5 +63,6 @@ fi
 * Wed Feb 1 2017 Chris Webster <cjw@ucar.edu> - 1.0-2
 - Add requires ads-user package...since we do chown.
 - Change /mnt/r1 to /var/r1
+- Change cron entry to bash style redirect.
 * Sat Aug 7 2010 Chris Webster <cjw@ucar.edu> - 1.0-1
 - initial version; AVAPS
