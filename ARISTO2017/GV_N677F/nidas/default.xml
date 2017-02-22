@@ -890,7 +890,7 @@
 
 
 <!-- Watlow CLS-208 sensor, added for ARISTO-2017 for ACOM -->
-    <serialSensor ID="WatlowCLS208" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" timeout="3.0">
+    <serialSensor ID="WatlowCLS208" baud="19200" class="raf.Watlow" databits="8" parity="none" stopbits="1" timeout="3.0">
         <!-- This uses the Modbus-RTU communications protocol (http://www.modbustools.com/modbus.html).
              This is a prompted, binary protocol. Prompts are supposed to
              "start with a silent interval of at least 3.5 character times".
@@ -922,7 +922,7 @@
              A 0x03 prompt means "READ HOLDING REGISTERS", which makes it seem
              that some other timing loop is putting values in those registers.
              -->
-        <sample id="1">
+      <sample id="1">
             <variable name="TIF" units="degC" longname="Temperature of loop 1"/>
             <variable name="TIA" units="degC" longname="Temperature of loop 2"/>
             <variable name="TENV" units="degC" longname="Temperature of loop 3"/>
@@ -944,8 +944,8 @@
             <variable name="QTT" units="degC" longname="Power output of loop 4"/>
             <prompt rate="1" string="\x01\x03\x01\xce\x00\x04\x24\x0a" offset="0.6"/>
         </sample>
-        <message separator="\x01\x03\x10" length="38" position="beg"/>
-    </serialSensor>
+      <message separator="\x01\x03\x10" length="38" position="beg"/>
+   </serialSensor>
 
 <!-- Faulhaber MCBL3006SEARS motion controller. -->
     <serialSensor ID="MCBL3006SEARS" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
