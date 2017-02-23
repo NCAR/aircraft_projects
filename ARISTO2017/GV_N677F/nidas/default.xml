@@ -2129,9 +2129,9 @@
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_GPT10" units="deg_C"/>
         </sample>
-        <sample id="2" rate="10">
+        <sample id="2" rate="25">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="20"/>
           <variable longname="Turbulence Sensor 1" name="TURB01" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
@@ -2205,9 +2205,9 @@
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_GPT11" units="deg_C"/>
         </sample>
-        <sample id="2" rate="10">
+        <sample id="2" rate="25">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="20"/>
           <variable longname="Turbulence Sensor 9" name="TURB09" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
@@ -2350,9 +2350,9 @@
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_GPT20" units="deg_C"/>
         </sample>
-        <sample id="2" rate="10">
+        <sample id="2" rate="25">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="20"/>
           <variable longname="Turbulence Sensor 17" name="TURB17" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
@@ -2426,9 +2426,9 @@
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_GPT21" units="deg_C"/>
         </sample>
-        <sample id="2" rate="10">
+        <sample id="2" rate="25">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="20"/>
           <variable longname="Turbulence Sensor 25" name="TURB25" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
@@ -2498,7 +2498,6 @@
     </dsm>
 
     <dsm derivedData="sock::7071" id="25" location="LWO" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
-      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
       <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS1" id="350" suffix="_LAMS">
           <parameter name="INSTRUMENT" type="string" value="LAMS"/>
           <parameter name="LEVER_ARM_X" type="int" value="564"/>
@@ -2527,7 +2526,6 @@
     </dsm>
 
     <dsm derivedData="sock::7071" id="30" location="RWI" name="dsmRWI" rserialPort="30002" statusAddr="sock::30001">
-      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWI"/>
       <serialSensor IDREF="CDP" devicename="/dev/ttyS12" id="400" suffix="_RWII">
         <parameter name="SerialNumber" type="string" value="CDP058"/>
       </serialSensor>
@@ -2540,7 +2538,6 @@
     </dsm>
 
     <dsm derivedData="sock::7071" id="83" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
-      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_RWO"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
