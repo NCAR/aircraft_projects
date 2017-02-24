@@ -2622,5 +2622,272 @@
       </sensor>
     </dsm>
 
+
+<!-- gain=4,bipolar=F gives a range of 0-5V -->
+    <dsm derivedData="sock::7071" id="60" location="cvi_rack" name="cvi-dsm" rserialPort="30002" statusAddr="sock::30001">
+        <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
+            <parameter name="rate" type="int" value="10"/>
+            	
+
+<!--
+            		gain=16, bipolar="false":  0 to 1.25V
+	            	gain=8, bipolar="false":  0 to 2.5V
+	            	gain=4, bipolar="false":  0 to 5V
+	            	gain=2, bipolar="false":  0 to 10V
+            		gain=16, bipolar="true":  -.625 to .625
+	            	gain=8, bipolar="true":  -1.25 to 1.25
+	            	gain=4, bipolar="true":  -2.5 to 2.5
+	            	gain=2, bipolar="true":  -5  to 5
+	            	gain=1, bipolar="true":  -10  to 10
+	        -->
+            <sample id="1" rate="10">
+                <variable name="CVF1" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00046"/>
+                    <parameter name="corIntercept" type="float" value="-0.0002648"/>
+                </variable>
+                <variable name="CVFX0" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00043"/>
+                    <parameter name="corIntercept" type="float" value="-0.0000626"/>
+                </variable>
+                <variable name="CVFX1" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00037"/>
+                    <parameter name="corIntercept" type="float" value="0.000027"/>
+                </variable>
+                <variable name="CVFX2" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00036"/>
+                    <parameter name="corIntercept" type="float" value="0.0000307"/>
+                </variable>
+                <variable name="CVFX3" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00247"/>
+                    <parameter name="corIntercept" type="float" value="-0.006609"/>
+                </variable>
+                <variable name="CVFX4" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00035"/>
+                    <parameter name="corIntercept" type="float" value="0.0001242"/>
+                </variable>
+                <variable name="CVFX5" units="V" longname="CVI User Flow">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="CVFX6" units="V" longname="CVI User Flow">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="CVFX7" units="V" longname="CVI User Flow">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="CVFX8" units="V" longname="CVI User Flow">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="CVPCN" units="V" longname="CVI Sample Pressure">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.00032"/>
+                    <parameter name="corIntercept" type="float" value="0.000164"/>
+                    <poly coefs="-5.817 342.05 -0.0354" units="mb"/>
+                </variable>
+            </sample>
+        </sensor>
+        <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d1" id="20" latency="0.25">
+            <parameter name="rate" type="int" value="50"/>
+            <sample id="1" rate="50">
+            	
+
+<!--
+            		gain=16, bipolar="false":  0 to 1.25V
+	            	gain=8, bipolar="false":  0 to 2.5V
+	            	gain=4, bipolar="false":  0 to 5V
+	            	gain=2, bipolar="false":  0 to 10V
+            		gain=16, bipolar="true":  -.625 to .625
+	            	gain=8, bipolar="true":  -1.25 to 1.25
+	            	gain=4, bipolar="true":  -2.5 to 2.5
+	            	gain=2, bipolar="true":  -5  to 5
+	            	gain=1, bipolar="true":  -10  to 10
+	        -->
+
+<!--
+                <parameter name="filter" value="boxcar" type="string"/>
+                <parameter name="numpoints" value="10" type="int"/>
+                -->
+
+<!-- gain=16,bipolar=F gives a range of 0-1.25V -->
+                <variable minValue="0.05" name="CVTT" units="V" longname="CVI Temperature Tip">
+                    <parameter name="gain" type="float" value="16"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="corSlope" type="float" value="1.00466"/>
+                    <parameter name="corIntercept" type="float" value="0.0001349"/>
+                </variable>
+                <variable minValue="0.05" name="CVTP" units="V" longname="CVI Temperature at Probe">
+                    <parameter name="gain" type="float" value="16"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="corSlope" type="float" value="1.00499"/>
+                    <parameter name="corIntercept" type="float" value="0.0000984"/>
+                </variable>
+                <variable minValue="0.05" name="CVTS" units="V" longname="CVI Temperature Sample Line">
+                    <parameter name="gain" type="float" value="16"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="corSlope" type="float" value="1.00178"/>
+                    <parameter name="corIntercept" type="float" value="0.000859"/>
+                </variable>
+                <variable minValue="0.05" name="CVTCN" units="V" longname="CVI Temperature by CNC">
+                    <parameter name="gain" type="float" value="16"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="corSlope" type="float" value="1.00166"/>
+                    <parameter name="corIntercept" type="float" value="0.000857"/>
+                </variable>
+                <variable minValue="0.05" name="CVTAI" units="V">
+                    <parameter name="gain" type="float" value="16"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="corSlope" type="float" value="1.00444"/>
+                    <parameter name="corIntercept" type="float" value="0.00023"/>
+                </variable>
+            </sample>
+        </sensor>
+        <sensor class="DSC_PulseCounter" devicename="/dev/dmmat_cntr0" id="30">
+            <sample id="1" rate="1">
+                <variable longname="CN Counts" name="CNT1" units=""/>
+            </sample>
+        </sensor>
+
+<!-- TDL Note:  Should a swap from the new TDL to the old TDL occur, one need only
+     uncomment out the TDL_CVI1 line and comment the TDL_CVI2 line -->
+       <!-- <serialSensor IDREF="TDL_CVI1" devicename="/dev/ttyS5" id="40"/> -->
+       <serialSensor IDREF="TDL_CVI2" devicename="/dev/ttyS5" id="40"/>
+       <serialSensor IDREF="UHSASCU" devicename="/dev/ttyS7" id="50" suffix="_CVIU">
+            <parameter name="SerialNumber" type="string" value="UHSAS015"/>
+            <parameter name="sendInit" type="bool" value="false"/>
+       </serialSensor>
+<!--       <serialSensor IDREF="PIC_H2O" devicename="/dev/ttyS8" id="70" suffix="_CVIP"/> cjw 7/8/2016 -->
+
+<!-- input from LabView via socket -->
+        <serialSensor class="raf.CVI_LV_Input" devicename="inet::30006" id="60">
+
+<!-- 0.000,0.000,0.000,0.000,0.000,0,0,0,0,0,0,0,10.000,16784.917,8.434,3.668,5.609\r\n -->
+            <sample id="1" rate="1" scanfFormat="%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%f,%f,%f,%f,%f">
+                <variable longname="CVI time lag + 0.5 sec" name="CVTDIFF" units="sec"/>
+                <variable longname="CVI excess flow control" name="CVFX0WR" units="V"/>
+                <variable longname="CVI TDL flow control" name="CVFX2WR" units="V"/>
+                <variable longname="CVI impactor flow control" name="CVFX3WR" units="V"/>
+                <variable longname="CVI OPC flow control" name="CVFX4WR" units="V"/>
+                <variable longname="CVI supply flow control" name="CVF1WR" units="V"/>
+                <variable longname="CVI valve 0" name="CVV0" units=""/>
+                <variable longname="CVI valve 1" name="CVV1" units=""/>
+                <variable longname="CVI valve 2" name="CVV2" units=""/>
+                <variable longname="CVI valve 3" name="CVV3" units=""/>
+                <variable longname="CVI inlet flag, 0=CVI, 1=Total" name="CVINLET" units=""/>
+                <variable longname="CVI user flow index" name="CVFXFLOWS" units="count"/>
+
+<!-- Note that this field is skipped in the scanf with %*f
+                <variable name="CVFXX" units="" longname="CVI # user connects or disconnects"/>
+                -->
+                <variable longname="CVI minimum cut radius" name="CVRAD" units="um"/>
+                <variable longname="CVI concentration factor" name="CVCFACT" units=""/>
+                <variable longname="CVI relative humidity" name="CVRH" units="%"/>
+                <variable longname="CVI dew point" name="CVDP" units="degC"/>
+                <variable longname="CVI cloud condensed water content" name="CVCWC" units="g/m^3"/>
+            </sample>
+            <message length="0" position="end" separator="\n"/>
+        </serialSensor>
+        <output class="RawSampleOutputStream">
+            <socket port="30000" type="server"/>
+        </output>
+
+<!-- To save data on local CF when running standalone
+        <output class="RawSampleOutputStream">
+            <fileset dir="/media/cf/data"
+                file="${DSM}_%Y%m%d_%H%M%S.dat"
+                length="1800">
+            </fileset>
+        </output>
+        -->
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+        <processor class="raf.CVIProcessor">
+            <parameter name="vout" type="string" value="/dev/dmmat_d2a0"/>
+            <parameter name="dout" type="string" value="/dev/viper_dio0"/>
+
+<!-- These variables are sent to LabView over the CVIOutput socket -->
+            <sample id="10000" rate="1">
+                <variable name="CNT1"/>
+                <variable name="CVF1"/>
+                <variable name="CVFX0"/>
+                <variable name="CVFX1"/>
+                <variable name="CVFX2"/>
+                <variable name="CVFX3"/>
+                <variable name="CVFX4"/>
+                <variable name="CVFX5"/>
+                <variable name="CVFX6"/>
+                <variable name="CVFX7"/>
+                <variable name="CVFX8"/>
+                <variable name="CVPCN"/>
+                <variable name="CVTT"/>
+                <variable name="CVTP"/>
+                <variable name="CVTS"/>
+                <variable name="CVTCN"/>
+                <variable name="CVTAI"/>
+                <variable name="H2OR"/>
+                <variable name="PDLR"/>
+                <variable name="TTDLR"/>
+                <variable name="TDLsignal"/>
+                <variable name="TDLlaser"/>
+                <variable name="TDLline"/>
+                <variable name="TDLzero"/>
+                <variable name="TTDLencl"/>
+                <variable name="TTDLtec"/>
+                <variable name="TDLtrans"/> 
+                <variable name="UHSAS_CNTS_CVIU"/>
+                <variable name="USMPFLW_CVIU"/>
+                <variable name="UPRESS_CVIU"/>
+                <variable name="UDIFF_CVIU"/>
+                <variable name="UBTMP_CVIU"/>
+                <variable name="H2O_CVIP"/>
+                <variable name="O18_CVIP"/>
+                <variable name="DEUT_CVIP"/>
+            </sample>
+            <!-- to see this output if a PC is not available, change
+                 the address to localhost, and listen on tcp/30005 with netcat:
+                    nc -l -p 30005
+            -->
+            <output class="raf.CVIOutput">
+                <socket address="192.168.184.146" block="false" port="30005" type="client"/>
+            </output>
+            <output class="raf.CVIOutput">
+                <socket block="false" port="30007" type="server"/>
+            </output>
+
+<!-- Uncomment this output to see what the DSM is sending to the LabView PC
+            <output class="raf.CVIOutput">
+                <fileset dir="/var/tmp"
+                    file="cvi_%Y%m%d_%H%M%S.dat"
+                    length="1800">
+                </fileset>
+            </output>
+            -->
+        </processor>
+    </dsm>
+
   </site>
 </project>
