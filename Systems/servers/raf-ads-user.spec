@@ -112,11 +112,6 @@ fi
 %post
 chown -R ads:ads /home/ads/bin
 
-echo
-echo "  If your installing this on an aircraft then fix the AIRCRAFT and PROJECT"
-echo "  variables in ~/ads3_environment.csh !!!"
-echo
-
 cf=/home/ads/.ssh/id_dsa_dsm
 if ! [ -f /home/ads/.ssh/id_dsa_dsm ]; then
     echo "$cf private ssh key not found. Copy it from another system, and chmod 0600"

@@ -18,7 +18,7 @@ Requires: raf-c130-dhcp
 Requires: raf-ac-named
 Requires: raf-c130-ddclient
 Requires: raf-satcom
-Requires: raf-satcom-bgan
+#Requires: raf-satcom-bgan
 Requires: raf-ads3-sudoers
 Requires: raf-ac-nfs
 Requires: raf-ac-avaps
@@ -57,14 +57,45 @@ if [ ! -d $dir ]; then
   ln -s $dir /opt/local
 fi
 
-dir=/home/data
-if [ ! -d $dir ]; then
-  mkdir -p $dir
+mkdir -p /home/data
+mkdir -p /var/r1
+mkdir -p /var/r2
+chown ads:ads /home/data /var/r1 /var/r2
+
+
+%post
+
+/usr/bin/hostnamectl set-hostname acserver.raf.ucar.edu
+
+cf=/etc/rc.local
+if ! grep -q "nimbus.pid" $cf; then
+  cat << EO_RC_LOCAL >> $cf
+
+# Perform some basic housekeeping / clean up.
+rm -f /tmp/nimbus.pid
+rm -f /home/DataBases/postmaster.pid
+
+EO_RC_LOCAL
+
 fi
+
+
+cf=/etc/hosts.allow
+if ! grep -q "128.117" $cf; then
+  cat << EO_HOSTS_ALLOW >> $cf
+ALL : LOCAL, .ucar.edu, 128.117., 127.0.0.1, 192.168.
+EO_HOSTS_ALLOW
+fi
+
+
+sed '/^export AIRCRAFT/c\export AIRCRAFT=C130_N130AR' ads3_environment.sh
+
 
 %files 
 
 %changelog
+* Sun Feb 26 2017 Chris Webster <cjw@ucar.edu> 1.0-15
+- Bring in parity with raf-gv.spec.  %post additions.
 * Mon Jan 16 2017 Chris Webster <cjw@ucar.edu> 1.0-15
 - Change raf-ac-ntp to raf-ac-chrony for RHEL7.  Add gdm and selinux.
 * Tue Apr 5 2016 Chris Webster <cjw@ucar.edu> 1.0-14
