@@ -1,43 +1,27 @@
-SHELL=/bin/bash
+# Persistent ssh tunnel to EOL, attempting reopens only every 10 minutes.
+@reboot ssh -N eoltunnel > /tmp/eoltunnel.log 2>&1
+# IRC and IRC bot
+@reboot /home/ads/ircd/Unreal3.2/unreal start > /dev/null 2>&1
+@reboot sleep 5; /home/ads/rbot/bin/rbot > /dev/null 2>&1
 
-@reboot /home/local/Systems/scripts/scrubber >& /tmp/scrubber.log
-@reboot ssh -N eoltunnel >& /tmp/eoltunnel.log
+@reboot /home/local/Systems/scripts/scrubber > /tmp/scrubber.log 2>&1
 
 # Always
-*/3 * * * * /home/local/Systems/scripts/ensure_running.cron >& /tmp/ensure_run.log
-*/2 * * * * /home/local/Systems/scripts/send_camera.cron >& /tmp/camera_send.log
-0 * * * * /home/local/Systems/scripts/scrubber >& /tmp/scrubber.log
-
-# New satellite script
-3,18,33,48 * * * * /home/local/Systems/scripts/get_ir_image_cron.py >>& /tmp/get_ir_image.log
-5,20,35,50 * * * * /home/local/Systems/scripts/get_4kmvis_image_cron.py >>& /tmp/get_4kmvis_image.log
-#5,20,35,50 * * * * /home/local/Systems/scripts/get_vis_image_cron.py >>& /tmp/get_vis_image.log
-*/10 * * * * /home/local/Systems/scripts/get_conus_cweb_cron.py >>& /tmp/get_conus_cweb.log
-
-# Get flight plan script
-*/20 * * * * /home/local/Systems/scripts/get_flight_plan.py >>& /tmp/get_flight_plan.log
-#*/30 * * * * /home/local/Systems/scripts/get_drop_plan.py >>& /tmp/get_drop_plan.log
+*/3 * * * * /bin/bash -l -c "/home/local/Systems/scripts/ensure_running.cron > /tmp/ensure_run.log 2>&1"
+*/2 * * * * /bin/bash -l -c "/home/local/Systems/scripts/send_camera.cron > /tmp/camera_send.log 2>&1"
+*/10 * * * * ssh -N eoltunnel > /tmp/eoltunnel.log 2>&1
+0 * * * * /home/local/Systems/scripts/scrubber > /tmp/scrubber.log 2>&1
 
 # MTP
-#*/3 * * * * /home/local/Systems/scripts/send_MTP.cron >& /tmp/mtp_send.log
+#*/3 * * * * /home/local/Systems/scripts/send_MTP.cron >> /tmp/mtp_send.log 2>&1
 # TOGA
-*/2 * * * * python /home/local/Systems/scripts/send_toga.py >>& /tmp/send_toga.log
+#*/2 * * * * python /home/local/Systems/scripts/send_toga.py >> /tmp/send_toga.log 2>&1
 # AVAPS
-#* * * * * /home/local/Systems/scripts/avaps_proc.cron.py >>& /tmp/avaps_proc.log
+* * * * * /home/local/Systems/scripts/avaps_proc.cron.py >> /tmp/avaps_proc.log 2>&1
 
-#
-# Persistent ssh tunnel to EOL, attempting reopens only every 10 minutes.
-*/10 * * * * ssh -N eoltunnel >& /tmp/eoltunnel.log
-
-# Time stamp label for MC
-* * * * * /home/local/Systems/scripts/make_label.py >>& /dev/null
 
 # Copy flight_track and position to CatalogIngest
-* * * * * /home/local/Systems/scripts/copy_flight_geo_to_catalog.cron >>& /tmp/copy_flight_geo_to_catalog.log
+* * * * * /home/local/Systems/scripts/copy_flight_geo_to_catalog.cron >> /tmp/copy_flight_geo_to_catalog.log 2>&1
 
 # Cleanup old Catalog files from filesystem and database via DockerCompose
-1 */2 * * * /home/local/Systems/scripts/catalog_delete_files.cron >>& /tmp/catalog_delete_files.log
-
-# IRC and IRC bot
-@reboot /home/ads/ircd/Unreal3.2/unreal start >& /dev/null
-@reboot sleep 5; /home/ads/rbot/bin/rbot >& /dev/null
+1 */2 * * * /home/local/Systems/scripts/catalog_delete_files.cron >> /tmp/catalog_delete_files.log 2>&1
