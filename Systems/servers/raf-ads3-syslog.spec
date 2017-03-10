@@ -1,6 +1,6 @@
 Name: raf-ads3-syslog
 Version: 1.0
-Release: 8
+Release: 9
 Summary: Additions to syslog config for logging from NIDAS processes.
 
 License: GPL
@@ -27,16 +27,28 @@ cp -r etc/* $RPM_BUILD_ROOT/%{_sysconfdir}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+
+%if 0%{?rhel} < 7
+if [ -x /etc/init.d/syslog ]; then
+        /etc/init.d/syslog restart
+else
+        /etc/init.d/rsyslog restart
+fi
+%else
+systemctl restart rsyslog.service
+%endif
+
 %triggerin -- rsyslog
+
+# %%triggerin script is run when a given target package is installed or
+# upgraded, or when this package is installed or upgraded and the target
+# is already installed.
 
 chmod +r /var/log/messages
 touch /var/log/ads3.log
 touch /var/log/ads3_kernel.log
 chmod +r /var/log/ads3*
-
-# %%triggerin script is run when a given target package is installed or
-# upgraded, or when this package is installed or upgraded and the target
-# is already installed.
 
 # if SYSLOGD_OPTIONS doesn't exist add it, with -s " " option
 # edit out obsolete options
@@ -91,6 +103,10 @@ if [ -f $cf ]; then
 s/^([^[:space:]]+)/\1;local5.none/
 }' $cf
 
+    # remove old directives that are now in /etc/rsyslog.d/ads3.conf
+    sed -r -i -e '/^local5.*ads3/d' $cf
+    sed -r -i -e '/^kern.*ads3/d' $cf
+
     md5sum -c $tmpfile --status || restart=true
 fi
 
@@ -103,7 +119,7 @@ else
         /etc/init.d/rsyslog restart
 fi
 %else
-/bin/systemctl restart rsyslog.service
+systemctl restart rsyslog.service
 %endif
 
 fi
@@ -122,6 +138,8 @@ fi
 %config %attr(0755,root,root) /etc/rsyslog.d/ads3.conf
 
 %changelog
+* Fri Mar 10 2017 Gordon Maclean <maclean@ucar.edu> 1.0-9
+- restart rsyslog in post script
 * Fri Mar 10 2017 Gordon Maclean <maclean@ucar.edu> 1.0-8
 - fixes for rsyslog
 * Thu Apr 04 2013 Gordon Maclean <maclean@ucar.edu> 1.0-7
