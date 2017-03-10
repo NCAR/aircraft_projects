@@ -459,7 +459,6 @@
           <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
           <variable longname="Reference GPS Vertical Speed" name="GGVSPD" units="m/s"/>
       </sample>
-
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
     <serialSensor ID="CMIGITS3" baud="38400" class="raf.CMIGITS3_Serial" databits="8" parity="odd" stopbits="1">
@@ -790,6 +789,7 @@
       </sample>
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
     </serialSensor>
+
     <serialSensor ID="UHSAS" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1" timeout="10">
       <parameter name="HSKP_SCALE" type="int" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000"/>
       <sample id="1" rate="10">
@@ -863,46 +863,31 @@
       <message length="0" position="end" separator="\r\n"/>
      </serialSensor>
 
-<!-- UHSAS borrowed from Darrin Toohey @ CU.
-        Has different housekeeping scaling factors and output rate
--->
-    <serialSensor ID="UHSASCU" baud="9600" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
-      <parameter name="HSKP_SCALE" type="int" value="64000 12800 6400 6400 12800 6400 6400 12800 6400  6400 12800 6400"/>
-      <sample id="1" rate="2">
-        <variable length="100" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
-        <variable longname="Total Counts" name="UHSAS_CNTS" units="#/sec"/>
+
+    <serialSensor ID="UHSASCU" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <parameter name="SerialNumber" type="string" value="UHSAS002"/>
+
+      <!-- Time Format is mm/dd/yyyy hh:mm:ss.msec pm -->
+      <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
+        <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
         <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
         <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
-        <variable longname="UHSAS Sample Flow" name="USMPFLW" units="V">
-          <linear intercept="0.0" slope="0.333" units="vccs"/>
-        </variable>
+        <variable longname="UHSAS Sample Flow" name="USMPFLW" units="sccm"/>
         <variable longname="UHSAS Reference Intensity" name="UREF" units="V"/>
-        <variable longname="UHSAS Temperature in Canister, signal" name="UTEMP" units="V"/>
-        <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="V">
-          <poly coefs="115.42 -141.21 63.38" units="sccs"/>
-        </variable>
+        <variable longname="UHSAS Laser Temperature" name="ULSRTEMP" units="V"/>
+        <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="sccm"/>
         <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/>
-        <variable longname="UHSAS Temperature in Canister" name="UBTMP" units="V">
-          <linear intercept="0.0" slope="178.5714" units="K"/>
-        </variable>
-
-<!-- UPFLW is one of 3 variables not parsed from the housekeeping array
-        <variable name="UPFLW" units="V" longname="UHSAS Purge Flow">
-          <linear slope="20" intercept="0.0" units="sccs"/>
-        </variable
--->
-        <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="V">
-          <linear intercept="0.0" slope="250.0" units="hPa"/>
-        </variable>
-
-<!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
-
-<!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
+        <variable longname="UHSAS Temperature in Canister" name="UTMP" units="K"/>
+        <variable longname="UHSAS Purge Flow" name="UPRGFLW" units="sccm"/>
+        <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="kPa"/>
+        <variable longname="UHSAS Auxilliary" name="UAUX" units="V"/>
+        <variable longname="UHSAS Flow" name="UFLW" units="sccm"/>
+        <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
-
-<!-- look for ffff07 termination sequence after 220 bytes -->
-      <message length="220" position="end" separator="\xff\xff\x07"/>
+      <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+
+
     <serialSensor ID="VCSEL" baud="38400" class="raf.VCSEL_Serial" databits="8" parity="none" stopbits="1">
 
 <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
@@ -1005,13 +990,12 @@
         <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
       </sample>
 
-<!--
       <sample id="3" rate="1">
         <variable name="A2DC" length="128" units="count" longname="Fast 2DC Raw Accumulation, center-in (per cell)"/>
         <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
       </sample>
--->
     </sensor>
+
     <sensor ID="Fast2DP" class="raf.TwoD64_USB">
       <parameter name="TAS_RATE" type="int" value="10"/>
       <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
@@ -1371,6 +1355,7 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+
     <sensor ID="LAMSX" class="raf.LamsSensor">
       <parameter name="TAS_level" type="float" value="155.0"/>
 
@@ -1390,6 +1375,26 @@
         <variable length="512" longname="LAMS histogram maximums" name="LAMS_MAX" units="Mhz"/>
       </sample>
     </sensor>
+
+    <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41002">
+        <sample id="1" rate="50">
+            <variable longname="LAMS Sequence Number, Beam 1" name="SEQ1" units="none"/>
+            <variable length="512" longname="LAMS Histogram Averages, Beam 1" name="BEAM1" units="Mhz"/>
+        </sample>
+        <sample id="2" rate="50">
+            <variable longname="LAMS Sequence Number, Beam 2" name="SEQ2" units="none"/>
+            <variable length="512" longname="LAMS Histogram Maximums, Beam 2" name="BEAM2" units="Mhz"/>
+        </sample>
+        <sample id="3" rate="50">
+            <variable longname="LAMS Sequence Number, Beam 3" name="SEQ3" units="none"/>
+            <variable length="512" longname="LAMS Histogram Maximums, Beam 3" name="BEAM3" units="Mhz"/>
+        </sample>
+        <sample id="4" rate="50">
+            <variable longname="LAMS Sequence Number, Beam 4" name="SEQ4" units="none"/>
+            <variable length="512" longname="LAMS Histogram Maximums, Beam 4" name="BEAM4" units="Mhz"/>
+        </sample>
+    </sensor>
+
     <serialSensor ID="PIC_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %*d %*f">
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
@@ -1532,7 +1537,7 @@
           <socket type="mcaccept"/>
         </output>
       </service>
-      <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.25">
+      <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="1.0">
 
 <!-- input from every DSM on this aircraft that has
              a socket output of type RawSampleOutputStream -->
@@ -1555,17 +1560,11 @@
       </service>
     </server>
 
+    <dsm derivedData="sock::31000" id="99" location="acserver" name="acserver" statusAddr="sock:192.168.184.1:30001">
 
-    <dsm id="99" location="acserver" name="acserver" derivedData="sock::31000" statusAddr="sock:192.168.184.1:30001">
-      <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS0" id="120">
-          <parameter name="INSTRUMENT" type="string" value="GUSTPOD"/>
-          <parameter name="LEVER_ARM_X" type="int" value="564"/>
-          <parameter name="LEVER_ARM_Y" type="int" value="730"/>
-          <parameter name="LEVER_ARM_Z" type="int" value="-284"/>
-      </serialSensor>
 <!--
       <sensor IDREF="OZONE_PHOTOMETER" devicename="usock::31222" id="300" suffix="_NCARO3"/>
-  -->
+-->
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -1630,13 +1629,31 @@
       </sensor>
     </dsm>
 -->
+    <dsm derivedData="sock::7071" id="110" location="bench" name="dsm310" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
+      <output class="RawSampleOutputStream">
+        <socket block="false" type="mcrequest"/>
+      </output>
+
+      <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="1500">
+        <sample id="1" rate="100">
+          <variable count="true" longname="TSI CN Counter Output" name="CNTS" units="count"/>
+        </sample>
+      </sensor>
+
+
+    </dsm>
+
     <dsm derivedData="sock::7071" id="109" location="bench" name="labdsm9" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LAB9"/>
       <output class="RawSampleOutputStream">
         <socket block="false" type="mcrequest"/>
       </output>
+
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-        <calfile file="A2D1712.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+
+<!--        <calfile file="A2D1712.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/> -->
+        <calfile file="A2D1715.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
@@ -1645,60 +1662,77 @@
         <sample id="2" rate="500">
           <variable longname="" name="dsmLAB9_A0_ch0" units="V">
             <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
           </variable>
           <variable longname="" name="dsmLAB9_A0_ch1" units="V">
             <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
           </variable>
           <variable longname="" name="dsmLAB9_A0_ch2" units="V">
             <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
           </variable>
           <variable longname="" name="dsmLAB9_A0_ch3" units="V">
             <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
           </variable>
           <variable longname="" name="dsmLAB9_A0_ch4" units="V">
             <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
           </variable>
           <variable longname="" name="dsmLAB9_A0_ch5" units="V">
             <parameter name="channel" type="int" value="5"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
           </variable>
           <variable longname="" name="dsmLAB9_A0_ch6" units="V">
             <parameter name="channel" type="int" value="6"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
           </variable>
           <variable longname="" name="dsmLAB9_A0_ch7" units="V">
             <parameter name="channel" type="int" value="7"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
           </variable>
         </sample>
       </sensor>
+
+<!--
+      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="400" suffix="_2DC">
+        <parameter name="SerialNumber" type="string" value="F2DC003"/>
+        <parameter name="RESOLUTION" type="int" value="25"/>
+      </sensor>
+-->
+<!--
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS5" id="120" suffix="_tty5"/>
+      <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="2200"/>
+
       <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS8" id="800" suffix="_LAMS">
         <parameter name="INSTRUMENT" type="string" value="LAMS"/>
         <parameter name="GPS_FEED" type="int" value="0"/>
       </serialSensor>
-      <serialSensor IDREF="S100" devicename="/dev/ttyS7" id="1000" suffix="_RWI">
-        <parameter name="SerialNumber" type="string" value="FSSP109"/>
+-->
+
+<!--
+      <serialSensor IDREF="CDP" devicename="/dev/ttyS12" id="2000" suffix="_CDP">
+        <parameter name="SerialNumber" type="string" value="CDP058"/>
       </serialSensor>
-      <serialSensor IDREF="S300" devicename="/dev/ttyS9" id="1200" suffix="_RW3">
-        <parameter name="SerialNumber" type="string" value="FSSP305"/>
+      <serialSensor IDREF="S200" devicename="/dev/ttyS7" id="2600" suffix="_S200">
+        <parameter name="SerialNumber" type="string" value="PCAS108"/>
       </serialSensor>
-      <serialSensor IDREF="D_GPS" devicename="/dev/ttyS6" id="1400"/>
+-->
     </dsm>
-    <dsm derivedData="sock::7071" id="110" location="bench" name="labdsm10" rserialPort="30002" statusAddr="sock::30001">
+
+
+<!--    <dsm derivedData="sock::7071" id="110" location="bench" name="labdsm10" rserialPort="30002" statusAddr="sock::30001"> -->
+
+    <dsm derivedData="sock::7071" id="113" location="bench" name="dsm313" rserialPort="30002" statusAddr="sock::30001"> 
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LAB10"/>
       <output class="RawSampleOutputStream">
         <socket block="false" type="mcrequest"/>
@@ -1713,42 +1747,42 @@
         <sample id="2" rate="500">
           <variable longname="" name="dsmLAB10_A0_ch0" units="V">
             <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
           <variable longname="" name="dsmLAB10_A0_ch1" units="V">
             <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
           <variable longname="" name="dsmLAB10_A0_ch2" units="V">
             <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
           <variable longname="" name="dsmLAB10_A0_ch3" units="V">
             <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
           <variable longname="" name="dsmLAB10_A0_ch4" units="V">
             <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
           <variable longname="" name="dsmLAB10_A0_ch5" units="V">
             <parameter name="channel" type="int" value="5"/>
-            <parameter name="gain" type="float" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
           <variable longname="" name="dsmLAB10_A0_ch6" units="V">
             <parameter name="channel" type="int" value="6"/>
-            <parameter name="gain" type="float" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
           <variable longname="" name="dsmLAB10_A0_ch7" units="V">
             <parameter name="channel" type="int" value="7"/>
-            <parameter name="gain" type="float" value="4"/>
+            <parameter name="gain" type="float" value="2"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
         </sample>
@@ -1762,10 +1796,23 @@
         <parameter name="SerialNumber" type="string" value="PCAS108"/>
       </serialSensor>
 -->
+
+<!--
       <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="400" suffix="_RWO">
         <parameter name="SerialNumber" type="string" value="F2DC001"/>
         <parameter name="RESOLUTION" type="int" value="25"/>
       </sensor>
+    -->
+      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="400" suffix="_LAB">
+        <parameter name="SerialNumber" type="string" value="F2DC002"/>
+        <parameter name="RESOLUTION" type="int" value="10"/>
+      </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="19" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_319"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
 
 <!--
