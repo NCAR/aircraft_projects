@@ -2899,16 +2899,6 @@
         <socket type="mcrequest"/>
       </output>
 
-<!--
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
-        <calfile file="A2D011.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_322A0" units="deg_C"/>
-        </sample>
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
--->
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300">
         <parameter name="SerialNumber" type="string" value="W477547"/>
         <parameter name="rate" type="int" value="100"/>
@@ -3299,27 +3289,16 @@
       </sensor>
     </dsm>
     <dsm derivedData="sock::31000" id="25" location="bench" name="dsm325" rserialPort="30002" statusAddr="sock::30001">
-<!--    derivedData changed from sock::7071 to 31000
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_325"/>
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_325"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
--->
-	<sensor class="DSC_A2DSensor"
-            devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
-        <calfile file="A2D007.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
-            <parameter name="rate" type="int" value="10"/>
-
-
-<!---        <parameter name="rate" type="int" value="500"/>-->
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_325A0" units="deg_C"/>
-        </sample>
-        <sample id="2" rate="10">
+	<sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
+        <parameter name="SerialNumber" type="string" value="W474510"/>
+        <parameter name="rate" type="int" value="100"/>
+        <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="10"/>
           <variable longname="" name="dsm325_A0_ch0" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
