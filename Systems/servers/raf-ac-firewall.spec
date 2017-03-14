@@ -1,20 +1,26 @@
 Name: raf-ac-firewall
-Version: 1.0
-Release: 11
+Version: 2.0
+Release: 0
 Summary: Iptables configuration for RAF aircraft server
 
 License: GPL
 Source: %{name}-%{version}.tar.gz
-Packager: Gordon Maclean <maclean@ucar.edu>
+Packager: Chris Webster <cjw@ucar.edu>
 Vendor: UCAR
 BuildArch: noarch
 
+%if 0%{?rhel} >= 7
+Requires: firewalld procps-ng
+%else
+Requires: iptables procps
+%endif
+
 # initscripts gives /etc/sysctl.conf, procps gives /sbin/sysctl
-Requires: iptables initscripts procps
+Requires: initscripts
 
 
 %description
-Iptables configuration for RAF aircraft server.
+Firewall configuration for RAF aircraft server.
 
 %prep
 %setup -n %{name}
@@ -27,7 +33,9 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/usr/local/admin
 install -d $RPM_BUILD_ROOT/etc/sysconfig
 cp -r usr/local/admin/raf-ac-firewall $RPM_BUILD_ROOT/usr/local/admin
+%if 0%{?rhel} < 7
 cp -r etc/sysconfig/iptables $RPM_BUILD_ROOT/etc/sysconfig
+%endif
 
 %triggerin -- iptables initscripts
 # %triggerin script is run when a given target package is installed or
@@ -46,6 +54,16 @@ fi
 if [ `sysctl -n net.ipv4.ip_forward` == 0 ]; then
     sysctl net.ipv4.ip_forward=1
 fi
+
+
+%if 0%{?rhel} >= 7
+/bin/systemctl enable firewalld
+
+/usr/local/admin/raf-ac-firewall/firewalld-setup.sh > /tmp/firewalld.$$
+
+/bin/systemctl restart firewalld
+
+%else
 
 # run the iptables-setup.sh script
 # convert counters in lines like ":PREROUTING ACCEPT [20971:4859482]" to 0:0
@@ -77,16 +95,23 @@ if ! { chkconfig --list iptables | fgrep -q "5:on"; }; then
 fi
 /etc/init.d/iptables restart
 
+%endif
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
+%if 0%{?rhel} < 7
 %config(noreplace) %attr(0600,root,root) /etc/sysconfig/iptables
+%endif
 %dir /usr/local/admin/raf-ac-firewall
 %config %attr(0755,root,root) /usr/local/admin/raf-ac-firewall/iptables-setup.sh
+%config %attr(0755,root,root) /usr/local/admin/raf-ac-firewall/firewalld-setup.sh
 
 %changelog
+* Tue Mar 14 2017 Chris Webster <cjw@ucar.edu> 2.0-0
+- Change from iptables to firewalld - CentOS 7.
 * Wed Sep 14 2016 Janine Aquino <janine@ucar.edu> 1.0-11
 - Fix typo in variable name SAFE_EXT_IFS.
 * Fri Aug 26 2016 Chris Webster <cjw@ucar.edu> 1.0-10
