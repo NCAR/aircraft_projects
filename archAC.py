@@ -477,7 +477,7 @@ if __name__ == "__main__":
     match = re.search("EOL",location)
     if not match:
 	print "\033[1;4;33mWarning: "+sys.argv[index+2]+" is depreciated!\033[0m\n"
-    (dir,calendaryear) = string.split(location,'/')
+    (dir,calendaryear) = string.rsplit(location,'/',1)
     #Optional e-mail argument
     if len(sys.argv)-1 >= index+3:
          email = sys.argv[index+3]
