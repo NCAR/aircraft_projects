@@ -1281,8 +1281,12 @@
       <serialSensor IDREF="UHSAS" devicename="/dev/ttyS9" id="4200" suffix="_RWOO">
         <parameter name="SerialNumber" type="string" value="UHSAS001"/>
       </serialSensor>
-      <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS10" id="4400" suffix="_DB"/>
-      <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS11" id="4600"/>
+      <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS10" id="4400" suffix="_DB">
+        <parameter name="lag" type = "float" value="1.0"/>
+      </serialSensor>
+      <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS11" id="4600">
+        <parameter name="lag" type = "float" value="1.0"/>
+      </serialSensor>
       <serialSensor IDREF="CO_2005" devicename="/dev/ttyS12" id="4800"/>
     </dsm>
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
