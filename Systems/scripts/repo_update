@@ -66,6 +66,7 @@ if [ ! -d $dir ]; then
 else
   cd $dir
   git pull origin master
+  git submodule foreach git pull origin master
   cd ..
 fi
 
@@ -94,7 +95,7 @@ if [ ! -d $dir ]; then
 else
   cd $dir
   git pull origin master
-  git submodule update --init
+  git submodule foreach git pull origin master
   cd ..
 fi
 
@@ -105,7 +106,7 @@ if [ ! -d $dir ]; then
 else
   cd $dir
   git pull origin master
-  git submodule update --init
+  git submodule foreach git pull origin master
   cd ..
 fi
 
