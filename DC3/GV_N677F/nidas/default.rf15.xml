@@ -1574,7 +1574,9 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS8" id="4200"/>
+      <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS8" id="4200">
+        <parameter name="lag" type = "float" value="1.0"/>
+      </serialSensor>
     </dsm>
     <dsm derivedData="sock::7071" id="4" location="cabin_mpdb" name="dsm304" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
