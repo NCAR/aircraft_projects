@@ -62,10 +62,12 @@ fi
 
 dir=ncpp
 if [ ! -d $dir ]; then
-  git clone https://github.com/ncar/$dir
+  # We need --recursive to get eol_scons.
+  git clone --recursive https://github.com/ncar/$dir
 else
   cd $dir
   git pull origin master
+  git submodule update --init
   git submodule foreach git pull origin master
   cd ..
 fi
@@ -90,22 +92,24 @@ fi
 
 dir=aeros
 if [ ! -d $dir ]; then
-  # We need --recursive for aeros to get eol_scons.
+  # We need --recursive to get eol_scons.
   git clone --recursive https://github.com/ncareol/$dir
 else
   cd $dir
   git pull origin master
+  git submodule update --init
   git submodule foreach git pull origin master
   cd ..
 fi
 
 dir=ric
 if [ ! -d $dir ]; then
-  # We need --recursive for aeros to get eol_scons.
+  # We need --recursive to get eol_scons.
   git clone --recursive https://github.com/ncareol/$dir
 else
   cd $dir
   git pull origin master
+  git submodule update --init
   git submodule foreach git pull origin master
   cd ..
 fi
