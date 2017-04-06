@@ -10,7 +10,6 @@
         </sample>
     </sensor>
     <arincSensor ID="IRS-C130" class="raf.IRS_HW_HG2001GD">
-
       <sample id="0132" process="true" rate="25">
         <variable longname="Hybrid True Heading - 132" name="THDGHYB" units="deg_T"/>
       </sample>
@@ -936,6 +935,7 @@
         <prompt rate="10" string="\x1b\x02\x1d\x00"/>
         <message length="156"/>
     </serialSensor>
+
 <!-- 
     CDP notes:  
       - The CDP can be either a 38400 or 57600 baud instrument.  This is controlled via a jumper that is on the back side
@@ -975,9 +975,9 @@
       </sample>
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
     </serialSensor>
-
     <serialSensor ID="BCPD" baud="57600" class="raf.BCPD_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
       <parameter name="calfile" type="string" value="PMSspecs"/>
+
 <!-- 
         Thresholds from Bill Dawson/Scott.  5/5/16
 -->
@@ -997,7 +997,6 @@
       </sample>
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
     </serialSensor>
-
     <serialSensor ID="UHSAS" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
         <parameter name="HSKP_SCALE" type="int" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000"/>
         <sample id="1" rate="10">
@@ -1260,7 +1259,6 @@
         </sample>
 -->
     </sensor>
-
     <sensor ID="CFDC" class="UDPSocketSensor" devicename="usock::30105" suffix="_CFDC">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
             <variable longname="CFDC IN Count" name="INC" units="counts/sec"/>
@@ -1273,7 +1271,6 @@
             <variable longname="CFDC Filter (ON=1)" name="FILTER" units="bool"/>
         </sample>
     </sensor>
-
     <serialSensor ID="CCN" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%f, %f, %f, %f, %f, %f, %f, %f, %f">
             <variable longname="CCN Sample Temperature" name="AT" units="deg_C"/>
@@ -1394,7 +1391,6 @@
          </sample>
          <message length="0" position="end" separator="\r\n"/>
      </serialSensor>
-
     <serialSensor ID="OphirIII" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%*d %c %f %f %f %f %f %f %f %f %f">
 
@@ -1495,9 +1491,7 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
   </sensorcatalog>
-
-
-  <site class="raf.Aircraft" name="C130_N130AR" applyCals="true">
+  <site applyCals="true" class="raf.Aircraft" name="C130_N130AR">
     <parameter name="tailNumber" type="string" value="N130AR"/>
     <parameter name="applyCals" type="bool" value="true"/>
     <server statusAddr="sock:127.0.0.1:30001">
@@ -1573,7 +1567,7 @@
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_318" units="deg_C"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_3181" units="deg_C"/>
         </sample>
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
@@ -1604,138 +1598,144 @@
           </variable>
         </sample>
       </sensor>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
+        <calfile file="A2D006.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2D Temperature" name="A2DTEMP_3182" units="deg_C"/>
+        </sample>
+      </sensor>
     </dsm>
 
     <dsm id="19" location="Fwd_DSM_2" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_319"/>
-        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS5" id="110">
-          <sample id="1">
-            <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="hPa"/>
-          </sample>
-          <sample id="2">
-            <variable longname="Temperature of QCF Probe" name="QCFTEMP" units="deg_C"/>
-          </sample>
-        </serialSensor>
-        <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000">
-          <sample id="0314" rate="25">
-            <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_319"/>
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS5" id="110">
+        <sample id="1">
+          <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="hPa"/>
+        </sample>
+        <sample id="2">
+          <variable longname="Temperature of QCF Probe" name="QCFTEMP" units="deg_C"/>
+        </sample>
+      </serialSensor>
+      <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000">
+        <sample id="0314" rate="25">
+          <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
               <linear units="degree_T">
                 <calfile file="THDG.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS1/"/>
               </linear>
-            </variable>
-          </sample>
-          <sample id="0324" rate="50">
-            <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
+          </variable>
+        </sample>
+        <sample id="0324" rate="50">
+          <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
               <linear units="degree">
                 <calfile file="PITCH.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS1/"/>
               </linear>
-            </variable>
-          </sample>
-        </arincSensor>
-        <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A"/>
-        <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
-            <sample id="5" rate="25">
-                <variable longname="Altitude above ground (radar altimeter)" name="HGM232" units="feet">
-                </variable>
-            </sample>
-        </sensor>
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D015.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
-            <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_319" units="deg_C"/>
-            </sample>
-            <sample id="2" rate="10">
-              <parameter name="filter" type="string" value="boxcar"/>
-              <parameter name="numpoints" type="int" value="50"/>
-              <variable longname="Raw Dynamic Pressure, Fuselage" name="CAVP_DPB" units="V">
-                <parameter name="channel" type="int" value="1"/>
-                <parameter name="gain" type="float" value="4"/>
-                <parameter name="bipolar" type="bool" value="false"/>
-                <poly units="hPa">
-                  <calfile file="CAVP_DPB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-                </poly>
-              </variable>
-            </sample>
-        </sensor>
-
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
+          </variable>
+        </sample>
+      </arincSensor>
+      <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
+      <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A"/>
+      <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
+        <sample id="5" rate="25">
+          <variable longname="Altitude above ground (radar altimeter)" name="HGM232" units="feet"/>
+        </sample>
+      </sensor>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+        <calfile file="A2D015.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2D Temperature" name="A2DTEMP_319" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Raw Dynamic Pressure, Fuselage" name="CAVP_DPB" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="hPa">
+              <calfile file="CAVP_DPB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
 
     <dsm id="20" location="Fwd_FS245_1" name="dsm320" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_320"/>
-        <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000" suffix="_IRS2">
-          <sample id="0314" rate="25">
-            <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
-              <linear units="degree_T">
-                <calfile file="THDG.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS2/"/>
-              </linear>
-            </variable>
-          </sample>
-          <sample id="0324" rate="50">
-            <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
-              <linear units="degree">
-                <calfile file="PITCH.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS2/"/>
-              </linear>
-            </variable>
-          </sample>
-        </arincSensor>
-        <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A2"/>
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="110" suffix="_DPT"/>
-        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS6" id="120">
-          <sample id="1">
-            <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="hPa"/>
-          </sample>
-          <sample id="2">
-            <variable longname="Temperature of QCR Probe" name="QCRTEMP" units="deg_C"/>
-          </sample>
-        </serialSensor>
-        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS7" id="130">
-            <sample id="1">
-                <variable longname="Raw Static Pressure, Fuselage" name="PSFD" units="hPa"/>
-            </sample>
-        </serialSensor>
-        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS8" id="140">
-            <sample id="1">
-                <variable longname="Raw Static Pressure, Fuselage" name="PSFRD" units="hPa"/>
-            </sample>
-        </serialSensor>
-        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS9" id="150">
-          <sample id="1">
-            <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="hPa"/>
-          </sample>
-          <sample id="2">
-            <variable longname="Temperature of ADIFR Probe" name="ADIFRTEMP" units="deg_C"/>
-          </sample>
-        </serialSensor>
-        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS10" id="160">
-          <sample id="1">
-            <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="hPa"/>
-          </sample>
-          <sample id="2">
-            <variable longname="Temperature of BDIFR Probe" name="BDIFRTEMP" units="deg_C"/>
-          </sample>
-        </serialSensor>
-        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS11" id="170">
-          <sample id="1">
-            <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="hPa"/>
-          </sample>
-          <sample id="2">
-            <variable longname="Temperature of QCFR Probe" name="QCFRTEMP" units="deg_C"/>
-          </sample>
-        </serialSensor>
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D003.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
-            <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_FWDFS0" units="deg_C"/>
-            </sample>
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_320"/>
+      <arincSensor IDREF="IRS-C130" devicename="/dev/arinc0" id="1000" suffix="_IRS2">
+        <sample id="0314" rate="25">
+          <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T">
+            <linear units="degree_T">
+              <calfile file="THDG.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS2/"/>
+            </linear>
+          </variable>
+        </sample>
+        <sample id="0324" rate="50">
+          <variable longname="IRS Aircraft Pitch Angle" name="PITCH" units="degree">
+            <linear units="degree">
+              <calfile file="PITCH.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/Instruments/C130_IRS2/"/>
+            </linear>
+          </variable>
+        </sample>
+      </arincSensor>
+      <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
+      <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A2"/>
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="110" suffix="_DPT"/>
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS6" id="120">
+        <sample id="1">
+          <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="hPa"/>
+        </sample>
+        <sample id="2">
+          <variable longname="Temperature of QCR Probe" name="QCRTEMP" units="deg_C"/>
+        </sample>
+      </serialSensor>
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS7" id="130">
+        <sample id="1">
+          <variable longname="Raw Static Pressure, Fuselage" name="PSFD" units="hPa"/>
+        </sample>
+      </serialSensor>
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS8" id="140">
+        <sample id="1">
+          <variable longname="Raw Static Pressure, Fuselage" name="PSFRD" units="hPa"/>
+        </sample>
+      </serialSensor>
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS9" id="150">
+        <sample id="1">
+          <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="hPa"/>
+        </sample>
+        <sample id="2">
+          <variable longname="Temperature of ADIFR Probe" name="ADIFRTEMP" units="deg_C"/>
+        </sample>
+      </serialSensor>
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS10" id="160">
+        <sample id="1">
+          <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="hPa"/>
+        </sample>
+        <sample id="2">
+          <variable longname="Temperature of BDIFR Probe" name="BDIFRTEMP" units="deg_C"/>
+        </sample>
+      </serialSensor>
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS11" id="170">
+        <sample id="1">
+          <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="hPa"/>
+        </sample>
+        <sample id="2">
+          <variable longname="Temperature of QCFR Probe" name="QCFRTEMP" units="deg_C"/>
+        </sample>
+      </serialSensor>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+        <calfile file="A2D003.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2D Temperature" name="A2DTEMP_FWDFS0" units="deg_C"/>
+        </sample>
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
@@ -1757,16 +1757,12 @@
           </variable>
         </sample>
       </sensor>
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
-            <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
-            <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_FWDFS1" units="deg_C"/>
-            </sample>
-        <sample id="2" rate="10">
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d00" id="220">
+        <parameter name="SerialNumber" type="string" value="W477534"/>
+        <parameter name="rate" type="int" value="100"/>
+        <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="10"/>
           <variable longname="Interior Cabin Static Pressure" name="PCAB" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="2"/>
@@ -1777,21 +1773,21 @@
           </variable>
         </sample>
       </sensor>
-        <output class="RawSampleOutputStream">
-            <socket block="false" type="mcrequest"/>
-        </output>
+      <output class="RawSampleOutputStream">
+        <socket block="false" type="mcrequest"/>
+      </output>
     </dsm>
 
     <dsm derivedData="sock::7071" id="21" location="Video_Rack" name="dsm321" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_321"/>
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130" suffix="_DPB"/>
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D008.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
-            <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_VID0" units="deg_C"/>
-            </sample>
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_321"/>
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130" suffix="_DPB"/>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+        <calfile file="A2D1601.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2D Temperature" name="A2DTEMP_VID0" units="deg_C"/>
+        </sample>
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
@@ -1813,13 +1809,13 @@
           </variable>
         </sample>
       </sensor>
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
-            <calfile file="A2D1702.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
-            <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_VID1" units="deg_C"/>
-            </sample>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
+        <calfile file="A2D1702.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2D Temperature" name="A2DTEMP_VID1" units="deg_C"/>
+        </sample>
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
@@ -1849,9 +1845,9 @@
           </variable>
         </sample>
       </sensor>
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
 
     <dsm derivedData="sock::7071" id="22" location="Left Wing Pod" name="dsm322" rserialPort="30002" statusAddr="sock::30001">
@@ -1889,19 +1885,19 @@
     </dsm>
 
     <dsm derivedData="sock::7071" id="23" location="AftOvrhd_L" name="dsm323" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_323"/>
-        <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
-            <sample id="1" rate="100">
-                <variable count="true" longname="TSI CN Counter Output" name="CNTS" units="count"/>
-            </sample>
-        </sensor>
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D1714.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
-            <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_AFTL0" units="deg_C"/>
-            </sample>
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_323"/>
+      <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
+        <sample id="1" rate="100">
+          <variable count="true" longname="TSI CN Counter Output" name="CNTS" units="count"/>
+        </sample>
+      </sensor>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+        <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2D Temperature" name="A2DTEMP_AFTL0" units="deg_C"/>
+        </sample>
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
@@ -1966,11 +1962,8 @@
             </sample>
         </sensor>
 -->
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="400">
-        <calfile file="A2D1714.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <calfile file="A2D018.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
@@ -1989,18 +1982,21 @@
           </variable>
         </sample>
       </sensor>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
 
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_324"/>
-        <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="150"/>
-        <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-            <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
-            <parameter name="rate" type="int" value="500"/>
-            <sample id="1" rate="1">
-                <parameter name="temperature" type="bool" value="true"/>
-                <variable longname="A2D Temperature" name="A2DTEMP_AFTR0" units="deg_C"/>
-            </sample>
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_324"/>
+      <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="150"/>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+        <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2D Temperature" name="A2DTEMP_AFTR0" units="deg_C"/>
+        </sample>
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
@@ -2038,9 +2034,6 @@
           </variable>
         </sample>
       </sensor>
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="400">
         <calfile file="A2D009.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
@@ -2059,51 +2052,54 @@
           </variable>
         </sample>
       </sensor>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
 
     <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmGustPod" rserialPort="30002" statusAddr="sock::30001">
-        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
-        <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
-            <sample id="1">
-                <variable longname="Raw Dynamic Pressure, Gust Pod" name="PS" units="hPa"/>
-            </sample>
-        </serialSensor>
-        <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS6" id="120" suffix="_GP">
-            <parameter name="INSTRUMENT" type="string" value="GUSTPOD"/>
-        </serialSensor>
-        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130" suffix="_GP">
-            <sample id="1">
-                <variable longname="Horizontal Differential Pressure, Gust Pod" name="BDIF" units="hPa"/>
-            </sample>
-            <sample id="2">
-                <variable longname="Temperature of BDIF Probe" name="BDIFTEMP" units="deg_C"/>
-            </sample>
-        </serialSensor>
-        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140" suffix="_GP">
-            <sample id="1">
-                <variable longname="Vertical Differential Pressure, Gust Pod" name="ADIF" units="hPa">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
+        <sample id="1">
+          <variable longname="Raw Dynamic Pressure, Gust Pod" name="PS" units="hPa"/>
+        </sample>
+      </serialSensor>
+      <serialSensor IDREF="CMIGITS3" devicename="/dev/ttyS6" id="120" suffix="_GP">
+          <parameter name="INSTRUMENT" type="string" value="GUSTPOD"/>
+      </serialSensor>
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130" suffix="_GP">
+        <sample id="1">
+          <variable longname="Horizontal Differential Pressure, Gust Pod" name="BDIF" units="hPa"/>
+        </sample>
+        <sample id="2">
+          <variable longname="Temperature of BDIF Probe" name="BDIFTEMP" units="deg_C"/>
+        </sample>
+      </serialSensor>
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140" suffix="_GP">
+        <sample id="1">
+          <variable longname="Vertical Differential Pressure, Gust Pod" name="ADIF" units="hPa">
 
 <!-- 
                    Compensate for inserting Gust Probe "upside down" 
 -->
-                   <linear intercept="0.0" slope="-1.0" units="hPa"/>
-                </variable>
-            </sample>
-            <sample id="2">
-                <variable longname="Temperature of ADIF Probe" name="ADIFTEMP" units="deg_C"/>
-            </sample>
-        </serialSensor>
-        <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS9" id="150" suffix="_GP">
-            <sample id="1">
-                <variable longname="Raw Dynamic Pressure, Gust Pod" name="QC" units="hPa"/>
-            </sample>
-            <sample id="2">
-                <variable longname="Temperature of QC Probe" name="QCTEMP" units="deg_C"/>
-            </sample>
-        </serialSensor>
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
+            <linear intercept="0.0" slope="-1.0" units="hPa"/>
+          </variable>
+        </sample>
+        <sample id="2">
+          <variable longname="Temperature of ADIF Probe" name="ADIFTEMP" units="deg_C"/>
+        </sample>
+      </serialSensor>
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS9" id="150" suffix="_GP">
+        <sample id="1">
+          <variable longname="Raw Dynamic Pressure, Gust Pod" name="QC" units="hPa"/>
+        </sample>
+        <sample id="2">
+          <variable longname="Temperature of QC Probe" name="QCTEMP" units="deg_C"/>
+        </sample>
+      </serialSensor>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
   </site>
 </project>
