@@ -255,7 +255,7 @@
        </serialSensor>
 <!--       <serialSensor IDREF="PIC_H2O" devicename="/dev/ttyS8" id="70" suffix="_CVIP"/> cjw 7/8/2016 -->
 
-<!-- input from LabView via socket -->
+<!-- input from display laptop via socket -->
         <socketSensor class="raf.CVI_LV_Input" devicename="inet::30006" id="60">
 
 <!-- 0.000,0.000,0.000,0.000,0.000,0,0,0,0,0,0,0,10.000,16784.917,8.434,3.668,5.609\r\n -->
@@ -303,7 +303,7 @@
             <parameter name="vout" type="string" value="/dev/dmmat_d2a0"/>
             <parameter name="dout" type="string" value="/dev/viper_dio0"/>
 
-<!-- These variables are sent to LabView over the CVIOutput socket -->
+<!-- These variables are sent to the display laptop over the CVIOutput socket -->
             <sample id="10000" rate="1">
                 <variable name="CNT1"/>
                 <variable name="CVF1"/>
@@ -352,7 +352,7 @@
                 <socket block="false" port="30007" type="server"/>
             </output>
 
-<!-- Uncomment this output to see what the DSM is sending to the LabView PC
+<!-- Uncomment this output to see what the DSM is sending to the display laptop
             <output class="raf.CVIOutput">
                 <fileset dir="/var/tmp"
                     file="cvi_%Y%m%d_%H%M%S.dat"
