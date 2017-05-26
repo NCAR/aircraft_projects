@@ -1156,7 +1156,7 @@
         -->
         </sensor>
 
-        <socketSensor ID="JAVAD_GPS" class="GPS_NMEA_Serial" devicename="usock::41002" id="1400" suffix="_JVD">
+        <serialSensor ID="JAVAD_GPS" class="GPS_NMEA_Serial" devicename="usock::41002" id="1400" suffix="_JVD">
             <!-- GGA record -->
             <sample id="1" rate="1">
                 <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="sec"/>
@@ -1184,7 +1184,7 @@
                 <variable longname="True Heading Angle" name="THDG" units="degree_T"/>
             </sample>
             <message length="0" position="end" separator="\r\n"/>
-        </socketSensor>
+        </serialSensor>
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
