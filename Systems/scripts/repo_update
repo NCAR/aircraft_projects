@@ -66,11 +66,8 @@ if [ ! -d $dir ]; then
   git clone --recursive https://github.com/ncar/$dir
 else
   cd $dir
-  cd source; scons -c; cd ..
   git pull origin master
-#  git submodule update --init
-#  git submodule foreach git pull origin master
-  git submodule foreach "(git checkout master; git pull; cd ..; git add '$path'; git commit -m 'Submodule Sync')"
+  git submodule update --recursive --remote
   cd ..
 fi
 
@@ -79,9 +76,7 @@ if [ ! -d $dir ]; then
   git clone --recursive https://github.com/ncar/$dir
 else
   cd $dir
-  scons -c
   git pull origin master
-  git submodule foreach "(git checkout master; git pull; cd ..; git add '$path'; git commit -m 'Submodule Sync')"
   cd ..
 fi
 
@@ -90,9 +85,8 @@ if [ ! -d $dir ]; then
   git clone --recursive https://github.com/ncar/$dir
 else
   cd $dir
-  scons -c
   git pull origin master
-  git submodule foreach "(git checkout master; git pull; cd ..; git add '$path'; git commit -m 'Submodule Sync')"
+  git submodule update --recursive --remote
   cd ..
 fi
 
@@ -103,10 +97,7 @@ if [ ! -d $dir ]; then
 else
   cd $dir
   git pull origin master
-  cd source; scons -c; cd ..
-#  git submodule update --init
-#  git submodule foreach git pull origin master
-  git submodule foreach "(git checkout master; git pull; cd ..; git add '$path'; git commit -m 'Submodule Sync')"
+  git submodule update --recursive --remote
   cd ..
 fi
 
@@ -117,10 +108,6 @@ if [ ! -d $dir ]; then
 else
   cd $dir
   git pull origin master
-  cd src; scons -c; cd ..
-#  git submodule update --init
-#  git submodule foreach git pull origin master
-  git submodule foreach "(git checkout master; git pull; cd ..; git add '$path'; git commit -m 'Submodule Sync')"
+  git submodule update --recursive --remote
   cd ..
 fi
-
