@@ -537,10 +537,9 @@
             <variable name="ACGAIN" units="count" longname="VCSEL AC Gain"/>
             <variable name="LSRINT" units="count" longname="VCSEL Averaged Laser Intensity"/>
         </sample>
-        <sample id="2" rate="25" scanfFormat="%f %f %f %*f">
+        <sample id="2" rate="25" scanfFormat="%f %f %*f %*f">
             <variable name="RAWCONC" units="#/cm3" longname="VCSEL Moisture Number Density"/>     <!-- molecules/cm^3 -->
             <variable name="SMPLSRINT" units="mV" longname="VCSEL Sample Laser Intensity"/>
-            <variable name="DPV" units="deg_C" longname="VCSEL Frost Dew Point"/>
         </sample>
         <!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
         <sample id="3" rate="1" scanfFormat="SPEC %98f">
@@ -833,50 +832,14 @@
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
 
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
-          <sample id="0314" rate="25">
-            <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
-              <linear slope="1.0" intercept="0.0" units="degree_T"/>
-            </variable>
-          </sample>
-          <sample id="0324" rate="50">
-            <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="0.3" units="degree"/>
-            </variable>
-          </sample>
-        </arincSensor>
-        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2">
-          <sample id="0314" rate="25">
-            <variable name="THDG" units="degree_T" longname="IRS Aircraft True Heading Angle">
-              <linear slope="1.0" intercept="0.24" units="degree_T"/>
-            </variable>
-          </sample>
-          <sample id="0324" rate="50">
-            <variable name="PITCH" units="degree" longname="IRS Aircraft Pitch Angle">
-              <linear slope="1.0" intercept="-0.16" units="degree"/>
-            </variable>
-          </sample>
-          <sample id="0325" rate="50">
-            <variable name="ROLL" units="degree"   longname="IRS Aircraft Roll Angle">
-              <linear slope="1.0" intercept="0.28" units="degree"/>
-            </variable>
-          </sample>
-        </arincSensor>
-
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
+        <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2"/>
         <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A">
-          <sample id="0165" rate="1">
-            <variable name="VSPD" units="m/s" longname="Avionics GPS Vertical Velocity">
-              <linear slope="1.02" intercept="-0.06" units="m/s"/>
-            </variable>
-          </sample>
-        </arincSensor>
+        <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A"/>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110">
 	    <sample id="1">
-                <variable name="PSF" units="hPa" longname="Raw Static Pressure, Fuselage">
-                    <linear slope="1.0014" intercept="-0.809" units="hPa"/>
-                </variable>
+                <variable name="PSF" units="hPa" longname="Raw Static Pressure, Fuselage"/>
 	    </sample>
         </serialSensor>
 
@@ -895,9 +858,7 @@
         <serialSensor IDREF="HoneywellPPT"
                 devicename="/dev/ttyS5" id="110">
             <sample id="1">
-                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage">
-                   <linear slope="0.9966" intercept="0.126" units="hPa"/>
-                </variable>
+                <variable name="QCF" units="hPa" longname="Raw Dynamic Pressure, Fuselage"/>
             </sample>
             <sample id="2">
                 <variable name="QCFTEMP" units="deg_C" longname="Temperature of QCF Probe"/>
@@ -907,9 +868,7 @@
         <serialSensor IDREF="HoneywellPPT"
                 devicename="/dev/ttyS6" id="120">
             <sample id="1">
-                <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome">
-                    <linear slope="1.0025" intercept="0.16" units="hPa"/>
-                </variable>
+                <variable name="QCR" units="hPa" longname="Raw Dynamic Pressure, Radome"/>
             </sample>
             <sample id="2">
                 <variable name="QCRTEMP" units="deg_C" longname="Temperature of QCR Probe"/>
@@ -919,9 +878,7 @@
         <serialSensor IDREF="HoneywellPPT"
                 devicename="/dev/ttyS7" id="130">
             <sample id="1">
-                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome">
- 		    <poly coefs="-1.280000e-01 1.002200e+00 -1.000000e-05" units="hPa"/>
-                </variable>
+                <variable name="ADIFR" units="hPa" longname="Vertical Differential Pressure, Radome"/>
             </sample>
             <sample id="2">
                 <variable name="ADIFRTEMP" units="deg_C" longname="Temperature of ADIFR Probe"/>
@@ -931,9 +888,7 @@
         <serialSensor IDREF="HoneywellPPT"
                 devicename="/dev/ttyS8" id="140">
             <sample id="1">
-                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome">
-                    <linear slope="1.001400" intercept=".06" units="hPa"/>
-                </variable>
+                <variable name="BDIFR" units="hPa" longname="Horizontal Differential Pressure, Radome"/>
             </sample>
             <sample id="2">
                 <variable name="BDIFRTEMP" units="deg_C" longname="Temperature of BDIFR Probe"/>
