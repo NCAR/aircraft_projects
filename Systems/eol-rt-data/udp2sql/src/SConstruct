@@ -1,8 +1,8 @@
 # -*- python -*-
 
-env = Environment(tools = ["default", "qt4", "nidas"])
+env = Environment(tools = ["default", "qt", "nidas"])
 
-env.Append(CXXFLAGS='-g -Werror')
+env.Append(CXXFLAGS='-g -Werror -fstack-check')
 env.ParseConfig('python-config --includes')
 env.ParseConfig('python-config --cflags')
 env.ParseConfig('python-config --libs')
