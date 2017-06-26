@@ -16,7 +16,8 @@ Requires: raf-lab-dhcp
 Requires: raf-lab-named
 Requires: raf-ads3-sudoers
 Requires: raf-www-control
-Requires: raf-postgresql
+# Temporary until we actually create the RPM.
+#Requires: raf-postgresql
 Requires: GMT
 Requires: postgresql-server
 Requires: kde-baseapps

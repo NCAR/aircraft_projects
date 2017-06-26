@@ -25,8 +25,7 @@ Requires: raf-ac-avaps
 Requires: raf-ac-mtp
 Requires: raf-www-control
 Requires: raf-www-camera
-# Not finished.
-#Requires: raf-postgresql
+Requires: raf-postgresql
 Requires: GMT
 Requires: ruby
 Requires: squid
