@@ -1,6 +1,6 @@
 Name: raf-c130
 Version: 1.0
-Release: 15
+Release: 16
 Summary: Metapackage for all server and satcom packages needed on C130
 
 License: GPL
@@ -21,10 +21,10 @@ Requires: raf-satcom
 #Requires: raf-satcom-bgan
 Requires: raf-ads3-sudoers
 Requires: raf-ac-nfs
+Requires: raf-ac-postgresql
 Requires: raf-ac-avaps
 Requires: raf-www-control
 Requires: raf-www-camera
-Requires: raf-postgresql
 Requires: GMT
 Requires: ruby
 Requires: squid
