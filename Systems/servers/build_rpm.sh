@@ -59,6 +59,13 @@ while [ "$dopkg" == all -o $# -gt 0 ]; do
         rpmbuild -bb ${pkg}.spec | tee -a $log  || exit $?
     fi
 
+    pkg=raf-catalog
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
+        rpmbuild -bb ${pkg}.spec | tee -a $log  || exit $?
+    fi
+
     pkg=raf-gv
     if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
         version=`get_version $pkg.spec`

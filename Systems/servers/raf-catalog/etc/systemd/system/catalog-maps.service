@@ -1,0 +1,37 @@
+#
+# adapted from http://trackless.ca/2015/12/21/docker-compose-meets-systemd/
+#
+
+#
+# deploy to /etc/systemd/system/catalog-maps.service
+# enable:
+#   systemctl enable catalog-maps.service
+# start:
+#   systemctl start catalog-maps.service
+
+[Unit]
+Description=Catalog Maps, Managed by Docker Compose
+After=docker.service
+BindsTo=docker.service
+Conflicts=shutdown.target reboot.target halt.target
+
+[Service]
+TimeoutStartSec=0
+TimeoutStopSec=30
+Restart=always
+RestartSec=10
+User=catalog
+WorkingDirectory=/home/catalog/catalog-maps
+
+ExecStartPre=-/usr/local/bin/docker-compose kill
+ExecStartPre=-/usr/local/bin/docker-compose rm
+ExecStartPre=-/usr/local/bin/docker-compose rm -f
+
+ExecStart=/usr/local/bin/docker-compose up --force-recreate
+
+ExecStop=/usr/local/bin/docker-compose stop
+
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
