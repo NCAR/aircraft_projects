@@ -31,7 +31,7 @@ ground stations.
 cp -r var %{buildroot}/
 sudo -u postgres /usr/bin/initdb /var/lib/pgsql/data
 sudo -u postgres /bin/systemctl start postgresql
-sudo -u postgres /usr/bin/cat psql-init.sql | sudo -u postgres psql
+sudo -u postgres /usr/bin/cat var/lib/pgsql/psql-init.sql | sudo -u postgres psql
 
 
 %clean
