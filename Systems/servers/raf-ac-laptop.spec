@@ -1,6 +1,6 @@
 Name: raf-ac-laptop
 Version: 1
-Release: 1
+Release: 2
 Summary: Package far RAF aircraft display laptops
 
 License: GPL
@@ -12,6 +12,8 @@ Requires: raf-ac-gdm
 Requires: firefox
 Requires: xchat
 Requires: tigervnc
+# Adding this so we can build aeros locally...
+Requires: raf-devel
 
 
 %description
@@ -49,10 +51,15 @@ chown -R ads:ads /home/ads/bin
 /bin/systemctl disable firewalld
 /bin/systemctl disable packagekitd
 
+/bin/rm /etc/localtime
+/bin/ln -s /usr/share/zoneinfo/UTC localtime
 
 %files
 
 %changelog
+* Tue Jul 25 2017 Chris Webster <cjw@ucar.edu> 1.2
+- Add raf-devel
+- Set timezone.
 * Mon Jan 16 2017 Chris Webster <cjw@ucar.edu> 1.1
 - Initial check in.
 
