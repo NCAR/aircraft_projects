@@ -91,7 +91,7 @@ EO_HOSTS_ALLOW
 fi
 
 
-sed '/^export AIRCRAFT/c\export AIRCRAFT=GV_N677F' ads3_environment.sh
+echo "export AIRCRAFT=GV_N677F" > /etc/profile.d/ads3.sh
 
 
 %files 

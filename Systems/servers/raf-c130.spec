@@ -88,7 +88,7 @@ EO_HOSTS_ALLOW
 fi
 
 
-sed '/^export AIRCRAFT/c\export AIRCRAFT=C130_N130AR' ads3_environment.sh
+echo "export AIRCRAFT=C130_N130AR" > /etc/profile.d/ads3.sh
 
 
 %files 

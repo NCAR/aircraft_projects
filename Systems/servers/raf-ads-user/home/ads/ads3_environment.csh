@@ -2,9 +2,8 @@
 # Environment for ads user
 #
 
-setenv AIRCRAFT Lab_N600
-#setenv AIRCRAFT GV_N677F
-#setenv AIRCRAFT C130_N130AR
+# This has moved to /etc/profile.d/ads3.csh
+#setenv AIRCRAFT Lab_N600
 
 setenv PGGRND real-time-`echo $AIRCRAFT | cut -d _ -f 1`
 

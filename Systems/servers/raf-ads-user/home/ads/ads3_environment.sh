@@ -2,9 +2,8 @@
 # Environment for ads user
 #
 
-export AIRCRAFT=Lab_N600
-#export AIRCRAFT=GV_N677F
-#export AIRCRAFT=C130_N130AR
+# This has moved to /etc/profile.d/ads3.sh
+#export AIRCRAFT=Lab_N600
 
 export PGGRND=real-time-`echo $AIRCRAFT | cut -d _ -f 1`
 
