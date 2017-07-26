@@ -59,6 +59,9 @@ mkdir -p ${RPM_BUILD_ROOT}/home/ads
 /bin/rm /etc/localtime
 /bin/ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
+# Turn off screen lock.
+/bin/gsettings set org.gnome.desktop.screensaver lock-enabled false
+
 
 %files
 %defattr(-,ads,ads)
