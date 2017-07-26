@@ -17,8 +17,3 @@ CREATE USER ads with LOGIN PASSWORD 'ads';
 CREATE USER nimbus with LOGIN PASSWORD 'nimbus';
 ALTER ROLE nimbus superuser;
 
---
--- Create required databases
---
-CREATE DATABASE real-time;
-

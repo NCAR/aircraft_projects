@@ -33,7 +33,7 @@ rm -rf %{buildroot}
 
 %files 
 %defattr(-,postgres,postgres)
-/var/lib/pgsql/psql-init-eolrtdata.sql
+%config /var/lib/pgsql/psql-init-eolrtdata.sql
 
 %changelog
 * Tue Jul 25 2017 Janine Aquino <janine@ucar.edu> 1.0-1

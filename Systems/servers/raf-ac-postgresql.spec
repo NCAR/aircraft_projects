@@ -27,13 +27,17 @@ ground stations.
 %prep
 %setup -q -n %{name}
 
+%pre
+su postgres -c "/usr/bin/initdb /var/lib/pgsql/data"
+/bin/systemctl enable postgresql.service
+/bin/systemctl restart postgresql
+
 %install
 cp -r var %{buildroot}/
 
 %post
-su postgres /usr/bin/initdb /var/lib/pgsql/data
-su postgres /bin/systemctl start postgresql
-su postgres "/usr/bin/cat var/lib/pgsql/psql-init.sql | psql"
+su postgres -c "/usr/bin/cat var/lib/pgsql/psql-init.sql | psql"
+createdb -U postgres real-time
 
 
 %clean
