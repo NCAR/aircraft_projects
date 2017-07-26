@@ -1,9 +1,10 @@
 Name: raf-ac-laptop
 Version: 1
-Release: 2
+Release: 3
 Summary: Package far RAF aircraft display laptops
 
 License: GPL
+Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 
 Requires: raf-ac-chrony
@@ -21,6 +22,8 @@ This package is a meta-package.  Its purpose is to list packages
 required in the EOL computing environment, such as ntp, cups, and rsh.
 
 %prep
+%setup -q -n %{name}
+
 
 %pre
 
@@ -43,20 +46,30 @@ fi
 %build
 
 %install
+rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}/home/ads
+
+/bin/cp -r home/ads/.ssh                  ${RPM_BUILD_ROOT}/home/ads
 
 
 %post
-chown -R ads:ads /home/ads/bin
-
 /bin/systemctl disable firewalld
 /bin/systemctl disable packagekitd
 
 /bin/rm /etc/localtime
 /bin/ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
+
 %files
+%defattr(-,ads,ads)
+%attr(0700,ads,ads) /home/ads/.ssh
+%attr(0600,ads,ads) /home/ads/.ssh/authorized_keys
+
 
 %changelog
+* Wed Jul 26 2017 Chris Webster <cjw@ucar.edu> 1.3
+- Add .ssh/authorized_key populated with id_rsa.pub
+- Removed /home/ads/bin.  Not needed at the moment.
 * Tue Jul 25 2017 Chris Webster <cjw@ucar.edu> 1.2
 - Add raf-devel
 - Set timezone.
