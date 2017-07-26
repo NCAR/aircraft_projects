@@ -29,21 +29,22 @@ ground stations.
 
 %install
 cp -r var %{buildroot}/
-sudo -u postgres /usr/bin/initdb /var/lib/pgsql/data
-sudo -u postgres /bin/systemctl start postgresql
-sudo -u postgres /usr/bin/cat var/lib/pgsql/psql-init.sql | sudo -u postgres psql
+
+%post
+su postgres /usr/bin/initdb /var/lib/pgsql/data
+su postgres /bin/systemctl start postgresql
+su postgres "/usr/bin/cat var/lib/pgsql/psql-init.sql | psql"
 
 
 %clean
 rm -rf %{buildroot}
 
-%post
 
 
 %files 
 %defattr(-,postgres,postgres)
-/var/lib/pgsql/data/pg_hba.conf
-/var/lib/pgsql/data/postgresql.conf
+%config /var/lib/pgsql/data/pg_hba.conf
+%config /var/lib/pgsql/data/postgresql.conf
 /var/lib/pgsql/psql-init.sql
 
 %changelog
