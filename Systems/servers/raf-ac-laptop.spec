@@ -15,11 +15,12 @@ Requires: xchat
 Requires: tigervnc
 # Adding this so we can build aeros locally...
 Requires: raf-devel
+Requires: GMT
 
 
 %description
-This package is a meta-package.  Its purpose is to list packages
-required in the EOL computing environment, such as ntp, cups, and rsh.
+Setup for aircraft display laptops.
+
 
 %prep
 %setup -q -n %{name}
@@ -59,7 +60,7 @@ mkdir -p ${RPM_BUILD_ROOT}/home/ads
 
 
 # Turn off screen lock.
-/bin/gsettings set org.gnome.desktop.screensaver lock-enabled false
+su ads -c "/bin/gsettings set org.gnome.desktop.screensaver lock-enabled false"
 
 
 %files
