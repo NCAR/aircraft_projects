@@ -23,7 +23,9 @@ installed after raf-ac-postgresql is installed.
 
 %install
 cp -r var %{buildroot}/
-sudo -u postgres /usr/bin/cat var/lib/pgsql/psql-init-eolrtdata.sql | sudo -u postgres psql
+
+%post
+su postgres "/usr/bin/cat var/lib/pgsql/psql-init-eolrtdata.sql | psql"
 
 
 %clean
