@@ -21,11 +21,21 @@ installed after raf-ac-postgresql is installed.
 %prep
 %setup -q -n %{name}
 
-%install
-cp -r var %{buildroot}/
-
 %post
-su postgres "/usr/bin/cat var/lib/pgsql/psql-init-eolrtdata.sql | psql"
+# Platforms database holds a list of all aircraft we support. Need one DB 
+# per aircraft.
+createdb -U postgres platforms
+createdb -U postgres real-time-A10
+createdb -U postgres real-time-B146
+createdb -U postgres real-time-C130
+createdb -U postgres real-time-DC8
+createdb -U postgres real-time-DLR
+createdb -U postgres real-time-GH
+createdb -U postgres real-time-N42RF
+createdb -U postgres real-time-N43RF
+createdb -U postgres real-time-N49RF
+createdb -U postgres real-time-WB57
+createdb -U postgres real-time-WKA
 
 
 %clean
