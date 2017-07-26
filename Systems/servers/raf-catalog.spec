@@ -1,5 +1,5 @@
 Name:           raf-catalog
-Version:        0.0.2
+Version:        0.0.4
 Release:        1%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
@@ -44,7 +44,7 @@ mkdir -pv $CATALOG_DIRS ${RPM_BUILD_ROOT}/var/lib/mod_tile ${RPM_BUILD_ROOT}/hom
 
 # SSH: `catuser` pub key, for products2plane
 
-cp raf-catalog/home/catalog/.ssh/id_rsa_catuser.pub ${RPM_BUILD_ROOT}/home/catalog/.ssh/id_rsa_catuser.pub
+cp raf-catalog/home/catalog/.ssh/id_rsa_* ${RPM_BUILD_ROOT}/home/catalog/.ssh/
 
 %files
 
@@ -71,9 +71,7 @@ cp raf-catalog/home/catalog/.ssh/id_rsa_catuser.pub ${RPM_BUILD_ROOT}/home/catal
 /home/catalog/products
 /var/lib/mod_tile
 /home/catalog/.ssh/id_rsa_catuser.pub
-#
-# TODO ?: authorized_keys
-#
+/home/catalog/.ssh/id_rsa_ej_kepler.pub
 
 %pre
 
@@ -110,8 +108,24 @@ systemctl start httpd
 
 systemctl enable catalog-maps
 
+#
+# ~catalog/.ssh/authorized_keys
+#
+
+touch /home/catalog/.ssh/authorized_keys
+
+if ! grep -q catuser /home/catalog/.ssh/authorized_keys ; then
+  cat /home/catalog/.ssh/id_rsa_catuser.pub >> /home/catalog/.ssh/authorized_keys
+fi
+
+if ! grep -q kepler /home/catalog/.ssh/authorized_keys ; then
+  cat /home/catalog/.ssh/id_rsa_ej_kepler.pub >> /home/catalog/.ssh/authorized_keys
+fi
+
 %changelog
-* Tue Jul 25 2017 Erik Johnson <ej@ucar.edu> - 0.0.2
+* Wed Jul 26 2017 Erik Johnson <ej@ucar.edu> - 0.0.4
+- Add catuser (products2plane) and ej SSH pub keys to ~catalog/.ssh/authorized_keys
+* Tue Jul 25 2017 Erik Johnson <ej@ucar.edu> - 0.0.3
 - catalog-maps.service: fix paths to docker-compose executable
 * Tue Jul 25 2017 Erik Johnson <ej@ucar.edu> - 0.0.1
 - ~catalog/.bashrc: dynamically populate CATALOG_UID/GID, CATALOG_PLANE environment variables, for use by Docker Compose
