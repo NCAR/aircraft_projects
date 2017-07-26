@@ -52,7 +52,7 @@ chown -R ads:ads /home/ads/bin
 /bin/systemctl disable packagekitd
 
 /bin/rm /etc/localtime
-/bin/ln -s /usr/share/zoneinfo/UTC localtime
+/bin/ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
 %files
 
