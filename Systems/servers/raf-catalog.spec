@@ -1,5 +1,5 @@
 Name:           raf-catalog
-Version:        0.0.4
+Version:        0.0.5
 Release:        1%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
@@ -45,6 +45,7 @@ mkdir -pv $CATALOG_DIRS ${RPM_BUILD_ROOT}/var/lib/mod_tile ${RPM_BUILD_ROOT}/hom
 # SSH: `catuser` pub key, for products2plane
 
 cp raf-catalog/home/catalog/.ssh/id_rsa_* ${RPM_BUILD_ROOT}/home/catalog/.ssh/
+cp raf-catalog/home/catalog/.bashrc ${RPM_BUILD_ROOT}/home/catalog/
 
 %files
 
@@ -72,6 +73,7 @@ cp raf-catalog/home/catalog/.ssh/id_rsa_* ${RPM_BUILD_ROOT}/home/catalog/.ssh/
 /var/lib/mod_tile
 /home/catalog/.ssh/id_rsa_catuser.pub
 /home/catalog/.ssh/id_rsa_ej_kepler.pub
+/home/catalog/.bashrc
 
 %pre
 
@@ -122,7 +124,11 @@ if ! grep -q kepler /home/catalog/.ssh/authorized_keys ; then
   cat /home/catalog/.ssh/id_rsa_ej_kepler.pub >> /home/catalog/.ssh/authorized_keys
 fi
 
+chown catalog:catalog /home/catalog/.ssh/authorized_keys
+
 %changelog
+* Wed Jul 26 2017 Erik Johnson <ej@ucar.edu> - 0.0.5
+- Fixes for ~catalog/.bashrc and ~catalog/.ssh/authorized_keys
 * Wed Jul 26 2017 Erik Johnson <ej@ucar.edu> - 0.0.4
 - Add catuser (products2plane) and ej SSH pub keys to ~catalog/.ssh/authorized_keys
 * Tue Jul 25 2017 Erik Johnson <ej@ucar.edu> - 0.0.3
