@@ -21,6 +21,10 @@ installed after raf-ac-postgresql is installed.
 %prep
 %setup -q -n %{name}
 
+%pre
+/usr/bin/timedatectl set-timezone UTC
+
+
 %post
 # Platforms database holds a list of all aircraft we support. Need one DB 
 # per aircraft.
@@ -41,9 +45,11 @@ createdb -U postgres real-time-WKA
 %clean
 rm -rf %{buildroot}
 
+
 %files 
 %defattr(-,postgres,postgres)
-%config /var/lib/pgsql/psql-init-eolrtdata.sql
+/var/lib/pgsql/psql-init-eolrtdata.sql
+
 
 %changelog
 * Tue Jul 25 2017 Janine Aquino <janine@ucar.edu> 1.0-1
