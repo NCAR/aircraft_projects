@@ -31,9 +31,6 @@ su postgres "/usr/bin/cat var/lib/pgsql/psql-init-eolrtdata.sql | psql"
 %clean
 rm -rf %{buildroot}
 
-%post
-
-
 %files 
 %defattr(-,postgres,postgres)
 /var/lib/pgsql/psql-init-eolrtdata.sql

@@ -154,6 +154,13 @@ while [ "$dopkg" == all -o $# -gt 0 ]; do
         rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
     fi
 
+    pkg=raf-ac-eolrtdata
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
+
     pkg=raf-ac-laptop
     if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
         version=`get_version $pkg.spec`
