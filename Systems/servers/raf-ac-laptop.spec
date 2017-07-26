@@ -26,6 +26,7 @@ required in the EOL computing environment, such as ntp, cups, and rsh.
 
 
 %pre
+/usr/bin/timedatectl set-timezone UTC
 
 adduser=false
 addeolgroup=false
@@ -56,8 +57,6 @@ mkdir -p ${RPM_BUILD_ROOT}/home/ads
 /bin/systemctl disable firewalld
 /bin/systemctl disable packagekitd
 
-/bin/rm /etc/localtime
-/bin/ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
 # Turn off screen lock.
 /bin/gsettings set org.gnome.desktop.screensaver lock-enabled false
