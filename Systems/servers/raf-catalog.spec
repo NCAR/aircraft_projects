@@ -1,5 +1,5 @@
 Name:           raf-catalog
-Version:        0.0.1
+Version:        0.0.2
 Release:        1%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
@@ -111,6 +111,8 @@ systemctl start httpd
 systemctl enable catalog-maps
 
 %changelog
+* Tue Jul 25 2017 Erik Johnson <ej@ucar.edu> - 0.0.2
+- catalog-maps.service: fix paths to docker-compose executable
 * Tue Jul 25 2017 Erik Johnson <ej@ucar.edu> - 0.0.1
 - ~catalog/.bashrc: dynamically populate CATALOG_UID/GID, CATALOG_PLANE environment variables, for use by Docker Compose
 - ~catalog/.bashrc: add short aliases for common commands

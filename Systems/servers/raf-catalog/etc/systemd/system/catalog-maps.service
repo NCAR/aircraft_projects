@@ -23,13 +23,13 @@ RestartSec=10
 User=catalog
 WorkingDirectory=/home/catalog/catalog-maps
 
-ExecStartPre=-/usr/local/bin/docker-compose kill
-ExecStartPre=-/usr/local/bin/docker-compose rm
-ExecStartPre=-/usr/local/bin/docker-compose rm -f
+ExecStartPre=-/usr/bin/docker-compose kill
+ExecStartPre=-/usr/bin/docker-compose rm
+ExecStartPre=-/usr/bin/docker-compose rm -f
 
-ExecStart=/usr/local/bin/docker-compose up --force-recreate
+ExecStart=/usr/bin/docker-compose up --force-recreate
 
-ExecStop=/usr/local/bin/docker-compose stop
+ExecStop=/usr/bin/docker-compose stop
 
 NotifyAccess=all
 
