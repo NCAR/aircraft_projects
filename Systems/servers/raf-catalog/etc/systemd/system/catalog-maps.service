@@ -27,7 +27,7 @@ ExecStartPre=-/usr/bin/docker-compose kill
 ExecStartPre=-/usr/bin/docker-compose rm
 ExecStartPre=-/usr/bin/docker-compose rm -f
 
-ExecStart=/usr/bin/docker-compose up --force-recreate
+ExecStart=/bin/bash --login -c '/usr/bin/docker-compose up --force-recreate'
 
 ExecStop=/usr/bin/docker-compose stop
 

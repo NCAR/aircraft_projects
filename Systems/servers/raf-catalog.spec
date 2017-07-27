@@ -1,5 +1,5 @@
 Name:           raf-catalog
-Version:        0.0.6
+Version:        0.0.7
 Release:        1%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
@@ -134,6 +134,9 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Thu Jul 26 2017 Erik Johnson <ej@ucar.edu> - 0.0.7
+- catalog-maps.service: load catalog user's environment when starting
+- sudoers/catalog: add commands to manage catalog-maps.service as catalog user
 * Wed Jul 26 2017 Erik Johnson <ej@ucar.edu> - 0.0.6
 - add /etc/sudoers.d/catalog
 * Wed Jul 26 2017 Erik Johnson <ej@ucar.edu> - 0.0.5
