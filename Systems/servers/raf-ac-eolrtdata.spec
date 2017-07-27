@@ -2,7 +2,6 @@ Name: raf-ac-eolrtdata
 Version: 1.0
 Release: 1
 Summary: Metapackage for requirements specific to eol-rt-data ground server.
-Source: %{name}-%{version}.tar.gz
 License: GPL
 
 Requires: raf-ac-postgresql
@@ -17,9 +16,6 @@ installed after raf-ac-postgresql is installed.
     - rpm -ivh install requires dependencies to be listed on the command line
       or already installed.
   - create platforms database
-
-%prep
-%setup -q -n %{name}
 
 %pre
 /usr/bin/timedatectl set-timezone UTC
@@ -45,11 +41,7 @@ createdb -U postgres real-time-WKA
 %clean
 rm -rf %{buildroot}
 
-
-%files 
-%defattr(-,postgres,postgres)
-/var/lib/pgsql/psql-init-eolrtdata.sql
-
+%files
 
 %changelog
 * Tue Jul 25 2017 Janine Aquino <janine@ucar.edu> 1.0-1
