@@ -1,5 +1,5 @@
 Name:           raf-catalog
-Version:        0.0.5
+Version:        0.0.6
 Release:        1%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
@@ -47,12 +47,19 @@ mkdir -pv $CATALOG_DIRS ${RPM_BUILD_ROOT}/var/lib/mod_tile ${RPM_BUILD_ROOT}/hom
 cp raf-catalog/home/catalog/.ssh/id_rsa_* ${RPM_BUILD_ROOT}/home/catalog/.ssh/
 cp raf-catalog/home/catalog/.bashrc ${RPM_BUILD_ROOT}/home/catalog/
 
+#
+# /etc/sudoers.d/catalog
+#
+mkdir -pv ${RPM_BUILD_ROOT}/etc/sudoers.d
+cp raf-catalog/etc/sudoers.d/catalog ${RPM_BUILD_ROOT}/etc/sudoers.d/catalog
+
 %files
 
 #
 # root files
 #
 %attr(0755,root,root) %{_bindir}/docker-compose
+%attr(0600,root,root) /etc/sudoers.d/catalog
 
 %defattr(644,catalog,catalog,755)
 /etc/httpd/conf.d/osm_tiles_and_catalog.conf
@@ -127,6 +134,8 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Wed Jul 26 2017 Erik Johnson <ej@ucar.edu> - 0.0.6
+- add /etc/sudoers.d/catalog
 * Wed Jul 26 2017 Erik Johnson <ej@ucar.edu> - 0.0.5
 - Fixes for ~catalog/.bashrc and ~catalog/.ssh/authorized_keys
 * Wed Jul 26 2017 Erik Johnson <ej@ucar.edu> - 0.0.4
