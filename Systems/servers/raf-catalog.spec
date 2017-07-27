@@ -134,7 +134,7 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
-* Thu Jul 26 2017 Erik Johnson <ej@ucar.edu> - 0.0.7
+* Thu Jul 27 2017 Erik Johnson <ej@ucar.edu> - 0.0.7
 - catalog-maps.service: load catalog user's environment when starting
 - sudoers/catalog: add commands to manage catalog-maps.service as catalog user
 * Wed Jul 26 2017 Erik Johnson <ej@ucar.edu> - 0.0.6
