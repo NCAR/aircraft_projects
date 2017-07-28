@@ -5,6 +5,7 @@ Summary: Metapackage for requirements specific to eol-rt-data ground server.
 License: GPL
 
 Requires: raf-ac-postgresql
+Requires: scons
 
 BuildArch: noarch
 
