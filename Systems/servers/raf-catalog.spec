@@ -1,5 +1,5 @@
 Name:           raf-catalog
-Version:        0.1.0
+Version:        0.1.1
 Release:        1%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
@@ -134,9 +134,38 @@ if ! grep -q kepler /home/catalog/.ssh/authorized_keys ; then
   cat /home/catalog/.ssh/id_rsa_ej_kepler.pub >> /home/catalog/.ssh/authorized_keys
 fi
 
+echo_notice () {
+  echo
+  echo '# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #'
+  echo
+  echo '  NOTICE: '
+  echo
+  echo "    $1"
+  echo
+  echo '# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #'
+  echo
+}
+
+#
+# check for existence of ~catalog/.ssh/id_rsa, if not, echo message to set it up
+#
+if [ ! -s ~catalog/.ssh/id_rsa ] ; then
+  echo_notice '~catalog/.ssh/id_rsa does not exist or is empty. Please set up a valid SSH key for the catalog user.'
+fi
+
+#
+# check if /var/lib/mod_tile is empty, if it is, echo message to populate it
+#
+if [ ! -d /var/lib/mod_tile/default ] || [ ! "$(ls -A /var/lib/mod_tile/default)" ] ; then
+  echo_notice '/var/lib/mod_tile/default does not exist or is empty. Please populate it w/ OpenStreetMap tiles, e.g. from /scr/ctm/ej/osm/mod_tile*.tar'
+fi
+
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Fri Jul 28 2017 Erik Johnson <ej@ucar.edu> - 0.1.1
+- Add conditional post-install messages re: ~catalog/.ssh/id_rsa and /var/lib/mod_tile
+- /etc/sudoers/catalog: add journalctl -u catalog-maps* for catalog user
 * Fri Jul 28 2017 Erik Johnson <ej@ucar.edu> - 0.1.0
 - Docker Compose: update to latest release: 1.15.0
 - Git: add ej-friendly git aliases
