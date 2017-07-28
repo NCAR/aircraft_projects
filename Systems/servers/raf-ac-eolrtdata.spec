@@ -2,6 +2,7 @@ Name: raf-ac-eolrtdata
 Version: 1.0
 Release: 1
 Summary: Metapackage for requirements specific to eol-rt-data ground server.
+Source: %{name}-%{version}.tar.gz
 License: GPL
 
 Requires: raf-ac-postgresql
@@ -22,11 +23,18 @@ installed after raf-ac-postgresql is installed.
     - yum install will install missing dependencies
     - rpm -ivh install requires dependencies to be listed on the command line
       or already installed.
-  - create platforms database
+  - install other dependencies
+  - create platforms database and aircraft-specific databases
+  - install crontab in /var/spool/cron/ads so will run as ads user on eol-rt-data
+
+%prep
+%setup -q -n %{name}
 
 %pre
 /usr/bin/timedatectl set-timezone UTC
 
+%install
+cp -r var %{buildroot}/
 
 %post
 # Platforms database holds a list of all aircraft we support. Need one DB 
@@ -50,7 +58,11 @@ createdb -U postgres real-time-WKA
 rm -rf %{buildroot}
 
 %files
+%defattr(-,postgres,postgres)
+%config /var/spool/cron/ads
 
 %changelog
+* Fri Jul 28 2017 Janine Aquino <janine@ucar.edu> 1.0-2
+- Install crontab
 * Tue Jul 25 2017 Janine Aquino <janine@ucar.edu> 1.0-1
 - Initial hack
