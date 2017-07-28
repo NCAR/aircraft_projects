@@ -17,7 +17,7 @@ Requires: tigervnc
 Requires: raf-devel
 Requires: GMT
 Requires: nidas
-Requires: nidas-build
+Requires: nidas-devel
 
 
 %description
