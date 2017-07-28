@@ -32,6 +32,7 @@ createdb -U postgres real-time-C130
 createdb -U postgres real-time-DC8
 createdb -U postgres real-time-DLR
 createdb -U postgres real-time-GH
+createdb -U postgres real-time-GV
 createdb -U postgres real-time-N42RF
 createdb -U postgres real-time-N43RF
 createdb -U postgres real-time-N49RF
