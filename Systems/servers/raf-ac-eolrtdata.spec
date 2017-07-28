@@ -7,6 +7,11 @@ License: GPL
 Requires: raf-ac-postgresql
 Requires: scons
 Requires: qt-devel
+Requires: nidas
+Requires: nidas-devel
+Requires: python-devel
+Requires: openssl-devel
+Requires: bzip2-devel
 
 BuildArch: noarch
 
