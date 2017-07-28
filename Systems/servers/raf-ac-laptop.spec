@@ -1,6 +1,6 @@
 Name: raf-ac-laptop
 Version: 1
-Release: 3
+Release: 4
 Summary: Package far RAF aircraft display laptops
 
 License: GPL
@@ -16,6 +16,8 @@ Requires: tigervnc
 # Adding this so we can build aeros locally...
 Requires: raf-devel
 Requires: GMT
+Requires: nidas
+Requires: nidas-build
 
 
 %description
@@ -70,6 +72,8 @@ su ads -c "/bin/gsettings set org.gnome.desktop.screensaver lock-enabled false"
 
 
 %changelog
+* Fri Jul 28 2017 Chris Webster <cjw@ucar.edu> 1.4
+- Add nidas and GMT packages.
 * Wed Jul 26 2017 Chris Webster <cjw@ucar.edu> 1.3
 - Add .ssh/authorized_key populated with id_rsa.pub
 - Removed /home/ads/bin.  Not needed at the moment.
