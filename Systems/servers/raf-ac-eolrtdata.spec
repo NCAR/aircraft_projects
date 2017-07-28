@@ -6,6 +6,7 @@ License: GPL
 
 Requires: raf-ac-postgresql
 Requires: scons
+Requires: qt-devel
 
 BuildArch: noarch
 
