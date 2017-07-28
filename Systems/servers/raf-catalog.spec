@@ -1,5 +1,5 @@
 Name:           raf-catalog
-Version:        0.0.7
+Version:        0.1.0
 Release:        1%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
@@ -30,7 +30,7 @@ mkdir -p %{buildroot}/%{_bindir}
 pwd
 ls -la
 env
-cp raf-catalog/docker-compose-Linux-x86_64-1.11.2 %{buildroot}/%{_bindir}/docker-compose
+cp raf-catalog/docker-compose-Linux-x86_64-1.15.0 %{buildroot}/%{_bindir}/docker-compose
 
 mkdir -p ${RPM_BUILD_ROOT}/etc/httpd/conf.d ${RPM_BUILD_ROOT}/etc/sysconfig/ ${RPM_BUILD_ROOT}/etc/systemd/system/
 
@@ -40,12 +40,13 @@ cp raf-catalog/etc/systemd/system/catalog-maps.service ${RPM_BUILD_ROOT}/etc/sys
 
 CATALOG_DIRS="${RPM_BUILD_ROOT}/home/catalog/products/incoming/gv ${RPM_BUILD_ROOT}/home/catalog/products/incoming/c130 ${RPM_BUILD_ROOT}/home/catalog/products/jail/gv ${RPM_BUILD_ROOT}/home/catalog/products/jail/c130 ${RPM_BUILD_ROOT}/home/catalog/products/html/gv ${RPM_BUILD_ROOT}/home/catalog/products/html/c130"
 
-mkdir -pv $CATALOG_DIRS ${RPM_BUILD_ROOT}/var/lib/mod_tile ${RPM_BUILD_ROOT}/home/catalog/.ssh/
+mkdir -pv $CATALOG_DIRS ${RPM_BUILD_ROOT}/var/lib/mod_tile ${RPM_BUILD_ROOT}/home/catalog/.ssh/ ${RPM_BUILD_ROOT}/home/catalog/docker/db
 
 # SSH: `catuser` pub key, for products2plane
 
 cp raf-catalog/home/catalog/.ssh/id_rsa_* ${RPM_BUILD_ROOT}/home/catalog/.ssh/
 cp raf-catalog/home/catalog/.bashrc ${RPM_BUILD_ROOT}/home/catalog/
+cp raf-catalog/home/catalog/.gitconfig ${RPM_BUILD_ROOT}/home/catalog/
 
 #
 # /etc/sudoers.d/catalog
@@ -81,6 +82,8 @@ cp raf-catalog/etc/sudoers.d/catalog ${RPM_BUILD_ROOT}/etc/sudoers.d/catalog
 /home/catalog/.ssh/id_rsa_catuser.pub
 /home/catalog/.ssh/id_rsa_ej_kepler.pub
 /home/catalog/.bashrc
+/home/catalog/.gitconfig
+/home/catalog/docker/db
 
 %pre
 
@@ -134,6 +137,10 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Fri Jul 28 2017 Erik Johnson <ej@ucar.edu> - 0.1.0
+- Docker Compose: update to latest release: 1.15.0
+- Git: add ej-friendly git aliases
+- Docker: add ~catalog/docker/db volume directory for db (mysql) service
 * Thu Jul 27 2017 Erik Johnson <ej@ucar.edu> - 0.0.7
 - catalog-maps.service: load catalog user's environment when starting
 - sudoers/catalog: add commands to manage catalog-maps.service as catalog user
