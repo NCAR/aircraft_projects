@@ -1,4 +1,4 @@
-Name: raf-ac-eolrtdata
+Name: raf-eol-rt-data
 Version: 1.0
 Release: 1
 Summary: Metapackage for requirements specific to eol-rt-data ground server.
