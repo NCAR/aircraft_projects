@@ -173,7 +173,7 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
-* Fri Jul 28 2017 Erik Johnson <ej@ucar.edu> - 0.1.3
+* Mon Jul 31 2017 Erik Johnson <ej@ucar.edu> - 0.1.3
 - catalog-user group friendliness:
 - add group eol to catalog user as its primary group
 - ensure that ~catalog/products has group-write permissions and eol group
