@@ -1,5 +1,5 @@
 Name:           raf-catalog
-Version:        0.1.2
+Version:        0.1.3
 Release:        1%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
@@ -74,13 +74,17 @@ cp raf-catalog/etc/sudoers.d/catalog ${RPM_BUILD_ROOT}/etc/sudoers.d/catalog
 
 #%defattr(file perms, user, group, dir perms)
 %defattr(644,catalog,catalog,755)
-/home/catalog/products
 /var/lib/mod_tile
 /home/catalog/.ssh/id_rsa_catuser.pub
 /home/catalog/.ssh/id_rsa_ej_kepler.pub
 /home/catalog/.bashrc
 /home/catalog/.gitconfig
 /home/catalog/docker/db
+
+#
+# make /home/catalog/products group eol and group writable, so that ads can write files
+#
+%attr(775,catalog,eol) /home/catalog/products
 
 %pre
 
@@ -97,6 +101,15 @@ _adddockergroup=false
 grep -q ^docker: /etc/group || _adddockergroup=true
 $_adddockergroup && groupadd docker
 usermod -aG docker catalog
+
+
+#
+# add eol group, add catalog user to eol group
+#
+_addeolgroup=false
+grep -q ^eol: /etc/group || _addeolgroup=true
+$_addeikgroup && groupadd eol
+usermod -g eol catalog
 
 %post
 chmod 700 /home/catalog/.ssh
@@ -160,6 +173,12 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Fri Jul 28 2017 Erik Johnson <ej@ucar.edu> - 0.1.3
+- catalog-user group friendliness:
+- add group eol to catalog user as its primary group
+- ensure that ~catalog/products has group-write permissions and eol group
+- set catalog user's umask to 002
+- set CATALOG_GID to eol's gid
 * Fri Jul 28 2017 Erik Johnson <ej@ucar.edu> - 0.1.2
 - build: remove debugging statements and remove --verbose flags from commands
 * Fri Jul 28 2017 Erik Johnson <ej@ucar.edu> - 0.1.1
