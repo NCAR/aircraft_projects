@@ -1,5 +1,5 @@
 Name:           raf-catalog
-Version:        0.1.3
+Version:        0.1.4
 Release:        1%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
@@ -108,7 +108,7 @@ usermod -aG docker catalog
 #
 _addeolgroup=false
 grep -q ^eol: /etc/group || _addeolgroup=true
-$_addeikgroup && groupadd eol
+$_addeolgroup && groupadd eol
 usermod -g eol catalog
 
 %post
@@ -173,6 +173,10 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Mon Jul 31 2017 Erik Johnson <ej@ucar.edu> - 0.1.4
+- catalog user:
+- revert method of setting CATALOG_GID, since eol is primary group
+- fix typo
 * Mon Jul 31 2017 Erik Johnson <ej@ucar.edu> - 0.1.3
 - catalog-user group friendliness:
 - add group eol to catalog user as its primary group

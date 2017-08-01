@@ -11,7 +11,7 @@ umask 002
 # export SYSTEMD_PAGER=
 
 export CATALOG_UID=`id -u`
-export CATALOG_GID=`getent group eol | cut -d : -f 3`
+export CATALOG_GID=`id -g`
 
 export CATALOG_PLANE=`echo $AIRCRAFT | cut -d _ -f 1 | awk '{print tolower($0)}'`
 
