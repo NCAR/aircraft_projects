@@ -104,7 +104,7 @@ fi
 
 $addeolgroup && /usr/sbin/groupadd -g 1342 -o eol
 $addadsgroup && /usr/sbin/groupadd -g 1318 -o ads
-$adduser && /usr/sbin/useradd  -u 12900 -N -g ads -G eol -s /bin/bash -c "ADS operator" -K PASS_MAX_DAYS=-1 ads || :
+$adduser && /usr/sbin/useradd  -u 12900 -N -g eol -G ads -s /bin/bash -c "ADS operator" -K PASS_MAX_DAYS=-1 ads || :
 
 if ! grep eol /etc/group | grep -q ads; then
     ypmatch eol group > /dev/null 2>&1 || usermod -G eol ads
