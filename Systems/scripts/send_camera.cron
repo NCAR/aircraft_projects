@@ -130,7 +130,7 @@ case "$feed" in
 	    ../montage/${file}
 	cd ../montage
 	;;
-esac	
+esac
 
 # exit if this file was already sent
 [[ -f ../sent/$key$file ]] && exit
@@ -156,5 +156,5 @@ plane=`echo $AIRCRAFT | cut -d _ -f 1`
 catalog_ingest_dir=/home/catalog/products/incoming/${plane,,}
 
 if [ -d $catalog_ingest_dir ]; then
-  cp ../sent/$key$file $catalog_ingest_dir/aircraft.NSF_NCAR_$plane.`camera_image_to_catalog_time $file`.forward_camera.jpg
+  cp ../sent/$key$file $catalog_ingest_dir/aircraft.NSF_NCAR_$plane.`camera_image_to_catalog_time $file`.$camera_camera.jpg
 fi
