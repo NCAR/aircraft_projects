@@ -20,3 +20,7 @@ export CATALOG_PLANE=`echo $AIRCRAFT | cut -d _ -f 1 | awk '{print tolower($0)}'
 alias g=git
 alias d=docker
 alias dc=docker-compose
+alias cmaps='cd ~/catalog-maps'
+alias cingest='cd ~/catalog-ingest'
+alias cproducts='cd ~/products'
+alias ..='cd ..'

@@ -1,5 +1,5 @@
 Name:           raf-catalog
-Version:        0.1.4
+Version:        0.1.5
 Release:        1%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
@@ -144,6 +144,10 @@ if ! grep -q kepler /home/catalog/.ssh/authorized_keys ; then
   cat /home/catalog/.ssh/id_rsa_ej_kepler.pub >> /home/catalog/.ssh/authorized_keys
 fi
 
+if ! grep -q gstoss-macbook /home/catalog/.ssh/authorized_keys ; then
+  cat /home/catalog/.ssh/id_rsa_gstoss_macbook.pub >> /home/catalog/.ssh/authorized_keys
+fi
+
 echo_notice () {
   echo
   echo '# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #'
@@ -173,6 +177,9 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Wed Aug 02 2017 Erik Johnson <ej@ucar.edu> - 0.1.5
+- Add gstoss-macbook SSH key to ~catalog/.ssh/authorized_keys
+- Add ej-friendly bash aliases to ~catalog/.bashrc
 * Mon Jul 31 2017 Erik Johnson <ej@ucar.edu> - 0.1.4
 - catalog user:
 - revert method of setting CATALOG_GID, since eol is primary group
