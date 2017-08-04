@@ -47,25 +47,14 @@ mv $RPM_BUILD_ROOT/var/www/html/flight_data/cgi-bin/flight_data $RPM_BUILD_ROOT/
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root)
-%attr(0664, ads, apache) /var/www/html/index.html
-%attr(0664, ads, apache) /var/www/html/flight_data/*html
-%dir %attr(0775, ads, apache) /var/www/html/flight_data
-%attr(0664, ads, apache) /var/www/html/flight_data/js/*
-%dir %attr(0775, ads, apache) /var/www/html/flight_data/js
-%attr(0664, ads, apache) /var/www/html/flight_data/css/*
-%dir %attr(0775, ads, apache) /var/www/html/flight_data/css
-%attr(0664, ads, apache) /var/www/html/flight_data/images/*
-%dir %attr(0775, ads, apache) /var/www/html/flight_data/images
-%attr(0664, ads, apache) /var/www/html/flight_data/GE/*
-%dir %attr(0775, ads, apache) /var/www/html/flight_data/GE
-%attr(0664, ads, apache) /var/www/html/flight_data/display/*
-%dir %attr(0775, ads, apache) /var/www/html/flight_data/display
-
-%attr(0775, ads, apache) /var/www/cgi-bin/flight_data/*
-%dir %attr(0775, ads, apache) /var/www/cgi-bin/flight_data
+%defattr(0664, ads, apache, 0775)
+/var/www/html/index.html
+/var/www/html/flight_data
+/var/www/cgi-bin/flight_data
 
 %changelog
+* Fri Aug 4 2017 <cjw@ucar.edu> 1-3
+- Cleanup %files section of spec file.
 * Tue Feb 28 2012 <cjw@ucar.edu> 1-3
 - Fixed image timestamp labels not being on top.
 - Add 'x' to popup balloons.
