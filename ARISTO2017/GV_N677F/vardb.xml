@@ -1179,7 +1179,7 @@
       <long_name>UHSAS Concentration (per cell)</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
-      <dependencies>AUHSAS UFLWC USCAT</dependencies>
+      <dependencies>AUHSAS USMPFLW USCAT</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="CVEW">
@@ -2015,6 +2015,7 @@
       <long_name>Fast Ozone Mixing Ratio</long_name>
       <is_analog>false</is_analog>
       <category>Chemistry</category>
+      <derive>FO3C</derive>
       <reference>false</reference>
     </variable>
     <variable name="FPCRC">
@@ -3875,6 +3876,24 @@
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
+    <variable name="PSTF">
+      <units>hPa</units>
+      <long_name>Raw Static Pressure, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <category>Uncorr'd Raw</category>
+      <derive>PSTFC</derive>
+      <standard_name>air_pressure</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="PSTFC">
+      <units>hPa</units>
+      <long_name>Corrected Static Pressure, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <category>Atmos. State</category>
+      <dependencies>PSTF QCTF ATTACK SSLIP</dependencies>
+      <standard_name>air_pressure</standard_name>
+      <reference>false</reference>
+    </variable>
     <variable name="PSTT">
       <units>count</units>
       <long_name>PCAS Signal Transit Time</long_name>
@@ -4079,6 +4098,24 @@
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
       <dependencies>QCR PSF QCF ATTACK</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="QCTF">
+      <units>hPa</units>
+      <long_name>Raw Dynamic Pressure, Top of Fuselage</long_name>
+      <is_analog>true</is_analog>
+      <voltage_range>0 10</voltage_range>
+      <default_sample_rate>100</default_sample_rate>
+      <category>Uncorr'd Raw</category>
+      <derive>QCTFC</derive>
+      <reference>false</reference>
+    </variable>
+    <variable name="QCTFC">
+      <units>hPa</units>
+      <long_name>Corrected Dynamic Pressure, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <category>Aircraft State</category>
+      <dependencies>PSTF QCTF ATTACK SSLIP</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="QCW">
