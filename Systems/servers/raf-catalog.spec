@@ -1,5 +1,5 @@
 Name:           raf-catalog
-Version:        0.1.6
+Version:        0.1.7
 Release:        1%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
@@ -181,6 +181,8 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Thu Aug 17 2017 Erik Johnson <ej@ucar.edu> - 0.1.7
+- ~/.bashrc: use AIRCRAFT for hostname in PS1, alias ll='ls -la'
 * Thu Aug 03 2017 Erik Johnson <ej@ucar.edu> - 0.1.6
 - Add loehrer@shiraz SSH key to ~catalog/.ssh/authorized_keys
 * Wed Aug 02 2017 Erik Johnson <ej@ucar.edu> - 0.1.5
