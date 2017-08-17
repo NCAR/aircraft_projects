@@ -1,6 +1,6 @@
 Name: raf-ads3-sudoers
 Version: 1.0
-Release: 4
+Release: 5
 Summary: Package containing updates for /etc/sudoers file for ADS3 data acquisition
 
 License: GPL
@@ -26,18 +26,25 @@ rm -rf $RPM_BUILD_ROOT
 tmpsudo=/tmp/sudoers_$$
 cp /etc/sudoers $tmpsudo
 
+# Add /opt/nidas/bin to secure_path
+if grep -q "secure_path" $tmpsudo; then
+    if grep "secure_path" $tmpsudo & ! grep -q nidas $tmpsudo; then
+        sed -i -r 's@(.*secure_path.*)$@\1:/opt/nidas/bin@' $tmpsudo
+    fi
+fi
+
 # add mkfs, tune2fs, dumpe2fs to STORAGE alias
 if grep -q "^Cmnd_Alias STORAGE" $tmpsudo; then
-    if ! grep "^Cmnd_Alias STORAGE" | grep -q mkfs $tmpsudo; then
+    if ! grep "^Cmnd_Alias STORAGE" $tmpsudo | grep -q mkfs $tmpsudo; then
         sed -i -r 's@^(Cmnd_Alias STORAGE.*)$@\1, /sbin/fsck, /sbin/fsck.ext3, /sbin/mkfs, /sbin/mkfs.ext3, /sbin/tune2fs, /sbin/dumpe2fs@' $tmpsudo
     fi
 else
     echo "Cmnd_Alias STORAGE = /sbin/fdisk, /sbin/sfdisk, /sbin/parted, /sbin/partprobe, /bin/mount, /bin/umount, /sbin/fsck, /sbin/fsck.ext3, /sbin/mkfs, /sbin/mkfs.ext3, /sbin/tune2fs, /sbin/dumpe2fs" >> $tmpsudo
 fi
 
-# add mkfs, tune2fs, dumpe2fs to STORAGE alias
+# add modprobe DRIVERS alias
 if grep -q "^Cmnd_Alias DRIVERS" $tmpsudo; then
-    if ! grep "^Cmnd_Alias DRIVERS" | grep -q mkfs $tmpsudo; then
+    if ! grep "^Cmnd_Alias DRIVERS" $tmpsudo | grep -q modprobe $tmpsudo; then
         sed -i -r 's@^(Cmnd_Alias DRIVERS.*)$@\1, /sbin/modprobe, /sbin/rmmod@' $tmpsudo
     fi
 else
@@ -96,6 +103,9 @@ fi
 %files
 
 %changelog
+* Thu Aug 17 2017 Chris Webster <cjw@ucar.edu> 1.0-5
+- Add /opt/nidas/bin to secure_path.
+- Fix some grep commands that did not have a file name.
 * Thu May 16 2013 Chris Webster <cjw@ucar.edu> 1.0-4
 - Add firewire driver reload program (reload_fw) for cameras.
 * Sat Apr  7 2012 Gordon Maclean <maclean@ucar.edu> 1.0-3
