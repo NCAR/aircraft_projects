@@ -49,6 +49,8 @@ BuildArch: noarch
 Metapackage for all server and satcom packages needed on C130.
 
 %pre
+/usr/bin/timedatectl set-timezone UTC
+
 dir=/home/local
 if [ ! -d $dir ]; then
   mkdir -p $dir/bin $dir/include $dir/lib
@@ -94,6 +96,8 @@ echo "export AIRCRAFT=C130_N130AR" > /etc/profile.d/ads3.sh
 %files 
 
 %changelog
+* Fri Aug 18 2017 Catherine Dewerd <cdewerd@ucar.edu> 1.0-15
+- Add set timezone to bring %pre to parity with raf-gc.spec
 * Sun Feb 26 2017 Chris Webster <cjw@ucar.edu> 1.0-15
 - Bring in parity with raf-gv.spec.  %post additions.
 * Mon Jan 16 2017 Chris Webster <cjw@ucar.edu> 1.0-15
