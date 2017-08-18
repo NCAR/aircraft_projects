@@ -1573,28 +1573,20 @@
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Radiometric Surface Temperature" name="TRSTB" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="deg_C">
+              <calfile file="TRSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
           <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH2" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
               <calfile file="RTH2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
-            <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="deg_C">
-              <calfile file="RSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="deg_C">
-              <calfile file="RSTB1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
@@ -1800,14 +1792,6 @@
               <calfile file="RTH1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="UV Hygrometer Pressure" name="XUVP" units="V">
-            <parameter name="channel" type="int" value="7"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="XUVP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
         </sample>
       </sensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
@@ -1820,28 +1804,20 @@
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="UV Hygrometer Temperature" name="XUVT" units="V">
+          <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
             <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="XUVT.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="UV Hygrometer Intensity" name="XUVI" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="XUVI.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Radiometric Surface Temperature" name="TRSTB" units="V">
-            <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="V">
-              <calfile file="TRSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="RSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="V">
+              <calfile file="RSTB1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
@@ -1850,7 +1826,7 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
-
+<!--
     <dsm derivedData="sock::7071" id="22" location="Left Wing Pod" name="dsm322" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_322"/>
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300" latency="0.25">
@@ -1941,28 +1917,6 @@
         </sample>
       </sensor>
 
-<!--
-        <sensor class="raf.DSMAnalogSensor"    devicename="/dev/ncar_a2d1" id="220">
-            <calfile path="$PROJ_DIR/Configuration/raf/cal_files/A2D" file="A2D1704.dat"/>
-            <parameter name="rate" value="500" type="int"/>
-            <sample id="1" rate="10">
-                <parameter name="filter" value="boxcar" type="string"/>
-                <parameter name="numpoints" value="50" type="int"/>
-                <variable name="THIML1" units="V" longname="HIMIL Tip Temperature">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <poly coefs="0 100 0" units="deg_C"/>
-                </variable>
-                <variable name="THIML2" units="V" longname="HIMIL Tip Temperature">
-                    <parameter name="gain" value="4" type="float"/> <parameter name="bipolar" value="false" type="bool"/>
-                    <poly coefs="0 100 0" units="deg_C"/>
-                </variable>
-            </sample>
-            <sample id="2" rate="1">
-                <parameter name="temperature" value="true" type="bool"/>
-                <variable name="A2DTEMP_AFTL1" units="deg_C" longname="A2D Temperature"/>
-            </sample>
-        </sensor>
--->
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="400">
         <calfile file="A2D018.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
@@ -1987,10 +1941,12 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
+-->
 
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_324"/>
-      <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="150"/>
+      <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS5" id="150"/>
+      <serialSensor IDREF="PIC2311_CO2" devicename="/dev/ttyS6" id="600" suffix="_PIC2311"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
         <calfile file="A2D002.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
@@ -2015,22 +1971,6 @@
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="V">
               <calfile file="RICE.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC1" units="V">
-            <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="W">
-              <calfile file="PLWC1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Radiometric Sky/Cloud-Base Temperature" name="RSTT" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="deg_C">
-              <calfile file="RSTT.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
