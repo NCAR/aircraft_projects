@@ -30,7 +30,7 @@ unset LD_LIBRARY_PATH
 
 export MANPATH=/usr/share/man:/opt/local/man
 
-if [ -z "$TERM" -a $OSTYPE == linux ]; then
+if [ -n "$TERM" ]; then
   alias ls='ls --color=tty'
   if [ $AIRCRAFT == "Lab_N600" ]; then
     set PS1="%{\033]0;%m:%~\007%}%m \!% "
