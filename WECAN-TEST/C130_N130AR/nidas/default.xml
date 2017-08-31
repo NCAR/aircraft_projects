@@ -1750,7 +1750,7 @@
           </variable>
         </sample>
       </sensor>
-      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d00" id="220">
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="220">
         <parameter name="SerialNumber" type="string" value="W477534"/>
         <parameter name="rate" type="int" value="100"/>
         <sample id="1" rate="10">
@@ -1983,7 +1983,9 @@
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_AFTR1" units="deg_C"/>
         </sample>
-        <sample id="3" rate="500">
+        <sample id="3" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
           <variable longname="Dummy to facilitate delivery of A2D Temperature" name="DUMMY_AFTR1" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="1"/>
