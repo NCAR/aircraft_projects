@@ -18,6 +18,11 @@ mkdir ${DAT}
 nice ./run_nimbus
 nice ./reorder_all
 nice ./run_proc2d
+nice ../scripts/AddWIF TORERO ${DAT}
+nice ../scripts/AddHtTerrain TORERO ${DAT} -40 10 -105 -70 no
+# (Yes will download the terrain ht DB for the area of interest for this
+# project. It takes forever. Change to no after first run to speed things
+# up.)
 
 kill $xvpid
 exit 0
