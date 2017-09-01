@@ -49,6 +49,12 @@ BuildArch: noarch
 Metapackage for all server and satcom packages needed on C130.
 
 %pre
+# Install EPEL
+rpm -ivh  http://download.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+# Install EOL EPEL
+rpm -ihv http://www.eol.ucar.edu/software/rpms/eol-repo-epel-1-3.noarch.rpm
+
 /usr/bin/timedatectl set-timezone UTC
 
 dir=/home/local
@@ -97,7 +103,7 @@ echo "export AIRCRAFT=C130_N130AR" > /etc/profile.d/ads3.sh
 
 %changelog
 * Fri Aug 18 2017 Catherine Dewerd <cdewerd@ucar.edu> 1.0-15
-- Add set timezone to bring %pre to parity with raf-gc.spec
+- Add set timezone to bring %pre to parity with raf-gv.spec
 * Sun Feb 26 2017 Chris Webster <cjw@ucar.edu> 1.0-15
 - Bring in parity with raf-gv.spec.  %post additions.
 * Mon Jan 16 2017 Chris Webster <cjw@ucar.edu> 1.0-15

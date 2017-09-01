@@ -50,6 +50,13 @@ BuildArch: noarch
 Metapackage for all server and satcom packages needed on GV.
 
 %pre
+
+# Install EPEL
+rpm -ivh  http://download.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
+
+# Install EOL EPEL
+rpm -ihv http://www.eol.ucar.edu/software/rpms/eol-repo-epel-1-3.noarch.rpm
+
 /usr/bin/timedatectl set-timezone UTC
 
 dir=/home/local
