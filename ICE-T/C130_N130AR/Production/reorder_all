@@ -9,7 +9,7 @@ endif
 
 foreach file ( ICE-T?f??.nc )
   echo $file
-  ncReorder $file temp_ice.nc
+  nccopy -u $file temp_ice.nc
   mv -f temp_ice.nc $file
   chmod g+w $file
 end

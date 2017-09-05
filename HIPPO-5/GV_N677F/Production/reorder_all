@@ -4,6 +4,6 @@ cd ${DAT}
 
 foreach file ( HIPPO-5?f??.nc )
   echo $file
-  ncReorder $file temp2h5.nc
+  nccopy -u $file temp2h5.nc
   mv -f temp2h5.nc $file
 end
