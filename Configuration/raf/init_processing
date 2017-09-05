@@ -87,7 +87,7 @@ end
 
 
 # ---------------------------------------------------------
-# ncReorder script.
+# Reorder netCDF files by removing the UNLIMITED dimension.
 #
 set files=${proj}'?f??.nc'
 
@@ -102,7 +102,7 @@ echo "foreach file ( $files )" >> reorder_all
 
 cat >> reorder_all << "EOFREO2"
   echo $file
-  ncReorder $file temp1.nc
+  nccopy -u $file temp1.nc
   mv -f temp1.nc $file
   chmod g+w $file
 end
