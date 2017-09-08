@@ -1038,6 +1038,13 @@
       <dependencies>CUHSAS</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="CONCUD">
+      <units>#/cm3</units>
+      <long_name>UHSAS CVI Drop Concentration (all cells)</long_name>
+      <is_analog>false</is_analog>
+      <dependencies>TACTU_CVIU CVCFACT USMPFLW_CVIU</dependencies>
+      <reference>false</reference>
+    </variable>
     <variable name="CONCV">
       <units>#/cm3</units>
       <long_name>VCSEL Moisture Number Density</long_name>
@@ -1182,6 +1189,13 @@
       <dependencies>AUHSAS USMPFLW USCAT</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="CVCWCC">
+      <units>g/m-3</units>
+      <long_name>CVI Cloud Condensed Water Content, Corrected</long_name>
+      <is_analog>false</is_analog>
+      <dependencies>CVRHO CVCFACT CVINLET TASX</dependencies>
+      <reference>false</reference>
+    </variable>
     <variable name="CVEW">
       <units>m/s</units>
       <long_name>CMIGITS-III Ground Speed Vector, East Component</long_name>
@@ -1194,6 +1208,13 @@
       <long_name>CMIGITS-III Ground Speed Vector, North Component</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
+      <reference>false</reference>
+    </variable>
+    <variable name="CVRHO">
+      <units>g/m-3</units>
+      <long_name>CVI Water Content, Enhanced</long_name>
+      <is_analog>false</is_analog>
+      <dependencies>PTDLR H2OR</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="CVSPD">
@@ -3890,7 +3911,7 @@
       <long_name>Corrected Static Pressure, Top of Fuselage</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
-      <dependencies>PSTF QCTF ATTACK SSLIP</dependencies>
+      <dependencies>PSTF QCTF ATTACK SSLIP MACHF</dependencies>
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
@@ -4108,6 +4129,7 @@
       <default_sample_rate>100</default_sample_rate>
       <category>Uncorr'd Raw</category>
       <derive>QCTFC</derive>
+      <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="QCTFC">
@@ -4115,7 +4137,8 @@
       <long_name>Corrected Dynamic Pressure, Top of Fuselage</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>PSTF QCTF ATTACK SSLIP</dependencies>
+      <dependencies>PSTF QCTF ATTACK SSLIP MACHF</dependencies>
+      <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="QCW">
