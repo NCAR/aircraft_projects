@@ -1,0 +1,12 @@
+ MAILTO=ej@ucar.edu
+
+#
+# get products via FTP
+#
+
+#
+# Docker Compose echoes 'Starting...' messages to STDERR, so let's grep them out but
+# pass the rest STDERR to STDERR, so that legitimate errors are still emailed
+#
+
+*/5 * * * * /bin/bash -l -c "cd /home/catalog/catalog-maps && docker-compose run --rm app ./bin/ftp-get-products >> /tmp/catalog-ftp-get-products.log 2> >(>&2 grep -v Starting\ catalogmaps_db)"
