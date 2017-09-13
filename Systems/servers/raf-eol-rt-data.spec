@@ -1,6 +1,6 @@
 Name: raf-eol-rt-data
 Version: 1.0
-Release: 1
+Release: 2
 Summary: Metapackage for requirements specific to eol-rt-data ground server.
 Source: %{name}-%{version}.tar.gz
 License: GPL
@@ -10,9 +10,11 @@ Requires: scons
 Requires: qt-devel
 Requires: nidas
 Requires: nidas-devel
+Requires: nidas-build
 Requires: python-devel
 Requires: openssl-devel
 Requires: bzip2-devel
+Requires: emacs
 
 BuildArch: noarch
 
@@ -64,5 +66,6 @@ rm -rf %{buildroot}
 %changelog
 * Fri Jul 28 2017 Janine Aquino <janine@ucar.edu> 1.0-2
 - Install crontab
+- Add a couple requires.
 * Tue Jul 25 2017 Janine Aquino <janine@ucar.edu> 1.0-1
 - Initial hack
