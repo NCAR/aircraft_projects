@@ -76,12 +76,7 @@ fi
 %attr(0755,ads,ads) /home/ads/Desktop/aeros.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/nimbus.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_data_acq.desktop
-%attr(0755,ads,ads) /home/ads/Desktop/start_mpds.desktop
-%attr(0755,ads,ads) /home/ads/Desktop/start_iridium_tbal.desktop
-%attr(0755,ads,ads) /home/ads/Desktop/start_iridium_blue.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/stop_data_acq.desktop
-%attr(0755,ads,ads) /home/ads/Desktop/stop_mpds.desktop
-%attr(0755,ads,ads) /home/ads/Desktop/stop_iridium.desktop
 %attr(0700,ads,ads) /home/ads/.ssh
 %attr(0755,ads,ads) /home/ads
 
