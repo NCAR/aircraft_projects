@@ -61,10 +61,10 @@ fi
 %if 0%{?rhel} >= 7
   /bin/systemctl enable nagios
   /bin/systemctl restart nagios 
-  %else
+%else
    /sbin/chkconfig --levels 345 nagios on
    /sbin/chkconfig --add raf_nagios_init
- %endif
+%endif
 
 %clean
 rm -rf %{buildroot}
