@@ -15,6 +15,7 @@ Requires: python-devel
 Requires: openssl-devel
 Requires: bzip2-devel
 Requires: emacs
+Requires: pycrypto
 
 BuildArch: noarch
 
@@ -64,6 +65,8 @@ rm -rf %{buildroot}
 %config /var/spool/cron/ads
 
 %changelog
+* Fri Sep 22 2017 Chris Webster <janine@ucar.edu> 1.0-2
+- Add Requires for pycrypto.  Used for NOAA AOC python decryption built into udp2sql.
 * Fri Jul 28 2017 Janine Aquino <janine@ucar.edu> 1.0-2
 - Install crontab
 - Add a couple requires.
