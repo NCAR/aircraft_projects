@@ -82,7 +82,7 @@ rm -rf %{buildroot}
 * Fri Sep 22 2017 Janine Aquino <janine@ucar.edu> 1.0-2
 - Separate postgresql configuration for aircraft and ground. Ground is here.
 - Aircraft is in raf-ac-postgresql rpm.
-* Fri Sep 22 2017 Chris Webster <janine@ucar.edu> 1.0-2
+* Fri Sep 22 2017 Chris Webster <cjw@ucar.edu> 1.0-2
 - Add Requires for pycrypto.  Used for NOAA AOC python decryption built into udp2sql.
 * Tue Jul 25 2017 Janine Aquino <janine@ucar.edu> 1.0-2
 - Install crontab

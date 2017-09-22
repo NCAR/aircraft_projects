@@ -51,7 +51,7 @@ rm -rf %{buildroot}
 /var/lib/pgsql/psql-init.sql
 
 %changelog
-* Fri Sept 8 2017 Janine Aquino <janine@ucar.edu> 1.0-2
+* Fri Sep 22 2017 Janine Aquino <janine@ucar.edu> 1.0-2
 - Separate postgresql configuration for aircraft and ground. Aircraft is here.
 - Ground is in raf-ac-eolrtdata rpm.
 * Tue Jul 25 2017 Janine Aquino <janine@ucar.edu> 1.0-2

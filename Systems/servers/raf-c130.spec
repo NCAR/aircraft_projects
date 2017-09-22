@@ -26,11 +26,13 @@ BuildArch: noarch
 Metapackage for all server and satcom packages needed on C130.
 
 %prep
-%setup -q -n %{name}
+%setup -q -n raf-server-common
 
 
 %install 
-cp var/spool/cron/crontab.ac.c130	${RPM_BUILD_ROOT}/var/spool/cron/ads
+mkdir -p ${RPM_BUILD_ROOT}/var/spool/cron/ads
+mkdir -p ${RPM_BUILD_ROOT}/home/ads/Desktop
+cp var/spool/cron/crontab.ads.c130	${RPM_BUILD_ROOT}/var/spool/cron/ads
 cp home/ads/Desktop/*camera*		${RPM_BUILD_ROOT}/home/ads/Desktop
 cp home/ads/Desktop/*mpds*		${RPM_BUILD_ROOT}/home/ads/Desktop
 cp -r home/ads/.subversion		${RPM_BUILD_ROOT}/home/ads
@@ -44,9 +46,9 @@ sed -i '/^IPADDR=.*/IPADDR=128.117.44.101/' /etc/sysconfig/network-scripts/ifcfg
 %files 
 %config %attr(0600,ads,ads) /var/spool/cron/ads
 %config %attr(0640,ads,ads) /home/ads/.subversion/servers
-%attr(0755,ads,ads) /home/ads/Desktop/start_cameras.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/start_camera.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_mpds.desktop
-%attr(0755,ads,ads) /home/ads/Desktop/stop_cameras.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/stop_camera.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/stop_mpds.desktop
 
 

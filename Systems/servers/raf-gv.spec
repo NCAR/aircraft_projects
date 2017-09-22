@@ -27,13 +27,15 @@ BuildArch: noarch
 Metapackage for all server and satcom packages needed on GV.
 
 %prep
-%setup -q -n %{name}
+%setup -q -n raf-server-common
 
 
 %install
-cp var/spool/cron/crontab.ac.gv	${RPM_BUILD_ROOT}/var/spool/cron/ads
-cp home/ads/Desktop/*		${RPM_BUILD_ROOT}/home/ads/Desktop
-cp -r home/ads/.subversion	${RPM_BUILD_ROOT}/home/ads
+mkdir -p ${RPM_BUILD_ROOT}/var/spool/cron/ads
+mkdir -p ${RPM_BUILD_ROOT}/home/ads/Desktop
+cp var/spool/cron/crontab.ads.gv	${RPM_BUILD_ROOT}/var/spool/cron/ads
+cp home/ads/Desktop/*			${RPM_BUILD_ROOT}/home/ads/Desktop
+cp -r home/ads/.subversion		${RPM_BUILD_ROOT}/home/ads
 
 
 %post
@@ -44,11 +46,11 @@ sed -i '/^IPADDR=.*/IPADDR=128.117.44.102/' /etc/sysconfig/network-scripts/ifcfg
 %files 
 %config %attr(0600,ads,ads) /var/spool/cron/ads
 %config %attr(0640,ads,ads) /home/ads/.subversion/servers
-%attr(0755,ads,ads) /home/ads/Desktop/start_cameras.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/start_camera.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_mpds.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_iridium_tbal.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_iridium_blue.desktop
-%attr(0755,ads,ads) /home/ads/Desktop/stop_cameras.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/stop_camera.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/stop_mpds.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/stop_iridium.desktop
 
