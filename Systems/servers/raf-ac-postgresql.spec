@@ -13,8 +13,7 @@ Requires: qt-postgresql
 BuildArch: noarch
 
 %description
-   Installation and configuration of postgresql for RAF aircraft servers and 
-ground stations.
+   Installation and configuration of postgresql for RAF aircraft servers.
   - install postgresql if not already installed
     - yum install will install missing dependencies
     - rpm -ivh install requires dependencies to be listed on the command line
@@ -52,7 +51,10 @@ rm -rf %{buildroot}
 /var/lib/pgsql/psql-init.sql
 
 %changelog
-* Tue Jul 25 2017 Janine Aquino <janine@ucar.edu> 1.0-1
+* Fri Sept 8 2017 Janine Aquino <janine@ucar.edu> 1.0-2
+- Separate postgresql configuration for aircraft and ground. Aircraft is here.
+- Ground is in raf-ac-eolrtdata rpm.
+* Tue Jul 25 2017 Janine Aquino <janine@ucar.edu> 1.0-2
 - Attempt to get rpm to do initial database configuration.
 * Mon Jul 24 2017 Janine Aquino <janine@ucar.edu> 1.0-1
 - Few more pieces in place. Not there yet.
