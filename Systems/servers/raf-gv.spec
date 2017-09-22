@@ -4,6 +4,7 @@ Release: 16
 Summary: Metapackage for all server and satcom packages needed on GV
 
 License: GPL
+Source: %{name}-%{version}.tar.gz
 
 Requires: raf-server-common
 Requires: raf-ac-firewall
@@ -25,7 +26,8 @@ BuildArch: noarch
 %description
 Metapackage for all server and satcom packages needed on GV.
 
-%pre
+%prep
+%setup -q -n %{name}
 
 
 %install
@@ -40,8 +42,8 @@ sed -i '/^IPADDR=.*/IPADDR=128.117.44.102/' /etc/sysconfig/network-scripts/ifcfg
 
 
 %files 
-%config(0600,ads,ads) /var/spool/cron/ads
-%config(0640,ads,ads) /home/ads/.subversion/servers
+%config %attr(0600,ads,ads) /var/spool/cron/ads
+%config %attr(0640,ads,ads) /home/ads/.subversion/servers
 %attr(0755,ads,ads) /home/ads/Desktop/start_cameras.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_mpds.desktop
 %attr(0755,ads,ads) /home/ads/Desktop/start_iridium_tbal.desktop

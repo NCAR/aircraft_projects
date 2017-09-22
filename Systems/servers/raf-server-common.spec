@@ -4,6 +4,7 @@ Release: 1
 Summary: Metapackage for common configuration for lab and aircraft systems.
 
 License: GPL
+Source: %{name}-%{version}.tar.gz
 
 Requires: raf-devel
 Requires: raf-ads3-syslog
@@ -36,6 +37,10 @@ BuildArch: noarch
 %description
 Metapackage for common lab and aircraft server configuration.
 
+%prep
+%setup -q -n %{name}
+
+
 %install
 
 # Install EPEL and EOL repos.  This needs to be done manually before installing this RPM.
@@ -43,10 +48,14 @@ Metapackage for common lab and aircraft server configuration.
 #rpm -ihv http://www.eol.ucar.edu/software/rpms/eol-repo-epel-1-3.noarch.rpm
 
 # Copy network config scripts.
-cp etc/sysconfig/network-scripts/ifcfg* ${RPM_BUILD_ROOT}/etc/sysconfig/network-scripts
+mkdir -p ${RPM_BUILD_ROOT}/etc/sysconfig/network-scripts
+cp etc/sysconfig/network-scripts/ifcfg-em? ${RPM_BUILD_ROOT}/etc/sysconfig/network-scripts
 
+
+%post
 # All servers operate in UTC.
 /usr/bin/timedatectl set-timezone UTC
+/usr/bin/hostnamectl set-hostname acserver.raf.ucar.edu
 
 dir=/home/local
 if [ ! -d $dir ]; then
@@ -61,7 +70,6 @@ mkdir -p /var/r1
 mkdir -p /var/r2
 chown ads:ads /home/data /var/r1 /var/r2
 
-/usr/bin/hostnamectl set-hostname acserver.raf.ucar.edu
 
 cf=/etc/rc.local
 if ! grep -q "nimbus.pid" $cf; then
@@ -85,10 +93,10 @@ fi
 
 
 %files 
-%config(0644,root,root) /etc/sysconfig/network-scripts/ifcfg-em1
-%config(0644,root,root) /etc/sysconfig/network-scripts/ifcfg-em2
-%config(0644,root,root) /etc/sysconfig/network-scripts/ifcfg-em3
-%config(0644,root,root) /etc/sysconfig/network-scripts/ifcfg-em4
+%config %attr(0644,root,root) /etc/sysconfig/network-scripts/ifcfg-em1
+%config %attr(0644,root,root) /etc/sysconfig/network-scripts/ifcfg-em2
+%config %attr(0644,root,root) /etc/sysconfig/network-scripts/ifcfg-em3
+%config %attr(0644,root,root) /etc/sysconfig/network-scripts/ifcfg-em4
 
 
 %changelog
