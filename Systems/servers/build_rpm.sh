@@ -56,7 +56,14 @@ while [ "$dopkg" == all -o $# -gt 0 ]; do
     if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
         version=`get_version $pkg.spec`
         tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
-        rpmbuild -bb ${pkg}.spec | tee -a $log  || exit $?
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+    fi
+
+    pkg=raf-server-common
+    if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
+        version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
     fi
 
     pkg=raf-catalog
@@ -69,12 +76,14 @@ while [ "$dopkg" == all -o $# -gt 0 ]; do
     pkg=raf-gv
     if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
         version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-server-common
         rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
     fi
 
     pkg=raf-c130
     if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
         version=`get_version $pkg.spec`
+        tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-server-common
         rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
     fi
 
@@ -151,7 +160,7 @@ while [ "$dopkg" == all -o $# -gt 0 ]; do
     if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
         version=`get_version $pkg.spec`
         tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" ${pkg}
-#        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
+        rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
     fi
 
     pkg=raf-eol-rt-data

@@ -5,43 +5,19 @@ Summary: Metapackage for all server and satcom packages needed on C130
 
 License: GPL
 
-Requires: raf-devel
-Requires: raf-ads3-syslog
-Requires: raf-ads3-sysctl
-Requires: raf-ads-user
-Requires: raf-ac-gdm
-Requires: raf-ac-selinux
-Requires: raf-ac-chrony
-Requires: raf-ac-nagios
+Requires: raf-server-common
 Requires: raf-ac-firewall
 Requires: raf-c130-dhcp
 Requires: raf-ac-named
 Requires: raf-c130-ddclient
 Requires: raf-satcom
 #Requires: raf-satcom-bgan
-Requires: raf-ads3-sudoers
 Requires: raf-ac-nfs
-Requires: raf-ac-postgresql
 Requires: raf-ac-avaps
 Requires: raf-www-control
 Requires: raf-www-camera
-Requires: GMT
-Requires: ruby
 Requires: squid
 Requires: libdc1394-devel
-Requires: kde-baseapps
-Requires: nidas-min
-Requires: nidas-libs
-Requires: nidas-modules
-Requires: nidas-autocal
-Requires: nidas-configedit
-Requires: nidas-daq
-Requires: nidas-devel
-Requires: nidas-build
-Requires: nidas-buildeol
-Requires: nidas-ael
-Requires: ael-local-dpkgs
-Requires: nagircbot
 
 BuildArch: noarch
 
@@ -49,59 +25,33 @@ BuildArch: noarch
 Metapackage for all server and satcom packages needed on C130.
 
 %pre
-# Install EPEL
-rpm -ivh  http://download.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
-# Install EOL EPEL
-rpm -ihv http://www.eol.ucar.edu/software/rpms/eol-repo-epel-1-3.noarch.rpm
 
-/usr/bin/timedatectl set-timezone UTC
-
-dir=/home/local
-if [ ! -d $dir ]; then
-  mkdir -p $dir/bin $dir/include $dir/lib
-  chown -R ads:ads $dir
-  chmod g+w $dir/bin $dir/include $dir/lib
-  ln -s $dir /opt/local
-fi
-
-mkdir -p /home/data
-mkdir -p /var/r1
-mkdir -p /var/r2
-chown ads:ads /home/data /var/r1 /var/r2
+%install 
+cp var/spool/cron/crontab.ac.c130	${RPM_BUILD_ROOT}/var/spool/cron/ads
+cp home/ads/Desktop/*camera*		${RPM_BUILD_ROOT}/home/ads/Desktop
+cp home/ads/Desktop/*mpds*		${RPM_BUILD_ROOT}/home/ads/Desktop
+cp -r home/ads/.subversion		${RPM_BUILD_ROOT}/home/ads
 
 
 %post
-
-/usr/bin/hostnamectl set-hostname acserver.raf.ucar.edu
-
-cf=/etc/rc.local
-if ! grep -q "nimbus.pid" $cf; then
-  cat << EO_RC_LOCAL >> $cf
-
-# Perform some basic housekeeping / clean up.
-rm -f /tmp/nimbus.pid
-rm -f /home/DataBases/postmaster.pid
-
-EO_RC_LOCAL
-
-fi
-
-
-cf=/etc/hosts.allow
-if ! grep -q "128.117" $cf; then
-  cat << EO_HOSTS_ALLOW >> $cf
-ALL : LOCAL, .ucar.edu, 128.117., 127.0.0.1, 192.168.
-EO_HOSTS_ALLOW
-fi
-
-
 echo "export AIRCRAFT=C130_N130AR" > /etc/profile.d/ads3.sh
+sed -i '/^IPADDR=.*/IPADDR=128.117.44.101/' /etc/sysconfig/network-scripts/ifcfg-em3
 
 
 %files 
+%config(0600,ads,ads) /var/spool/cron/ads
+%config(0640,ads,ads) /home/ads/.subversion/servers
+%attr(0755,ads,ads) /home/ads/Desktop/start_cameras.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/start_mpds.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/stop_cameras.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/stop_mpds.desktop
+
 
 %changelog
+* Tue Sep 19 2017 Chris Webster <cjw@ucar.edu> 1.0-16
+- Add set timezone to bring %pre to parity with raf-gv.spec
+- Addition of raf-server-common to consolidate common config between lab and ac servers.
 * Fri Aug 18 2017 Catherine Dewerd <cdewerd@ucar.edu> 1.0-15
 - Add set timezone to bring %pre to parity with raf-gv.spec
 * Sun Feb 26 2017 Chris Webster <cjw@ucar.edu> 1.0-15

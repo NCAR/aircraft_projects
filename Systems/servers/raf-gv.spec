@@ -5,44 +5,20 @@ Summary: Metapackage for all server and satcom packages needed on GV
 
 License: GPL
 
-Requires: raf-devel
-Requires: raf-ads3-syslog
-Requires: raf-ads3-sysctl
-Requires: raf-ads-user
-Requires: raf-ac-gdm
-Requires: raf-ac-selinux
-Requires: raf-ac-chrony
-Requires: raf-ac-nagios
+Requires: raf-server-common
 Requires: raf-ac-firewall
 Requires: raf-gv-dhcp
 Requires: raf-ac-named
 Requires: raf-gv-ddclient
 Requires: raf-satcom
 #Requires: raf-satcom-bgan
-Requires: raf-ads3-sudoers
 Requires: raf-ac-nfs
-Requires: raf-ac-postgresql
 Requires: raf-ac-avaps
 Requires: raf-ac-mtp
 Requires: raf-www-control
 Requires: raf-www-camera
-Requires: GMT
-Requires: ruby
 Requires: squid
 Requires: libdc1394-devel
-Requires: kde-baseapps
-Requires: nidas-min
-Requires: nidas-libs
-Requires: nidas-modules
-Requires: nidas-autocal
-Requires: nidas-configedit
-Requires: nidas-daq
-Requires: nidas-devel
-Requires: nidas-build
-Requires: nidas-buildeol
-Requires: nidas-ael
-Requires: ael-local-dpkgs
-Requires: nagircbot
 
 BuildArch: noarch
 
@@ -51,60 +27,33 @@ Metapackage for all server and satcom packages needed on GV.
 
 %pre
 
-# Install EPEL
-rpm -ivh  http://download.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
 
-# Install EOL EPEL
-rpm -ihv http://www.eol.ucar.edu/software/rpms/eol-repo-epel-1-3.noarch.rpm
-
-/usr/bin/timedatectl set-timezone UTC
-
-dir=/home/local
-if [ ! -d $dir ]; then
-  mkdir -p $dir/bin $dir/include $dir/lib
-  chown -R ads:ads $dir
-  chmod g+w $dir/bin $dir/include $dir/lib
-  ln -s $dir /opt/local
-fi
-
-mkdir -p /home/data
-mkdir -p /var/r1
-mkdir -p /var/r2
-chown ads:ads /home/data /var/r1 /var/r2
+%install
+cp var/spool/cron/crontab.ac.gv	${RPM_BUILD_ROOT}/var/spool/cron/ads
+cp home/ads/Desktop/*		${RPM_BUILD_ROOT}/home/ads/Desktop
+cp -r home/ads/.subversion	${RPM_BUILD_ROOT}/home/ads
 
 
 %post
-
-/usr/bin/hostnamectl set-hostname acserver.raf.ucar.edu
-
-cf=/etc/rc.local
-if ! grep -q "nimbus.pid" $cf; then
-  cat << EO_RC_LOCAL >> $cf
-
-# Perform some basic housekeeping / clean up.
-rm -f /tmp/nimbus.pid
-rm -f /home/DataBases/postmaster.pid
-
-EO_RC_LOCAL
-
-fi
-
-
-cf=/etc/hosts.allow
-if ! grep -q "128.117" $cf; then
-  cat << EO_HOSTS_ALLOW >> $cf
-ALL : LOCAL, .ucar.edu, 128.117., 127.0.0.1, 192.168.
-EO_HOSTS_ALLOW
-fi
-
-
 echo "export AIRCRAFT=GV_N677F" > /etc/profile.d/ads3.sh
+sed -i '/^IPADDR=.*/IPADDR=128.117.44.102/' /etc/sysconfig/network-scripts/ifcfg-em3
 
 
 %files 
+%config(0600,ads,ads) /var/spool/cron/ads
+%config(0640,ads,ads) /home/ads/.subversion/servers
+%attr(0755,ads,ads) /home/ads/Desktop/start_cameras.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/start_mpds.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/start_iridium_tbal.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/start_iridium_blue.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/stop_cameras.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/stop_mpds.desktop
+%attr(0755,ads,ads) /home/ads/Desktop/stop_iridium.desktop
 
 
 %changelog
+* Tue Sep 19 2017 Chris Webster <cjw@ucar.edu> 1.0-16
+- Addition of raf-server-common to consolidate common config between lab and ac servers.
 * Mon Jan 16 2017 Chris Webster <cjw@ucar.edu> 1.0-15
 - Change raf-ac-ntp to raf-ac-chrony for RHEL7.  Add gdm and selinux.
 * Tue Apr 5 2016 Chris Webster <cjw@ucar.edu> 1.0-14

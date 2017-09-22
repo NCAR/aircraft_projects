@@ -1,37 +1,14 @@
-Summary: Metapackage for all server and satcom packages needed on lab systems.
 Name: raf-ads3-lab
+Summary: Metapackage for all server and satcom packages needed on lab systems.
 Version: 1.0
-Release: 9
+Release: 10
 License: GPL
 
+Requires: raf-server-common
 Requires: eol-devel
 Requires: raf-devel
-Requires: raf-ads3-syslog
-Requires: raf-ads-user
-Requires: raf-ac-gdm
-Requires: raf-ac-selinux
-Requires: raf-ac-chrony
-Requires: raf-ac-nagios
 Requires: raf-lab-dhcp
 Requires: raf-lab-named
-Requires: raf-ads3-sudoers
-Requires: raf-www-control
-# Temporary until we actually create the RPM.
-#Requires: raf-postgresql
-Requires: GMT
-Requires: postgresql-server
-Requires: kde-baseapps
-Requires: nidas-min
-Requires: nidas-libs
-Requires: nidas-modules
-Requires: nidas-autocal
-Requires: nidas-configedit
-Requires: nidas-daq
-Requires: nidas-devel
-Requires: nidas-build
-Requires: nidas-buildeol
-Requires: nidas-ael
-Requires: ael-local-dpkgs
 
 BuildArch: noarch
 
@@ -40,22 +17,14 @@ Metapackage for all server and satcom packages needed on lab systems.
 
 
 %pre
-dir=/home/local
-if [ ! -d $dir ]; then
-  mkdir -p $dir/bin $dir/include $dir/lib
-  chown -R ads:ads $dir
-  chmod g+w $dir/bin $dir/include $dir/lib
-  ln -s $dir /opt/local
-fi
 
-dir=/home/data
-if [ ! -d $dir ]; then
-  mkdir -p $dir
-fi
+echo "export AIRCRAFT=Lab_N600" > /etc/profile.d/ads3.sh
 
 %files 
 
 %changelog
+* Tue Sep 19 2017 Chris Webster <cjw@ucar.edu> 1.0-10
+- Addition of raf-server-common.
 * Mon Jan 16 2017 Chris Webster <cjw@ucar.edu> 1.0-9
 - Updates for RHEL7.
 - Addition of raf-devel.
