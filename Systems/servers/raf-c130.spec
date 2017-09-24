@@ -15,6 +15,7 @@ Requires: raf-satcom
 #Requires: raf-satcom-bgan
 Requires: raf-ac-nfs
 Requires: raf-ac-avaps
+Requires: raf-www-map
 Requires: raf-www-control
 Requires: raf-www-camera
 Requires: squid
