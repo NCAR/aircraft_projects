@@ -1,7 +1,7 @@
 Summary: ddclient perl script and supporting scripts for running ddclient from pppd
 Name: raf-ddclient
 Version: 1.0
-Release: 6
+Release: 7
 License: GPL
 Group: System Environment/Daemons
 Source: %{name}-%{version}.tar.gz
@@ -45,13 +45,24 @@ install -d $RPM_BUILD_ROOT
 cp -r etc $RPM_BUILD_ROOT
 cp -r usr $RPM_BUILD_ROOT
 
+
+%post
+mkdir -p /var/cache/ddclient
+
+
 %post -n raf-gv-ddclient
 sed -i 's,^SYSNAME=.*,SYSNAME=gv,' /etc/ppp/run_ddclient.sh
-echo "*/5 * * * * /usr/sbin/ddclient -verbose -file /etc/ddclient/gv.conf >> /tmp/ddclient.log 2>&1" >> /var/spool/cron/root
+cf=/var/spool/cron/root
+if !grep -q ddclient $cf; then
+  echo "*/5 * * * * /usr/sbin/ddclient -verbose -file /etc/ddclient/gv.conf >> /tmp/ddclient.log 2>&1" >> /var/spool/cron/root
+fi
 
 %post -n raf-c130-ddclient
 sed -i 's,^SYSNAME=.*,SYSNAME=c130,' /etc/ppp/run_ddclient.sh
-echo "*/5 * * * * /usr/sbin/ddclient -verbose -file /etc/ddclient/c130.conf >> /tmp/ddclient.log 2>&1" >> /var/spool/cron/root
+cf=/var/spool/cron/root
+if !grep -q ddclient $cf; then
+  echo "*/5 * * * * /usr/sbin/ddclient -verbose -file /etc/ddclient/c130.conf >> /tmp/ddclient.log 2>&1" >> /var/spool/cron/root
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -77,6 +88,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) /etc/ppp/run_ddclient.sh
 
 %changelog
+* Sun Sep 24 2017 Chris Webster <cjw@ucar.edu> 1.0-7
+- mkdir /var/cache/ddclient
 * Fri Feb 17 2017 Chris Webster <cjw@ucar.edu> 1.0-6
 - Add cron entry.
 * Thu Apr  5 2012 Chris Webster <cjw@ucar.edu> 1.0-6
