@@ -1552,6 +1552,14 @@
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="SMPS" devicename="usock::30104" id="300" suffix="_SMPS"/>
+      <sensor IDREF="ACDFO3" devicename="usock::30107" id="700" suffix="_ACD"/>
+      <sensor ID="PAVEL_INLET" class="UDPSocketSensor" devicename="usock::29003" id="2900">
+        <sample id="1" rate="1" scanfFormat="%f,%f,%f">
+            <variable longname="Valco HIGH valve position" name="VALCOHIGH" units="number"/>
+            <variable longname="Valco LOW valve position" name="VALCOLOW" units="number"/>
+            <variable longname="Solenoid state" name="SOLPOS" units="number"/>
+        </sample>
+      </sensor>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150" suffix="_UDP"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
       <output class="RawSampleOutputStream">
