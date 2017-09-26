@@ -38,6 +38,8 @@ cp -r var %{buildroot}/
 su postgres -c "/usr/bin/cat var/lib/pgsql/psql-init.sql | psql"
 createdb -U postgres real-time
 
+echo "CREATE TABLE mission_control ( key text NOT NULL, value text); ALTER TABLE public.mission_control OWNER TO ads;" | psql -h localhost -U ads real-time
+
 
 %clean
 rm -rf %{buildroot}
@@ -51,6 +53,8 @@ rm -rf %{buildroot}
 /var/lib/pgsql/psql-init.sql
 
 %changelog
+* Tue Sep 26 2017 Chris Webster <cjw@ucar.edu> 1.0-2
+- Add creation of mission_control table.
 * Fri Sep 22 2017 Janine Aquino <janine@ucar.edu> 1.0-2
 - Separate postgresql configuration for aircraft and ground. Aircraft is here.
 - Ground is in raf-ac-eolrtdata rpm.
