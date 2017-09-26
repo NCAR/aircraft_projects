@@ -13,7 +13,10 @@ Requires: httpd php php-pgsql php-pecl-json raf-jquery python-inotify
 
 
 %description
-	This is the front-end viewer package that works with the ieee1394 capture program, and capture-camserver backend. This package will install files necissary for the website into /var/www/html/camera and should be accessable at http://localhost/camera.
+This is the front-end viewer package that works with the ieee1394 capture
+program, and capture-camserver backend. This package will install files
+necessary for the website into /var/www/html/camera and should be
+accessable at http://localhost/camera.
 
 %prep
 %setup -q -n raf-www
@@ -25,19 +28,17 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/var/www/html
 cp -r camera $RPM_BUILD_ROOT/var/www/html/
 
+
 %post
-mkdir -p /mnt/r1/camera_images
-ln -s /mnt/r1/camera_images /var/www/html/camera/camera_images
+#mkdir -p /mnt/r1/camera_images
+#ln -s /mnt/r1/camera_images /var/www/html/camera/camera_images
 phpconf=`find /etc -name "php.conf"`
 echo "SetEnv PGHOST acserver" >> $phpconf
 echo "SetEnv PGUSER ads" >> $phpconf
 echo "SetEnv PGDATABASE real-time" >> $phpconf
 
-%if 0%{?rhel} < 7
-/sbin/service httpd restart
-%else
 /bin/systemctl restart httpd
-%endif
+
 
 %postun
 rm /var/www/html/camera/camera_images
@@ -45,7 +46,9 @@ phpconf=`find /etc -name "php.conf"`
 sed -i '/SetEnv PGHOST/ d' $phpconf
 sed -i '/SetEnv PGUSER/ d' $phpconf
 sed -i '/SetEnv PGDATABASE/ d' $phpconf
-/sbin/service httpd restart
+
+/bin/systemctl restart httpd
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -58,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 /var/www/html/camera/*
 
 %changelog
+* Tue Sep 26 2017 <cjw@ucar.edu> 1.2
+- Cleanup.
+
 * Mon Sep 30 2013 <cjw@ucar.edu> 1.2
 - Fix interface bug.
 
