@@ -15,10 +15,22 @@ BuildArch: noarch
 %description
 Metapackage for all server and satcom packages needed on lab systems.
 
+%prep
+%setup -q -n raf-server-common
 
-%pre
+%install
+mkdir -p ${RPM_BUILD_ROOT}/home/ads/Desktop
+cp home/ads/Desktop/*                   ${RPM_BUILD_ROOT}/home/ads/Desktop
+cp -r home/ads/.subversion              ${RPM_BUILD_ROOT}/home/ads
+
+%post
 
 echo "export AIRCRAFT=Lab_N600" > /etc/profile.d/ads3.sh
+sed -i '/^IPADDR=.*/ c\NM_CONTROLLED="no" ' /etc/sysconfig/network-scripts/ifcfg-em3
+sed -i '/^GATEWAY=.*/c\ ' /etc/sysconfig/network-scripts/ifcfg-em3
+sed -i '/^PREFIX=.*/c\ ' /etc/sysconfig/network-scripts/ifcfg-em3
+sed -i '/^BOOTPROTO=.*/c\BOOTPROTO=dhcp' /etc/sysconfig/network-scripts/ifcfg-em3
+
 
 %files 
 

@@ -200,6 +200,7 @@ while [ "$dopkg" == all -o $# -gt 0 ]; do
     pkg=raf-ads3-lab
     if [ "$dopkg" == all -o "$dopkg" == $pkg ];then
         version=`get_version $pkg.spec`
+	tar czf ${topdir}/SOURCES/${pkg}-${version}.tar.gz --exclude .svn --exclude "*.swp" raf-server-common
         rpmbuild -ba --clean ${pkg}.spec | tee -a $log  || exit $?
     fi
 
