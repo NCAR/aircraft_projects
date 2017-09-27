@@ -3,6 +3,7 @@ Summary: Metapackage for all server and satcom packages needed on lab systems.
 Version: 1.0
 Release: 10
 License: GPL
+Source: %{name}-%{version}.tar.gz
 
 Requires: raf-server-common
 Requires: eol-devel
