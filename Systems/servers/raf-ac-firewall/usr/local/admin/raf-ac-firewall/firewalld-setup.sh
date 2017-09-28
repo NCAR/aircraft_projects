@@ -23,10 +23,11 @@ firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i em2 -o em3
 firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i em3 -o em2 -m state --state RELATED,ESTABLISHED -j ACCEPT
 
 #
-# For SATCOM NAT and masquerading we should add restrictions back that only computers
+# For SATCOM NAT and masquerading restrict that only computers
 # in 192.168.x.[0-64] range can get out.
 #
-firewall-cmd --permanent --direct --add-rule ipv4 nat POSTROUTING 0 -o em4 -j MASQUERADE
+#firewall-cmd --permanent --direct --add-rule ipv4 nat POSTROUTING 0 -o em4 -j MASQUERADE
+firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o em4 -j MASQUERADE -s 192.168.84.0/26
 firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i em1 -o em4 -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i em4 -o em1 -m state --state RELATED,ESTABLISHED -j ACCEPT
 firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 0 -i em2 -o em4 -j ACCEPT
