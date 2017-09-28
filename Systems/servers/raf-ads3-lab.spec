@@ -20,9 +20,7 @@ Metapackage for all server and satcom packages needed on lab systems.
 %setup -q -n raf-server-common
 
 %install
-mkdir -p ${RPM_BUILD_ROOT}/home/ads/Desktop
-cp home/ads/Desktop/*                   ${RPM_BUILD_ROOT}/home/ads/Desktop
-cp -r home/ads/.subversion              ${RPM_BUILD_ROOT}/home/ads
+
 
 %post
 
