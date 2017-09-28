@@ -1,6 +1,6 @@
 Name: raf-ac-firewall
 Version: 2.0
-Release: 0
+Release: 1
 Summary: Iptables configuration for RAF aircraft server
 
 License: GPL
@@ -110,6 +110,9 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0755,root,root) /usr/local/admin/raf-ac-firewall/firewalld-setup.sh
 
 %changelog
+* Thu Sep 28 2017 Chris Webster <cjw@ucar.edu> 2.0-1
+- Add rule to restrict only computers in IP range of 192.168.84.[0-63] can get
+- off plane through SATCOM.
 * Tue Mar 14 2017 Chris Webster <cjw@ucar.edu> 2.0-0
 - Change from iptables to firewalld - CentOS 7.
 * Wed Sep 14 2016 Janine Aquino <janine@ucar.edu> 1.0-11
