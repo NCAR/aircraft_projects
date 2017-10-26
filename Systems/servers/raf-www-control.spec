@@ -26,6 +26,8 @@ mkdir -p $RPM_BUILD_ROOT/var/www/html/
 cp -r control $RPM_BUILD_ROOT/var/www/html/
 
 %post
+/bin/systemctl enable httpd
+/bin/systemctl restart httpd
 
 %clean
 rm -rf $RPM_BUILD_ROOT

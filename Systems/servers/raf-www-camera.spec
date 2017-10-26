@@ -37,6 +37,7 @@ echo "SetEnv PGHOST acserver" >> $phpconf
 echo "SetEnv PGUSER ads" >> $phpconf
 echo "SetEnv PGDATABASE real-time" >> $phpconf
 
+/bin/systemctl enable httpd
 /bin/systemctl restart httpd
 
 
