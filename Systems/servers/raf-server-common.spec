@@ -18,7 +18,6 @@ Requires: raf-ads3-sudoers
 Requires: raf-ac-postgresql
 Requires: raf-www-control
 Requires: ruby
-Requires: libdc1394-devel
 Requires: kde-baseapps
 Requires: nidas-min
 Requires: nidas-libs
@@ -31,6 +30,12 @@ Requires: nidas-build
 Requires: nidas-buildeol
 Requires: nidas-ael
 Requires: ael-local-dpkgs
+
+# Firewire for Cameras
+Requires: libdc1394-devel
+
+# For LDM
+Requires: libxml2-devel
 
 BuildArch: noarch
 
@@ -90,6 +95,9 @@ if ! grep -q "128.117" $cf; then
 ALL : LOCAL, .ucar.edu, 128.117., 127.0.0.1, 192.168.
 EO_HOSTS_ALLOW
 fi
+
+systemctl enable squid
+systemctl start squid
 
 
 %files 
