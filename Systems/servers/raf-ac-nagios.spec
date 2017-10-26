@@ -29,8 +29,8 @@ install -d %{buildroot}/usr/lib64/nagios/plugins
 #install -d %{buildroot}%{_sysconfdir}/httpd/conf.d #file no longer exists
 
 #cp etc/init.d/raf_nagios_init   %{buildroot}%{_sysconfdir}/init.d
-cp etc/nagios/raf_commands.cfg  %{buildroot}%{_sysconfdir}/nagios
-cp etc/nagios/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios
+cp etc/nagios/raf_commands.cfg  %{buildroot}%{_sysconfdir}/nagios/objects
+cp etc/nagios/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios/objects
 cp usr/lib/nagios/plugins/raf_* %{buildroot}/usr/lib64/nagios/plugins
 #cp etc/httpd/conf.d/nagios.conf             %{buildroot}%{_sysconfdir}/httpd/conf.d             
 
@@ -43,10 +43,10 @@ sed -i 's/use_authentication=1/use_authentication=0/g' $cf
 # commands.cfg in fc11 will move into nagios/objects
 cf=/etc/nagios/nagios.cfg
 if ! grep -q "/raf_commands.cfg" $cf; then
-  sed -i 's/commands.cfg/commands.cfg\ncfg_file=\/etc\/nagios\/raf_commands.cfg/' $cf
+  sed -i 's/commands.cfg/commands.cfg\ncfg_file=\/etc\/nagios\/objects\/raf_commands.cfg/' $cf
 fi
 if ! grep -q "/raf_localhost.cfg" $cf; then
-  sed -i 's/localhost.cfg/localhost.cfg\ncfg_file=\/etc\/nagios\/raf_localhost.cfg/' $cf
+  sed -i 's/localhost.cfg/localhost.cfg\ncfg_file=\/etc\/nagios\/objects\/raf_localhost.cfg/' $cf
 fi
 if ! grep -q "log_external_commands=1" $cf; then
   sed -i 's/log_external_commands=1/log_external_commands=0/' $cf
@@ -58,13 +58,8 @@ if ! grep -q "use_syslog=1" $cf; then
   sed -i 's/use_syslog=1/use_syslog=0/' $cf
 fi
 
-%if 0%{?rhel} >= 7
-  /bin/systemctl enable nagios
-  /bin/systemctl restart nagios 
-%else
-   /sbin/chkconfig --levels 345 nagios on
-   /sbin/chkconfig --add raf_nagios_init
-%endif
+/bin/systemctl enable nagios
+/bin/systemctl restart nagios 
 
 %clean
 rm -rf %{buildroot}
@@ -78,6 +73,8 @@ rm -rf %{buildroot}
 #%{_sysconfdir}/httpd/conf.d/nagios.conf
 
 %changelog
+* Thu Oct 26 2017 Chris Webster <cjw@ucar.edu> - 1.0.14
+- EL7 updates.  local cmds and config go in /etc/nagios/objects now.
 * Wed Feb 1 2017 Catherine Dewerd <cdewerd@ucar.edu> - 1.0.14
 - removed httpd dependancy because httpd/conf.d/nagios.conf no longer exists
 * Thu Nov 13 2014 Chris Webster <cjw@ucar.edu> - 1.0-13
