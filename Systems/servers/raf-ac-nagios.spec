@@ -1,6 +1,6 @@
 Name: raf-ac-nagios
 Version: 1.0
-Release: 13
+Release: 14
 Summary: Configuration and plugins for nagios
 
 License: GPL
@@ -23,14 +23,12 @@ Configuration and additional plugins for RAF aircraft servers.
 
 %install
 rm -rf %{buildroot}
-#install -d %{buildroot}%{_sysconfdir}/init.d
-install -d %{buildroot}%{_sysconfdir}/nagios
+install -d %{buildroot}%{_sysconfdir}/nagios/objects
 install -d %{buildroot}/usr/lib64/nagios/plugins
 #install -d %{buildroot}%{_sysconfdir}/httpd/conf.d #file no longer exists
 
-#cp etc/init.d/raf_nagios_init   %{buildroot}%{_sysconfdir}/init.d
-cp etc/nagios/raf_commands.cfg  %{buildroot}%{_sysconfdir}/nagios/objects
-cp etc/nagios/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios/objects
+cp etc/nagios/objects/raf_commands.cfg  %{buildroot}%{_sysconfdir}/nagios/objects
+cp etc/nagios/objects/raf_localhost.cfg %{buildroot}%{_sysconfdir}/nagios/objects
 cp usr/lib/nagios/plugins/raf_* %{buildroot}/usr/lib64/nagios/plugins
 #cp etc/httpd/conf.d/nagios.conf             %{buildroot}%{_sysconfdir}/httpd/conf.d             
 
@@ -46,7 +44,7 @@ if ! grep -q "/raf_commands.cfg" $cf; then
   sed -i 's/commands.cfg/commands.cfg\ncfg_file=\/etc\/nagios\/objects\/raf_commands.cfg/' $cf
 fi
 if ! grep -q "/raf_localhost.cfg" $cf; then
-  sed -i 's/localhost.cfg/localhost.cfg\ncfg_file=\/etc\/nagios\/objects\/raf_localhost.cfg/' $cf
+  sed -i 's/localhost.cfg/raf_localhost.cfg/' $cf
 fi
 if ! grep -q "log_external_commands=1" $cf; then
   sed -i 's/log_external_commands=1/log_external_commands=0/' $cf
@@ -66,9 +64,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-#%{_sysconfdir}/init.d/raf_nagios_init #this one still exists
-%{_sysconfdir}/nagios/raf_commands.cfg
-%{_sysconfdir}/nagios/raf_localhost.cfg
+%{_sysconfdir}/nagios/objects/raf_commands.cfg
+%{_sysconfdir}/nagios/objects/raf_localhost.cfg
 /usr/lib64/nagios/plugins/raf_*
 #%{_sysconfdir}/httpd/conf.d/nagios.conf
 
