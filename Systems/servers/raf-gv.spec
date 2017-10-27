@@ -86,7 +86,7 @@ sed -i '/^IPADDR=.*/IPADDR=128.117.44.102/' /etc/sysconfig/network-scripts/ifcfg
 * Mon Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-4
 - Added ael-local-dpkgs, remove raf-ads3-rsyncd
 * Thu Nov 20 2008 Gordon Maclean <maclean@ucar.edu> 1.0-3
-- Added rad-ads3-rsyncd
+- Added raf-ads3-rsyncd
 * Tue Apr 15 2008 Gordon Maclean <maclean@ucar.edu> 1.0-2
 - Added raf-gv-ddclient
 * Fri Apr 4 2008 Gordon Maclean <maclean@ucar.edu> 1.0-1

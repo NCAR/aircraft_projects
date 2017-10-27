@@ -57,6 +57,6 @@ sed -i '/^BOOTPROTO=.*/c\BOOTPROTO=dhcp' /etc/sysconfig/network-scripts/ifcfg-em
 * Mon Nov 16 2009 Gordon Maclean <maclean@ucar.edu> 1.0-3
 - Added ael-local-dpkgs, remove raf-ads3-rsyncd
 * Thu Nov 20 2008 Gordon Maclean <maclean@ucar.edu> 1.0-2
-- Added rad-ads3-rsyncd
+- Added raf-ads3-rsyncd
 * Fri Oct 24 2008 Gordon Maclean <maclean@ucar.edu> 1.0-1
 - initial

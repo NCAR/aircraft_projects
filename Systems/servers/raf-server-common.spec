@@ -7,6 +7,7 @@ License: GPL
 Source: %{name}-%{version}.tar.gz
 
 Requires: raf-devel
+Requires: raf-ads3-rsync
 Requires: raf-ads3-syslog
 Requires: raf-ads3-sysctl
 Requires: raf-ads-user
