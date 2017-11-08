@@ -12,7 +12,8 @@ pkill camera_symlink
 sudo modprobe -r firewire_ohci
 sudo modprobe firewire_ohci
 
-# Reset camera images symlink for camera web page display
+# (Re)set camera images symlink for camera web page display
+touch /var/www/html/camera
 cd /var/www/html/camera
 rm camera_images
 cam_path=`get_ac_config.py cameras.path`
@@ -20,4 +21,4 @@ ln -s `dirname ${cam_path}`
 
 sleep 2
 
-/etc/init.d/capture.sh start
+/etc/init.d/capture.sh start 

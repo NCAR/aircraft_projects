@@ -66,21 +66,10 @@ if [ $AIRCRAFT == "GV_N677F" ]; then
   fi
   
   # Start udp2sql to receive database update messages from the ground
-  ps ax | grep udp2sql | grep -qv grep
-  if [ $? -eq 1 ]; then
-    /opt/local/bin/udp2sql > /tmp/udp2sql.log &
-  fi
-
-  # Open Street Maps rendering daemon.
-#  ps ax | grep renderd | grep -qv grep
-#  if [ $? -eq 1 ]; then
-#    nice /usr/local/bin/renderd &
-#  fi
-fi
-
-ps ax | grep listen_lightning.pl | grep -qv grep
-if [ $? -eq 1 ]; then
-  nohup /home/local/Systems/scripts/lightning/listen_lightning.pl > /tmp/listen_lightning.log &
+  #ps ax | grep udp2sql | grep -qv grep
+  #if [ $? -eq 1 ]; then
+  #  /opt/local/bin/udp2sql > /tmp/udp2sql.log &
+  #fi
 fi
 
 ps ax | grep camera_symlink.py | grep -qv grep
@@ -95,10 +84,10 @@ if [ $? -eq 1 ]; then
 fi
 
 # Nagios variable QC checks
-ps ax | grep qc_check | grep -qv grep
-if [ $? -eq 1 ]; then
-  /home/local/raf/nagios-qc/qc_check.sh 30 > /tmp/qc_check.log &
-fi
+#ps ax | grep qc_check | grep -qv grep
+#if [ $? -eq 1 ]; then
+#  /home/local/raf/nagios-qc/qc_check.sh 30 > /tmp/qc_check.log &
+#fi
 
 
 # Start the Remote Instrument Control aircraft switch
