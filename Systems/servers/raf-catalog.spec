@@ -1,5 +1,5 @@
 Name:           raf-catalog
-Version:        0.1.7
+Version:        1.0
 Release:        1%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
@@ -118,9 +118,13 @@ chmod 700 /home/catalog/.ssh
 # avoid successive entries to /etc/sysconfig/docker
 #
 
-_modify_docker_sysconfig=false
-egrep -q ^other_args=\'--iptables=false\' /etc/sysconfig/docker || _modify_docker_sysconfig==true
-$_modify_docker_sysconfig && echo "other_args='--iptables=false'" >> /etc/sysconfig/docker
+_modify_docker_sysconfig_iptables=false
+egrep -q ^other_args=\'--iptables=false\' /etc/sysconfig/docker || _modify_docker_sysconfig_iptables=true
+$_modify_docker_sysconfig_iptables && echo "other_args='--iptables=false'" >> /etc/sysconfig/docker
+
+_modify_docker_sysconfig_dns=false
+egrep -q ^DOCKER_OPTS=\'--dns=192.168.184.1\' /etc/sysconfig/docker || _modify_docker_sysconfig_dns=true
+$_modify_docker_sysconfig_dns && echo "DOCKER_OPTS='--dns=192.168.184.1'" >> /etc/sysconfig/docker
 
 systemctl enable docker
 systemctl start docker
@@ -181,6 +185,9 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Wed Nov 08 2017 Erik Johnson <ej@ucar.edu> - 1.0-1
+- promote version to 1.0
+- add dns config to /etc/sysconfig/docker
 * Thu Aug 17 2017 Erik Johnson <ej@ucar.edu> - 0.1.7
 - ~/.bashrc: use AIRCRAFT for hostname in PS1, alias ll='ls -la'
 * Thu Aug 03 2017 Erik Johnson <ej@ucar.edu> - 0.1.6
