@@ -1,6 +1,6 @@
 Name:           raf-catalog
 Version:        1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
 License:        GPLv3+
@@ -29,11 +29,13 @@ mkdir -p %{buildroot}/%{_bindir}
 
 cp raf-catalog/docker-compose-Linux-x86_64-1.15.0 %{buildroot}/%{_bindir}/docker-compose
 
-mkdir -p ${RPM_BUILD_ROOT}/etc/httpd/conf.d ${RPM_BUILD_ROOT}/etc/sysconfig/ ${RPM_BUILD_ROOT}/etc/systemd/system/
+mkdir -p ${RPM_BUILD_ROOT}/etc/httpd/conf.d ${RPM_BUILD_ROOT}/etc/systemd/system/
 
 cp raf-catalog/etc/httpd/conf.d/osm_tiles_and_catalog.conf ${RPM_BUILD_ROOT}/etc/httpd/conf.d/osm_tiles_and_catalog.conf
 
 cp raf-catalog/etc/systemd/system/catalog-maps.service ${RPM_BUILD_ROOT}/etc/systemd/system/catalog-maps.service
+
+cp raf-catalog/etc/systemd/system/irc-bot.service ${RPM_BUILD_ROOT}/etc/systemd/system/irc-bot.service
 
 CATALOG_DIRS="${RPM_BUILD_ROOT}/home/catalog/products/incoming/gv ${RPM_BUILD_ROOT}/home/catalog/products/incoming/c130 ${RPM_BUILD_ROOT}/home/catalog/products/jail/gv ${RPM_BUILD_ROOT}/home/catalog/products/jail/c130 ${RPM_BUILD_ROOT}/home/catalog/products/html/gv ${RPM_BUILD_ROOT}/home/catalog/products/html/c130"
 
@@ -62,6 +64,7 @@ cp raf-catalog/etc/sudoers.d/catalog ${RPM_BUILD_ROOT}/etc/sudoers.d/catalog
 %defattr(644,catalog,catalog,755)
 /etc/httpd/conf.d/osm_tiles_and_catalog.conf
 /etc/systemd/system/catalog-maps.service
+/etc/systemd/system/irc-bot.service
 
 #
 # catalog files
@@ -113,18 +116,6 @@ usermod -g eol catalog
 
 %post
 chmod 700 /home/catalog/.ssh
-
-#
-# avoid successive entries to /etc/sysconfig/docker
-#
-
-_modify_docker_sysconfig_iptables=false
-egrep -q ^other_args=\'--iptables=false\' /etc/sysconfig/docker || _modify_docker_sysconfig_iptables=true
-$_modify_docker_sysconfig_iptables && echo "other_args='--iptables=false'" >> /etc/sysconfig/docker
-
-_modify_docker_sysconfig_dns=false
-egrep -q ^DOCKER_OPTS=\'--dns=192.168.184.1\' /etc/sysconfig/docker || _modify_docker_sysconfig_dns=true
-$_modify_docker_sysconfig_dns && echo "DOCKER_OPTS='--dns=192.168.184.1'" >> /etc/sysconfig/docker
 
 systemctl enable docker
 systemctl start docker
@@ -185,6 +176,10 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Thu Nov 08 2017 Erik Johnson <ej@ucar.edu> - 1.0-2
+- Add systemd unit file for irc-bot
+- sudoers.d/catalog: add commands for managing irc-bot and reviewing its journal logs
+- Remove code for /etc/sysconfig/docker-- no longer used on RHEL 7
 * Wed Nov 08 2017 Erik Johnson <ej@ucar.edu> - 1.0-1
 - promote version to 1.0
 - add dns config to /etc/sysconfig/docker
