@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#
+# initialize an acserver for IrcBot
+#
+
+#
+# prerequisites:
+# - installation of raf-catalog package >= 1.0-3
+# - GitHub deploy key copied to ~catalog/.ssh/id_rsa
+#
+
+if [ `whoami` != 'catalog' ]; then
+  echo "ERROR: $0 must be run as 'catalog' user"
+  exit 1
+fi
+
+if [ ! -f ~/.ssh/id_rsa ]; then
+  echo "ERROR: SSH key ~/.ssh/id_rsa does not exist. Please add SSH key."
+  exit 1
+fi
+
+if [ -z "$CATALOG_PLANE" ]; then
+  echo "ERROR: CATALOG_PLANE must be set."
+  exit 1
+fi
+
+\cd
+
+git clone git@github.com:ncareol/irc-bot.git
+
+\cd irc-bot
+
+git checkout master
+
+ln -sv docker/docker-compose.yml docker-compose.yml
+
+\cd config
+
+#
+# bot config: link plane-specific config to config/irc-bot.yml
+#
+ln -sv "$CATALOG_PLANE"bot.yml irc-bot.yml
+
+\cd ..
+
+docker-compose pull
+docker-compose build
+
+docker-compose run app bundle --path vendor --local
+
+sudo systemctl start irc-bot
