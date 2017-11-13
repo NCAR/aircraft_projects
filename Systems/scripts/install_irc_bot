@@ -42,6 +42,11 @@ ln -sv docker/docker-compose.yml docker-compose.yml
 #
 ln -sv "$CATALOG_PLANE"bot.yml irc-bot.yml
 
+#
+# check config: link plane-specific config to config/rectify-bot.yml
+#
+ln -sv "$CATALOG_PLANE"-check-bot.yml rectify-bot.yml
+
 \cd ..
 
 docker-compose pull
