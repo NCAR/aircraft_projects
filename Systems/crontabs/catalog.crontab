@@ -10,3 +10,12 @@
 #
 
 */5 * * * * /bin/bash -l -c "cd /home/catalog/catalog-maps && docker-compose run --rm app ./bin/ftp-get-products-all >> /tmp/catalog-ftp-get-products.log 2> >(>&2 grep -v Starting\ catalogmaps_db)"
+
+#
+# IRC check bot
+#
+
+#
+# grep out duplicate 'Lost connection' messages
+#
+*/5 * * * * /bin/bash -l -c "docker-compose -f /home/catalog/irc-bot/docker-compose.yml run -T --rm app ./bin/rectify-bot >> /tmp/catalog-rectify-bot.log 2> >(>&2 grep -v Lost\ connection)"
