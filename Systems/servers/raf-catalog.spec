@@ -1,6 +1,6 @@
 Name:           raf-catalog
 Version:        1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
 License:        GPLv3+
@@ -124,6 +124,7 @@ systemctl enable httpd
 systemctl start httpd
 
 systemctl enable catalog-maps
+systemctl enable irc-bot
 
 #
 # ~catalog/.ssh/authorized_keys
@@ -176,6 +177,8 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Thu Nov 08 2017 Erik Johnson <ej@ucar.edu> - 1.0-3
+- systemctl enable irc-bot
 * Thu Nov 08 2017 Erik Johnson <ej@ucar.edu> - 1.0-2
 - Add systemd unit file for irc-bot
 - sudoers.d/catalog: add commands for managing irc-bot and reviewing its journal logs
