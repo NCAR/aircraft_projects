@@ -17,10 +17,3 @@
 #*/2 * * * * python /home/local/Systems/scripts/send_toga.py >> /tmp/send_toga.log 2>&1
 # AVAPS
 * * * * * /home/local/Systems/scripts/avaps_proc.cron.py >> /tmp/avaps_proc.log 2>&1
-
-
-# Copy flight_track and position to CatalogIngest
-* * * * * /bin/bash -l -c "/home/local/Systems/scripts/copy_flight_geo_to_catalog.cron >> /tmp/copy_flight_geo_to_catalog.log 2>&1"
-
-# Cleanup old Catalog files from filesystem and database via DockerCompose
-1 */2 * * * /home/local/Systems/scripts/catalog_delete_files.cron >> /tmp/catalog_delete_files.log 2>&1
