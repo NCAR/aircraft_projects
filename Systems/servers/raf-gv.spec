@@ -44,7 +44,7 @@ echo "export AIRCRAFT=GV_N677F" > /etc/profile.d/ads3.sh
 sed -i '/^IPADDR=.*/IPADDR=128.117.44.102/' /etc/sysconfig/network-scripts/ifcfg-em3
 
 
-%files 
+%files
 %config %attr(0600,ads,ads) /var/spool/cron/ads
 %config %attr(0640,ads,ads) /home/ads/.subversion/servers
 %attr(0755,ads,ads) /home/ads/Desktop/start_camera.desktop
@@ -57,6 +57,9 @@ sed -i '/^IPADDR=.*/IPADDR=128.117.44.102/' /etc/sysconfig/network-scripts/ifcfg
 
 
 %changelog
+* Thu Nov 16 2017 Erik Johnson <ej@ucar.edu> 1.0-18
+- move catalog-related crontab entries from ads user to catalog user
+- rename crontabs from crontab.ads.<plane> to ads.<plane>.crontab
 * Tue Sep 19 2017 Chris Webster <cjw@ucar.edu> 1.0-16
 - Addition of raf-server-common to consolidate common config between lab and ac servers.
 * Mon Jan 16 2017 Chris Webster <cjw@ucar.edu> 1.0-15
