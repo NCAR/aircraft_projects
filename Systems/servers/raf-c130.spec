@@ -1,6 +1,6 @@
 Name: raf-c130
 Version: 1.0
-Release: 16
+Release: 17
 Summary: Metapackage for all server and satcom packages needed on C130
 
 License: GPL
@@ -30,10 +30,10 @@ Metapackage for all server and satcom packages needed on C130.
 %setup -q -n raf-server-common
 
 
-%install 
+%install
 mkdir -p ${RPM_BUILD_ROOT}/var/spool/cron/ads
 mkdir -p ${RPM_BUILD_ROOT}/home/ads/Desktop
-cp var/spool/cron/crontab.ads.c130	${RPM_BUILD_ROOT}/var/spool/cron/ads
+cp var/spool/cron/ads.c130.crontab	${RPM_BUILD_ROOT}/var/spool/cron/ads
 cp home/ads/Desktop/*camera*		${RPM_BUILD_ROOT}/home/ads/Desktop
 cp home/ads/Desktop/*mpds*		${RPM_BUILD_ROOT}/home/ads/Desktop
 cp -r home/ads/.subversion		${RPM_BUILD_ROOT}/home/ads
@@ -44,7 +44,7 @@ echo "export AIRCRAFT=C130_N130AR" > /etc/profile.d/ads3.sh
 sed -i '/^IPADDR=.*/IPADDR=128.117.44.101/' /etc/sysconfig/network-scripts/ifcfg-em3
 
 
-%files 
+%files
 %config %attr(0600,ads,ads) /var/spool/cron/ads
 %config %attr(0640,ads,ads) /home/ads/.subversion/servers
 %attr(0755,ads,ads) /home/ads/Desktop/start_camera.desktop
@@ -54,6 +54,10 @@ sed -i '/^IPADDR=.*/IPADDR=128.117.44.101/' /etc/sysconfig/network-scripts/ifcfg
 
 
 %changelog
+
+* Thu Nov 16 2017 Erik Johnson <ej@ucar.edu> 1.0-17
+- move catalog-related crontab entries from ads user to catalog user
+- rename crontabs from crontab.ads.<plane> to ads.<plane>.crontab
 * Tue Sep 19 2017 Chris Webster <cjw@ucar.edu> 1.0-16
 - Add set timezone to bring %pre to parity with raf-gv.spec
 - Addition of raf-server-common to consolidate common config between lab and ac servers.
