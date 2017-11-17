@@ -1,6 +1,6 @@
 Name: raf-ads-user
 Version: 1
-Release: 22
+Release: 23
 Summary: 'ads' user files.
 
 License: none
@@ -117,6 +117,8 @@ fi
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Fri Sep 22 2017 Chris Webster <cjw@ucar.edu> 1.23
+- Remove SATCOM desktop icons. They will move to raf-gv & raf-c130.
 * Mon Apr 11 2016 Chris Webster <cjw@ucar.edu> 1.22
 - Add ads:ads to /etc passwd:group files
 - Add .gitconfig file
