@@ -12,7 +12,7 @@ Requires: firefox
 
 %description
 Makes sure ads:ads exists in /etc files.  Password needs to be set manually at this time.
-Provides the 'ads' user csh & bash logins, and icons files.
+Provides the 'ads' user sh & bash logins, and icons files.
 
 %prep
 %setup -q -n %{name}
@@ -26,7 +26,6 @@ cp home/ads/System.cshrc             ${RPM_BUILD_ROOT}/home/ads/.System.cshrc
 cp home/ads/Jeffco_only.cshrc        ${RPM_BUILD_ROOT}/home/ads/.Jeffco_only.cshrc
 cp home/ads/cshrc                    ${RPM_BUILD_ROOT}/home/ads/.cshrc
 cp home/ads/my_defaults              ${RPM_BUILD_ROOT}/home/ads/.my_defaults
-cp home/ads/ads3_environment.csh     ${RPM_BUILD_ROOT}/home/ads/ads3_environment.csh
 cp home/ads/ads3_environment.sh      ${RPM_BUILD_ROOT}/home/ads/ads3_environment.sh
 cp home/ads/login                    ${RPM_BUILD_ROOT}/home/ads/.login
 cp home/ads/System.bashrc            ${RPM_BUILD_ROOT}/home/ads/.System.bashrc
@@ -117,6 +116,8 @@ fi
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Mon Nov 20 2017 Janine Aquino <janine@ucar.edu> 1.23
+- Remove ads3_environment.csh. We now use bash.
 * Fri Sep 22 2017 Chris Webster <cjw@ucar.edu> 1.23
 - Remove SATCOM desktop icons. They will move to raf-gv & raf-c130.
 * Mon Apr 11 2016 Chris Webster <cjw@ucar.edu> 1.22
