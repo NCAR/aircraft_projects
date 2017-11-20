@@ -46,6 +46,8 @@ Metapackage for common lab and aircraft server configuration.
 %prep
 %setup -q -n %{name}
 
+%pre
+mkdir -p %{_localstatedir}/run/nidas
 
 %install
 
@@ -109,5 +111,8 @@ systemctl start squid
 
 
 %changelog
+* Mon Nov 20 2017 Janine Aquino <janine@ucar.edu> 1.0-1
+ - add mkdir -p /var/run/nidas to %pre
+ - Added PROXY_METHOD, BROWSER_ONLY, and PREFIX to em files.
 * Tue Sep 19 2017 Chris Webster <cjw@ucar.edu> 1.0-1
 - Initial hack
