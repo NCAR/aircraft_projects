@@ -55,7 +55,6 @@ fi
 %config /home/ads/.System.cshrc
 %config /home/ads/.cshrc
 %config /home/ads/.my_defaults
-%config /home/ads/ads3_environment.csh
 %config /home/ads/ads3_environment.sh
 %config /home/ads/.login
 %config /home/ads/.Jeffco_only.bashrc
