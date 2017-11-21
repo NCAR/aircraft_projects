@@ -41,7 +41,7 @@ cp -r home/ads/.subversion		${RPM_BUILD_ROOT}/home/ads
 
 %post
 echo "export AIRCRAFT=GV_N677F" > /etc/profile.d/ads3.sh
-sed -i '/^IPADDR=.*/IPADDR=128.117.44.102/' /etc/sysconfig/network-scripts/ifcfg-em3
+sed -i 's/^IPADDR=.*/IPADDR=128.117.44.102/' /etc/sysconfig/network-scripts/ifcfg-em3
 
 
 %files
