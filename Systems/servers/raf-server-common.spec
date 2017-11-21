@@ -84,8 +84,7 @@ if ! grep -q "nimbus.pid" $cf; then
   cat << EO_RC_LOCAL >> $cf
 
 # Perform some basic housekeeping / clean up.
-rm -f /tmp/nimbus.pid
-rm -f /home/DataBases/postmaster.pid
+rm -f /tmp/nimbus.pid /tmp/run/nidas/*.pid
 
 EO_RC_LOCAL
 
