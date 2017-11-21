@@ -53,14 +53,14 @@ mkdir -p /var/cache/ddclient
 %post -n raf-gv-ddclient
 sed -i 's,^SYSNAME=.*,SYSNAME=gv,' /etc/ppp/run_ddclient.sh
 cf=/var/spool/cron/root
-if !grep -q ddclient $cf; then
+if ! grep -q ddclient $cf; then
   echo "*/5 * * * * /usr/sbin/ddclient -verbose -file /etc/ddclient/gv.conf >> /tmp/ddclient.log 2>&1" >> /var/spool/cron/root
 fi
 
 %post -n raf-c130-ddclient
 sed -i 's,^SYSNAME=.*,SYSNAME=c130,' /etc/ppp/run_ddclient.sh
 cf=/var/spool/cron/root
-if !grep -q ddclient $cf; then
+if ! grep -q ddclient $cf; then
   echo "*/5 * * * * /usr/sbin/ddclient -verbose -file /etc/ddclient/c130.conf >> /tmp/ddclient.log 2>&1" >> /var/spool/cron/root
 fi
 
