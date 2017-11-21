@@ -12,7 +12,7 @@ Requires: firefox
 
 %description
 Makes sure ads:ads exists in /etc files.  Password needs to be set manually at this time.
-Provides the 'ads' user sh & bash logins, and icons files.
+Provides the 'ads' user bash logins and icons files.
 
 %prep
 %setup -q -n %{name}
