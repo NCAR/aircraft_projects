@@ -31,7 +31,6 @@ Metapackage for all server and satcom packages needed on C130.
 
 
 %install
-mkdir -p ${RPM_BUILD_ROOT}/var/spool/cron/ads
 mkdir -p ${RPM_BUILD_ROOT}/home/ads/Desktop
 cp var/spool/cron/ads.c130.crontab	${RPM_BUILD_ROOT}/var/spool/cron/ads
 cp home/ads/Desktop/*camera*		${RPM_BUILD_ROOT}/home/ads/Desktop
