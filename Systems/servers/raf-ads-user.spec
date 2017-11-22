@@ -42,11 +42,6 @@ cp -r home/ads/.ssh                  ${RPM_BUILD_ROOT}/home/ads
 if [ ! grep -q ads %{_sharedstatedir}/nidas/DaqUser ]; then
     echo "ads" > %{_sharedstatedir}/nidas/DaqUser
 fi
-chown -R ads %{_localstatedir}/run/nidas
-group=`id -gn ads`
-if [ -n "$group" ]; then
-    chgrp -R $group %{_localstatedir}/run/nidas
-fi
 
 
 %files
@@ -117,6 +112,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %changelog
 * Mon Nov 20 2017 Janine Aquino <janine@ucar.edu> 1.23
 - Remove ads3_environment.csh. We now use bash.
+- Remove chown of /var/run/nidas.  We don't use; uses /tmp/run/nidas.
 * Fri Sep 22 2017 Chris Webster <cjw@ucar.edu> 1.23
 - Remove SATCOM desktop icons. They will move to raf-gv & raf-c130.
 * Mon Apr 11 2016 Chris Webster <cjw@ucar.edu> 1.22
