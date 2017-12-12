@@ -33,6 +33,7 @@ Metapackage for all server and satcom packages needed on GV.
 
 %install
 mkdir -p ${RPM_BUILD_ROOT}/home/ads/Desktop
+mkdir -p ${RPM_BUILD_ROOT}/var/spool/cron
 cp var/spool/cron/ads.gv.crontab	${RPM_BUILD_ROOT}/var/spool/cron/ads
 cp home/ads/Desktop/*			${RPM_BUILD_ROOT}/home/ads/Desktop
 cp -r home/ads/.subversion		${RPM_BUILD_ROOT}/home/ads
