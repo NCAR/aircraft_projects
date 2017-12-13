@@ -1688,6 +1688,19 @@
       -->
     </sensor>
 
+    <sensor ID="PHIPS" class="UDPSocketSensor" devicename="usock::30132">
+      <sample id="1" rate="1">
+        <variable longname="PHIPS Packet Sequence Number" name="SEQ" units="none"/>
+        <variable longname="PHIPS Total Acquired Data Ssets" name="TADS" units="none"/>
+        <variable longname="PHIPS Trigger Flag (0 = forced, 1 = real particle event)" name="TRIG" units="none"/>
+        <variable length="20" longname="PHIPS Detector Histogram" name="DET" units="Mhz"/>
+      </sample>
+      <sample id="2" rate="1">
+        <variable longname="PHIPS Camera 1 Sequence Number" name="CAM1" units="none"/>
+        <variable longname="PHIPS Camera 2 Sequence Number" name="CAM2" units="none"/>
+      </sample>
+    </sensor>
+
 <!-- Specialized UDP Packets indicating that Mission Controller is asking for instruments to behave in
      specific ways -->
     <sensor ID="CTRLRESRCH" class="UDPSocketSensor" devicename="usock::41005">
@@ -1743,6 +1756,7 @@
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150" suffix="_UDP"/>
       <sensor IDREF="CFDC" devicename="usock::30105" id="200" suffix="_CFDC"/>
+      <sensor IDREF="PHIPS" devicename="usock::30132" id="400" suffix="_PHIPS"/>
       <sensor IDREF="CUTWC" devicename="usock::30129" id="300" suffix="_CLH"/>
       <sensor IDREF="GNI" devicename="usock::32102" id="500" suffix="_GNI"/>
       <output class="RawSampleOutputStream">
