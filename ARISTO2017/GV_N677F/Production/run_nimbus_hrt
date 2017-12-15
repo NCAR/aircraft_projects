@@ -1,0 +1,8 @@
+#!/bin/csh
+
+# Remove existing files.  Helps to avoid if a residual data if nimbus fails.
+/bin/rm ${DAT}/ARISTO2017?f??h.nc
+
+foreach setup_file ( setup_?f??_hrt )
+  nimbus -b $setup_file
+end
