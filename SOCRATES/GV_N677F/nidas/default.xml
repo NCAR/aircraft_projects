@@ -833,6 +833,32 @@
       </sample>
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
     </serialSensor>
+
+    <serialSensor ID="PIP_SERIAL" baud="57600" class="raf.PIP_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
+      <parameter name="calfile" type="string" value="PMSspecs"/>
+      <parameter name="RESOLUTION" type="int" value="100"/>
+      <parameter name="DOF_REJ" type="int" value="1"/>
+      <sample id="1">
+        <variable longname="PIP Diode 1 Voltage" name="PIPEDV0" units="Vdc"/>
+        <variable longname="PIP Diode 64 Voltage" name="PIPEDV64" units="Vdc"/>
+        <variable longname="PIP Diode 32 Voltage" name="PIPEDV32" units="Vdc"/>
+        <variable longname="PIP Control Board Temperature" name="PIPCBTMP" units="deg_C"/>
+        <variable longname="PIP Laser Current" name="PIPLSRC" units="mAmp"/>
+        <variable longname="PIP Laser Power Monitor" name="PIPLSRP" units="V"/>
+        <variable longname="PIP Rejected Particle Count (Oversize)" name="REJOFLOW" units="count"/>
+        <variable longname="PIP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
+        <variable longname="PIP Rejected Particle Count (End)" name="REJEND" units="count"/>
+        <variable length="63" longname="PIP Raw Accumulation (per cell)" name="APIP" units="count"/>
+        <variable longname="PIP Time between last sample and this sample" name="DELTAT" units="msec"/>
+      </sample>
+<!--      <message length="180" position="end" separator="\xfa\xde"/> -->
+      <prompt rate="10" string="\x1b\x02\x01\x00\xb7\x00\x00\x1b\x00\x00\xf0\x00"/>
+    </serialSensor>
+
+    <serialSensor ID="PIP_Images" class="DSMSerialSensor" baud="57600" databits="8" parity="none" stopbits="1">
+      <parameter name="RESOLUTION" type="int" value="100"/>
+    </serialSensor>
+
     <serialSensor ID="UHSAS" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1" timeout="10">
       <parameter name="HSKP_SCALE" type="int" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000"/>
       <sample id="1" rate="10">
@@ -2203,10 +2229,14 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="300" suffix="_RWIO">
+      <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="100" suffix="_RWIO">
         <parameter name="SerialNumber" type="string" value="CDP016"/>
       </serialSensor>
+      <serialSensor IDREF="PIP_SERIAL" devicename="/dev/ttyS11" id="200" suffix="_RWII">
+        <parameter name="SerialNumber" type="string" value="PIP011"/>
+      </serialSensor>
     </dsm>
+
     <dsm derivedData="sock::7071" id="13" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
