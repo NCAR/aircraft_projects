@@ -7,15 +7,15 @@
 #   case version of the project name e.g. icebridge2015 not ICEBRIDGE2015
 
 # Data dir to run on gstation
-#rstudio_dir =    '/home/ads/RStudio/'
+rstudio_dir =    '/home/ads/RStudio/'
 #translate2ds = '/home/local/raf/instruments/3v-cpi/translate2ds/translate2ds '
 
 # Data dir to run on EOL servers
-rstudio_dir =    '/h/eol/ads/RStudio/'
+#rstudio_dir =    '/h/eol/ads/RStudio/'
 translate2ds = '/opt/local/bin/translate2ds '
 
 # Products - set to true if you want 'em
-nc2asc = True
+nc2asc = False
 nc2iwg = False
 catalog = True
 HRT =    False
@@ -26,11 +26,11 @@ HRTonly = False
 
 ### NAS stuff ###
 # Do we have local SWIG RAID storage.
-NAS =     False
+NAS =     True
 # Does NAS have a permanent mount?
 NAS_permanent_mount = True
 
-nas_url =        '192.168.1.30:/data'
+nas_url =        '192.168.1.46:/data'
 nas_mnt_pt =     '/mnt/Data/'
 nas_sync_dir =   nas_mnt_pt + '/data/synced_data/'
 nas_data_dir =   nas_mnt_pt + '/data/scr_data/'
@@ -49,9 +49,9 @@ nas_data_dir =   nas_mnt_pt + '/data/scr_data/'
 #rlocal_ftp_dir = '/FieldStorage/FieldProjects/' + project + '/RAFqc'
 
 ### R stuff ###
-# DataReview is in github.  https://github/WilliamCooper/DataReview.git
-# Is Rstudio generating HTML files?
-RstudioHTML = False
+# The Rstudio shiny app is in the repository: https://github.com/WilliamCooper/QAtools 
+# Should this script launch the QAtools shiny app?
+Rstudio = True
 
 ### Instrument specific processing ###
 # - true or false depending on if instrument is on project.
