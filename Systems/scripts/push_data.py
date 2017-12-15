@@ -5,9 +5,9 @@
 # user where needed) and does several things:
 #  1: zips up the nc, kml, and iwg1 files into a single zip file 
 #  2: zips up the ads file
-#  3: Creates plots using an Rstudio script
-#  4: copies nc, kml, plots to local FTP site for readynas to sync to Boulder
-#  4: FTPs the nc and kml files to a local server in the WINTER Ops center 
+#  3: Creates interactive plots using an Rstudio script
+#  4: copies nc, kml, to local FTP site for readynas to sync to Boulder
+#  4: FTPs the nc and kml files to a local server in the Ops center 
 #
 
 import os
@@ -39,7 +39,8 @@ proj_dir  = read_env("PROJ_DIR") + '/' + project + '/' + aircraft + '/'
 
 # Initialization 
 #   The RStudio piece seems to need special setup for each project
-sys.path.insert(0,proj_dir)
+scripts_dir = proj_dir + '/scripts'
+sys.path.insert(0,scripts_dir)
 from fieldProc_setup import *
 
 ##############   Beginning of Setup ######################################
@@ -48,7 +49,7 @@ nc2ascBatch =	proj_dir + 'scripts/nc2asc.bat'
 # Don't make it Raw_Data/proj.
 zip_dir = '/tmp/'
 
-# Catalog setup should not need to change - they are cery consistent
+# Catalog setup should not need to change - they are very consistent
 # so leave this here, rather than in project-specific setup file
 qc_ftp_site =    'catalog.eol.ucar.edu'
 qc_ftp_dir =     '/pub/incoming/catalog/'+ project.lower()
@@ -345,20 +346,7 @@ rawfile=find_file(raw_dir,flight,file_prefix,'ads')
 # RStudio plotting
 if not os.path.exists(rstudio_dir):
   print 'RStudio DataReview has not been checked out at : '+ rstudio_dir
-  print 'No plots being generated.'
-else:
-  #Include time in RStudio filename so can load into field catalog
-  filename = rawfile.split(raw_dir)[1]
-  time = filename.split(".")[0].replace('_','')
-
-  # RStudio PDF file
-  RStudio_outfile = data_dir+file_prefix+'Plots.pdf'
-  rstudiofile=find_file(data_dir,raircraft+time[0:12],raircraft+time[0:12],'RAF_QC_plots_hires.pdf')
-
-  # RStudio HTML file
-  if RstudioHTML:
-    RStudio_outfileHTML = data_dir+file_prefix+'Plots.html'
-    rstudiofileHTML=find_file(data_dir,raircraft+time[0:12],raircraft+time[0:12],'RAF_QC_plots.html')
+  print 'QC plots cannot be generated.'
 
 ###################  Beginning of Processing ##############################
 # 3VCPI 
@@ -437,32 +425,13 @@ if process:
   #
   # Run Al Cooper's R code for QA/QC production
   #
-  # Currently requires being run from the ~/RStudio/DataReview directory.
-  # Run as: "Rscript Review.R ##", without the 'rf', 'tf', or 'ff' at this time.
+  # Currently requires being run from the ~/RStudio/QAtools directory.
+  # To run: launch rstudio, then type "shiny::runApp()"
   #
-  # If R is not installed or working, documentation is in:
-  #  RStudio/Randadu/RanaduManual.pdf (git clone https://github.com/WilliamCooper/Ranadu)
-  # also see:
-  #  RStudio/DataReview/DataReviewManual.pdf
-  #
-  os.chdir(data_dir)
-  fl_num = flight[2:]  # This will probably change in the future...
-  command = "Rscript " + rstudio_dir + "/Review.R " + fl_num
+  os.chdir(rstudio_dir+"/QAtools")
+  command = "rstudio"
   print "about to execute : "+command
   os.system(command)
-
-  # rename Rstudio output files to name with time so can input into
-  # field catalog
-  command = "/bin/cp " + RStudio_outfile + " " + rstudiofile;
-  print "about to execute : "+command
-  if os.system(command) == 0:
-    proc_qc_files = "Yes"
-
-  if RstudioHTML:
-    command = "/bin/cp " + RStudio_outfileHTML + " " + rstudiofileHTML;
-    print "about to execute : "+command
-    if os.system(command) == 0:
-      proc_Rstudio_HTML= "Yes"
 
 ###################  Beginning of Shipping ##############################
 else:
@@ -480,15 +449,6 @@ if nc2iwg:
 if nc2asc:
   print "ASCII file = "+icarttfile
   print os.system("ls -l "+icarttfile)
-print "RStudio PDF file = "+rstudiofile
-print os.system("ls -l "+rstudiofile)
-print "RStudio PDF outfile = "+RStudio_outfile
-print os.system("ls -l "+RStudio_outfile)
-if RstudioHTML:
-  print "RStudio HTML file = "+rstudiofileHTML
-  print os.system("ls -l "+rstudiofileHTML)
-  print "RStudio HTML outfile = "+rstudiofileHTML
-  print os.system("ls -l "+rstudiofileHTML)
 print "Raw ADS file = "+rawfile
 print os.system("ls -l "+rawfile)
 if threevcpi2d_file != '':
@@ -519,9 +479,6 @@ if NAS:
     stor_iwg_file = rsync_file(iwg1file,nc_out_dir)
   if nc2asc:
     stor_asc_file = rsync_file(icarttfile,nc_out_dir)
-  stor_qc_file = rsync_file(rstudiofile,qc_out_dir)
-  if RstudioHTML:
-    stor_qchtml_file = rsync_file(rstudiofileHTML,qc_out_dir)
   if not reprocess:
     stor_raw_file = rsync_file(rawfile,raw_out_dir)
 
@@ -543,9 +500,6 @@ if nc2iwg:
   data_dir,iwg1filename = os.path.split(iwg1file)
 if nc2asc:
   data_dir,icarttfilename = os.path.split(icarttfile)
-rdata_dir,rstudiofilename = os.path.split(rstudiofile)
-if RstudioHTML:
-  rdata_dir,rstudiofilenameHTML = os.path.split(rstudiofileHTML)
 
 print "data_dir = "+data_dir
 print "ncfilename = "+ncfilename
@@ -554,9 +508,6 @@ if nc2iwg:
   print "iwg1filename = "+iwg1filename
 if nc2asc:
   print "icarttfilename = "+icarttfilename
-print "RStudiofilenamePDF = "+rstudiofilename
-if RstudioHTML:
-  print "RStudiofilenameHTML = "+rstudiofilenameHTML
 
 #
 # data_dump section
@@ -581,9 +532,6 @@ if nc2iwg:
   zip_file(iwg1filename)
 if nc2asc:
   zip_file(icarttfilename)
-zip_file(RStudio_outfile)
-if RstudioHTML:
-  zip_file(Rstudio_outfileHTML)
 
 
 # Put QC files into catalog and to the NAS if it exists
@@ -595,18 +543,6 @@ if catalog:
     ftp = ftplib.FTP(qc_ftp_site)
     ftp.login("anonymous", email)
     ftp.cwd(qc_ftp_dir)
-    print ""
-    print "Putting file:"+rstudiofilename
-    os.chdir(rdata_dir)
-    file = open(rstudiofilename, 'r')
-    ftp.storbinary('STOR ' + rstudiofilename, file)
-    file.close()
-    if RstudioHTML:
-      print "Putting file:"+rstudiofilenameHTML
-      file = open(rstudiofilenameHTML, 'r')
-      ftp.storbinary('STOR ' + rstudiofilenameHTML, file)
-      file.close()
-    print "Finished putting QC files"
     print ""
     ftp.quit()
     ship_qc_files = 'Yes-Cat'
@@ -770,16 +706,6 @@ else:
 #    ftp.storbinary('STOR ' + icarttfilename, file)
 #    file.close()
 #
-#    os.chdir(rdata_dir)
-#    ftp.cwd(rlocal_ftp_dir)
-#    print "Putting RStudio PDF file: "+rstudiofile
-#    file = open(rstudiofilename, 'r')
-#    ftp.storbinary('STOR ' + rstudiofilename, file)
-#    file.close()
-#    print "Putting RStudio HTML file: "+rstudiofileHTML
-#    file = open(rstudiofilenameHTML, 'r')
-#    ftp.storbinary('STOR ' + rstudiofilenameHTML, file)
-#    file.close()
 #    print "Done Putting data files to local ftp server"
 #    print ""
 #    ftp.quit()
