@@ -1,6 +1,6 @@
 Name:           raf-catalog
 Version:        1.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
 License:        GPLv3+
@@ -44,6 +44,7 @@ mkdir -p $CATALOG_DIRS ${RPM_BUILD_ROOT}/var/lib/mod_tile ${RPM_BUILD_ROOT}/home
 # SSH: `catuser` pub key, for products2plane
 
 cp raf-catalog/home/catalog/.ssh/id_rsa_* ${RPM_BUILD_ROOT}/home/catalog/.ssh/
+cp raf-catalog/home/catalog/.ssh/config ${RPM_BUILD_ROOT}/home/catalog/.ssh/
 cp raf-catalog/home/catalog/.bashrc ${RPM_BUILD_ROOT}/home/catalog/
 cp raf-catalog/home/catalog/.gitconfig ${RPM_BUILD_ROOT}/home/catalog/
 
@@ -78,6 +79,7 @@ cp raf-catalog/etc/sudoers.d/catalog ${RPM_BUILD_ROOT}/etc/sudoers.d/catalog
 #%defattr(file perms, user, group, dir perms)
 %defattr(644,catalog,catalog,755)
 /var/lib/mod_tile
+/home/catalog/.ssh/config
 /home/catalog/.ssh/id_rsa_catuser.pub
 /home/catalog/.ssh/id_rsa_ej_kepler.pub
 /home/catalog/.bashrc
@@ -177,6 +179,8 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Fri Dec 15 2017 Erik Johnson <ej@ucar.edu> - 1.0-4
+- add config for SSH alias, github-catalog-ingest, for catalog user
 * Thu Nov 08 2017 Erik Johnson <ej@ucar.edu> - 1.0-3
 - systemctl enable irc-bot
 * Thu Nov 08 2017 Erik Johnson <ej@ucar.edu> - 1.0-2
