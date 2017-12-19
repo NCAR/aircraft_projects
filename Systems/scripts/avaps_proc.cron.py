@@ -26,13 +26,15 @@ sys.path.append("/home/local/raf/python")
 import raf.ac_config
 
 ####################  CONFIGURATION #######################################
-send_Dfiles = False
+send_Dfiles = True 
 send_prodfiles = True
 # The following probably won't change
 Aspen_QC_exe = '/home/local/src/aspenqc/bin/Aspen-QC'
 d_file_re = 'D????????_??????_P.?'
-raw_data_dir = raf.ac_config.get_config("dropsonde.raw_path")
-ads_web_dir = raf.ac_config.get_config("dropsonde.skewt_path")
+raw_data_dir = "/var/r1//dropsondes"
+ads_web_dir = "/var/www/html/skewt"
+#raw_data_dir = raf.ac_config.get_config("dropsonde.raw_path")
+#ads_web_dir = raf.ac_config.get_config("dropsonde.skewt_path")
 grnd_ftp_host = 'catalog.eol.ucar.edu'
 grnd_skewt_dir = '/pub/incoming/AVAPS/skewt'
 grnd_wmo_dir = '/pub/incoming/AVAPS/bufr'
@@ -86,8 +88,8 @@ for file in list:
             os.system(cmd)
             os.rename(file_bz2, 'inserted/'+file_bz2)
 
-        except:
-            syslog.syslog(ident+':failed to compress/PQinsert:'+file)
+        except Exception as e:
+            syslog.syslog("%s: failed to compress/PQinsert:'%s': %s" % (ident, file, e))
             cmd='bunzip2 '+file_bz2
             os.system(cmd)
     else:
