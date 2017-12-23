@@ -27,3 +27,8 @@ alias cmaps='cd ~/catalog-maps'
 alias cingest='cd ~/catalog-ingest'
 alias cproducts='cd ~/products'
 alias ..='cd ..'
+
+if [ -d ~/.rbenv/bin ]; then
+  export PATH="$HOME/.rbenv/bin:$PATH"
+  eval "$(~/.rbenv/bin/rbenv init -)"
+fi

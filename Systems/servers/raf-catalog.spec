@@ -1,6 +1,6 @@
 Name:           raf-catalog
 Version:        1.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
 License:        GPLv3+
@@ -116,6 +116,13 @@ grep -q ^eol: /etc/group || _addeolgroup=true
 $_addeolgroup && groupadd eol
 usermod -g eol catalog
 
+#
+# add /catalog symbolic link
+#
+_addcataloglink=false
+[ -L /catalog ] || _addcataloglink=true
+$_addcataloglink && ln -s /home/catalog/products /catalog
+
 %post
 chmod 700 /home/catalog/.ssh
 
@@ -179,6 +186,8 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Fri Dec 22 2017 Erik Johnson <ej@ucar.edu> - 1.0-5
+- add accommodations for running CatalogMaps natively w/ rbenv
 * Fri Dec 15 2017 Erik Johnson <ej@ucar.edu> - 1.0-4
 - add config for SSH alias, github-catalog-ingest, for catalog user
 * Thu Nov 08 2017 Erik Johnson <ej@ucar.edu> - 1.0-3
