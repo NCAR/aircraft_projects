@@ -25,8 +25,6 @@ mkdir ~/.rbenv
 cd ~/.rbenv
 tar xvf /tmp/rbenv-v1.1.1.tar.gz --strip-components=1
 ./src/configure && make -C src
-echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-echo 'eval "$(~/.rbenv/bin/rbenv init -)"'  >> ~/.bashrc
 
 . ~/.bash_profile
 
