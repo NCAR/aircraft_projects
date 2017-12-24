@@ -17,26 +17,34 @@ if [ ! -f ~/.ssh/id_rsa ]; then
 fi
 
 #
-# install rbenv to ~/.rbenv
+# verify that chruby is installed
 #
-
-wget -O /tmp/rbenv-v1.1.1.tar.gz https://github.com/rbenv/rbenv/archive/v1.1.1.tar.gz
-mkdir ~/.rbenv
-cd ~/.rbenv
-tar xvf /tmp/rbenv-v1.1.1.tar.gz --strip-components=1
-./src/configure && make -C src
-
-. ~/.bash_profile
+if [ ! -d /usr/local/share/chruby ]; then
+  echo "chruby does not appear to be installed. Please install chruby"
+  exit 1
+fi
 
 #
-# install ruby-build as rbenv plugin
+# verify that ruby-install is installed and in $PATH
 #
-mkdir -p "$(rbenv root)"/plugins
-git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+if [ ! -x "$(command -v ruby-install)" ] ; then
+  echo "ruby-install is not installed or not in $PATH. Please correct this to continue."
+  exit 1
+fi
 
-# source ~/.bashrc
+RUBY_VERSION=2.3.3
 
-curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-doctor | bash
+#
+# install ruby
+#
+ruby-install ruby-$RUBY_VERSION
+
+#
+# source chruby in case we just installed it and haven't started a new shell
+#   and to make it aware of newly installed ruby version
+#
+source /usr/local/share/chruby/chruby.sh
+source /usr/local/share/chruby/auto.sh
 
 #
 # install dependencies
@@ -52,11 +60,12 @@ sudo yum install -y openssl-devel gcc-c++ libxml2-devel mariadb-devel readline-d
 
 git clone git@github.com:ncareol/catalog-maps.git catalog-maps-native
 
-echo '2.3.3' > catalog-maps-native/.ruby-version
+#
+# echo version before cd so that chruby auto switches to this version on `cd`
+#
+echo $RUBY_VERSION > catalog-maps-native/.ruby-version
 
 cd catalog-maps-native
-
-rbenv install -v
 
 gem install bundler
 
