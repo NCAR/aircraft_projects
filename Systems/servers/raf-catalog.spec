@@ -1,6 +1,6 @@
 Name:           raf-catalog
 Version:        1.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
 License:        GPLv3+
@@ -186,6 +186,8 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Sat Dec 23 2017 Erik Johnson <ej@ucar.edu> - 1.0-6
+- CatalogMaps native: switch from rbenv to chruby
 * Fri Dec 22 2017 Erik Johnson <ej@ucar.edu> - 1.0-5
 - add accommodations for running CatalogMaps natively w/ rbenv
 * Fri Dec 15 2017 Erik Johnson <ej@ucar.edu> - 1.0-4
