@@ -1,6 +1,6 @@
 Name:           raf-catalog
 Version:        1.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
 License:        GPLv3+
@@ -119,9 +119,9 @@ usermod -g eol catalog
 #
 # add /catalog symbolic link
 #
-_addcataloglink=false
-[ -L /catalog ] || _addcataloglink=true
-$_addcataloglink && ln -s /home/catalog/products /catalog
+if [[ ! -L /catalog ]]; then
+  ln -s /home/catalog/products /catalog
+fi
 
 %post
 chmod 700 /home/catalog/.ssh
@@ -186,6 +186,8 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Sat Dec 23 2017 Erik Johnson <ej@ucar.edu> - 1.0-7
+- CatalogMaps native: fix syntax for conditionally creating /catalog sym link
 * Sat Dec 23 2017 Erik Johnson <ej@ucar.edu> - 1.0-6
 - CatalogMaps native: switch from rbenv to chruby
 * Fri Dec 22 2017 Erik Johnson <ej@ucar.edu> - 1.0-5
