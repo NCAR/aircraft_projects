@@ -66,6 +66,7 @@ git clone git@github.com:ncareol/catalog-maps.git catalog-maps-native
 echo $RUBY_VERSION > catalog-maps-native/.ruby-version
 
 cd catalog-maps-native
+git checkout master
 
 gem install bundler
 
