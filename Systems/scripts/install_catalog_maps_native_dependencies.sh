@@ -31,6 +31,14 @@ tar -xzvf chruby-0.3.9.tar.gz
 cd chruby-0.3.9/
 sudo make install
 
+
+\cd /tmp
+
+#
+# clean up
+#
+rm -rf ruby-install-0.6.1* chruby-0.3.9*
+
 #
 # install dependencies of gems
 #
