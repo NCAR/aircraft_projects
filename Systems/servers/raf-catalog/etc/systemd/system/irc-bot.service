@@ -10,9 +10,9 @@
 #   systemctl start irc-bot.service
 
 [Unit]
-Description=IRC Bot, Managed by Docker Compose
-After=docker.service
-BindsTo=docker.service
+Description=IRC Bot, Run via chruby
+# After=docker.service
+# BindsTo=docker.service
 Conflicts=shutdown.target reboot.target halt.target
 
 [Service]
@@ -23,13 +23,14 @@ RestartSec=10
 User=catalog
 WorkingDirectory=/home/catalog/irc-bot
 
-ExecStartPre=-/usr/bin/docker-compose kill
-ExecStartPre=-/usr/bin/docker-compose rm
-ExecStartPre=-/usr/bin/docker-compose rm -f
+# ExecStartPre=-/usr/bin/docker-compose kill
+# ExecStartPre=-/usr/bin/docker-compose rm
+# ExecStartPre=-/usr/bin/docker-compose rm -f
+# ExecStart=/bin/bash --login -c '/usr/bin/docker-compose up --force-recreate'
 
-ExecStart=/bin/bash --login -c '/usr/bin/docker-compose up --force-recreate'
+ExecStart=/usr/local/bin/chruby-exec 2.4.2 -- /home/catalog/irc-bot/bin/irc-bot --fg
 
-ExecStop=/usr/bin/docker-compose stop
+# ExecStop=/usr/bin/docker-compose stop
 
 NotifyAccess=all
 

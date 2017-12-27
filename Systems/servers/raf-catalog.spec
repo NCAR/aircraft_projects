@@ -1,6 +1,6 @@
 Name:           raf-catalog
 Version:        1.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
 License:        GPLv3+
@@ -186,6 +186,8 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Wed Dec 27 2017 Erik Johnson <ej@ucar.edu> - 1.0-8
+- IrcBot native: update irc-bot.service to start bot w/ chruby and native Ruby
 * Sat Dec 23 2017 Erik Johnson <ej@ucar.edu> - 1.0-7
 - CatalogMaps native: fix syntax for conditionally creating /catalog sym link
 * Sat Dec 23 2017 Erik Johnson <ej@ucar.edu> - 1.0-6
