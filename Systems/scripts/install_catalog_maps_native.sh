@@ -68,6 +68,17 @@ echo $RUBY_VERSION > catalog-maps-native/.ruby-version
 cd catalog-maps-native
 git checkout master
 
+#
+# add '[receive]' section to .git/config
+#
+if ! grep -lq '\[receive\]' .git/config ; then
+  echo 'adding [receive] section to .git/config'
+  cat <<GITCONFIG >> .git/config
+[receive]
+    denyCurrentBranch = ignore
+GITCONFIG
+fi
+
 gem install bundler
 
 bundle --path vendor --local
