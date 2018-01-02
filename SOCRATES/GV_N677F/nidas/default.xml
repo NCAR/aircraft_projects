@@ -855,9 +855,10 @@
       <prompt rate="10" string="\x1b\x02\x01\x00\xb7\x00\x00\x1b\x00\x00\xf0\x00"/>
     </serialSensor>
 
-    <sensor ID="PIP_IMAGE" class="raf.PIP_Image">
+    <serialSensor ID="PIP_IMAGE" baud="460800" class="raf.PIP_Image" databits="8" parity="none" stopbits="1">
       <parameter name="RESOLUTION" type="int" value="100"/>
-    </sensor>
+      <message length="4096"/>
+    </serialSensor>
 
     <serialSensor ID="UHSAS" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1" timeout="10">
       <parameter name="HSKP_SCALE" type="int" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000"/>
