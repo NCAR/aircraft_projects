@@ -851,10 +851,10 @@
         <variable length="63" longname="PIP Raw Accumulation (per cell)" name="APIP" units="count"/>
         <variable longname="PIP Time between last sample and this sample" name="DELTAT" units="msec"/>
       </sample>
+
 <!--      <message length="180" position="end" separator="\xfa\xde"/> -->
       <prompt rate="10" string="\x1b\x02\x01\x00\xb7\x00\x00\x1b\x00\x00\xf0\x00"/>
     </serialSensor>
-
     <serialSensor ID="PIP_IMAGE" baud="460800" class="raf.PIP_Image" databits="8" parity="none" stopbits="1">
       <parameter name="RESOLUTION" type="int" value="100"/>
       <message length="4096"/>
@@ -1793,6 +1793,7 @@
         </processor>
       </service>
     </server>
+
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.184.1:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
@@ -1801,13 +1802,14 @@
       <sensor IDREF="PHIPS" devicename="usock::30132" id="400" suffix="_PHIPS"/>
       <sensor IDREF="CUTWC" devicename="usock::30129" id="300" suffix="_CLH"/>
       <sensor IDREF="GNI" devicename="usock::32102" id="500" suffix="_GNI"/>
-      <sensor IDREF="PIP_IMAGE" devicename="/dev/ttyUSB0" id="600" suffix="_RWII">
+      <serialSensor IDREF="PIP_IMAGE" devicename="/dev/ttyUSB0" id="600" suffix="_RWII">
         <parameter name="SerialNumber" type="string" value="PIP011"/>
-      </sensor>
+      </serialSensor>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
     </dsm>
+
     <dsm derivedData="sock::7071" id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
@@ -1816,7 +1818,6 @@
       <serialSensor IDREF="UHSAS" devicename="/dev/ttyS4" id="4400" suffix="_LWII">
         <parameter name="SerialNumber" type="string" value="UHSAS001"/>
       </serialSensor>
-
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS6" id="4200" suffix="_GPS2"/>
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="150"/>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS8" id="200" suffix="_DPR"/>
@@ -1885,6 +1886,7 @@
         </sample>
       </sensor>
     </dsm>
+
     <dsm derivedData="sock::7071" id="4" location="cabin_mpdb" name="dsm304" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
@@ -1946,6 +1948,7 @@
         </sample>
       </sensor>
     </dsm>
+
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS5" id="110">
@@ -2057,6 +2060,7 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
+
     <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
       <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
         <sample id="1">
@@ -2098,6 +2102,7 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
+
     <dsm derivedData="sock::7071" id="10" location="L-5 Rack" name="dsm310" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
       <output class="RawSampleOutputStream">
@@ -2223,6 +2228,7 @@
         </sample>
       </sensor>
     </dsm>
+
     <dsm derivedData="sock::7071" id="11" location="LWI" name="dsmLWI" rserialPort="30002" statusAddr="sock::30001">
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
@@ -2244,6 +2250,7 @@
         </sample>
       </sensor>
     </dsm>
+
     <dsm derivedData="sock::7071" id="12" location="RWI" name="dsmRWI" rserialPort="30002" statusAddr="sock::30001">
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
