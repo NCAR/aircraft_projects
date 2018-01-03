@@ -1021,7 +1021,7 @@
             <variable longname="CFDC Filter (ON=1)" name="FILTER" units="bool"/>
         </sample>
     </sensor>
-    <serialSensor ID="CCN" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+    <serialSensor ID="DMTCCN" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="%f, %f, %f, %f, %f, %f, %f, %f, %f">
         <variable longname="CCN Sample Temperature" name="AT" units="deg_C"/>
         <variable longname="CCN Column A top of Column Temp" name="T1COLA" units="deg_C"/>
@@ -1034,6 +1034,21 @@
         <variable longname="CCN Sample Flow Column B" name="FLOWB" units="cm3/min"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
+    <serialSensor ID="CCN" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable longname="CCN Concentration" name="CONC" units="#/cm3"/>
+        <variable longname="CCN Sheath Flow" name="SHFLW" units="cc/m"/>
+        <variable longname="CCN Aerosol Flow" name="AERFLW" units="cc/m"/>
+        <variable longname="CCN Inlet Temperature" name="TINLET" units="deg_C"/>
+        <variable longname="CCN Top Temperature" name="TTOP" units="deg_C"/>
+        <variable longname="CCN Bottom Temperature" name="TBOTTOM" units="deg_C"/>
+        <variable longname="CCN OPC Temperature" name="TOPC" units="deg_C"/>
+        <variable longname="CCN Chamber Pressure" name="PRESS" units="mbar"/>
+        <variable longname="CCN OPC Scatter" name="SCAT" units="mV"/>
+        <variable longname="CCN Cycle Time" name="CYCLT" units="s"/>
+      </sample>
+      <message length="0" position="end" separator="\r"/>
     </serialSensor>
     <sensor ID="Fast2DC" class="raf.TwoD64_USB">
       <parameter name="SerialNumber" type="string" value="F2DC001"/>
