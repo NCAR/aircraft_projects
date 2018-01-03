@@ -14,5 +14,8 @@ Cmnd_Alias CATALOG_COMMANDS = /usr/bin/rpm, /usr/bin/yum, /bin/systemctl * catal
 
 Cmnd_Alias IRCBOT_COMMANDS = /bin/systemctl * irc-bot*, /usr/sbin/service irc-bot *, /bin/journalctl -u irc-bot*, /bin/journalctl --unit irc-bot*
 
+Cmnd_Alias DOCKER_COMMANDS = /bin/systemctl * docker*, /usr/sbin/service docker *, /bin/journalctl -u docker*, /bin/journalctl --unit docker*
+
 catalog ALL= NOPASSWD: CATALOG_COMMANDS
 catalog ALL= NOPASSWD: IRCBOT_COMMANDS
+catalog ALL= NOPASSWD: DOCKER_COMMANDS
