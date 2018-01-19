@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #  NOTE = Be sure to ask the systems group to create a directory:
-#   /net/iftp2/pub/incoming/<project>/synced_data. If NAS_permanent_mount
+#   /net/ftp/pub/data/incoming/<project>/data_synced. If NAS_permanent_mount
 #   then NAS will copy files to that dir.
 #   Note that the CWIG standard and the standard expected by the 
 #   catcher script will be that <project> above will be the lower
@@ -30,10 +30,10 @@ NAS =     True
 # Does NAS have a permanent mount?
 NAS_permanent_mount = True
 
-nas_url =        '192.168.1.46:/data'
+nas_url =        '192.168.1.30:/data' #not .46
 nas_mnt_pt =     '/mnt/Data/'
-nas_sync_dir =   nas_mnt_pt + '/data/synced_data/'
-nas_data_dir =   nas_mnt_pt + '/data/scr_data/'
+nas_sync_dir =   nas_mnt_pt + '/data/SOCRATES/data_synced/'
+nas_data_dir =   nas_mnt_pt + '/data/SOCRATES/scr_data/'
 
 ### remote FTP setup (if no NAS) ###
 #ftp_site =       'data.eol.ucar.edu'
