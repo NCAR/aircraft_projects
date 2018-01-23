@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 # Runs in cron on tikal as user ads
 
@@ -7,9 +7,14 @@ This script uses the pyinotify module to monitor
 the creation of new files that are created in the 
 incoming data' folder.  When a new file is detected it
 is handled according to the type of file it is:
-    Raw Data
-    Product Data - form <PROJECT><FL##>.zip
-    Camera images
+    Raw Data - ads files, form .ads or .ads.bz2
+    Product Data - form <PROJECT><FL##>.ext.zip or <PROJECT><FL##>.ext
+    Camera images - flight_number_<FL##>.tar - NOT YET IMPLEMENTED
+    qc/<PROJECT><FL##>Plots.pdf - NOT YET IMPLEMENTED
+Right now, the patterns assume that product files begin with the project name.
+If they don't, then the beginning of the filename will be assumed to be the 
+project and the files are written to DATA_DIR/<bad_project>, e.g. /scr/raf_data/picarro_
+for files named picarro_rf01.zip.
 
 """
 
@@ -19,18 +24,26 @@ import time
 import smtplib
 from email.mime.text import MIMEText
 
-reProdFile = re.compile("(\S+)(\S\S\d\d).(\S+).zip")
+# regex to match files we want this script to handle. Can't count on files being
+# zipped so handle all sorts of pattern variations.
+reZip = re.compile("zip")
+reRawFile = re.compile("(\d+)_(\d+)_(\S\S\d\d).ads")
+reProdFile = re.compile("(\S+)(\S\S\d\d)\S*\.\S+")
 reRawProjName = re.compile("project name: (\S+)")
 
-##  Configuration for the distribution - modify the following
-NAS_in_field =    True                          # Set to false for ftp 
-temp_dir =        '/tmp/'                        # Where we unzip & put busy
-dat_parent_dir =  os.environ["DATA_DIR"] + '/' # Where nc files go
-rdat_parent_dir = os.environ["RAW_DATA_DIR"] + '/' # where raw ads files go
-#ftp_parent_dir =  '/net/ftp/pub/data/download/'  # Where nc files go for PIs
-busy_file = temp_dir+'DIST_PROD'               # temp file that exists if prog 
-                            #is running. Allows script to not clobber itself
-##  End of Configuration
+###  Configuration for the distribution - modify the following
+cronTime = 10	# How often (in mins) script is run from crontab
+NAS_in_field =    True                            # Set to false for ftp 
+temp_dir =        '/tmp/'                         # Where we unzip & put busy
+dat_parent_dir =  os.environ["DATA_DIR"] + '/'    # Where nc files go
+rdat_parent_dir = os.environ["RAW_DATA_DIR"] + '/'# Where raw ads files go
+ftp_parent = False				  # Set to true to copy to ftp
+ftp_parent_dir =  '/net/ftp/pub/data/download/'   # Where nc files go for PIs
+busy_file = temp_dir+'DIST_PROD'  # Temp file that exists if program is running. 
+                                  # Allows script to not clobber itself
+###  End of Configuration
+
+# Initialize some blank strings
 final_message = ""
 project = ""
 flight = ""
@@ -40,14 +53,13 @@ flight = ""
 #  dist_prod_file(fn) - takes a file path&name that is an RAF production 
 #                       file delivered from the field either through ftp
 #                       or Synced from a field NAS.
-#  It expects a file name of the form PROD_<PROJ_NAME>_<FLIGHT>.zip
-#  and that it will contain netCDF, kml and ancillary product files
-#  that are to be copied to the raf data directory (dat_parent_dir+<PROJ_NAME)
-#  and also copied to the ftp distribution area for PI acquisition.
+#  It expects a file name of the form reProdFile (defined above)
+#  that are to be copied to the raf data directory (dat_parent_dir+<PROJ_NAME>)
+#  and also copied to the ftp distribution area for PI acquisition (if requested).
 #  
 #  If the files have been ftp'd over, they will be removed so that the
 #  production scripts can be rerun, generate and ftp over new ones.  If not 
-#  then they won't so that the Sync function doesn't just write them again. 
+#  then they won't so that the NAS Sync function doesn't just write them again. 
 #  Sync in the field will update them in the case of rerunning production in
 #  the field.
 ##############################################################################
@@ -55,28 +67,31 @@ def dist_prod_file(fn):
 
     final_message = "Starting distribution of RAF Field Production Data\n"
     # This script is not re-entrant - bail if running
-    if os.path.isfile(busy_file):
-        st=os.stat(busy_file)
-        bfiletime = st.st_mtime
-        curtime = time.mktime(time.localtime())
-        if (curtime-bfiletime) > 3000.0:
-            logging.info(" Busy file:"+busy_file+" more than 5 minutes old, deleting.")
-            os.remove(busy_file)
-        else:
-            logging.info("  Product Dist busy file:"+busy_file+" exists. Exiting")
-            send_mail_and_die()
-    command = 'touch '+busy_file
-    os.system(command)
+#    if os.path.isfile(busy_file):
+#        st=os.stat(busy_file)
+#        bfiletime = st.st_mtime
+#        curtime = time.mktime(time.localtime())
+#        if (curtime-bfiletime) > 3000.0:
+#            logging.info(" Busy file:"+busy_file+" more than 5 minutes old, deleting.")
+#            os.remove(busy_file)
+#        else:
+#            logging.info("  Product Dist busy file:"+busy_file+" exists. Exiting")
+#	    final_message = final_message + "  Product Dist busy file:"+busy_file+" exists. Exiting\n"
+#            send_mail_and_die(final_message)
+#	    exit(1)
+#    command = 'touch '+busy_file
+#    os.system(command)
 
     # Verify we've got the right file type
     data = None
     file_dir,file_name = os.path.split(fn)
     m=reProdFile.match(file_name)
     if not m:
-        logging.error("Error - called w/non-product file:"+fn)
-	if os.path.isfile(busy_file):
-            os.remove(busy_file)
-        send_mail_and_die()
+	message = "Error - called w/non-product file:"+fn
+        logging.error(message)
+#	if os.path.isfile(busy_file):
+#            os.remove(busy_file)
+	send_mail_and_die(final_message + message)
     message = "Got an ADS Product file:"+fn
     final_message = final_message + message + '\n'
     logging.info(message)
@@ -91,10 +106,17 @@ def dist_prod_file(fn):
         command = 'mv -f '+fn+' '+temp_dir
         logging.info('Moving file to temp dir: '+command)
     os.system(command)
+
+    # Now that file has been copied to temp_dir, work there.
     os.chdir(temp_dir)
-    command = 'unzip -o '+file_name
-    logging.info('Unzipping product file: '+command)
-    os.system(command)
+
+    # If file is zipped, unzip it
+    m = reZip.match(file_name)
+    if m:
+	command = 'unzip -o '+file_name
+        logging.info('Unzipping product file: '+command)
+        os.system(command)
+
     # Get project and flight info from file_name
     m=reProdFile.match(file_name)
     if m:
@@ -103,9 +125,9 @@ def dist_prod_file(fn):
     else:
         logging.error('Filename does not match expected pattern!!')
         logging.error('Bailing out!')
-	if os.path.isfile(busy_file):
-            os.remove(busy_file)
-        send_mail_and_die()
+#	if os.path.isfile(busy_file):
+#            os.remove(busy_file)
+        send_mail_and_die(final_message + 'Filename does not match expected pattern!!')
 
     #Make sure raf data directory exists
     if os.path.isdir(dat_parent_dir+project):
@@ -119,9 +141,9 @@ def dist_prod_file(fn):
         except:
             logging.error('Could not make product directory:'+dat_dir)
             logging.error('Bailing out')
-	    if os.path.isfile(busy_file):
-                os.remove(busy_file)
-            send_mail_and_die()
+#	    if os.path.isfile(busy_file):
+#                os.remove(busy_file)
+	    send_mail_and_die(final_message+ 'Could not make product directory:'+dat_dir)
 
     logging.info('Data dir: '+dat_dir)
     command = '/bin/cp -f '+project+flight+'* '+dat_dir
@@ -129,35 +151,36 @@ def dist_prod_file(fn):
     os.system(command)
 
     #Make sure ftp data directory exists
-#    if os.path.isdir(ftp_parent_dir+project):
-#        ftp_dir = ftp_parent_dir+project
-#    elif os.path.isdir(ftp_parent_dir+project.lower()):
-#        ftp_dir = ftp_parent_dir+project.lower()
-#    else:
-#        ftp_dir = ftp_parent_dir+project.lower()
-#        try:
-#            os.mkdir(ftp_dir)
-#        except:
-#            logging.error('Could not make ftp directory:'+ftp_dir)
-#            logging.error('Bailing out')
-#            if os.path.isfile(busy_file):
-#                os.remove(busy_file)
-#            send_mail_and_die()
-#
-#    logging.info('FTP dir: ' + ftp_dir)
-#    command = '/bin/cp -f '+project+flight+'* '+ftp_dir
-#    message = "Moving files to ftpdir:"+command
-#    final_message = final_message+message+'\n'
-#    logging.info(message)
-#    os.system(command)
+    if ftp_parent:	# If requested
+        if os.path.isdir(ftp_parent_dir+project):
+            ftp_dir = ftp_parent_dir+project
+        elif os.path.isdir(ftp_parent_dir+project.lower()):
+            ftp_dir = ftp_parent_dir+project.lower()
+        else:
+            ftp_dir = ftp_parent_dir+project.lower()
+            try:
+                os.mkdir(ftp_dir)
+            except:
+                logging.error('Could not make ftp directory:'+ftp_dir)
+                logging.error('Bailing out')
+#                if os.path.isfile(busy_file):
+#                    os.remove(busy_file)
+                send_mail_and_die(final_message)
+
+        logging.info('FTP dir: ' + ftp_dir)
+        command = '/bin/cp -f '+project+flight+'* '+ftp_dir
+        message = "Moving files to ftpdir:"+command
+        final_message = final_message+message+'\n'
+        logging.info(message)
+        os.system(command)
     
     # if files are being ftp'd in, then remove it so newly processed file
-    #   can be written to the directory.
+    # can be written to the directory.
     if NAS_in_field != True:
         if os.path.isfile(fn):
             os.remove(fn)
 
-    send_mail_and_die()
+    return(final_message)
 ##   End of dist_prod_file
 
 ###############################################################################
@@ -178,82 +201,107 @@ def dist_prod_file(fn):
 def dist_raw_file(fn):
 
     # This script is not re-entrant - bail if running
-    busy_file = temp_dir+'DIST_RAW'
-    if os.path.isfile(busy_file):
-        logging.info("  Product Dist busy file:"+busy_file+" exists. Exiting")
-        os.remove(busy_file)
-        send_mail_and_die()
-    command = 'touch '+busy_file
-    os.system(command)
+#    busy_file = temp_dir+'DIST_RAW'
+#    if os.path.isfile(busy_file):
+#        logging.info("  Product Dist busy file:"+busy_file+" exists. Exiting")
+#        os.remove(busy_file)
+#	send_mail_and_die(final_message+ "  Product Dist busy file:"+busy_file+" exists. Exiting")
+#    command = 'touch '+busy_file
+#    os.system(command)
 
     # Raw file in bz2 form
     # Put the file in /tmp (so sync doesn't keep writing it)
     # unzip it, get project name from ascii header
     # move the file into the raw data directory
-    if not fn.endswith('.bz2'):
-        logging.error('File does not match expected pattern:'+fn)
+#    if not fn.endswith('.bz2'):
+#        logging.error('File does not match expected pattern:'+fn)
 
     logging.info("Got an ADS Raw file:"+fn)
 
     #  Copy to /tmp for unzipping so rsync won't send new bz2 file
     command = '/bin/cp '+fn+' '+temp_dir
-    logging.info('copy file to temp dir: '+command)
+    message = 'copy file to temp dir: '+command
+    logging.info(message)
+    final_message = final_message + message
     os.system(command)
+
     os.chdir(temp_dir)
-    filedir,bzfilename = os.path.split(fn)
-    command = 'bunzip2 -f '+bzfilename
-    logging.info('Unzipping product file: '+command)
-    os.system(command)
-    bzelts = bzfilename.split('.')
-    filename = bzelts[0]+'.'+bzelts[1]
-    logging.info('Stepping through file:'+filename+' to get project')
+
+    if fn.endswith('.bz2'):
+        filedir,bzfilename = os.path.split(fn)
+        command = 'bunzip2 -f '+bzfilename
+        message = 'Unzipping product file: '+command
+        logging.info(message)
+        final_message = final_message + message
+        os.system(command)
+        bzelts = bzfilename.split('.')
+        filename = bzelts[0]+'.'+bzelts[1]
+    else:
+	filedir,filename = os.path.split(fn)
+
+    message = 'Stepping through file:'+filename+' to get project'
+    logging.info(message)
+    final_message = final_message + message
+
     file = open(filename)
     for line in file:
         m = reRawProjName.match(line)
         if m:
-            logging.info('  Found proj line:'+line)
+            message = '  Found proj line:'+line
+            logging.info(message)
+            final_message = final_message + message
             project = m.group(1)
             break
+
+    # Find or create project dir under RAW_DATA_DIR
     raw_ads_dir = rdat_parent_dir + project
     if not os.path.isdir(raw_ads_dir):
         try:
             os.mkdir(raw_ads_dir)
         except:
-            logging.error('Could not make ftp directory:'+ftp_dir)
+	    message = 'Could not make ftp directory:'+ftp_dir
+            logging.error(message)
             logging.error('Bailing out')
-	    if os.path.isfile(busy_file):
-                os.remove(busy_file)
-            send_mail_and_die()
+#	    if os.path.isfile(busy_file):
+#                os.remove(busy_file)
+	    send_mail_and_die(final_message + message)
+	    exit(1)
 
     logging.info('Raw Data Dir: '+raw_ads_dir)
     command = 'mv -f '+filename+' '+raw_ads_dir
-    logging.info(' Moving raw file into place:'+command)
+    message = ' Moving raw file into place:'+command
+    logging.info(message)
+    final_message = final_message + message
     os.system(command)
-    if os.path.isfile(busy_file):
-        os.remove(busy_file)
+
+#    if os.path.isfile(busy_file):
+#        os.remove(busy_file)
+
+    return(final_message)
 ## End of dist_raw_data  ###
 
 ##############################################################################
-def send_mail_and_die():
+def send_mail_and_die(body):
 
-    emailfilename = 'email.addr.txt'
-    fo = open(path+"/"+emailfilename, 'r+')
-    email = fo.readline()
-    fo.close()
+    #emailfilename = 'email.addr.txt'
+    #fo = open(path+"/"+emailfilename, 'r+')
+    #email = fo.readline()
+    #fo.close()
+    #email = "janine@ucar.edu"
     #message = "About to send e-mail to:"+email
-    #logging.info(message)
-    #msg = MIMEText(final_message)
+    #logging.info(body)
+    #body = body + 'See /tmp/ads_data_catcher.log\n'
+    #msg = MIMEText(body)
     #msg['Subject'] = 'Receive and Disribute message for:'+project+'  flight:'+flight
     #msg['From'] = 'ads@groundstation'
     #msg['To'] = email
-    #msg['Body'] = 'See /tmp/ads_data_catcher.log'
 
     #s = smtplib.SMTP('localhost')
     #s.sendmail("ads@groundstation",email,msg.as_string())
-
-    #logging.info("Message: "+msg.as_string())
+    #logging.info("Message:\n"+msg.as_string())
     #s.quit()
     #os.remove(emailfilename)
+
     if os.path.isfile(busy_file):
         os.remove(busy_file)
     if os.path.isfile(project+flight+'*'):
@@ -264,6 +312,8 @@ def send_mail_and_die():
 ## End of send_mail_and_die ##
 
 ##############################################################################
+### MAIN
+##############################################################################
 
 if __name__ == '__main__':
     try:
@@ -272,62 +322,74 @@ if __name__ == '__main__':
 
         # setup logging
         logger = logging.getLogger()
-        handler = logging.handlers.RotatingFileHandler(logfile, maxBytes=8192, backupCount=10)
+        handler = logging.handlers.RotatingFileHandler(logfile, maxBytes=1000000, backupCount=9)
         formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s")
         handler.setFormatter(formatter)
         logger.addHandler(handler)
         logger.setLevel(logging.DEBUG)
 
-        logging.info('Catch ads field data deposited to:'+path)
+        logging.info('########################################################')
+        logging.info('# Catch ads field data deposited to:'+path)
+        logging.info('########################################################')
 
     except IndexError:
+	# Usage statement
         print "\nUsage: %s path logfile" % sys.argv[0]
-        print "    path    - path to data files  (i.e. /net/iftp2/pub/incoming/<project>/synced_data)"
+        print "    path - path to data files  "
+	print "         (i.e. /net/ftp/pub/data/incoming/<project>/data_synced)"
         print "    logfile - logfile name (i.e. /tmp/ads_data_catcher.log)"
-        print "\nThe logfile is rotated every 8192 bytes with a backup count of 10."
+        print "\nThe logfile is rotated every 1000000 bytes with a backup count of 9."
         if os.path.isfile(busy_file):
             os.remove(busy_file)
 	exit(1)
 
+    # Confirm that path to uploaded data files (as entered on command line) exists
     if not os.path.isdir(path):
-        logging.critical("exiting, folder: '%s' does not exist." % path)
+	message = "exiting, folder: '%s' does not exist." % path
+        logging.critical(message)
         if os.path.isfile(busy_file):
             os.remove(busy_file)
-        send_mail_and_die()
+	send_mail_and_die(message)
+	exit(1)
 
-    # Look for files > 1 minute old and < 11 minutes old
-     
+    # This script runs in cron every cronTime minutes, so look for files > 1 minute 
+    # old # and < cronTime+ 1 minutes old
     one_min_ago = time.time() - 60
-    one_hour_ago = time.time() - 3600
-    logging.info('Looking for new files in:'+path)
+    one_hour_ago = time.time() - 60*cronTime
+    logging.info('Looking for new files in:'+path+' that were written in last '
+	    +str(cronTime)+' minutes')
     for file in os.listdir(path):
         fullfile = path+file
         if os.path.isfile(fullfile):
             st=os.stat(fullfile)
             mtime=st.st_mtime
-            logging.info('file:'+file+'  mtime = '+str(mtime)+'  - one:'+str(mtime - one_min_ago)+ '  - hour:'+str(mtime - one_hour_ago))
             if mtime > one_hour_ago and mtime < one_min_ago:
-                logging.info('file met time criteria'+fullfile)
+                logging.info('file met time criteria '+fullfile)
 
                 # If we find a file - fork off process to deal with it
+		a=reRawFile.match(file)
                 m=reProdFile.match(file)
-		if m:
-                    newpid = os.fork()
-                    if newpid == 0:
-                        dist_prod_file(fullfile)
-                    else:
-                        pids = (os.getpid(), newpid)
-                        logging.info("parent: %d, child: %d" % pids)
-
-                elif file.endswith('.bz2'):
-                    newpid = os.fork()
-                    if newpid == 0:
-                        dist_raw_file(fullfile)
-                    else:
-                        pids = (os.getpid(), newpid)
-                        logging.info("parent: %d, child: %d" % pids)
+                if a or file.endswith('.bz2'): # Sometimes ads files are bzipped
+		                               # to make them quicker to transfer
+		    print "Found ads file "+file
+                    #newpid = os.fork()
+                    #if newpid == 0:
+                    final_message = dist_raw_file(fullfile)
+                    #else:
+                    #    pids = (os.getpid(), newpid)
+                    #    logging.info("parent: %d, child: %d" % pids)
+		elif m:
+		    print "Found "+file
+                    #newpid = os.fork()
+                    #if newpid == 0:
+                    final_message = dist_prod_file(fullfile)
+                    #else:
+                    #    pids = (os.getpid(), newpid)
+                    #    logging.info("parent: %d, child: %d" % pids)
 
                 else:
                     logging.info('  - Does not match naming conventions')
                     logging.info('  - skipping')
 
+    send_mail_and_die(final_message)
+    exit(1)
