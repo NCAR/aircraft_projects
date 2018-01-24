@@ -10,7 +10,9 @@ is handled according to the type of file it is:
     Raw Data - ads files, form .ads or .ads.bz2
     Product Data - form <PROJECT><FL##>.ext.zip or <PROJECT><FL##>.ext
     Camera images - flight_number_<FL##>.tar - NOT YET IMPLEMENTED
-    qc/<PROJECT><FL##>Plots.pdf - NOT YET IMPLEMENTED
+    qc/ is not distributed because those images are in the field catalog too.
+    PMS2D files - 20160210_115216_rf10.2d - NOT YET IMPLEMENTED
+    2DS files - base170301134744.2DS - NOT YET IMPLEMENTED
 Right now, the patterns assume that product files begin with the project name.
 If they don't, then the beginning of the filename will be assumed to be the 
 project and the files are written to DATA_DIR/<bad_project>, e.g. /scr/raf_data/picarro_
