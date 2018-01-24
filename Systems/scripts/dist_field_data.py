@@ -32,7 +32,7 @@ reProdFile = re.compile("(\S+)(\S\S\d\d)\S*\.\S+")
 reRawProjName = re.compile("project name: (\S+)")
 
 ###  Configuration for the distribution - modify the following
-cronTime = 10	# How often (in mins) script is run from crontab
+cronTime = 60*16	# How often (in mins) script is run from crontab
 NAS_in_field =    True                            # Set to false for ftp 
 temp_dir =        '/tmp/'                         # Where we unzip & put busy
 dat_parent_dir =  os.environ["DATA_DIR"] + '/'    # Where nc files go
@@ -146,7 +146,7 @@ def dist_prod_file(fn):
 	    send_mail_and_die(final_message+ 'Could not make product directory:'+dat_dir)
 
     logging.info('Data dir: '+dat_dir)
-    command = '/bin/cp -f '+project+flight+'* '+dat_dir
+    command = '/bin/cp -f '+file_name+' '+dat_dir
     logging.info('Copying to raf data:'+command)
     os.system(command)
 
@@ -200,6 +200,7 @@ def dist_prod_file(fn):
 ##############################################################################
 def dist_raw_file(fn):
 
+    final_message = "Starting distribution of RAF Field Raw Data\n"
     # This script is not re-entrant - bail if running
 #    busy_file = temp_dir+'DIST_RAW'
 #    if os.path.isfile(busy_file):
@@ -355,9 +356,10 @@ if __name__ == '__main__':
     # This script runs in cron every cronTime minutes, so look for files > 1 minute 
     # old # and < cronTime+ 1 minutes old
     one_min_ago = time.time() - 60
-    one_hour_ago = time.time() - 60*cronTime
+    one_hour_ago = time.time() - 60*cronTime*2 #Give some overlap. OK if cp twice.
     logging.info('Looking for new files in:'+path+' that were written in last '
 	    +str(cronTime)+' minutes')
+    found = False
     for file in os.listdir(path):
         fullfile = path+file
         if os.path.isfile(fullfile):
@@ -365,6 +367,7 @@ if __name__ == '__main__':
             mtime=st.st_mtime
             if mtime > one_hour_ago and mtime < one_min_ago:
                 logging.info('file met time criteria '+fullfile)
+		found = True
 
                 # If we find a file - fork off process to deal with it
 		a=reRawFile.match(file)
@@ -390,6 +393,10 @@ if __name__ == '__main__':
                 else:
                     logging.info('  - Does not match naming conventions')
                     logging.info('  - skipping')
+    if not found:
+	message = "No files found that meet criteria"
+	logging.info(message)
+	final_message = final_message + message
 
     send_mail_and_die(final_message)
     exit(1)
