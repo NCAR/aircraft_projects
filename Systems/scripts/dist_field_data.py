@@ -34,7 +34,7 @@ reProdFile = re.compile("(\S+)(\S\S\d\d)\S*\.\S+")
 reRawProjName = re.compile("project name: (\S+)")
 
 ###  Configuration for the distribution - modify the following
-cronTime = 60*16	# How often (in mins) script is run from crontab
+cronTime = 10	# How often (in mins) script is run from crontab
 NAS_in_field =    True                            # Set to false for ftp 
 temp_dir =        '/tmp/'                         # Where we unzip & put busy
 dat_parent_dir =  os.environ["DATA_DIR"] + '/'    # Where nc files go
@@ -360,7 +360,7 @@ if __name__ == '__main__':
     one_min_ago = time.time() - 60
     one_hour_ago = time.time() - 60*cronTime*2 #Give some overlap. OK if cp twice.
     logging.info('Looking for new files in:'+path+' that were written in last '
-	    +str(cronTime)+' minutes')
+	    +str(cronTime*2)+' minutes')
     found = False
     for file in os.listdir(path):
         fullfile = path+file
