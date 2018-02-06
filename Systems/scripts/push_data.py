@@ -309,6 +309,7 @@ if nclist.__len__() == 1:
     reprocess = True
   else:
     process = False
+    reprocess = False 
 elif nclist.__len__() == 0:
   print "No files found matching form: "+data_dir+'*'+flight+'.'+filetype
   print "We must process!"
@@ -454,8 +455,8 @@ print os.system("ls -l "+rawfile)
 if threevcpi2d_file != '':
   print "3V-CPI 2DS file = "+threevcpi2d_file
   print os.system("ls -l "+threevcpi2d_file)
-print "**************************"
-print ""
+print "******************************************"
+print " We're not done yet. Please be patient, Lou."
 
 if NAS:
   if NAS_permanent_mount == False:
@@ -473,13 +474,18 @@ if NAS:
   ensure_dir(qc_out_dir)
   ensure_dir(raw_out_dir)
 
+  print 'Copying '+ncfile+' to '+nc_out_dir
   stor_nc_file = rsync_file(ncfile,nc_out_dir)
+  print 'Copying '+kmlfile+' to '+nc_out_dir
   stor_kml_file = rsync_file(kmlfile,nc_out_dir)
   if nc2iwg:
+    print 'Copying '+iwg1file+' to '+nc_out_dir
     stor_iwg_file = rsync_file(iwg1file,nc_out_dir)
   if nc2asc:
+    print 'Copying '+icarttfile+' to '+nc_out_dir
     stor_asc_file = rsync_file(icarttfile,nc_out_dir)
   if not reprocess:
+    print 'Copying '+rawfile+' to '+raw_out_dir
     stor_raw_file = rsync_file(rawfile,raw_out_dir)
 
 emailfilename = 'email.addr.txt'
@@ -606,9 +612,13 @@ if NAS != True:
 # put zipped file onto NAS for BT-syncing back home.
 else:
 
-  if not reprocess:  
+  if reprocess:  
+    print 'Reprocessing so assume ADS already shipped during first processing'
+    print 'If this is not the case, run /home/data/Raw_Data/SOCRATES/*'+flight+'.ads /mnt/Data/data/SOCRATES/data_synced when this script is complete'
+  else:
     # Now ZiP up the rawfile.
     raw_dir,rawfilename = os.path.split(rawfile)
+    print "zipping "+rawfilename
     zip_raw_file = zip_dir + rawfilename + '.bz2'
     print "rawfilename = "+rawfilename
     os.chdir(raw_dir)
@@ -620,8 +630,6 @@ else:
       print ""
     else:
       print 'Compressed ADS image already exists.'
-  else:
-    print 'Reprocessing so assume ADS already shipped during first processing'
 
 
   # mount the NAS and put zipped files to it
@@ -632,6 +640,7 @@ else:
      os.system(command)
 
   os.chdir(data_dir)
+  print 'Copying nc and kml file to NAS'
   ship_nc_file = rsync_file(ncfilename,nas_sync_dir)
   ship_kml_file = rsync_file(kmlfilename,nas_sync_dir)
   if nc2iwg:
@@ -639,6 +648,7 @@ else:
   if nc2asc:
     ship_asc_file = rsync_file(icarttfilename,nas_sync_dir)
   if not reprocess:  
+    print 'Copying ads file to NAS'
     ship_raw_file = rsync_file(zip_raw_file,nas_sync_dir)
     command = 'unzip '+nas_sync_dir+'/'+zip_raw_file
     if os.system(command) == 0:
@@ -739,7 +749,7 @@ else:
 #    print e
 #    ftp.quit()
 
-final_message = final_message + ' REPORT on Processing and shipping. \n\n'
+final_message = final_message + '\nREPORT on Processing and shipping. \n\n'
 final_message = final_message + 'FileType  Proc Stor     Ship\n'
 final_message = final_message + 'Raw       '+proc_raw_file+'  '+stor_raw_file+'  '+ship_raw_file+'\n'
 final_message = final_message + '3VCPI     '+proc_3vcpi_files+'  '+stor_3vcpi_files+'  '+ship_3vcpi_files+'\n'
@@ -762,7 +772,7 @@ s.ehlo()
 s.starttls()
 s.ehlo()
 s.login('ads_raf_ncar@yahoo.com','color;tree2')
-s.sendmail('ads_raf_ncar@yahoo.com', email, msg.as_string())
+s.sendmail('ads@_raf_ncar@yahoo.com',email, msg.as_string())
 s.quit()
 
 raw_input("\n\nPress Enter to terminate...")
