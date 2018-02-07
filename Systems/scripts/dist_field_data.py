@@ -34,7 +34,7 @@ reProdFile = re.compile("(\S+)(\S\S\d\d)\S*\.\S+")
 reRawProjName = re.compile("project name: (\S+)")
 
 ###  Configuration for the distribution - modify the following
-cronTime = 480	# How often (in mins) script is run from crontab
+cronTime = 60*24	# How often (in mins) script is run from crontab
 # SOCRATES - Since ads files take 7 hours+ to transfer but are timestamped 
 # at start of transfer, need to go back 8 hours.
 NAS_in_field =    True                            # Set to false for ftp 
@@ -360,15 +360,16 @@ if __name__ == '__main__':
     # This script runs in cron every cronTime minutes, so look for files > 1 minute 
     # old # and < cronTime+ 1 minutes old
     one_min_ago = time.time() - 60
-    one_hour_ago = time.time() - cronTime
+    one_hour_ago = time.time() - cronTime*60
     logging.info('Looking for new files in:'+path+' that were written in last '
-	    +str(cronTime)+' minutes')
+	    +str(cronTime)+' minutes so after '+str(one_hour_ago))
     found = False
     for file in os.listdir(path):
         fullfile = path+file
         if os.path.isfile(fullfile):
             st=os.stat(fullfile)
             mtime=st.st_mtime
+            #logging.info('File '+file+' has time '+str(mtime))
             if mtime > one_hour_ago and mtime < one_min_ago and not file.endswith('.bts'): # bts files are mid-transfer
                 logging.info('file met time criteria '+fullfile)
 		found = True
