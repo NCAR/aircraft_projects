@@ -34,7 +34,7 @@ reProdFile = re.compile("(\S+)(\S\S\d\d)\S*\.\S+")
 reRawProjName = re.compile("project name: (\S+)")
 
 ###  Configuration for the distribution - modify the following
-cronTime = 60*24	# How often (in mins) script is run from crontab
+cronTime = 60*8	# How often (in mins) script is run from crontab
 # SOCRATES - Since ads files take 7 hours+ to transfer but are timestamped 
 # at start of transfer, need to go back 8 hours.
 NAS_in_field =    True                            # Set to false for ftp 
@@ -67,7 +67,7 @@ flight = ""
 #  Sync in the field will update them in the case of rerunning production in
 #  the field.
 ##############################################################################
-def dist_prod_file(fn):
+def dist_prod_file(fn,mtime):
 
     final_message = "Starting distribution of RAF Field Production Data\n"
     # This script is not re-entrant - bail if running
@@ -149,6 +149,28 @@ def dist_prod_file(fn):
 #                os.remove(busy_file)
 	    send_mail_and_die(final_message+ 'Could not make product directory:'+dat_dir)
 
+    # Check if file has already been copied
+    logging.info(os.stat(dat_dir+"/"+file_name).st_mtime);
+    logging.info(mtime);
+    try:
+        if os.stat(dat_dir+"/"+file_name).st_mtime < mtime:
+            # File is updated, so copy it.
+            logging.info("File is updated. Copy it.")
+        else:
+            # File is not new - abort
+            logging.info("File already copied. Refusing to recopy.")
+
+            # if files are being ftp'd in, then remove it so newly processed file
+            # can be written to the directory.
+            if NAS_in_field != True:
+               if os.path.isfile(fn):
+                    os.remove(fn)
+
+            return(final_message)
+    except:
+        # File doesn't exist, so copy it.
+            logging.info("File is new. Copy it.")
+
     logging.info('Data dir: '+dat_dir)
     command = '/bin/cp -f '+file_name+' '+dat_dir
     logging.info('Copying to raf data:'+command)
@@ -202,7 +224,7 @@ def dist_prod_file(fn):
 #  Sync in the field will update them in the case of rerunning prduction in
 #  the field.
 ##############################################################################
-def dist_raw_file(fn):
+def dist_raw_file(fn,mtime):
 
     final_message = "Starting distribution of RAF Field Raw Data\n"
     # This script is not re-entrant - bail if running
@@ -273,6 +295,20 @@ def dist_raw_file(fn):
 	    exit(1)
 
     logging.info('Raw Data Dir: '+raw_ads_dir)
+
+    # Check if file has already been copied
+    try:
+        if os.stat(raw_ads_dir+"/"+filename).mtime < mtime:
+            # File is new, so copy it.
+            logging.info("File is updated. Copy it.")
+        else:
+            # File is not new - abort
+            logging.info("ADS file already copied. Refusing to recopy.")
+            return(final_message)
+    except:
+        # File doesn't exist, so copy it.
+        logging.info("File is new. Copy it.")
+
     command = 'mv -f '+filename+' '+raw_ads_dir
     message = ' Moving raw file into place:'+command
     logging.info(message)
@@ -382,7 +418,7 @@ if __name__ == '__main__':
 		    print "Found ads file "+file
                     #newpid = os.fork()
                     #if newpid == 0:
-                    final_message = dist_raw_file(fullfile)
+                    final_message = dist_raw_file(fullfile,mtime)
                     #else:
                     #    pids = (os.getpid(), newpid)
                     #    logging.info("parent: %d, child: %d" % pids)
@@ -390,7 +426,7 @@ if __name__ == '__main__':
 		    print "Found "+file
                     #newpid = os.fork()
                     #if newpid == 0:
-                    final_message = dist_prod_file(fullfile)
+                    final_message = dist_prod_file(fullfile,mtime)
                     #else:
                     #    pids = (os.getpid(), newpid)
                     #    logging.info("parent: %d, child: %d" % pids)
