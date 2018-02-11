@@ -100,27 +100,6 @@ def dist_prod_file(fn,mtime):
     final_message = final_message + message + '\n'
     logging.info(message)
 
-    # Work in the /tmp dir - If we have a NAS in the field leave file in 
-    # so BTSync doesn't keep replacing it, if move it so that ftp can 
-    # replace it if they choose to reprocess in the field.
-    if NAS_in_field:
-        command = '/bin/cp -f '+fn+' '+temp_dir
-        logging.info('copy file to temp dir: '+command)
-    else: 
-        command = 'mv -f '+fn+' '+temp_dir
-        logging.info('Moving file to temp dir: '+command)
-    os.system(command)
-
-    # Now that file has been copied to temp_dir, work there.
-    os.chdir(temp_dir)
-
-    # If file is zipped, unzip it
-    m = reZip.match(file_name)
-    if m:
-	command = 'unzip -o '+file_name
-        logging.info('Unzipping product file: '+command)
-        os.system(command)
-
     # Get project and flight info from file_name
     m=reProdFile.match(file_name)
     if m:
@@ -150,8 +129,6 @@ def dist_prod_file(fn,mtime):
 	    send_mail_and_die(final_message+ 'Could not make product directory:'+dat_dir)
 
     # Check if file has already been copied
-    logging.info(os.stat(dat_dir+"/"+file_name).st_mtime);
-    logging.info(mtime);
     try:
         if os.stat(dat_dir+"/"+file_name).st_mtime < mtime:
             # File is updated, so copy it.
@@ -170,6 +147,27 @@ def dist_prod_file(fn,mtime):
     except:
         # File doesn't exist, so copy it.
             logging.info("File is new. Copy it.")
+
+    # Work in the /tmp dir - If we have a NAS in the field leave file in 
+    # so BTSync doesn't keep replacing it, if move it so that ftp can 
+    # replace it if they choose to reprocess in the field.
+    if NAS_in_field:
+        command = '/bin/cp -f '+fn+' '+temp_dir
+        logging.info('copy file to temp dir: '+command)
+    else: 
+        command = 'mv -f '+fn+' '+temp_dir
+        logging.info('Moving file to temp dir: '+command)
+    os.system(command)
+
+    # Now that file has been copied to temp_dir, work there.
+    os.chdir(temp_dir)
+
+    # If file is zipped, unzip it
+    m = reZip.match(file_name)
+    if m:
+	command = 'unzip -o '+file_name
+        logging.info('Unzipping product file: '+command)
+        os.system(command)
 
     logging.info('Data dir: '+dat_dir)
     command = '/bin/cp -f '+file_name+' '+dat_dir
@@ -328,19 +326,19 @@ def send_mail_and_die(body):
     #fo = open(path+"/"+emailfilename, 'r+')
     #email = fo.readline()
     #fo.close()
-    #email = "janine@ucar.edu"
+    email = "janine@ucar.edu"
     #message = "About to send e-mail to:"+email
     #logging.info(body)
     #body = body + 'See /tmp/ads_data_catcher.log\n'
-    #msg = MIMEText(body)
-    #msg['Subject'] = 'Receive and Disribute message for:'+project+'  flight:'+flight
-    #msg['From'] = 'ads@groundstation'
-    #msg['To'] = email
+    msg = MIMEText(body)
+    msg['Subject'] = 'Receive and Disribute message for:'+project+'  flight:'+flight
+    msg['From'] = 'ads@groundstation'
+    msg['To'] = email
 
-    #s = smtplib.SMTP('localhost')
-    #s.sendmail("ads@groundstation",email,msg.as_string())
+    s = smtplib.SMTP('localhost')
+    s.sendmail("ads@groundstation",email,msg.as_string())
     #logging.info("Message:\n"+msg.as_string())
-    #s.quit()
+    s.quit()
     #os.remove(emailfilename)
 
     if os.path.isfile(busy_file):
@@ -415,7 +413,6 @@ if __name__ == '__main__':
                 m=reProdFile.match(file)
                 if a or file.endswith('.bz2'): # Sometimes ads files are bzipped
 		                               # to make them quicker to transfer
-		    logging.info("Found ads file "+file)
                     #newpid = os.fork()
                     #if newpid == 0:
                     final_message = dist_raw_file(fullfile,mtime)
@@ -423,7 +420,6 @@ if __name__ == '__main__':
                     #    pids = (os.getpid(), newpid)
                     #    logging.info("parent: %d, child: %d" % pids)
 		elif m:
-		    logging.info("Found "+file)
                     #newpid = os.fork()
                     #if newpid == 0:
                     final_message = dist_prod_file(fullfile,mtime)
