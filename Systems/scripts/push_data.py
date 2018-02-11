@@ -767,12 +767,13 @@ msg['Subject'] = 'Process & Push message for:'+project+'  flight:'+flight
 msg['From'] = 'ads@groundstation'
 msg['To'] = email
 
-s = smtplib.SMTP('smtp.mail.yahoo.com:587')
-s.ehlo()
-s.starttls()
-s.ehlo()
-s.login('ads_raf_ncar@yahoo.com','color;tree2')
-s.sendmail('ads@_raf_ncar@yahoo.com',email, msg.as_string())
+s = smtplib.SMTP('localhost')
+#s = smtplib.SMTP('smtp.mail.yahoo.com:587')
+#s.ehlo()
+#s.starttls()
+#s.ehlo()
+#s.login('ads_raf_ncar@yahoo.com','color;tree2')
+s.sendmail('ads@groundstation',email, msg.as_string())
 s.quit()
 
 raw_input("\n\nPress Enter to terminate...")
