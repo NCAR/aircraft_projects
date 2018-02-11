@@ -415,7 +415,7 @@ if __name__ == '__main__':
                 m=reProdFile.match(file)
                 if a or file.endswith('.bz2'): # Sometimes ads files are bzipped
 		                               # to make them quicker to transfer
-		    print "Found ads file "+file
+		    logging.info("Found ads file "+file)
                     #newpid = os.fork()
                     #if newpid == 0:
                     final_message = dist_raw_file(fullfile,mtime)
@@ -423,7 +423,7 @@ if __name__ == '__main__':
                     #    pids = (os.getpid(), newpid)
                     #    logging.info("parent: %d, child: %d" % pids)
 		elif m:
-		    print "Found "+file
+		    logging.info("Found "+file)
                     #newpid = os.fork()
                     #if newpid == 0:
                     final_message = dist_prod_file(fullfile,mtime)
