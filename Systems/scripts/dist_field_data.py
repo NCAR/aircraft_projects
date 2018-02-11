@@ -18,6 +18,7 @@ If they don't, then the beginning of the filename will be assumed to be the
 project and the files are written to DATA_DIR/<bad_project>, e.g. /scr/raf_data/picarro_
 for files named picarro_rf01.zip.
 
+When complete, this script sends an email to address in email.addr.txt
 """
 
 import logging, logging.handlers
@@ -51,6 +52,7 @@ busy_file = temp_dir+'DIST_PROD'  # Temp file that exists if program is running.
 final_message = ""
 project = ""
 flight = ""
+found_data = False
 
 
 ###############################################################################
@@ -67,7 +69,7 @@ flight = ""
 #  Sync in the field will update them in the case of rerunning production in
 #  the field.
 ##############################################################################
-def dist_prod_file(fn,mtime):
+def dist_prod_file(fn,mtime,found_data):
 
     final_message = "Starting distribution of RAF Field Production Data\n"
     # This script is not re-entrant - bail if running
@@ -96,7 +98,7 @@ def dist_prod_file(fn,mtime):
 #	if os.path.isfile(busy_file):
 #            os.remove(busy_file)
 	send_mail_and_die(final_message + message)
-    message = "Got an ADS Product file:"+fn
+    message = "Got an ADS Product file: "+fn
     final_message = final_message + message + '\n'
     logging.info(message)
 
@@ -110,7 +112,7 @@ def dist_prod_file(fn,mtime):
         logging.error('Bailing out!')
 #	if os.path.isfile(busy_file):
 #            os.remove(busy_file)
-        send_mail_and_die(final_message + 'Filename does not match expected pattern!!')
+        send_mail_and_die(final_message + ' Filename does not match expected pattern!!')
 
     #Make sure raf data directory exists
     if os.path.isdir(dat_parent_dir+project):
@@ -126,16 +128,19 @@ def dist_prod_file(fn,mtime):
             logging.error('Bailing out')
 #	    if os.path.isfile(busy_file):
 #                os.remove(busy_file)
-	    send_mail_and_die(final_message+ 'Could not make product directory:'+dat_dir)
+	    send_mail_and_die(final_message+ ' Could not make product directory:'+dat_dir)
 
     # Check if file has already been copied
     try:
         if os.stat(dat_dir+"/"+file_name).st_mtime < mtime:
             # File is updated, so copy it.
             logging.info("File is updated. Copy it.")
+            found_data=True
         else:
             # File is not new - abort
-            logging.info("File already copied. Refusing to recopy.")
+            message = "File already copied. Refusing to recopy.\n"
+            logging.info(message)
+            final_message = final_message + message
 
             # if files are being ftp'd in, then remove it so newly processed file
             # can be written to the directory.
@@ -146,14 +151,15 @@ def dist_prod_file(fn,mtime):
             return(final_message)
     except:
         # File doesn't exist, so copy it.
-            logging.info("File is new. Copy it.")
+        logging.info("File is new. Copy it.")
+        found_data=True
 
     # Work in the /tmp dir - If we have a NAS in the field leave file in 
     # so BTSync doesn't keep replacing it, if move it so that ftp can 
     # replace it if they choose to reprocess in the field.
     if NAS_in_field:
         command = '/bin/cp -f '+fn+' '+temp_dir
-        logging.info('copy file to temp dir: '+command)
+        logging.info('copy file to temp dir: '+command+'\n')
     else: 
         command = 'mv -f '+fn+' '+temp_dir
         logging.info('Moving file to temp dir: '+command)
@@ -193,7 +199,7 @@ def dist_prod_file(fn,mtime):
 
         logging.info('FTP dir: ' + ftp_dir)
         command = '/bin/cp -f '+project+flight+'* '+ftp_dir
-        message = "Moving files to ftpdir:"+command
+        message = "Moving files to ftpdir: "+command
         final_message = final_message+message+'\n'
         logging.info(message)
         os.system(command)
@@ -222,7 +228,7 @@ def dist_prod_file(fn,mtime):
 #  Sync in the field will update them in the case of rerunning prduction in
 #  the field.
 ##############################################################################
-def dist_raw_file(fn,mtime):
+def dist_raw_file(fn,mtime,found_data):
 
     final_message = "Starting distribution of RAF Field Raw Data\n"
     # This script is not re-entrant - bail if running
@@ -245,7 +251,7 @@ def dist_raw_file(fn,mtime):
 
     #  Copy to /tmp for unzipping so rsync won't send new bz2 file
     command = '/bin/cp '+fn+' '+temp_dir
-    message = 'copy file to temp dir: '+command
+    message = "copy file to temp dir: "+command+'\n'
     logging.info(message)
     final_message = final_message + message
     os.system(command)
@@ -264,7 +270,7 @@ def dist_raw_file(fn,mtime):
     else:
 	filedir,filename = os.path.split(fn)
 
-    message = 'Stepping through file:'+filename+' to get project'
+    message = 'Stepping through file:'+filename+' to get project\n'
     logging.info(message)
     final_message = final_message + message
 
@@ -296,19 +302,22 @@ def dist_raw_file(fn,mtime):
 
     # Check if file has already been copied
     try:
-        if os.stat(raw_ads_dir+"/"+filename).mtime < mtime:
+        if os.stat(raw_ads_dir+"/"+filename).st_mtime < mtime:
             # File is new, so copy it.
             logging.info("File is updated. Copy it.")
+            found_data=True
         else:
             # File is not new - abort
-            logging.info("ADS file already copied. Refusing to recopy.")
-            return(final_message)
+            message = "ADS file already copied. Refusing to recopy.\n"
+            logging.info(message)
+            return(final_message+message)
     except:
         # File doesn't exist, so copy it.
         logging.info("File is new. Copy it.")
+        found_data=True
 
     command = 'mv -f '+filename+' '+raw_ads_dir
-    message = ' Moving raw file into place:'+command
+    message = ' Moving raw file into place: '+command
     logging.info(message)
     final_message = final_message + message
     os.system(command)
@@ -322,14 +331,13 @@ def dist_raw_file(fn,mtime):
 ##############################################################################
 def send_mail_and_die(body):
 
-    #emailfilename = 'email.addr.txt'
-    #fo = open(path+"/"+emailfilename, 'r+')
-    #email = fo.readline()
-    #fo.close()
-    email = "janine@ucar.edu"
-    #message = "About to send e-mail to:"+email
-    #logging.info(body)
-    #body = body + 'See /tmp/ads_data_catcher.log\n'
+    emailfilename = 'email.addr.txt'
+    os.chdir(cwd)
+    fo = open(emailfilename, 'r+')
+    email = fo.readline()
+    fo.close()
+    logging.info("About to send e-mail to: "+email)
+    body = body + 'See /tmp/ads_data_catcher.log\n'
     msg = MIMEText(body)
     msg['Subject'] = 'Receive and Disribute message for:'+project+'  flight:'+flight
     msg['From'] = 'ads@groundstation'
@@ -337,9 +345,8 @@ def send_mail_and_die(body):
 
     s = smtplib.SMTP('localhost')
     s.sendmail("ads@groundstation",email,msg.as_string())
-    #logging.info("Message:\n"+msg.as_string())
+    logging.info("Message:\n"+msg.as_string())
     s.quit()
-    #os.remove(emailfilename)
 
     if os.path.isfile(busy_file):
         os.remove(busy_file)
@@ -355,6 +362,9 @@ def send_mail_and_die(body):
 ##############################################################################
 
 if __name__ == '__main__':
+
+    cwd = os.getcwd()
+
     try:
         path    = sys.argv[1]
         logfile = sys.argv[2]
@@ -415,14 +425,14 @@ if __name__ == '__main__':
 		                               # to make them quicker to transfer
                     #newpid = os.fork()
                     #if newpid == 0:
-                    final_message = dist_raw_file(fullfile,mtime)
+                    final_message = final_message + dist_raw_file(fullfile,mtime,found_data)
                     #else:
                     #    pids = (os.getpid(), newpid)
                     #    logging.info("parent: %d, child: %d" % pids)
 		elif m:
                     #newpid = os.fork()
                     #if newpid == 0:
-                    final_message = dist_prod_file(fullfile,mtime)
+                    final_message = final_message + dist_prod_file(fullfile,mtime,found_data)
                     #else:
                     #    pids = (os.getpid(), newpid)
                     #    logging.info("parent: %d, child: %d" % pids)
@@ -435,5 +445,9 @@ if __name__ == '__main__':
 	logging.info(message)
 	final_message = final_message + message
 
-    send_mail_and_die(final_message)
+    # Only send email from here if copied new files successfully. 
+    # Failure messages are sent as errors encountered above.
+    if found_data:
+        send_mail_and_die(final_message)
+
     exit(1)
