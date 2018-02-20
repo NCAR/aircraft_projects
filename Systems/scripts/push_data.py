@@ -336,7 +336,8 @@ if process:
 # KML
 kmlfile=find_file(data_dir,flight,file_prefix,'kml')
 # asc
-icarttfile=find_file(data_dir,flight,file_prefix,'asc')
+if nc2asc:
+  icarttfile=find_file(data_dir,flight,file_prefix,'asc')
 # iwg
 if nc2iwg:
   iwg1file=find_file(data_dir,flight,file_prefix,'iwg1')
@@ -754,7 +755,8 @@ final_message = final_message + 'FileType  Proc Stor     Ship\n'
 final_message = final_message + 'Raw       '+proc_raw_file+'  '+stor_raw_file+'  '+ship_raw_file+'\n'
 final_message = final_message + '3VCPI     '+proc_3vcpi_files+'  '+stor_3vcpi_files+'  '+ship_3vcpi_files+'\n'
 final_message = final_message + '2D        '+proc_2d_files+'  '+stor_2d_files+'  '+ship_2d_files+'\n'
-final_message = final_message + 'NetCDF    '+proc_nc_file +'  '+stor_nc_file +'  '+ship_nc_file+'\n'
+final_message = final_message + 'NetCDF    '+proc_nc_file +'
+'+str(stor_nc_file) +'  '+ship_nc_file+'\n'
 final_message = final_message + 'KML       '+proc_kml_file+'  '+stor_kml_file+'  '+ship_kml_file+'\n'
 final_message = final_message + 'ASCII     '+proc_asc_file+'  '+stor_asc_file+'  '+ship_asc_file+'\n'
 final_message = final_message + 'IWG       '+proc_iwg_file+'  '+stor_iwg_file+'  '+ship_iwg_file+'\n'
