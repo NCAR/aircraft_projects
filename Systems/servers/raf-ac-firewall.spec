@@ -1,7 +1,7 @@
 Name: raf-ac-firewall
 Version: 2.0
 Release: 1
-Summary: Iptables configuration for RAF aircraft server
+Summary: IPtables configuration for RAF aircraft server
 
 License: GPL
 Source: %{name}-%{version}.tar.gz
@@ -17,6 +17,7 @@ Requires: iptables procps
 
 # initscripts gives /etc/sysctl.conf, procps gives /sbin/sysctl
 Requires: initscripts
+Requires: raf-ads3-sysctl
 
 
 %description
@@ -41,19 +42,6 @@ cp -r etc/sysconfig/iptables $RPM_BUILD_ROOT/etc/sysconfig
 # %triggerin script is run when a given target package is installed or
 # upgraded, or when this package is installed or upgraded and the target
 # is already installed.
-
-# turn on forwarding
-cf=/etc/sysctl.conf
-if ! egrep -q "^[[:space:]]*net.ipv4.ip_forward=" $cf; then
-    echo "net.ipv4.ip_forward=1" >> $cf
-else
-sed -i -c '/^[[:space:]]*net.ipv4.ip_forward=/{
-s/=0/=1/
-}' $cf
-fi
-if [ `sysctl -n net.ipv4.ip_forward` == 0 ]; then
-    sysctl net.ipv4.ip_forward=1
-fi
 
 
 %if 0%{?rhel} >= 7
