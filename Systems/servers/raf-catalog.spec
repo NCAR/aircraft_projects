@@ -1,6 +1,6 @@
 Name:           raf-catalog
 Version:        1.0
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
 License:        GPLv3+
@@ -99,13 +99,13 @@ grep -q ^catalog /etc/passwd || _adduser=true
 $_adduser && useradd catalog
 
 #
-# add docker group, add catalog user to docker group
+# add docker group, add catalog and ads users to docker group
 #
 _adddockergroup=false
 grep -q ^docker: /etc/group || _adddockergroup=true
 $_adddockergroup && groupadd docker
 usermod -aG docker catalog
-
+usermod -aG docker ads
 
 #
 # add eol group, add catalog user to eol group
@@ -185,6 +185,8 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Tue Feb 20 2018 Erik Johnson <ej@ucar.edu> - 1.0-12
+- REALLY add ads user to docker group
 * Tue Feb 20 2018 Erik Johnson <ej@ucar.edu> - 1.0-11
 - Require: raf-ads-user, add ads user to docker group
 - fix permissions on ~/mod_tile
