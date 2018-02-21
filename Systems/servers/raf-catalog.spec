@@ -1,6 +1,6 @@
 Name:           raf-catalog
 Version:        1.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
 License:        GPLv3+
@@ -12,6 +12,7 @@ Source: %{name}-%{version}.tar.gz
 Requires:       docker
 Requires:       httpd
 Requires:       git
+Requires:       raf-ads-user
 BuildArch:      x86_64
 BuildRoot:      %{_tmppath}/%{name}
 
@@ -39,7 +40,7 @@ cp raf-catalog/etc/systemd/system/irc-bot.service ${RPM_BUILD_ROOT}/etc/systemd/
 
 CATALOG_DIRS="${RPM_BUILD_ROOT}/home/catalog/products/incoming/gv ${RPM_BUILD_ROOT}/home/catalog/products/incoming/c130 ${RPM_BUILD_ROOT}/home/catalog/products/jail/gv ${RPM_BUILD_ROOT}/home/catalog/products/jail/c130 ${RPM_BUILD_ROOT}/home/catalog/products/html/gv ${RPM_BUILD_ROOT}/home/catalog/products/html/c130"
 
-mkdir -p $CATALOG_DIRS ${RPM_BUILD_ROOT}/var/lib/mod_tile ${RPM_BUILD_ROOT}/home/catalog/.ssh/ ${RPM_BUILD_ROOT}/home/catalog/docker/db
+mkdir -p $CATALOG_DIRS ${RPM_BUILD_ROOT}/home/catalog/mod_tile ${RPM_BUILD_ROOT}/home/catalog/.ssh/ ${RPM_BUILD_ROOT}/home/catalog/docker/db
 
 # SSH: `catuser` pub key, for products2plane
 
@@ -62,11 +63,6 @@ cp raf-catalog/etc/sudoers.d/catalog ${RPM_BUILD_ROOT}/etc/sudoers.d/catalog
 %attr(0755,root,root) %{_bindir}/docker-compose
 %attr(0600,root,root) /etc/sudoers.d/catalog
 
-%defattr(644,catalog,catalog,755)
-/etc/httpd/conf.d/osm_tiles_and_catalog.conf
-/etc/systemd/system/catalog-maps.service
-/etc/systemd/system/irc-bot.service
-
 #
 # catalog files
 #
@@ -78,7 +74,10 @@ cp raf-catalog/etc/sudoers.d/catalog ${RPM_BUILD_ROOT}/etc/sudoers.d/catalog
 
 #%defattr(file perms, user, group, dir perms)
 %defattr(644,catalog,catalog,755)
-/var/lib/mod_tile
+/etc/httpd/conf.d/osm_tiles_and_catalog.conf
+/etc/systemd/system/catalog-maps.service
+/etc/systemd/system/irc-bot.service
+/home/catalog/mod_tile
 /home/catalog/.ssh/config
 /home/catalog/.ssh/id_rsa_catuser.pub
 /home/catalog/.ssh/id_rsa_ej_kepler.pub
@@ -186,6 +185,11 @@ fi
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
 %changelog
+* Tue Feb 20 2018 Erik Johnson <ej@ucar.edu> - 1.0-11
+- Require: raf-ads-user, add ads user to docker group
+- fix permissions on ~/mod_tile
+- remove /var/lib/mod_tile
+- consolidate file/dir permissions
 * Wed Jan 03 2018 Erik Johnson <ej@ucar.edu> - 1.0-10
 - catalog sudoers: enable systemctl and journalctl commands for docker
 * Tue Jan 02 2018 Erik Johnson <ej@ucar.edu> - 1.0-9
