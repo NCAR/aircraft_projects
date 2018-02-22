@@ -1,6 +1,6 @@
 Name:           raf-catalog
 Version:        1.0
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
 License:        GPLv3+
@@ -125,11 +125,17 @@ fi
 %post
 chmod 700 /home/catalog/.ssh
 
+# naive handling of Docker's daemon.json
+echo '{"dns":["192.168.184.1"]}' > /etc/docker/daemon.json
+
 systemctl enable docker
 systemctl start docker
 
 systemctl enable httpd
-systemctl start httpd
+#
+# restart httpd in case it was already installed and running, so that new config is loaded
+#
+systemctl restart httpd
 
 systemctl enable catalog-maps
 systemctl enable irc-bot
@@ -184,7 +190,18 @@ fi
 
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
 
+%triggerin -- docker
+# naive handling of Docker's daemon.json
+echo '{"dns":["192.168.184.1"]}' > /etc/docker/daemon.json
+
+%preun
+# naive handling of Docker's daemon.json
+echo '{}' > /etc/docker/daemon.json
+
 %changelog
+* Wed Feb 21 2018 Erik Johnson <ej@ucar.edu> - 1.0-13
+- Docker: configure DNS to use acserver in /etc/docker/daemon.json
+- post: restart httpd in case it was already installed and running, so that new config is loaded
 * Tue Feb 20 2018 Erik Johnson <ej@ucar.edu> - 1.0-12
 - REALLY add ads user to docker group
 * Tue Feb 20 2018 Erik Johnson <ej@ucar.edu> - 1.0-11
