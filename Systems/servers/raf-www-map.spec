@@ -1,7 +1,7 @@
 Name: raf-www-map
 Version: 1 
-Release: 3
-Summary: OpenStreetMaps slippy map with OSM postGIS database and mapnik, renderd, mod_tile for rendering on demand
+Release: 4
+Summary: Web packages
 
 License: none
 Source: %{name}-%{version}.tar.gz
@@ -9,12 +9,11 @@ Distribution: RHEL 7.3 Linux
 BuildArch: noarch
 
 Requires: raf-ads-user
-Requires: openlayers raf-jquery httpd php php-pgsql php-pecl-json perl perl-DBD-Pg
+Requires: raf-jquery httpd php php-pgsql php-pecl-json perl perl-DBD-Pg
 
 %description
-OpenStreetMaps tile-based javascript web-viewer.
+Install web sub-packages for controls/, cameras/, and maps artwork pages.
 
-This package will install the openlayers webpage to display the tiles, using mod_tile w/ renderd to render the tiles on demand. 
 
 %prep
 %setup -q -n raf-www
@@ -39,6 +38,7 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/var/www/html/
 cp -r flight_data $RPM_BUILD_ROOT/var/www/html/
 cp flight_data/index.html $RPM_BUILD_ROOT/var/www/html/
+(cd $RPM_BUILD_ROOT/var/www/html/flight_data/display; tar xf windbarbs.tar.gz; rm windbarbs.tar.gz)
 
 mkdir -p $RPM_BUILD_ROOT/var/www/cgi-bin/flight_data/
 mv $RPM_BUILD_ROOT/var/www/html/flight_data/cgi-bin/flight_data $RPM_BUILD_ROOT/var/www/cgi-bin/
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 /var/www/cgi-bin/flight_data
 
 %changelog
+* Thu Feb 22 2018 <cjw@ucar.edu> 1-4
+- Cleanup Requires and Comments, since cno longer does openlayers / OSM.
+- tar up wind-barbs in svn and un tar in this package install.
 * Fri Aug 4 2017 <cjw@ucar.edu> 1-3
 - Cleanup %files section of spec file.
 * Tue Feb 28 2012 <cjw@ucar.edu> 1-3
