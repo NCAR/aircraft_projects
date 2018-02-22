@@ -1,6 +1,6 @@
 Name:           raf-catalog
 Version:        1.0
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
 License:        GPLv3+
@@ -13,6 +13,7 @@ Requires:       docker
 Requires:       httpd
 Requires:       git
 Requires:       raf-ads-user
+Requires:       raf-www-map
 BuildArch:      x86_64
 BuildRoot:      %{_tmppath}/%{name}
 
@@ -203,6 +204,8 @@ systemctl restart docker
 echo '{}' > /etc/docker/daemon.json
 
 %changelog
+* Thu Feb 22 2018 Erik Johnson <ej@ucar.edu> - 1.0-14
+- add raf-www-map as dependency, for KML art
 * Wed Feb 21 2018 Erik Johnson <ej@ucar.edu> - 1.0-13
 - Docker: configure DNS to use acserver in /etc/docker/daemon.json
 - post: restart httpd in case it was already installed and running, so that new config is loaded
