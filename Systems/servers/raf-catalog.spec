@@ -1,6 +1,6 @@
 Name:           raf-catalog
 Version:        1.0
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Dependencies for running Field-Catalog software on RAF acservers
 
 License:        GPLv3+
@@ -186,10 +186,10 @@ if [ ! -s ~catalog/.ssh/id_rsa ] ; then
 fi
 
 #
-# check if /var/lib/mod_tile is empty, if it is, echo message to populate it
+# check if /home/catalog/mod_tile is empty, if it is, echo message to populate it
 #
-if [ ! -d /var/lib/mod_tile/default ] || [ ! "$(ls -A /var/lib/mod_tile/default)" ] ; then
-  echo_notice '/var/lib/mod_tile/default does not exist or is empty. Please populate it w/ OpenStreetMap tiles, e.g. from /scr/ctm/ej/osm/mod_tile*.tar'
+if [ ! -d /home/catalog/mod_tile/default ] || [ ! "$(ls -A /home/catalog/mod_tile/default)" ] ; then
+  echo_notice '/home/catalog/mod_tile/default does not exist or is empty. Please populate it w/ OpenStreetMap tiles, e.g. from /scr/raf/osm//osm/mod_tile*.tar'
 fi
 
 chown catalog:catalog /home/catalog/.ssh/authorized_keys
@@ -204,6 +204,9 @@ systemctl restart docker
 echo '{}' > /etc/docker/daemon.json
 
 %changelog
+* Thu Feb 22 2018 Erik Johnson <ej@ucar.edu> - 1.0-15
+- rather than /var/lib/mod_tile/default, check to see if /home/catalog/mod_tile/default is empty
+- update path to location of OSM tiles
 * Thu Feb 22 2018 Erik Johnson <ej@ucar.edu> - 1.0-14
 - add raf-www-map as dependency, for KML art
 * Wed Feb 21 2018 Erik Johnson <ej@ucar.edu> - 1.0-13
