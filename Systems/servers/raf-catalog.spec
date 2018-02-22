@@ -129,7 +129,10 @@ chmod 700 /home/catalog/.ssh
 echo '{"dns":["192.168.184.1"]}' > /etc/docker/daemon.json
 
 systemctl enable docker
-systemctl start docker
+#
+# restart docker in case it was already installed and running, so that new config is loaded
+#
+systemctl restart docker
 
 systemctl enable httpd
 #
@@ -193,6 +196,7 @@ chown catalog:catalog /home/catalog/.ssh/authorized_keys
 %triggerin -- docker
 # naive handling of Docker's daemon.json
 echo '{"dns":["192.168.184.1"]}' > /etc/docker/daemon.json
+systemctl restart docker
 
 %preun
 # naive handling of Docker's daemon.json
