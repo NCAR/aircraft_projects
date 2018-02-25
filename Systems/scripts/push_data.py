@@ -36,6 +36,7 @@ aircraft = read_env("AIRCRAFT")
 data_dir = read_env("DATA_DIR") + '/' + project + '/'
 raw_dir  = read_env("RAW_DATA_DIR") + '/' + project + '/'
 proj_dir  = read_env("PROJ_DIR") + '/' + project + '/' + aircraft + '/'
+reprocess = False 
 
 # Initialization 
 #   The RStudio piece seems to need special setup for each project
@@ -430,10 +431,11 @@ if process:
   # Currently requires being run from the ~/RStudio/QAtools directory.
   # To run: launch rstudio, then type "shiny::runApp()"
   #
-  os.chdir(rstudio_dir+"/QAtools")
-  command = "rstudio"
-  print "about to execute : "+command
-  os.system(command)
+  if Rstudio:
+    os.chdir(rstudio_dir+"/QAtools")
+    command = "rstudio"
+    print "about to execute : "+command
+    os.system(command)
 
 ###################  Beginning of Shipping ##############################
 else:
@@ -457,7 +459,7 @@ if threevcpi2d_file != '':
   print "3V-CPI 2DS file = "+threevcpi2d_file
   print os.system("ls -l "+threevcpi2d_file)
 print "******************************************"
-print " We're not done yet. Please be patient, Lou."
+print " We're not done yet. Please be patient."
 
 if NAS:
   if NAS_permanent_mount == False:
@@ -755,8 +757,7 @@ final_message = final_message + 'FileType  Proc Stor     Ship\n'
 final_message = final_message + 'Raw       '+proc_raw_file+'  '+stor_raw_file+'  '+ship_raw_file+'\n'
 final_message = final_message + '3VCPI     '+proc_3vcpi_files+'  '+stor_3vcpi_files+'  '+ship_3vcpi_files+'\n'
 final_message = final_message + '2D        '+proc_2d_files+'  '+stor_2d_files+'  '+ship_2d_files+'\n'
-final_message = final_message + 'NetCDF    '+proc_nc_file +'
-'+str(stor_nc_file) +'  '+ship_nc_file+'\n'
+final_message = final_message + 'NetCDF    '+str(proc_nc_file) +'  '+str(stor_nc_file) +'  '+ship_nc_file+'\n'
 final_message = final_message + 'KML       '+proc_kml_file+'  '+stor_kml_file+'  '+ship_kml_file+'\n'
 final_message = final_message + 'ASCII     '+proc_asc_file+'  '+stor_asc_file+'  '+ship_asc_file+'\n'
 final_message = final_message + 'IWG       '+proc_iwg_file+'  '+stor_iwg_file+'  '+ship_iwg_file+'\n'
