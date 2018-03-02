@@ -23,3 +23,693 @@ On UHSAS took out screws for heat sink and installed caps scres for test flights
 Ran Auto A/D cal all channels apear to be withing spec.  Data system is warm after running all day.
 VCSEL removed and fixed by Beaton.  Ops checked okay.
 
+09JAN2018 - Auto A/D Cal
+DSM 305 (Radome) A2D 1706 Ch.5 "CAVP_DPL"
++ 0.008
+
+12Jan18
+left 60Hz showed 70 VAC measured ok
+2ds had moisture in OB Horz 
+Lots of water in bott of the aircarft and VISBot Radiometer, in the sphir
+Blew moisture out of Radome. Taped nose holes, blew air from transducer side to drain lines.
+Pulled ceiling panel above ADS seat to check for water. It was dry.
+Checked UHSAS connections at laptop.
+KAZ,DA, KH
+
+13Jan18
+Blew out Dew Pointers
+Inspected IR Radiometers for water. None visible.
+Removed I-Beam.
+Cleaned 2ds
+unplugged ballard box, using SATCOM bandwidth
+LWOB DSB rebooting look at next MX day
+KAZ,DA,KH
+
+15Jan18
+Pulled LWOB DSM dried out to address rebooting in flight
+Pulled UHSAS and cleaned blue Amphenol connector (both ends). Found some corrosion on it.
+Installed GNI board and tested. (Josh)
+Drop Sonde having comm issues, removed then reinstalled (Jason)
+Dried out VISB dome cover.
+Pulled CN counter Plug, placed in desk drawer. ***MUST BE RE-INSTALLED FOR RETURN FERRY FLIGHTS***
+KAZ,DA,KH
+
+
+RF01
+TECH: KAZ
+DATE: 011618
+
+TO 9:54 22:54
+LND 5:10 06:10
+
+No drop sondes today
+DPR took a bit to settle down, to find dew point 23:12
+CVI_RACK shown as Red CRITICAL in Controls page.  Data was getting to ADS, Darren T confirmed
+Plugged in Bot VIS radiometer, while the data had structure to it, Julie say it's bad
+PLWC did not respond in cloud, RICE looked good.  Rebooted DSM LWI @ 04:13 to try and fix saw nothing promising.
+DSM Server died at 02:30 at the bottom of the second dip.  Did not restart DSM, started Data AQ and Nimbus.  System came back ok.
+2DS Vertical showing spotty data then when blank.  Had cleaned on a previous MX day. 
+LWOB DSM did not reboot 
+
+
+17JAN2018
+Maintenance Day
+
+Changed out PLWC element.
+VISB Radiometer swapped with spare (VIST)
+
+
+18JAN2018
+Maintenance Day
+
+Performed CDP Cals - Find screen shots on ADS desktop.
+RWO DSM died during mx day. Appears to be connection issue on AC/DC power supply. Re-seated connecters and booted up fine.
+
+21Jan2018 Sunday
+Cal'd CDP
+RWO- opened up to see the AC/DC power supply blown, the back side is chared.  Swapped with LWO (Gust Probe) as the spares for the project are in the airshipment that arrieves 1/22
+
+Channel shift on DSM303. Reboot fixed it.  Started during initial power up.
+
+
+
+
+22Jan18
+RF03
+
+Takeoff:21:02
+Landing:04:11
+
+Start camera icon didn't work.  Had to start_cameras in terminal window.  Cameras stopped recording 23:46 ish.  Restarted.  Again shortly after at 23:52 ish.  Coincidentally during intial descents at that time.  Not sure if it is related.  Have a pic of failure messages in terminal window for SE's. 
+
+No LWO DSM this flight.  Waiting on spare power supply.  This means no Gust Pod.
+
+VCSEL having a hard time holding dewpoint.  Reboot around 21:34.  Reboot didn't do much. Turned out it was going between modes at -20c.  Once we got a little warmer or cooler, it worked fine.  Iced up various times and lost dew point in flight.
+
+PLWC not responding as expected.  Still responding at 7.5W-8.5W ish.  Should be around 14W in clear air.
+
+DPR went wonky around 01:18.  Came back around 01:25.
+
+QCR went nan at 02:25.  Probably iced up or froze some water inside tubing around 02:12.  Came back inline with QCF around 02:39.
+
+Unheated Temp Probe iced up quite a bit through flight.  Not sure if it survived.
+
+2DS V channel not responding well.  I think this has been the case all along.
+
+
+
+23Jan18
+RF03
+Prior to flight, changed out plwc element.  Ohmed out good.  Chris W also lowered the PLWCC calculation lower threshold from 10W to 7W.
+
+Opened up radome and blew out all pressure tubing.  There was water in all the lines.
+
+
+25Jan2018
+MAINTENANCE DAY
+/Troubleshooting PLWC at board level (Josh) Had to pull 2D-S can to access pylon to remove PLWC Control Box for further inspection/troubleshooting. Cannot test PLWC until flight.
+/Inspecting 2D-S optics, internally (Josh)
+/Performed CDP Cals
+/RWI DSM did not boot right away. Had to cycle breaker three times. Opened pylon cover to let the DSM air out a bit.
+/Filled Butanol - RAF CN and CVI CN.
+/Air shipment arrived mid-afternoon...*ADS Spares* Installed spare AC/DC Power Supply in LWO DSM. Tests out GOOD.
+
+
+01Feb2018
+MAINTENACE DAY
+/Pulled all DSM covers from pylons to allow air flow to DSMs.
+/Blew out all nose drain lines from connection at the pressure transducer to the drain, (nose holes taped).
+/Performed CDP Cals
+/Cleaned DPL. Right Dew Pointer should be cleaned next maintenance day. Did not want to do both at once in case they were damaged.
+/Left Camera has a faulty fire-wire connection at the back of the camera. Wiggling it causes the camera to go ON and OFF. Messing with it in flight causes all camera images to fail. May want to leave OFF for rest of project.
+/Identified Gust Pod issue. Molex connector PINS on GP power supply (60Hz input) making poor contact. Causing Gust Pod power ON and OFF intermittently. Pulled pins, found them to be inserted upside down, reshaped, and reinstalled. Tested out good.
+*Also found that the Gust Pod input power gender was backwards. Power to the probe has male pins.
+Note: Given that the problem with the Gust Pod was power related, it is likely that the Serial card previously removed from LWO DSM is still good.
+/Flushed L & R Temp Sensors
+/Performed A/D Auto Cal - DSM 305; A/D 1706; Ch.5 Offset increased to 0.010
+Chris W. looked into the Data Acquisition drops that were experienced in the two (2) previous Research Flights. He was unable to determine any cause or symptom that may be leading to these drops.
+/Jorgen took a 5/64" allen wrench from the tech tool bag, with permission, to use on GNI for the duration of the project. The allen wrench needs to be modified (cut down to size) for his specific use.
+/Performed full system check of DSMs and state parameters. All check out OK.
+
+
+03Feb2018
+TURNOVER
+/RAF CN plug resides in ADS desk drawer. Must be reinstalled prior to ferry flights back to RAF.
+/I-Beam resides in sea-tainer with applicable hardware. Should be reinstalled prior to ferry flights back to RAF.
+/CVI cover needs to be safety wired for ferry flights back to RAF.
+/cleaned DPR today
+/opened radome for inspection.
+/techs went over information for turnover.
+/Ran auto Cal  DSM 303 analog A0 1705 channel 3 is 10mv DSM 305 Ch 5 is 8mv.
+
+RF08
+Cowan
+2/4/18
+
+Left side buss 60 Hz meter is reading 80V. This happened yesterday as we were doing turn over.  Measured left side with meter and it is 115V.  We do not want to tear into it since we do not have spares here.  Will monitor with meter each day.
+
+Had isssue with 2DC prior to flight.  Initially it would not connect to the DSM.  We opened the panel and reset the USB connector which finally got it to connect.  At that point we noticed that we got a runaway probe and it was giving us imamges with regularity but not constant.  Due to time we decide to attempt a quick clean of the optics through the laser hole.  This did clean the errant particle from the 45 degree mirrors. The end diode voltages were higher than I had seen before but we are getting images.  We will clean 
+the mirrors correctly before the next flight.
+
+Did not do autocal prior to flight, yesterdays were fine and I ran out of time.
+
+BO 2309
+TO 2315
+
+2357 Coffee maker value leaks, mechs informed. Almost a grumpy crew with no coffee, but I found a way to make it work.
+
+0006 Noticed that all data was lost from 2351 to 2353.  Not sure what happened.  Looks like a DSM reboot.
+
+0056 Still seeing Gust pod dropouts.  These tend to be shorter and not the probe going completly out. All occured between 0048 and 0054.
+
+0115 or there abouts good 2DC images.
+
+Had VCSEL drops in the last 30 mins of profiling.
+
+2DS had issues in the V channel but that might have been due to icing.
+
+Cameras locked up last 45 min of flight was not able to reset.  Need to have an SE look at it.
+
+Messed up and deleted my log so I might have missed something
+
+0610 Looks like camera control is back.  I am guessing mouse is messing up.
+
+0617 DSM 310 data was messed up. Saw that the IRIG card had stopped.  Rebooted DSM and all data came back.
+
+On final data system locked up.  SE looked at.
+
+Land 0646
+BI 0650
+
+0138 Power readings (Fl200 on ferry south)
+
+Left Side A bus
+400 Hz
+Ph A 17.6A 116V
+Ph B 19.6A 117V
+Ph C 21.5A 115V
+Anti Ice
+Ph A 0A 116V
+Ph B 0A 117V
+Ph C 0A 115V
+
+Right Side B bus
+400 Hz
+Ph A 10.7A 115V
+Ph B 18.1A 113V
+Ph C 8.9A 116V
+Anti Ice
+Ph A 0A 115V
+Ph B 6.7A 112V
+Ph C 0A 115V
+
+Left Side 60 Hz
+80V (see note at begining of flight) 47A
+
+Right Side 60 Hz 115V 17A
+
+28V AI Wing
+28.2V 33A
+
+
+
+
+04 Feb 2018  RF09  Ed K
+
+Preflight:
+
+Cleaned 2DC mirrors with acetone and Q-tips, inbrd mirror had 4 big specs on it and cleaned-up
+fairly easily, outbrd mirror was quite gunked-up and was more difficult to clean,
+i.e. fingernail needed to remove one large spec.  Result: D01 = 3.78V, D32 = 4.66V, D64 = 4.39V
+
+Ran autocal, #'s looked reasonable, became busy helping mechs deal with water issue at coffee pot during water fill for GV - the water valve for coffee pot was stuck open -> water everywhere
+AVAPS inop for this flight
+Left-side camera unplugged so that fwd & right remain working
+
+22:55 takeoff 
+ 
+23:23 restart cameras
+00:00 Phipps working now, had to reboot 60Hz a few times
+Left-side bus now reading 112V (?) (reading 80V on gnd)
+TCAB 23C - 20Kft transit south
+02:29 begin descent for research/profiles
+03:10 cycle pwr on LWO DSM, QC_GP & QCTEMP_GP were nan, no change, all wing probes have icing here
+03:20ish noticed icing gone at ~500 ft and LWO all channels working
+04:10 vxcel in and out every few minutes 
+04:15 QCR is nan
+04:27 QCR is back -> must have thawed out
+05:59 looks like we lost data across the board for about 10 secs (?)
+
+07:01 landing
+ 
+2/6/18
+Maintenace Day
+Removed 2DC mirrors.  They were still cleaned.  We cleaned them and reinstalled.  In the future we will clean them between each set of flights on a maintenace day but not between consecutive flights inless there is a reason to suspect contamination.
+Opened radome and revese blew out QCR since it froze last flight.  Got about 1/8 tsp of water out of the line with the center hole plugged.  Also reverse blew the bottom ADIF port but no water can out.
+Opened Gust pod for inspection since QC gust also froze last flight. Found that the center port had water in it, we were able to see the water in the teflon line.  We blew out 2 other ports with no water coming out so we are calling it good at this point.  The wind has come up so we will do the CDP cal and 2DC checks tomorrow.Filled Butonal in our CN counter might need to fill CVI Tomorrow.
+
+
+2/7/18
+Maintenance day
+Did CDP cal, looks about the same.  Put spinning disk on 2DC so Jorgan would have some data to look at.  Used water to flush the windows of the CDP and 2DS, using air ject to clear the water.  They look better.
+Checked out the data system for next flight in the next few days.
+Looked at left camera, we applied contact cleaner and added a strain relief.  Hopefully it will work.  There are not screws at the camera and I think that might be the problem on these rough flights.
+
+2/8/18
+RF10 
+Cowan
+
+Preflight
+Had initial issue with the server.  First the mouse was locked up and a reset of the USB cable fixed that.  When Data Aqu was started the window for the 12 hours did not stay on.  Also nimbus would crash.  Showed it to Janine but we could find nothing.  We continued the flight and it started fine.  Cleaned the radiomenters pre-flight also.
+
+VCSEL got wet during preflight, will need to wait until takeoff to see if it needs to be restarted.
+
+BO 2048
+TO 2055
+
+2119 VCSEL having some issues not sure if it is becase we are in cloud or what. It was switching modes/
+0019 Data all probes.
+0040 to 0042 Iced up QCR.
+
+Land 0510
+BI 0515
+
+
+0350 Power readings (less than 5K feet)
+
+Left Side A bus
+400 Hz
+Ph A 15.8A 115V
+Ph B 19.3A 117V
+Ph C 19.2A 115V
+Anti Ice
+Ph A 0A 116V
+Ph B 0A 117V
+Ph C 0A 115V
+
+Right Side B bus
+400 Hz
+Ph A 10.7A 115V
+Ph B 16.3A 114V
+Ph C 8.4A 116V
+Anti Ice
+Ph A 0A 115V
+Ph B 6.6A 113V
+Ph C 0A 115V
+
+Left Side 60 Hz
+115V 32A
+
+Right Side 60 Hz 115V 17A
+
+28V AI Wing
+28.2V 32A
+
+
+
+10 Feb 18  FF04  Ed K
+
+Re-positioned the plane to Bay 10 from bay 21
+
+Today was media day/open house from 10am to 2:30pm, ~260 people showed up to see the plane
+
+We're diverting the plane to Adelaide to avoid a potential nasty storm (winds/hail)
+projected to hit Hobart this evening 
+
+Preflight: abbreviated version - approx one hour
+John C tightened up CVI's cigar HIMIL screws
+Not running UHSAS and CN from our list of duties
+Power to wing probes except HCR
+Lou said only LWOO (Phipps) and RWOO (ClH2) needed to be on for the flt, JC tho't otherwise
+
+O4:58 takeoff
+
+05:48 noticed LW camera stopped working, reseated at camera fixed it
+05:56 restart cameras
+
+06:46 landing
+
+
+11 Feb 18  FF05  Ed K
+
+Preflight: no mouse movement at server start-up -> reseat works
+Note - Adelaide local is 30 mins behind Hobart time
+Not running UHSAS and CN from our list of duties
+Power to wing probes except HCR0706
+
+23:15 takeoff
+
+23:18 restart cameras
+00:39 vcsel dropouts
+
+00:52 landing
+
+
+12 Feb 18
+
+Maintenace day
+With the ferry flights from the last two days we decided to just look at the radome lines.  We found that the center port had a small dropplet of water in drain line.  We opened it and then did a light blow from the center port with the drain open to remove the final condensation.  Closed up the radome after that.
+
+Looked at the 2DC mirrors.  The outboard had a haze and what appeard to be a small water spot on it.  The inboard was clean.  Both mirrors cleaned and re-installed.
+
+Performed CDP cal, data is in the SOCRATES CDP Cals folder - per usual. 
+ 
+Did A/D calibration.  There was no change from the last time.
+
+Filled Mike R's CN with BuOH
+
+FF06  JC
+2/13/18
+Flight to Melborne for evac - Not running full instrument load.
+Ran autocal preflight no changes since last.
+
+BO 0706
+TO 0710
+
+0720 Getting occasional 2DC images, very small.  Need to keep an eye on it and might need to clean it before research. but we might be in something also althoug I do not know what.  The particles are somewhat big.
+
+0737 Looks like the 2DC ig gnerating blank records.  The imagaes are moving off the display with nothing coming on from the bottom.  I have not seen that before. we are 40K with clear skys no reason for any data.
+
+0752 Rice looks noisy wit very small spike on it.  I do not recall seeing that before, Will need to look at data to see if it is there.
+
+
+Everything else looks okay from this quick flight
+
+Land 0813
+BI 0817
+
+FF07
+02/17/18
+Return to Hobart
+
+During pre-flight had problesm getting satcom to come up.  Cyceled switch and no help. Cyceled breker and got SDU but no SBU.  cycled switch again Got SDU.  Chat is working so just going to go with it.
+
+Found MPDB A/D CavP_GNI to have shifted 20mv with this cal. Ran again and saw 15mv so sowemthing shifted.
+ MBDB ch 2 S/N 1605.
+
+2111 Satcom still not working. cycled main breaker.
+2150 2DC looks good now.
+2151 unable to get satcom up.  SDU light comes on but hat is all. Pulled main breaker (SBU in baggae pit) lights went out.  Reracked it. Got SDU light for a bit then it went out again.  It does not stay lighted. Will talk to ground crew and see what we want to do.
+
+
+RF11
+
+Preflight
+Satcom still not working/ Looks like SDU is working okay but the SBU will not logon (no green light at box). We hwave powered on and off multiple times and reseated all the boxes with no success.
+Fuel was late and only part of a truck, flight was late leaving.
+
+BO 0131
+TO 0140
+
+0157 Looks like Right camera is not working.
+0255 CFDC spilled some water on decent.  It was a small amount and did not get under the floor.
+ 
+Looking at e-mails it looks like the satcom problem may have been with the provider, the satelight is having altitude issues and that is why we cannot find it.  They will let us know when and if they get it fixed.
+
+0421 2DC looking good today. Issues with strange data.
+0513 Gust probe stopped all variables.  DSM reset. Data restored when rebooted.
+0520 Gust probe DSM stopped again, came back at 0522 when I was up resetting breaker. Came back at 0526 and stopped within seconds. It did not come back in 3 to 4 minutes so I pulled the breaker for the rest of the flight.  We will have to look at that before a flight tomorrow.
+
+
+Ask Kurt about iridium power and Imarsat being the same or different?
+
+
+
+18 Feb 2018  RF12  Ed K
+
+Preflight: remove rwo dsm cover and replaced some worn screws.  
+Remove lwo dsm cover, checked connector seating on dsm, closed up.  
+Cleaned 2dc mirrors - outbrd was fairly dirty(?).  Satcom is working today.
+Rebooted dsm 304 - was dropping out and finally stopped working - reboot successful at mpdb.
+Left & right side cameras working.  Note - all times are approximate in this log.
+
+2348 data acq drop-out during taxi - I was turned around
+
+2352 takeoff
+
+2353 data acq working (I did nothing, I just turned my seat around after TO and it started working)
+0001 restart cameras - fwd camera now working
+0110 got one sonde out of launch tube - piece broken off it, located inbetween
+     second (outbrd) sonde - this piece fell into the launch tube
+0120 got second sonde out of launch tube - sticky stick works pretty well
+0128 sondes are being lauched now
+0738 data acq stopped as we started our decent from 20Kft
+
+0753 landed
+
+2/19/18
+Maintenance
+Cleaned 2DC Mirrors, they were pretty good. Washed the 2DS windows.  Did a CDP calibrations and washed the CDP windows. Gave the Temp sensors a fresh water rinse.  Helped out users as required. Looked at a headset cord and verified it is bad, we still have a spare so we will hold off fixing it until we return. Added Butonal to our CN counter the CVI cn counter. Did cabin beutification. Ran autocal and all boards were good. CAVP_GNI was even good today.  Not sure what I saw the other day that had it off by 15 mv.
+
+2/20/18
+RF13
+Preflight - firewall issues
+There were issues with the fire wall changes that were made and backed out yesterday. Eventually it was corrected and the off plane communications were restored.
+
+On Taxi the data aquisition stopped again.  It stopped just as we moved from parking. It needed to be restarted once we took off (stop data aquisition and then start data aquisition continuing the same flight and restart NIMBUS). This is the second consecutive flight that this has occurred. Not sure why it would work the whole preflight then fail when the plane moves?
+
+
+BO 2255
+TO 2259
+
+2327 Power cycled LWI DSM to see if it would clear up a wierd harmonic on PLWC.
+2330 That did not seem to fix it. I can almost convince myself that it is tied with or simialr to a periodic noise in RICE also (see screenshot from RF13). PLWC does react correctly or at least if did at a cloud pass through just after takeoff. Very strange.
+0012 Power cycled PHIPS per chat request.
+0222 Data all cloud probes.
+0518 had to restart cameras not updating.
+0521 PLCW is now okay. I find it interesting that it cleared after the cameras were restared.  They have nothing in common but it is interesting.
+0615 PLWC stuff is back but not quite as bad.
+
+Land
+BI 
+
+
+
+21 Feb 2018  RF14  Ed K
+
+Preflight: cleaned fwd camera and all radiometers
+
+2109 Janine changed /var/lib/pgsql/data/postgresql.conf per CJW email and restarted postgresql
+
+2109 data acq dropped out, dsms are OK (green) and time was updating on controls tab - but no data - 
+we think aeros lost itself from Janine's changes to data base size whilst sys was running (same timestamp)
+
+2134 restart data acq
+
+reboot vcsel before door close & Julie (MC) lost headset after door close - another bad cord from ics unit to headset at MC station?  we may be out of luck for any more headset repairs 
+
+2248 takeoff
+
+2258 everything looks great on the camera viewer tab, all three cameras are updating and recording (green) for
+     rf 14, but controls tab is red and critical for cameras(?)
+
+0030 vcsel drop-outs
+
+0156 28 mins to 62 S or 0224, then we turn around
+
+0301 oops, wanted to cycle pwr to gust probe dsm, cycled phips instead, but all is well with both
+
+0440-ish toggle UHSAS laser
+
+0440-ish hot smell in bag pit area
+
+0446 Ed R vents bag pit area 
+
+0500 heading back -done with sci for today, got one full carosel for Jorgen (32 slides?)
+
+0646 landed
+
+
+02/23/18
+Maintenance Day
+Removed DPR for cleaning. Found lots of particles in it, blew it out and cleaned the mirror.  Looking back at data not sure why this one is so noisy at low level.  The balance number is not good at low level for some reason.  If this cleaning does not fix the issues I would suspect that it need to go in for repair with some data. This looks like it has been an issue for the begining of the project.
+
+Did a CDP calibrartion.  Looks like something is differnet at the 10um size, now in bin 4 or 5 instead of bin 6. Ran it twice to be sure and got the same result. All the sizes over 10 look like them might have shifted down a bin size but it is somewhat hard to tel.  Also the conditions on the ramp might be different.
+
+Cleaned 2DC mirrors, they were very clean when removed.  Verified end diode voltages after cleaning.
+
+Opened Radome to check the lines, there was no water in any line that we could see.  This was expected as there had been no indications of iced radome in the last few flights.
+
+Looked at date from RF14 to verify that everything looks okay.
+
+Rebooted data system to check changes that Janine put in for the buffers.  This should fix the random stops.
+
+Should be ready for flight tomorrow.
+
+
+
+RF 15
+2/24/18
+Pre-flight
+Due to rain there were questions about going.  We left covers  on as long as we could.  Raining during preflight
+Pre flight Auto Cal is showing GNI Cave P at 11 mv again.  Might want to look at that board when we get back.
+Had initial issues getting the UHSAS computer to connect. There was no data and the commit button was flashing. Turns out that I had missed a breaker on the wing so it was not getting power.  If no cennections and the commit is look and see if power is on for the probe.
+
+During Taxi the data system quit taking data again.  Cindy reported a "network error" which means that they are no longer getting data from their DSM.  Upon turing around after takeoff I noticed that the DSM time was increasing but that Nimbus had stopped updating.  Since Cindy was not getting anything from the CVI DSM I decided to stop and restart DAQ. When I hit Stop DAQ Cindy reported that the "Network Error" cleared and she was getting data from the DSM again (note I had NOT restarted our DAQ yet). I restarted DAQ (continuing the same flight) and then restarted Nimbus. The data system started displaying data again.
+
+BO 0157
+TO 0207
+
+VCSEL needed reboot after takeoff as it was not displaying dewpoint.  This is not surprosing with the rain on preflight.
+The PI station had an issue with the headset as did the PM station.  The PM PTT did not work. The PI had wierd issues.  Might need to look at L-6 station where we plug in headset and see if it is okay. We have 3 PTT extensions that all have the PTT not working and at least 1 broke headset so far. Also one extension makes it so the sound is very weak and hard to hear. All have been clearly marked in the galley.
+
+0215 Turned on CN counter, it got missed at the 30 Min checks. Also turned on cameras at this time.
+0634 DPR looks better but still does not look great at 500 feet.
+1900 Forward camera not updateing so I stopped cameras.  Now no cameras are found and the process will not start.
+modprobe: ERROR: could not remove 'firewire_ohci': Device or resource busy is the error message. Hopefully it will clear with a power off if nothing else.  I tried to reset the firewire connector but that did not help.
+
+Land
+BI
+
+0350 Power reading FL200 for about 2 hours
+Left Side A bus
+400 Hz
+Ph A 18.1A 116V
+Ph B 21.4A 117V
+Ph C 24.0A 115V
+Anti Ice
+Ph A 0A 116V
+Ph B 0A 117V
+Ph C 0A 115V
+
+Right Side B bus
+400 Hz
+Ph A 10.9A 115V
+Ph B 15.6A 112V
+Ph C 8.9A 115V
+Anti Ice
+Ph A 0A 115V
+Ph B 4.0A 113V
+Ph C 0A 115V
+
+Left Side 60 Hz
+115V 47A
+
+Right Side 60 Hz 115V 16A
+
+28V AI Wing
+28.2V 32A
+
+FF08
+2/27/18
+Hobart to Samoa
+
+Preflight
+
+BO 2154
+TO 2200
+
+As soon as we moved today Nimbus went to Warning, then stopped and then DSM server went to Warning then Stopped.  In about a min it came back and then it happened again in the same sequence as we took the runway.  When I was able to turn around Nimbus and DSM server were both stopped as was the Camera capture. The Camera Capture did not stop before we took the runway, I suspect it stopped during or just after takeoff.  Once I turned around since I saw DSM server stopped I stopped DAQ and then restarted DAQ and Nimbus.  Not sure if that was the best choice but it did get stuff working again.
+
+
+2225 Gust pod DSM seems to be dropping in and out. Suspect that it might have gotten wet in the rain a few days ago. Maybe we should have opened it when we were packing.
+0159 realized that the 2DS was not started for this flight (not something the tech generaly deals with) Will start it tomorrow it is cold soaked already.
+0345 Noticed that CCN's had both quite reporting to the data system.  They were still in but not clicking anymore. Turned them off at this point.
+Chris turned off nimbus at some poiont.
+
+
+
+Land 0405
+BI 0408
+
+
+
+0220 Power reading FL410 for about 4 hours
+Only our rack and wing probes on. Running CCN's in L-5 this flight.
+Left Side A bus
+400 Hz
+Ph A 7.1A 116V
+Ph B 7.9A 117V
+Ph C 12.2A 115V
+Anti Ice
+Ph A 0A 116V
+Ph B 0A 117V
+Ph C 0A 115V
+
+Right Side B bus
+400 Hz
+Ph A 8.3A 115V
+Ph B 13.3A 112V
+Ph C 6.9A 115V
+Anti Ice
+Ph A 0A 115V
+Ph B 6.5A 113V
+Ph C 0A 115V
+
+Left Side 60 Hz
+115V 9A
+
+Right Side 60 Hz 115V 11A
+
+28V AI Wing
+28.3V 32A
+
+FF09
+Samoa to Kona
+Pre-flight
+Noticed that I forgot to put the tape on the radome last night and there was evidence that it had rained.  Opened the drain ports on the center and top lines. Gently blew them out to clear and water in the tubes. Turned on 2DS for this flight.  The CCN counters are NOT on for this flight.
+
+BO 2150
+TO 2153
+
+2205 LWO DSM stopped again.  I think it is a wet issue.  Do not really have time to troubleshoot on the ferry.  If there is time in Kona I will take a look and amybe blow it out.
+
+2210 Power cycled LWO DSM. The DSM cam back at 2212.
+
+2212 LWO stopped again and then it came back at 2221 and I did nothing.  It has to be some kind of wierd wet power issue. LWO continues to have issues perodically throughout the rest of the flight.
+
+2319 2DC end diodes are down a bit. I am sure it is getting a bit dirty. Mirrors should be ckeaned before it is out away.
+
+0125 Data all probes.
+
+At various times during the flight cycled RWO 28VAI for Chris.  This effected Camers and RICE.
+
+0244 Data syste, stopped on landing.
+
+0241 Landed.
+0245 Parked at customs
+
+FF10
+030118
+Kona to KBJC
+
+Pre-flight
+Chris is removing the Honeywell Temps since they are causing data issues.  Might be doing something else also.
+
+BO 1837
+TO 1843
+
+1915 LWO DSM dropping out again. It continues dropping out occassionally for the whole flight.
+
+Quite flight no other issues to report.
+
+Land
+BI
+
+
+
+
+
+
+Leave at bottom of log.  Edit above this line.
+Things to do when at jeffco.
+Look at L-6 ICS headset plug in box and make sure wires are okay.
+LWO DSM is dropping out suspect "wet" issues.  It should be gone over including the AC to DC supply
+Bottom radiometer, suspect that water is getting in via outer dome then into inner dome via small holes in base.  O-ring looks a little small there is still a gap.  Might want to look at using a gasket.
+Head sets and cords need repair.
+Look at ADS ICS plug in, not working with remote PPT but it could be that PTT also.
+2DC end diode voltages decreasing. Probably should be cleaned before getting put away.
+
+Data Qual
+PHIPS look that SEQ_PHIPS in increaseing 1 per second
+PIP diodes should be between 1 and 2.5 V
+2 DC end Diodes over 1V
+RICE about 1V in flight cycleing up to 5V in cicing conditions.
+PLWC grater than 10W in flight usually 12W at altitude 16 W low level.
+Look at a couple of flights and get information to put in a Data QC file by varibale name.
+
+
+
+
+
+
