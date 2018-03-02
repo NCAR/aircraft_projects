@@ -26,10 +26,10 @@ sys.path.append("/home/local/raf/python")
 import raf.ac_config
 
 ####################  CONFIGURATION #######################################
-send_Dfiles = True 
+send_Dfiles =  True
 send_prodfiles = True
 # The following probably won't change
-Aspen_QC_exe = '/home/local/src/aspenqc/bin/Aspen-QC'
+Aspen_QC_exe = '/home/local/aspenqc/bin/Aspen-QC'
 d_file_re = 'D????????_??????_P.?'
 raw_data_dir = "/var/r1//dropsondes"
 ads_web_dir = "/var/www/html/skewt"
@@ -66,7 +66,7 @@ list = sorted(list)
 for file in list:
 
     # Make product files (skewt and tempdrop) 
-    os.putenv('ASPENCONFIG', '/home/local/src/aspenqc')
+    os.putenv('ASPENCONFIG', '/home/local/aspenqc')
     os.system('/bin/cp '+file+' tmp')
     skewt_fn = file+'.svg'
     wmo_fn = file+'.wmo'
@@ -107,15 +107,19 @@ for file in list:
             ftp.storbinary('stor '+skewt_fn, open(skewt_fn, 'rb'))
             syslog.syslog(ident+':'+skewt_fn+' sent')
             os.rename(skewt_fn, 'sent/'+skewt_fn)
-            ftp.cwd(grnd_wmo_dir)
-            ftp.storbinary('stor '+wmo_fn, open(wmo_fn, 'rb'))
-            syslog.syslog(ident+':'+wmo_fn+' sent')
-            os.rename(wmo_fn, 'sent/'+wmo_fn)
+            # Per Kate during the SOCRATES project, these WMO messages are not i
+            # desired and are messing up her processing. Turn off sending them.
+            # JAA 2/18/2018
+            #ftp.cwd(grnd_wmo_dir)
+            #ftp.storbinary('stor '+wmo_fn, open(wmo_fn, 'rb'))
+            #syslog.syslog(ident+':'+wmo_fn+' sent')
+            #os.rename(wmo_fn, 'sent/'+wmo_fn)
+
+            ftp.quit() 
     
         except ftplib.all_errors, e:
             syslog.syslog(ident+':Error putting file: %s' % e)
     
-        ftp.quit() 
     else:
         os.system('/bin/rm '+skewt_fn+' '+wmo_fn)
 
