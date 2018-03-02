@@ -30,11 +30,6 @@ fi
 #  nohup /opt/local/bin/acTrack2kml -p DC8 -o > /tmp/acTrack2kml-DC8.log &
 #fi
 
-#ps ax | grep listen_sat.pl | grep -qv grep
-#if [ $? -eq 1 ]; then
-#  nohup /home/local/Systems/scripts/listen_sat.pl > /tmp/listen_sat.log &
-#fi
-
 if [ $AIRCRAFT == "C130_N130AR" ]; then
 
   # Start daemon to transfer Wyoming Cloud Lidar images to the ground via LDM.
@@ -43,11 +38,6 @@ if [ $AIRCRAFT == "C130_N130AR" ]; then
     /home/local/Systems/scripts/uwyo_lidar /mnt/r1/uwyo_lidar 2 /tmp/uwyo_lidar.log &
   fi
 
-  # Open Street Maps rendering daemon.
-#  ps ax | grep renderd | grep -qv grep
-#  if [ $? -eq 1 ]; then
-#    nice /usr/bin/renderd &
-#  fi
 fi
 
 if [ $AIRCRAFT == "GV_N677F" ]; then
