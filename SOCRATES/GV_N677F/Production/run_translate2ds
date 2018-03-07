@@ -1,0 +1,9 @@
+#!/bin/csh
+
+cd ${RAW_DATA_DIR}/SOCRATES/2DS
+
+foreach file ([RTF]*/*)
+    set flight=`echo $file | sed 's/\/.*$//'`
+    translate2ds -flight $flight -project SOCRATES -platform GV_N677F -sn SPEC001 -f $file
+end
+
