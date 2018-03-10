@@ -28,17 +28,3 @@ process2d ${RAW_DATA_DIR}/SOCRATES/PMS2D/20180224_005335_rf15.2d -o ${DAT}/SOCRA
 #process2d ${RAW_DATA_DIR}/SOCRATES/PMS2D/20180226_210839_ff08.2d -o ${DAT}/SOCRATESff08.nc
 #process2d ${RAW_DATA_DIR}/SOCRATES/PMS2D/20180227_204201_ff09.2d -o ${DAT}/SOCRATESff09.nc
 #process2d ${RAW_DATA_DIR}/SOCRATES/PMS2D/20180301_181532_ff10.2d -o ${DAT}/SOCRATESff10.nc
-
-
-# 2DS
-# For TF01, the 2DS code was in local time. I put a hack in my checkout to change to
-# UTC.
-/net/work/dev/jaa/aircraft_oap/bin/process2d ${RAW_DATA_DIR}/SOCRATES/2DS/TF01/base180102124417 -o ${DAT}/SOCRATEStf01.nc
-process2d ${RAW_DATA_DIR}/SOCRATES/2DS/TF02/base180104164600.2DS -o ${DAT}/SOCRATEStf02.nc
-
-cd ${RAW_DATA_DIR}/SOCRATES/2DS
-
-foreach file ([RF]*/*.2d)
-    set flight=`echo $file | sed 's/\/.*$//'`
-    process2d ${RAW_DATA_DIR}/SOCRATES/2DS/$file -o ${DAT}/SOCRATES${flight}.nc
-end

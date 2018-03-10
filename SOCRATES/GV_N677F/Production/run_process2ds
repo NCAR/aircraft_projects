@@ -1,0 +1,14 @@
+#!/bin/csh
+
+# For TF01, the 2DS code was in local time. I put a hack in my checkout to change to
+# UTC.
+/net/work/dev/jaa/aircraft_oap/bin/process2d
+${RAW_DATA_DIR}/SOCRATES/2DS/TF01/base180102124417.2d -o ${DAT}/SOCRATEStf012ds.nc
+process2d ${RAW_DATA_DIR}/SOCRATES/2DS/TF02/base180104164600.2d -o ${DAT}/SOCRATEStf022ds.nc
+
+cd ${RAW_DATA_DIR}/SOCRATES/2DS
+
+foreach file ([RTF]F*/*.2d)
+    set flight=`echo $file | sed 's/\/.*$//' | tr "[:upper:]" "[:lower:]"`
+    process2d ${RAW_DATA_DIR}/SOCRATES/2DS/$file -o ${DAT}/SOCRATES${flight}2ds.nc
+end
