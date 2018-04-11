@@ -1869,7 +1869,7 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
-
+-->
     <dsm derivedData="sock::7071" id="23" location="AftOvrhd_L" name="dsm323" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_323"/>
       <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
@@ -1877,12 +1877,12 @@
           <variable count="true" longname="TSI CN Counter Output" name="CNTS" units="count"/>
         </sample>
       </sensor>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="400">
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
         <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2D Temperature" name="A2DTEMP_AFTL1" units="deg_C"/>
+          <variable longname="A2D Temperature" name="A2DTEMP_AFTL0" units="deg_C"/>
         </sample>
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
@@ -1926,12 +1926,12 @@
         </sample>
       </sensor>
 
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="400">
         <calfile file="A2D018.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_AFTL0" units="deg_C"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_AFTL1" units="deg_C"/>
         </sample>
         <sample id="2" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
@@ -1950,7 +1950,7 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
--->
+
     <dsm derivedData="sock::7071" id="24" location="AftOvrhd_R" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_324"/>
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS5" id="150"/>
