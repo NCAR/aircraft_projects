@@ -22,14 +22,14 @@ set PROJECT = "DC3"
 #### puts them on the hpss. 
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA /scr/raf/Raw_Data/$PROJECT/camera_images jpg EOL
 
-### LRT - done, rearchived with updated VCSEL cals 1/28/2013
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc EOL
+### LRT - done, rearchived with updated VCSEL cals 1/28/2013, updated 2017/05/05 for RAF reprocessing.
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc FS/EOL/2012
 
-### HRT - done, rearchived with updated VCSEL cals 1/28/2013
-#/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc EOL
+### HRT - done, rearchived with updated VCSEL cals 1/28/2013, 2017 for variable name change.
+/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc FS/EOL/2012
 
-### KML - done, rearchived with updated VCSEL cals 1/28/2013
-#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml EOL
+### KML - done, rearchived with updated VCSEL cals 1/28/2013, 20170505 for reprocessing.
+#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml FS/EOL/2012
  
 ### MOVIE
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -m /scr/raf/Prod_Data/$PROJECT/movies mp4 EOL
@@ -38,8 +38,8 @@ set PROJECT = "DC3"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py mtp /scr/raf/Prod_Data/$PROJECT NGV EOL cbsnyder@ucar.edu
 
 ### VCSEL
-/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI/ROI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi roi EOL
-/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi 2DSCPI EOL
-/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi 2DSCPIHK EOL
-/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi log EOL
-/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi TXT EOL
+#/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI/ROI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi roi EOL
+#/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi 2DSCPI EOL
+#/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi 2DSCPIHK EOL
+#/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi log EOL
+#/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi TXT EOL
