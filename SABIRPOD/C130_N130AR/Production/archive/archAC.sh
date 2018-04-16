@@ -12,10 +12,10 @@ set PROJECT = "SABIR"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads EOL/2015
 
 ### CAMERA
-#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA /scr/raf/Raw_Data/$PROJECT/camera_images/ jpg EOL/2015
+/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA /scr/raf/Raw_Data/$PROJECT/camera_images/ jpg EOL/2015
 
 ### PRELIMINARY LRT
-/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/LRT /scr/raf/Raw_Data/$PROJECT/field_phase nc EOL/2015
+#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/LRT /scr/raf/Raw_Data/$PROJECT/field_phase nc EOL/2015
 
 ### PRELIMINARY KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/KML /scr/raf/Raw_Data/$PROJECT/field_data kml EOL/2015
