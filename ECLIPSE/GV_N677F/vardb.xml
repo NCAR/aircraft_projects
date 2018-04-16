@@ -1038,6 +1038,12 @@
       <dependencies>CUHSAS</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="CONCUD">
+      <units>#/cm3</units>
+      <long_name>UHSAS CVI Drop Concentration (all cells)</long_name>
+      <is_analog>false</is_analog>
+      <reference>false</reference>
+    </variable>
     <variable name="CONCV">
       <units>#/cm3</units>
       <long_name>VCSEL Moisture Number Density</long_name>
@@ -1182,6 +1188,18 @@
       <dependencies>AUHSAS UFLWC USCAT</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="CVCFACTTDL">
+      <units></units>
+      <long_name>CVI TDL Concentration Factor</long_name>
+      <is_analog>false</is_analog>
+      <reference>false</reference>
+    </variable>
+    <variable name="CVCWCC">
+      <units>g/m-3</units>
+      <long_name>CVI Cloud Condensed Water Content, Corrected</long_name>
+      <is_analog>false</is_analog>
+      <reference>false</reference>
+    </variable>
     <variable name="CVEW">
       <units>m/s</units>
       <long_name>CMIGITS-III Ground Speed Vector, East Component</long_name>
@@ -1194,6 +1212,12 @@
       <long_name>CMIGITS-III Ground Speed Vector, North Component</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
+      <reference>false</reference>
+    </variable>
+    <variable name="CVRHO">
+      <units>g/m-3</units>
+      <long_name>CVI Water Content, Enhanced</long_name>
+      <is_analog>false</is_analog>
       <reference>false</reference>
     </variable>
     <variable name="CVSPD">
@@ -2016,6 +2040,13 @@
       <is_analog>false</is_analog>
       <category>Chemistry</category>
       <derive>FO3C</derive>
+      <reference>false</reference>
+    </variable>
+    <variable name="FO3C">
+      <units>ppbv</units>
+      <long_name>Fast Response Ozone Mixing Ratio, Corrected</long_name>
+      <is_analog>false</is_analog>
+      <category>Chemistry</category>
       <reference>false</reference>
     </variable>
     <variable name="FPCRC">
@@ -3876,6 +3907,24 @@
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
+    <variable name="PSTF">
+      <units>hPa</units>
+      <long_name>Raw Static Pressure, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <category>Uncorr'd Raw</category>
+      <derive>PSTFC</derive>
+      <standard_name>air_pressure</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="PSTFC">
+      <units>hPa</units>
+      <long_name>Corrected Static Pressure, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <category>Atmos. State</category>
+      <dependencies>PSTF QCTF ATTACK SSLIP MACHF</dependencies>
+      <standard_name>air_pressure</standard_name>
+      <reference>false</reference>
+    </variable>
     <variable name="PSTT">
       <units>count</units>
       <long_name>PCAS Signal Transit Time</long_name>
@@ -4080,6 +4129,26 @@
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
       <dependencies>QCR PSF QCF ATTACK</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="QCTF">
+      <units>hPa</units>
+      <long_name>Raw Dynamic Pressure, Top of Fuselage</long_name>
+      <is_analog>true</is_analog>
+      <voltage_range>0 10</voltage_range>
+      <default_sample_rate>100</default_sample_rate>
+      <category>Uncorr'd Raw</category>
+      <derive>QCTFC</derive>
+      <standard_name>air_pressure</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="QCTFC">
+      <units>hPa</units>
+      <long_name>Corrected Dynamic Pressure, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <category>Aircraft State</category>
+      <dependencies>PSTF QCTF ATTACK SSLIP MACHF</dependencies>
+      <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="QCW">
@@ -4460,6 +4529,13 @@
       <is_analog>false</is_analog>
       <category>Uncorr'd Raw</category>
       <dependencies>RT_A</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="SCANBT">
+      <units>count</units>
+      <long_name>MTP Brightness Temperatures</long_name>
+      <is_analog>false</is_analog>
+      <category>Atmos. State</category>
       <reference>false</reference>
     </variable>
     <variable name="SDWC1">
