@@ -1,8 +1,8 @@
-#!/bin/csh
+#!/bin/csh -x
 
 cd ${DAT}
 
-foreach file ( MITTS?f??.nc )
+foreach file ( MITTS_?f??.nc )
   echo $file
   nccopy -u $file temp1.nc
   mv -f temp1.nc $file
