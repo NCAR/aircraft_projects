@@ -12,13 +12,11 @@ set PROJECT = "ARISTO2015"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads EOL/2015
 
 ### CAMERA
-/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg EOL/2015
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg EOL/2015
 
 ########################## Preliminary Data Files ##########################
 ### Preliminary LRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc nc EOL/2015
-#/net/work/bin/scripts/mass_store/archAC/archAC.py PRELIMINARY/LRT /scr/raf_data/WINTER nc EOL/2015
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/WINTER nc EOL/2015
 
 ### Preliminary LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/LRT/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict EOL/2015
@@ -52,10 +50,12 @@ set PROJECT = "ARISTO2015"
 ### Preliminary ARNOLD ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/ARNOLD /scr/raf/Raw_Data/$PROJECT/field_phase/ARNOLD ict EOL/2015
 
+### LAMS
+#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/LAMS /scr/raf/Raw_Data/$PROJECT/LAMS nc EOL/2015
 
 ########################## Production Data Files ##########################
 ### LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc EOL/2015
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc EOL/2015
 
 ### LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict EOL/2015
