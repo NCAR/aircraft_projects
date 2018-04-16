@@ -13,10 +13,11 @@ set PROJECT = "HIPPO"
 
 ### LRT - done
 #/net/work/bin/scripts/mass_store/archAC/archAC.py UNALTERED/LRT /scr/raf/Prod_Data/HIPPO-1 nc RAF
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/HIPPO-1 .nc EOL
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/HIPPO-1 .nc /FS/EOL/2009
+#/net/work/bin/scripts/mass_store/archAC/archAC.py gv /scr/raf/Prod_Data/HIPPO-1 .asc /FS/EOL/2009
 
 ### KML - done
-/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/HIPPO-1/kml kml EOL/2009
+/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/HIPPO-1/kml/V3_20110506 kml /FS/EOL/2009
 
 ### CHAT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
