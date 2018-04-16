@@ -48,10 +48,12 @@ set PROJECT = "CSET"
 ### Preliminary ARNOLD ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/ARNOLD /scr/raf/Raw_Data/$PROJECT/field_phase/ARNOLD ict EOL/2015
 
+### Preliminary HOLODEC NetCDF concentration files
+/net/work/bin/scripts/mass_store/archAC/archAC.py holodec/H2H_NetCDF /scr/raf/Prod_Data/$PROJECT/HOLODEC/H2H/nc nc FS/EOL/2015
 
 ########################## Production Data Files ##########################
 ### LRT
-/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/version1.1 /scr/raf/Prod_Data/$PROJECT [0-9].nc EOL/2015
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/version1_2 /scr/raf/Prod_Data/$PROJECT nc FS/EOL/2015
 
 ### LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict EOL/2015
@@ -64,7 +66,7 @@ set PROJECT = "CSET"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml EOL/2015
 
 ### HRT
-/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT h.nc EOL/2015
+#/net/work/bin/scripts/mass_store/archAC/archAC.py HRT/version1_2 /scr/raf/Prod_Data/$PROJECT/HRT_V1.2 h.nc FS/EOL/2015
 
 ### HRT KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KMLh /scr/raf/Prod_Data/$PROJECT/HRT kml EOL/2015
