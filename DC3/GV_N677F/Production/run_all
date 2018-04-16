@@ -15,9 +15,14 @@ endif
 
 mkdir ${DAT}
 
-nice ./run_nimbus
+nice ./run_nimbus_hrt
 nice ./reorder_all
-nice ./run_proc2d
+#nice ./run_proc2d
+#nice ../scripts/AddWIF DC3 ${DAT}
+#nice ../scripts/AddHtTerrain DC3 ${DAT} 24 43 -106 -85 yes
+# (Yes will download the terrain ht DB for the area of interest for this
+# project. It takes forever. Change to no after first run to speed things
+# up.)
 
 kill $xvpid
 exit 0
