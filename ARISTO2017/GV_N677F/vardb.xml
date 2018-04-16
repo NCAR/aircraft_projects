@@ -2806,6 +2806,13 @@
       <dependencies>QCRC PSFC</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="MACHTF">
+      <units>none</units>
+      <long_name>Aircraft Mach Number, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <dependencies>QCTFC PSTFC</dependencies>
+      <reference>false</reference>
+    </variable>
     <variable name="MACHX">
       <units>none</units>
       <long_name>Aircraft Mach Number, Reference</long_name>
@@ -4135,7 +4142,7 @@
       <voltage_range>0 10</voltage_range>
       <default_sample_rate>100</default_sample_rate>
       <category>Uncorr'd Raw</category>
-      <derive>QCTFC</derive>
+      <derive>QCTFC TASTF MACHTF</derive>
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
@@ -4866,6 +4873,15 @@
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
       <dependencies>MACHR ATX</dependencies>
+      <standard_name>platform_speed_wrt_air</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="TASTF">
+      <units>m/s</units>
+      <long_name>Aircraft True Airspeed, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <category>Aircraft State</category>
+      <dependencies>MACHTF ATX</dependencies>
       <standard_name>platform_speed_wrt_air</standard_name>
       <reference>false</reference>
     </variable>
