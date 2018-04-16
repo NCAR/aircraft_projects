@@ -137,6 +137,24 @@
       <category>PMS Probe</category>
       <reference>false</reference>
     </variable>
+    <variable name="ACCELX">
+      <units></units>
+      <long_name>X-Axis of 3 Axis Accelerometer</long_name>
+      <is_analog>false</is_analog>
+      <reference>false</reference>
+    </variable>
+    <variable name="ACCELY">
+      <units></units>
+      <long_name>Y-Axis of 3 Axis Accelerometer</long_name>
+      <is_analog>false</is_analog>
+      <reference>false</reference>
+    </variable>
+    <variable name="ACCELZ">
+      <units></units>
+      <long_name>Z-Axis of 3 Axis Accelerometer</long_name>
+      <is_analog>false</is_analog>
+      <reference>false</reference>
+    </variable>
     <variable name="ACDP">
       <units>count</units>
       <long_name>CDP Raw Accumulation (per cell)</long_name>
@@ -395,7 +413,7 @@
       <long_name>Ambient Temperature, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
-      <dependencies>ATF1</dependencies>
+      <dependencies>ATH1</dependencies>
       <standard_name>air_temperature</standard_name>
       <reference>false</reference>
     </variable>
@@ -1017,7 +1035,7 @@
     </variable>
     <variable name="CONCU">
       <units>#/cm3</units>
-      <long_name>UHSAS Concentration (all cells)</long_name>
+      <long_name>UHSAS Ambient Concentration (all cells)</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CUHSAS</dependencies>
@@ -1025,7 +1043,7 @@
     </variable>
     <variable name="CONCU100">
       <units>#/cm3</units>
-      <long_name>UHSAS Concentration, .1 micron and bigger</long_name>
+      <long_name>UHSAS Ambient Concentration, .1 micron and bigger</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CUHSAS</dependencies>
@@ -1033,10 +1051,16 @@
     </variable>
     <variable name="CONCU500">
       <units>#/cm3</units>
-      <long_name>UHSAS Concentration, .5 micron and bigger</long_name>
+      <long_name>UHSAS Ambient Concentration, .5 micron and bigger</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CUHSAS</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="CONCUD">
+      <units>#/cm3</units>
+      <long_name>UHSAS CVI Drop Concentration (all cells)</long_name>
+      <is_analog>false</is_analog>
       <reference>false</reference>
     </variable>
     <variable name="CONCV">
@@ -1177,10 +1201,22 @@
     </variable>
     <variable name="CUHSAS">
       <units>#/cm3</units>
-      <long_name>UHSAS Concentration (per cell)</long_name>
+      <long_name>UHSAS Ambient Concentration (per cell)</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>AUHSAS UFLWC USCAT</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="CVCFACTTDL">
+      <units></units>
+      <long_name>CVI TDL Concentration Factor</long_name>
+      <is_analog>false</is_analog>
+      <reference>false</reference>
+    </variable>
+    <variable name="CVCWCC">
+      <units>g/m-3</units>
+      <long_name>CVI Cloud Condensed Water Content, Corrected</long_name>
+      <is_analog>false</is_analog>
       <reference>false</reference>
     </variable>
     <variable name="CVEW">
@@ -1195,6 +1231,12 @@
       <long_name>CMIGITS-III Ground Speed Vector, North Component</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
+      <reference>false</reference>
+    </variable>
+    <variable name="CVRHO">
+      <units>g/m-3</units>
+      <long_name>CVI Water Content, Enhanced</long_name>
+      <is_analog>false</is_analog>
       <reference>false</reference>
     </variable>
     <variable name="CVSPD">
@@ -2791,6 +2833,12 @@
       <dependencies>QCRC PSFDC</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="MACHTF">
+      <units>none</units>
+      <long_name>Aircraft Mach Number, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <reference>false</reference>
+    </variable>
     <variable name="MACHX">
       <units>none</units>
       <long_name>Aircraft Mach Number, Reference</long_name>
@@ -3892,6 +3940,23 @@
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
+    <variable name="PSTF">
+      <units>hPa</units>
+      <long_name>Raw Static Pressure, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <category>Uncorr'd Raw</category>
+      <derive>PSTFC</derive>
+      <standard_name>air_pressure</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="PSTFC">
+      <units>hPa</units>
+      <long_name>Corrected Static Pressure, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <category>Atmos. State</category>
+      <standard_name>air_pressure</standard_name>
+      <reference>false</reference>
+    </variable>
     <variable name="PSTT">
       <units>count</units>
       <long_name>PCAS Signal Transit Time</long_name>
@@ -4096,6 +4161,25 @@
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
       <dependencies>QCR PSFD QCF ATTACK</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="QCTF">
+      <units>hPa</units>
+      <long_name>Raw Dynamic Pressure, Top of Fuselage</long_name>
+      <is_analog>true</is_analog>
+      <voltage_range>0 10</voltage_range>
+      <default_sample_rate>100</default_sample_rate>
+      <category>Uncorr'd Raw</category>
+      <derive>QCTFC</derive>
+      <standard_name>air_pressure</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="QCTFC">
+      <units>hPa</units>
+      <long_name>Corrected Dynamic Pressure, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <category>Aircraft State</category>
+      <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="QCW">
@@ -4475,7 +4559,14 @@
       <long_name>Recovery Temperature, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Uncorr'd Raw</category>
-      <dependencies>RTF1</dependencies>
+      <dependencies>RTH1</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="SCANBT">
+      <units>count</units>
+      <long_name>MTP Brightness Temperatures</long_name>
+      <is_analog>false</is_analog>
+      <category>Atmos. State</category>
       <reference>false</reference>
     </variable>
     <variable name="SDWC1">
@@ -4815,6 +4906,14 @@
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
       <dependencies>MACHR ATX</dependencies>
+      <standard_name>platform_speed_wrt_air</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="TASTF">
+      <units>m/s</units>
+      <long_name>Aircraft True Airspeed, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <category>Aircraft State</category>
       <standard_name>platform_speed_wrt_air</standard_name>
       <reference>false</reference>
     </variable>
@@ -5169,7 +5268,7 @@
     </variable>
     <variable name="UFLWC">
       <units>vol cm3/s</units>
-      <long_name>UHSAS Corrected Flow</long_name>
+      <long_name>UHSAS Sample Flow at Ambient Conditions</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>USMPFLW UPRESS PSXC ATX</dependencies>
