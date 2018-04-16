@@ -6,11 +6,19 @@
 #   catcher script will be that <project> above will be the lower
 #   case version of the project name e.g. icebridge2015 not ICEBRIDGE2015
 
+# Data dir to run on gstation
+#rstudio_dir =    '/home/ads/RStudio/'
+#translate2ds = '/home/local/raf/instruments/3v-cpi/translate2ds/translate2ds '
+
+# Data dir to run on EOL servers
+rstudio_dir =    '/h/eol/ads/RStudio/'
+translate2ds = '/opt/local/bin/translate2ds '
+
 # Products - set to true if you want 'em
 nc2asc = True
 nc2iwg = False
 catalog = True
-HRT = True
+HRT =    False
 # If processing was already done, and now someone wants HRT data,
 # to avoid reprocessing LRT, regenerating plots, etc, set HRTonly to 
 # True
@@ -18,7 +26,7 @@ HRTonly = False
 
 ### NAS stuff ###
 # Do we have local SWIG RAID storage.
-NAS =            True
+NAS =     False
 # Does NAS have a permanent mount?
 NAS_permanent_mount = True
 
@@ -42,7 +50,6 @@ nas_data_dir =   nas_mnt_pt + '/data/scr_data/'
 
 ### R stuff ###
 # DataReview is in github.  https://github/WilliamCooper/DataReview.git
-rstudio_dir =   '/home/ads/RStudio/DataReview/'
 # Is Rstudio generating HTML files?
 RstudioHTML = False
 

@@ -218,7 +218,7 @@
       <long_name>Attack Angle, Radome Diff. Pressure</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>ADIFR QCF PSF</dependencies>
+      <dependencies>ADIFR QCF PSF GGALT</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="ALT">
@@ -395,7 +395,7 @@
       <long_name>Ambient Temperature, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
-      <dependencies>ATH1</dependencies>
+      <dependencies>ATH2</dependencies>
       <standard_name>air_temperature</standard_name>
       <reference>false</reference>
     </variable>
@@ -2015,6 +2015,7 @@
       <long_name>Fast Ozone Mixing Ratio</long_name>
       <is_analog>false</is_analog>
       <category>Chemistry</category>
+      <derive>FO3C</derive>
       <reference>false</reference>
     </variable>
     <variable name="FPCRC">
@@ -2165,6 +2166,15 @@
       <is_analog>false</is_analog>
       <category>Position</category>
       <dependencies>GGALT PALT GGNSAT GGSTATUS</dependencies>
+      <standard_name>altitude</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="GGALTF">
+      <units>f</units>
+      <long_name>Corrected GPS Altitude in feet</long_name>
+      <is_analog>false</is_analog>
+      <category>Position</category>
+      <dependencies>GGALT</dependencies>
       <standard_name>altitude</standard_name>
       <reference>false</reference>
     </variable>
@@ -4449,7 +4459,7 @@
       <long_name>Recovery Temperature, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Uncorr'd Raw</category>
-      <dependencies>RTH1</dependencies>
+      <dependencies>RTH2</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="SDWC1">
@@ -5654,7 +5664,6 @@
       <long_name>Corrected GPS Altitude in feet</long_name>
       <is_analog>false</is_analog>
       <category>Position</category>
-      <dependencies>GGALT</dependencies>
       <standard_name>altitude</standard_name>
       <reference>false</reference>
     </variable>

@@ -18,10 +18,10 @@ set PROJECT = "ORCAS"
 ########################## Preliminary Data Files ##########################
 ### Preliminary LRT - done
 #/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc EOL/2016
-#/net/work/bin/scripts/mass_store/archAC/archAC.py PRELIMINARY/LRT /scr/raf_data/WINTER nc EOL/2016
+#/net/work/bin/scripts/mass_store/archAC/archAC.py preliminary/LRT /scr/raf/Raw_Data/$PROJECT/preliminary/LRT nc EOL/2016
 
 ### Preliminary LRT ICT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT/icartt asc EOL/2016
+#/net/work/bin/scripts/mass_store/archAC/archAC.py preliminary/ICARTT /scr/raf/Raw_Data/$PROJECT/preliminary/icartt asc EOL/2016
 
 ### Preliminary KML - done
 #/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/KML /scr/raf/Raw_Data/$PROJECT/field_phase/LRT/kml ff02.kml EOL/2016
@@ -56,17 +56,17 @@ set PROJECT = "ORCAS"
 
 ########################## Production Data Files ##########################
 ### LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc EOL/2016
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT Z.nc EOL/2016
+
+### KML
+#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml EOL/2016
 
 ### LRT ICT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict EOL/2016
+/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT asc EOL/2016
 
 ### PMS2D
 #/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d EOL/2016
 
-
-### KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml EOL/2016
 
 ### HRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc EOL/2016

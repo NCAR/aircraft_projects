@@ -40,8 +40,6 @@ from email.mime.text import MIMEText
 #  TODO: project should be pulled from environment variable(?)
 
 project =        'ORCAS'
-data_dir =       '/home/data/'
-rstudio_dir =    '/home/ads/RStudio/'
 
 # Instruments, true or false depending on if instrument is on project
 threeVCPI =      'false'
@@ -74,12 +72,8 @@ raircraft      = 'aircraft.NSF_NCAR_GV.'
 
 # Products set to true if you want 'em
 nc2asc = 'true'
-nc2ascBatch = '/home/local/projects/ORCAS/GV_N677F/scripts/ascii.bat'
 
 nc2iwg = 'false'
-
-translate2ds = '/home/local/raf/instruments/3v-cpi/translate2ds/translate2ds '
-twods_aircraft = 'GV_N677F'
 
 catalog = 'false'
 # ******************  End of Modification Section ****************
