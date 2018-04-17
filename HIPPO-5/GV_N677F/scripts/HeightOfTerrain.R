@@ -3,22 +3,23 @@
 writeLines("This script must be run from barolo as libraries aren't currently installed elsewhere")
 
 args <- commandArgs(trailingOnly = TRUE)
-Directory <- "/scr/raf/Prod_Data/"
 TdbData <- "/h/eol/janine/Rstudio/HeightOfTerrain/TerrainData"
 
-if (length(args) == 7) {
+if (length(args) == 8) {
    print("Using values from command line")
    Project = args[1] ## project name in caps
    Flight <- args[2] ##rfxx
-   lt_s <- args[3]
-   lt_n <- args[4]
-   lg_w <- args[5]
-   lg_e <- args[6]
-   Tdb <- args[7]
+   Directory <- args[3]
+   lt_s <- args[4]
+   lt_n <- args[5]
+   lg_w <- args[6]
+   lg_e <- args[7]
+   Tdb <- args[8]
 } else if (length(args) == 0) {
    print("Using hardcoded values. Don't forget to change lat/lon!")
    Flight <- "rf01" 		
    Project = "DEEPWAVE"	
+   Directory <- "/scr/raf/Prod_Data/$Project"
    #range for DEEPWAVE
    lt_s <- -60
    lt_n <- -20 
@@ -48,7 +49,7 @@ require(sm)
 require(plyr)
 require(ncdf4)
 require(maps)
-fname = sprintf("%s%s/%s%s.nc", Directory, Project, Project, Flight)
+fname = sprintf("%s/%s%s.nc", Directory,Project, Flight)
 SaveRData <- sprintf("%s.Rdata.gz", thisFileName)
 print(sprintf("Processing %s %s",fname,Tdb))
 
@@ -193,8 +194,8 @@ HeightOfTerrain <- function (.lat, .long) {
 
 ## ----add-variables-to-netCDF-file, echo=TRUE, include=TRUE---------------
 
-fname <- sprintf("%s%s/%s%s.nc", Directory, Project, Project, Flight)
-fnew <- sprintf("%s%s/%s%sZ.nc", Directory, Project, Project, Flight) 
+fname <- sprintf("%s/%s%s.nc", Directory, Project, Flight)
+fnew <- sprintf("%s/%s%sZ.nc", Directory, Project, Flight) 
 print(sprintf("Copy file %s to %s",fname,fnew))
 # copy file to avoid changing original: note 'Z' in new file name
 file.copy (fname, fnew, overwrite=TRUE)   #careful: will overwrite 'Z' file
@@ -223,7 +224,7 @@ SFC[is.na(SFC)] <- 0      # replace missing values with zero; mostly ocean pts
 ALTG <- Data$GGALT - SFC 
 Data["SFC_SRTM"] <- SFC   # add new variable to data.frame
 Data["ALTG_SRTM"] <- ALTG
-SaveRData <- "NOMADSSterrain.Rdata.gz"
+SaveRData <- "terrain.Rdata.gz"
 # comment one of these
 save(Data, file=SaveRData, compress="gzip")
 # load(file=SaveRData)
