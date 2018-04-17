@@ -224,7 +224,7 @@ SFC[is.na(SFC)] <- 0      # replace missing values with zero; mostly ocean pts
 ALTG <- Data$GGALT - SFC 
 Data["SFC_SRTM"] <- SFC   # add new variable to data.frame
 Data["ALTG_SRTM"] <- ALTG
-SaveRData <- "NOMADSSterrain.Rdata.gz"
+SaveRData <- "terrain.Rdata.gz"
 # comment one of these
 save(Data, file=SaveRData, compress="gzip")
 # load(file=SaveRData)
