@@ -9,28 +9,41 @@
 set PROJECT = "SOCRATES"
 
 ### ADS
-#/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads FS/EOL/2018
 
 ### CAMERA - RUN THIS LINE FROM /scr/raf/Raw_Data/ so temp files will go
-### there and not fill up /net/jlocal
-#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg EOL/2018
+# there and not fill up /net/jlocal
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_ff01/ jpg FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_ff02/ jpg FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_ff03/ jpg FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_ff04/ jpg FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_ff05/ jpg FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_ff06/ jpg FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_ff07/ jpg FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_ff08/ jpg FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_ff09/ jpg FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_ff10/ jpg FS/EOL/2018
 
 ########################## Preliminary Data Files ##########################
 ### Preliminary LRT 
-#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc EOL/2018
-#/net/work/bin/scripts/mass_store/archAC/archAC.py preliminary/LRT /scr/raf/Raw_Data/$PROJECT/preliminary/LRT nc EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc FS/EOL/2018
 
 ### Preliminary LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py preliminary/ICARTT /scr/raf/Raw_Data/$PROJECT/preliminary/icartt asc EOL/2018
 
 ### Preliminary KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/KML /scr/raf/Raw_Data/$PROJECT/field_phase/LRT/kml ff02.kml EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/KML /scr/raf/Raw_Data/$PROJECT/field_phase/LRT/KML kml FS/EOL/2018
 
 ### Preliminary HRT 
-#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/HRT /scr/raf/Raw_Data/$PROJECT/field_phase/HRT nc EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/HRT /scr/raf/Raw_Data/$PROJECT/field_phase/HRT nc FS/EOL/2018
+
+
+### Preliminary SRT 
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/SRT /scr/raf/Raw_Data/$PROJECT/field_phase/SRT nc FS/EOL/2018
+
 
 ### Preliminary HRT KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/KMLh /scr/raf/Raw_Data/$PROJECT/field_phase/HRT kml EOL/2018
+/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/KMLh /scr/raf/Raw_Data/$PROJECT/field_phase/HRT/kml kml FS/EOL/2018
 
 ### Preliminary CO ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/CO /scr/raf/Raw_Data/$PROJECT/field_phase/CO ict EOL/2018
@@ -62,10 +75,10 @@ set PROJECT = "SOCRATES"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml EOL/2018
 
 ### LRT ICT
-/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT asc EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT asc EOL/2018
 
 ### PMS2D
-#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/2018
 
 
 ### HRT
