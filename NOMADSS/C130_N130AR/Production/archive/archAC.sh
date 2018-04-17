@@ -6,7 +6,7 @@
 ###############
 #   Project   #
 ###############
-set PROJECT = "NOMADSS"
+set PROJECT = "SAS_NOMADSS"
 
 ### ADS
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads EOL
@@ -25,7 +25,7 @@ set PROJECT = "NOMADSS"
 
 
 ### LRT
-/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT/ nc EOL/2013
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1.1_20170516 /scr/raf/Prod_Data/$PROJECT/ nc FS/EOL/2013
 
 ### KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml EOL
