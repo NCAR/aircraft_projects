@@ -6,14 +6,22 @@
 
 import urllib
 import urllib2
+import platform
 
 nasaResp = urllib2.urlopen("http://asp2.arc.nasa.gov/dashlite/dash.php?ACTION=FETCH_LAST_POS&CALLSIGN=NASA426")
 
 sRes = nasaResp.read()
 aIWG = sRes.split(",")
 
-P3_kml_file = '/var/www/html/flight_data/GE/P3_current_pos.kml'
+
 #P3_kml_file = './P3_current_pos.new.kml'
+host = platform.node()
+if (host.find("acserver") >= 0):
+    P3_kml_file = '/var/www/html/flight_data/GE/P3_current_pos.kml'
+else:
+    P3_kml_file = '/net/www/docs/flight_data/C130/GE/P3_current_pos.kml'
+
+print "P3_kml_file =" + P3_kml_file
 
 dt_tm = aIWG[1].split("T")
 time =  dt_tm[1]
@@ -37,7 +45,10 @@ with open (P3_kml_file, "w") as kml_file:
     kml_file.write('  <IconStyle>\n')
     kml_file.write('   <scale>0.8</scale>\n')
     kml_file.write('   <Icon>\n')
-    kml_file.write('    <href>http://acserver.raf.ucar.edu/flight_data/display/blackplane.png</href>\n')
+    if (host.find("acserver") >= 0):
+        kml_file.write('    <href>http://acserver.raf.ucar.edu/flight_data/display/blackplane.png</href>\n')
+    else:
+        kml_file.write('    <href>http://www.eol.ucar.edu/flight_data/display/blackplane.png</href>\n')
     kml_file.write('   </Icon>\n')
     kml_file.write('  </IconStyle>\n')
     kml_file.write(' </Style>\n')

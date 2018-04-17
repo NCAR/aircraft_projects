@@ -40,7 +40,8 @@ except:
 plane,tail = aircraft.split("_",1)
 
 # Initialization - change this for different file types/names/locations.
-local_image_dir  = '/var/www/html/flight_data/GE/'
+#local_image_dir  = '/var/www/html/flight_data/GE/'
+local_image_dir  = '/tmp/FRAPPE/MCD'
 image_type       = plane+'_cdphe_ozone'
 busy_file        = 'BUSY_'+image_type
 ftp_site         = 'catalog.eol.ucar.edu'
