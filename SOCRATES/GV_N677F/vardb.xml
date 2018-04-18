@@ -1927,7 +1927,7 @@
       <long_name>D-VALUE (GGALT - PALT)</long_name>
       <is_analog>false</is_analog>
       <category>Position</category>
-      <dependencies>GGALT PALT</dependencies>
+      <dependencies>GEOPTH PALT</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="EDPC">
@@ -2234,12 +2234,21 @@
       <standard_name>altitude</standard_name>
       <reference>false</reference>
     </variable>
+    <variable name="GEOPTH">
+      <units>m</units>
+      <long_name>Geopotential height [MSL]</long_name>
+      <is_analog>false</is_analog>
+      <category>Position</category>
+      <dependencies>GGALT GGLAT GGEOIDHT</dependencies>
+      <standard_name>altitude</standard_name>
+      <reference>false</reference>
+    </variable>
     <variable name="GGALT">
       <units>m</units>
       <long_name>GPS Geopotential Altitude</long_name>
       <is_analog>false</is_analog>
       <category>Position</category>
-      <derive>DVALUE</derive>
+      <derive>GEOPTH DVALUE</derive>
       <standard_name>altitude</standard_name>
       <reference>false</reference>
     </variable>
