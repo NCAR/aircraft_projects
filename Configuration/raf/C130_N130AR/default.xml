@@ -214,7 +214,7 @@
         <variable longname="cross hdg accel" name="cross_hdg_accel" units="G"/>
       </sample>
     </arincSensor>
-    <arincSensor ID="ADC-GV" class="raf.ADC_HW_EB7022597" speed="low">
+    <arincSensor ID="ADC" class="raf.ADC_HW_EB7022597" speed="low">
 
 <!-- 
             Taken from the Honeywell Engineering Specification A.4.1 spec. no. 
@@ -1577,20 +1577,12 @@
               <calfile file="RTH2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
-            <parameter name="channel" type="int" value="0"/>
+          <variable longname="Radiometric Surface Temperature" name="TRSTB" units="V">
+            <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="deg_C">
-              <calfile file="RSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="deg_C">
-              <calfile file="RSTB1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            <poly units="V">
+              <calfile file="TRSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
@@ -1647,8 +1639,8 @@
           </variable>
         </sample>
       </arincSensor>
-      <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-      <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A"/>
+      <arincSensor IDREF="ADC" devicename="/dev/arinc2" id="3000" suffix="_A"/>
+      <arincSensor IDREF="GPS" devicename="/dev/arinc3" id="4000" suffix="_A"/>
       <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
         <sample id="5" rate="25">
           <variable longname="Altitude above ground (radar altimeter)" name="HGM232" units="feet"/>
@@ -1697,8 +1689,8 @@
           </variable>
         </sample>
       </arincSensor>
-      <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
-      <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A2"/>
+      <arincSensor IDREF="ADC" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
+      <arincSensor IDREF="GPS" devicename="/dev/arinc3" id="4000" suffix="_A2"/>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="110" suffix="_DPT"/>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS6" id="120">
         <sample id="1">
@@ -1832,12 +1824,20 @@
               <calfile file="XUVI.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="Radiometric Surface Temperature" name="TRSTB" units="V">
-            <parameter name="channel" type="int" value="4"/>
+          <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
+            <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-              <calfile file="TRSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            <poly units="deg_C">
+              <calfile file="RSTB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Radiometric Surface Temperature" name="RSTB1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="deg_C">
+              <calfile file="RSTB1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
