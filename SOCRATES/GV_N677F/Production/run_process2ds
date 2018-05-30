@@ -5,7 +5,7 @@ setenv DAT ${DATA_DIR}/SOCRATES
 
 cd ${RAW_DATA_DIR}/SOCRATES/2DS
 
-foreach file ([RTF]F*/*.2d)
+foreach file ([RF]F*/*.2d)
     set flight=`echo $file | sed 's/\/.*$//' | tr "[:upper:]" "[:lower:]"`
-    process2d ${RAW_DATA_DIR}/SOCRATES/2DS/$file -o ${DAT}/SOCRATES${flight}2ds.nc
+    process2d ${RAW_DATA_DIR}/SOCRATES/2DS/$file -o ${DAT}/SOCRATES${flight}.nc
 end
