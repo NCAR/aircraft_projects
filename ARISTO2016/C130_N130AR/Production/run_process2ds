@@ -1,0 +1,11 @@
+#!/bin/csh
+
+setenv DAT /scr/raf/local_productiondata/ARISTO2016
+
+
+cd ${RAW_DATA_DIR}/ARISTO2016/2DS
+
+foreach file ([RF]F*/*.2d)
+    set flight=`echo $file | sed 's/\/.*$//' | tr "[:upper:]" "[:lower:]"`
+    process2d ${RAW_DATA_DIR}/ARISTO2016/2DS/$file -o ${DAT}/ARISTO2016${flight}.nc
+end

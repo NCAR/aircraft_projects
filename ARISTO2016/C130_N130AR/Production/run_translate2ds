@@ -1,0 +1,23 @@
+#!/bin/csh
+
+#cd ${RAW_DATA_DIR}/ARISTO2016/2DS
+
+#foreach file ([RF]*/*)
+#    set flight=`echo $file | sed 's/\/.*$//'`
+#    translate2ds -flight $flight -project ARISTO2016 -platform C130_N130AR -sn SPEC001 -f $file
+#    set outfile=`echo $file | sed 's/.2DS/.2d/'`
+#    set twodfile=`echo $outfile | sed 's/^.*\///'`
+#    mv $twodfile $outfile
+#end
+
+
+cd ${RAW_DATA_DIR}/ARISTO2016/3VCPI
+
+foreach file ([RF]*/*)
+    set flight=`echo $file | sed 's/\/.*$//'`
+    translate2ds -flight $flight -project ARISTO2016 -platform C130_N130AR -sn SPEC001 -f $file
+    set outfile=`echo $file | sed 's/.2DS/.2d/'`
+    set twodfile=`echo $outfile | sed 's/^.*\///'`
+    mv $twodfile $outfile
+end
+
