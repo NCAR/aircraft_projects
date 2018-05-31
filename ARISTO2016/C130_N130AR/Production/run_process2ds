@@ -9,3 +9,10 @@ foreach file ([RF]F*/*.2d)
     set flight=`echo $file | sed 's/\/.*$//' | tr "[:upper:]" "[:lower:]"`
     process2d ${RAW_DATA_DIR}/ARISTO2016/2DS/$file -o ${DAT}/ARISTO2016${flight}.nc
 end
+
+cd ${RAW_DATA_DIR}/ARISTO2016/3VCPI
+
+foreach file ([RF]F*/*.2d)
+    set flight=`echo $file | sed 's/\/.*$//' | tr "[:upper:]" "[:lower:]"`
+    process2d ${RAW_DATA_DIR}/ARISTO2016/3VCPI/$file -o ${DAT}/ARISTO2016${flight}.nc
+end
