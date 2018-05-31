@@ -167,7 +167,7 @@
         <sample id="0205" rate="8"><variable name="MACH" units="none" longname="ADC Mach Number"/></sample>
         <sample id="0206" rate="8"><variable name="CAS" units="m/s" longname="ADC Computed Air Speed"/></sample>
         <sample id="0210" rate="16"><variable name="TAS" units="m/s" longname="ADC True Air Speed"/></sample>
-        <sample id="0211" rate="2"><variable name="TT" units="deg_C" longname="ADC Total Air Temperature"/></sample>
+        <sample id="0211" rate="2"><variable name="RT" units="deg_C" longname="ADC Total Air Temperature"/></sample>
         <sample id="0213" rate="2"><variable name="AT" units="deg_C" longname="ADC Ambient Air Temperature"/></sample>
         <sample id="0215" rate="8"><variable name="QC" units="hPa" longname="ADC Impact Pressure"/></sample>
         <sample id="0217" rate="8"><variable name="PS" units="hPa" longname="ADC Static Pressure"/></sample>
@@ -325,9 +325,12 @@
         <message separator="\xff\x81" position="beg" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="DewPointer" class="DSMSerialSensor"
-        baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="%f,%f,%*f,%*f,%f" rate="1"/>
+    <serialSensor ID="DewPointer" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
+        <sample id="1" rate="1" scanfFormat="%f,%f,%*f,%*f,%f">
+            <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+            <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="deg_C"/>
+            <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
+        </sample>
         <message separator="\n" position="end" length="0"/>
     </serialSensor>
 
@@ -837,7 +840,7 @@
             </sample>
         </sensor>
 
-        <socketSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="200" timeout="600">
+        <serialSensor class="raf.PSI9116_Sensor" devicename="inet:psi9116:9000" id="200" timeout="600">
             <sample id="1" rate="10">
                 <variable name="PSCAN_0" units="hPa" longname="Pressure Scanner dynamic pressure, port 0" length="1"/>
                 <variable name="PSCAN_1" units="hPa" longname="Pressure Scanner dynamic pressure, port 1" length="1"/>
@@ -853,7 +856,7 @@
                 <variable name="PSCAN_11" units="hPa" longname="Pressure Scanner dynamic pressure, port 11" length="1"/>
             </sample>
             <message separator="\x01" position="beg" length="52"/>
-        </socketSensor>
+        </serialSensor>
 
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
@@ -863,27 +866,8 @@
     <dsm name="dsm320" location="Fwd_FS245_1" id="20" rserialPort="30002" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="320"/>
 
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130">
-            <sample id="1">
-                <variable name="DPTB" units="unk" longname="Dew/Frost Point Balance, Fuselage Top">
-                    <linear slope="1.0" intercept="0.0" units="unk"/>
-                </variable>
-                <variable name="DPT" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Top">
-                    <linear slope="1.0" intercept="-1.8" units="deg_C"/>
-                </variable>
-                <variable name="DPTTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Top"/>
-            </sample>
-        </serialSensor>
-
-        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="140">
-            <sample id="1">
-                <variable name="DPBB" units="unk" longname="Dew/Frost Point Balance, Fuselage Bottom"/>
-                <variable name="DPB" units="deg_C" longname="Dew/Frost Point Temperature, Fuselage Bottom">
-                    <linear slope="1.0" intercept="-1.5" units="deg_C"/>
-                </variable>
-                <variable name="DPBTEC" units="unk" longname="Dew/Frost Point TEC, Fuselage Bottom"/>
-            </sample>
-        </serialSensor>
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS5" id="130" suffix="_DPT"/>
+        <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="140" suffix="_DPB"/>
 
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS7" id="150">
             <sample id="1">
@@ -921,7 +905,7 @@
                     <parameter name="gain"     value="1"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
                     <poly coefs="-0.098 5.1373 8.3231e-05" units="hPa"/>
                 </variable>
-                <variable name="TTRR" units="V" longname="Total Temperature, Radome Right">
+                <variable name="RTF1" units="V" longname="Total Temperature, Radome Right">
                     <parameter name="channel" value="5" type="int"/>
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-68.309 27.092 -0.4413" units="deg_C"/>
@@ -1160,7 +1144,7 @@
             <sample id="1" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
-                <variable name="XTTWH" units="V" longname="Total Temperature, Deiced Wing">
+                <variable name="XRTWH" units="V" longname="Total Temperature, Deiced Wing">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-69.925 28.126 -0.416" units="deg_C"/>
                 </variable>
@@ -1183,7 +1167,7 @@
             <sample id="3" rate="100">
                 <parameter name="filter" value="boxcar" type="string"/>
                 <parameter name="numpoints" value="5" type="int"/>
-                <variable name="TTWH" units="V" longname="Total Temperature, Deiced Wing">
+                <variable name="RTWH" units="V" longname="Total Temperature, Deiced Wing">
                     <parameter name="gain"     value="4"       type="float"/> <parameter name="bipolar"      value="false"      type="bool"/>
                     <poly coefs="-68.485 28.126 -0.416" units="deg_C"/>
                 </variable>
