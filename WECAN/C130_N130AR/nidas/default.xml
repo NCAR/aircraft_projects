@@ -1148,7 +1148,6 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-
     <serialSensor ID="PIC_H2O" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PICCU">
       <sample id="1" rate="5" scanfFormat="%*f %f %f %f %*d %*f">
         <variable longname="Picarro Water Mixing Ratio" name="H2O" units="ppmv"/>
@@ -1885,62 +1884,40 @@
         <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="10"/>
-          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LPB" units="V">
+          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LPC" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_LPB" units="V">
+          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_LPC" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LPB" units="V">
+          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LPC" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
           </variable>
-        </sample>
-      </sensor>
+          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LPO" units="V">
+            <parameter name="channel" type="int" value="8"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_LPO" units="V">
+            <parameter name="channel" type="int" value="9"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LPO" units="V">
+            <parameter name="channel" type="int" value="10"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+          </variable>
+        </sample></sensor>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="700">
-        <calfile file="A2D003.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
-        <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_3221" units="deg_C"/>
-        </sample>
-        <sample id="2" rate="10">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LPO" units="V">
-            <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_LPO" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO32.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LPO" units="V">
-            <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO64.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-        </sample>
-      </sensor>
       <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="900" suffix="_LPO">
         <parameter name="SerialNumber" type="string" value="F2DC003"/>
         <parameter name="RESOLUTION" type="int" value="25"/>
@@ -1968,7 +1945,6 @@
           </variable>
         </sample>
       </sensor>
-
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="400">
         <calfile file="A2D018.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
