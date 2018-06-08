@@ -13,7 +13,7 @@ for ((i = 0; ; i++)); do
   then
     echo "Checking for flight number change"
     FLIGHT_NUM=`psql -c "SELECT value from global_attributes where key='FlightNumber' " -h acserver.raf.ucar.edu -d real-time -U ads -t | tr -d " " | head -1`
-    IMAGE_DIR="/var/r1/camera_images/flight_number_$FLIGHT_NUM/forward"
+    IMAGE_DIR="/var/r1/$PROJECT/camera_images/flight_number_$FLIGHT_NUM/forward"
   fi
 
   curr=`ls -t $IMAGE_DIR | head -n 1`
