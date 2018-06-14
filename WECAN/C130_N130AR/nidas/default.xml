@@ -1162,19 +1162,9 @@
       Unfortunately, it does not tag these values and does not guarentee delivery of the values in the same
       order as requested.  We have chosen to offer only the Raw CO value and figure out MR
       as a derived variable.  Look at older versions of this file in svn for info.
-      There are two AeroLaser instruments, one purchased in 2000 and the other in 2005
+      There are two AeroLaser instruments, one purchased in 2000 and the other in 2005. The 2000 model was retired
+      so has been removed from the sensor catalog. See old versions of this file in svn for info on it.
 -->
-    <serialSensor ID="CO_2000" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_AL">
-      <sample id="1" scanfFormat="%f">
-        <variable longname="AeroLaser (2000) Carbon Monoxide Raw Signal" name="CORAW" units="V">
-          <linear units="ppbv">
-            <calfile file="CORAW.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Instruments/Aero2000:${PROJ_DIR}/Configuration/raf/cal_files/Instruments/Aero2000"/>
-          </linear>
-        </variable>
-      </sample>
-      <prompt rate="5" string="SIG?\r"/>
-      <message length="0" position="end" separator="\r"/>
-    </serialSensor>
     <serialSensor ID="CO_2005" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_AL">
       <sample id="1" scanfFormat="%f">
         <variable longname="Aerolaser (2005) Carbon Monoxide Raw Signal" name="CORAW" units="V">
@@ -1185,6 +1175,23 @@
       </sample>
       <prompt rate="5" string="SIG?\r"/>
       <message length="0" position="end" separator="\r"/>
+    </serialSensor>
+
+<!-- Aerodyne Research, Inc Mini 108 CO-N2O instrument. First flown 2018
+-->
+    <serialSensor ID="CON2O" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_ARI">
+      <sample id="1" scanfFormat="%f %f %f %f %f %f %*f %*f %*f %f %f">
+	      <variable longname="Aerodyne Research Inc Mini 108 Igor Pro time" name="IgorTime" units="s"/>
+	      <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2O" units="ppbv"/>
+	      <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="CO" units="ppbv"/>
+	      <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2OA" units="ppbv"/>
+	      <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="COA" units="ppbv"/>
+	      <variable longname="Aerodyne Research Inc Mini 108 Water Mixing Ratio" name="H2O" units="ppbv"/>
+	      <variable longname="Aerodyne Research Inc Mini 108 Temperature" name="T" units="C"/>
+	      <variable longname="Aerodyne Research Inc Mini 108 Pressure" name="P" units="hPa"/>
+      </sample>
+      <prompt rate="5" string="SIG?\r"/>
+      <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
 <!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
@@ -2033,7 +2040,7 @@
         <parameter name="SerialNumber" type="string" value="260X06"/>
         <parameter name="RESOLUTION" type="int" value="10"/>
       </serialSensor>
-      <serialSensor IDREF="CO_2005" devicename="/dev/ttyS7" id="1200" suffix="_AL"/>
+      <serialSensor IDREF="CON2O" devicename="/dev/ttyS7" id="1200" suffix="_ARI"/>
     </dsm>
     <dsm derivedData="sock::7071" id="25" location="Right Wing Pod DSM" name="dsm325" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_325"/>
