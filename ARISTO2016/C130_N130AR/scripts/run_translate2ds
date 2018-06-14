@@ -1,0 +1,26 @@
+#!/bin/csh
+
+cd ${RAW_DATA_DIR}/ARISTO2016/2DS
+# The date for RF05 is ahead by 2016 hours. Fix here.
+translate2ds -flight RF05 -project ARISTO2016 -platform C130_N130AR -sn SPEC001 -offset -2016 -f RF05/*2DS
+
+# Now process the rest of the flights.
+foreach file ([RF0][3|4|6]/*2DS)
+    set flight=`echo $file | sed 's/\/.*$//'`
+    translate2ds -flight $flight -project ARISTO2016 -platform C130_N130AR -sn SPEC001 -f $file
+    set outfile=`echo $file | sed 's/.2DS/.2d/'`
+    set twodfile=`echo $outfile | sed 's/^.*\///'`
+    mv $twodfile $outfile
+end
+
+
+cd ${RAW_DATA_DIR}/ARISTO2016/3VCPI
+
+foreach file ([RF]*/*2DSCPI)
+    set flight=`echo $file | sed 's/\/.*$//'`
+    translate2ds -flight $flight -project ARISTO2016 -platform C130_N130AR -sn SPEC001 -f $file
+    set outfile=`echo $file | sed 's/.2DSCPI/.2d/'`
+    set twodfile=`echo $outfile | sed 's/^.*\///'`
+    mv $twodfile $outfile
+end
+
