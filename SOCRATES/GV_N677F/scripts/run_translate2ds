@@ -2,7 +2,11 @@
 
 cd ${RAW_DATA_DIR}/SOCRATES/2DS
 
-foreach file ([RTF]*/*)
+#TF01 was recorded in local time. Fix time when processing
+translate2ds -flight TF01 -project SOCRATES -platform GV_N677F -sn SPEC001 -offset 7 -f base180102124417.2DS
+
+# Now process all the other flights
+foreach file (TF02/*2DS [RF]*/*2DS)
     set flight=`echo $file | sed 's/\/.*$//'`
     translate2ds -flight $flight -project SOCRATES -platform GV_N677F -sn SPEC001 -f $file
     set outfile=`echo $file | sed 's/.2DS/.2d/'`
