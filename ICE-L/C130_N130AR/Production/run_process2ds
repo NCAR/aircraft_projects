@@ -1,0 +1,17 @@
+#!/bin/csh
+
+setenv DAT ${DATA_DIR}/ICE-L
+
+# For RF05 and RF06, the 2DS code was in local time. 
+
+cd ${RAW_DATA_DIR}/ICE-L/2DS/merged
+
+foreach file ([RTF]F*/*.2d)
+    set flight=`echo $file | sed 's/\/.*$//' | tr "[:upper:]" "[:lower:]"`
+    if $flight == 'RF05' or $flight == 'RF06'
+      # Add option for UTC offset
+      process2d ${RAW_DATA_DIR}/ICE-L/2DS/merged/$file -o ${DAT}/ICE-L${flight}2ds.nc
+    else
+      process2d ${RAW_DATA_DIR}/ICE-L/2DS/merged/$file -o ${DAT}/ICE-L${flight}2ds.nc
+    endif
+end

@@ -1,0 +1,17 @@
+#!/bin/csh
+
+cd ${RAW_DATA_DIR}/ICE-L/2DS/merged
+
+# Flights RF05 and RF08 were recorded 7 hours offset from UTC. Fix here.
+translate2ds -flight RF05 -project ICE-L -platform C130_N130AR -offset -7 -sn SPEC001 -f $file
+translate2ds -flight RF08 -project ICE-L -platform C130_N130AR -offset -7 -sn SPEC001 -f $file
+
+# Process remaining flights normally.
+foreach file ([RT]F[1-4]*/*2DS)
+    set flight=`echo $file | sed 's/\/.*$//'`
+    translate2ds -flight $flight -project ICE-L -platform C130_N130AR -sn SPEC001 -f $file
+    set outfile=`echo $file | sed 's/.2DS/.2d/'`
+    set twodfile=`echo $outfile | sed 's/^.*\///'`
+    mv $twodfile $outfile
+end
+
