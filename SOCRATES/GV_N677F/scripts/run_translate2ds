@@ -3,7 +3,8 @@
 cd ${RAW_DATA_DIR}/SOCRATES/2DS
 
 #TF01 was recorded in local time. Fix time when processing
-translate2ds -flight TF01 -project SOCRATES -platform GV_N677F -sn SPEC001 -offset 7 -f base180102124417.2DS
+translate2ds -flight TF01 -project SOCRATES -platform GV_N677F -sn SPEC001 -offset 7 -f TF01/base180102124417.2DS
+mv base180102124417.2d TF01/.
 
 # Now process all the other flights
 foreach file (TF02/*2DS [RF]*/*2DS)
