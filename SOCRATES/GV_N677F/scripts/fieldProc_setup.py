@@ -18,7 +18,7 @@ translate2ds = '/opt/local/bin/translate2ds '
 nc2asc = False
 nc2iwg = False
 catalog = True
-HRT =    False
+HRT =    True
 # If processing was already done, and now someone wants HRT data,
 # to avoid reprocessing LRT, regenerating plots, etc, set HRTonly to 
 # True
@@ -51,7 +51,7 @@ nas_data_dir =   nas_mnt_pt + '/data/SOCRATES/scr_data/'
 ### R stuff ###
 # The Rstudio shiny app is in the repository: https://github.com/WilliamCooper/QAtools 
 # Should this script launch the QAtools shiny app?
-Rstudio = True
+Rstudio = False
 
 ### Instrument specific processing ###
 # - true or false depending on if instrument is on project.
