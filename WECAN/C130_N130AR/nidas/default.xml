@@ -1297,7 +1297,6 @@
         <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
       </sample>
     </sensor>
-
     <sensor ID="Fast2DP" class="raf.TwoD64_USB">
         <parameter name="TAS_RATE" type="int" value="10"/>
         <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
@@ -1642,6 +1641,14 @@
               <calfile file="RTH1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
+          <variable longname="Cabin Temperature Middle at L6 Rack Location" name="TCABM_L6" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="deg_C">
+              <calfile file="TCAB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
         </sample>
       </sensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="220">
@@ -1862,18 +1869,18 @@
               <calfile file="XCELLPRES.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
+          <variable longname="Cabin Temperature Forward at L1 Rack Location" name="TCABF_L1" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="deg_C">
+              <calfile file="TCAB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
         </sample>
         <sample id="3" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH2" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="RTH2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
           <variable longname="UV Hygrometer Absorption Cell Temperature" name="XCELLTEMP_UVH" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="1"/>
@@ -1888,6 +1895,14 @@
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="Deg_C">
               <calfile file="XSIGV.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH2" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="deg_C">
+              <calfile file="RTH2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
@@ -2048,6 +2063,14 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="">
               <calfile file="INLETP_AL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Cabin Temperature Aft at L8 Rack Location" name="TCABA_R8" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="deg_C">
+              <calfile file="TCAB.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
