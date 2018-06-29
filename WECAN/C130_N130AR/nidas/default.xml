@@ -1177,6 +1177,14 @@
       <message length="0" position="end" separator="\r"/>
     </serialSensor>
 
+    <sensor ID="PAN-CIMS" class="UDPSocketSensor" devicename="usock::30126" suffix="_PAN">
+        <sample id="1" rate="1" scanfFormat="PAN-CIMS,%*fT%*f,%f,%f,%f">
+            <variable longname="Peroxy-acetyl-nitrate" name="PAN" units="pptv"/>
+            <variable longname="Peroxy-propionyl-nitrate" name="PPN" units="pptv"/>
+            <variable longname="PAN Calibration Signal" name="CAL" units="counts"/>
+        </sample>
+    </sensor>
+
 <!-- Aerodyne Research, Inc Mini 108 CO-N2O instrument. First flown 2018
 -->
     <serialSensor ID="CON2O" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_ARI">
@@ -1605,6 +1613,7 @@
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
+      <sensor IDREF="PAN-CIMS" devicename="usock::30126" id="1700"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
