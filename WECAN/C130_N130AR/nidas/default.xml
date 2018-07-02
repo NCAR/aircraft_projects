@@ -1117,34 +1117,15 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-    <serialSensor ID="PIC2401_CO2" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_NOAA">
-      <sample id="1" rate="1" scanfFormat="%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
-        <variable longname="Picarro Epoch Time" name="EPOCH" units="seconds">
+    <serialSensor ID="PIC2401_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC2401">
+      <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %*f %*f">
+        <!--variable longname="Picarro Epoch Time" name="EPOCH" units="seconds">
           <linear intercept="-1452000000" slope="1.0" units="seconds"/>
-        </variable>
-        <variable longname="Picarro Date" name="DATE" units="yymmdd"/>
-        <variable longname="Picarro Time" name="TIME" units="hhmmss"/>
-        <variable longname="Picarro Ambient Pressure" name="PS" units="torr"/>
-        <variable longname="Picarro Cavity Pressure" name="CAVP" units="torr"/>
-        <variable longname="Picarro Cavity Temperature" name="CAVT" units="deg_C"/>
-        <variable longname="Picarro Das Temperature" name="DAST" units="deg_C"/>
-        <variable longname="Picarro Etalon Temperature" name="ETALONT" units="deg_C"/>
-        <variable longname="Picarro Warm Box Temperature" name="WBOXT" units="deg_C"/>
-        <variable longname="Picarro Species" name="SPECIES" units=""/>
-        <variable longname="Picarro MPV Position" name="MPVPOS" units=""/>
-        <variable longname="Picarro Inlet Valve" name="INVLV" units=""/>
-        <variable longname="Picarro Outlet Valve" name="OUTVLV" units=""/>
-        <variable longname="Picarro Carbon Monoxide Mixing Ratio" name="CO" units="ppm"/>
+        </variable-->
         <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppm"/>
-        <variable longname="Picarro Carbon Dioxide Mixing Ratio, Dry" name="CO2DRY" units="ppm"/>
         <variable longname="Picarro Methane Mixing Ratio" name="CH4" units="ppm"/>
-        <variable longname="Picarro Methane Mixing Ratio, Dry" name="CH4DRY" units="ppm"/>
+        <variable longname="Picarro Carbon Monoxide Mixing Ratio" name="CO" units="ppm"/>
         <variable longname="Picarro H2O Mixing Ratio" name="H2O" units="%"/>
-        <variable longname="Picarro H2O Raw Mixing Ratio" name="H2ORAW" units="%"/>
-        <variable longname="Picarro H2O B Mixing Ratio" name="H2OB" units="%"/>
-        <variable longname="Picarro Peak 14" name="PEAK14" units=""/>
-        <variable longname="Picarro Peak 84, Raw" name="PEAK84" units=""/>
-        <variable longname="Picarro Flow" name="FLOW" units="sccm"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
@@ -1187,9 +1168,9 @@
 
 <!-- Aerodyne Research, Inc Mini 108 CO-N2O instrument. First flown 2018
 -->
-    <serialSensor ID="CON2O" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_ARI">
-      <sample id="1" scanfFormat="%f %f %f %f %f %f %*f %*f %*f %f %f">
-	      <variable longname="Aerodyne Research Inc Mini 108 Igor Pro time" name="IgorTime" units="s"/>
+    <serialSensor ID="CON2O" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_ARI">
+      <sample id="1" rate="1" scanfFormat="c%*f,%f,%f,%f,%f,%f,%*f,%*f,%*f,%f,%f">
+	      <!--variable longname="Aerodyne Research Inc Mini 108 Igor Pro time" name="IgorTime" units="s"/-->
 	      <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2O" units="ppbv"/>
 	      <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="CO" units="ppbv"/>
 	      <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2OA" units="ppbv"/>
@@ -1198,7 +1179,7 @@
 	      <variable longname="Aerodyne Research Inc Mini 108 Temperature" name="T" units="C"/>
 	      <variable longname="Aerodyne Research Inc Mini 108 Pressure" name="P" units="hPa"/>
       </sample>
-      <prompt rate="5" string="SIG?\r"/>
+      <!--prompt rate="5" string="SIG?\r"/-->
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
@@ -1219,14 +1200,18 @@
         </sample>
     </sensor>
     <sensor ID="HARP_ACTINIC_FLUX" class="UDPSocketSensor" devicename="usock::30108" suffix="_HARP">
-        <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%d,%d,%f">
-            <variable longname="UVN 315 nm Counts" name="UVN315" units="counts"/>
-            <variable longname="UVN 382 nm Counts" name="UVN382" units="counts"/>
+        <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%f,%f,%f,%f,%f">
+            <variable longname="UVN jO3 " name="UVNJO3" units="counts"/>
+            <variable longname="UVN jNO2 " name="UVNJNO2" units="counts"/>
+            <variable longname="UVN 350 nm " name="UVN350" units="counts"/>
+            <variable longname="UVN 400 nm " name="UVN400" units="counts"/>
             <variable longname="UVN Relative Humidity" name="UVNRH" units="%"/>
         </sample>
-        <sample id="2" rate="1" scanfFormat="HRP_AFZ,%*dT%*d,%d,%d,%f">
-            <variable longname="UVZ 315 nm Counts" name="UVZ315" units="counts"/>
-            <variable longname="UVZ 382 nm Counts" name="UVZ382" units="counts"/>
+        <sample id="2" rate="1" scanfFormat="HRP_AFZ,%*dT%*d,%f,%f,%f,%f,%f">
+            <variable longname="UVZ jO3 " name="UVZJO3" units="counts"/>
+            <variable longname="UVZ jNO2 " name="UVZJNO2" units="counts"/>
+            <variable longname="UVZ 350 nm " name="UVZ350" units="counts"/>
+            <variable longname="UVZ 400 nm " name="UVZ400" units="counts"/>
             <variable longname="UVZ Relative Humidity" name="UVZRH" units="%"/>
         </sample>
     </sensor>
@@ -1298,6 +1283,7 @@
         <variable longname="Fast 2DC Diode Voltage, Diode 1" name="DIOV01" units="Vdc"/>
         <variable longname="Fast 2DC Diode Voltage, Diode 32" name="DIOV32" units="Vdc"/>
         <variable longname="Fast 2DC Diode Voltage, Diode 64" name="DIOV64" units="Vdc"/>
+        <variable longname="Fast 2DC Diode TAS" name="TAS" units="mps"/>
       </sample>
       <sample id="2" rate="1">
         <variable length="64" longname="Fast 2DC Raw Accumulation, entire-in (per cell)" name="A1DC" units="count"/>
@@ -1615,6 +1601,7 @@
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
       <sensor IDREF="PAN-CIMS" devicename="usock::30126" id="1700"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
+      <!--sensor ID="HARP_ACTINIC_FLUX" devicename="usock::30108" suffix="??"-->
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
