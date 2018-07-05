@@ -1312,7 +1312,7 @@
 -->
     </sensor>
     <sensor ID="CFDC" class="UDPSocketSensor" devicename="usock::30105" suffix="_CFDC">
-        <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
+        <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f %f">
             <variable longname="CFDC IN Count" name="INC" units="counts/sec"/>
             <variable longname="CFDC Total Count" name="CNTS" units="counts/sec"/>
             <variable longname="CFDC Saturation Water" name="SAT" units="%"/>
@@ -1599,6 +1599,7 @@
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
+      <sensor IDREF="CFDC" devicename="usock::30105" id="600"/>
       <sensor IDREF="HARP_ACTINIC_FLUX" devicename="usock::30108" id="1500"/>
       <sensor IDREF="PAN-CIMS" devicename="usock::30126" id="1700"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
@@ -2074,7 +2075,6 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor IDREF="CFDC" devicename="/dev/ttyS6" id="600" suffix="_CFDC"/>
       <serialSensor IDREF="PIC2401_CO2" devicename="/dev/ttyS8" id="800" suffix="_PIC2401"/>
       <serialSensor IDREF="UHSAS" devicename="/dev/ttyS10" id="1000" suffix="_RWO">
         <parameter name="SerialNumber" type="string" value="260X06"/>
