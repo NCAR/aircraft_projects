@@ -1047,11 +1047,14 @@
         UHSAS from Darrin Toohey @ CU.
         Has different housekeeping scaling factors and output rate
     -->
+<!-- JAA
     <serialSensor ID="UHSASCU" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
       <parameter name="SerialNumber" type="string" value="UHSAS002"/>
 
+-->
       <!-- Time Format is mm/dd/yyyy hh:mm:ss.msec pm -->
-      <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
+<!-- JAA
+      <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f % f %f %f">
         <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
         <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
         <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
@@ -1066,12 +1069,14 @@
         <variable longname="UHSAS Purge Flow" name="UPRGFLW" units="sccm"/>
         <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="kPa"/>
         <variable longname="UHSAS Auxilliary" name="UAUX" units="V"/>
+-->
 <!-- Commenting this variable out to compensate for the zero bin shift (this is a hack).
           The probe is just putting out a zero for this value anyways, so nothing lost.
         <variable longname="UHSAS Flow" name="UFLW" units="sccm"/>
 
      and the length of the histogram is changed from 99 to 100.
 -->
+<!-- JAA
         <variable length="100" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
       <sample id="2" rate="1">
@@ -1079,6 +1084,7 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+-->
 
     <serialSensor ID="RDMA" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <message length="0" position="end" separator="\r\n"/>
@@ -1192,14 +1198,14 @@
         </sample>
     </sensor>
     <sensor ID="HARP_ACTINIC_FLUX" class="UDPSocketSensor" devicename="usock::30108" suffix="_HARP">
-        <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%f,%f,%f,%f,%f">
+        <sample id="1" rate="3" scanfFormat="HRP_AFN,%*dT%*d,%f,%f,%d,%d,%f">
             <variable longname="UVN jO3 " name="UVNJO3" units="counts"/>
             <variable longname="UVN jNO2 " name="UVNJNO2" units="counts"/>
             <variable longname="UVN 350 nm " name="UVN350" units="counts"/>
             <variable longname="UVN 400 nm " name="UVN400" units="counts"/>
             <variable longname="UVN Relative Humidity" name="UVNRH" units="%"/>
         </sample>
-        <sample id="2" rate="1" scanfFormat="HRP_AFZ,%*dT%*d,%f,%f,%f,%f,%f">
+        <sample id="2" rate="2" scanfFormat="HRP_AFZ,%*dT%*d,%f,%f,%d,%d,%f">
             <variable longname="UVZ jO3 " name="UVZJO3" units="counts"/>
             <variable longname="UVZ jNO2 " name="UVZJNO2" units="counts"/>
             <variable longname="UVZ 350 nm " name="UVZ350" units="counts"/>
@@ -2283,10 +2289,12 @@
            <!-- 4 seconds for extended sample line -->
            <parameter name="lag" type = "float" value="3.0"/>
        </serialSensor>
+<!-- JAA
        <serialSensor IDREF="UHSASCU" devicename="/dev/ttyS7" id="50" suffix="_CVIU">
-            <parameter name="SerialNumber" type="string" value="UHSAS015"/>
+            <parameter name="SerialNumber" type="string" value="UHSAS002"/>
             <parameter name="sendInit" type="bool" value="false"/>
        </serialSensor>
+-->
 <!--       <serialSensor IDREF="PIC_H2O" devicename="/dev/ttyS8" id="70" suffix="_CVIP"/> cjw 7/8/2016 -->
 
 <!-- input from LabView via socket -->
@@ -2321,7 +2329,6 @@
         <output class="RawSampleOutputStream">
             <socket port="30000" type="server"/>
         </output>
-
 <!-- To save data on local CF when running standalone
              <output class="RawSampleOutputStream">
             <fileset dir="/media/cf/data"
@@ -2380,7 +2387,7 @@
                     nc -l -p 30005
             -->
             <output class="raf.CVIOutput">
-                <socket address="192.168.184.146" block="false" port="30005" type="client"/>
+                <socket address="192.168.84.146" block="false" port="30005" type="client"/>
             </output>
             <output class="raf.CVIOutput">
                 <socket block="false" port="30007" type="server"/>
