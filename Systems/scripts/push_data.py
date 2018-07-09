@@ -40,15 +40,14 @@ reprocess = False
 
 # Initialization 
 #   The RStudio piece seems to need special setup for each project
-scripts_dir = proj_dir + '/scripts'
-sys.path.insert(0,scripts_dir)
+sys.path.insert(0,proj_dir)
 from fieldProc_setup import *
 
 ##############   Beginning of Setup ######################################
 nc2ascBatch =	proj_dir + 'scripts/nc2asc.bat'
 
 # Don't make it Raw_Data/proj.
-zip_dir = '/tmp/'
+zip_dir = 'tmp/'
 
 # Catalog setup should not need to change - they are very consistent
 # so leave this here, rather than in project-specific setup file
@@ -113,9 +112,10 @@ proc_qc_files =    'NO!'
 ship_qc_files =    'NO!    '
 stor_qc_files =    'NO!    '
 
+print ""
 final_message = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n'
 final_message = final_message + 'Process and Push log for Project:' + project
-final_message = final_message + '  Flight:'+flight+'\r\n\r\n'
+final_message = final_message + '  Flight:'+flight+'\r\n'
 
 
 ####################   End of Setup ######################################
@@ -308,7 +308,7 @@ if nclist.__len__() == 1:
   if reproc == 'R': 
     process = True
     reprocess = True
-  else:
+  else: # Ship only
     process = False
     reprocess = False 
 elif nclist.__len__() == 0:
@@ -441,7 +441,7 @@ if process:
 else:
   print "Processing already done, skipping nimbus command"
 
-
+print ""
 print "************************** Begin Shipping Data ***************"
 print "NetCDF file = "+ncfile
 print os.system("ls -l "+ncfile)
@@ -458,17 +458,20 @@ print os.system("ls -l "+rawfile)
 if threevcpi2d_file != '':
   print "3V-CPI 2DS file = "+threevcpi2d_file
   print os.system("ls -l "+threevcpi2d_file)
-print "******************************************"
+print "**************************************************************"
+print ""
 print " We're not done yet. Please be patient."
 
 if NAS:
   if NAS_permanent_mount == False:
      # Mount NAS
      command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
-     print 'Mounting nas: '+command
+     print '\r\nMounting nas: '+command
      os.system(command)
 
   # Put copies of files to local store
+  nas_sync_dir = nas_mnt_pt + '/data/' + project + '/data_synced'
+  nas_data_dir = nas_mnt_pt + '/data/' + project + '/data_scr'
   nc_out_dir = nas_data_dir+"/nc/"
   qc_out_dir = nas_data_dir+"/qc/"
   raw_out_dir = nas_data_dir+"/raw/"
@@ -477,6 +480,8 @@ if NAS:
   ensure_dir(qc_out_dir)
   ensure_dir(raw_out_dir)
 
+  print ""
+  print "*************** Copy files to NAS scratch area ***************"
   print 'Copying '+ncfile+' to '+nc_out_dir
   stor_nc_file = rsync_file(ncfile,nc_out_dir)
   print 'Copying '+kmlfile+' to '+nc_out_dir
@@ -487,9 +492,10 @@ if NAS:
   if nc2asc:
     print 'Copying '+icarttfile+' to '+nc_out_dir
     stor_asc_file = rsync_file(icarttfile,nc_out_dir)
-  if not reprocess:
+  if not reprocess and process:
     print 'Copying '+rawfile+' to '+raw_out_dir
     stor_raw_file = rsync_file(rawfile,raw_out_dir)
+  print ""
 
 emailfilename = 'email.addr.txt'
 emailfile = data_dir+emailfilename
@@ -546,6 +552,8 @@ if nc2asc:
 # Put QC files into catalog and to the NAS if it exists
 if catalog:
   try:
+    print ""
+    print "*************************** Catalog transfer *****************"
     print 'opening FTP connection to: ' + qc_ftp_site
     print '- putting QC data in directory: ' + qc_ftp_dir
   
@@ -614,10 +622,14 @@ if NAS != True:
 
 # put zipped file onto NAS for BT-syncing back home.
 else:
+  print ""
+  print "***** Copy files to NAS sync area for transfer back home *****"
 
-  if reprocess:  
+  if reprocess or (not reprocess and not process):  
     print 'Reprocessing so assume ADS already shipped during first processing'
-    print 'If this is not the case, run /home/data/Raw_Data/SOCRATES/*'+flight+'.ads /mnt/Data/data/SOCRATES/data_synced when this script is complete'
+    print 'If this is not the case, run'
+    print '"/home/data/Raw_Data/'+project+'/*'+flight+'.ads '+nas_sync_dir+'/ADS"'
+    print 'when this script is complete'
   else:
     # Now ZiP up the rawfile.
     raw_dir,rawfilename = os.path.split(rawfile)
@@ -627,8 +639,8 @@ else:
     os.chdir(raw_dir)
     if not os.path.exists(zip_raw_file):
       print "Compressing ADS file with command:"
-      print command
       command = "bzip2 -kc " + rawfilename + " > " + zip_raw_file
+      print command
       os.system(command)
       print ""
     else:
@@ -639,20 +651,23 @@ else:
   if NAS_permanent_mount == False:
      # Mount NAS
      command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
-     print 'Mounting nas: '+command
+     print '\r\nMounting nas: '+command
      os.system(command)
 
   os.chdir(data_dir)
-  print 'Copying nc and kml file to NAS'
-  ship_nc_file = rsync_file(ncfilename,nas_sync_dir)
-  ship_kml_file = rsync_file(kmlfilename,nas_sync_dir)
+  ship_nc_file = rsync_file(ncfilename,nas_sync_dir+'/LRT')
+  print 'Copying '+ncfilename+' to '+nas_sync_dir+'/LRT'
+  ship_kml_file = rsync_file(kmlfilename,nas_sync_dir+'/KML')
+  print 'Copying '+kmlfilename+' to '+nas_sync_dir+'/KML'
   if nc2iwg:
     ship_iwg_file = rsync_file(iwg1filename,nas_sync_dir)
+    print 'Copying '+iwg1filename+' to '+nas_sync_dir
   if nc2asc:
     ship_asc_file = rsync_file(icarttfilename,nas_sync_dir)
-  if not reprocess:  
-    print 'Copying ads file to NAS'
-    ship_raw_file = rsync_file(zip_raw_file,nas_sync_dir)
+    print 'Copying '+icarttfilename+' to '+nas_sync_dir
+  if not reprocess and process:  
+    print 'Copying ads file to '+nas_sync_dir
+    ship_raw_file = rsync_file(zip_raw_file,nas_sync_dir+"/ADS")
     command = 'unzip '+nas_sync_dir+'/'+zip_raw_file
     if os.system(command) == 0:
       unzip_raw_file = 'Yes-NAS'
@@ -779,8 +794,10 @@ s = smtplib.SMTP('localhost')
 s.sendmail('ads@groundstation',email, msg.as_string())
 s.quit()
 
-raw_input("\n\nPress Enter to terminate...")
-answer = 'N'
-while answer != 'Y':
-  answer = raw_input('\n\n  Are you sure you want to terminate? (Y/N):')
+#raw_input("\n\nPress Enter to terminate...")
+#answer = 'N'
+#while answer != 'Y':
+#  answer = raw_input('\n\n  Are you sure you want to terminate? (Y/N):')
+
+print "\r\nSuccessful completion. Close window to exit."
 sys.exit(1)
