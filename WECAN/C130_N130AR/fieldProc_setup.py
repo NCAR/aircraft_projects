@@ -7,18 +7,18 @@
 #   case version of the project name e.g. icebridge2015 not ICEBRIDGE2015
 
 # Data dir to run on gstation
-#rstudio_dir =    '/home/ads/RStudio/'
-#translate2ds = '/home/local/raf/instruments/3v-cpi/translate2ds/translate2ds '
+rstudio_dir =    '/home/ads/RStudio/'
 
 # Data dir to run on EOL servers
-rstudio_dir =    '/h/eol/ads/RStudio/'
+#rstudio_dir =    '/h/eol/ads/RStudio/'
+
 translate2ds = '/opt/local/bin/translate2ds '
 
 # Products - set to true if you want 'em
-nc2asc = True
+nc2asc = False # ICARTT
 nc2iwg = False
-catalog = True
-HRT =    False
+catalog = False # Send QC plots to field catalog
+HRT =    True
 # If processing was already done, and now someone wants HRT data,
 # to avoid reprocessing LRT, regenerating plots, etc, set HRTonly to 
 # True
@@ -26,14 +26,12 @@ HRTonly = False
 
 ### NAS stuff ###
 # Do we have local SWIG RAID storage.
-NAS =     False
+NAS =     True
 # Does NAS have a permanent mount?
-NAS_permanent_mount = True
+NAS_permanent_mount = False
 
 nas_url =        '192.168.1.30:/data'
-nas_mnt_pt =     '/mnt/Data/'
-nas_sync_dir =   nas_mnt_pt + '/data/synced_data/'
-nas_data_dir =   nas_mnt_pt + '/data/scr_data/'
+nas_mnt_pt =     '/mnt/Data'
 
 ### remote FTP setup (if no NAS) ###
 #ftp_site =       'data.eol.ucar.edu'
@@ -51,20 +49,20 @@ nas_data_dir =   nas_mnt_pt + '/data/scr_data/'
 ### R stuff ###
 # DataReview is in github.  https://github/WilliamCooper/DataReview.git
 # Is Rstudio generating HTML files?
-RstudioHTML = False
+Rstudio = False
 
 ### Instrument specific processing ###
 # - true or false depending on if instrument is on project.
-twoD      =      True
-threeVCPI =      False
+twoD      =      False 	#PMS2D from 2D-C
+threeVCPI =      False 	#CPI, 2DS
 
 # If doing a project specific data_dump for a user, please go to the datadump 
 # section of push_data and set command as you want.
-datadump = True
+datadump = False
 
 # To trim flights when processing, create a setup file for the flight under
 # Production. The process script will read that if it exists.
 
 #backup_raw_dir = '/mnt/opsdisk'
-#backup_raw_dir2 = '/media/Seagate\ Expansion\ Drive/deepwave/'
+#backup_raw_dir2 = '/media/Seagate\ Expansion\ Drive/wecan/'
 
