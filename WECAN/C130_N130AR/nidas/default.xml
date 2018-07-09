@@ -1047,13 +1047,11 @@
         UHSAS from Darrin Toohey @ CU.
         Has different housekeeping scaling factors and output rate
     -->
-<!-- JAA
-    <serialSensor ID="UHSASCU" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
-      <parameter name="SerialNumber" type="string" value="UHSAS002"/>
 
--->
+    <serialSensor ID="UHSASCU" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
+      <parameter name="SerialNumber" type="string" value="UHSAS015"/>
+
       <!-- Time Format is mm/dd/yyyy hh:mm:ss.msec pm -->
-<!-- JAA
       <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f % f %f %f">
         <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
         <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
@@ -1069,14 +1067,12 @@
         <variable longname="UHSAS Purge Flow" name="UPRGFLW" units="sccm"/>
         <variable longname="UHSAS Absolute Pressure in Canister" name="UPRESS" units="kPa"/>
         <variable longname="UHSAS Auxilliary" name="UAUX" units="V"/>
--->
 <!-- Commenting this variable out to compensate for the zero bin shift (this is a hack).
           The probe is just putting out a zero for this value anyways, so nothing lost.
         <variable longname="UHSAS Flow" name="UFLW" units="sccm"/>
 
      and the length of the histogram is changed from 99 to 100.
 -->
-<!-- JAA
         <variable length="100" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
       <sample id="2" rate="1">
@@ -1084,7 +1080,6 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
--->
 
     <serialSensor ID="RDMA" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <message length="0" position="end" separator="\r\n"/>
@@ -2060,7 +2055,7 @@
       </output>
       <serialSensor IDREF="PIC2401_CO2" devicename="/dev/ttyS8" id="800" suffix="_PIC2401"/>
       <serialSensor IDREF="UHSAS" devicename="/dev/ttyS10" id="1000" suffix="_RWO">
-        <parameter name="SerialNumber" type="string" value="260X06"/>
+        <parameter name="SerialNumber" type="string" value="UHSAS001"/>
         <parameter name="RESOLUTION" type="int" value="10"/>
       </serialSensor>
       <serialSensor IDREF="CON2O" devicename="/dev/ttyS7" id="1200" suffix="_ARI"/>
@@ -2289,12 +2284,12 @@
            <!-- 4 seconds for extended sample line -->
            <parameter name="lag" type = "float" value="3.0"/>
        </serialSensor>
-<!-- JAA
+
        <serialSensor IDREF="UHSASCU" devicename="/dev/ttyS7" id="50" suffix="_CVIU">
-            <parameter name="SerialNumber" type="string" value="UHSAS002"/>
+            <parameter name="SerialNumber" type="string" value="UHSAS015"/>
             <parameter name="sendInit" type="bool" value="false"/>
        </serialSensor>
--->
+
 <!--       <serialSensor IDREF="PIC_H2O" devicename="/dev/ttyS8" id="70" suffix="_CVIP"/> cjw 7/8/2016 -->
 
 <!-- input from LabView via socket -->
