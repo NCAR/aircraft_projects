@@ -618,7 +618,7 @@
         <message length="0" position="end" separator="\r"/>
     </serialSensor>
     <sensor ID="TOGA" class="UDPSocketSensor" devicename="usock::30120" suffix="_TOGA">
-      <sample id="1" rate="1" scanfFormat="TOGA,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+      <sample id="1" rate="1" scanfFormat="TOGA,%*d-%*d-%*dT%*d:%*d:%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="TOGA Acetone" name="ACETONE" units="pptv"/>
         <variable longname="TOGA Acrolein" name="Acrolein" units="pptv"/>
         <variable longname="TOGA Benzene" name="BENZENE" units="pptv"/>
@@ -1268,6 +1268,7 @@
       <parameter name="SerialNumber" type="string" value="F2DC002"/>
       <parameter name="RESOLUTION" type="int" value="10"/>
       <parameter name="TAS_RATE" type="int" value="10"/>
+      <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
       <sample id="1" rate="1">
         <variable longname="Fast 2DC Board Serial Number" name="BSN" units="#"/>
         <variable longname="Fast 2DC Date / Time Stamp" name="DATE" units="count"/>
