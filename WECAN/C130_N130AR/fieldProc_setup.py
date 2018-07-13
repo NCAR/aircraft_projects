@@ -5,6 +5,9 @@
 #   Note that the CWIG standard and the standard expected by the 
 #   catcher script will be that <project> above will be the lower
 #   case version of the project name e.g. icebridge2015 not ICEBRIDGE2015
+#
+# This script only copies ADS, LRT, and KML back to Boulder (and QC plots
+# if requested). If you need something else, talk to an RAF SE.
 
 # Data dir to run on gstation
 rstudio_dir =    '/home/ads/RStudio/'
@@ -15,10 +18,10 @@ rstudio_dir =    '/home/ads/RStudio/'
 translate2ds = '/opt/local/bin/translate2ds '
 
 # Products - set to true if you want 'em
-nc2asc = False # ICARTT
-nc2iwg = False
+nc2asc = False # Generate ICARTT
+nc2iwg = False # Generate IWG1 packet
 catalog = False # Send QC plots to field catalog
-HRT =    True
+HRT =    True  # Generate HRT .nc file
 # If processing was already done, and now someone wants HRT data,
 # to avoid reprocessing LRT, regenerating plots, etc, set HRTonly to 
 # True
@@ -53,7 +56,7 @@ Rstudio = False
 
 ### Instrument specific processing ###
 # - true or false depending on if instrument is on project.
-twoD      =      False 	#PMS2D from 2D-C
+twoD      =      True 	#PMS2D from 2D-C
 threeVCPI =      False 	#CPI, 2DS
 
 # If doing a project specific data_dump for a user, please go to the datadump 
