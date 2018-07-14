@@ -39,15 +39,15 @@ proj_dir  = read_env("PROJ_DIR") + '/' + project + '/' + aircraft + '/'
 reprocess = False 
 
 # Initialization 
-#   The RStudio piece seems to need special setup for each project
 sys.path.insert(0,proj_dir)
 from fieldProc_setup import *
+# Note: The RStudio piece seems to need special setup for each project
 
 ##############   Beginning of Setup ######################################
 nc2ascBatch =	proj_dir + 'scripts/nc2asc.bat'
 
 # Don't make it Raw_Data/proj.
-zip_dir = 'tmp/'
+zip_dir = '/tmp/'
 
 # Catalog setup should not need to change - they are very consistent
 # so leave this here, rather than in project-specific setup file
@@ -668,12 +668,13 @@ else:
   if not reprocess and process:  
     print 'Copying ads file to '+nas_sync_dir
     ship_raw_file = rsync_file(zip_raw_file,nas_sync_dir+"/ADS")
-    command = 'unzip '+nas_sync_dir+'/'+zip_raw_file
-    if os.system(command) == 0:
-      unzip_raw_file = 'Yes-NAS'
-    else:
-      message='ERROR!: unzipping zipfile: '+command
-      print_message(message)
+# I have no idea why we'd unzip the file before we send it. Comment out.
+#    command = 'unzip '+nas_sync_dir+'/ADS/'+rawfilename+'.bz2'
+#    if os.system(command) == 0:
+#      unzip_raw_file = 'Yes-NAS'
+#    else:
+#      message='ERROR!: unzipping zipfile: '+command
+#      print_message(message)
 
 #  if NAS_permanent_mount == False:
 #    command = "sudo /bin/umount "+nas_mnt_pt
