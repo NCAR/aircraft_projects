@@ -64,6 +64,11 @@
 # Modified 3/2/2015 Janine Aquino
 #	Omitting "removed" subdirs did not work if "removed" was under an accepted
 #	archival dir, such as forward/removed. Fixed this bug.
+# Modified 7/10/2018 Taylor Thomas
+# 	to make including an email address as an argument. Removed default 
+#	email address so that script fails and notififies user if no email 
+#	is supplied.
+#
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -94,8 +99,6 @@ dirmapfile = "/scr/raf/Prod_Data/archives/msfiles/directory_map"
 class archRAFdata:
 
     def sendMail(self, subject, body, email):
-	if email == "":
-	    email = "janine@ucar.edu";
 	msg = MIMEText(body)
 	msg['subject'] = subject
 	msg['from'] = email
@@ -482,7 +485,7 @@ if __name__ == "__main__":
     if len(sys.argv)-1 >= index+3:
          email = sys.argv[index+3]
     else:
-         email = ""
+         print "You must supply an email address as the last argument. If the script fails, you will receive an email."
 
     # Make sure this script is being run from 
     # $PROJ_DIR/<proj>/<platform>/Production/archive.
