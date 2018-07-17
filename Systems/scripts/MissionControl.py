@@ -390,6 +390,9 @@ class MissionControl(QWidget):
             self.notify = QSocketNotifier(self.conn.fileno(), QSocketNotifier.Read)
         except:
             self.notify = QSocketNotifier(self.cursor.fileno(), QSocketNotifier.Read)
+	
+	# To get this script to work on the cockpit laptop during WE-CAN, I had to 
+	# comment this line out.
         QObject.connect(self.notify, SIGNAL("activated(int)"), self.updateSelection)
         self.cursor.execute("LISTEN missioncontrol")
         self.conn.commit()
