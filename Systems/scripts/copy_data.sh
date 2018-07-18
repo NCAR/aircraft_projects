@@ -35,7 +35,7 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    if [ "$EXIT" -eq 0 ]; then
       #umount $TRANSFER_MEDIA;
       echo "Copy of .ads file(s) for $PROJECT$FLIGHT SUCCESSFUL."
-      echo "You can now safely remove the drive by right clicking the desktop icon."
+      echo "You can now safely remove the drive by right-clicking the desktop icon."
    elif [ "$EXIT" -gt 0 ]; then
       echo "Copy of .ads file(s) for $PROJECT$FLIGHT UNSUCCESSFUL."
       echo "Check files under /var/r1/$PROJECT and try again."
