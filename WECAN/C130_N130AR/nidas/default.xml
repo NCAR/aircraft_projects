@@ -1362,19 +1362,19 @@
         <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
     </sensor>
-    <sensor ID="VCSEL" class="UDPSocketSensor" devicename="usock:30134" suffix="_VXL2">
+    <sensor ID="VCSEL2" class="UDPSocketSensor" devicename="usock:30134" suffix="_VXL2">
         <sample id="1" rate="1" scanfFormat="%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-            <variable longname="VCSEL Ambient Pressure" name="ambpres" units="hPa"/>
-            <variable longname="VCSEL Ambient Temperature" name="ambtemp" units="deg_C"/>
-            <variable longname="VCSEL Tec Volt" name="tecvolt" units="V"/>
-            <variable longname="VCSEL Plus 15" name="plus15" units="V"/>
-            <variable longname="VCSEL Minus 15" name="minus15" units="V"/>
-            <variable longname="VCSEL Plus 12" name="plus12" units="V"/>
-            <variable longname="VCSEL Plus 5" name="plus5" units="V"/>
-            <variable longname="VCSEL Reference Index" name="refindex" units=""/>
-            <variable longname="VCSEL Reference" name="lsrintref" units=""/>
-            <variable longname="VCSEL Ambient" name="lsrintamb" units=""/>
-            <variable longname="VCSEL Strong Trans" name="strongtrans" units=""/>
+            <variable longname="VCSEL Ambient Pressure" name="PS" units="hPa"/>
+            <variable longname="VCSEL Ambient Temperature" name="AT" units="deg_C"/>
+            <variable longname="VCSEL Laser TEC Voltage" name="TECV" units="V"/>
+            <variable longname="VCSEL Power Supply Plus 15" name="PLUS15" units="V"/>
+            <variable longname="VCSEL Power Supply Minus 15" name="MINUS15" units="V"/>
+            <variable longname="VCSEL Power Supply Plus 12" name="PLUS12" units="V"/>
+            <variable longname="VCSEL Power Supply Plus 5" name="PLUS5" units="V"/>
+            <variable longname="VCSEL Reference Index" name="REFIDX" units=""/>
+            <variable longname="VCSEL Laser Intensity Reference" name="LSRREF" units="V"/>
+            <variable longname="VCSEL Laser Intensity Ambient" name="LSRAMB" units="V"/>
+            <variable longname="VCSEL Strong Line Transmission" name="STRONG" units=""/>
         </sample>
     </sensor>
     <sensor ID="AWAS" class="UDPSocketSensor" devicename="usock::30131" suffix="_AWAS">
@@ -1648,7 +1648,7 @@
       <sensor IDREF="TOGA" devicename="usock::30120" id="1600"/>
       <sensor IDREF="PAN-CIMS" devicename="usock::30126" id="1700"/>
       <sensor IDREF="AWAS" devicename="usock::30131" id="1800"/>
-      <sensor IDREF="VCSEL" devicename="usock::30134" id="1900"/>
+      <sensor IDREF="VCSEL2" devicename="usock::30134" id="1900"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
