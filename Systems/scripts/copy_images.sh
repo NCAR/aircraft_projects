@@ -1,7 +1,7 @@
-#! /bin/bash
+#!/bin/bash
 ###----------------------------------------------------------------------------
-# script to tar and copy image files from aircraft to transfer media for a given flight
-# after connecting removable drive, run script to transfer file(s)
+# script to tar and copy image files from aircraft to transfer media for a 
+# given flight after connecting removable drive, run script to transfer file(s)
 ###----------------------------------------------------------------------------
 # assign list of parameters for transferring data
 PROJECT="WECAN"
