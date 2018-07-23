@@ -20,7 +20,7 @@ translate2ds = '/opt/local/bin/translate2ds '
 # Products - set to true if you want 'em
 nc2asc = False # Generate ICARTT
 nc2iwg = False # Generate IWG1 packet
-catalog = False # Send QC plots to field catalog
+catalog = True # Send QC plots to field catalog
 HRT =    True  # Generate HRT .nc file
 # If processing was already done, and now someone wants HRT data,
 # to avoid reprocessing LRT, regenerating plots, etc, set HRTonly to 
@@ -52,7 +52,7 @@ nas_mnt_pt =     '/mnt/Data'
 ### R stuff ###
 # DataReview is in github.  https://github/WilliamCooper/DataReview.git
 # Is Rstudio generating HTML files?
-Rstudio = False
+Rstudio = True
 
 ### Instrument specific processing ###
 # - true or false depending on if instrument is on project.
