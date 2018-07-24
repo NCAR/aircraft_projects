@@ -6,11 +6,9 @@
 # assign list of parameters for transferring data
 PROJECT="WECAN"
 
-# DATA_LOCATION="/var/r1/$PROJECT/camera_images"
-DATA_LOCATION="/scr/tmp/taylort/copy_data_tests/WECAN/camera_images"
+DATA_LOCATION="/var/r1/$PROJECT/camera_images"
 
-# TRANSFER_MEDIA="/run/media/ads/*/WECAN"
-TRANSFER_MEDIA="/scr/tmp/taylort/copy_data_tests/8845_TEST_MEDIA_8943"
+TRANSFER_MEDIA="/run/media/ads/*/WECAN"
 
 echo "Enter flight to copy from $PROJECT using lower case e.g. rf01 or ff03:"
 read FLIGHT
