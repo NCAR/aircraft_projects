@@ -1,14 +1,16 @@
 #!/bin/bash
 ###----------------------------------------------------------------------------
 # script to tar and copy image files from aircraft to transfer media for a 
-# given flight after connecting removable drive, run script to transfer file(s)
+# given flight. After connecting removable drive, run script to transfer images
 ###----------------------------------------------------------------------------
 # assign list of parameters for transferring data
 PROJECT="WECAN"
 
-DATA_LOCATION="/var/r1/$PROJECT/camera_images"
+# DATA_LOCATION="/var/r1/$PROJECT/camera_images"
+DATA_LOCATION="/scr/tmp/taylort/copy_data_tests/WECAN/camera_images"
 
-TRANSFER_MEDIA="/run/media/ads/*/WECAN"
+# TRANSFER_MEDIA="/run/media/ads/*/WECAN"
+TRANSFER_MEDIA="/scr/tmp/taylort/copy_data_tests/8845_TEST_MEDIA_8943"
 
 echo "Enter flight to copy from $PROJECT using lower case e.g. rf01 or ff03:"
 read FLIGHT
@@ -37,7 +39,8 @@ if [ $DIR -eq 0 ]; then
    if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
       echo "You entered $DRIVE_CONNECTION, which means you have a drive connected."
       if [ $TAR_FILE -eq 0 ]; then
-         rsync -cav $DATA_LOCATION/flight_number_$FLIGHT.tar $TRANSFER_MEDIA
+         cd $DATA_LOCATION
+         rsync -cav flight_number_$FLIGHT.tar $TRANSFER_MEDIA
          EXIT="$?"
          echo "rsync exit status: $EXIT"
          if [ $EXIT -eq 0 ]; then
@@ -55,8 +58,9 @@ if [ $DIR -eq 0 ]; then
          fi
       elif [ $TAR_FILE -gt 0 ]; then
          echo "No .tar file for flight_number_$FLIGHT found, creating tar file."
-         tar -cvf $DATA_LOCATION/flight_number_$FLIGHT.tar $DATA_LOCATION/flight_number_$FLIGHT
-         rsync -cav $DATA_LOCATION/flight_number_$FLIGHT.tar $TRANSFER_MEDIA
+         cd $DATA_LOCATION
+         tar -cvf flight_number_$FLIGHT.tar flight_number_$FLIGHT
+         rsync -cav flight_number_$FLIGHT.tar $TRANSFER_MEDIA
          EXIT="$?"
          echo "rsync exit status: $EXIT" 
          if [ $EXIT -eq 0 ]; then
