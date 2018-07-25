@@ -17,8 +17,8 @@ rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
 translate2ds = '/opt/local/bin/translate2ds '
 
 # Products - set to true if you want 'em
-nc2asc = False # Generate ICARTT
-nc2iwg =  True # Generate IWG1 packet
+nc2asc =  True # Generate ICARTT
+nc2iwg = False # Generate IWG1 packet
 catalog = True # Send QC plots to field catalog
 HRT =     True # Generate HRT .nc file
 SRT =     True # Generate SRT .nc file
