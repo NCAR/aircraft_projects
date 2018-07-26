@@ -15,6 +15,10 @@ rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
 # Software - set locations of needed software
 translate2ds = '/opt/local/bin/translate2ds '
 
+# This code can currently either send everything as zipfiles, or everything
+# uncompressed. Choose here.
+sendzipped = False
+
 # Products - set to true if you want 'em
 ICARTT =  True # Generate ICARTT
 IWG1 = False # Generate IWG1 packet
