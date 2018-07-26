@@ -520,7 +520,7 @@ if NAS:
   if catalog:
     ensure_dir(nas_data_dir+"/qc")
     print 'Copying QC plots to '+nas_data_dir+"/qc"
-    status[key]["stor"] = rsync_file(rstudio_dir+"/QAtools/"+raircraft+date+".RAF_QC_plots.pdf",qc_out_dir)
+    status[key]["stor"] = rsync_file(rstudio_dir+"/QAtools/"+raircraft+date+".RAF_QC_plots.pdf",nas_data_dir+"/qc")
 
   print ""
 
