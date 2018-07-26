@@ -510,19 +510,17 @@ if NAS:
   nas_sync_dir = nas_mnt_pt + '/data/' + project + '/data_synced'
   # and in dirs for local use...
   nas_data_dir = nas_mnt_pt + '/data/' + project + '/data_scr'
-  nc_out_dir = nas_data_dir+"/nc/"
-  qc_out_dir = nas_data_dir+"/qc/"
-  raw_out_dir = nas_data_dir+"/raw/"
-
-  ensure_dir(nc_out_dir)
-  ensure_dir(qc_out_dir)
-  ensure_dir(raw_out_dir)
 
   print ""
   print "*************** Copy files to NAS scratch area ***************"
   for key in file_ext:
-    print 'Copying '+filename[key]+' to '+nc_out_dir
-    status[key]["stor"] = rsync_file(filename[key],nc_out_dir)
+    ensure_dir(nas_data_dir+"/"+file_ext[key])
+    print 'Copying '+filename[key]+' to '+nas_data_dir+"/"+file_ext[key]
+    status[key]["stor"] = rsync_file(filename[key],nas_data_dir+"/"+file_ext[key])
+  if catalog:
+    ensure_dir(nas_data_dir+"/qc")
+    print 'Copying QC plots to '+nas_data_dir+"/qc"
+    status[key]["stor"] = rsync_file(rstudio_dir+"/QAtools/"+raircraft+date+".RAF_QC_plots.pdf",qc_out_dir)
 
   print ""
 
@@ -633,11 +631,11 @@ else:
   print "***** Copy files to NAS sync area for transfer back home *****"
 
   if reprocess or (not reprocess and not process):  
-    final_message = final_message + '\n***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n'
+    final_message = final_message + '\n***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n'
     final_message = final_message + 'Reprocessing so assume ADS already shipped during first processing\n'
-    final_message = final_message + 'If this is not the case, run\n'
-    final_message = final_message + '"cp /home/data/Raw_Data/'+project+'/*'+flight+'.ads '+nas_sync_dir+'/ADS"\n'
-    final_message = final_message + 'when this script is complete\n'
+    final_message = final_message + 'If this is not the case, run\n\n'
+    final_message = final_message + '"cp /home/data/Raw_Data/'+project+'/*'+flight+'.ads '+nas_sync_dir+'/ADS"\n\n'
+    final_message = final_message + 'when this script is complete\n\n'
     final_message = final_message + '***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n'
   else:
     # Now ZiP up the ADS file.
