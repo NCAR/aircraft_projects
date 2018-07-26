@@ -536,12 +536,12 @@ fo.write(email+'\n')
 fo.close()
 
 # ZIP up the files as per expectations back home
-#if sendzipped:
-for key in file_ext:
-  data_dir,file_name = os.path.split(filename[key])
-  print key+" filename = "+file_name
-  print "data_dir = "+data_dir
-  zip_file(file_name,inst_dir[key])
+if sendzipped:
+  for key in file_ext:
+    data_dir,file_name = os.path.split(filename[key])
+    print key+" filename = "+file_name
+    print "data_dir = "+data_dir
+    zip_file(file_name,inst_dir[key])
 
 ### data_dump section ###
 # Project specific data_dump's for indivual users.
@@ -589,7 +589,8 @@ if catalog and process:
       print 'Could not close ftp connection:'
       print e
 
-# No NAS this project, so put zipped files to EOL server
+# No NAS this project, so put files to EOL server. Put 
+# zipped files if they exist.
 # This has not been tested as of WECAN (2018)
 if NAS != True:
   try:
@@ -606,8 +607,12 @@ if NAS != True:
       print filename[key]+' '
       os.chdir(inst_dir[key])
       if filename[key] != '': 
-        file = open(filename[key], 'r')
-        ftp.storbinary('STOR ' + filename[key]+".zip", file)
+        if sendzipped:
+          file_name = filename[key]+".zip"
+        else:
+          file_name = filename[key]
+        file = open(file_name, 'r')
+        ftp.storbinary('STOR ' + file_name, file)
         file.close()
         status[key]["stor"] = 'Yes-FTP'
 
