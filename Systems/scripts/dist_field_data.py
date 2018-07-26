@@ -30,8 +30,8 @@ from email.mime.text import MIMEText
 # regex to match files we want this script to handle. Can't count on files being
 # zipped so handle all sorts of pattern variations.
 reZip = re.compile("zip")
-reRawFile = re.compile("(\d+)_(\d+)_(\S\S\d\d).ads")
-reProdFile = re.compile("(\S+)(\S\S\d\d)\S*\.\S+")
+reRawFile = re.compile("(\d+)_(\d+)_(\S\S\d\d).[ads|2d]")
+reProdFile = re.compile("(\S+)(\Sf\d\d)\S*\.(\S+)")
 reRawProjName = re.compile("project name: (\S+)")
 
 ###  Configuration for the distribution - modify the following
@@ -247,7 +247,7 @@ def dist_raw_file(fn,mtime,found_data):
 #    if not fn.endswith('.bz2'):
 #        logging.error('File does not match expected pattern:'+fn)
 
-    logging.info("Got an ADS Raw file:"+fn)
+    logging.info("Got an PMS2D or ADS Raw file:"+fn)
 
     #  Copy to /tmp for unzipping so rsync won't send new bz2 file
     command = '/bin/cp '+fn+' '+temp_dir
@@ -408,9 +408,11 @@ if __name__ == '__main__':
     logging.info('Looking for new files in:'+path+' that were written in last '
 	    +str(cronTime)+' minutes so after '+str(one_hour_ago))
     found = False
-    for file in os.listdir(path):
-        fullfile = path+file
-        if os.path.isfile(fullfile):
+    for root, dirs, files in os.walk(path):
+      for name in dirs:
+        for file in os.listdir(os.path.join(root, name)):
+          fullfile = path+file
+          if os.path.isfile(fullfile):
             st=os.stat(fullfile)
             mtime=st.st_mtime
             #logging.info('File '+file+' has time '+str(mtime))
