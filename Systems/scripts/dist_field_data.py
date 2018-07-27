@@ -270,35 +270,36 @@ def dist_raw_file(fn,mtime,found_data):
     else:
 	filedir,filename = os.path.split(fn)
 
-    message = 'Stepping through file:'+filename+' to get project\n'
-    logging.info(message)
-    final_message = final_message + message
+    if fn.endswith(".ads"):
+      message = 'Stepping through file:'+filename+' to get project\n'
+      logging.info(message)
+      final_message = final_message + message
 
-    file = open(filename)
-    for line in file:
-        m = reRawProjName.match(line)
-        if m:
-            message = '  Found proj line:'+line
-            logging.info(message)
-            final_message = final_message + message
-            project = m.group(1)
-            break
+      file = open(filename)
+      for line in file:
+          m = reRawProjName.match(line)
+          if m:
+              message = '  Found proj line:'+line
+              logging.info(message)
+              final_message = final_message + message
+              project = m.group(1)
+              break
 
-    # Find or create project dir under RAW_DATA_DIR
-    raw_ads_dir = rdat_parent_dir + project
-    if not os.path.isdir(raw_ads_dir):
-        try:
-            os.mkdir(raw_ads_dir)
-        except:
-	    message = 'Could not make ftp directory:'+ftp_dir
-            logging.error(message)
-            logging.error('Bailing out')
-#	    if os.path.isfile(busy_file):
-#                os.remove(busy_file)
-	    send_mail_and_die(final_message + message)
-	    exit(1)
+      # Find or create project dir under RAW_DATA_DIR
+      raw_ads_dir = rdat_parent_dir + project
+      if not os.path.isdir(raw_ads_dir):
+          try:
+              os.mkdir(raw_ads_dir)
+          except:
+	      message = 'Could not make ftp directory:'+ftp_dir
+              logging.error(message)
+              logging.error('Bailing out')
+#	      if os.path.isfile(busy_file):
+#                  os.remove(busy_file)
+  	      send_mail_and_die(final_message + message)
+	      exit(1)
 
-    logging.info('Raw Data Dir: '+raw_ads_dir)
+      logging.info('Raw Data Dir: '+raw_ads_dir)
 
     # Check if file has already been copied
     try:
