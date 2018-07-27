@@ -35,7 +35,7 @@ reProdFile = re.compile("(\S+)(\Sf\d\d)\S*\.(\S+)")
 reRawProjName = re.compile("project name: (\S+)")
 
 ###  Configuration for the distribution - modify the following
-cronTime = 60*8	# How often (in mins) script is run from crontab
+cronTime = 60*24	# How often (in mins) script is run from crontab
 # SOCRATES - Since ads files take 7 hours+ to transfer but are timestamped 
 # at start of transfer, need to go back 8 hours.
 NAS_in_field =    True                            # Set to false for ftp 
@@ -409,21 +409,28 @@ if __name__ == '__main__':
 	    +str(cronTime)+' minutes so after '+str(one_hour_ago))
     found = False
     for root, dirs, files in os.walk(path):
+     if not re.search(r'\.sync',root):
+      #print "ROOT: "+root
       for name in dirs:
-        for file in os.listdir(os.path.join(root, name)):
-          fullfile = path+file
+       if not re.search(r'\.sync',name):
+	#print "NAME: " +root+name
+        for filename in os.listdir(root+name):
+         if not re.search(r'\.sync',name):
+	  #print "FILENAME: " +root+name+"/"+filename
+          fullfile = root+name+"/"+filename
+	  print fullfile
           if os.path.isfile(fullfile):
             st=os.stat(fullfile)
             mtime=st.st_mtime
-            #logging.info('File '+file+' has time '+str(mtime))
-            if mtime > one_hour_ago and mtime < one_min_ago and not file.endswith('.bts'): # bts files are mid-transfer
+            #logging.info('File '+filename+' has time '+str(mtime))
+            if mtime > one_hour_ago and mtime < one_min_ago and not filename.endswith('.bts'): # bts files are mid-transfer
                 logging.info('file met time criteria '+fullfile)
 		found = True
 
                 # If we find a file - fork off process to deal with it
-		a=reRawFile.match(file)
-                m=reProdFile.match(file)
-                if a or file.endswith('.bz2'): # Sometimes ads files are bzipped
+		a=reRawFile.match(filename)
+                m=reProdFile.match(filename)
+                if a or filename.endswith('.bz2'): # Sometimes ads files are bzipped
 		                               # to make them quicker to transfer
                     #newpid = os.fork()
                     #if newpid == 0:
