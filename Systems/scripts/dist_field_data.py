@@ -228,7 +228,7 @@ def dist_prod_file(fn,mtime,found_data):
 #  Sync in the field will update them in the case of rerunning prduction in
 #  the field.
 ##############################################################################
-def dist_raw_file(fn,mtime,found_data):
+def dist_raw_file(fn,mtime,found_data,project):
 
     final_message = "Starting distribution of RAF Field Raw Data\n"
     # This script is not re-entrant - bail if running
@@ -301,6 +301,7 @@ def dist_raw_file(fn,mtime,found_data):
 
       logging.info('Raw Data Dir: '+raw_ads_dir)
 
+    raw_ads_dir = rdat_parent_dir + project
     # Check if file has already been copied
     try:
         if os.stat(raw_ads_dir+"/"+filename).st_mtime < mtime:
@@ -415,7 +416,7 @@ if __name__ == '__main__':
       for name in dirs:
        if not re.search(r'\.sync',name):
 	#print "NAME: " +root+name
-        for filename in os.listdir(root+name):
+        for filename in os.listdir(root+"/"+name):
          if not re.search(r'\.sync',name):
 	  #print "FILENAME: " +root+name+"/"+filename
           fullfile = root+name+"/"+filename
@@ -435,7 +436,7 @@ if __name__ == '__main__':
 		                               # to make them quicker to transfer
                     #newpid = os.fork()
                     #if newpid == 0:
-                    final_message = final_message + dist_raw_file(fullfile,mtime,found_data)
+                    final_message = final_message + dist_raw_file(fullfile,mtime,found_data,project)
                     #else:
                     #    pids = (os.getpid(), newpid)
                     #    logging.info("parent: %d, child: %d" % pids)
