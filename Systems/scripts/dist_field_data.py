@@ -420,7 +420,7 @@ if __name__ == '__main__':
          if not re.search(r'\.sync',name):
 	  #print "FILENAME: " +root+name+"/"+filename
           fullfile = root+name+"/"+filename
-	  print fullfile
+	  #print fullfile
           if os.path.isfile(fullfile):
             st=os.stat(fullfile)
             mtime=st.st_mtime
