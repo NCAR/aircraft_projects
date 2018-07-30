@@ -55,8 +55,9 @@ if [ $DIR -eq 0 ]; then
          fi
       elif [ $TAR_FILE -gt 0 ]; then
          echo "No .tar file for flight_number_$FLIGHT found, creating tar file."
-         tar -cvf $DATA_LOCATION/flight_number_$FLIGHT.tar $DATA_LOCATION/flight_number_$FLIGHT
-         rsync -cav $DATA_LOCATION/flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT
+         cd $DATA_LOCATION
+         tar -cvf flight_number_$FLIGHT.tar flight_number_$FLIGHT
+         rsync -cav flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT
          EXIT="$?"
          echo "rsync exit status: $EXIT" 
          if [ $EXIT -eq 0 ]; then
