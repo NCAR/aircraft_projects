@@ -515,8 +515,13 @@ if NAS:
   print "*************** Copy files to NAS scratch area ***************"
   for key in file_ext:
     ensure_dir(nas_data_dir+"/"+file_ext[key])
-    print 'Copying '+filename[key]+' to '+nas_data_dir+"/"+file_ext[key]
-    status[key]["stor"] = rsync_file(filename[key],nas_data_dir+"/"+file_ext[key])
+    if key == "ADS" and not reprocess and process:  
+      print 'Copying '+filename[key]+' to '+nas_data_dir+"/"+file_ext[key]
+      status[key]["stor"] = rsync_file(filename[key],nas_data_dir+"/"+file_ext[key])
+    else:
+      print 'Copying '+filename[key]+' to '+nas_data_dir+"/"+file_ext[key]
+      status[key]["stor"] = rsync_file(filename[key],nas_data_dir+"/"+file_ext[key])
+
   if catalog:
     ensure_dir(nas_data_dir+"/qc")
     print 'Copying QC plots to '+nas_data_dir+"/qc"
@@ -663,12 +668,13 @@ else:
 
   for key in file_ext:
     os.chdir(inst_dir[key])
-    status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/' + key)
-    print 'Copying '+filename[key]+' file to '+nas_sync_dir+'/' + key
+    if key == "ADS" and not reprocess and process:  
+      status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/' + key)
+      print 'Copying '+filename[key]+' file to '+nas_sync_dir+'/' + key
+    else:
+      status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/' + key)
+      print 'Copying '+filename[key]+' file to '+nas_sync_dir+'/' + key
 
-  if key == "ADS" and not reprocess and process:  
-    status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/' + key)
-    print 'Copying  '+filename[key]+' file to '+nas_sync_dir
 
   # unmount NAS
 #  if NAS_permanent_mount == False:
