@@ -175,7 +175,7 @@ def rsync_file(file,out_dir):
     proc_file = 'Yes-NAS'
     return(str(proc_file));
   else: 
-    message = '\nERROR!: syncing file: '+command
+    message = '\nERROR!: syncing file: '+command+'\n'
     print_message(message)
 
 # See of a LRT file exists already and query user about what to do.
@@ -356,7 +356,7 @@ def reorder_nc(ncfile):
   if os.system(command) == 0:
     proc_nc_file  =    'Yes'
   else:
-    message= "ERROR: NC Reorder failed! But NetCDF file should be fine"
+    message= "ERROR: NC Reorder failed! But NetCDF file should be fine\n"
     print_message(message)
     proc_nc_file  =    'Yes'
   return(proc_nc_file)
@@ -409,13 +409,13 @@ for key in file_ext:
   else:
     (key,filename[key])=find_file(inst_dir[key],flight,file_prefix,file_type[key],file_ext[key],key)
 
+# Get the flight date from the ADS filename
+file_name = filename["ADS"].split(raw_dir)[1]
+date = file_name[:15]
+date = re.sub('_','', date)
+
 if process:
   for key in file_ext:
-    # Get the flight date from the ADS filename
-    if (key == "ADS"):
-      file_name = filename[key].split(raw_dir)[1]
-      date = file_name[:15]
-      date = re.sub('_','', date)
 
     # Process the ads data to desired netCDF frequencies
     if ((key == "LRT" or key == "HRT" or key == "SRT") and process):
@@ -506,7 +506,7 @@ if NAS:
      os.system(command)
 
   # Put copies of files to local store
-  # in dirs to sync to fto site in Boulder...
+  # in dirs to sync to ftp site in Boulder...
   nas_sync_dir = nas_mnt_pt + '/data/' + project + '/data_synced'
   # and in dirs for local use...
   nas_data_dir = nas_mnt_pt + '/data/' + project + '/data_scr'
@@ -575,7 +575,7 @@ if catalog and process:
       ftp.storbinary('STOR ' + raircraft+date+".RAF_QC_plots.pdf", file)
       file.close()
     else:
-       message= "ERROR: Rename of plots failed"
+       message= "ERROR: Rename of plots failed\n"
 
   except ftplib.all_errors as e:
     print ""
