@@ -515,9 +515,10 @@ if NAS:
   print "*************** Copy files to NAS scratch area ***************"
   for key in file_ext:
     ensure_dir(nas_data_dir+"/"+file_ext[key])
-    if key == "ADS" and not reprocess and process:  
-      print 'Copying '+filename[key]+' to '+nas_data_dir+"/"+file_ext[key]
-      status[key]["stor"] = rsync_file(filename[key],nas_data_dir+"/"+file_ext[key])
+    if (key == "ADS"): 
+      if (not reprocess) and process:
+        print 'Copying '+filename[key]+' to '+nas_data_dir+"/"+file_ext[key]
+        status[key]["stor"] = rsync_file(filename[key],nas_data_dir+"/"+file_ext[key])
     else:
       print 'Copying '+filename[key]+' to '+nas_data_dir+"/"+file_ext[key]
       status[key]["stor"] = rsync_file(filename[key],nas_data_dir+"/"+file_ext[key])
@@ -640,6 +641,7 @@ else:
     final_message = final_message + 'Reprocessing so assume ADS already shipped during first processing\n'
     final_message = final_message + 'If this is not the case, run\n\n'
     final_message = final_message + '"cp /home/data/Raw_Data/'+project+'/*'+flight+'.ads '+nas_sync_dir+'/ADS"\n\n'
+    final_message = final_message + '"cp /home/data/Raw_Data/'+project+'/*'+flight+'.ads '+nas_scr_dir+'/ads"\n\n'
     final_message = final_message + 'when this script is complete\n\n'
     final_message = final_message + '***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n'
   else:
@@ -668,9 +670,10 @@ else:
 
   for key in file_ext:
     os.chdir(inst_dir[key])
-    if key == "ADS" and not reprocess and process:  
-      status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/' + key)
-      print 'Copying '+filename[key]+' file to '+nas_sync_dir+'/' + key
+    if (key == "ADS"):
+      if (not reprocess) and process:  
+        status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/' + key)
+        print 'Copying '+filename[key]+' file to '+nas_sync_dir+'/' + key
     else:
       status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/' + key)
       print 'Copying '+filename[key]+' file to '+nas_sync_dir+'/' + key
