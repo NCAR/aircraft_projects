@@ -39,12 +39,12 @@ NAS_permanent_mount = False
 nas_url =        '192.168.1.30:/data'
 nas_mnt_pt =     '/mnt/Data'
 
-
 ### remote FTP setup (if no NAS) ###
-#ftp_site =       'data.eol.ucar.edu'
-#user =           'orcas'
-#password =       'all4thepod'
-#ftp_data_dir =   'synced_data'
+FTP =    False
+ftp_site =       'ftp.eol.ucar.edu'
+user =           'anonymous'
+password =       'ads@ucar.edu'
+ftp_data_dir =   '/pub/data/incoming/wecan'
 
 ### local FTP setup ###
 #local_ftp_site = '192.168.1.10'
