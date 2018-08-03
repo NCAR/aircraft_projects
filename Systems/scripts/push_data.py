@@ -596,43 +596,51 @@ if catalog and process:
 # No NAS this project, so put files to EOL server. Put 
 # zipped files if they exist.
 # This has not been tested as of WECAN (2018)
-if NAS != True:
+if FTP == True:
   try:
     print 'opening FTP connection to: ' + ftp_site
 
     ftp = ftplib.FTP(ftp_site)
-    ftp.login(user, password)
-    ftp.cwd(ftp_data_dir)
+    ftp.login("anonymous", email)
     print ""
     print datetime.datetime.now().time()
-
-    print "Putting files: "
-    for key in file_ext:
-      print filename[key]+' '
-      os.chdir(inst_dir[key])
-      if filename[key] != '': 
-        if sendzipped:
-          file_name = filename[key]+".zip"
-        else:
-          file_name = filename[key]
-        file = open(file_name, 'r')
-        ftp.storbinary('STOR ' + file_name, file)
-        file.close()
-        status[key]["stor"] = 'Yes-FTP'
-
-    print datetime.datetime.now().time()
-    print "Finished putting data file"
-    print ""
-    ftp.quit()
 
   except ftplib.all_errors as e:
     print ""
-    print 'Error writing nc/kml/iwg1/icartt data file to eol server'
+    print 'Error connecting to FTP site ' + ftp_site
     print e
     ftp.quit()
 
+  print "Putting files: "
+  for key in file_ext:
+    try:
+      os.chdir(inst_dir[key])
+      print 'Putting '+filename[key]+' to '+ftp_site+':/'+ftp_data_dir+'/'+key
+      if filename[key] != '': 
+        data_dir,file_name = os.path.split(filename[key])
+        if sendzipped:
+          file_name = file_name+".zip"
+        else:
+          file_name = file_name
+        ftp.cwd(ftp_data_dir+'/'+key)
+        file = open(file_name, 'r')
+        print ftp.storbinary('STOR ' + file_name, file)
+        file.close()
+        status[key]["stor"] = 'Yes-FTP'
+
+      print datetime.datetime.now().time()
+      print "Finished putting data file"
+      print ""
+
+    except ftplib.all_errors as e:
+      print ""
+      print 'Error writing '+file_name+' to '+ftp_site+':/'+ftp_data_dir+'/'+key
+      print e
+
+  ftp.quit()
+
 # put zipped file onto NAS for BT-syncing back home.
-else:
+if NAS == True:
   print ""
   print "***** Copy files to NAS sync area for transfer back home *****"
 
@@ -641,7 +649,7 @@ else:
     final_message = final_message + 'Reprocessing so assume ADS already shipped during first processing\n'
     final_message = final_message + 'If this is not the case, run\n\n'
     final_message = final_message + '"cp /home/data/Raw_Data/'+project+'/*'+flight+'.ads '+nas_sync_dir+'/ADS"\n\n'
-    final_message = final_message + '"cp /home/data/Raw_Data/'+project+'/*'+flight+'.ads '+nas_scr_dir+'/ads"\n\n'
+    final_message = final_message + '"cp /home/data/Raw_Data/'+project+'/*'+flight+'.ads '+nas_data_dir+'/ads"\n\n'
     final_message = final_message + 'when this script is complete\n\n'
     final_message = final_message + '***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n'
   else:
