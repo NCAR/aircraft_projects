@@ -50,7 +50,7 @@ busy_file = temp_dir+'DIST_PROD'  # Temp file that exists if program is running.
 
 # Initialize some blank strings
 final_message = ""
-project = ""
+project = os.environ["PROJECT"]
 flight = ""
 found_data = False
 
@@ -318,7 +318,10 @@ def dist_raw_file(fn,mtime,found_data,project):
         logging.info("File is new. Copy it.")
         found_data=True
 
-    command = 'mv -f '+filename+' '+raw_ads_dir
+    if fn.endswith(".2d"):
+        command = 'mv -f '+filename+' '+raw_ads_dir+"/PMS2D"
+    else:
+        command = 'mv -f '+filename+' '+raw_ads_dir
     message = ' Moving raw file into place: '+command
     logging.info(message)
     final_message = final_message + message
