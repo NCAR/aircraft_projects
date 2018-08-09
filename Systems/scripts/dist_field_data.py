@@ -33,6 +33,7 @@ reZip = re.compile("zip")
 reRawFile = re.compile("(\d+)_(\d+)_(\S\S\d\d).[ads|2d]")
 reProdFile = re.compile("(\S+)(\Sf\d\d)\S*\.(\S+)")
 reRawProjName = re.compile("project name: (\S+)")
+reRawProjName2d = re.compile("<Project>(\S+)</Project>")
 
 ###  Configuration for the distribution - modify the following
 cronTime = 60*24	# How often (in mins) script is run from crontab
@@ -40,8 +41,8 @@ cronTime = 60*24	# How often (in mins) script is run from crontab
 # at start of transfer, need to go back 8 hours.
 NAS_in_field =    True                            # Set to false for ftp 
 temp_dir =        '/tmp/'                         # Where we unzip & put busy
-dat_parent_dir =  os.environ["DATA_DIR"] + '/'    # Where nc files go
-rdat_parent_dir = os.environ["RAW_DATA_DIR"] + '/'# Where raw ads files go
+dat_parent_dir =  "DATA_DIR" + '/'    # Where nc files go
+rdat_parent_dir = "RAW_DATA_DIR" + '/'# Where raw ads files go
 ftp_parent = False				  # Set to true to copy to ftp
 ftp_parent_dir =  '/net/ftp/pub/data/download/'   # Where nc files go for PIs
 busy_file = temp_dir+'DIST_PROD'  # Temp file that exists if program is running. 
@@ -50,7 +51,7 @@ busy_file = temp_dir+'DIST_PROD'  # Temp file that exists if program is running.
 
 # Initialize some blank strings
 final_message = ""
-project = os.environ["PROJECT"]
+project = ""
 flight = ""
 found_data = False
 
@@ -285,6 +286,21 @@ def dist_raw_file(fn,mtime,found_data,project):
               project = m.group(1)
               break
 
+    if fn.endswith(".2d"):
+      message = 'Stepping through file:'+filename+' to get project\n'
+      logging.info(message)
+      final_message = final_message + message
+
+      file = open(filename)
+      for line in file:
+          m = reRawProjName2d.search(line)
+          if m:
+              message = '  Found proj line:'+line
+              logging.info(message)
+              final_message = final_message + message
+              project = m.group(1)
+              break
+
       # Find or create project dir under RAW_DATA_DIR
       raw_ads_dir = rdat_parent_dir + project
       if not os.path.isdir(raw_ads_dir):
@@ -300,8 +316,12 @@ def dist_raw_file(fn,mtime,found_data,project):
 	      exit(1)
 
       logging.info('Raw Data Dir: '+raw_ads_dir)
-
-    raw_ads_dir = rdat_parent_dir + project
+    
+    if fn.endswith(".2d"):
+       raw_ads_dir = rdat_parent_dir + project + "/PMS2D"
+    else:
+       raw_ads_dir = rdat_parent_dir + project
+    
     # Check if file has already been copied
     try:
         if os.stat(raw_ads_dir+"/"+filename).st_mtime < mtime:
@@ -310,7 +330,7 @@ def dist_raw_file(fn,mtime,found_data,project):
             found_data=True
         else:
             # File is not new - abort
-            message = "ADS file already copied. Refusing to recopy.\n"
+            message = "ADS/PMS2D raw file already copied. Refusing to recopy.\n"
             logging.info(message)
             return(final_message+message)
     except:
@@ -318,10 +338,7 @@ def dist_raw_file(fn,mtime,found_data,project):
         logging.info("File is new. Copy it.")
         found_data=True
 
-    if fn.endswith(".2d"):
-        command = 'mv -f '+filename+' '+raw_ads_dir+"/PMS2D"
-    else:
-        command = 'mv -f '+filename+' '+raw_ads_dir
+    command = 'mv -f '+filename+' '+raw_ads_dir
     message = ' Moving raw file into place: '+command
     logging.info(message)
     final_message = final_message + message
