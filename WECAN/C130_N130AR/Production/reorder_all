@@ -1,0 +1,10 @@
+#!/bin/csh
+
+cd ${DAT}
+
+foreach file ( WECAN?f??.nc )
+  echo $file
+  nccopy -u $file wecan_temp.nc
+  mv -f wecan_temp.nc $file
+  chmod g+w $file
+end
