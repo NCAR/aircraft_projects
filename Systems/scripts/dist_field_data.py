@@ -41,8 +41,8 @@ cronTime = 60*24	# How often (in mins) script is run from crontab
 # at start of transfer, need to go back 8 hours.
 NAS_in_field =    True                            # Set to false for ftp 
 temp_dir =        '/tmp/'                         # Where we unzip & put busy
-dat_parent_dir =  "DATA_DIR" + '/'    # Where nc files go
-rdat_parent_dir = "RAW_DATA_DIR" + '/'# Where raw ads files go
+dat_parent_dir =  os.environ["DATA_DIR"] + '/'    # Where nc files go
+rdat_parent_dir = os.environ["RAW_DATA_DIR"] + '/'# Where raw ads files go
 ftp_parent = False				  # Set to true to copy to ftp
 ftp_parent_dir =  '/net/ftp/pub/data/download/'   # Where nc files go for PIs
 busy_file = temp_dir+'DIST_PROD'  # Temp file that exists if program is running. 
