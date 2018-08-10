@@ -1325,6 +1325,16 @@
             <variable longname="CFDC Filter (ON=1)" name="FILTER" units="bool"/>
         </sample>
     </sensor>
+    <sensor ID="SP2" class="UDPSocketSensor" devicename="usock::30109" suffix="_SP2">
+        <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f">
+            <variable longname="SP2 Sample Flow LFE" name="QS" units="vccm"/>
+            <variable longname="SP2 Alicat FC Read" name="QD" units="vol"/>
+            <variable longname="SP2 YAG Power" name="YAGP" units="V"/>
+            <variable longname="SP2 Scatter. Conc." name="SCAT" units="#/cc"/>
+            <variable longname="SP2 Incand. Conc." name="INC" units="#/cc"/>
+        </sample>
+    </sensor>
+
     <serialSensor ID="CCN" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%f, %f, %f, %f, %f, %f, %f, %f, %f">
             <variable longname="CCN Sample Temperature" name="AT" units="deg_C"/>
@@ -1378,7 +1388,7 @@
         </sample>
     </sensor>
     <sensor ID="AWAS" class="UDPSocketSensor" devicename="usock::30131" suffix="_AWAS">
-        <sample id="1" rate="1" scanfFormat="AWAS_STATUS,%*dT%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%1d%1d%1d%1d%1d%1d%1d%1d">
+        <sample id="1" rate="1" scanfFormat="AWAS_STATUS,%*dT%*2d%*2d%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%1d%1d%1d%1d%1d%1d%1d%1d">
             <variable longname="AWAS Version" name="VERSION" units="number"/>
             <variable longname="AWAS Can Number" name="CANNUM" units="number"/>
 	    <variable longname="AWAS Seconds Open" name="SECOPN" units="sec"/>
@@ -1421,14 +1431,14 @@
             <variable longname="SMPS Relative Humidity" name="RH" units="Pct"/>
         </sample> 
     </sensor>
-    <serialSensor ID="SP2" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+    <!--serialSensor ID="SP2" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%f %f %f">
             <variable longname="SP2 Concentration Incand Particles" name="CIP" units="#/cm3"/>
             <variable longname="SP2 YAG Power" name="YAGP" units="V"/>
             <variable longname="SP2 Sample Flow Rate" name="FLOW" units="cc/min"/>
         </sample>
         <message length="0" position="end" separator="\r\n"/>
-    </serialSensor>
+    </serialSensor-->
     <serialSensor ID="TDLH2O" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="20" scanfFormat="%*f %*f %*f %*f %*f %*f %f %f %f %f %f %f %f %f">
             <variable longname="2f Signal Amplitude, TDL Short Path" name="PP2FS" units="count"/>
@@ -1644,6 +1654,7 @@
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
       <sensor IDREF="CFDC" devicename="usock::30105" id="600"/>
       <sensor IDREF="NONOYO3" devicename="usock::30107" id="700"/>
+      <sensor IDREF="SP2" devicename="usock::30109" id="900"/>
       <sensor IDREF="HARP_ACTINIC_FLUX" devicename="usock::30108" id="1500"/>
       <sensor IDREF="TOGA" devicename="usock::30120" id="1600"/>
       <sensor IDREF="PAN-CIMS" devicename="usock::30126" id="1700"/>
