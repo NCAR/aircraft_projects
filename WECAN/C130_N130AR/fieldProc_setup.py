@@ -7,6 +7,10 @@
 #   case version of the project name e.g. icebridge2015 not ICEBRIDGE2015
 #
 # This script currently copies all data files back to Boulder.
+# A future upgrade would be to put the proc, ship, and stor booleans (i.e. the 
+# status hash from push_data) into this file so users could set them here. 
+# (Would need to modify push_data to use user requests rather than overwriting
+# in certain places.
 
 # Plots - set path to RStudio dir
 rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
