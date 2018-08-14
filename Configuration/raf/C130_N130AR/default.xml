@@ -1327,14 +1327,15 @@
             <variable longname="SMPS Relative Humidity" name="RH" units="Pct"/>
         </sample> 
     </sensor>
-    <serialSensor ID="SP2" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%f %f %f">
-            <variable longname="SP2 Concentration Incand Particles" name="CIP" units="#/cm3"/>
+    <sensor ID="CSUSP2" class="UDPSocketSensor" devicename="usock::30109" suffix="_SP2">
+        <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f">
+            <variable longname="SP2 Sample Flow LFE" name="QS" units="vccm"/>
+            <variable longname="SP2 Alicat FC Read" name="QD" units="vol"/>
             <variable longname="SP2 YAG Power" name="YAGP" units="V"/>
-            <variable longname="SP2 Sample Flow Rate" name="FLOW" units="cc/min"/>
+            <variable longname="SP2 Scatter. Conc." name="SCAT" units="#/cc"/>
+            <variable longname="SP2 Incand. Conc." name="INC" units="#/cc"/>
         </sample>
-        <message length="0" position="end" separator="\r\n"/>
-    </serialSensor>
+    </sensor>
     <serialSensor ID="TDLH2O" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="20" scanfFormat="%*f %*f %*f %*f %*f %*f %f %f %f %f %f %f %f %f">
             <variable longname="2f Signal Amplitude, TDL Short Path" name="PP2FS" units="count"/>
