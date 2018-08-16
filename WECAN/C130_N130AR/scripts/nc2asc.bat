@@ -1,4 +1,3 @@
-if=/scr/raf_data/WECAN/WECANrf04.nc
 hd= ICARTT
 avg= 1
 dt= NoDate
