@@ -15,14 +15,9 @@ for CATALOG_SSH_KEY in 'id_rsa' 'ingest_deploy_key_rsa' 'maps_aircraft_assets_de
 done
 
 #
-# verify that CATALOG_PLANE is set
+# CATALOG_PLANES: set up acserver for both aircraft, to better handle case where acserver switches aircraft
 #
-if [ -z "$CATALOG_PLANE" ]; then
-  echo "ERROR: Environment variable CATALOG_PLANE is not set or is empty. Please set CATALOG_PLANE."
-  exit 1
-fi
-
-echo "plane: $CATALOG_PLANE"
+CATALOG_PLANES=(c130 gv)
 
 \cd
 
@@ -78,7 +73,9 @@ GITCONFIG
     #
     # touch ingest project PID file
     #
-    touch tmp/$CATALOG_PLANE-monitor-queue.pid
+    for CATALOG_PLANE in "${CATALOG_PLANES[@]}"; do
+      touch tmp/$CATALOG_PLANE-monitor-queue.pid
+    done
   elif [ $APP = 'maps-aircraft-assets' ]; then
     ./bin/link-assets
   fi
@@ -98,7 +95,9 @@ docker-compose build
 docker-compose run app bundle --path vendor --local
 docker-compose run ingest bundle --path vendor --local
 
-docker-compose run app ./bin/rake map:load[config/aircraft/$CATALOG_PLANE.yml]
+for CATALOG_PLANE in "${CATALOG_PLANES[@]}"; do
+  docker-compose run app ./bin/rake map:load[config/aircraft/$CATALOG_PLANE.yml]
+done
 
 docker-compose run app ./bin/rake assets:precompile
 
