@@ -7,15 +7,12 @@ if [ `whoami` != 'catalog' ]; then
   exit 1
 fi
 
-if [ ! -f ~/.ssh/id_rsa ]; then
-  echo "ERROR: SSH key ~/.ssh/id_rsa does not exist. Please add SSH key."
-  exit 1
-fi
-
-if [ ! -f ~/.ssh/ingest_deploy_key_rsa ]; then
-  echo "ERROR: SSH key ~/.ssh/ingest_deploy_key_rsa does not exist. Please add SSH key."
-  exit 1
-fi
+for CATALOG_SSH_KEY in 'id_rsa' 'ingest_deploy_key_rsa' 'maps_aircraft_assets_deploy_key_rsa'; do
+  if [ ! -f ~/.ssh/$CATALOG_SSH_KEY ]; then
+    echo "ERROR: SSH key ~/.ssh/$CATALOG_SSH_KEY does not exist. Please add SSH key."
+    exit 1
+  fi
+done
 
 #
 # verify that CATALOG_PLANE is set
@@ -30,34 +27,41 @@ echo "plane: $CATALOG_PLANE"
 \cd
 
 #
-# git clone maps, ingest
+# git clone maps, ingest, maps-aircraft-assets
 #
-for APP in 'ingest' 'maps'; do
+for APP in 'catalog-ingest' 'catalog-maps' 'maps-aircraft-assets'; do
 
   echo "setting up $APP"
 
-  if [ $APP = 'ingest' ] ; then
-    REPO=ssh://github-catalog-ingest/ncareol/catalog-$APP.git
+  if [ $APP = 'catalog-ingest' ] ; then
+    REPO=ssh://github-catalog-ingest/ncareol/catalog-ingest.git
+  elif [ $APP = 'maps-aircraft-assets' ]; then
+    REPO=ssh://github-maps-aircraft-assets/NCAR/maps-aircraft-assets.git
   else
-    REPO=git@github.com:ncareol/catalog-$APP.git
+    REPO=git@github.com:ncareol/catalog-maps.git
   fi
 
   git clone $REPO
-  \cd catalog-$APP
+  \cd $APP
 
-  if [ $APP = 'ingest' ] ; then
+  if [ $APP = 'catalog-ingest' ] ; then
     git checkout feature-dockerize
     _hook=etc/acserver/post-receive
+  elif [ $APP = 'maps-aircraft-assets' ]; then
+    git checkout master
+    _hook=hooks/post-receive
   else
     git checkout master
-    _hook=config/hooks/$CATALOG_PLANE/post-receive
+    _hook=config/hooks/acserver/post-receive
   fi
 
   #
   # Easy-Deploy hook
   #
 
-  cp -v $_hook .git/hooks/post-receive
+  cd .git/hooks
+  ln -s ../../$_hook
+  cd ../../
 
   #
   # add '[receive]' section to .git/config
@@ -70,11 +74,13 @@ for APP in 'ingest' 'maps'; do
 GITCONFIG
   fi
 
-  if [ $APP = 'ingest' ] ; then
+  if [ $APP = 'catalog-ingest' ] ; then
     #
     # touch ingest project PID file
     #
     touch tmp/$CATALOG_PLANE-monitor-queue.pid
+  elif [ $APP = 'maps-aircraft-assets' ]; then
+    ./bin/link-assets
   fi
 
   \cd
@@ -92,7 +98,7 @@ docker-compose build
 docker-compose run app bundle --path vendor --local
 docker-compose run ingest bundle --path vendor --local
 
-docker-compose run app ./bin/rake map:load[config/map/$CATALOG_PLANE.yml]
+docker-compose run app ./bin/rake map:load[config/aircraft/$CATALOG_PLANE.yml]
 
 docker-compose run app ./bin/rake assets:precompile
 
