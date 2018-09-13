@@ -218,7 +218,15 @@
       <long_name>Attack Angle, Radome Diff. Pressure</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>ADIFR QCF PSF</dependencies>
+      <dependencies>ADIFR QCF PSF GGALT</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="AKY">
+      <units>degree</units>
+      <long_name>Attack Angle, Radome Diff. Pressure</long_name>
+      <is_analog>false</is_analog>
+      <category>Aircraft State</category>
+      <dependencies>ADIFR QCF</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="ALT">
@@ -387,7 +395,7 @@
       <long_name>Attack Angle, Reference</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>AKRD</dependencies>
+      <dependencies>AKY</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="ATX">
@@ -1050,7 +1058,7 @@
       <units>#/cm3</units>
       <long_name>UHSAS CVI Drop Concentration (all cells)</long_name>
       <is_analog>false</is_analog>
-      <dependencies>TACTU_CVIU CVCFACT USMPFLW_CVIU CVINLET</dependencies>
+      <dependencies>TACTU_CVIU CVCFACTC USMPFLW_CVIU CVINLET</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="CONCV">
@@ -1212,11 +1220,18 @@
       <dependencies>AUHSAS UFLWC</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="CVCFACTC">
+      <units></units>
+      <long_name>CVI Concentration Factor, Compensated for Icing</long_name>
+      <is_analog>false</is_analog>
+      <dependencies>CVCFACT CVINLET CVCWC ATX</dependencies>
+      <reference>false</reference>
+    </variable>
     <variable name="CVCFACTTDL">
       <units></units>
       <long_name>CVI TDL Concentration Factor</long_name>
       <is_analog>false</is_analog>
-      <dependencies>CVCFACT CVPCN CVTCN PTDLR TTDLR</dependencies>
+      <dependencies>CVCFACTC CVPCN CVTCN PTDLR TTDLR</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="CVCWCC">
@@ -1231,6 +1246,13 @@
       <long_name>CMIGITS-III Ground Speed Vector, East Component</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
+      <reference>false</reference>
+    </variable>
+    <variable name="CVIFLAG">
+      <units>bool</units>
+      <long_name>CVI Flag</long_name>
+      <is_analog>false</is_analog>
+      <dependencies>CVCFACTC</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="CVNS">
@@ -5313,6 +5335,13 @@
       <is_analog>false</is_analog>
       <dependencies>ATX MR</dependencies>
       <standard_name>virtual_temperature</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="UFLAG">
+      <units>bool</units>
+      <long_name>CVI UHSAS Data Quality Flag (0=questionable, 1=good)</long_name>
+      <is_analog>false</is_analog>
+      <dependencies>TACTU</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="UFLWC">
