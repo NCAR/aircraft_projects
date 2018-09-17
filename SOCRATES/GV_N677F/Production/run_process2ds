@@ -1,6 +1,10 @@
 #!/bin/csh
 
-setenv DAT ${DATA_DIR}/SOCRATES
+if ($uid == 20000) then
+  setenv DAT /scr/raf/local_productiondata/
+else
+  setenv DAT ${DATA_DIR}/SOCRATES
+endif
 
 
 cd ${RAW_DATA_DIR}/SOCRATES/2DS
