@@ -221,6 +221,14 @@
       <dependencies>ADIFR QCF PSF GGALT</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="AKY">
+      <units>degree</units>
+      <long_name>Attack Angle, Radome Diff. Pressure</long_name>
+      <is_analog>false</is_analog>
+      <category>Aircraft State</category>
+      <dependencies>ADIFR QCF</dependencies>
+      <reference>false</reference>
+    </variable>
     <variable name="ALT">
       <units>m</units>
       <long_name>IRS Baro-Inertial Altitude</long_name>
@@ -1852,7 +1860,7 @@
       <long_name>D-VALUE (GGALT - PALT)</long_name>
       <is_analog>false</is_analog>
       <category>Position</category>
-      <dependencies>GGALT PALT</dependencies>
+      <dependencies>GEOPTH PALT</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="EDPC">
@@ -2151,12 +2159,21 @@
       <standard_name>altitude</standard_name>
       <reference>false</reference>
     </variable>
+    <variable name="GEOPTH">
+      <units>m</units>
+      <long_name>Geopotential height [MSL]</long_name>
+      <is_analog>false</is_analog>
+      <category>Position</category>
+      <dependencies>GGALT GGLAT GGEOIDHT</dependencies>
+      <standard_name>height</standard_name>
+      <reference>false</reference>
+    </variable>
     <variable name="GGALT">
       <units>m</units>
       <long_name>GPS Geopotential Altitude</long_name>
       <is_analog>false</is_analog>
       <category>Position</category>
-      <derive>DVALUE</derive>
+      <derive>GEOPTH DVALUE</derive>
       <standard_name>altitude</standard_name>
       <reference>false</reference>
     </variable>
@@ -5498,6 +5515,15 @@
       <is_analog>false</is_analog>
       <category>Wind</category>
       <dependencies>TASX VEWC VNSC PITCH ROLL THDG ATTACK SSLIP GGVSPD</dependencies>
+      <standard_name>upward_air_velocity</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="WIY">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Wind Vector, Vertical Gust Component</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>TASX VEWC VNSC PITCH ROLL THDG AKY SSLIP GGVSPD</dependencies>
       <standard_name>upward_air_velocity</standard_name>
       <reference>false</reference>
     </variable>
