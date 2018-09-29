@@ -7,15 +7,12 @@ sleep 2
 
 setenv DISPLAY :6.1
 
-#if ($uid == 20000) then
-#  setenv DAT /scr/raf/local_productiondata/
-#else
-setenv DAT /scr/raf/Prod_Data/SOCRATES/CVI
-#endif
+#setenv DAT ${DATA_DIR}/SOCRATES
+setenv CVIDAT /scr/raf/Prod_Data/SOCRATES/CVI
 
-#./mac2unixRename.sh*
-#./run_asc2cdf
-#./cvi_atted.sh*
+./mac2unixRename.sh*
+./run_asc2cdf
+./cvi_atted.sh*
 ./merge_cvi.sh*
 
 kill $xvpid

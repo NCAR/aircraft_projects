@@ -4,20 +4,20 @@
 # breaks the files into lines (they came over as the entire contents of
 # the file on one line.
 
-unzip ${DAT}/CVIDataroMerge.zip
+unzip ${CVIDAT}/CVIDataroMerge.zip
 
-mv ${DAT}/RF03DatatoMerge\ copy.txt ${DAT}/RF03DatatoMergecopy.txt
-mv ${DAT}/RF08DatatoMerge\ copy.txt ${DAT}/RF08DatatoMergecopy.txt
-mv ${DAT}/RF09DatatoMerge\ copy.txt ${DAT}/RF09DatatoMergecopy.txt
-mv ${DAT}/RF10DatatoMerge\ copy.txt ${DAT}/RF10DatatoMergecopy.txt
-mv ${DAT}/RF12DatatoMerge\ copy.txt ${DAT}/RF12DatatoMergecopy.txt
-mv ${DAT}/RF14DatatoMerge\ copy.txt ${DAT}/RF14DatatoMergecopy.txt
-mv ${DAT}/RF15DatatoMerge\ copy.txt ${DAT}/RF15DatatoMergecopy.txt
+mv ${CVIDAT}/RF03DatatoMerge\ copy.txt ${CVIDAT}/RF03DatatoMergecopy.txt
+mv ${CVIDAT}/RF08DatatoMerge\ copy.txt ${CVIDAT}/RF08DatatoMergecopy.txt
+mv ${CVIDAT}/RF09DatatoMerge\ copy.txt ${CVIDAT}/RF09DatatoMergecopy.txt
+mv ${CVIDAT}/RF10DatatoMerge\ copy.txt ${CVIDAT}/RF10DatatoMergecopy.txt
+mv ${CVIDAT}/RF12DatatoMerge\ copy.txt ${CVIDAT}/RF12DatatoMergecopy.txt
+mv ${CVIDAT}/RF14DatatoMerge\ copy.txt ${CVIDAT}/RF14DatatoMergecopy.txt
+mv ${CVIDAT}/RF15DatatoMerge\ copy.txt ${CVIDAT}/RF15DatatoMergecopy.txt
 
-mac2unix ${DAT}/RF03DatatoMergecopy.txt
-mac2unix ${DAT}/RF08DatatoMergecopy.txt
-mac2unix ${DAT}/RF09DatatoMergecopy.txt
-mac2unix ${DAT}/RF10DatatoMergecopy.txt
-mac2unix ${DAT}/RF12DatatoMergecopy.txt
-mac2unix ${DAT}/RF14DatatoMergecopy.txt
-mac2unix ${DAT}/RF15DatatoMergecopy.txt
+mac2unix ${CVIDAT}/RF03DatatoMergecopy.txt
+mac2unix ${CVIDAT}/RF08DatatoMergecopy.txt
+mac2unix ${CVIDAT}/RF09DatatoMergecopy.txt
+mac2unix ${CVIDAT}/RF10DatatoMergecopy.txt
+mac2unix ${CVIDAT}/RF12DatatoMergecopy.txt
+mac2unix ${CVIDAT}/RF14DatatoMergecopy.txt
+mac2unix ${CVIDAT}/RF15DatatoMergecopy.txt

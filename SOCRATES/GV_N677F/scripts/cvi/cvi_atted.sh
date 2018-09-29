@@ -2,7 +2,7 @@
 
 exec > ./cvatted.log 2>&1
 
-for filename in `ls -1 ${DAT}/RF*nc`
+for filename in `ls -1 ${CVIDAT}/RF*nc`
 do
     ncatted -a units,CVIFLAG,m,c,"bool" -h $filename
     ncatted -a long_name,CVIFLAG,m,c,"CVI flag" -h $filename
