@@ -1,0 +1,26 @@
+#!/bin/csh
+
+/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac :6 &
+set xvpid=$!
+onintr int
+sleep 2
+
+setenv DISPLAY :6.1
+
+#if ($uid == 20000) then
+#  setenv DAT /scr/raf/local_productiondata/
+#else
+setenv DAT /scr/raf/Prod_Data/SOCRATES/CVI
+#endif
+
+#./mac2unixRename.sh*
+#./run_asc2cdf
+#./cvi_atted.sh*
+./merge_cvi.sh*
+
+kill $xvpid
+exit 0
+
+int:
+  kill $xvpid
+  exit 1
