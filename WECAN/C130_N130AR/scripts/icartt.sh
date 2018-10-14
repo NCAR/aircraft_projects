@@ -1,10 +1,10 @@
 #!/bin/bash
 
-if ($uid == 20000) then
-  setenv DAT /scr/raf/local_productiondata
+if [ "$UID" -eq 20000 ]; then
+  DAT=/scr/raf/local_productiondata
 else
-  setenv DAT ${DATA_DIR}/WECAN
-endif
+  DAT=${DATA_DIR}/WECAN
+fi
 
 BATCH_FILE=${PROJ_DIR}/WECAN/C130_N130AR/scripts/nc2asc.bat
 
