@@ -1,0 +1,37 @@
+To create the three files required by DC3:
+
+D3-RAF-AEROSOL_GV_YYYYMMDD_R#.ICT
+D3-RAF-CLOUDS_GV_YYYYMMDD_R#.ICT
+D3-RAF-NAV_GV_YYYYMMDD_R#.ICT
+
+copy all the scripts from this dir, and the final LRT netCDF files, to a working
+directory.
+
+Run:
+> create_icartt.sh
+> update_comments.pl
+> mvit
+
+Note that if you need to create a new revision (R2), then determine what changed
+with the LRT files and edit update_comments.pl. Change:
+
+REVISION:R1; R0
+to
+REVISION:R2; R1; R0
+
+and below that add a line beginnning with R2: and a description of the change, i.e.
+R2: Type changes here
+
+Finally, change the value added to header_lines to equal the revision number so
+the header count will be correct.
+
+Zip all the files together so you can scan them in one go:
+
+zip DC3-RAF.zip DC3*ICT
+
+Then go to http://www-air.larc.nasa.gov/cgi-bin/fscan and scan and upload all the
+new files.
+
+JAA
+1/29/2012
+
