@@ -1,0 +1,27 @@
+#!/bin/csh
+
+set I=0
+set PREFIX = "CONTRAST-LRT_GV_"
+set Version = "_V2"
+
+foreach C (`ls /scr/raf/Prod_Data/CONTRAST/LRT/V2_UHSAS_update/CONTRAST*.nc`)
+	set FDate = `ncdump -h $C | grep FlightDate`
+	set FMonth = `echo $FDate | awk '{print substr($0,16,2)}'`
+	set FDay = `echo $FDate | awk '{print substr($0,19,2)}'`
+	set FYear = `echo $FDate | awk '{print substr($0,22,4)}'`
+	set ascDate = $FYear$FMonth$FDay"_"
+
+set RFpos = `echo $C | awk '{print index($0, ".nc")}'`
+set SFX = `echo $C $RFpos | awk '{print substr($0,$2-4,4)}'`
+
+#echo $C $RFpos | awk '{print $0,$1,$2,$3}'
+#echo $PREFIX$ascDate$SFX$Version.asc
+#exit
+
+	echo "if="$C > temp
+	echo "of=$PREFIX$ascDate$SFX$Version.GV" >> temp
+	echo "sp=Space" >> temp
+	echo "hd=AmesDEF" >> temp
+	cat var_list >> temp
+	nc2asc -b temp
+end
