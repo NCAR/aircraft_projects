@@ -9,7 +9,7 @@ mv base180102124417.2d TF01/.
 #Do non-RF flights (no lag fixes identified)
 foreach file (TF02/*2DS [F]*/*2DS)
     set flight=`echo $file | sed 's/\/.*$//'`
-    echo "translate2ds -flight $flight -project SOCRATES -platform GV_N677F -sn SPEC001  -f $file"
+    translate2ds -flight $flight -project SOCRATES -platform GV_N677F -sn SPEC001  -f $file
     set outfile=`echo $file | sed 's/.2DS/.2d/'`
     set twodfile=`echo $outfile | sed 's/^.*\///'`
     mv $twodfile $outfile
@@ -41,7 +41,7 @@ foreach file ([R]*/*2DS)
     set lag_index=`echo $flight| sed 's/RF//'`
     # Find offset that corresponds to flight
     set offset = `python -c "lags=[-11,-12,-14,-15,-17,-19,-20,-24,-26,-27,-32,-34,-36,-37,-39]; print lags[int('$lag_index')-1]"`
-    echo /net/work/dev/jaa/aircraft_oap/translate2ds/translate2ds -flight $flight -project SOCRATES -platform GV_N677F -sn SPEC001 -offset $offset -f $file
+    /net/work/dev/jaa/aircraft_oap/translate2ds/translate2ds -flight $flight -project SOCRATES -platform GV_N677F -sn SPEC001 -offset $offset -f $file
     set outfile=`echo $file | sed 's/.2DS/.2d/'`
     set twodfile=`echo $outfile | sed 's/^.*\///'`
     mv $twodfile $outfile
