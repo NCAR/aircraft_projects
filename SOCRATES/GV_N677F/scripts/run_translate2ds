@@ -17,28 +17,30 @@ end
 
 
 # Now process all the research flights and apply lags to each one
-#Here are the 2DS lag times (in seconds) for each SOCRATES flight (from Cory)
-#RF01 - 11
-#RF02 - 12
-#RF03 - 14
-#RF04 - 15
-#RF05 - 17
-#RF06 - 19
-#RF07 - 20
-#RF08 - 24
-#RF09 - 26
-#RF10 - 27
-#RF11 - 32
-#RF12 - 34
-#RF13 - 36
-#RF14 - 37
-#RF15 - 39
+# Here are the 2DS lag times (in seconds) for each SOCRATES flight (from Cory)
+# 2DS data is later than it should be, so apply negative lag to get correct
+# time.
+#RF01 = -11
+#RF02 = -12
+#RF03 = -14
+#RF04 = -15
+#RF05 = -17
+#RF06 = -19
+#RF07 = -20
+#RF08 = -24
+#RF09 = -26
+#RF10 = -27
+#RF11 = -32
+#RF12 = -34
+#RF13 = -36
+#RF14 = -37
+#RF15 = -39
 foreach file ([R]*/*2DS)
     set flight=`echo $file | sed 's/\/.*$//'`
     # Pull out the number part of the flight number
     set lag_index=`echo $flight| sed 's/RF//'`
     # Find offset that corresponds to flight
-    set offset = `python -c "lags=[11,12,14,15,17,19,20,24,26,27,32,34,36,37,39]; print lags[int('$lag_index')-1]"`
+    set offset = `python -c "lags=[-11,-12,-14,-15,-17,-19,-20,-24,-26,-27,-32,-34,-36,-37,-39]; print lags[int('$lag_index')-1]"`
     echo /net/work/dev/jaa/aircraft_oap/translate2ds/translate2ds -flight $flight -project SOCRATES -platform GV_N677F -sn SPEC001 -offset $offset -f $file
     set outfile=`echo $file | sed 's/.2DS/.2d/'`
     set twodfile=`echo $outfile | sed 's/^.*\///'`
