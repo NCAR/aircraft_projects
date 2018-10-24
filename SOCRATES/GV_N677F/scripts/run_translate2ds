@@ -3,17 +3,17 @@
 cd ${RAW_DATA_DIR}/SOCRATES/2DS
 
 #TF01 was recorded in local time (7 hour offset = 25200 seconds offset). Fix time when processing
-translate2ds -flight TF01 -project SOCRATES -platform GV_N677F -sn SPEC001 -offset 25200 -f TF01/base180102124417.2DS
-mv base180102124417.2d TF01/.
+#translate2ds -flight TF01 -project SOCRATES -platform GV_N677F -sn SPEC001 -offset 25200 -f TF01/base180102124417.2DS
+#mv base180102124417.2d TF01/.
 
 #Do non-RF flights (no lag fixes identified)
-foreach file (TF02/*2DS [F]*/*2DS)
-    set flight=`echo $file | sed 's/\/.*$//'`
-    translate2ds -flight $flight -project SOCRATES -platform GV_N677F -sn SPEC001  -f $file
-    set outfile=`echo $file | sed 's/.2DS/.2d/'`
-    set twodfile=`echo $outfile | sed 's/^.*\///'`
-    mv $twodfile $outfile
-end
+#foreach file (TF02/*2DS [F]*/*2DS)
+#    set flight=`echo $file | sed 's/\/.*$//'`
+#    translate2ds -flight $flight -project SOCRATES -platform GV_N677F -sn SPEC001  -f $file
+#    set outfile=`echo $file | sed 's/.2DS/.2d/'`
+#    set twodfile=`echo $outfile | sed 's/^.*\///'`
+#    mv $twodfile $outfile
+#end
 
 
 # Now process all the research flights and apply lags to each one
@@ -46,3 +46,5 @@ foreach file ([R]*/*2DS)
     set twodfile=`echo $outfile | sed 's/^.*\///'`
     mv $twodfile $outfile
 end
+
+echo "SOCRATES translate2ds processing done" | mail -s "SOCRATES 2DS Processing" 3038757450@tmomail.net
