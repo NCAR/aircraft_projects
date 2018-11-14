@@ -26,7 +26,7 @@ $SIG{'ALRM'} = 'handler';
 
 $| = 1;
 
-$pghost = "eol-rt-data.ml-ext.ucar.edu";
+$pghost = "eol-rt-data.eol.ucar.edu";
 $pgdb = "$ENV{'PGGRND'}";
 
 $dbattr = {RaiseError => 1, AutoCommit => 1};
