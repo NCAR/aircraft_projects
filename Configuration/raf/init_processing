@@ -94,7 +94,15 @@ set files=${proj}'?f??.nc'
 cat > reorder_all << "EOFREO"
 #!/bin/csh
 
+set busyFile='reorderInProgress'
+
 cd ${DAT}
+
+if (-f $busyFile) then
+  exit 0
+endif
+
+touch $busyFile
 
 "EOFREO"
 
@@ -102,10 +110,15 @@ echo "foreach file ( $files )" >> reorder_all
 
 cat >> reorder_all << "EOFREO2"
   echo $file
-  nccopy -u $file temp1.nc
-  mv -f temp1.nc $file
-  chmod g+w $file
+  ncdump -h $file | head | grep --quiet UNLIMITED
+  if ($status > 2) then
+    nccopy -u $file reotemp.nc
+    mv -f reotemp.nc $file
+    chmod g+w $file
+  endif
 end
+
+rm $busyFile
 "EOFREO2"
 
 
