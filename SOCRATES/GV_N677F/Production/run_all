@@ -1,11 +1,11 @@
 #!/bin/csh
 
-/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac :9 &
+/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac :6 &
 set xvpid=$!
 onintr int
 sleep 2
 
-setenv DISPLAY :9.1
+setenv DISPLAY :6.1
 
 if ($uid == 20000) then
   setenv DAT /scr/raf/local_productiondata/
@@ -18,7 +18,11 @@ mkdir ${DAT}
 nice ./run_nimbus
 nice ./reorder_all
 nice ./run_proc2d
+#echo "Processing 2DS is turned off at the moment."
 nice ./run_process2ds
+
+# To merge CVI...
+../scripts/cvi/run_all_cvi
 
 kill $xvpid
 exit 0
