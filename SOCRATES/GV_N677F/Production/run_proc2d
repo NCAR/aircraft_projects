@@ -1,5 +1,12 @@
 #!/bin/csh
 
+if ($uid == 20000) then
+  setenv DAT /scr/raf/local_productiondata/
+else
+  setenv DAT ${DATA_DIR}/SOCRATES
+endif
+
+
 # 2DC
 #process2d ${RAW_DATA_DIR}/SOCRATES/PMS2D/20180102_180150_tf01.2d -o ${DAT}/SOCRATEStf01.nc
 #process2d ${RAW_DATA_DIR}/SOCRATES/PMS2D/20180104_145145_tf02.2d -o ${DAT}/SOCRATEStf02.nc
