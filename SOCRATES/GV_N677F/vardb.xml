@@ -173,6 +173,16 @@
       <category>Uncorr'd Raw</category>
       <reference>false</reference>
     </variable>
+    <variable name="ADIFF">
+      <units>hPa</units>
+      <long_name>Vertical Differential Pressure, Radome (Filtered)</long_name>
+      <is_analog>true</is_analog>
+      <voltage_range>-10 10</voltage_range>
+      <default_sample_rate>100</default_sample_rate>
+      <category>Uncorr'd Raw</category>
+      <derive>AKFF</derive>
+      <reference>false</reference>
+    </variable>
     <variable name="ADIFR">
       <units>hPa</units>
       <long_name>Vertical Differential Pressure, Radome</long_name>
@@ -211,6 +221,14 @@
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
       <dependencies>ADIF QCB MACHX</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="AKFF">
+      <units>degree</units>
+      <long_name>Attack Angle, Radome Diff. Pressure (Filtered)</long_name>
+      <is_analog>false</is_analog>
+      <category>Aircraft State</category>
+      <dependencies>ADIFF QCF PSF</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="AKRD">
@@ -1235,7 +1253,7 @@
       <reference>false</reference>
     </variable>
     <variable name="CVCWCC">
-      <units>g/m-3</units>
+      <units>g m-3</units>
       <long_name>CVI Cloud Condensed Water Content, Corrected</long_name>
       <is_analog>false</is_analog>
       <dependencies>CVRHO CVCFACTTDL CVINLET TASX</dependencies>
@@ -1263,7 +1281,7 @@
       <reference>false</reference>
     </variable>
     <variable name="CVRHO">
-      <units>g/m-3</units>
+      <units>g m-3</units>
       <long_name>CVI Water Content, Enhanced</long_name>
       <is_analog>false</is_analog>
       <dependencies>PTDLR H2OR</dependencies>
@@ -2896,7 +2914,7 @@
       <units>none</units>
       <long_name>Aircraft Mach Number, Top of Fuselage</long_name>
       <is_analog>false</is_analog>
-      <dependencies>QCTFC PSTFC</dependencies>
+      <dependencies>QCTFC PSFC</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="MACHX">
@@ -3690,7 +3708,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWC1DC">
-      <units>gram/m3</units>
+      <units>g m-3</units>
       <long_name>2D-C Water/Ice Content, 260X Emulation</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3785,7 +3803,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWCC">
-      <units>gram/m3</units>
+      <units>g m-3</units>
       <long_name>Corrected PMS-King Liquid Water Content</long_name>
       <is_analog>false</is_analog>
       <category>Liquid Water</category>
@@ -3811,7 +3829,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWCD">
-      <units>gram/m3</units>
+      <units>g m-3</units>
       <long_name>CDP Water/Ice Content</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3829,7 +3847,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWCPIP">
-      <units>gram/m3</units>
+      <units>g m-3</units>
       <long_name>PIP Water/Ice Content, 260X Emulation</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3989,6 +4007,24 @@
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
+    <variable name="PSFF">
+      <units>hPa</units>
+      <long_name>Raw Static Pressure, Fuselage, Heavily Filtered</long_name>
+      <is_analog>false</is_analog>
+      <category>Uncorr'd Raw</category>
+      <derive>PSFFC</derive>
+      <standard_name>air_pressure</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="PSFFC">
+      <units>hPa</units>
+      <long_name>Corrected Static Pressure, Fuselage, Heavily Filtered</long_name>
+      <is_analog>false</is_analog>
+      <category>Atmos. State</category>
+      <dependencies>PSFF QCF AKFF</dependencies>
+      <standard_name>air_pressure</standard_name>
+      <reference>false</reference>
+    </variable>
     <variable name="PSFRD">
       <units>hPa</units>
       <long_name>Raw Static Pressure, Fuselage Right</long_name>
@@ -4011,7 +4047,6 @@
       <long_name>Raw Static Pressure, Top of Fuselage</long_name>
       <is_analog>false</is_analog>
       <category>Uncorr'd Raw</category>
-      <derive>PSTFC</derive>
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
@@ -4246,7 +4281,7 @@
       <long_name>Corrected Dynamic Pressure, Top of Fuselage</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>PSTF QCTF ATTACK SSLIP MACHF</dependencies>
+      <dependencies>QCTF PSTF PSFFC</dependencies>
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
@@ -4468,7 +4503,7 @@
       <reference>false</reference>
     </variable>
     <variable name="RHODT">
-      <units>gram/m3</units>
+      <units>g m-3</units>
       <long_name>Absolute Humidity, T-Electric</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
@@ -5370,6 +5405,15 @@
       <standard_name>eastward_wind</standard_name>
       <reference>false</reference>
     </variable>
+    <variable name="UIC1">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Wind Vector, East Component</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>WIC1</dependencies>
+      <standard_name>eastward_wind</standard_name>
+      <reference>false</reference>
+    </variable>
     <variable name="UVB">
       <units>W/m2</units>
       <long_name>Ultraviolet Irradiance, Bottom</long_name>
@@ -5456,6 +5500,14 @@
       <dependencies>WIC</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="UXC1">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Wind Vector, Longitudinal Component</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>WIC1</dependencies>
+      <reference>false</reference>
+    </variable>
     <variable name="V10">
       <units>V</units>
       <long_name>10-Volt Reference</long_name>
@@ -5522,6 +5574,15 @@
       <is_analog>false</is_analog>
       <category>Wind</category>
       <dependencies>WIC</dependencies>
+      <standard_name>northward_wind</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="VIC1">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Wind Vector, North Component</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>WIC1</dependencies>
       <standard_name>northward_wind</standard_name>
       <reference>false</reference>
     </variable>
@@ -5653,6 +5714,14 @@
       <dependencies>WIC</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="VYC1">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Wind Vector, Lateral Component</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>WIC1</dependencies>
+      <reference>false</reference>
+    </variable>
     <variable name="VZI">
       <units>m/s</units>
       <long_name>Aircraft Integrated Vertical Velocity</long_name>
@@ -5684,6 +5753,17 @@
       <standard_name>wind_from_direction</standard_name>
       <reference>false</reference>
     </variable>
+    <variable name="WDC1">
+      <units>degree_T</units>
+      <long_name>GPS-Corrected Horizontal Wind Direction</long_name>
+      <is_analog>false</is_analog>
+      <min_limit>0</min_limit>
+      <max_limit>360</max_limit>
+      <category>Wind</category>
+      <dependencies>UIC1 VIC1</dependencies>
+      <standard_name>wind_from_direction</standard_name>
+      <reference>false</reference>
+    </variable>
     <variable name="WI">
       <units>m/s</units>
       <long_name>Wind Vector, Vertical Gust Component</long_name>
@@ -5699,6 +5779,15 @@
       <is_analog>false</is_analog>
       <category>Wind</category>
       <dependencies>TASX VEWC VNSC PITCH ROLL THDG ATTACK SSLIP GGVSPD</dependencies>
+      <standard_name>upward_air_velocity</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="WIC1">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Wind Vector, Vertical Gust Component</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>TASTF VEWC VNSC PITCH ROLL THDG ATTACK SSLIP GGVSPD</dependencies>
       <standard_name>upward_air_velocity</standard_name>
       <reference>false</reference>
     </variable>
@@ -5742,6 +5831,15 @@
       <is_analog>false</is_analog>
       <category>Wind</category>
       <dependencies>UIC VIC</dependencies>
+      <standard_name>wind_speed</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="WSC1">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Horizontal Wind Speed</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>UIC1 VIC1</dependencies>
       <standard_name>wind_speed</standard_name>
       <reference>false</reference>
     </variable>
