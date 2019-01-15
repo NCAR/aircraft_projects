@@ -242,7 +242,7 @@
       <long_name>Calculated MTP ATP Altitudes</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
-      <dependencies>SCANBT GGALT</dependencies>
+      <dependencies>TEMPC</dependencies>
       <standard_name>air_temperature</standard_name>
       <reference>false</reference>
     </variable>
@@ -4125,6 +4125,58 @@
       <standard_name>height</standard_name>
       <reference>false</reference>
     </variable>
+    <variable name="RCFALT1IDX">
+      <units></units>
+      <long_name>index of flight level below aircraft from RCF file</long_name>
+      <is_analog>false</is_analog>
+      <category>Housekeeping</category>
+      <dependencies>TEMPC</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="RCFALT2IDX">
+      <units></units>
+      <long_name>index of flight level above aircraft from RCF file</long_name>
+      <is_analog>false</is_analog>
+      <category>Housekeeping</category>
+      <dependencies>TEMPC</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="RCFIDX">
+      <units></units>
+      <long_name>index of RCF file used for each MTP profile</long_name>
+      <is_analog>false</is_analog>
+      <category>Housekeeping</category>
+      <dependencies>TEMPC</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="RCFMRIDX">
+      <units></units>
+      <long_name>Meridional Region Index: match quality indicator (&lt;1 is good)</long_name>
+      <is_analog>false</is_analog>
+      <min_limit>0</min_limit>
+      <max_limit>2</max_limit>
+      <category>Housekeeping</category>
+      <dependencies>TEMPC</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="RCFTROP1">
+      <units>km</units>
+      <long_name>MTP Tropopause 1 Altitude</long_name>
+      <is_analog>false</is_analog>
+      <category>Atmos. State</category>
+      <dependencies>TEMPC</dependencies>
+      <standard_name>altitude</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="RCFTROP2">
+      <units>km</units>
+      <long_name>MTP Tropopause 2 Altitude</long_name>
+      <is_analog>false</is_analog>
+      <category>Atmos. State</category>
+      <dependencies>TEMPC</dependencies>
+      <standard_name>altitude</standard_name>
+      <reference>false</reference>
+    </variable>
     <variable name="RDMAHVPS">
       <units>V</units>
       <long_name>RDMA High Voltage Power Supply</long_name>
@@ -4487,7 +4539,7 @@
     </variable>
     <variable name="SCANBT">
       <units>count</units>
-      <long_name>MTP Brightness Temperatures</long_name>
+      <long_name>MTP Brightness Temperatures [Angle,Channel]</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
       <dependencies>SCNT TCNT SAAT TR350CNTP TMIXCNTP TR600CNTP</dependencies>
@@ -4945,7 +4997,7 @@
       <reference>false</reference>
     </variable>
     <variable name="TEMPC">
-      <units>count</units>
+      <units>deg_K</units>
       <long_name>Calculated MTP ATP Temperatures</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
