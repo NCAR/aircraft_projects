@@ -4,12 +4,12 @@
 # Script monitors ingest directories for newly written files and then syncs
 # the file to the appropriate directory based on the file type.
 #############################################################################
+
 import logging, logging.handlers
 import os, sys, re, sys
 import time
 import smtplib
 from email.mime.text import MIMEText
-#from fieldProc_setup import *
 
 # Initialization
 sys.path.insert(0,proj_dir)
@@ -59,30 +59,46 @@ def dir_check():
             logging.error('Bailing out')
             send_mail_and_die(final_message+ ' Could not make product directory:'+dat_dir)
 
-
 #############################################################################
 # Function to distribute RAF raw data
 #############################################################################
 def dist_raw():
 
     final_message = 'Starting distribution of RAF raw data\n'
-
-    command = 'rsync -qu '+temp_dir+'/RAF_data/ADS/* '+rdat_dir
-    message_ads = 'Syncing ADS dir into place: '+command+'\n'
-    logging.info(message_ads)
-    os.system(command)
     
-    command = 'rsync -qu '+temp_dir+'/RAF_data/PMS2D/* '+rdat_dir+'/PMS2D'
-    message_2draf = 'Syncing PMS2D dir to rdat: '+command+'\n'
-    logging.info(message_2draf)
+    for fname in os.listdir(temp_dir+'/RAF_data/ADS'):
+        if fname.endswith('.ads'):
+            command = 'rsync -qu '+temp_dir+'/RAF_data/ADS/*.ads '+rdat_dir
+            message = 'Syncing ADS dir into place: '+command+'\n'
+            logging.info(message)
+            os.system(command)
+          
+            final_message = final_message + message 
+
+        elif fname.endswith('.bz2'):
+            command = 'rsync -qu '+temp_dir+'/RAF_data/ADS/*.bz2 '+rdat_dir
+            message = 'Syncing ADS dir into place: '+command+'\n'
+            logging.info(message)
+            os.system(command)
+
+            final_message = final_message + message 
+
+        else:
+            pass
+  
+    command = 'rsync -rqu '+temp_dir+'/RAF_data/PMS2D '+rdat_dir
+    message = 'Syncing PMS2D dir to rdat: '+command+'\n'
+    logging.info(message)
     os.system(command)
 
-    command = 'rsync -qu '+temp_dir+'/RAF_data/PMS2D/* '+ftp_dir+'/RAF_data/PMS2D'
+    final_message = final_message + message 
+    
+    command = 'rsync -rqu '+temp_dir+'/RAF_data/PMS2D '+ftp_dir+'/RAF_data'
     message_ftp = 'Syncing PMS2D dir into place: '+command+'\n'        
     logging.info(message_ftp)
     os.system(command)
 
-    final_message = final_message + message_ads + message_2draf + message_ftp
+    final_message = final_message + message
 
     return(final_message)
 
@@ -92,24 +108,68 @@ def dist_raw():
 def dist_prod():
 
     final_message = 'Starting distribution of RAF prod data\n'
-
-    command = 'rsync -qu '+temp_dir+'/RAF_data/* '+dat_dir+'/field_data'
-    message_prod = 'Syncing production data into place: '+command+'\n'
-    logging.info(message_prod)
-    os.system(command)
     
-    command = 'rsync -qu '+temp_dir+'/RAF_data/* '+ftp_dir+'/RAF_data'
-    message_ftp = 'Syncing production data to rdat: '+command+'\n'
-    logging.info(message_ftp)
-    os.system(command)
+    for fname in os.listdir(temp_dir+'/RAF_data'):
+        if fname.endswith('.nc'):
+            command = 'rsync -qu '+temp_dir+'/RAF_data/*.nc '+dat_dir+'/field_data'
+            message = 'Syncing production data into place: '+command+'\n'
+            logging.info(message)
+            os.system(command)
 
-    command = 'rsync -rqu '+dat_dir+'/field_data/* '+dat_dir
-    message_field = 'Syncing production data into place: '+command+'\n'       
-    logging.info(message_field)
-    os.system(command)
+            final_message = final_message + message
+            
+            command = 'rsync -qu '+temp_dir+'/RAF_data/*.nc '+ftp_dir+'/RAF_data'
+            message = 'Syncing production data to ftp: '+command+'\n'
+            logging.info(message)
+            os.system(command)
 
-    final_message = final_message + message_prod + message_ftp + message_field
+            final_message = final_message + message
 
+        elif fname.endswith('.kml'):
+            command = 'rsync -qu '+temp_dir+'/RAF_data/*.kml '+dat_dir+'/field_data'
+            message = 'Syncing production data into place: '+command+'\n'
+            logging.info(message)
+            os.system(command)
+
+            final_message = final_message + message
+            
+            command = 'rsync -qu '+temp_dir+'/RAF_data/*.kml '+ftp_dir+'/RAF_data'
+            message = 'Syncing production data to ftp: '+command+'\n'
+            logging.info(message)
+            os.system(command)
+
+            final_message = final_message + message
+
+        elif fname.endswith('.ict'):
+            command = 'rsync -qu '+temp_dir+'/RAF_data/*.ict '+dat_dir+'field_data'
+            message = 'Syncing production data into place: '+command+'\n'
+            logging.ingo(message)
+            os.system(command)
+
+            final_message = final_message + message
+            
+            command = 'rsync -qu '+temp_dir+'/RAF_data/*.ict '+ftp_dir+'/RAF_data'
+            message = 'Syncing production data to ftp: '+command+'\n'
+            logging.info(message)
+            os.system(command)
+
+            final_message = final_message + message
+
+        else:
+            pass
+
+def dist_field():
+    final_message = 'Starting distribution of RAF prod data\n'
+    for fname in os.listdir(dat_dir+'/field_data'):
+        if fname.endswith('.nc'):
+            command = 'rsync -qu '+dat_dir+'/field_data/*.nc '+dat_dir
+            message = 'Syncing production data into place: '+command+'\n'       
+            logging.info(message)
+            os.system(command)
+
+            final_message = final_message + message
+        else:
+            pass
     return(final_message)
 
 #############################################################################
@@ -184,5 +244,6 @@ if __name__ == '__main__':
     dist_raw()
     dist_prod()
     dist_PI()
-   
+    dist_field()   
     exit(1)
+
