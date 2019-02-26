@@ -1,14 +1,12 @@
 #!/usr/bin/python
 #
-# It takes a flight number designation and then using it gets raw ads 
-# file, netCDF file and kml file for that flight number (verifying with the 
-# user where needed) and does several things:
-#  1: zips up the nc, kml, and iwg1 files into a single zip file 
+#  It takes a flight number designation and then using it gets raw ads
+#  file, netCDF file and kml file for that flight number (verifying with the
+#  user where needed) and does several things:
+#  1: Processes the .ads file to create field data as defined in fieldProc_setup.py
 #  2: zips up the ads file
-#  3: Creates interactive plots using an Rstudio script
-#  4: copies nc, kml, to local FTP site for readynas to sync to Boulder
-#  4: FTPs the nc and kml files to a local server in the Ops center 
-#
+#  3: Creates plots using an Rstudio script
+#  4: copies nc, kml, 2d, ads to NAS dirs for storage and to sync to Boulder
 
 import os
 import re
@@ -27,7 +25,7 @@ from collections import OrderedDict
 
 def read_env(env_var):
   try:
-    var =	os.environ[env_var]
+    var =       os.environ[env_var]
     return(var)
   except KeyError:
     print "Please set the environment variable "+env_var
@@ -39,19 +37,17 @@ data_dir = read_env("DATA_DIR") + '/' + project + '/'
 raw_dir  = read_env("RAW_DATA_DIR") + '/' + project + '/'
 proj_dir  = read_env("PROJ_DIR") + '/' + project + '/' + aircraft + '/'
 
-# Initialization 
+# Initialization
 sys.path.insert(0,proj_dir)
 from fieldProc_setup import *
-# Note: The RStudio piece seems to need special setup for each project
 
 # Query user for the flight designation and place to send output
 flight = raw_input('Input flight designation (e.g. tf01):')
 print flight
 email = raw_input('Input email address to send results:')
 
-
 ##############   Beginning of Setup ######################################
-nc2ascBatch =	proj_dir + 'scripts/nc2asc.bat'
+nc2ascBatch =   proj_dir + 'scripts/nc2asc.bat'
 
 # Don't make it Raw_Data/proj.
 zip_dir = '/tmp/'
@@ -59,9 +55,10 @@ zip_dir = '/tmp/'
 # Catalog setup should not need to change - they are very consistent
 # so leave this here, rather than in project-specific setup file
 qc_ftp_site =    'catalog.eol.ucar.edu'
+
 # Hard-code around project name inconsistency. Revert for next project.
 #qc_ftp_dir =     '/pub/incoming/catalog/'+ project.lower()
-qc_ftp_dir =     '/pub/incoming/catalog/we-can'
+qc_ftp_dir =     '/pub/incoming/catalog/otrec'
 if aircraft == "GV_N677F":
   raircraft      = 'aircraft.NSF_NCAR_GV.'
 elif aircraft == "C130_N130AR":
@@ -78,7 +75,7 @@ print 'Expecting to find .ads files in ' + raw_dir + '.'
 print
 
 # *************************  Dictionaries ************************
-# These are directories where instrument-specific data files (not 
+# These are directories where instrument-specific data files (not
 # RAF standard data) can be found.
 inst_dir = {
    "ADS"   : raw_dir,
@@ -136,8 +133,8 @@ rate = {
 # nimbus config filename extensions
 config_ext = {
   "LRT" : "",
-  "HRT" : "_HRT",
-  "SRT" : "_SRT",
+  "HRT" : "h",
+  "SRT" : "s",
 }
 
 # This dictionary contains a list of all file types you want to report
@@ -152,7 +149,7 @@ status = {
    "IWG1"        : { "proc" : "No!", "ship" : "No!", "stor" : "No!"},
    "PMS2D"       : { "proc" : "No!", "ship" : "No!", "stor" : "No!"},
    "threeVCPI"   : { "proc" : "No!", "ship" : "No!", "stor" : "No!"},
-   "QCplots"     : { "proc" : "No!", "ship" : "No!", "stor" : "No!"},
+   "QCplots"     : { "proc" : "No!", "ship" : "No!", "stor" : "No!"}
 }
 ####################   End of Setup ######################################
 
@@ -174,11 +171,11 @@ def rsync_file(file,out_dir):
   if os.system(command) == 0:
     proc_file = 'Yes-NAS'
     return(str(proc_file));
-  else: 
+  else:
     message = '\nERROR!: syncing file: '+command+'\n'
     print_message(message)
 
-# See of a LRT file exists already and query user about what to do.
+# See if a LRT file exists already and query user about what to do.
 def find_lrt_netcdf(filetype):
 
   process=False
@@ -194,12 +191,12 @@ def find_lrt_netcdf(filetype):
     reproc = ''
     while reproc == '' and reproc != 'R' and reproc != 'S':
       reproc = raw_input('Reprocess? (R) or Ship? (S):')
-    if reproc == 'R': 
+    if reproc == 'R':
       process = True
       reprocess = True
     else: # Ship only
       process = False
-      reprocess = False 
+      reprocess = False
 
   elif nclist.__len__() == 0:
     print "No files found matching form: "+data_dir+'*'+flight+'.'+filetype
@@ -211,14 +208,14 @@ def find_lrt_netcdf(filetype):
     print "More than one "+filetype+" file found."
     ncfile=step_through_files(nclist)
 
-  if ncfile == '' : 
+  if ncfile == '' :
     print "No NetCDF file identified!"
     print "Aborting"
     sys.exit(0)
 
   return(process,reprocess,ncfile)
 
-# See of a file exists already and query user about what to do.
+# See if a file exists already and query user about what to do.
 def find_file(data_dir,flight,file_prefix,filetype,fileext,flag):
   datafile = ''
   datalist = glob.glob(data_dir+'*'+flight+filetype+'.'+fileext)
@@ -260,7 +257,7 @@ def step_through_files(datalist):
     ans = raw_input(datalist[i]+'? (Y/N)')
     if ans == 'Y' or ans == 'y':
       datafile = datalist[i]
-    if i < datalist.__len__() - 1: 
+    if i < datalist.__len__() - 1:
       i = i + 1
     else:
       i = 0
@@ -290,7 +287,6 @@ def process_netCDF(rawfile,ncfile,pr,config_ext):
   res = os.system(command)
   print '\nresult of nimbus call = '+str(res)
   print
-
   # nimbus is currently returning code 134. I am not sure what this means,
   # but code is completing successfully, so assume success.
   #if (res == 0):
@@ -317,12 +313,12 @@ def process_threeVCPI(aircraft,project,flight,twods_raw_dir,oapfile_dir):
         command = 'cat '+file+' >> '+catted_file
         print "cat 3vcPIfiles:"+command
         os.system(command)
-  
+
       command = translate2ds + '-project ' + project + ' -flight ' + flight \
                 +' -platform '+aircraft + ' -sn SPEC001 -f ' + catted_file + ' -o .'
       print ' 3v-cpi command:' + command
       os.system(command)
-      
+
       # move 2DS file to the RAF naming convention and location
       if not os.path.isdir(oapfile_dir):
         try:
@@ -339,7 +335,7 @@ def process_threeVCPI(aircraft,project,flight,twods_raw_dir,oapfile_dir):
         print ' mv command: '+command
         os.system(command)
         threevcpi2d_file = oapfile_dir+'20'+datetime+'_'+flight+'.2d'
-      
+
         # Merge 3v-cpi data into netCDF file
         command = 'process2d '+threevcpi2d_file+' -o '+ncfile
         print "3v-cpi merge cmd: "+command
@@ -360,7 +356,6 @@ def reorder_nc(ncfile):
     print_message(message)
     proc_nc_file  =    'Yes'
   return(proc_nc_file)
-
 def zip_file(filename,datadir):
     os.chdir(datadir)
     command = "zip " + filename + ".zip " + filename
@@ -374,7 +369,7 @@ def zip_file(filename,datadir):
 ######################   Begin main function  ############################
 
 # Create the project- and flight-specific filename prefix (e.g. WECANrf01)
-file_prefix =	project + flight
+file_prefix =   project + flight
 
 # Prepare for final message information
 print ""
@@ -386,7 +381,7 @@ final_message = final_message + '  Flight:'+flight+'\r\n'
 # Make sure the directory to store processed data exists.
 ensure_dir(data_dir)
 
-# 3VCPI 
+# 3VCPI
 threevcpi2d_file = ''
 
 # Confirm code exists for RStudio plotting
@@ -431,7 +426,7 @@ if process:
       print "about to execute : "+command
       if os.system(command) == 0:
         status[key]["proc"] = 'Yes'
-
+    
     # Generate ICARTT file from LRT, if requested
     if (key == "ICARTT"):
       command = "nc2asc -b "+nc2ascBatch+" -i "+filename["LRT"]+" -o "+filename[key];
@@ -446,13 +441,13 @@ if process:
     # Fast 2D data, extract first, then process.
     if (key == "PMS2D"):
       ensure_dir(inst_dir["PMS2D"])
-
       file_name = filename["ADS"].split(raw_dir)[1]
       fileelts = file_name.split('.')
       filename["PMS2D"] = inst_dir["PMS2D"] + fileelts[0] + '.2d'
+
       if not os.path.exists(filename["PMS2D"]):
         # General form of extract2d from RAW_DATA_DIR is:
-        #   extract2d PMS2D/output.2d input.ads
+        # Extract2d PMS2D/output.2d input.ads
         command = 'extract2d '+filename["PMS2D"]+' '+filename["ADS"]
         message = '\nExtracting 2D from ads:'+command+'\n'
         print message
@@ -460,27 +455,23 @@ if process:
 
       if os.path.exists(filename["PMS2D"]):
         # Process 2D data into netCDF file.  General form is:
-        #   process2d $RAW_DATA_DIR/$proj/PMS2D/input.2d -o $DATA_DIR/$proj/output.nc
-        #
+        # Process2d $RAW_DATA_DIR/$proj/PMS2D/input.2d -o $DATA_DIR/$proj/output.nc
         command = 'process2d '+filename["PMS2D"]+' -o '+filename["LRT"]
         print '2D merge command: '+command
-        if os.system(command) == 0:
-          status["PMS2D"]["proc"] = 'Yes'
 
-        status["PMS2D"]["ship"] = 'Yes'
-        status["PMS2D"]["stor"] = 'Yes'
+       # if os.system(command) == 0:
+       #   status["PMS2D"]["proc"] = 'Yes'
+       # status["PMS2D"]["ship"] = 'Yes'
+       # status["PMS2D"]["stor"] = 'Yes'
 
-      print
+      #print
 
-
-  #
   # Run Al Cooper's R code for QA/QC production
   #
   # Currently requires being run from the ~/RStudio/QAtools directory.
   # To run interactively: launch rstudio, then type "shiny::runApp()"
-  #
   if Rstudio:
-    os.chdir(rstudio_dir+"/QAtools")
+    os.chdir(rstudio_dir+"QAtools")
     command = "Rscript DataReview.R "+project+" "+flight
     print "about to execute : "+command
     os.system(command)
@@ -507,21 +498,24 @@ if NAS:
 
   # Put copies of files to local store
   # in dirs to sync to ftp site in Boulder...
-  nas_sync_dir = nas_mnt_pt + '/data/' + project + '/data_synced'
+  nas_sync_dir = nas_mnt_pt + '/data/' + project + '/Sync_to_Boulder/RAF_data'
   # and in dirs for local use...
-  nas_data_dir = nas_mnt_pt + '/data/' + project + '/data_scr'
+  nas_data_dir = nas_mnt_pt + '/data/' + project + '/RAF_data'
 
   print ""
   print "*************** Copy files to NAS scratch area ***************"
   for key in file_ext:
-    ensure_dir(nas_data_dir+"/"+file_ext[key])
-    if (key == "ADS"): 
+    ensure_dir(nas_data_dir)
+    if (key == "ADS"):
       if (not reprocess) and process:
-        print 'Copying '+filename[key]+' to '+nas_data_dir+"/"+file_ext[key]
-        status[key]["stor"] = rsync_file(filename[key],nas_data_dir+"/"+file_ext[key])
+        print 'Copying '+filename[key]+' to '+nas_data_dir+'/ADS'
+        status[key]["stor"] = rsync_file(filename[key],nas_data_dir+'/ADS')
+    elif (key == "PMS2D"):
+        print 'Copying '+filename[key]+' to '+nas_data_dir+'/PMS2D'
+        status[key]["stor"] = rsync_file(filename[key],nas_data_dir+'/PMS2D')
     else:
-      print 'Copying '+filename[key]+' to '+nas_data_dir+"/"+file_ext[key]
-      status[key]["stor"] = rsync_file(filename[key],nas_data_dir+"/"+file_ext[key])
+      print 'Copying '+filename[key]+' to '+nas_data_dir
+      status[key]["stor"] = rsync_file(filename[key],nas_data_dir)
 
   if catalog:
     ensure_dir(nas_data_dir+"/qc")
@@ -540,17 +534,22 @@ fo.write(email+'\n')
 fo.close()
 
 # ZIP up the files as per expectations back home
+# this only affects non-ads files
 if sendzipped:
   for key in file_ext:
-    data_dir,file_name = os.path.split(filename[key])
-    print key+" filename = "+file_name
-    print "data_dir = "+data_dir
-    zip_file(file_name,inst_dir[key])
+    if (key == "ADS"):
+      print "Raw .ads file found but not zipping, if zip_ads is set, will bzip .ads file next."
+    elif (key == "PMS2D"):
+      print "Raw .2d file found but not zipping."
+    else:
+      data_dir,file_name = os.path.split(filename[key])
+      print key+" filename = "+file_name
+      print "data_dir = "+data_dir
+      zip_file(file_name,inst_dir[key])
 
 ### data_dump section ###
 # Project specific data_dump's for indivual users.
 if datadump:
-
   # PICARRO data - extract and write to nas_sync_dir
   ddfilename = 'picarro_'+flight+'.asc'
   command = 'data_dump -i 10,600 -A '+rawfile+' > '+data_dir+'/'+ddfilename
@@ -559,13 +558,13 @@ if datadump:
   os.system(command)
 
 # Put QC files into catalog and to the NAS if it exists
-if catalog and process:
+if catalog:
   try:
     print ""
     print "*************************** Catalog transfer *****************"
     print 'opening FTP connection to: ' + qc_ftp_site
     print '- putting QC data in directory: ' + qc_ftp_dir
-  
+
     ftp = ftplib.FTP(qc_ftp_site)
     ftp.login("anonymous", email)
     ftp.cwd(qc_ftp_dir)
@@ -593,9 +592,9 @@ if catalog and process:
       print 'Could not close ftp connection:'
       print e
 
-# No NAS this project, so put files to EOL server. Put 
+# No NAS this project, so put files to EOL server. Put
 # zipped files if they exist.
-# This has not been tested as of WECAN (2018)
+# This has not been tested as of OTREC (2018)
 if FTP == True:
   try:
     print 'opening FTP connection to: ' + ftp_site
@@ -610,13 +609,12 @@ if FTP == True:
     print 'Error connecting to FTP site ' + ftp_site
     print e
     ftp.quit()
-
   print "Putting files: "
   for key in file_ext:
     try:
       os.chdir(inst_dir[key])
       print 'Putting '+filename[key]+' to '+ftp_site+':/'+ftp_data_dir+'/'+key
-      if filename[key] != '': 
+      if filename[key] != '':
         data_dir,file_name = os.path.split(filename[key])
         if sendzipped:
           file_name = file_name+".zip"
@@ -639,37 +637,37 @@ if FTP == True:
 
   ftp.quit()
 
-# put zipped file onto NAS for BT-syncing back home.
+# Put file onto NAS for BTSyncing back home.
 if NAS == True:
   print ""
   print "***** Copy files to NAS sync area for transfer back home *****"
 
-  if reprocess or (not reprocess and not process):  
+  if reprocess or (not reprocess and not process):
     final_message = final_message + '\n***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n'
     final_message = final_message + 'Reprocessing so assume ADS already shipped during first processing\n'
     final_message = final_message + 'If this is not the case, run\n\n'
     final_message = final_message + '"cp /home/data/Raw_Data/'+project+'/*'+flight+'.ads '+nas_sync_dir+'/ADS"\n\n'
-    final_message = final_message + '"cp /home/data/Raw_Data/'+project+'/*'+flight+'.ads '+nas_data_dir+'/ads"\n\n'
+    final_message = final_message + '"cp /home/data/Raw_Data/'+project+'/*'+flight+'.ads '+nas_data_dir+'/ADS"\n\n'
     final_message = final_message + 'when this script is complete\n\n'
     final_message = final_message + '***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n'
-  else:
-    # Now ZiP up the ADS file.
-    raw_dir,rawfilename = os.path.split(filename["ADS"])
-    print "zipping "+rawfilename
-    zip_raw_file = zip_dir + rawfilename + '.bz2'
-    print "rawfilename = "+zip_raw_file
-    os.chdir(raw_dir)
-    if not os.path.exists(zip_raw_file):
+
+  if zip_ADS:
+      # Now only zip up the ADS file, if requested
+      raw_dir,rawfilename = os.path.split(filename["ADS"])
+      print "zipping "+rawfilename
+      zip_raw_file = zip_dir + rawfilename + '.bz2'
+      print "rawfilename = "+zip_raw_file
+      os.chdir(raw_dir)
+      #if not os.path.exists(zip_raw_file):
       print "Compressing ADS file with command:"
       command = "bzip2 -kc " + rawfilename + " > " + zip_raw_file
       print command
       os.system(command)
       print ""
-    else:
-      print 'Compressed ADS image already exists.'
+  else:
+      print '.ads file not being zipped due to preference'
 
-
-  # mount the NAS and put zipped files to it
+  # mount the NAS and put files to it
   if NAS_permanent_mount == False:
      # Mount NAS
      command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
@@ -679,13 +677,25 @@ if NAS == True:
   for key in file_ext:
     os.chdir(inst_dir[key])
     if (key == "ADS"):
-      if (not reprocess) and process:  
-        status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/' + key)
-        print 'Copying '+filename[key]+' file to '+nas_sync_dir+'/' + key
+        if ship_ADS == True:
+            if zip_ADS == True:
+                rsync_file(zip_raw_file,nas_sync_dir+'/ADS')
+                print 'Copying '+zip_raw_file+' file to '+nas_sync_dir+'/ADS'
+            else:
+                rsync_file(filename[key],nas_sync_dir+'/ADS')
+                print 'Copying '+filename[key]+' file to '+nas_sync_dir+'/ADS'
+        else:
+            pass
+    elif (key == "PMS2D"):
+        status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/PMS2D')
+        print 'Copying '+filename[key]+' file to '+nas_sync_dir+'/PMS2D'
     else:
-      status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/' + key)
-      print 'Copying '+filename[key]+' file to '+nas_sync_dir+'/' + key
-
+      if sendzipped == True:
+        status[key]["ship"] = rsync_file(filename[key]+'.zip',nas_sync_dir)
+        print 'Copying '+filename[key]+'.zip file to '+nas_sync_dir
+      else:
+        status[key]["ship"] = rsync_file(filename[key],nas_sync_dir)
+        print 'Copying '+filename[key]+' file to '+nas_sync_dir
 
   # unmount NAS
 #  if NAS_permanent_mount == False:
@@ -694,11 +704,15 @@ if NAS == True:
 #    os.system(command)
 
 
-final_message = final_message + '\nREPORT on Processing and shipping. \n\n'
-final_message = final_message + 'FileType  Proc Stor     Ship\n'
+final_message = final_message + '\nREPORT on processing and shipping of files. \n\n'
+final_message = final_message + 'FileType  Stor     Ship\n'
+
 for key in file_ext:
-  final_message = final_message + key+'\t'+str(status[key]["proc"])+'\t'
-  final_message = final_message + str(status[key]["stor"])+'\t'+str(status[key]["ship"])+'\n'
+  if (key =="ADS"):
+      final_message = final_message +key+'\t'+str(status[key]["proc"])+'\n'
+  else:
+    #final_message = final_message +key+'\t'+str(status[key]["proc"])+'\t'
+    final_message = final_message +key+'\t'+str(status[key]["stor"])+'\t'+str(status[key]["ship"])+'\n'
 
 final_message = final_message + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
 
@@ -714,3 +728,4 @@ s.quit()
 
 print "\r\nSuccessful completion. Close window to exit."
 sys.exit(1)
+
