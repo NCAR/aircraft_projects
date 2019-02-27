@@ -1,0 +1,13 @@
+#!/bin/csh
+
+cd ${RAW_DATA_DIR}/ICE-T/3v-cpi
+
+foreach file ([RTF]*/*2DSCPI)
+    set flight=`echo $file | sed 's/-.*\/.*$//'`
+    echo "translate2ds -flight $flight -project ICE-T -platform GV_N677F -sn SPEC001 -f $file"
+    translate2ds -flight $flight -project ICE-T -platform GV_N677F -sn SPEC001 -f $file
+    set outfile=`echo $file | sed 's/.2DSCPI/.2d/'`
+    set twodfile=`echo $outfile | sed 's/^.*\///'`
+    mv $twodfile $outfile
+end
+

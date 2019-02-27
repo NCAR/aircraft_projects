@@ -1,0 +1,10 @@
+#!/bin/csh
+
+setenv DAT /scr/raf/Prod_Data/ICE-T/3v-cpi
+
+cd ${RAW_DATA_DIR}/ICE-T/3v-cpi
+
+foreach file ([RF]F*/*.2d)
+    set flight=`echo $file | sed 's/-.*\/.*$//' | tr "[:upper:]" "[:lower:]"`
+    process2d ${RAW_DATA_DIR}/ICE-T/3v-cpi/$file -o ${DAT}/ICE-T${flight}3v-cpi.nc
+end
