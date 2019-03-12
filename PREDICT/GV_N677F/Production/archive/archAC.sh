@@ -7,7 +7,8 @@
 #   Project   #
 ###############
 set PROJECT = "PREDICT"
-echo "Make sure netCDF files have been reordered before archiving!"
+set YEAR = 2010
+#echo "Make sure netCDF files have been reordered before archiving!"
 
 ### ADS
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ff01.ads RAF janine@ucar.edu
@@ -16,7 +17,10 @@ echo "Make sure netCDF files have been reordered before archiving!"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
 
 ###LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT .nc EOL janine@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version1_2001Feb02 /scr/raf/Prod_Data/$PROJECT/Version1_2001Feb02 .nc FS/EOL/$YEAR taylort@ucar.edu
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version2_2019Jan24 /scr/raf/Prod_Data/$PROJECT/Version2_2019Jan24 .nc FS/EOL/$YEAR taylort@ucar.edu
+
+
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT/ordered rf26.nc ATDdata
 
 ###KML
@@ -62,4 +66,4 @@ echo "Make sure netCDF files have been reordered before archiving!"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py mtp /scr/raf/Prod_Data/$PROJECT/mtp NGV EOL janine@ucar.edu
 
 ### O3
-/net/work/bin/scripts/mass_store/archAC/archAC.py O3 /scr/raf/Prod_Data/$PROJECT/O3 dat EOL
+#/net/work/bin/scripts/mass_store/archAC/archAC.py O3 /scr/raf/Prod_Data/$PROJECT/O3 dat EOL

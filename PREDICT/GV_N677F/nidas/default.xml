@@ -951,9 +951,11 @@
         </serialSensor>
 
         <serialSensor IDREF="Water_CN_Counter" devicename="/dev/ttyS7" id="320" suffix="_WCN"/>
+<!--
         <serialSensor IDREF="S200" devicename="/dev/ttyS8" id="340" suffix="_OPC">
           <parameter name="SerialNumber" value="OPC001" type="string"/>
 	</serialSensor>
+-->
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
@@ -963,7 +965,7 @@
 
     <dsm name="dsmLWO" location="LWO" id="83" rserialPort="30002" derivedData="sock::7071" statusAddr="sock::30001">
         <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
-
+<!--
         <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110" suffix="_GP">
             <sample id="1">
                 <variable name="PS" units="hPa" longname="Raw Dynamic Pressure, Gust Pod"/>
@@ -984,7 +986,6 @@
         <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140" suffix="_GP">
             <sample id="1">
                 <variable name="ADIF" units="hPa" longname="Vertical Differential Pressure, Gust Pod">
-                   <!-- Compensate for inserting Gust Probe "upside down" -->
                    <linear slope="-1.0" intercept="0.0" units="hPa"/>
                 </variable>
             </sample>
@@ -1001,7 +1002,7 @@
                 <variable name="QCRTEMP" units="deg_C" longname="Temperature of QCR Probe"/>
             </sample>
         </serialSensor>
-
+-->
         <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
