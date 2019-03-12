@@ -15,9 +15,13 @@ set PROJECT = "HIPPO"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py UNALTERED/LRT /scr/raf/Prod_Data/HIPPO-1 nc RAF
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/HIPPO-1 .nc /FS/EOL/2009
 #/net/work/bin/scripts/mass_store/archAC/archAC.py gv /scr/raf/Prod_Data/HIPPO-1 .asc /FS/EOL/2009
+### LRT (legacy docs)
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1_20090602 /scr/raf/Prod_Data/HIPPO-1/V1_20090602 .nc FS/EOL/2009 taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V2_20100729 /scr/raf/Prod_Data/HIPPO-1/V2_20100729 .nc FS/EOL/2009 taylort@ucar.edu
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V3_20110506 /scr/raf/Prod_Data/HIPPO-1/V3_20110506 .nc FS/EOL/2009 taylort@ucar.edu
 
 ### KML - done
-/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/HIPPO-1/kml/V3_20110506 kml /FS/EOL/2009
+#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/HIPPO-1/kml/V3_20110506 kml /FS/EOL/2009
 
 ### CHAT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
