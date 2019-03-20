@@ -1,15 +1,15 @@
-# Python3
-#
-# Merge time shifted CVI UHSAS data into the netCDF files.
-# Darin Toohy provided .csv files for each flight with the shifted data.
+#UHSAS to NC Merge
 
-# Imports
+#Imports
 import numpy as np
 from netCDF4 import Dataset
 import pandas
+import math
 
 #fileNames
 flightNums = ['{:02d}'.format(x) for x in range(1,17)]
+#flightNums = ['15']
+#basePath = 'C:/Users/rainw/Desktop/Data/WECAN/UHSASNCMerge/'
 basePath = '/scr/raf_data/WECAN/cvi_merge/'
 newDataFile = 'CVI_UHSAS_RF','_for_netcdf_merge.csv'
 
@@ -128,12 +128,15 @@ for flight in flightNums:
         np.sum( AUHSAS[:,18:], axis = 1 ) / UFLW
 
     #Set np.nan values to fill value -32767
-    for key in ncKeys:
-        tmp = np.where(np.isnan(ncData[key][:]))[0]
-        if len(tmp) == 0:
-            print('No bad data?')
-            continue
-        ncData[key][tmp] = -32767#tmp[:,0,0],:,:] = -32767
+    for key in ncKeys[2:]:
+        try:
+            ncData[key][np.isnan(ncData[key])] = -32767
+        except: pass
+    for key in ncKeys[:2]:
+        for i in range(len(ncData[key][0,0,:])):
+            try:
+                ncData[key][np.isnan(ncData[key][:,0,i]),0,i] = -32767
+            except: pass
 
     #Save and close nc file.
     ncData.close
