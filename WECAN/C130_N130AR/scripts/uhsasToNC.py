@@ -1,4 +1,7 @@
-#UHSAS to NC Merge
+# Python3
+#
+# Merge time shifted CVI UHSAS data into the netCDF files.
+# Darin Toohy provided .csv files for each flight with the shifted data.
 
 #Imports
 import numpy as np
@@ -8,8 +11,6 @@ import math
 
 #fileNames
 flightNums = ['{:02d}'.format(x) for x in range(1,17)]
-#flightNums = ['15']
-#basePath = 'C:/Users/rainw/Desktop/Data/WECAN/UHSASNCMerge/'
 basePath = '/scr/raf_data/WECAN/cvi_merge/'
 newDataFile = 'CVI_UHSAS_RF','_for_netcdf_merge.csv'
 
