@@ -3,6 +3,11 @@
 #############################################################################
 # Script monitors ingest directories for newly written files and then syncs
 # the file to the appropriate directory based on the file type.
+#
+# Runs from cron on tikal as user ads. 
+#
+# Script should be in /h/eol/ads/crontab
+#
 #############################################################################
 
 import logging, logging.handlers
@@ -11,10 +16,12 @@ import time
 import smtplib
 from email.mime.text import MIMEText
 
-project = 'OTREC'
-aircraft = 'GV_N677F'
-proj_dir = '/net/jlocal/projects/'+project+'/'+aircraft
+# Get the arguments from the command line
+temp_dir = sys.argv[1]
+project = sys.argv[2]
+aircraft = sys.argv[3] 
 
+proj_dir = os.getenv("PROJ_DIR")+'/'+project+'/'+aircraft+'/'
 # Initialization
 sys.path.insert(0,proj_dir)
 from fieldProc_setup import *
@@ -22,7 +29,7 @@ from fieldProc_setup import *
 dat_dir = dat_parent_dir+project
 ftp_dir = ftp_parent_dir
 rdat_dir = rdat_parent_dir+project
-
+eol_dir = temp_dir+'/EOL_data/'
 #############################################################################
 # Directory checks
 #############################################################################
@@ -223,6 +230,7 @@ def dist_field():
 def dist_PI(directory):
     
     final_message = 'Starting distribution of PI data\n'
+    
     # Rsync anything and everything in the assigned dir
     command = 'rsync -rqu '+temp_dir+'/'+directory+' '+ftp_dir
     message = 'Syncing dir into place: '+command+'\n'
@@ -235,6 +243,7 @@ def dist_PI(directory):
 def dist_recursive(directory):
 
     final_message = 'Starting distribution of PI data\n'
+
     # Rsync anything and everything in the assigned dir
     command = 'rsync -rqu '+eol_dir+directory+' '+ftp_dir+'/EOL_data'
     message = 'Syncing dir into place: '+command+'\n'
@@ -292,14 +301,11 @@ def main():
 if __name__ == '__main__':
 
     try:
-        # Get the arguments from the command line
-        temp_dir    = sys.argv[1]
-        logfile = sys.argv[2]
-        eol_dir = temp_dir+'/EOL_data/'
-        
         # Set up logging
         logger = logging.getLogger()
-        handler = logging.handlers.RotatingFileHandler(logfile, maxBytes=1000000, backupCount=9)
+        # If you want to revert to a log file uncomment
+        #handler = logging.handlers.RotatingFileHandler(logfile, maxBytes=1000000, backupCount=9)
+        handler = logging.StreamHandler(sys.stdout)
         formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s")
         handler.setFormatter(formatter)
         logger.addHandler(handler)
@@ -308,11 +314,10 @@ if __name__ == '__main__':
     except IndexError:
 
         # Usage statement
-        print "\nUsage: %s path logfile" % sys.argv[0]
-        print "    path - path to data files  "
-        print "         (i.e. /net/ftp/pub/data/incoming/<project>/data_synced)"
-        print "    logfile - logfile name (i.e. /tmp/ads_data_catcher.log)"
-        print "\nThe logfile is rotated every 1000000 bytes with a backup count of 9."
+        print "\nUsage: %s path temp_dir logfile"
+        print "path - path to script  "
+        print "(i.e. /h/eol/ads/crontab)"
+        print "logfile - logfile name (i.e. /tmp/sync.log)"
 
     main()   
 
