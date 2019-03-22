@@ -476,6 +476,10 @@ if process:
     print "about to execute : "+command
     os.system(command)
 
+    command = "cp -p "+project+flight+".pdf /home/ads/Desktop"
+    print "copying QAQC pdf to desktop"
+    os.system(command)
+
 ###################  Beginning of Shipping ##############################
 else:
   print "Processing already done, skipping nimbus command"
@@ -498,9 +502,9 @@ if NAS:
 
   # Put copies of files to local store
   # in dirs to sync to ftp site in Boulder...
-  nas_sync_dir = nas_mnt_pt + '/data/' + project + '/Sync_to_Boulder/RAF_data'
+  nas_sync_dir = nas_mnt_pt + '/data/' + project + '/Sync_to_Boulder/EOL_data/RAF_data'
   # and in dirs for local use...
-  nas_data_dir = nas_mnt_pt + '/data/' + project + '/RAF_data'
+  nas_data_dir = nas_mnt_pt + '/data/' + project + '/EOL_data/RAF_data'
 
   print ""
   print "*************** Copy files to NAS scratch area ***************"
@@ -704,15 +708,11 @@ if NAS == True:
 #    os.system(command)
 
 
-final_message = final_message + '\nREPORT on processing and shipping of files. \n\n'
-final_message = final_message + 'FileType  Stor     Ship\n'
+final_message = final_message + '\nREPORT on shipping of files. \n\n'
+final_message = final_message + 'File Type  Stor     Ship\n'
 
 for key in file_ext:
-  if (key =="ADS"):
-      final_message = final_message +key+'\t'+str(status[key]["proc"])+'\n'
-  else:
-    #final_message = final_message +key+'\t'+str(status[key]["proc"])+'\t'
-    final_message = final_message +key+'\t'+str(status[key]["stor"])+'\t'+str(status[key]["ship"])+'\n'
+  final_message = final_message +key+'\t'+str(status[key]["stor"])+'\t'+str(status[key]["ship"])+'\n'
 
 final_message = final_message + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
 
