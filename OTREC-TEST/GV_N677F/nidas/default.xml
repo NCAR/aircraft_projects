@@ -1849,6 +1849,26 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="400">
+        <calfile file="A2D1605.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_MPDB0" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Aerolaser Inlet Pressure Measurement" name="INLETP_AL" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="INLETP_AL.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
     </dsm>
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
