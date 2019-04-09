@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+<project xmlns="http://www.eol.ucar.edu/nidas" name="RAF_Lab" system="Lab_N600" version="$LastChangedRevision: 2514 $" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd">
+
+
+  <site class="raf.Aircraft" name="Lab_N600">
+    <parameter name="tailNumber" type="string" value="N600"/>
+    <parameter name="applyCals" type="bool" value="true"/>
+    <server statusAddr="sock:127.0.0.1:30001">
+      <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.0">
+
+<!-- input from every DSM on this aircraft that has
+             a socket output of type RawSampleOutputStream -->
+        <input class="RawSampleInputStream">
+          <socket maxIdle="60" type="mcaccept"/>
+        </input>
+        <processor class="SampleArchiver">
+          <output class="RawSampleOutputStream">
+            <fileset dir="/var/r1/${PROJECT}" file="%Y%m%d_%H%M%S_${FLIGHT}.ads" length="0"/>
+          </output>
+          <output class="RawSampleOutputStream">
+            <socket port="30000" type="server"/>
+          </output>
+        </processor>
+      </service>
+    </server>
+
+    <dsm id="20" name="dsmwrd" statusAddr="sock:192.168.84.1:30001">
+        <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
+            <parameter name="rate" type="int" value="100"/>
+
+<!--
+            		gain=16, bipolar="false":  0 to 1.25V
+	            	gain=8, bipolar="false":  0 to 2.5V
+	            	gain=4, bipolar="false":  0 to 5V
+	            	gain=2, bipolar="false":  0 to 10V
+            		gain=16, bipolar="true":  -.625 to .625
+	            	gain=8, bipolar="true":  -1.25 to 1.25
+	            	gain=4, bipolar="true":  -2.5 to 2.5
+	            	gain=2, bipolar="true":  -5  to 5
+	            	gain=1, bipolar="true":  -10  to 10
+	        -->
+            <sample id="1" rate="10">
+                <variable name="v0" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="v1" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="v2" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="v3" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="v4" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="v5" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="v6" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="v7" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+            </sample>
+        </sensor>
+	  <output class="RawSampleOutputStream">
+	    <socket port="30000" type="server"/>
+	  </output>
+    </dsm>
+  </site>
+</project>
