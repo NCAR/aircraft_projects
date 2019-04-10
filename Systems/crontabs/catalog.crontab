@@ -12,9 +12,7 @@ BASH_ENV=/home/catalog/.bashrc
 # pass the rest STDERR to STDERR, so that legitimate errors are still emailed
 #
 
-#*/5 * * * * cd /home/catalog/catalog-maps && docker-compose run --rm app ./bin/ftp-get-products-all >> /tmp/catalog-ftp-get-products.log 2> >(>&2 grep -v Starting\ catalogmaps_db)
-
-*/5 * * * * cd ~/catalog-maps-native && ./bin/ftp-get-products-all >> /tmp/catalog-ftp-get-products.log
+*/5 * * * * cd /home/catalog/catalog-maps && docker-compose run --rm app ./bin/ftp-get-products-all >> /tmp/catalog-ftp-get-products.log 2> >(>&2 grep -v Starting\ catalog-maps)
 
 #
 # check for products in jail
@@ -29,7 +27,7 @@ BASH_ENV=/home/catalog/.bashrc
 #
 # grep out duplicate 'Lost connection' messages
 #
-*/5 * * * * cd /home/catalog/irc-bot && ./bin/rectify-bot >> /tmp/catalog-rectify-bot.log 2> >(>&2 grep -v Lost\ connection)
+*/5 * * * * cd /home/catalog/irc-bot && docker-compose run --rm app ./bin/rectify-bot >> /tmp/catalog-rectify-bot.log 2> >(>&2 grep -v Lost\ connection)
 
 #
 # Copy flight_track and position to CatalogIngest
