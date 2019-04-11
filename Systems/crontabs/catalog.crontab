@@ -15,12 +15,6 @@ BASH_ENV=/home/catalog/.bashrc
 */5 * * * * cd /home/catalog/catalog-maps && docker-compose run --rm app ./bin/ftp-get-products-all >> /tmp/catalog-ftp-get-products.log 2> >(>&2 grep -v Starting\ catalog-maps)
 
 #
-# check for products in jail
-#
-
-10 * * * * find ~/products/jail/$CATALOG_PLANE -type f
-
-#
 # IRC check bot
 #
 
