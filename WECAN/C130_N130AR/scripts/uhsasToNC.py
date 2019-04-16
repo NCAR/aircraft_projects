@@ -14,6 +14,8 @@ flightNums = ['{:02d}'.format(x) for x in range(1,17)]
 basePath = '/scr/raf_data/WECAN/cvi_merge/'
 newDataFile = 'CVI_UHSAS_RF','_for_netcdf_merge.csv'
 
+
+
 #Data to overwrite from .csv files
 ncKeys = ['AUHSAS_CVIU', 'CUHSAS_CVIU','CONCU500_CVIU', 'CONCU100_CVIU', \
     'TCNTU_CVIU', 'CONCU_CVIU', 'CONCUD', 'CVINLET','CVCFACT']
@@ -69,8 +71,10 @@ for flight in flightNums:
         ncData['CVINLET'][csvOffset : csvOffset + csvLen + 1] = \
             np.array(df[' CVINLET'][dfStart:dfEnd], dtype = 'float32')
 
+    print(list(ncData['CVINLET']))
     ncData['CVINLET'][ncData['CVINLET'] == -9999] = np.nan
-
+    print(list(ncData['CVINLET']))
+    
     #Spurious
     try:
         ncData['CVCFACT'][csvOffset : csvOffset + csvLen + 1] = \
@@ -79,7 +83,10 @@ for flight in flightNums:
         ncData['CVCFACT'][csvOffset : csvOffset + csvLen + 1] = \
             np.array(df['CVCFACT'][dfStart:dfEnd], dtype = 'float32')
 
+    print(list(ncData['CVCFACT']))
     ncData['CVCFACT'][ncData['CVCFACT'] == -9999] = np.nan
+    print(list(ncData['CVCFACT']))
+
 
     #Enhancement factor correction.
     ncData['CVCFACT'][csvOffset : csvOffset + csvLen + 1] /= 1.12
@@ -100,6 +107,9 @@ for flight in flightNums:
     UFLW =  (usmpflw/60.0) * \
         (upres * 10.0 / ncData['PSXC'][csvOffset : csvOffset + csvLen + 1]) * \
         ((273.15 + ncData['ATX'][csvOffset : csvOffset + csvLen + 1]) / utmp )
+
+    #Filter to remove large spikes as a result of dividing by small flows
+    UFLW[UFLW <= 0.1] = np.nan
 
     #Sum up all the columns of AUHSAS
     ncData['TCNTU_CVIU'][csvOffset : csvOffset + csvLen + 1] =  \
