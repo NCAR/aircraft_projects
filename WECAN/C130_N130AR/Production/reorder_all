@@ -10,13 +10,15 @@ endif
 
 touch $busyFile
 
-foreach file ( WECAN*.nc )
-  echo $file
+foreach file ( WECANrf??.nc )
   ncdump -h $file | head | grep --quiet UNLIMITED
   if ($status > 2) then
+    echo $file " Processing"
     nccopy -u $file reotemp.nc
     mv -f reotemp.nc $file
     chmod g+w $file
+  else
+    echo $file " Didn't need re-ordering"
   endif
 end
 
