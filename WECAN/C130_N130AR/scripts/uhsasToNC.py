@@ -14,11 +14,9 @@ flightNums = ['{:02d}'.format(x) for x in range(1,17)]
 basePath = '/scr/raf_data/WECAN/cvi_merge/'
 newDataFile = 'CVI_UHSAS_RF','_for_netcdf_merge.csv'
 
-
-
 #Data to overwrite from .csv files
-ncKeys = ['AUHSAS_CVIU', 'CUHSAS_CVIU','CONCU500_CVIU', 'CONCU100_CVIU', \
-    'TCNTU_CVIU', 'CONCU_CVIU', 'CONCUD', 'CVINLET','CVCFACT']
+ncKeys = ['AUHSAS_CVIU','CUHSAS_CVIU','CONCU500_CVIU','CONCU100_CVIU', \
+    'TCNTU_CVIU','CONCU_CVIU','CONCUD','CVINLET','CVCFACT']
 
 #AUHSAS is all the raw bins starting at index 14 ON.
 #CUHSAS is all the raw bins divided by UFLWC_CVIU
@@ -69,7 +67,7 @@ for flight in flightNums:
             np.array(df['CVINLET'][dfStart:dfEnd], dtype = 'float32')
     except:
         ncData['CVINLET'][csvOffset : csvOffset + csvLen + 1] = \
-            np.array(df[' CVINLET'][dfStart:dfEnd], dtype = 'float32')
+            np.array(df['CVINLET'][dfStart:dfEnd], dtype = 'float32')
 
     print(list(ncData['CVINLET']))
     ncData['CVINLET'][ncData['CVINLET'] == -9999] = np.nan
@@ -92,7 +90,7 @@ for flight in flightNums:
     ncData['CVCFACT'][csvOffset : csvOffset + csvLen + 1] /= 1.12
 
     AUHSAS = np.array(df.values[dfStart:dfEnd,14:14+99],dtype='float32')
-    AUHSAS[AUHSAS == -9999] = np.nan
+    AUHSAS[AUHSAS == -32767] = np.nan
 
     ncData['AUHSAS_CVIU'][csvOffset : csvOffset + csvLen + 1 , 0 , :-1] = AUHSAS
 
