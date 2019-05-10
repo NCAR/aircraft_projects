@@ -105,5 +105,8 @@ echo "\nGive us a legitimate vardb.xml and xsd ."
 cd $proj/$platform
 /opt/local/bin/vdb2xml VarDB
 
+echo "\nChecking Header correctness"
+sed 's/GV Project/$proj/' $PROJ_DIR/$proj/$platform/nidas/default.xml
+
 echo "\nMake sure this gets added to subversion (svn add $PROJ_DIR/$proj)."
 
