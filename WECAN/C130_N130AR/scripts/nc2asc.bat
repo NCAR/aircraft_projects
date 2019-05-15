@@ -73,3 +73,5 @@ var=WIC
 var=WSC
 var=MACHX
 var=MR_UVH
+var=SFC_SRTM
+var=ALTG_SRTM

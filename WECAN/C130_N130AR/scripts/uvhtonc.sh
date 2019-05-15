@@ -1,13 +1,12 @@
 #!/bin/bash
-# script to convert ascii text files with MR_UVH data to .nc and merge with main flight nc file for WE-CAN
-# script should be run from the directory containing the ascii text files and the flight .nc files to merge into.
-
+# Script to convert ascii text files with MR_UVH data to .nc and merge with main flight nc file for WE-CAN
 UVH_NC=WECAN_UVHrf
 DAT=/scr/raf_data/WECAN/uvh_merge/final_uvh_merge
 PRODUCTION=/scr/raf/local_productiondata
-# in text files, missing values should be updated to align with convetnion for missing data 
-# make sure that the header in the .txt files contains UTC, MR_UVH
-# time in seconds since midnight UTC and MR_UVH in ppmv
+
+# In text files, missing values should be updated to align with convention for missing data 
+# Make sure that the header in the .txt files contains UTC, MR_UVH
+# Time in seconds since midnight UTC and MR_UVH in ppmv
 sed -i -e 's/-99999.0/-32767/g' ${DAT}/rf01.txt
 sed -i -e 's/-99999.0/-32767/g' ${DAT}/rf02.txt 
 sed -i -e 's/-99999.0/-32767/g' ${DAT}/rf03.txt
@@ -28,7 +27,7 @@ sed -i -e 's/-99999.0/-32767/g' ${DAT}/rf17.txt
 sed -i -e 's/-99999.0/-32767/g' ${DAT}/rf18.txt
 sed -i -e 's/-99999.0/-32767/g' ${DAT}/rf19.txt
 
-# use asc2cdf to convert the text file to .nc
+# Use asc2cdf to convert the text file to .nc
 asc2cdf -d 2018-07-24 -m ${DAT}/rf01.txt ${DAT}/${UVH_NC}01.nc
 asc2cdf -d 2018-07-26 -m ${DAT}/rf02.txt ${DAT}/${UVH_NC}02.nc
 asc2cdf -d 2018-07-30 -m ${DAT}/rf03.txt ${DAT}/${UVH_NC}03.nc
@@ -49,7 +48,7 @@ asc2cdf -d 2018-09-06 -m ${DAT}/rf17.txt ${DAT}/${UVH_NC}17.nc
 asc2cdf -d 2018-09-10 -m ${DAT}/rf18.txt ${DAT}/${UVH_NC}18.nc
 asc2cdf -d 2018-09-13 -m ${DAT}/rf19.txt ${DAT}/${UVH_NC}19.nc
 
-# use ncatted to update the long name and units in the newly created .nc files
+# Use ncatted to update the long name and units in the newly created .nc files
 ncatted -O -a long_name,MR_UVH,o,c,"UVH Volumetric Mixing Ratio Dry Air" ${DAT}/${UVH_NC}01.nc
 ncatted -O -a units,MR_UVH,o,c,"ppmv" ${DAT}/${UVH_NC}01.nc
 
@@ -107,7 +106,7 @@ ncatted -O -a units,MR_UVH,o,c,"ppmv" ${DAT}/${UVH_NC}18.nc
 ncatted -O -a long_name,MR_UVH,o,c,"UVH Volumetric Mixing Ratio Dry Air" ${DAT}/${UVH_NC}19.nc
 ncatted -O -a units,MR_UVH,o,c,"ppmv" ${DAT}/${UVH_NC}19.nc
 
-# after the .nc files are created containing the MR_UVH data, merge variable into main .nc files
+# After the .nc files are created containing the MR_UVH data, merge variable into main .nc files
 ncmerge -v MR_UVH ${PRODUCTION}/WECANrf01.nc ${DAT}/WECAN_UVHrf01.nc
 ncmerge -v MR_UVH ${PRODUCTION}/WECANrf02.nc ${DAT}/WECAN_UVHrf02.nc
 ncmerge -v MR_UVH ${PRODUCTION}/WECANrf03.nc ${DAT}/WECAN_UVHrf03.nc
@@ -127,6 +126,3 @@ ncmerge -v MR_UVH ${PRODUCTION}/WECANrf16.nc ${DAT}/WECAN_UVHrf16.nc
 ncmerge -v MR_UVH ${PRODUCTION}/WECANrf17.nc ${DAT}/WECAN_UVHrf17.nc
 ncmerge -v MR_UVH ${PRODUCTION}/WECANrf18.nc ${DAT}/WECAN_UVHrf18.nc
 ncmerge -v MR_UVH ${PRODUCTION}/WECANrf19.nc ${DAT}/WECAN_UVHrf19.nc
-
-
-

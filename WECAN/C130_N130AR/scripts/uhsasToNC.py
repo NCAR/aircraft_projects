@@ -12,7 +12,7 @@ import math
 #fileNames
 flightNums = ['{:02d}'.format(x) for x in range(1,17)]
 basePath = '/scr/raf_data/WECAN/cvi_merge/'
-newDataFile = 'CVI_UHSAS_RF','_for_netcdf_merge.csv'
+newDataFile = 'CVI_UHSAS_RF','_for_netcdf_merge_V1_1.csv'
 
 #Data to overwrite from .csv files
 ncKeys = ['AUHSAS_CVIU','CUHSAS_CVIU','CONCU500_CVIU','CONCU100_CVIU', \
