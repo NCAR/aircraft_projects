@@ -1,113 +1,20 @@
 #!/bin/bash
 
-# Start of a script for installing/updating software on an aircraft server.
+# Script to update all existing subvserion & git repositories in current directory.
 
-cd /home/local
+for repo in *; do
+  if [ -d "${repo}/.svn" ]; then
+    svn update $repo
+  fi
 
-dir=raf
-if [ ! -d $dir ]; then
-  svn co http://svn.eol.ucar.edu/svn/raf/trunk $dir
-else
-  svn update $dir
-fi
+  if [ -d "${repo}/.git" ]; then
+    cd $repo
+    git pull
+    grep -q submodule .git/config
+    if [ $? == 0 ]; then
+      git submodule update --recursive --remote
+    fi
+    cd ..
+  fi
+done
 
-dir=Systems
-if [ ! -d $dir ]; then
-  svn co http://svn.eol.ucar.edu/svn/raf/Systems
-else
-  svn update $dir
-fi
-
-dir=projects
-if [ ! -d $dir ]; then
-  svn co --non-recursive http://svn.eol.ucar.edu/svn/projects
-  svn update projects/Configuration
-  svn update projects/RAF_Lab
-else
-  svn update $dir
-fi
-
-dir=nidas
-if [ ! -d $dir ]; then
-  # We need --recursive for nidas for the ARINC driver.
-  git clone --recursive https://github.com/ncareol/$dir
-else
-  cd $dir
-  git pull origin master
-  cd ..
-fi
-
-# CMIGITS Code.  ITAR controlled.
-# git clone file:///net/cds/git/cmigits-nidas.git
-# cd cmigits-nidas/
-# Onboard build >>>>  make BUILDS='armbe'
-
-dir=libraf
-if [ ! -d $dir ]; then
-  git clone https://github.com/ncar/$dir
-else
-  cd $dir
-  git pull origin master
-  cd ..
-fi
-
-dir=ncplot
-if [ ! -d $dir ]; then
-  git clone https://github.com/ncar/$dir
-else
-  cd $dir
-  git pull origin master
-  cd ..
-fi
-
-dir=ncpp
-if [ ! -d $dir ]; then
-  # We need --recursive to get eol_scons & libraf.
-  git clone --recursive https://github.com/ncar/$dir
-else
-  cd $dir
-  git pull origin master
-  git submodule update --recursive --remote
-  cd ..
-fi
-
-dir=aircraft_nc_utils
-if [ ! -d $dir ]; then
-  git clone --recursive https://github.com/ncar/$dir
-else
-  cd $dir
-  git pull origin master
-  cd ..
-fi
-
-dir=aircraft_oap
-if [ ! -d $dir ]; then
-  git clone --recursive https://github.com/ncar/$dir
-else
-  cd $dir
-  git pull origin master
-  git submodule update --recursive --remote
-  cd ..
-fi
-
-dir=aeros
-if [ ! -d $dir ]; then
-  # We need --recursive to get eol_scons.
-  git clone --recursive https://github.com/ncareol/$dir
-else
-  cd $dir
-  git pull origin master
-  git submodule update --recursive --remote
-  cd ..
-fi
-
-dir=ric
-if [ ! -d $dir ]; then
-  # We need --recursive to get eol_scons.
-  git clone --recursive https://github.com/ncareol/$dir
-else
-  cd $dir
-  git pull origin master
-  git submodule update --recursive --remote
-  cd ..
-fi
