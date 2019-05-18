@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 
 <!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
-<project xmlns="http://www.eol.ucar.edu/nidas" name="GV Project" system="GV_N677F" version="$LastChangedRevision: 2514 $" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd">
+<project xmlns="http://www.eol.ucar.edu/nidas" name="ECLIPSE2019" system="GV_N677F" version="$LastChangedRevision: 2514 $" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd">
   <sensorcatalog>
     <sensor ID="IRIG" class="raf.IRIGSensor">
       <sample id="1">
@@ -911,7 +911,6 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
      </serialSensor>
-
     <serialSensor ID="VCSEL" baud="38400" class="raf.VCSEL_Serial" databits="8" parity="none" stopbits="1" suffix="_VXL">
 
 <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
@@ -981,7 +980,6 @@
       </sample>
       <message length="0" position="end" separator="#\r\n"/>
     </serialSensor>
-
     <sensor ID="CFDC" class="UDPSocketSensor" devicename="usock::30105" suffix="_CFDC">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
             <variable longname="CFDC IN Count" name="INC" units="counts/sec"/>
@@ -994,7 +992,6 @@
             <variable longname="CFDC Filter (ON=1)" name="FILTER" units="bool"/>
         </sample>
     </sensor>
-
     <serialSensor ID="CCN" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="%f, %f, %f, %f, %f, %f, %f, %f, %f">
         <variable longname="CCN Sample Temperature" name="AT" units="deg_C"/>
@@ -1454,11 +1451,10 @@
         <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
     </sensor>
-
     <serialSensor ID="CUUHSAS" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <parameter name="SerialNumber" type="string" value="UHSAS002"/>
 
-      <!-- Time Format is mm/dd/yyyy hh:mm:ss.msec pm -->
+<!-- Time Format is mm/dd/yyyy hh:mm:ss.msec pm -->
       <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
         <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
         <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
@@ -1477,7 +1473,6 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-
     <sensor ID="NOAASP2" class="UDPSocketSensor" devicename="usock::30105">
       <sample id="1" rate="1" scanfFormat="NOAA_SP2,%*dT%*d,%f,%f,%f,%f,%f">
         <variable longname="NOAA SP2 Back Carbon Particle Concentration" name="BCPC" units="#/cm3"/>
@@ -1890,16 +1885,16 @@
         </sample>
       </serialSensor>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS10" id="150">
-	<sample id="1">
-	  <variable longname="Raw Dynamic Pressure, Windscreen" name="QCTF" units="hPa"/>
+	      <sample id="1">
+	        <variable longname="Raw Dynamic Pressure, Windscreen" name="QCTF" units="hPa"/>
 	</sample>
-	<sample id="2">
-	  <variable longname="Temperature of QCTF Probe" name="QCTFTEMP" units="deg_C"/>
+	      <sample id="2">
+	        <variable longname="Temperature of QCTF Probe" name="QCTFTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
       <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS11" id="160">
-	<sample id="1">
-	  <variable longname="Raw Static Pressure, Fuselage" name="PSTF" units="hPa"/>
+	      <sample id="1">
+	        <variable longname="Raw Static Pressure, Fuselage" name="PSTF" units="hPa"/>
 	</sample>
       </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
@@ -1912,14 +1907,6 @@
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Recovery Air Temperature, Unheated" name="RTF1" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="RTF1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
           <variable longname="Recovery Air Temperature, Deiced Right, HARCO" name="RTH2" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
