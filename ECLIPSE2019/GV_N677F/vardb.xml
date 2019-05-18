@@ -175,6 +175,16 @@
       <category>Uncorr'd Raw</category>
       <reference>false</reference>
     </variable>
+    <variable name="ADIFF">
+      <units>hPa</units>
+      <long_name>Vertical Differential Pressure, Radome (Filtered)</long_name>
+      <is_analog>true</is_analog>
+      <voltage_range>-10 10</voltage_range>
+      <default_sample_rate>100</default_sample_rate>
+      <category>Uncorr'd Raw</category>
+      <derive>AKFF</derive>
+      <reference>false</reference>
+    </variable>
     <variable name="ADIFR">
       <units>hPa</units>
       <long_name>Vertical Differential Pressure, Radome</long_name>
@@ -215,6 +225,14 @@
       <dependencies>ADIF QCB MACHX</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="AKFF">
+      <units>degree</units>
+      <long_name>Attack Angle, Radome Diff. Pressure (Filtered)</long_name>
+      <is_analog>false</is_analog>
+      <category>Aircraft State</category>
+      <dependencies>ADIFF QCF PSF</dependencies>
+      <reference>false</reference>
+    </variable>
     <variable name="AKRD">
       <units>degree</units>
       <long_name>Attack Angle, Radome Diff. Pressure</long_name>
@@ -223,21 +241,20 @@
       <dependencies>ADIFR QCF PSF</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="AKY">
+      <units>degree</units>
+      <long_name>Attack Angle, Radome Diff. Pressure</long_name>
+      <is_analog>false</is_analog>
+      <category>Aircraft State</category>
+      <dependencies>ADIFR QCF</dependencies>
+      <reference>false</reference>
+    </variable>
     <variable name="ALT">
       <units>m</units>
       <long_name>IRS Baro-Inertial Altitude</long_name>
       <is_analog>false</is_analog>
       <category>Position</category>
       <standard_name>altitude</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="ALTC">
-      <units>km</units>
-      <long_name>Calculated MTP ATP Altitudes</long_name>
-      <is_analog>false</is_analog>
-      <category>Atmos. State</category>
-      <dependencies>TEMPC</dependencies>
-      <standard_name>air_temperature</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="ALTX">
@@ -314,14 +331,6 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <derive>CS300 CONC3 DBAR3 PVOL3 TCNT3</derive>
-      <reference>false</reference>
-    </variable>
-    <variable name="AT">
-      <units>deg_C</units>
-      <long_name>Ambient Temperature</long_name>
-      <is_analog>false</is_analog>
-      <category>Atmos. State</category>
-      <standard_name>air_temperature</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="ATF1">
@@ -978,7 +987,6 @@
       <long_name>PCAS Concentration (all cells)</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
-      <standard_name>atmosphere_number_content_of_aerosol_particles</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="CONCD">
@@ -1026,7 +1034,13 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CS200</dependencies>
-      <standard_name>atmosphere_number_content_of_aerosol_particles</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="CONCPIP">
+      <units>#/L</units>
+      <long_name>PIP Concentration, 260X Emulation (all cells)</long_name>
+      <is_analog>false</is_analog>
+      <category>PMS Probe</category>
       <reference>false</reference>
     </variable>
     <variable name="CONCR">
@@ -1041,7 +1055,6 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CUHSAS</dependencies>
-      <standard_name>atmosphere_number_content_of_aerosol_particles</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="CONCU100">
@@ -1050,7 +1063,6 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CUHSAS</dependencies>
-      <standard_name>atmosphere_number_content_of_aerosol_particles</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="CONCU500">
@@ -1059,7 +1071,6 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CUHSAS</dependencies>
-      <standard_name>atmosphere_number_content_of_aerosol_particles</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="CONCUD">
@@ -1093,6 +1104,12 @@
       <dependencies>TASX</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="CONC_PHIPS">
+      <units>#/cm3</units>
+      <long_name>PHIPS Concentration</long_name>
+      <is_analog>false</is_analog>
+      <reference>false</reference>
+    </variable>
     <variable name="CORAW">
       <units>V</units>
       <long_name>CO RAW value</long_name>
@@ -1114,7 +1131,13 @@
       <long_name>PCAS Concentration (per cell)</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
-      <standard_name>atmosphere_number_content_of_aerosol_particles</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="CPIP">
+      <units>#/L</units>
+      <long_name>PIP Concentration, 260X Emulation (per cell)</long_name>
+      <is_analog>false</is_analog>
+      <category>PMS Probe</category>
       <reference>false</reference>
     </variable>
     <variable name="CPITCH">
@@ -1164,7 +1187,6 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>AS200 PFLWC</dependencies>
-      <standard_name>atmosphere_number_content_of_aerosol_particles</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="CS300">
@@ -1213,7 +1235,12 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>AUHSAS UFLWC USCAT</dependencies>
-      <standard_name>atmosphere_number_content_of_aerosol_particles</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="CVCFACTC">
+      <units></units>
+      <long_name>CVI Concentration Factor, Compensated for Icing</long_name>
+      <is_analog>false</is_analog>
       <reference>false</reference>
     </variable>
     <variable name="CVCFACTTDL">
@@ -1235,7 +1262,12 @@
       <long_name>CMIGITS-III Ground Speed Vector, East Component</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <standard_name>platform_speed_wrt_ground</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="CVIFLAG">
+      <units>bool</units>
+      <long_name>CVI Flag</long_name>
+      <is_analog>false</is_analog>
       <reference>false</reference>
     </variable>
     <variable name="CVNS">
@@ -1243,7 +1275,6 @@
       <long_name>CMIGITS-III Ground Speed Vector, North Component</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <standard_name>platform_speed_wrt_ground</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="CVRHO">
@@ -1380,6 +1411,13 @@
       <dependencies>CS200</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="DBARPIP">
+      <units>um</units>
+      <long_name>PIP Mean Particle Diameter, 260X Emulation</long_name>
+      <is_analog>false</is_analog>
+      <category>PMS Probe</category>
+      <reference>false</reference>
+    </variable>
     <variable name="DBARU">
       <units>um</units>
       <long_name>UHSAS Mean Particle Diameter</long_name>
@@ -1486,6 +1524,13 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CS100</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="DBZPIP">
+      <units>dBZ</units>
+      <long_name>PIP Calculated Reflectivity, 260X Emulation</long_name>
+      <is_analog>false</is_analog>
+      <category>PMS Probe</category>
       <reference>false</reference>
     </variable>
     <variable name="DIFF1">
@@ -1599,6 +1644,13 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CS200</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="DISPPIP">
+      <units>none</units>
+      <long_name>PIP Dispersion, 260X Emulation (sigma/dbarx)</long_name>
+      <is_analog>false</is_analog>
+      <category>PMS Probe</category>
       <reference>false</reference>
     </variable>
     <variable name="DISPU">
@@ -2222,7 +2274,7 @@
       <is_analog>false</is_analog>
       <category>Position</category>
       <dependencies>GGALT GGLAT GGEOIDHT</dependencies>
-      <standard_name>geopotential_height</standard_name>
+      <standard_name>altitude</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="GGALT">
@@ -2393,7 +2445,6 @@
       <long_name>GPS Ground Speed Vector, East Component</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <standard_name>platform_speed_wrt_ground</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="GVNS">
@@ -2401,7 +2452,6 @@
       <long_name>GPS Ground Speed Vector, North Component</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <standard_name>platform_speed_wrt_ground</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="GVZI">
@@ -2754,25 +2804,6 @@
       <category>Uncorr'd Raw</category>
       <reference>false</reference>
     </variable>
-    <variable name="IWD">
-      <units>degree_T</units>
-      <long_name>Horizontal Wind Direction, INS</long_name>
-      <is_analog>false</is_analog>
-      <min_limit>0</min_limit>
-      <max_limit>360</max_limit>
-      <category>Wind</category>
-      <modulus_range>0 360</modulus_range>
-      <standard_name>wind_from_direction</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="IWS">
-      <units>m/s</units>
-      <long_name>Horizontal Wind Speed, INS</long_name>
-      <is_analog>false</is_analog>
-      <category>Wind</category>
-      <standard_name>wind_speed</standard_name>
-      <reference>false</reference>
-    </variable>
     <variable name="JNO2">
       <units>1/sec</units>
       <long_name>HARP JNO2 Proxy</long_name>
@@ -2837,7 +2868,7 @@
       <reference>false</reference>
     </variable>
     <variable name="LWC">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Raw C-T Liquid Water Content</long_name>
       <is_analog>false</is_analog>
       <category>Uncorr'd Raw</category>
@@ -2845,7 +2876,7 @@
       <reference>false</reference>
     </variable>
     <variable name="LWCC">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Corrected C-T Liquid Water Content</long_name>
       <is_analog>false</is_analog>
       <category>Liquid Water</category>
@@ -2871,6 +2902,13 @@
       <long_name>Aircraft Mach Number, Radome</long_name>
       <is_analog>false</is_analog>
       <dependencies>QCRC PSFC</dependencies>
+      <reference>false</reference>
+    </variable>
+    <variable name="MACHTF">
+      <units>none</units>
+      <long_name>Aircraft Mach Number, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <dependencies>QCTFC PSFC</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="MACHX">
@@ -3064,13 +3102,6 @@
       <default_sample_rate>10</default_sample_rate>
       <reference>false</reference>
     </variable>
-    <variable name="MTPTIME">
-      <units>s</units>
-      <long_name>time of MTP measurement</long_name>
-      <is_analog>false</is_analog>
-      <dependencies>SHOUR SMIN SSEC</dependencies>
-      <reference>false</reference>
-    </variable>
     <variable name="NACCEPT2DCA">
       <units>count</units>
       <long_name>Number of Fast 2DC Particles Accepted, All Particles</long_name>
@@ -3108,7 +3139,7 @@
       <reference>false</reference>
     </variable>
     <variable name="NLWCC">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Corrected Nevzorov Liquid Water Content</long_name>
       <is_analog>false</is_analog>
       <category>Liquid Water</category>
@@ -3230,7 +3261,7 @@
       <reference>false</reference>
     </variable>
     <variable name="NTWCC">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Corrected Nevzorov Total Water Content</long_name>
       <is_analog>false</is_analog>
       <category>Liquid Water</category>
@@ -3680,7 +3711,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWC1DP">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>2D-P Water/Ice Content, 260X Emulation</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3699,7 +3730,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWC2DC">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>2D-C Water/Ice Content, Reconstruction</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3708,7 +3739,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWC2DCA">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Fast 2DC Liquid Water Content, All Particles</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3716,7 +3747,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWC2DCR">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Fast 2DC Liquid Water Content, Round Particles</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3724,7 +3755,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWC2DP">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>2D-P Water/Ice Content, Reconstruction</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3733,7 +3764,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWC2DPA">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Fast 2DP Liquid Water Content, All Particles</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3741,7 +3772,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWC2DPR">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Fast 2DP Liquid Water Content, Round Particles</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3749,7 +3780,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWC3">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>FSSP-300 Water/Ice Content</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3757,7 +3788,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWC6">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>260X Water/Ice Content</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3775,7 +3806,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWCC1">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Corrected PMS-King Liquid Water Content</long_name>
       <is_analog>false</is_analog>
       <category>Liquid Water</category>
@@ -3784,7 +3815,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWCC2">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Corrected PMS-King Liquid Water Content</long_name>
       <is_analog>false</is_analog>
       <category>Liquid Water</category>
@@ -3801,7 +3832,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWCF">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>FSSP-100 Water/Ice Content</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3809,8 +3840,16 @@
       <standard_name>atmosphere_cloud_liquid_water_content</standard_name>
       <reference>false</reference>
     </variable>
-    <variable name="PLWCX">
+    <variable name="PLWCPIP">
       <units>g m-3</units>
+      <long_name>PIP Water/Ice Content, 260X Emulation</long_name>
+      <is_analog>false</is_analog>
+      <category>PMS Probe</category>
+      <standard_name>atmosphere_cloud_liquid_water_content</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="PLWCX">
+      <units>gram/m3</units>
       <long_name>200X Water/Ice Content</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3819,7 +3858,7 @@
       <reference>false</reference>
     </variable>
     <variable name="PLWCY">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>200Y Water/Ice Content</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
@@ -3883,14 +3922,6 @@
       <long_name>PCAS Laser Reference Voltage</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
-      <reference>false</reference>
-    </variable>
-    <variable name="PS">
-      <units>hPa</units>
-      <long_name>Static Pressure</long_name>
-      <is_analog>false</is_analog>
-      <category>Uncorr'd Raw</category>
-      <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="PSB">
@@ -3966,6 +3997,24 @@
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
       <dependencies>PSFD QCX</dependencies>
+      <standard_name>air_pressure</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="PSFF">
+      <units>hPa</units>
+      <long_name>Raw Static Pressure, Fuselage, Heavily Filtered</long_name>
+      <is_analog>false</is_analog>
+      <category>Uncorr'd Raw</category>
+      <derive>PSFFC</derive>
+      <standard_name>air_pressure</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="PSFFC">
+      <units>hPa</units>
+      <long_name>Corrected Static Pressure, Fuselage, Heavily Filtered</long_name>
+      <is_analog>false</is_analog>
+      <category>Atmos. State</category>
+      <dependencies>PSFF QCF AKFF</dependencies>
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
@@ -4225,7 +4274,7 @@
       <long_name>Corrected Dynamic Pressure, Top of Fuselage</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>PSTF QCTF ATTACK SSLIP MACHF</dependencies>
+      <dependencies>QCTF PSTF PSFFC</dependencies>
       <standard_name>air_pressure</standard_name>
       <reference>false</reference>
     </variable>
@@ -4277,56 +4326,6 @@
       <derive>RALTM</derive>
       <dependencies>HGM232</dependencies>
       <standard_name>height</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="RCFALT1IDX">
-      <units>km</units>
-      <long_name>Index of flight level below aircraft from RCF file</long_name>
-      <is_analog>false</is_analog>
-      <category>Housekeeping</category>
-      <dependencies>TEMPC</dependencies>
-      <reference>false</reference>
-    </variable>
-    <variable name="RCFALT2IDX">
-      <units>km</units>
-      <long_name>Index of flight level above aircraft from RCF file</long_name>
-      <is_analog>false</is_analog>
-      <category>Housekeeping</category>
-      <dependencies>TEMPC</dependencies>
-      <reference>false</reference>
-    </variable>
-    <variable name="RCFIDX">
-      <units></units>
-      <long_name>Index of RCF file used for each MTP profile</long_name>
-      <is_analog>false</is_analog>
-      <category>Housekeeping</category>
-      <dependencies>TEMPC</dependencies>
-      <reference>false</reference>
-    </variable>
-    <variable name="RCFMRIDX">
-      <units></units>
-      <long_name>Meridional Region Index: match quality indicator (&lt;1 is good)</long_name>
-      <is_analog>false</is_analog>
-      <category>Housekeeping</category>
-      <dependencies>TEMPC</dependencies>
-      <reference>false</reference>
-    </variable>
-    <variable name="RCFTROP1">
-      <units>km</units>
-      <long_name>MTP Tropopause 1 Altitude</long_name>
-      <is_analog>false</is_analog>
-      <category>Atmos. State</category>
-      <dependencies>TEMPC</dependencies>
-      <standard_name>altitude</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="RCFTROP2">
-      <units>km</units>
-      <long_name>MTP Tropopause 2 Altitude</long_name>
-      <is_analog>false</is_analog>
-      <category>Atmos. State</category>
-      <dependencies>TEMPC</dependencies>
-      <standard_name>altitude</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="RDMAHVPS">
@@ -4405,7 +4404,6 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>C1DC</dependencies>
-      <standard_name>effective_radius_of_cloud_liquid_water_particle</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="REFF2DCA">
@@ -4413,7 +4411,6 @@
       <long_name>Fast 2DC Effective Radius, All Particles</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
-      <standard_name>effective_radius_of_cloud_liquid_water_particle</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="REFF2DCR">
@@ -4421,7 +4418,6 @@
       <long_name>Fast 2DC Effective Radius, Round Particles</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
-      <standard_name>effective_radius_of_cloud_liquid_water_particle</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="REFF2DPA">
@@ -4429,7 +4425,6 @@
       <long_name>Fast 2DP Effective Radius, All Particles</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
-      <standard_name>effective_radius_of_cloud_liquid_water_particle</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="REFF2DPR">
@@ -4437,7 +4432,6 @@
       <long_name>Fast 2DP Effective Radius, Round Particles</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
-      <standard_name>effective_radius_of_cloud_liquid_water_particle</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="REFF6">
@@ -4446,7 +4440,6 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>C260X</dependencies>
-      <standard_name>effective_radius_of_cloud_liquid_water_particle</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="REFFD">
@@ -4455,7 +4448,6 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CCDP</dependencies>
-      <standard_name>effective_radius_of_cloud_liquid_water_particle</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="REFFD2DC">
@@ -4464,7 +4456,6 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CCDP_LPO C1DC_LPC</dependencies>
-      <standard_name>effective_radius_of_cloud_liquid_water_particle</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="REFFF">
@@ -4473,7 +4464,6 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CS100</dependencies>
-      <standard_name>effective_radius_of_cloud_liquid_water_particle</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="REFFF2DC">
@@ -4482,7 +4472,6 @@
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
       <dependencies>CCDP_LWO C1DC_LWO1</dependencies>
-      <standard_name>effective_radius_of_cloud_liquid_water_particle</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="REJAT">
@@ -4500,7 +4489,7 @@
       <reference>false</reference>
     </variable>
     <variable name="RHOCR">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Absolute Humidity, Cryogenic</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
@@ -4515,7 +4504,7 @@
       <reference>false</reference>
     </variable>
     <variable name="RHOLA">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Absolute Humidity, Lyman-alpha</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
@@ -4523,7 +4512,7 @@
       <reference>false</reference>
     </variable>
     <variable name="RHOLA1">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Absolute Humidity, Lyman-alpha</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
@@ -4531,7 +4520,7 @@
       <reference>false</reference>
     </variable>
     <variable name="RHOUV">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Absolute Humidity, RAF Fast</long_name>
       <is_analog>false</is_analog>
       <category>Atmos. State</category>
@@ -4667,60 +4656,6 @@
       <is_analog>false</is_analog>
       <category>Uncorr'd Raw</category>
       <dependencies>RTH1</dependencies>
-      <reference>false</reference>
-    </variable>
-    <variable name="SAATX">
-      <units>deg_K</units>
-      <long_name>MTP Scan Average Ambient Air Temperatures</long_name>
-      <is_analog>false</is_analog>
-      <category>Atmos. State</category>
-      <dependencies>SCANBT ATX</dependencies>
-      <standard_name>air_temperature</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="SALATX">
-      <units>degree_N</units>
-      <long_name>MTP Scan Average Latitude</long_name>
-      <is_analog>false</is_analog>
-      <category>Position</category>
-      <dependencies>SCANBT LATC</dependencies>
-      <standard_name>latitude</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="SALONX">
-      <units>degree_E</units>
-      <long_name>MTP Scan Average Longitude</long_name>
-      <is_analog>false</is_analog>
-      <category>Position</category>
-      <dependencies>SCANBT LONC</dependencies>
-      <standard_name>longitude</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="SAPALTX">
-      <units>km</units>
-      <long_name>MTP Scan Average Pressure Altitude</long_name>
-      <is_analog>false</is_analog>
-      <category>Atmos. State</category>
-      <dependencies>SCANBT PALT</dependencies>
-      <standard_name>altitude</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="SAPITCHX">
-      <units>degrees</units>
-      <long_name>MTP Scan Average Pitch</long_name>
-      <is_analog>false</is_analog>
-      <category>Aircraft State</category>
-      <dependencies>SCANBT PITCH</dependencies>
-      <standard_name>platform_pitch_angle</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="SAROLLX">
-      <units>degrees</units>
-      <long_name>MTP Scan Average Roll</long_name>
-      <is_analog>false</is_analog>
-      <category>Aircraft State</category>
-      <dependencies>SCANBT ROLL</dependencies>
-      <standard_name>platform_roll_angle</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="SCANBT">
@@ -4917,60 +4852,6 @@
       <standard_name>platform_pitch_angle</standard_name>
       <reference>false</reference>
     </variable>
-    <variable name="SRATX">
-      <units>deg_K</units>
-      <long_name>MTP Scan RMS Ambient Air Temperatures</long_name>
-      <is_analog>false</is_analog>
-      <category>Atmos. State</category>
-      <dependencies>SCANBT ATX</dependencies>
-      <standard_name>air_temperature</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="SRLATX">
-      <units>degree_N</units>
-      <long_name>MTP Scan RMS Latitude</long_name>
-      <is_analog>false</is_analog>
-      <category>Position</category>
-      <dependencies>SCANBT LATC</dependencies>
-      <standard_name>latitude</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="SRLONX">
-      <units>degree_E</units>
-      <long_name>MTP Scan RMS Longitude</long_name>
-      <is_analog>false</is_analog>
-      <category>Position</category>
-      <dependencies>SCANBT LONC</dependencies>
-      <standard_name>longitude</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="SRPALTX">
-      <units>km</units>
-      <long_name>MTP Scan RMS Pressure Altitude</long_name>
-      <is_analog>false</is_analog>
-      <category>Atmos. State</category>
-      <dependencies>SCANBT PALT</dependencies>
-      <standard_name>altitude</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="SRPITCHX">
-      <units>degrees</units>
-      <long_name>MTP Scan RMS Pitch</long_name>
-      <is_analog>false</is_analog>
-      <category>Aircraft State</category>
-      <dependencies>SCANBT PITCH</dependencies>
-      <standard_name>platform_pitch_angle</standard_name>
-      <reference>false</reference>
-    </variable>
-    <variable name="SRROLLX">
-      <units>degrees</units>
-      <long_name>MTP Scan RMS Roll</long_name>
-      <is_analog>false</is_analog>
-      <category>Aircraft State</category>
-      <dependencies>SCANBT ROLL</dependencies>
-      <standard_name>platform_roll_angle</standard_name>
-      <reference>false</reference>
-    </variable>
     <variable name="SS">
       <units>degree</units>
       <long_name>Sideslip Angle, Diff. Pressure</long_name>
@@ -5126,6 +5007,15 @@
       <standard_name>platform_speed_wrt_air</standard_name>
       <reference>false</reference>
     </variable>
+    <variable name="TASTF">
+      <units>m/s</units>
+      <long_name>Aircraft True Airspeed, Top of Fuselage</long_name>
+      <is_analog>false</is_analog>
+      <category>Aircraft State</category>
+      <dependencies>MACHTF ATX</dependencies>
+      <standard_name>platform_speed_wrt_air</standard_name>
+      <reference>false</reference>
+    </variable>
     <variable name="TASW">
       <units>m/s</units>
       <long_name>Aircraft True Airspeed, Wing</long_name>
@@ -5236,15 +5126,6 @@
       <category>PMS Probe</category>
       <reference>false</reference>
     </variable>
-    <variable name="TEMPC">
-      <units>deg_K</units>
-      <long_name>calculated MTP ATP Temperatures</long_name>
-      <is_analog>false</is_analog>
-      <category>Atmos. State</category>
-      <dependencies>SCANBT</dependencies>
-      <standard_name>air_temperature</standard_name>
-      <reference>false</reference>
-    </variable>
     <variable name="TEO3">
       <units>ppb</units>
       <long_name>Raw TECO Ozone Output</long_name>
@@ -5338,7 +5219,7 @@
       <is_analog>false</is_analog>
       <category>Thermodynamic</category>
       <dependencies>ATX PSXC EWX MR</dependencies>
-      <standard_name>pseudo_equivalent_potential_temperature</standard_name>
+      <standard_name>equivelent_potential_temperature</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="THETAQ">
@@ -5356,7 +5237,6 @@
       <is_analog>false</is_analog>
       <category>Thermodynamic</category>
       <dependencies>TVIR PSXC</dependencies>
-      <standard_name>air_potential_temperature</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="THIML1">
@@ -5485,6 +5365,12 @@
       <standard_name>virtual_temperature</standard_name>
       <reference>false</reference>
     </variable>
+    <variable name="UFLAG">
+      <units>bool</units>
+      <long_name>CVI UHSAS Data Quality Flag (0=questionable, 1=good)</long_name>
+      <is_analog>false</is_analog>
+      <reference>false</reference>
+    </variable>
     <variable name="UFLWC">
       <units>vol cm3/s</units>
       <long_name>UHSAS Sample Flow at Ambient Conditions</long_name>
@@ -5508,6 +5394,15 @@
       <is_analog>false</is_analog>
       <category>Wind</category>
       <dependencies>WIC</dependencies>
+      <standard_name>eastward_wind</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="UIC1">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Wind Vector, East Component</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>WIC1</dependencies>
       <standard_name>eastward_wind</standard_name>
       <reference>false</reference>
     </variable>
@@ -5597,6 +5492,14 @@
       <dependencies>WIC</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="UXC1">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Wind Vector, Longitudinal Component</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>WIC1</dependencies>
+      <reference>false</reference>
+    </variable>
     <variable name="V10">
       <units>V</units>
       <long_name>10-Volt Reference</long_name>
@@ -5638,7 +5541,6 @@
       <long_name>Inertial Ground Speed Vector, East Component</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <standard_name>platform_speed_wrt_ground</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="VEWC">
@@ -5647,7 +5549,6 @@
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
       <dependencies>LATC</dependencies>
-      <standard_name>platform_speed_wrt_ground</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="VI">
@@ -5665,6 +5566,15 @@
       <is_analog>false</is_analog>
       <category>Wind</category>
       <dependencies>WIC</dependencies>
+      <standard_name>northward_wind</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="VIC1">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Wind Vector, North Component</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>WIC1</dependencies>
       <standard_name>northward_wind</standard_name>
       <reference>false</reference>
     </variable>
@@ -5749,7 +5659,6 @@
       <long_name>Inertial Ground Speed Vector, North Component</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <standard_name>platform_speed_wrt_ground</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="VNSC">
@@ -5758,7 +5667,6 @@
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
       <dependencies>LATC</dependencies>
-      <standard_name>platform_speed_wrt_ground</standard_name>
       <reference>false</reference>
     </variable>
     <variable name="VP15A">
@@ -5798,6 +5706,14 @@
       <dependencies>WIC</dependencies>
       <reference>false</reference>
     </variable>
+    <variable name="VYC1">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Wind Vector, Lateral Component</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>WIC1</dependencies>
+      <reference>false</reference>
+    </variable>
     <variable name="VZI">
       <units>m/s</units>
       <long_name>Aircraft Integrated Vertical Velocity</long_name>
@@ -5829,6 +5745,17 @@
       <standard_name>wind_from_direction</standard_name>
       <reference>false</reference>
     </variable>
+    <variable name="WDC1">
+      <units>degree_T</units>
+      <long_name>GPS-Corrected Horizontal Wind Direction</long_name>
+      <is_analog>false</is_analog>
+      <min_limit>0</min_limit>
+      <max_limit>360</max_limit>
+      <category>Wind</category>
+      <dependencies>UIC1 VIC1</dependencies>
+      <standard_name>wind_from_direction</standard_name>
+      <reference>false</reference>
+    </variable>
     <variable name="WI">
       <units>m/s</units>
       <long_name>Wind Vector, Vertical Gust Component</long_name>
@@ -5844,6 +5771,24 @@
       <is_analog>false</is_analog>
       <category>Wind</category>
       <dependencies>TASX VEWC VNSC PITCH ROLL THDG ATTACK SSLIP GGVSPD</dependencies>
+      <standard_name>upward_air_velocity</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="WIC1">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Wind Vector, Vertical Gust Component</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>TASTF VEWC VNSC PITCH ROLL THDG ATTACK SSLIP GGVSPD</dependencies>
+      <standard_name>upward_air_velocity</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="WIY">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Wind Vector, Vertical Gust Component</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>TASX VEWC VNSC PITCH ROLL THDG AKY SSLIP GGVSPD</dependencies>
       <standard_name>upward_air_velocity</standard_name>
       <reference>false</reference>
     </variable>
@@ -5878,6 +5823,15 @@
       <is_analog>false</is_analog>
       <category>Wind</category>
       <dependencies>UIC VIC</dependencies>
+      <standard_name>wind_speed</standard_name>
+      <reference>false</reference>
+    </variable>
+    <variable name="WSC1">
+      <units>m/s</units>
+      <long_name>GPS-Corrected Horizontal Wind Speed</long_name>
+      <is_analog>false</is_analog>
+      <category>Wind</category>
+      <dependencies>UIC1 VIC1</dependencies>
       <standard_name>wind_speed</standard_name>
       <reference>false</reference>
     </variable>
@@ -6006,7 +5960,7 @@
       <reference>false</reference>
     </variable>
     <variable name="XGLWC">
-      <units>g m-3</units>
+      <units>gram/m3</units>
       <long_name>Gerber PV-100 Probe Liquid Water Content</long_name>
       <is_analog>true</is_analog>
       <voltage_range>-5 5</voltage_range>
