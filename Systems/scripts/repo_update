@@ -3,6 +3,11 @@
 # Script to update all existing subvserion & git repositories in current directory.
 
 for repo in *; do
+  # Skip cmigits as it is a local git repo on internal servers.
+  if [ $repo = "cmigits-nidas" ]; then
+    continue
+  fi
+
   if [ -d "${repo}/.svn" ]; then
     svn update $repo
   fi
