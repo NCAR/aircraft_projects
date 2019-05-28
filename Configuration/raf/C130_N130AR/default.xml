@@ -1907,27 +1907,22 @@
           <variable count="true" longname="TSI CN Counter Output" name="CNTS" units="count"/>
         </sample>
       </sensor>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-        <calfile file="A2D1606.dat" path="$PROJ_DIR/Configuration/raf/cal_files/A2D"/>
-        <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2D Temperature" name="A2DTEMP_AFTL0" units="deg_C"/>
-        </sample>
-        <sample id="2" rate="10">
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200" latency="0.25">
+        <parameter name="rate" type="int" value="100"/>
+        <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="50"/>
           <variable longname="CN Counter Inlet Pressure" name="PCN" units="V">
             <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
             <poly units="hPa">
               <calfile file="PCN.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
           <variable longname="Raw CN Counter Sample Flow Rate" name="FCN" units="V">
             <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="2"/>
+            <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="vlpm">
               <calfile file="FCN.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
@@ -1942,12 +1937,10 @@
             </poly>
           </variable>
         </sample>
-        <sample id="3" rate="100">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="5"/>
+        <sample id="2" rate="100">
           <variable longname="CN Isokinetic Side Flow Rate" name="XICN" units="V">
             <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="2"/>
+            <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="vlpm">
               <calfile file="XICN.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
