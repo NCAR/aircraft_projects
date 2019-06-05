@@ -39,7 +39,7 @@ set dat=${DATA_DIR}/${proj}
 cat > run_all << "EOFRA"
 #!/bin/csh
 
-/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac :9 &
+/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac -nolisten tcp :9 &
 set xvpid=$!
 onintr int
 sleep 2
