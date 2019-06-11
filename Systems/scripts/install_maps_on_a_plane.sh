@@ -101,4 +101,8 @@ done
 
 docker-compose run app ./bin/rake assets:precompile
 
-sudo systemctl start catalog-maps
+sudo systemctl start catalog-maps@app.service
+sudo systemctl start catalog-maps@db.service
+sudo systemctl start catalog-maps@ingest.service
+sudo systemctl start catalog-maps@osm.service
+
