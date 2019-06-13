@@ -3,11 +3,31 @@
 <!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
 <project xmlns="http://www.eol.ucar.edu/nidas" name="RAF_Lab" system="Lab_N600" version="$LastChangedRevision: 2514 $" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd">
 
+  <sensorcatalog>
+    <sensor ID="IRIG" class="raf.IRIGSensor">
+      <sample id="1">
+        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
+        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+      </sample>
+    </sensor>
+
+  </sensorcatalog>
+
 
   <site class="raf.Aircraft" name="Lab_N600">
     <parameter name="tailNumber" type="string" value="N600"/>
     <parameter name="applyCals" type="bool" value="true"/>
     <server statusAddr="sock:127.0.0.1:30001">
+      <service class="XMLConfigService">
+        <output>
+          <socket type="mcaccept"/>
+        </output>
+      </service>
+      <service class="XMLConfigAllService">
+        <output>
+          <socket type="mcaccept"/>
+        </output>
+      </service>
       <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.0">
 
 <!-- input from every DSM on this aircraft that has
@@ -23,10 +43,20 @@
             <socket port="30000" type="server"/>
           </output>
         </processor>
+        <processor class="raf.SyncRecordGenerator">
+          <output class="SampleOutputStream">
+            <socket port="30001" type="server"/>
+          </output>
+        </processor>
       </service>
     </server>
 
     <dsm id="20" name="dsmwrd" statusAddr="sock:192.168.84.2:30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LAB8"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+
         <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
             <parameter name="rate" type="int" value="100"/>
 
@@ -42,6 +72,8 @@
 	            	gain=1, bipolar="true":  -10  to 10
 	        -->
             <sample id="1" rate="10">
+                <parameter name="filter" type="string" value="boxcar"/>
+                <parameter name="numpoints" type="int" value="10"/>
                 <variable name="diamond0" units="V">
                     <parameter name="gain" type="float" value="1"/>
                     <parameter name="bipolar" type="bool" value="true"/>
