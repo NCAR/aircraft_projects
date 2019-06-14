@@ -698,30 +698,7 @@
         <variable longname="TOGA Isoprene" name="ISOPRENE" units="pptv"/>
       </sample>
     </sensor>
-    <serialSensor ID="Water_CN_Counter" baud="115200" class="DSMSerialSensor" databits="8" init_string="SM,4,1\r" parity="none" stopbits="1" suffix="_WCN">
-      <sample id="1" rate="10" scanfFormat="D,%f,%f,%f,%f,%f,%f,%f,%f">
-        <variable longname="WCN Current Operating Mode" name="MCN" units="none"/>
-        <variable longname="WCN Status Flags" name="SFLCN" units="none"/>
-        <variable longname="WCN Aggregated Concentration (Intrument Calculated)" name="CONCNI" units="#/cm3"/>
-        <variable longname="WCN Sample Time (Elapsed Time)" name="ETCN" units="s"/>
-        <variable longname="WCN Live Time" name="LTCN" units="s"/>
-        <variable count="true" longname="WCN Accumulated Particle Counts" name="CNTS" units="count"/>
-        <variable longname="WCN Absolute Pressure" name="PCN" units="hPa"/>
-        <variable longname="WCN Raw Photometric Value" name="RPCN" units="none"/>
-      </sample>
-      <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
-        <variable longname="WCN Sample Flow Rate" name="FCNC" units="cm3/min">
-          <linear intercept="0.0" slope="0.001" units="vlpm"/>
-        </variable>
-        <variable longname="WCN Total Flow Rate" name="FTCN" units="cm3/min"/>
-        <variable longname="WCN Sheath Flow Rate" name="FSHCN" units="cm3/min"/>
-        <variable longname="WCN Absolute Pressure" name="PACN" units="hPa"/>
-        <variable longname="WCN Saturator Temperature" name="TSCN" units="deg_C"/>
-        <variable longname="WCN Growth Tube Temperature" name="TGCN" units="deg_C"/>
-        <variable longname="WCN Optics Temperature" name="CNTEMP" units="deg_C"/>
-      </sample>
-      <message length="0" position="end" separator="\r"/>
-    </serialSensor>
+
     <serialSensor ID="TDLH2O" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="20" scanfFormat="%f %f %f %f %*f %*f %f %f %f %f %f %f %f %f">
         <variable longname="Raw Water Mixing Ratio, TDL Short Path" name="XRAWMRS" units="hPa"/>
@@ -1030,35 +1007,7 @@
       </sample>
 -->
     </sensor>
-    <sensor ID="Fast2DP" class="raf.TwoD64_USB">
-      <parameter name="TAS_RATE" type="int" value="10"/>
-      <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
-      <parameter name="RESOLUTION" type="int" value="150"/>
-      <parameter name="SerialNumber" type="string" value="F2DP001"/>
-      <sample id="1" rate="10">
-        <variable longname="Fast 2DP Shadow OR Count" name="SHDORP" units="count"/>
-      </sample>
-      <sample id="2" rate="1">
-        <variable length="64" longname="Fast 2DP Raw Accumulation, entire-in (per cell)" name="A1DP" units="count"/>
-        <variable longname="Fast 2DP Probe Dead Time" name="DT1DP" units="msec"/>
-      </sample>
 
-<!--
-      <sample id="3" rate="1">
-        <variable length="128" longname="Fast 2DP Raw Accumulation, center-in (per cell)" name="A2DP" units="count"/>
-        <variable longname="Fast 2DP Probe Dead Time" name="DT2DP" units="msec"/>
-      </sample>
--->
-    </sensor>
-    <sensor ID="SIDS" class="raf.SidsNetSensor">
-      <parameter name="RESOLUTION" type="int" value="25"/>
-      <sample id="1" rate="1">
-        <variable length="128" longname="SIDS Raw Accumulation (per cell)" name="HEIGHT" units="count"/>
-        <variable length="128" longname="SIDS Raw Accumulation (per cell)" name="WIDTH" units="count"/>
-        <variable length="128" longname="SIDS Inter-arrival Time" name="IAT" units="count"/>
-        <variable longname="SIDS Rejected Particle Count" name="REJDOF" units="count"/>
-      </sample>
-    </sensor>
     <sensor ID="MTPATP" class="UDPSocketSensor" devicename="usock::30102" suffix="_MTP">
         <sample id="1" rate="1" scanfFormat="MTPP,%4d%2d%2dT%2d%2d%2d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="MTP ATP Year" name="PYEAR" units="count"/>
@@ -1209,26 +1158,7 @@
             <variable longname="AWAS Sample Now" name="SAMPNW" units=""/>
         </sample>
     </sensor>
-    <sensor ID="SMPS" class="UDPSocketSensor" devicename="usock::30104" suffix="_SMPS">
-        <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-            <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
-            <variable longname="SMPS DMA Temperature" name="DMAT" units="deg_C"/>
-            <variable longname="SMPS Flow Controller Pressure" name="FCPRES" units="Pa"/>
-            <variable longname="SMPS DMA Voltage" name="DMAV" units="V"/>
-            <variable longname="SMPS CPC QAE" name="CPCQAE" units="L/min"/>
-            <variable longname="SMPS DMA QAE" name="DMAQAE" units="L/min"/>
-            <variable longname="SMPS DP1 Pressure Difference" name="DP1" units="Pa"/>
-            <variable longname="SMPS DP2 Pressure Difference" name="DP2" units="Pa"/>
-            <variable longname="SMPS CPC Counts" name="CPCCNT" units="count"/>
-            <variable longname="SMPS Time Since Last Call" name="TSLC" units="sec"/>
-            <variable longname="SMPS CPC Saturator Temperature" name="CPCTSAT" units="deg_C"/>
-            <variable longname="SMPS CPC Condenser Temperature" name="CPCTCON" units="deg_C"/>
-            <variable longname="SMPS DMA Q Excess" name="DMAQEX" units="L/min"/>
-            <variable longname="SMPS Relative Humidity" name="RH" units="Pct"/>
-            <variable longname="SMPS Integrated N UP" name="INTGRNU" units="counts/cc"/>
-            <variable longname="SMPS Integrated N DOWN" name="INTGRND" units="counts/cc"/>
-        </sample>
-    </sensor>
+
     <sensor ID="GTCIMS" class="UDPSocketSensor" devicename="usock::30110" suffix="_GTCIMS">
         <sample id="1" rate="1" scanfFormat="GTCIMS, %*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%*f">
 
@@ -1509,23 +1439,7 @@
       </sample>
       <message length="0" position="end" separator="\r"/>
     </serialSensor>
-    <serialSensor ID="QCLS" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-      <sample id="1" rate="1" scanfFormat="a%*f,%f,%f,%f,,,,,">
-	
 
-<!-- <variable name="Igortime" units = "seconds since 1/1/1904 UTC"/> -->
-        <variable longname="Methane" name="CH4" units="ppb"/>
-        <variable longname="Nitrous Oxide" name="N2O" units="ppb"/>
-        <variable longname="Carbon Monoxide" name="CO" units="ppb"/>
-      </sample>
-      <sample id="2" rate="1" scanfFormat="t=%*f m=%f M=%*f">
-	
-
-<!-- <variable name="Igortime" units = "seconds since 1/1/1904 UTC"/> -->
-        <variable longname="Carbon Dioxide" name="CO2" units="ppb"/>
-      </sample>
-      <message length="0" position="end" separator="\r\n"/>
-    </serialSensor>
     <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41002">
         <sample id="1" rate="50">
             <variable longname="LAMS Sequence Number, Beam 1" name="SEQ1" units="none"/>

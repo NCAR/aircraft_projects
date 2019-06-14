@@ -837,36 +837,7 @@
 -->
         </sample>
     </sensor>
-    <serialSensor ID="Water_CN_Counter" baud="115200" class="DSMSerialSensor" databits="8" init_string="SM,4,1\r" parity="none" stopbits="1" suffix="_WCN">
-        <sample id="1" rate="10" scanfFormat="D,%f,%f,%f,%f,%f,%f,%f,%f">
-	      <variable longname="WCN Current Operating Mode" name="MCN" units="none"/>
-	      <variable longname="WCN Status Flags" name="SFLCN" units="none"/>
-              <variable longname="WCN Aggregated Concentration (Instrument Calculated)" name="CONCNI" units="#/cm3"/>
-	      <variable longname="WCN Sample Time (Elapsed Time)" name="ETCN" units="s"/>
-	      <variable longname="WCN Live Time" name="LTCN" units="s"/>
-	      <variable count="true" longname="WCN Accumulated Particle Counts" name="CNTS" units="count"/>
-	      <variable longname="WCN Absolute Pressure" name="PCN" units="hPa"/>
-	      <variable longname="WCN Raw Photometric Value" name="RPCN" units="none"/>
-        </sample>
-        <sample id="2" rate="10" scanfFormat="S,%f,%f,%f,%f,%f,%f,%f">
-	      <variable longname="WCN Sample Flow Rate" name="FCNC" units="cm3/min">
-                 <linear intercept="0.0" slope="0.001" units="vlpm"/>
-            </variable>
-	      <variable longname="WCN Total Flow Rate" name="FTCN" units="cm3/min"/>
-	      <variable longname="WCN Sheath Flow Rate" name="FSHCN" units="cm3/min"/>
-	      <variable longname="WCN Absolute Pressure" name="PACN" units="hPa"/>
-	      <variable longname="WCN Saturator Temperature" name="TSCN" units="deg_C"/>
-	      <variable longname="WCN Growth Tube Temperature" name="TGCN" units="deg_C"/>
-	      <variable longname="WCN Optics Temperature" name="CNTEMP" units="deg_C"/>
-        </sample>
-        <message length="0" position="end" separator="\r"/>
-    </serialSensor>
 
-<!-- 
-         For PLOWS: a timeout of 3 seconds seems to work well.
-         A value of 1 seconds didn't, it wouldn't successfully
-         get through the initialization without timing out. 
-    -->
     <serialSensor ID="S100" baud="38400" class="raf.SPP100_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
         <parameter name="calfile" type="string" value="PMSspecs"/>
         <parameter name="NCHANNELS" type="int" value="30"/>
@@ -917,24 +888,6 @@
         </sample>
         <prompt rate="10" string="\x1b\x02\x1d\x00"/>
         <message length="154"/>
-    </serialSensor>
-    <serialSensor ID="S300" baud="38400" class="raf.SPP300_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
-        <parameter name="calfile" type="string" value="PMSspecs"/>
-        <parameter name="NCHANNELS" type="int" value="30"/>
-        <parameter name="RANGE" type="int" value="1"/>
-        <parameter name="THRESHOLD" type="int" value="20"/>
-        <parameter name="DIVISOR_FLAG" type="int" value="0"/>
-        <parameter name="AVG_TRANSIT_WGT" type="int" value="5"/>
-        <parameter name="DOF_REJ" type="int" value="1"/>
-        <parameter name="CHAN_THRESH" type="int" value="38 92 194 376 678 1155 1880 2942 4096 4140 4238 4384 4590 4699 4807 4928 5027 5124 5255 5446 5673 5912 6164 6429 6754 7027 7310 7601 7901 8192"/>
-        <sample id="1">
-            <variable longname="SPP-300 Laser Reference Voltage" name="FREF3" units="V"/>
-            <variable longname="SPP-300 Housekeeping Data" name="FTMP3" units="deg_C"/>
-            <variable length="31" longname="SPP-300 (FSSP-300) Raw Accumulation (per cell) - DMT" name="AS300" units="count"/>
-            <variable longname="SPP-300 Time between last sample and this sample" name="DELTAT" units="msec"/>
-        </sample>
-        <prompt rate="10" string="\x1b\x02\x1d\x00"/>
-        <message length="156"/>
     </serialSensor>
 
 <!-- 
@@ -1254,26 +1207,7 @@
         </sample>
 -->
     </sensor>
-    <sensor ID="Fast2DP" class="raf.TwoD64_USB">
-        <parameter name="TAS_RATE" type="int" value="10"/>
-        <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
-        <parameter name="RESOLUTION" type="int" value="150"/>
-        <parameter name="SerialNumber" type="string" value="F2DP001"/>
-        <sample id="1" rate="10">
-            <variable longname="Fast 2DP Shadow OR Count" name="SHDORP" units="count"/>
-        </sample>
-        <sample id="2" rate="1">
-            <variable length="64" longname="Fast 2DP Raw Accumulation, entire-in (per cell)" name="A1DP" units="count"/>
-            <variable longname="Fast 2DP Probe Dead Time" name="DT1DP" units="msec"/>
-        </sample>
 
-<!--
-        <sample id="3" rate="1">
-            <variable length="128" longname="Fast 2DP Raw Accumulation, center-in (per cell)" name="A2DP" units="count"/>
-            <variable longname="Fast 2DP Probe Dead Time" name="DT2DP" units="msec"/>
-        </sample>
--->
-    </sensor>
     <sensor ID="CFDC" class="UDPSocketSensor" devicename="usock::30105" suffix="_CFDC">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
             <variable longname="CFDC IN Count" name="INC" units="counts/sec"/>
@@ -1323,24 +1257,7 @@
         <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
     </sensor>
-    <sensor ID="SMPS" class="UDPSocketSensor" devicename="usock::30104" suffix="SMPS">
-        <sample id="1" rate="1" scanfFormat="SMPS,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-            <variable longname="SMPS Sheath Flow" name="SHFLOW" units="L/min"/>
-            <variable longname="SMPS DMA Temperature" name="DMAT" units="deg_C"/>
-            <variable longname="SMPS Flow Controller Pressure" name="FCPRES" units="Pa"/>
-            <variable longname="SMPS DMA Voltage" name="DMAV" units="V"/>
-            <variable longname="SMPS CPC QAE" name="CPCQAE" units="cc/sec"/>
-            <variable longname="SMPS DMA QAE" name="DMAQAE" units="L/min"/>
-            <variable longname="SMPS DP1 Pressure Difference" name="DP1" units="Pa"/>
-            <variable longname="SMPS DP2 Pressure Difference" name="DP2" units="Pa"/>
-            <variable longname="SMPS CPC Counts" name="CPCCNT" units="count"/>
-            <variable longname="SMPS Time Since Last Call" name="TSLC" units="sec"/>
-            <variable longname="SMPS CPC Saturator Temperature" name="CPCTSAT" units="deg_C"/>
-            <variable longname="SMPS CPC Condenser Temperature" name="CPCTCON" units="deg_C"/>
-            <variable longname="SMPS DMA Q Excess" name="DMAQEX" units="L/min"/>
-            <variable longname="SMPS Relative Humidity" name="RH" units="Pct"/>
-        </sample> 
-    </sensor>
+
     <sensor ID="CSUSP2" class="UDPSocketSensor" devicename="usock::30109" suffix="_SP2">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f">
             <variable longname="SP2 Sample Flow LFE" name="QS" units="vccm"/>
