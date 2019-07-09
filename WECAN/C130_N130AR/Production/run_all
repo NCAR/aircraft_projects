@@ -15,20 +15,14 @@ endif
 
 mkdir ${DAT}
 
-#nice ./run_nimbus
-#nice ./reorder_all
-#nice ./run_proc2d
-#./run_nimbus
-./reorder_all
-./run_proc2d
-#../scripts/icartt.sh
+nice ./run_nimbus
+nice ./reorder_all
+nice ./run_proc2d
 
 # WECAN specific post processing for height above terrain, uhsas/CVI, and UVH
 echo "After normal production, you must merge MR_UVH using uvhtonc.sh and CVI/UHSAS vars using uhsasToNC.py"
 echo "HeightofTerrain processing should be performed after CVI/UHSAS merge."
-#nice ../scripts/uvhtonc.sh
-#nice ../scripts/uhsasToNC.py
-#nice ../scripts/AddHtTerrain
+echo "Since there are NASA ICARTT merges being generated from these files, please make sure that you upload the new ICARTT CORE and CVI datasets to the NASA archive."
 
 kill $xvpid
 exit 0
