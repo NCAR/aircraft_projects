@@ -1027,26 +1027,36 @@
       </sample>
 -->
     </sensor>
-    <sensor ID="Fast2DP" class="raf.TwoD64_USB">
+
+    <sensor ID="Fast2DC_v2" class="raf.TwoD64_USB_v3">
+      <parameter name="SerialNumber" type="string" value="F2DC002"/>
+      <parameter name="RESOLUTION" type="int" value="10"/>
       <parameter name="TAS_RATE" type="int" value="10"/>
       <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
-      <parameter name="RESOLUTION" type="int" value="150"/>
-      <parameter name="SerialNumber" type="string" value="F2DP001"/>
-      <sample id="1" rate="10">
-        <variable longname="Fast 2DP Shadow OR Count" name="SHDORP" units="count"/>
+      <sample id="1" rate="1">
+        <variable longname="Fast 2DC Board Serial Number" name="BSN" units="#"/>
+        <variable longname="Fast 2DC Date / Time Stamp" name="DATE" units="count"/>
+        <variable longname="Fast 2DC Shadow OR Count" name="SHDOR" units="count"/>
+        <variable longname="Fast 2DC Shadow OR Count" name="DOFOR" units="count"/>
+        <variable longname="Fast 2DC Board Temperature" name="BTMP" units="deg_C"/>
+        <variable longname="Fast 2DC Diode Voltage, Diode 1" name="DIOV01" units="Vdc">
+                <linear intercept="0.0" slope="2" units="Vdc"/>
+        </variable>
+        <variable longname="Fast 2DC Diode Voltage, Diode 32" name="DIOV32" units="Vdc">
+                <linear intercept="0.0" slope="2" units="Vdc"/>
+        </variable>
+        <variable longname="Fast 2DC Diode Voltage, Diode 64" name="DIOV64" units="Vdc">
+                <linear intercept="0.0" slope="2" units="Vdc"/>
+        </variable>
+        <variable longname="Fast 2DC Diode TAS" name="TAS" units="m/s"/>
       </sample>
       <sample id="2" rate="1">
-        <variable length="64" longname="Fast 2DP Raw Accumulation, entire-in (per cell)" name="A1DP" units="count"/>
-        <variable longname="Fast 2DP Probe Dead Time" name="DT1DP" units="msec"/>
+        <variable length="64" longname="Fast 2DC Raw Accumulation, entire-in (per cell)" name="A1DC" units="count"/>
+        <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="msec"/>
+        <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
       </sample>
-
-<!--
-      <sample id="3" rate="1">
-        <variable length="128" longname="Fast 2DP Raw Accumulation, center-in (per cell)" name="A2DP" units="count"/>
-        <variable longname="Fast 2DP Probe Dead Time" name="DT2DP" units="msec"/>
-      </sample>
--->
     </sensor>
+
     <sensor ID="SIDS" class="raf.SidsNetSensor">
       <parameter name="RESOLUTION" type="int" value="25"/>
       <sample id="1" rate="1">
@@ -1993,95 +2003,164 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
-    <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmGustPod" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmlwo" rserialPort="30002" statusAddr="sock::30001">
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
       <serialSensor IDREF="CDP" devicename="/dev/ttyS3" id="350" suffix="_LWOI">
         <parameter name="SerialNumber" type="string" value="CDP058"/>
       </serialSensor>
-      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="550" suffix="_LWOO">
+      <sensor IDREF="Fast2DC_v2" devicename="/dev/usbtwod_64_0" id="550" suffix="_LWOO">
         <parameter name="SerialNumber" type="string" value="F2DC001"/>
         <parameter name="RESOLUTION" type="int" value="25"/>
       </sensor>
-      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d00" id="750">
-	<calfile file="A2DW513006.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/DMMAT"/>
-	<parameter name="rate" type="int" value="500"/>
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="750" latency="0.25">
+	<parameter name="rate" type="int" value="100"/>
 	<sample id="1" rate="10">
 	  <parameter name="filter" type="string" value="boxcar"/>
-	  <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LWO" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_LWO" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO32.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LWO" units="V">
-            <parameter name="channel" type="int" value="5"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO64.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
+	  <parameter name="numpoints" type="int" value="10"/>
+                <!--<variable name="diamond0" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond1" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond2" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+-->
+                <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_LWO" units="V">
+                    <parameter name="gain" type="float" value="2"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_LWO" units="V">
+                    <parameter name="gain" type="float" value="2"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable longname="Fast 2DC End Diode Voltage #64"  name="F2DIO64_LWO" units="V">
+                    <parameter name="gain" type="float" value="2"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+<!--                <variable name="diamond6" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond7" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond8" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond9" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond10" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond11" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond12" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond13" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond14" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond15" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+-->    
         </sample>
       </sensor>
     </dsm>
-    <dsm derivedData="sock::7071" id="93" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="93" location="RWO" name="dsmrwo" rserialPort="30002" statusAddr="sock::30001">
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d00" id="300" latency="0.25"> 
-	<calfile file="A2DW462188.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/DMMAT"/>
-	<parameter name="rate" type="int" value="500"/>
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300" latency="0.25"> 
+	<parameter name="rate" type="int" value="100"/>
 	<sample id="1" rate="10">
 	  <parameter name="filter" type="string" value="boxcar"/>
-	  <parameter name="numpoints" type="int" value="50"/>
-	  <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
-            <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="RICE.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
-	    </poly>
-          </variable>
-          <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_RWOI" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_RWOI" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO32.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_RWOI" units="V">
-            <parameter name="channel" type="int" value="5"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="V">
-              <calfile file="F2DIO64.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
+	  <parameter name="numpoints" type="int" value="10"/>
+                <!--channel 0-->
+                <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
+                    <parameter name="gain" type="float" value="2"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <!--channel 3-->
+                <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_RWOI" units="V">
+                    <parameter name="gain" type="float" value="2"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <!--channel 4-->
+                <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_RWOI" units="V">
+                    <parameter name="gain" type="float" value="2"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <!--channel 5-->
+                <variable longname="Fast 2DC End Diode Voltage #64"  name="F2DIO64_RWOI" units="V">
+                    <parameter name="gain" type="float" value="2"/>
+                    <parameter name="bipolar" type="bool" value="false"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+
         </sample>
       </sensor>
-      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="500" suffix="_RWOI">
+      <sensor IDREF="Fast2DC_v2" devicename="/dev/usbtwod_64_0" id="500" suffix="_RWOI">
         <parameter name="SerialNumber" type="string" value="F2DC002"/>
         <parameter name="RESOLUTION" type="int" value="10"/>
       </sensor>
