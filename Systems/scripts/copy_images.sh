@@ -4,7 +4,7 @@
 # after connecting removable drive, run script to transfer file(s)
 ###----------------------------------------------------------------------------
 # assign list of parameters for transferring data
-PROJECT="WECAN"
+PROJECT="OTREC"
 
 DATA_LOCATION="/var/r1/$PROJECT/camera_images"
 
@@ -41,9 +41,9 @@ if [ $DIR -eq 0 ]; then
          EXIT="$?"
          echo "rsync exit status: $EXIT"
          if [ $EXIT -eq 0 ]; then
-            echo "Copy of camera_images .tar file for $PROJECT$FLIGHT SUCCESSFUL."
+            echo "Copy of camera_images .tar file for $PROJECT$FLIGHT SUCCESSFUL. Please wait for drive to unmount."
 	    umount $TRANSFER_MEDIA;
-            echo "You can now safely remove the drive by right-clicking the desktop icon."
+            echo "The removable drive has been unmounted and is safe to remove."
             sleep 8
          elif [ $EXIT -gt 0 ]; then
             echo "Copy of camera_images .tar file for $PROJECT$FLIGHT UNSUCCESSFUL."
