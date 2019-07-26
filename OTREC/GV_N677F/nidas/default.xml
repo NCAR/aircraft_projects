@@ -911,7 +911,7 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
      </serialSensor>
-    <serialSensor ID="VCSEL" baud="38400" class="raf.VCSEL_Serial" databits="8" parity="none" stopbits="1" suffix="_VXL">
+    <serialSensor ID="VCSEL" baud="19200" class="raf.VCSEL_Serial" databits="8" parity="none" stopbits="1" suffix="_VXL">
 
 <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
       <sample id="1" rate="1" scanfFormat="SWS %*f %f %f %f %f %f %f %c %*f %f %*f %*f %f %f %f %f">
@@ -1027,7 +1027,6 @@
       </sample>
 -->
     </sensor>
-
     <sensor ID="Fast2DC_v2" class="raf.TwoD64_USB_v3">
       <parameter name="SerialNumber" type="string" value="F2DC002"/>
       <parameter name="RESOLUTION" type="int" value="10"/>
@@ -1056,7 +1055,6 @@
         <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
       </sample>
     </sensor>
-
     <sensor ID="SIDS" class="raf.SidsNetSensor">
       <parameter name="RESOLUTION" type="int" value="25"/>
       <sample id="1" rate="1">
@@ -1840,7 +1838,7 @@
         <socket type="mcrequest"/>
       </output>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="400">
-        <calfile file="A2D1605.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <calfile file="A2D1602.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
@@ -2015,11 +2013,12 @@
         <parameter name="RESOLUTION" type="int" value="25"/>
       </sensor>
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="750" latency="0.25">
-	<parameter name="rate" type="int" value="100"/>
-	<sample id="1" rate="10">
-	  <parameter name="filter" type="string" value="boxcar"/>
-	  <parameter name="numpoints" type="int" value="10"/>
-                <!--<variable name="diamond0" units="V">
+	      <parameter name="rate" type="int" value="100"/>
+	      <sample id="1" rate="10">
+	        <parameter name="filter" type="string" value="boxcar"/>
+	        <parameter name="numpoints" type="int" value="10"/>
+
+<!--<variable name="diamond0" units="V">
                     <parameter name="gain" type="float" value="1"/>
                     <parameter name="bipolar" type="bool" value="true"/>
                     <parameter name="corSlope" type="float" value="1.0"/>
@@ -2050,12 +2049,13 @@
                     <parameter name="corSlope" type="float" value="1.0"/>
                     <parameter name="corIntercept" type="float" value="0.0"/>
                 </variable>
-                <variable longname="Fast 2DC End Diode Voltage #64"  name="F2DIO64_LWO" units="V">
+                <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_LWO" units="V">
                     <parameter name="gain" type="float" value="2"/>
                     <parameter name="bipolar" type="bool" value="false"/>
                     <parameter name="corSlope" type="float" value="1.0"/>
                     <parameter name="corIntercept" type="float" value="0.0"/>
                 </variable>
+
 <!--                <variable name="diamond6" units="V">
                     <parameter name="gain" type="float" value="1"/>
                     <parameter name="bipolar" type="bool" value="true"/>
@@ -2125,39 +2125,42 @@
         <socket type="mcrequest"/>
       </output>
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300" latency="0.25"> 
-	<parameter name="rate" type="int" value="100"/>
-	<sample id="1" rate="10">
-	  <parameter name="filter" type="string" value="boxcar"/>
-	  <parameter name="numpoints" type="int" value="10"/>
-                <!--channel 0-->
+	      <parameter name="rate" type="int" value="100"/>
+	      <sample id="1" rate="10">
+	        <parameter name="filter" type="string" value="boxcar"/>
+	        <parameter name="numpoints" type="int" value="10"/>
+
+<!--channel 0-->
                 <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
                     <parameter name="gain" type="float" value="2"/>
                     <parameter name="bipolar" type="bool" value="false"/>
                     <parameter name="corSlope" type="float" value="1.0"/>
                     <parameter name="corIntercept" type="float" value="0.0"/>
                 </variable>
-                <!--channel 3-->
+
+<!--channel 3-->
                 <variable longname="Fast 2DC End Diode Voltage #1" name="F2DIO1_RWOI" units="V">
                     <parameter name="gain" type="float" value="2"/>
                     <parameter name="bipolar" type="bool" value="false"/>
                     <parameter name="corSlope" type="float" value="1.0"/>
                     <parameter name="corIntercept" type="float" value="0.0"/>
                 </variable>
-                <!--channel 4-->
+
+<!--channel 4-->
                 <variable longname="Fast 2DC End Diode Voltage #32" name="F2DIO32_RWOI" units="V">
                     <parameter name="gain" type="float" value="2"/>
                     <parameter name="bipolar" type="bool" value="false"/>
                     <parameter name="corSlope" type="float" value="1.0"/>
                     <parameter name="corIntercept" type="float" value="0.0"/>
                 </variable>
-                <!--channel 5-->
-                <variable longname="Fast 2DC End Diode Voltage #64"  name="F2DIO64_RWOI" units="V">
+
+<!--channel 5-->
+                <variable longname="Fast 2DC End Diode Voltage #64" name="F2DIO64_RWOI" units="V">
                     <parameter name="gain" type="float" value="2"/>
                     <parameter name="bipolar" type="bool" value="false"/>
                     <parameter name="corSlope" type="float" value="1.0"/>
                     <parameter name="corIntercept" type="float" value="0.0"/>
                 </variable>
-
         </sample>
       </sensor>
       <sensor IDREF="Fast2DC_v2" devicename="/dev/usbtwod_64_0" id="500" suffix="_RWOI">
