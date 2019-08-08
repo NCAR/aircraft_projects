@@ -275,10 +275,10 @@ def process_netCDF(rawfile,ncfile,pr,config_ext):
   if not os.path.exists(nimConfFile):
     cf = open(nimConfFile, 'w')
     sdir,sfilename = os.path.split(rawfile)
-    line = "if=/${RAW_DATA_DIR}/"+sfilename+'\n'
+    line = "if=${RAW_DATA_DIR}/"+sfilename+'\n'
     cf.write(str(line))
     sdir,sfilename = os.path.split(ncfile)
-    line = "of=/${DATA_DIR}/"+sfilename+'\n'
+    line = "of=${DATA_DIR}/"+sfilename+'\n'
     cf.write(str(line))
     line = "pr="+pr+'\n'
     cf.write(str(line))
