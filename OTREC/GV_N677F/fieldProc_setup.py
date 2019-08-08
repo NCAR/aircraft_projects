@@ -19,8 +19,8 @@
 #############################################################################
 import os
 project = 'OTREC'
-DATA_DIR = os.environ['DATA_DIR'])
-RAW_DATA_DIR = os.environ['RAW_DATA_DIR'])
+DATA_DIR = os.environ['DATA_DIR']
+RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 
 # Do we have local SWIG RAID storage.
 NAS = True
