@@ -617,30 +617,53 @@ if FTP == True:
     print e
     ftp.quit()
   print "Putting files: "
+  print ""
   for key in file_ext:
+    print ""
     try:
       os.chdir(inst_dir[key])
-      print 'Putting '+filename[key]+' to '+ftp_site+':/'+ftp_data_dir+'/'+key
-      if filename[key] != '':
+    except ftplib.all_errors as e:
+      print 'Could not change to local dir '+inst_dir[key]
+      print e
+      continue
+
+    print 'Putting '+filename[key]+' to '+ftp_site+':/'+ftp_data_dir+'/'+key
+    if filename[key] != '':
+      try:
         data_dir,file_name = os.path.split(filename[key])
         if sendzipped:
           file_name = file_name+".zip"
         else:
           file_name = file_name
-        ftp.cwd(ftp_data_dir+'/'+key)
+        ftp.cwd('/'+ftp_data_dir+'/'+key)
+      except ftplib.all_errors as e:
+        print "Change dir to "+ftp_data_dir+'/'+key+" failed"
+        print e
+        continue
+
+      if file_name in ftp.nlst():
+        print 'File '+file_name+' already exists on ftp server.'
+        print 'File will not be transfered to ftp site'
+        print 'To force transfer, delete file from ftp site and rerun in Ship mode'
+        continue
+
+      try:
         file = open(file_name, 'r')
         print ftp.storbinary('STOR ' + file_name, file)
         file.close()
         status[key]["stor"] = 'Yes-FTP'
 
-      print datetime.datetime.now().time()
-      print "Finished putting data file"
-      print ""
+        print datetime.datetime.now().time()
+        print "Finished putting data file"
+        print ""
 
-    except ftplib.all_errors as e:
-      print ""
-      print 'Error writing '+file_name+' to '+ftp_site+':/'+ftp_data_dir+'/'+key
-      print e
+      except ftplib.all_errors as e:
+        print 'Error writing '+file_name+' to '+ftp_site+':/'+ftp_data_dir+'/'+key
+        print e
+        continue
+
+    else:
+      print "Filename is empty - nothing to write"
 
   ftp.quit()
 
