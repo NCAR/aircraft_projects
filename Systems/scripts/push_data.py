@@ -32,6 +32,7 @@ def read_env(env_var):
     sys.exit(1)
 
 project = read_env("PROJECT")
+print("project =", project)
 aircraft = read_env("AIRCRAFT")
 data_dir = read_env("DATA_DIR") + '/' + project + '/'
 raw_dir  = read_env("RAW_DATA_DIR") + '/' + project + '/'
@@ -273,9 +274,11 @@ def process_netCDF(rawfile,ncfile,pr,config_ext):
 
   if not os.path.exists(nimConfFile):
     cf = open(nimConfFile, 'w')
-    line = "if="+rawfile+'\n'
+    sdir,sfilename = os.path.split(rawfile)
+    line = "if=/${RAW_DATA_DIR}/"+sfilename+'\n'
     cf.write(str(line))
-    line = "of="+ncfile+'\n'
+    sdir,sfilename = os.path.split(ncfile)
+    line = "of=/${DATA_DIR}/"+sfilename+'\n'
     cf.write(str(line))
     line = "pr="+pr+'\n'
     cf.write(str(line))
@@ -476,7 +479,7 @@ if process:
     print "about to execute : "+command
     os.system(command)
 
-    command = "cp -p "+project+flight+".pdf /home/ads/Desktop"
+    command = "cp -p "+project+flight+"Plots.pdf /home/ads/Desktop"
     print "copying QAQC pdf to desktop"
     os.system(command)
 
@@ -712,6 +715,10 @@ final_message = final_message + '\nREPORT on shipping of files. \n\n'
 final_message = final_message + 'File Type  Stor     Ship\n'
 
 for key in file_ext:
+  if key != "ADS":
+    final_message = final_message +key+'\t'+str(status[key]["stor"])+'\t'+str(status[key]["ship"])+'\n'
+  else:
+    pass
   final_message = final_message +key+'\t'+str(status[key]["stor"])+'\t'+str(status[key]["ship"])+'\n'
 
 final_message = final_message + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
