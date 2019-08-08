@@ -59,30 +59,46 @@ rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
 # Software - set locations of needed software
 translate2ds = '/opt/local/bin/translate2ds '
 
+#############################################################################
 # This code can currently either send everything as zipfiles, or everything
 # uncompressed. Choose here.
+#############################################################################
 # sendzipped = False
-# FTP =    False
+
+#############################################################################
+# FTP configuration - not used if using NAS
+#############################################################################
 # ftp_site =       'ftp.eol.ucar.edu'
 # user =           'anonymous'
 # qpassword =       'ads@ucar.edu'
 
+#############################################################################
 # To trim flights when processing, create a setup file for the flight under
 # Production. The process script will read that if it exists.
 # Configuration for the distribution - modify the following
-
+# Choose between NAS_in_field and FTP
+#############################################################################
 NAS_in_field =    True                            # Set to false for ftp
+FTP = False 
 dat_parent_dir =  DATA_DIR+'/'     # Where nc files go
 rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 ftp_parent_dir =  '/net/ftp/pub/data/incoming/otrec/'   # Where nc files go for PIs
-# busy_file = temp_dir+'DIST_PROD'  # Temp file that exists if program is running.
-                                  # Allows script to not clobber itself
 
+#############################################################################
+# Temp file that exists if program is running.
+# Allows script to not clobber itself
+#############################################################################
+# busy_file = temp_dir+'DIST_PROD'  
+
+#############################################################################
 # If doing a project specific data_dump for a user, please go to the datadump
 # section of push_data and set command as you want.
+#############################################################################
 datadump = False
 
+#############################################################################
 ### local FTP setup ###
+#############################################################################
 # local_ftp_site = '192.168.1.10'
 # local_user     = 'anonymous'
 # local_password = 'cjw@ucar.edu'
