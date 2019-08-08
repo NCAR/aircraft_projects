@@ -19,8 +19,8 @@
 #############################################################################
 import os
 project = 'OTREC'
-DATA_DIR = '/scr/raf_data'
-RAW_DATA_DIR = '/scr/raf/Raw_Data'
+DATA_DIR = os.environ['DATA_DIR'])
+RAW_DATA_DIR = os.environ['RAW_DATA_DIR'])
 
 # Do we have local SWIG RAID storage.
 NAS = True
@@ -37,15 +37,22 @@ nas_mnt_pt =     '/mnt/Data'
 # Set to true if you want 'em
 ICARTT = False # Generate ICARTT
 IWG1 = False # Generate IWG1 packet
-Rstudio = False # Generate a PDF of the QC plots
-catalog = False # Send QC plots to field catalog
+Rstudio = True # Generate a PDF of the QC plots
+catalog = False # Send QC plots to field catalog, leave as False
 HRT = False # Generate HRT .nc file
 SRT = False # Generate SRT .nc file
+sendzipped = False # Zips all files before btsync to Boulder
+zip_ads = False # Bzips the ads file independently of processed files
+# you can have both sendzipped and zip_ads set to True if you want
 
 ### Instrument specific processing ###
-# - true or false depending on if instrument is on project.
-PMS2D = True    #PMS2D from 2D-C
-threeVCPI = False       #CPI, 2DS# Plots - set path to RStudio dir
+# True or False depending on if instrument is on project.
+PMS2D = True            #PMS2D from 2D-C
+threeVCPI = False       #CPI, 2DS
+
+#############################################################################
+
+# Plots - set path to RStudio dir
 rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
 # rstudio_dir =    '/h/eol/ads/RStudio/' # Data dir to run on EOL servers
 
