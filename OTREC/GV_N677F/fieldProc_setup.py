@@ -23,7 +23,7 @@ DATA_DIR = os.environ['DATA_DIR']
 RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 
 # Do we have local SWIG RAID storage.
-NAS = True
+NAS = False 
 
 # Does NAS have a permanent mount?
 NAS_permanent_mount = False
@@ -60,17 +60,12 @@ rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
 translate2ds = '/opt/local/bin/translate2ds '
 
 #############################################################################
-# This code can currently either send everything as zipfiles, or everything
-# uncompressed. Choose here.
-#############################################################################
-# sendzipped = False
-
-#############################################################################
 # FTP configuration - not used if using NAS
 #############################################################################
-# ftp_site =       'ftp.eol.ucar.edu'
-# user =           'anonymous'
-# qpassword =       'ads@ucar.edu'
+ftp_site =       'ftp.eol.ucar.edu'
+user =           'anonymous'
+qpassword =       'ads@ucar.edu'
+ftp_data_dir='EOL_data/RAF_data'
 
 #############################################################################
 # To trim flights when processing, create a setup file for the flight under
@@ -78,8 +73,9 @@ translate2ds = '/opt/local/bin/translate2ds '
 # Configuration for the distribution - modify the following
 # Choose between NAS_in_field and FTP
 #############################################################################
-NAS_in_field =    True                            # Set to false for ftp
-FTP = False 
+NAS_in_field =    False                            # Set to false for ftp
+FTP = True 
+password = 'tr0pics!'
 dat_parent_dir =  DATA_DIR+'/'     # Where nc files go
 rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 ftp_parent_dir =  '/net/ftp/pub/data/incoming/otrec/'   # Where nc files go for PIs
