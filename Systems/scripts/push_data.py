@@ -275,10 +275,10 @@ def process_netCDF(rawfile,ncfile,pr,config_ext):
   if not os.path.exists(nimConfFile):
     cf = open(nimConfFile, 'w')
     sdir,sfilename = os.path.split(rawfile)
-    line = "if=${RAW_DATA_DIR}/"+sfilename+'\n'
+    line = "if=${RAW_DATA_DIR}/"+project+"/"+sfilename+'\n'
     cf.write(str(line))
     sdir,sfilename = os.path.split(ncfile)
-    line = "of=${DATA_DIR}/"+sfilename+'\n'
+    line = "of=${DATA_DIR}/"+project+"/"+sfilename+'\n'
     cf.write(str(line))
     line = "pr="+pr+'\n'
     cf.write(str(line))
@@ -607,7 +607,7 @@ if FTP == True:
     print 'opening FTP connection to: ' + ftp_site
 
     ftp = ftplib.FTP(ftp_site)
-    ftp.login("anonymous", email)
+    ftp.login(string.lower(project), password)
     print ""
     print datetime.datetime.now().time()
 
