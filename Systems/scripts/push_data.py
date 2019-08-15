@@ -709,23 +709,28 @@ if NAS == True:
     if (key == "ADS"):
         if ship_ADS == True:
             if zip_ADS == True:
-                rsync_file(zip_raw_file,nas_sync_dir+'/ADS')
                 print 'Copying '+zip_raw_file+' file to '+nas_sync_dir+'/ADS'
+                rsync_file(zip_raw_file,nas_sync_dir+'/ADS')
+                print 'Done'
             else:
-                rsync_file(filename[key],nas_sync_dir+'/ADS')
                 print 'Copying '+filename[key]+' file to '+nas_sync_dir+'/ADS'
+                rsync_file(filename[key],nas_sync_dir+'/ADS')
+                print 'Done'
         else:
             pass
     elif (key == "PMS2D"):
-        status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/PMS2D')
         print 'Copying '+filename[key]+' file to '+nas_sync_dir+'/PMS2D'
+        status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/PMS2D')
+        print 'Done'
     else:
       if sendzipped == True:
-        status[key]["ship"] = rsync_file(filename[key]+'.zip',nas_sync_dir)
         print 'Copying '+filename[key]+'.zip file to '+nas_sync_dir
+        status[key]["ship"] = rsync_file(filename[key]+'.zip',nas_sync_dir)
+        print 'Done'
       else:
-        status[key]["ship"] = rsync_file(filename[key],nas_sync_dir)
         print 'Copying '+filename[key]+' file to '+nas_sync_dir
+        status[key]["ship"] = rsync_file(filename[key],nas_sync_dir)
+        print 'Done'
 
   # unmount NAS
 #  if NAS_permanent_mount == False:
