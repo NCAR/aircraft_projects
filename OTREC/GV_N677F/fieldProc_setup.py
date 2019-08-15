@@ -23,7 +23,7 @@ DATA_DIR = os.environ['DATA_DIR']
 RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 
 # Do we have local SWIG RAID storage.
-NAS = False 
+NAS = True
 
 # Does NAS have a permanent mount?
 NAS_permanent_mount = False
@@ -42,8 +42,11 @@ catalog = False # Send QC plots to field catalog, leave as False
 HRT = False # Generate HRT .nc file
 SRT = False # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
-zip_ads = False # Bzips the ads file independently of processed files
+zip_ADS = False # Bzips the ads file independently of processed files
 # you can have both sendzipped and zip_ads set to True if you want
+
+# Do you want to transfer ADS file back to Boulder (is the connection good enough?)
+ship_ADS = True
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
@@ -73,8 +76,8 @@ ftp_data_dir='EOL_data/RAF_data'
 # Configuration for the distribution - modify the following
 # Choose between NAS_in_field and FTP
 #############################################################################
-NAS_in_field =    False                            # Set to false for ftp
-FTP = True 
+NAS_in_field =    True                            # Set to false for ftp
+FTP = False
 password = 'tr0pics!'
 dat_parent_dir =  DATA_DIR+'/'     # Where nc files go
 rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
