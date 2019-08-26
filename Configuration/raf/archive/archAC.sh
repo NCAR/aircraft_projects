@@ -8,6 +8,7 @@
 ###############
 set PROJECT = "XXXPROJECTXXX"
 set YEAR = 20XX
+setenv PLATFORM "XXXAIRCRAFTXXX"
 
 ### ADS 
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads FS/EOL/$YEAR
