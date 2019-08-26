@@ -68,6 +68,9 @@
 # 	to make including an email address as an argument. Removed default 
 #	email address so that script fails and notififies user if no email 
 #	is supplied.
+# Modified 8/26/2019 Taylor Thomas
+#      to include functions to create and append SHA-1 cryptographic hashes for
+#      for all files that are archived. 
 #
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
@@ -84,6 +87,7 @@ import smtplib
 from email.MIMEText import MIMEText
 from datetime import datetime
 from os.path import join
+import hashlib
 #from subprocess import subprocess.Popen
 #from subprocess import subprocess.PIPE
 
@@ -95,6 +99,9 @@ rpwd = ""
 # File that contains map between project and Mass Store directories where
 # production data is archived.
 dirmapfile = "/scr/raf/Prod_Data/archives/msfiles/directory_map"
+hash_value_file = os.environ["PROJ_DIR"]+"/"+os.environ["PROJECT"]+\
+                  "/"+os.environ["PLATFORM"]+"/Production/archive/"+\
+                  os.environ["PROJECT"]+"_archive_hash_file.txt"
 
 class archRAFdata:
 
@@ -360,6 +367,31 @@ class archRAFdata:
 	    raise SystemExit
 	return
 
+    def hash_file(self, sfiles, sdir):
+        for i in sfiles:
+            h = hashlib.sha1()
+            with open(sdir+i,'rb') as file:
+                chunk = 0
+                while chunk != b'':
+                    chunk = file.read(1024)
+                    h.update(chunk)
+            return h.hexdigest()
+
+    def append_textfile(self, sfiles, hash_value_file, hash_value):
+        if os.path.isfile(hash_value_file):
+            pass
+        else:
+            open(hash_value_file,"w+")
+        append = raw_input("Would you like to append "+hash_value_file+" with sha1 hash? " + \
+                "yes == enter, no == anything else: ")
+        if append == "":
+            print("Appending "+hash_value_file+" for each file archived.")
+            for i in sfiles:
+                fh = open(hash_value_file, "a")
+                fh.write(i+","+hash_value+"\n")
+                fh.close()
+                print("SHA-1 cryptographic hash of "+i+" is "+hash_value)
+
     def archive_files(self,sdir,sfiles,flag,type,mssroot,email = ""):
 	'''
         Now archive the data!
@@ -619,7 +651,7 @@ if __name__ == "__main__":
                 sfiles.append(tfilelist)
         sdir = current_dir+"/"
     else:
-        #if (flag == "-m"):
+        # if (flag == "-m"):
         #            sdir = os.getcwd()
     
         # if flag == "-a" do regular processing
@@ -634,6 +666,8 @@ if __name__ == "__main__":
     sfiles.sort()
     
     mssroot = ' /'+location+'/'+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
-    #Now archive the data!
+    # Now archive the data!
     archraf.archive_files(sdir,sfiles,flag,type,mssroot,email)
-    
+    # Create a cryptographic hash
+    hash_value = archraf.hash_file(sfiles, sdir)
+    archraf.append_textfile(sfiles, hash_value_file, hash_value)
