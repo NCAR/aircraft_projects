@@ -65,7 +65,7 @@
 #	Omitting "removed" subdirs did not work if "removed" was under an accepted
 #	archival dir, such as forward/removed. Fixed this bug.
 # Modified 7/10/2018 Taylor Thomas
-# 	to make including an email address as an argument. Removed default 
+# 	to include email address as an argument. Removed default 
 #	email address so that script fails and notififies user if no email 
 #	is supplied.
 # Modified 8/26/2019 Taylor Thomas
@@ -367,31 +367,28 @@ class archRAFdata:
 	    raise SystemExit
 	return
 
-    def hash_file(self, sfiles, sdir):
-        for i in sfiles:
-            h = hashlib.sha1()
-            with open(sdir+i,'rb') as file:
-                chunk = 0
-                while chunk != b'':
-                    chunk = file.read(1024)
-                    h.update(chunk)
-            return h.hexdigest()
-
-    def append_textfile(self, sfiles, hash_value_file, hash_value):
+    # define function to create a hash for a given file
+    def hash_file(self, sfiles, sdir, hash_value_file):
+        # when function is called, ask user to confirm preference to append file with hashes
+        append = raw_input("Would you like to append "+hash_value_file+" with sha1 hash? " + \
+                "yes == enter, no == anything else: ")
+        # check to see if hash file already exists, create if not
         if os.path.isfile(hash_value_file):
             pass
         else:
-            open(hash_value_file,"w+")
-        append = raw_input("Would you like to append "+hash_value_file+" with sha1 hash? " + \
-                "yes == enter, no == anything else: ")
+            os.system("touch "+hash_value_file)
+        # if user wants to append file, create hashes
         if append == "":
-            print("Appending "+hash_value_file+" for each file archived.")
-            for i in sfiles:
-                fh = open(hash_value_file, "a")
-                fh.write(i+","+hash_value+"\n")
-                fh.close()
-                print("SHA-1 cryptographic hash of "+i+" is "+hash_value)
-
+            # iterate over each data file in sfiles list            
+            for filename in sfiles:
+                with open(sdir+filename, 'rb') as inputfile:
+                    current_datetime = str(datetime.now())
+                    data = inputfile.read()
+                    print(filename, current_datetime, hashlib.sha1(data).hexdigest())
+                    f = open(hash_value_file, 'a')
+                    print >>f, current_datetime+","+filename+",sha1,"+hashlib.sha1(data).hexdigest()
+            print("SHA-1 cryptographic hash values have been appended to "+hash_value_file)
+    
     def archive_files(self,sdir,sfiles,flag,type,mssroot,email = ""):
 	'''
         Now archive the data!
@@ -668,6 +665,6 @@ if __name__ == "__main__":
     mssroot = ' /'+location+'/'+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
     # Now archive the data!
     archraf.archive_files(sdir,sfiles,flag,type,mssroot,email)
-    # Create a cryptographic hash
-    hash_value = archraf.hash_file(sfiles, sdir)
-    archraf.append_textfile(sfiles, hash_value_file, hash_value)
+    
+    # Create hash and append file
+    archraf.hash_file(sfiles, sdir, hash_value_file) 
