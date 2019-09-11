@@ -1,0 +1,582 @@
+TF01 Notes
+Technician: Richard Freeman
+Date: 07/23/2019
+
+
+
+Preflight CDP issue: no communication from DSM LWO to CDP. Probe has power and appears to be functioning properly.
+
+After takeoff: CDP on LWO has serial communication.
+
+L5 rack forward laptop: screen is dark and difficult to read. Most likely a contrast issue need to adjust.
+
+F2DIO1_LDO, F2DIO32_LDO, F2DIO64_LDO are reading as NAN and occaisionally read as  in sub-mv range.
+
+R1: minimac still needs ads password for login
+
+Headset R6 cutting in and out on listening. Looks to be a problem with headset jack.
+
+Lost comms with CDP at 16:23.
+
+Cycled left wing power at 16:57. Still have no comms to CDP
+
+17:14 Left camera refocused.
+
+Had issue with right camera not displaying.
+
+Lost data on main power DSM from 18:05 to 18:15 with intermittent reconnects. connection stabilized on its own. will continue to monitor for dropouts.
+
+18:38 - DSM 304 analog card dropping out in aeros intermittently. 
+
+18:44 - LWO stopped. Cycled power to LWO which restored operation.CDP still not active.
+
+18:54 - CDP recorded data for about 15 minutes before dropping out again.,
+
+19:54 - Neglected to turn on water system and drain heater in pre-flight. remedied while landed at casper.
+
+
+Maintenance Day
+26July19
+
+Ran an auto A2D calibration. All seems good. Channels 5 and 6 in Nose DSM analog card 1706 are a little high and this is a known issue.
+
+CDP sent to DMT. Returned from DMT with a fixed loose pin and some new connectors.  Put on plane and did not see CDP.  Taken to the lab and was working.  Loopback all 4 serial channels on LWO CPU.  RS422 channel was bad.  Swapped CPU and CDP works.  
+
+Spare server moved to R1.
+
+VCSEL installed.  Catherine adjusted the data system for a 19200 baud rate.  It was sent to Southwest Sciences and they updated the firmware which created a different serial stream.  Some data is there.  No dewpoint.  Goal is to straighten that out before the departure to Costa Rica.
+
+
+
+
+
+TF02
+29July19
+
+ADS Tech: Kyle & Richard
+
+Takeoff: 15:22
+Landing: 17:13
+
+Seeing some VCSEL housekeeping variables but not a DP.  This is expected. rserial into it's serial channel and see a DP.  Thirdish' variable from the right. Serial stream is off after back from a firmware update from Southwest Sciences. We expect to get it's dewpoint in aeros by the time we leave for Costa Rica.
+
+Seeing left and forward camera but not a right camera. Richard saw the right camera itermittently. Eventually, all cameras were showing. There was no fix.  They were all being recorded the whole flight. Down looking camera is not being displayed at this point but is being recorded.
+
+Restarted nimbus after Chris W. requested to fix TASX.
+
+
+29July19
+Maintenance Day
+
+Did a CDP Cal.  It was run under a hangar flight with date.  Screenshots were placed in the OTREC folder on the ADS desktop.
+
+Put the spinning on the LWOO 2DC-25 and took a screenshot.  Placed the screenshot in the OTREC folder on the ADS desktop.
+
+
+
+30July19
+Maintenance Day
+
+Software Engineering team finished router and firewall issues.
+
+The down looking cameras focus was adjusted.
+
+Stuart swapped out an eeprom in VCSEL.  Baud rate is now 38400.  We now have a dewpoint in aeros.  
+
+
+31July19
+TF03
+ADS Tech: John M & Richard
+
+Pre-flight
+
+Had issue with A2D test and autocal crashing. Notification stated a problem with nidas, although I wasn't able to capture the actual error message. Was able to run both successfully without issue on the third attempt.
+
+ADS touch pad isn't tracking well. Pointer jumps around making it difficult to use
+
+F2DIOx_LWO is not valid for LWO forward diodes. Use DIOVx_LWOO.
+
+Flight
+17:49 - Starting crosswind manuevers. No issues to report. VCSEL data appearing in aeros.
+
+18:37 - Down facing camera not visable from controls page. But it is capturing data per Janine.
+
+18:57 - Unable to view shadowgraphs in aeros initially. Was able to view when in clouds.
+
+19:19 - All devices in control status page showed as critical for a brief moment when switching workspaces. No evidence of disruption in aeros. Will continue to monitor. 
+
+
+
+1Aug19
+Maintenance Day
+
+Rice was inop on the first three test flights.  There were 2 issues.  First, both LWO and RWO Diamond analog channels did not have there cal coefficients in the .xml.  Second, the Rice connector was wired incorrectly.  
+
+VCSEL was removed for training purposes and then reinstalled and checked out for operation.
+
+3Aug19
+FF01
+Munnerlyn
+Preflight check of instruments and walk around okay
+Satcom needed reboot, nidas dropout during A2D check.
+0958Z	wheels up
+1007Z	all instruments okay
+1644Z	radiometers on
+1811Z	feet wet over Matamoros, MX
+1848Z	cal maneuver.
+1901Z	feet dry south of Veracruz, Mexico
+1922Z	feet wet
+2042	cloud
+
+
+1
+5Aug19
+Maintenance Day
+
+Ran an auto A2D calibration. All seems good. Channel 4 on DSM 305 is 12mv off but this is the nose temp.  Channels 5 on DSM 305 is 51mv off and is a known issue. Channel 6 on DSM 305 is 47mv off and this is a known issue.
+
+Brought the data system up and all looks good. Organized the cabin from the ferry flight.  We are ready for RF01.
+
+
+7Aug19
+RF01
+
+Flight tech: Kyle
+
+Takeoff: 12:24
+Landing: 17:44
+
+During initial startup, had to recycle LWOO 2D probe for proper end diode voltages.
+
+12:32 RWO DSM reboot.  Unknown reason.
+
+During initial accent.  Straightened out some headset issues.
+
+Lost VCSEL dew point at 12:40.  ACGAIN never at zero.  Rebooted at 13:01.  Possibly iced over.  Did not see RICE go off but lots of 2D and CDP concentrations at that time. VCSEL dew point back at 13:04.
+
+We went through some clouds with moisture at approx 12:42ish which lasted about 5 to 6 minutes.  Sharp decline in ADIFR around 12:44.  NAN at 12:53. Most likely frozen.  QCR had issues at this time and appears to have recovered around 12:54.  QCTF was affected as well and recovered around 13:21. All this started at approx 28000 feet with temps around -25c.
+
+Lost satcom at 13:31. Came back 13:34.
+
+RICE should have reacted during that accent. Rebooted RWO at 14:03 with the hopes that RICE would get fixed but no success. I suspect a cabling issue.
+
+ADIFR came back at 16:00.   
+
+
+
+8Aug19
+Maintenance Day
+
+Turned on data system.  Powered up RWO.  Placed 400Hz to RWO and then 28VDC with WOW and the signal in AEROS looks nice and clean at just over 1 Volt as would be expected.  Removed RICE and visually inspected.  All conductors on MS connector look soldered properly and stable.  There are 20AWG to 16AWG splices in for the 28VDC and 400HZ returns in place.  Put a 1 and 5 volt simulator at the twinax RICE connection to the data system and it tests good.  Toned out for mating twinax connection to RICE MS connector and all tests good. Turned on 400Hz and checked at RICE MS connector and it's good.  Placed a 1 Volt simulator at the twinax connection to the data system and placed 28VDC to the RICE MS connector and it's good. 1 Volt signal in AEROS during this procedure is a clean 1 Volt in AEROS. Removed the DSM and inspected the ribbon cable to the analog card and it's good.  Sprayed contact cleaner on RICE MS connectors and put all back together and did a full function test with freeze mist and all is good. 
+
+Inspected radome tubing and found water in the drain line of the QCR and water in top ADIFR line.  Procedure was to unhook the QCR and both ADIFR lines from the enviromental box.  Take caps off these three drain lines.  Place tape over QCR and both ADIFR radome holes.  Blow completely through to the drain lines.  Then, cap drain lines, remove the tape and blow from the enviromental box out the radome holes.  I find this to be the most thorough procedure.  This is where we found the water in the top ADIFR line towards the enviromental box.  I am fully aware this is risking a leak in the radome but we can't see this with just a visual inspection.  A similar procedure was done with the QCTF line from it's black box through the pitot tube with no water found. Not sure we should do this in the future.  We did a wet rag test on the pitot with WOW and it got hot.  The QCTF breaker had not been tripped which leads to my next paragraph.  
+
+Flushed out the temp probe with water per the request of Cory Wolff.
+
+
+10Aug19
+Maintenance Day
+
+Cleaned radiometer glass per the request of Julie Haggerty.
+
+Janine put in fixes for the winds system.  Also, enabled DGPS from the Novatel for Stuart Beaton.
+
+After full data system checkout, QCF was not reporting properly.  Symptom was red samples/sec on status page.  An occasional 20 samples/sec would pop up but didn't match any of the Honeywell's on that serial card.  Power cycled 5 times with no success.  rserial into it's serial channel and looked like garbage data.  Ran serial loopback test on all serial channels on that card and all tested good.  Swapped with spare and all looks good.  It may have reverted back to an old baud rate.  Will need to be checked out back at RAF.  If there is another spare, possibly the next tech could bring it down with him.  Original S/N 33821 and was swapped out with the spare S/N 47172.
+
+Decided to abandon a CDP cal due to intermittent rain.  Will attempt next maintenance day.
+
+Abandoned an auto A2D cal due to lightening.  Evacuated the plane and went back to the hotel.  We are ready for flight.
+
+
+11Aug2016
+RF02
+Munnerlyn
+
+Preflight
+A2D Autocal froze at 19% again. Use Test A2D, cards okay
+Instrument check, Visable Radiometer (VISB and VIST) values look too low, refered to lead tech and Haggerty, will watch during flight. The sun is not yet up.
+RWO all vars nan, reboot 2x, all okay
+12:25Z	Wheels up
+12:30Z	RWO all vars nan, attempt soft reboot, ADS rebooted.
+12:40Z	RWO all vars nan, multiple attempts at reboot, power cycle and DC-DC inhibit. no fix.
+12:57Z	RWO back
+13:05Z	Pilots inform me, will level off at 35kft for speed runs
+13:13Z	VISB and VIST look reasonable
+13:32Z	dsmRWO, all values nan, reboot
+13:34Z	RWO is back
+14:50Z	cloud edge, both 2dcs and cdp have histograms. both 2dcs show images
+15:42Z	noted lack of response of RICE probe, check with pilots, GV ice sensor didn't sense ice either.
+
+
+12Aug19
+RF03
+ADS Tech: Kyle
+
+Takeoff: 12:19
+Landing: 17:53
+
+Swift Broadband Unit (SBU) led was off and on a few times just prior to and after takeoff.  Maybe we are in between satellites. Rebooted Satcom at 12:28.  Back at 12:31.  Stayed stable after reboot.  If this happens again, we need to look at the Thrane & Thrane web browser.  It's typically on the Americas satellite.  Check to see if it's trying to talk to a different one. Take a screen shot when this is happening and compare to "Satcom when good" screenshot on the desktop.  Attached is the same screenshot. Compare the signal strength bar at the top as well.
+
+Lost RWO at 12:30. Waited 3 minutes and could not ping it.  Seatbelt sign is on.  Tried remote power cycle from ADS rack with no success.  Power cycle at 12:40 with breaker.  I can ping it but still no data. It eventually came back but not talking to the 2D probe.  I rebooted it at 13:10 and all is talking now.  
+
+Lost VCSEL dew point during accent through liquid water clouds.  AC gain was never at 0.  I waited to see if it would come back.  Finally rebooted at 12:59.  Have a dew point at 13:03.
+
+QCR iced up during accent through liquid water clouds.
+
+QCTF iced up a bit.  This one makes no sense since this is a heated pitot. Back at 13:06. Will wet towel test with WOW bypass switch during next maintenance day.
+
+Successfully tested with multimeter that we did have 400Hz anti-ice in cabin during flight.
+
+Camera processes stopped at 13:47.  Janine could not kill some sort of process. Would have needed to reboot the ADS server which we did not do.  No forward, left, or right camera for the rest of the flight.  The down camera is still logging because it runs a different process.
+
+Mini-Mac in R5 keeps freezing up. Trick is to run minimal programs. 
+
+Noticed nimbus lagging at 16:20 and going yellow on the status page which eventually made all status information go red and then come back green within a few seconds.  All data stopped displaying on the plane for about 15 seconds from about 16:20:30 to 16:20:45.  Hopefully just a display issue.
+
+
+13Aug19
+Maintenance Day
+
+Had issues last maintenance day and prior to RF02 with the Auto A2D calibration locking at 19%.  Well, of course with Janine present today to look into it, it worked just fine.  DSM304 S/N 1602 CH4 is 12mv off. DSM 304 S/N 1705 CH2 & 3 40mv off, CH4 77mv off, CH5 81mv off, CH6 77mv off.  Outside RTH1 & RTH2 values are between 30 to 31C.
+
+Inspected and blew out QCR tubing. No signs of water.  It did come back during descent of RF03.
+
+Decided to replace the RWO DSM CPU.  Original card S/N 00665.  Card replacement S/N 00570.  The decision was make because when we replaced this card at RAF before deployment, we have been getting reboots when we engage power to the 2D probe which is on a separate 60Hz circuit.  We have also been getting random inflight reboots as well as some weird behavior.  See previous flight notes for more information.  After the card was replaced, we still got a reboot when we powered up the 2D probe.  This happens periodically and not all the time.  Should further investigate when back at RAF.
+
+Cleaned the 2DC-25um probe mirrors per Aaron Bansemer's request. During the process, a heater wire was broken when removing the heater from the mirror.  Let's not get too crazy with unnecessary cleaning.
+
+A little windy for CDP cal.  Will attempt the next maintenance day.
+
+Will inspect and test the QCTF pitot tube heat next maintenance day when we get a ladder after the sea containers arrive.
+
+
+
+14Aug19
+Maintenance Day
+
+Cleaned 2DC-25um probe per Josh Carnes instructions.  All looks good.
+
+Right Top Fuselage Pitot tube heat issue.  Essentially, 400Hz Anti-ice is applied to a heater in the pitot tube.  We measure 400Hz Anti-ice from the nose power box into the twisted pair that runs to a 2 pin MS connector on the pitot tube.  Attempted to remove the pitot tube from the fuselage but the hole is not big enough to be able to pull the rigid tubing with tubing fittings and the MS connector attached to the pitot tube through the hole.  Only access is through the bird strike panel which is quite the job.  Keep in mind that rain is always an issue.  With an ohm meter we measure an open circuit.  The heater should show some lower resistance value.  Per our math, it should read around 27ohms.  This tells me either a wire has been disconnected from the connector (less likely) or the heater is bad (more likely). Lou is aware and is going to pass it on to RSIG.
+
+Performed a CDP cal. All screenshots were placed in the CDP Cal folder on the ADS desktop.  
+
+16Aug2019
+RF04
+Munnerlyn
+
+preflight
+A2D Test good
+A2D autocal run and saved, good.
+users report AEROS connection to real time data is grayed out, called SE, problem resolved
+PSTF nan, soft reboot, dsmMPDB, did not fix, cycled power, PSTF okay
+12:30Z	Wheels up
+12:39Z	status page, cameras stopped, commands stop and start cameras, status page says cameras okay, recent files seen on hard drive.
+12:44Z	dsmRWO stopped,cycle power
+12:50Z	dsmRWO, cycled power, 
+12:55Z	dsmRWO, data came back briefly, then nan again, cycled power again
+13:12Z	Julie Haggerty and ADS report no conc or images LWO 2DC, end diode voltages present, cycled power to probe, will have to wait for the next cloud
+13:45Z	Julie Haggerty, LWO 2DC awake
+13:45Z	On station
+15:03Z	cloud edge, histograms on all probes, images on both 2dc probes. DPR above RTHx, DPL does not follow.
+15:40Z	Ferry to Caribbean leg
+16:20Z	Beginning first leg, Caribbean side
+
+
+17Aug19
+RF05
+Flight Tech: Kyle
+
+Takeoff: 12:21
+Landing: 17:590
+
+Everything is very wet this morning. No dew point in DPR prior to and after takeoff.  Need to service it. After a little tinkering around, DPR got a descent dew point around 14:41.  
+
+RWO gone at 12:32:30.  Waited 2 minutes for reboot with no success.  Cycled power with breaker at 12:35.  Could ping at 12:38.  All red in status page and nan's in aeros.  Now is the time to look at post flight data to see if it is there. Data 12:39:20 to 12:39:37. Back solid at 12:41:20. Took a screenshot of data in timeseries to compare to post flight data. See attached. 
+
+During preflight and after takeoff, 2D-10 end diode voltages really low.  Pretty sure optics were wet prior to takeoff.  Cycled power on just the 2D probe at 12:46. Diode voltages did not get larger.  My assumption is that the optics have some ice on them.  It appears the optics cleared at 12:54.  All good now.  
+
+Occasionally, on the Status Page, the Onboard Cameras goes yellow and the time is lagging. This event lasts a couple seconds and then goes green again. Possibly, this is why Onboard Cameras went red on RF03 and stopped recording.
+
+
+11Aug2016
+RF02
+Munnerlyn
+
+Preflight
+A2D Autocal, no evidence of channel shifting, A2D sn1706 ch 2-6 have shifts in y-int greater than 10mV, none greater than 100mV.
+DPR service mirror light blinking, rebalance on, cycled power then used rebalance x3, still stuck in rebalance
+VXCEL reboot
+RWO dsm came up fine this time, turned probe on before DSM
+Cycled power LWO dsm multiple times, called SE, informed lead tech who informed PI, decision made to fly anyway. Affected instruments are CDP and 2dc-10um
+
+13:28Z	Wheels up, will try rebalance then power cycle to DPR in dryer, low pressure air
+13:38Z	DPR is back, numbers in family with DPL and VXCEL. LWO dsm still out. Camera on status page is ed but seeing images, will take no action
+13:40Z	Camera web page shows error, cycle stop/start, camera status page green, seeing images advance
+13:58Z	DP_VXL nan, other vars present, serial data dsm MPDB present, cycle power, DP_VXL came back
+14:39Z	after multiple power cycles gave up on LWO dsm, pulled breaker to probes to limit hours on instrument. Left AI breakers engaged.
+16:08Z	AC server is up, dsm server and everything dowstream is down, cisco web page shows all ports with a red arrow down. Called SE and lead tech, conference by chat. Restart Nimbus, no help. Restart Nimbus by terminal window command, no help. Restart data acquisition, no help. Restart data acquisition as RF07, no help. Restart ADS computer, no help. Restart router, problem solved. Lost about 1 hr of data, Dropsondes and radar store data locally. Checked dsms and instruments, condition same as start of mission. Note: aircraft experience lightning strike of nose RF05, no burn marks or pitting noted.
+
+
+19Aug19
+Maintenance Day
+
+Cleaned DPR. In doing so, it was opened from the wrong side and the mirror got pulled off.  Replaced with the dew point spare.  Replace S/N 331 with S/N 330.
+
+Cleaned DPL.
+
+Cleaned VCSEL.
+
+Blew out radome tubing.
+
+LWO 65W AC/DC power supply tested bad. AC in and no DC out.  Replaced S/N 82 with S/N 319.
+
+Put aluminum tape over delron pylon mounting spacers on inboard and outboard sides of LWO and RWO pylons.  This is attempt to keep moisture out of the pylon.
+
+Janine found that the router is having some "host alert, timeserver DOWN" messages.  It attempted 10 times and then quit trying.  This may be our router issue in RF06. She changed the timeserver to a static ip address like the satcom, router, and acserver.
+
+
+
+20Aug19 
+Maintenance Day
+
+Tested DPR and got a dew point.
+
+Cleaned 2DC-10 per Josh Carnes instructions.
+
+Soldered a wire with a ring tongue to the twinax RICE shield and brought it to chassis ground through the RICE MS connector. This is an attempt to bring down the signal noise we are seeing.
+
+Powered up RWO without USB cable connected.  Then, engaged 2DC power that does not share the same breaker as the DSM and DSM did not reboot.  Powered down all RWO power.  Plugged in USB cable.  Powered up DSM until booted.  Engaged power to the 2DC and DSM did reboot.  We repeated this complete process twice.  Results were the same the second time. Rain has been intermittent and we decided to play it safe with just two full attempts. These reboots have been mostly there before and throughout the project.  This is our second CPU.  Changing to the second CPU did not fix the reboots. Wiring was ispected twice at RAF with all wired connections looking good. Janine was looking at log files during this process.  Results from the second full process are below:
+
+----- Messages from /var/log/ads3/dsm.log on dsmrwo 
+                                                                                                                     
+---- DSM powered up without USB cable from the 2DC10 plugged in. When 2DC10 was powered up, DSMRWO did not reboot.    
+Aug 20 17:15:59 dsmrwo kernel: Cannot find map file.                                                                  
+Aug 20 17:16:14 dsmrwo kernel: pcmcom8: ERROR: read EEPROM timeout                                                    
+Aug 20 17:16:18 dsmrwo kernel: pc104sg: WARNING: no match on read-back                                                
+Aug 20 17:16:20 dsmrwo last message repeated 9 times                                                                  
+Aug 20 17:16:20 dsmrwo kernel: pc104sg: WARNING: failed dual-port write after 10 attempts                             
+Aug 20 17:16:42 dsmrwo dsm[1946]: WARNING|sent 0 dgrams, requestType=0, port=42041, socketType=1, len=12, #mcifaces=1 
+Aug 20 17:16:44 dsmrwo dsm[1952]: WARNING|sent 0 dgrams, requestType=1, port=44427, socketType=1, len=12, #mcifaces=1 
+Aug 20 17:16:45 dsmrwo dsm[1954]: ERROR|dsmrwo:/dev/usbtwod_64_0: IOException: /dev/usbtwod_64_0: open: No such device
+Aug 20 17:17:25 dsmrwo last message repeated 4 times                                                                  
+                                                                                                                      
+----- DSM powered up with USB cable plugged in. When 2D probe was powered up, DSM rebooted                            
+Aug 20 17:19:09 dsmrwo kernel: Cannot find map file.                                                                  
+Aug 20 17:19:24 dsmrwo kernel: pcmcom8: ERROR: read EEPROM timeout                                                    
+Aug 20 17:19:28 dsmrwo kernel: pc104sg: WARNING: no match on read-back                                                
+Aug 20 17:19:29 dsmrwo last message repeated 9 times                                                                  
+Aug 20 17:19:29 dsmrwo kernel: pc104sg: WARNING: failed dual-port write after 10 attempts                             
+Aug 20 17:19:29 dsmrwo kernel:                                                                                        
+Aug 20 17:19:30 dsmrwo last message repeated 4 times                                                                  
+Aug 20 17:19:52 dsmrwo dsm[2023]: WARNING|sent 0 dgrams, requestType=0, port=40293, socketType=1, len=12, #mcifaces=1 
+Aug 20 17:20:00 dsmrwo dsm[2029]: WARNING|sent 0 dgrams, requestType=1, port=48553, socketType=1, len=12, #mcifaces=1
+Aug 20 17:20:00 dsmrwo kernel:  <6>usbtwod: INFO: /dev/usbtwod_64_0 (2d2d/2d03): transfer_buffer_length: 0  Number of Packets: 0  Ac
+Aug 20 17:20:00 dsmrwo last message repeated 2 times                                                                                
+Aug 20 17:20:00 dsmrwo kernel:  <6>usbtwod: INFO: /dev/usbtwod_64_0 (2d2d/2d03): nowo opened sucessfully, throttleRate=100  
+
+
+Janine did further testing with the router and we have not been able to repeat the RF06 failure.
+
+Did a full test of the data system and we are ready for RF07 on Thursday.
+
+ 
+
+22Aug19
+RF07
+
+Flight Tech: Kyle
+
+Takeoff: 13:27
+Landing: 19:27
+
+Fog delayed scheduled takeoff time.
+
+Grounding the RICE twinax shield to the airframe via the RICE MS connector did not solve the signal and noise issue. The only other things I can think of is taking that shield to the negative 28VDC and signal return on the RICE MS connector and physically pulling the RICE instrument apart and inspecting it.
+
+Lost RWO 2DC-10 at 18:00. Reboot at 18:05. Two reboots did not bring it back.  Lost it during some turbulance.  Could be the USB cable.  Will check post flight. The USB at the DSM may have been a little loose.  All was inspected, tested, and is working now.
+
+No nonsolicitated RWO DSM reboots during flight today.
+
+No indication that the router had any fatal causing issues with timeserver today.  On one of the previous maintnance days, we moved the timeserver ethernet cable from the network switch and plugged it directly into the router.  Possibly, this is our fix.
+
+Lost VCSEL during descent at 19:00.  AC Gain value at 0.  Rebooted at 19:02. After looking at playback camera (which is pretty cool), it got super cooled liquid watered or iced up.  Dew point back at 19:05.
+
+
+
+23AUG2019
+RF08
+
+Flight Tech: D. Allbee
+
+Taxi - 1213
+Takeoff - 1217
+Landed - 1742
+
+Preflight
+- DPR initialized in "Service Mirror" mode. Removed flag and blew out sensor with canned air. Fixed Service Mirror but still stuck in "Rebalance" mode. Informed Project Manager. DPL and VXL good. Will try cycling DPR in the air.
+- Tested RICE on the ground. Fully operational.
+
+1226 - Cycled power on DPR to see if mirror is dry enough to attain dew point. Successful.
+
+1245 - Cameras ON
+
+1247 - All 3 cloud physics probes functioning and displaying images/histogram.
+
+1419 - Lost SATCOM to the ground. Every item on the status page went RED. Data still being reported on Aeros...
+1425 - Cycled power on Router. Items on status page going back to green.
+1429 - SATCOM to ground returned.
+*ACSERVER NOT RETURNING TO GREEN
+////////////////////////////////////////////////////////////////
+9997% psg dsm
+ 14752 ?        Ssl    0:28 dsm -l 6 -u ads
+ 14851 ?        Ssl    9:46 dsm_server -l 6 -r -u ads -c
+ 14865 ?        S      0:02 kdialog --caption dsm_server --progressbar pid=14851, config=rf08. Progress is % of 12 hour flight. Press Cancel to shut down (X button does nothing) 43200
+439569 pts/5    S+     0:00 grep --color=auto dsm
+9994% kill 14752
+9995% psg dsm
+ 14851 ?        Ssl    9:54 dsm_server -l 6 -r -u ads -c
+ 14865 ?        S      0:02 kdialog --caption dsm_server --progressbar pid=14851, config=rf08. Progress is % of 12 hour flight. Press Cancel to shut down (X button does nothing) 43200
+448597 pts/5    S+     0:00 grep --color=auto dsm
+9995% dsm
+9996% psg dsm
+  1593 pts/5    S+     0:00 grep --color=auto dsm
+ 14851 ?        Ssl   10:04 dsm_server -l 6 -r -u ads -c
+ 14865 ?        S      0:02 kdialog --caption dsm_server --progressbar pid=14851, config=rf08. Progress is % of 12 hour flight. Press Cancel to shut down (X button does nothing) 43200
+452890 ?        Ssl    0:00 dsm -l 6 -u ads
+////////////////////////////////////////////////////////////////
+1437 - In Terminal Window
+psg dsm (gives list with numbers)
+dsm (not dsm server)
+kill xxxxx
+psg dsm (gives list) dsm will be gone
+dsm (adds dsm back into the process and should no longer be red)
+
+1440 - Entire status page green again.
+
+RICE is noisy for entirety of flight.
+
+1618 - Stuart B. asked that the camera process be stopped so he could make an update to the down-looking camera.
+1619 - Restarted cameras. Everything still functioning properly.
+
+1729 - Lost VCSEL on descent. Likely iced up the lenses flying through cloud. Cycled VCSEL but did not come back. Very close to landing.
+
+2D Probe End Diode Voltages very unstable prior to landing. Again, likely to flying through cloud and getting iced up.
+
+
+ 
+
+24AUG2019
+Maintenance Day
+
+First day attempting to use the A/C cart. However, the GPU does not provide 200 VAC which is required to power the A/C unit.
+
+Cleaned VCSEL mirrors.
+
+Cleaned DPR
+
+Decision made by SE team not to change out Router or Timeserver at this time.
+
+No standing water or condensation inside either radiometer.
+
+Cleaned RSTB lens.
+
+Blew out all nose lines.
+
+Power was dumped shortly after powering up ADS and some user instruments. No equipment damage reported.
+
+Auto A/D Cal is mostly good. S/N 1706 has offsets of:
+Ch. 2 - .052
+Ch. 3 - .051
+Ch. 4 - .100
+Ch. 5 - .100
+Ch. 6 - .091
+
+25Aug2019
+RF09
+Munnerlyn
+
+Preflight
+dsm305 (nose) red on status page, no data in Aeros, responds to ping, does not allow ssh login. No change in behavior from yesterday (maint). All of us concur that CPU card is the likely culprit. Dave is changing it and the A2D card (different issue, offsets from yesterday). Now cannot even ping the CPU. Decision made with PI to fly anyway.
+A2D cards show no signs of channel shifting.
+VXCEL has intensity over 1000 but no DP_VXL, cycle power. Still does not come back. 
+MIRROR_DPx has data but no DPx, could be DPx uses values from nose dsm for calculation.
+
+12:37Z	Wheels up, position not updating on map. Had Carol and Dave find Catherine
+13:11Z	DP_VXL nan, intensity over 1100, cycle power to VCSEL. (After later refering to manual, I beleive that output depends on ATX, which is not available today because dsm305 is down.)
+13:15Z	LRINT_VXL has been gradually decreasing to about 500
+13:16Z	Down camera not producing new files, cycle stop/start
+15:12Z	In cloud. CDP shows concentrations. Only RWO 2DC has images and shows concentrations. LWO conc are 0 and no images shown, end diode voltages are still within range so I think the concentrations are just outside the LWO 2DC range.
+15:44Z	DPR stuck at -35C, DPL is about-67C, cycle power DPR to get rebalance cycle.
+16:42Z	Chris had me stop and restart Nimbus
+16:42Z	DP_VXL is back, must just depend on TASX, not ATX
+17:23Z	In cloud again, CDP and 2DC on right wing shoe concentrations, 2DC on Left wing does not show concentrations.
+17:32Z	DIOV01_LWOO nan cannot cycle power, seatbelt light is on
+18/21Z	DIOV01_LWOO is back
+
+
+
+3Sept2019
+RF10
+Munnerlyn
+
+Preflight
+dsm305 (nose) red on status page, no data in Aeros, does not respond to ping. Five reboots. Connected Surface Pro to console port in back of ADS. Finally works, no commands given to 305.
+Dave cleaned VCSEL just prior to flight. laser intensity above 1100.
+A2D cards show no evidence of channel shifting.
+Cory says DIOV01_LWOO, DIOV32_LWOO and DIOV64_LWOO are low, cycled power, now they're good. DIOV01_RWOI, DIOV32_RWOI and DIOV64_RWOI are good
+DPR stuck in rebalance, cycled power, now good and close to DPL.
+
+12:14Z	Wheels up, dsm305 still working.
+12:21Z	Cameras stopped, cycled stop and start
+12:29Z	dsmLWO stopped, cycled power
+12:31Z	dsmRWO stopped, cycled power
+12:39Z	cloud, histograms on all probes, images present on both 2DCs
+13:24Z	on station
+14:00Z	Aspen installed on Stipo's computer so he can view dropsonde data realtime.
+14:39Z	L6 (dropsonde) headset can talk but not listen. Replaced both headset and extension and checked connections inside jacks, didn't fix. Original parts back, no replacements used. Will need to look inside wall mount box on maint day. He can hear communication on red "pilot" button but nothing else. Changing my mind about opening wall box, refering to mechs via lead tech instead.
+
+
+9Sept2019
+RF12
+Munnerlyn
+
+Preflight
+dsm305 analog card did not start, cycle power, see all variables
+DPR service mirror light on, cycle power, good preflight numbers, match DPL pretty well
+DP_VXL nan, all other numbers from it good, cycle power, all vars good
+probes end diode voltages good
+all A2Ds good, no channel shifting
+
+
+1403Z	Wheels up, all vars okay, heavy clouds on climbout
+1422Z	dsmLWO stopped, cycle power, looks good. In cloud, all probes show up on histograms, 2Ds show images
+1439Z	ADIFR nan, all other vars good, cycle power to dsm because of analog failure earlier. DSM305 IRIG-UNIX=0.1842sec.
+1444Z	DSM305 does not come back, multiple restarts. Checked for convertor on console port, present (note: multiple restarts with convertor present and not present on dsm305. down for flight)
+1507Z	restart cameras per Stuart
+1510Z	restart cameras again
+1555Z	restart Nimbus
+1617Z	Nimbus back
+1910Z	DSM Server and Nimbus stopped, restart data aquisition
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
