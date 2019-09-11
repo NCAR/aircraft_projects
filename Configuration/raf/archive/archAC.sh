@@ -6,8 +6,8 @@
 ###############
 #   Project   #
 ###############
-set PROJECT = "XXXPROJECTXXX"
-set YEAR = 20XX
+setenv PROJECT "XXXPROJECTXXX"
+setenv YEAR 20XX
 setenv PLATFORM "XXXAIRCRAFTXXX"
 
 ### ADS 
