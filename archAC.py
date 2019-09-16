@@ -71,7 +71,8 @@
 # Modified 8/26/2019 Taylor Thomas
 #      to include functions to create and append SHA-1 cryptographic hashes for
 #      for all files that are archived. 
-#
+# Modified 9/16/2019 Taylor Thomas
+#      Updating location where the archive hash file is written to be pdat.
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -99,9 +100,8 @@ rpwd = ""
 # File that contains map between project and Mass Store directories where
 # production data is archived.
 dirmapfile = "/scr/raf/Prod_Data/archives/msfiles/directory_map"
-hash_value_file = os.environ["PROJ_DIR"]+"/"+os.environ["PROJECT"]+\
-                  "/"+os.environ["PLATFORM"]+"/Production/archive/"+\
-                  os.environ["PROJECT"]+"_archive_hash_file.txt"
+hash_value_file = "/scr/raf/Prod_Data/"+os.environ["PROJECT"]+\
+                  "/"+os.environ["PROJECT"]+"_archive_hash_file.txt"
 
 class archRAFdata:
 
