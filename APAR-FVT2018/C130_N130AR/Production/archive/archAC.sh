@@ -9,20 +9,23 @@
 set PROJECT = "APAR-FVT2018"
 
 ### ADS 
-#/net/work/bin/scripts/mass_store/archAC/archAC.py ADS/down_days_ads /scr/raf/Raw_Data/$PROJECT/down_days_ads ads FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf_Raw_Data/$PROJECT ads FS/EOL/2018 taylort@ucar.edu
 
 ### CAMERA
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg FS/EOL/2018
 
 ########################## Preliminary Data Files ##########################
 ### Preliminary LRT  
-#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/LRT /scr/raf/Prod_Data/$PROJECT/field_phase/LRT nc FS/EOL/2018 taylort@ucar.edu
+
+### Preliminary SRT  
+/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/SRT /scr/raf/Prod_Data/$PROJECT/field_phase/SRT nc FS/EOL/2018 taylort@ucar.edu
 
 ## Preliminary HRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/HRT /scr/raf/Raw_Data/$PROJECT/field_phase/HRT nc FS/EOL/2018
 
 ### Preliminary KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/KML /scr/raf/Prod_Data/$PROJECT/field_phase/KML kml FS/EOL/2018 taylort@ucar.edu
 
 ########################## Production Data Files ##########################
 ### LRT
