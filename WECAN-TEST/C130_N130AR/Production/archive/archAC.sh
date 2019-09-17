@@ -9,7 +9,7 @@
 set PROJECT = "WECAN-TEST"
 
 ### ADS 
-/net/work/bin/scripts/mass_store/archAC/archAC.py ADS/down_days_ads /scr/raf/Raw_Data/$PROJECT/down_days_ads ads FS/EOL/2017
+#/net/work/bin/scripts/mass_store/archAC/archAC.py ADS/down_days_ads /scr/raf/Raw_Data/$PROJECT/down_days_ads ads FS/EOL/2017
 
 ### CAMERA
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg FS/EOL/2017
@@ -22,7 +22,7 @@ set PROJECT = "WECAN-TEST"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/HRT /scr/raf/Raw_Data/$PROJECT/field_phase/HRT nc FS/EOL/2017
 
 ### Preliminary KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml FS/EOL/2017
+/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/KML /scr/raf/Raw_Data/$PROJECT/field_phase kml FS/EOL/2017
 
 ########################## Production Data Files ##########################
 ### LRT
