@@ -16,8 +16,9 @@ set PROJECT = "HIPPO-3"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py UNALTERED/LRT /scr/raf/Prod_Data/$PROJECT nc RAF
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT \.nc EOL/2010 janine@ucar.edu
 
-/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1_20110328 /scr/raf/Prod_Data/$PROJECT/V1_20110328 .nc FS/EOL/2010 taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1_20110328 /scr/raf/Prod_Data/$PROJECT/V1_20110328 .nc FS/EOL/2010 taylort@ucar.edu
 #/net/work/bin/scripts/mass_store/archAC/archAC.pu LRT/V2_20110506 /scr/raf/Prod_Data/$PROJECT/V2_20110506 .nc FS/EOL/2010 taylort@ucar.edu
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V5_20190125 /scr/raf/Prod_Data/$PROJECT/V5_20190125 .nc FS/EOL/2010 taylort@ucar.edu
 
 #
 #### CHAT
