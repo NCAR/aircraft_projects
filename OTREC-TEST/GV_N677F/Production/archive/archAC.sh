@@ -6,18 +6,24 @@
 ###############
 #   Project   #
 ###############
-set PROJECT = "XXXPROJECTXXX"
-set YEAR = 20XX
+set PROJECT = "OTREC-TEST"
+set YEAR = 2019
 
 ### ADS 
-#/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads FS/EOL/$YEAR taylort@ucar.edu
 
 ### CAMERA
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg FS/EOL/$YEAR
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc FS/EOL/$YEAR taylort@ucar.edu
+
+### Preliminary HRT
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/HRT /scr/raf/Raw_Data/$PROJECT/field_phase/HRT nc FS/EOL/$YEAR taylort@ucar.edu
+
+### Preliminary SRT
+/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/SRT /scr/raf/Raw_Data/$PROJECT/field_phase/SRT nc FS/EOL/$YEAR taylort@ucar.edu
 
 ### Preliminary LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/LRT/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict FS/EOL/$YEAR
