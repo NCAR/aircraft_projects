@@ -9,7 +9,9 @@ endif
 
 cd ${RAW_DATA_DIR}/SOCRATES/2DS
 
-foreach file ([RF]F*/*.2d)
+foreach file (RF*/*.2d)
     set flight=`echo $file | sed 's/\/.*$//' | tr "[:upper:]" "[:lower:]"`
     process2d ${RAW_DATA_DIR}/SOCRATES/2DS/$file -o ${DAT}/SOCRATES${flight}.nc
 end
+
+echo "SOCRATES 2DS processing done - check ArmWidth" | mail -s "SOCRATES 2DS Processing done" 3038757450@tmomail.net
