@@ -23,10 +23,10 @@ set PROJECT = "DC3"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA /scr/raf/Raw_Data/$PROJECT/camera_images jpg EOL
 
 ### LRT - done, rearchived with updated VCSEL cals 1/28/2013, updated 2017/05/05 for RAF reprocessing.
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc FS/EOL/2012
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/ICARTT_format/V3_20181015 /scr/raf/Prod_Data/$PROJECT/V3_20181015/ICARTT_format ICT FS/EOL/2012 taylort@ucar.edu
 
 ### HRT - done, rearchived with updated VCSEL cals 1/28/2013, 2017 for variable name change.
-/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc FS/EOL/2012
+#/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc FS/EOL/2012
 
 ### KML - done, rearchived with updated VCSEL cals 1/28/2013, 20170505 for reprocessing.
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml FS/EOL/2012
@@ -39,7 +39,7 @@ set PROJECT = "DC3"
 
 ### VCSEL
 #/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI/ROI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi roi EOL
-#/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi 2DSCPI EOL
+#/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI/OAP -r /scr/raf_Raw_Data/$PROJECT/3v-cpi/oapfiles 2d FS/EOL/2012
 #/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi 2DSCPIHK EOL
 #/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi log EOL
 #/net/work/bin/scripts/mass_store/archAC/archAC.py 3V-CPI -r /scr/raf/Raw_Data/$PROJECT/3v-cpi TXT EOL
