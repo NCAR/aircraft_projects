@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Requires ${DAT} set in run_all
+
+if [ "$1" == "" ]; then
+   echo "Must include project name on command-line, e.g. rm_UHSAS HIPPO-3"
+   exit
+fi
+
+project=$1
+
+
+echo "removing UHSAS vars from production netCDF files for project $project"
+
+for file in `ls ${DAT}/${project}[rtf]f[0-9][0-9]FZ_no1DC.nc`
+do
+    echo $file
+    ncdump -h $file | grep float | grep 1DC
+    newfile=`echo $file | sed 's/no1DC/no1DCnoUHSAS/'`
+    echo $newfile
+    ncks -a -v '^.*UHSAS*$' -x $file $newfile
+    ncdump -h $newfile | grep float | grep 1DC
+    echo ""
+done
