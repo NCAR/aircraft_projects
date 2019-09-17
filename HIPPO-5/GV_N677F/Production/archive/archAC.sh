@@ -13,7 +13,9 @@ set PROJECT = "HIPPO-5"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads EOL janine@ucar.edu
 #
 ### LRT - done 5/16/2012, redone 6/25/2012 reprocessing Jul 28, 2016
-/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc EOL/2011 janine@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1.5_20121217_WI_WIC_fix /scr/raf/Prod_Data/$PROJECT/V1.5_20121217_WI_WIC_fix nc FS/EOL/2011 taylort@ucar.edu
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V3_20190125 /scr/raf/Prod_Data/$PROJECT/V3_20190125 nc FS/EOL/2011 taylort@ucar.edu
+
 #
 #### CHAT
 ##/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
