@@ -15,6 +15,10 @@ set PROJECT = "HIPPO-3"
 ### LRT - done 6/14/2010, V3 Dec 2012, V4 Nov 2016
 #/net/work/bin/scripts/mass_store/archAC/archAC.py UNALTERED/LRT /scr/raf/Prod_Data/$PROJECT nc RAF
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT \.nc EOL/2010 janine@ucar.edu
+
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1_20110328 /scr/raf/Prod_Data/$PROJECT/V1_20110328 .nc FS/EOL/2010 taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.pu LRT/V2_20110506 /scr/raf/Prod_Data/$PROJECT/V2_20110506 .nc FS/EOL/2010 taylort@ucar.edu
+
 #
 #### CHAT
 ##/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
@@ -50,7 +54,7 @@ set PROJECT = "HIPPO-3"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/kml/V4_20161109 kml EOL/2010
 
 ### NASA_AMES
-/net/work/bin/scripts/mass_store/archAC/archAC.py NASA_AMES /scr/raf/Prod_Data/$PROJECT 1DC.asc EOL/2010 janine@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py NASA_AMES /scr/raf/Prod_Data/$PROJECT 1DC.asc EOL/2010 janine@ucar.edu
 
 ### MTP
 #/net/work/bin/scripts/mass_store/archAC/archAC.py MTP /scr/raf/Prod_Data/$PROJECT/mtp NGV EOL janine@ucar.edu
