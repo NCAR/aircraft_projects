@@ -56,13 +56,13 @@ set PROJECT = "ORCAS"
 
 ########################## Production Data Files ##########################
 ### LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT Z.nc EOL/2016
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/version1_1 /scr/raf/Prod_Data/$PROJECT/V1.1_20181015 Z.nc FS/EOL/2016 taylort@ucar.edu
 
 ### KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml EOL/2016
 
 ### LRT ICT
-/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT asc EOL/2016
+/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT/version1_1 /scr/raf/Prod_Data/$PROJECT/V1.1_20181015 asc FS/EOL/2016 taylort@ucar.edu
 
 ### PMS2D
 #/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d EOL/2016
