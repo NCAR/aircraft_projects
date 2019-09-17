@@ -1,10 +1,10 @@
 #!/bin/csh
 
 set I=0
-set PREFIX = "CONTRAST-LRT_GV_"
-set Version = "_V2"
+set PREFIX = "/scr/raf/Prod_Data/CONTRAST/LRT/V1.2_20181015/CONTRAST-LRT_GV_"
+set Version = "_V3" #Derived from Version 1.2 of the LRT data
 
-foreach C (`ls /scr/raf/Prod_Data/CONTRAST/LRT/V2_UHSAS_update/CONTRAST*.nc`)
+foreach C (`ls /scr/raf/Prod_Data/CONTRAST/LRT/V1.2_20181015/CONTRAST*.nc`)
 	set FDate = `ncdump -h $C | grep FlightDate`
 	set FMonth = `echo $FDate | awk '{print substr($0,16,2)}'`
 	set FDay = `echo $FDate | awk '{print substr($0,19,2)}'`
