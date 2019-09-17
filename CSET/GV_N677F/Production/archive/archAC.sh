@@ -49,18 +49,17 @@ set PROJECT = "CSET"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/ARNOLD /scr/raf/Raw_Data/$PROJECT/field_phase/ARNOLD ict EOL/2015
 
 ### Preliminary HOLODEC NetCDF concentration files
-/net/work/bin/scripts/mass_store/archAC/archAC.py holodec/H2H_NetCDF /scr/raf/Prod_Data/$PROJECT/HOLODEC/H2H/nc nc FS/EOL/2015
+#/net/work/bin/scripts/mass_store/archAC/archAC.py holodec/H2H_NetCDF /scr/raf/Prod_Data/$PROJECT/HOLODEC/H2H/nc nc FS/EOL/2015
 
 ########################## Production Data Files ##########################
 ### LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/version1_2 /scr/raf/Prod_Data/$PROJECT nc FS/EOL/2015
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/version1_3 /scr/raf/Prod_Data/$PROJECT/LRT_V1.3_20181015 nc FS/EOL/2015 taylort@ucar.edu
 
 ### LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict EOL/2015
 
 ### PMS2D
 #/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d EOL/2015
-
 
 ### KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml EOL/2015
@@ -86,3 +85,5 @@ set PROJECT = "CSET"
 ### NONO2O3 ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py NONO2O3 /scr/raf/Prod_Data/$PROJECT/NONO2O3 ict EOL/2015
 
+### HOLODEC Reconstructed data files hist.mat format
+/net/work/bin/scripts/mass_store/archAC/archAC.py holodec/reconstructed /scr/raf_data/$PROJECT/holodec/cset tar.gz FS/EOL/2015
