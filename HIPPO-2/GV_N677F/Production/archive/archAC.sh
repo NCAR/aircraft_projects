@@ -12,6 +12,8 @@ echo "Make sure netCDF files have been reordered before archiving!"
 ### LRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py UNALTERED/LRT /scr/raf/Prod_Data/$PROJECT nc RAF
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT \.nc EOL/2009
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1_20110328 /scr/raf/Prod_Data/$PROJECT/V1_20110328 .nc FS/EOL/taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V2_20110506 /scr/raf/Prod_Data/$PROJECT/V2_20110506 .nc FS/EOL/taylort@ucar.edu
 
 ### ADS - done 12/17/09
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads RAF
