@@ -1,4 +1,6 @@
-echo "Be sure to reorder netCDF files before archiving to MSS!!!"
+set PROJECT = "ICE-L"
+
+#echo "Be sure to reorder netCDF files before archiving to MSS!!!"
 # ADS
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf2/Raw_Data/ICE-L ads RAF
 
@@ -12,7 +14,7 @@ echo "Be sure to reorder netCDF files before archiving to MSS!!!"
 #msrm -R -wpwd RAFDMG /RAF/2008/115/CPI
 
 #PMS2D
-/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/ICE-L/PMS2D 2d EOL
+#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/ICE-L/PMS2D 2d EOL
 
 #CAMERA
 # Don't archive camera files here. Use the archive_camera script!!!
@@ -47,6 +49,12 @@ echo "Be sure to reorder netCDF files before archiving to MSS!!!"
 
 # HRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf2/Prod_Data/ICE-L/HRT h.nc ATDdata
+# LRT old versions
+
+#/net/work/bin/scripts/mass_store/archAC/archAC.py HRT/Version1_2008Sep09 /scr/raf/Prod_Data/ICE-L/HRT/Version1_2008Sep09 h.nc FS/EOL/2007 taylort@ucar.edu
+
+/net/work/bin/scripts/mass_store/archAC/archAC.py HRT/Version2_2008Dec02 /scr/raf/Prod_Data/ICE-L/HRT/Version2_2008Dec02 h.nc FS/EOL/2007 taylort@ucar.edu
+
 
 # LRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf2/Prod_Data/ICE-L nc ATDdata
