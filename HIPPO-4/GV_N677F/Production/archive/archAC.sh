@@ -14,6 +14,10 @@ set PROJECT = "HIPPO-4"
 #
 ### LRT - done 5/15/2012, redone 06/25/2012, reprocessing Nov 7, 2016
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT no1DC.nc EOL/2011 janine@ucar.edu
+
+#LRT older version
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1.5_20121217_WI_WIC_fix /scr/raf/Prod_Data/$PROJECT/V1.5_20121217_WI_WIC_fix .nc FS/EOL/2011 taylort@ucar.edu
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V3_20190125 /scr/raf/Prod_Data/$PROJECT/V3_20190125 .nc FS/EOL/2011 taylort@ucar.edu
 #
 #### CHAT
 ##/net/work/bin/scripts/mass_store/archAC/archAC.py CHAT -t /scr/raf/Raw_Data/$PROJECT/Chat log RAF
@@ -67,4 +71,4 @@ set PROJECT = "HIPPO-4"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/kml/V2_20160728 kml EOL/2011
 
 ### NASA_AMES
-/net/work/bin/scripts/mass_store/archAC/archAC.py gv /scr/raf/Prod_Data/$PROJECT asc EOL/2011 janine@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py gv /scr/raf/Prod_Data/$PROJECT asc EOL/2011 janine@ucar.edu
