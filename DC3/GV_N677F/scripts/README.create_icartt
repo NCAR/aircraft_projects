@@ -4,13 +4,15 @@ D3-RAF-AEROSOL_GV_YYYYMMDD_R#.ICT
 D3-RAF-CLOUDS_GV_YYYYMMDD_R#.ICT
 D3-RAF-NAV_GV_YYYYMMDD_R#.ICT
 
-copy all the scripts from this dir, and the final LRT netCDF files, to a working
-directory.
+> cd /scr/raf/Prod_Data/DC3
+cd to the dir where the LRT files are
+> mkdir ICARTT_format
+> cd ICARTT_format
 
 Run:
-> create_icartt.sh
-> update_comments.pl
-> mvit
+> /net/jlocal/projects/DC3/GV_N677F/scripts/create_icartt.sh
+> /net/jlocal/projects/DC3/GV_N677F/scripts/update_comments.pl
+> /net/jlocal/projects/DC3/GV_N677F/scripts/mv_icartt
 
 Note that if you need to create a new revision (R2), then determine what changed
 with the LRT files and edit update_comments.pl. Change:
@@ -23,15 +25,16 @@ and below that add a line beginnning with R2: and a description of the change, i
 R2: Type changes here
 
 Finally, change the value added to header_lines to equal the revision number so
-the header count will be correct.
+the header count will be correct. And updste the special comment count
+(18+revision_number)
 
 Zip all the files together so you can scan them in one go:
 
 zip DC3-RAF.zip DC3*ICT
 
 Then go to http://www-air.larc.nasa.gov/cgi-bin/fscan and scan and upload all the
-new files.
+new files. If the scan fails, fix the problems and start this processing over.
 
 JAA
-1/29/2012
+10/17/2018
 
