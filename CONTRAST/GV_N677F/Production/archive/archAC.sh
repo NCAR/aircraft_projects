@@ -27,9 +27,11 @@ set PROJECT = "CONTRAST"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_rf17 jpg EOL/2014
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_tf01 jpg EOL/2014
 
-
 ### LRT
-/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT/V2_UHSAS_update nc EOL/2014
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1.2_20181015 /scr/raf/Prod_Data/$PROJECT/LRT/V1.2_20181015 nc FS/EOL/2014 taylort@ucar.edu
+
+### ICARTT
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/ICARTT/V3_20181015 /scr/raf/Prod_Data/$PROJECT/LRT/V1.2_20181015 GV FS/EOL/2014 taylort@ucar.edu 
 
 ### KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml EOL/2014
