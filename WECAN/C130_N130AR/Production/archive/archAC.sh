@@ -13,11 +13,17 @@ set YEAR = 2018
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads FS/EOL/$YEAR taylort@ucar.edu
 
 ### CAMERA
-#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA /scr/raf/Raw_Data/$PROJECT/camera_images jpg FS/EOL/$YEAR taylort@ucar.edu
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/LRT /scr/raf/Raw_Data/$PROJECT/field_phase nc FS/EOL/$YEAR taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/LRT/Version03 /scr/raf/Prod_Data/$PROJECT/field_data/LRT/Version03 .nc FS/EOL/$YEAR taylort@ucar.edu
+
+### Preliminary HRT
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/HRT /scr/raf_data/$PROJECT/field_data h.nc FS/EOL/$YEAR taylort@ucar.edu
+
+### Preliminary SRT
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/SRT /scr/raf_data/$PROJECT/field_data s.nc FS/EOL/$YEAR taylort@ucar.edu
 
 ### Preliminary LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/LRT/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict FS/EOL/$YEAR
@@ -26,7 +32,7 @@ set YEAR = 2018
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/IWG1 /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/IWG1 iwg1 FS/EOL/$YEAR
 
 ### Preliminary KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/KML /scr/raf_data/$PROJECT/field_data kml FS/EOL/$YEAR taylort@ucar.edu
 
 ### Preliminary CO ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/CO /scr/raf/Raw_Data/$PROJECT/field_phase/CO ict FS/EOL/$YEAR
@@ -49,19 +55,18 @@ set YEAR = 2018
 ### Preliminary ARNOLD ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/ARNOLD /scr/raf/Raw_Data/$PROJECT/field_phase/ARNOLD ict FS/EOL/$YEAR
 
-
 ########################## Production Data Files ##########################
 ### LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version1.1_20190517 /scr/raf/Prod_Data/$PROJECT/LRT/V1.1_20190517 nc FS/EOL/$YEAR taylort@ucar.edu
 
 ### LRT ICT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1.1_20190517 ICARTT /scr/raf/Prod_Data/$PROJECT/LRT/V1.1_20190517/ICARTT ict FS/EOL/$YEAR taylort@ucar.edu
 
 ### PMS2D
-#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/$YEAR taylort@ucar.edu
 
 ### KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/KML kml FS/EOL/$YEAR taylort@ucar.edu
 
 ### HRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc FS/EOL/$YEAR
@@ -70,10 +75,10 @@ set YEAR = 2018
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KMLh /scr/raf/Prod_Data/$PROJECT/HRT kml FS/EOL/$YEAR
 
 ### CO ICT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py CO /scr/raf/Prod_Data/$PROJECT/CO ict FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CO_N2O_H2O /scr/raf/Prod_Data/$PROJECT/CO_N2O_H2O ict FS/EOL/$YEAR taylort@ucar.edu
 
 ### CO2CH4 ICT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py CO2CH4 /scr/raf/Prod_Data/$PROJECT/CO2CH4 ict FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CO2_CH4_CO_H2O /scr/raf/Prod_Data/$PROJECT/CO2_CH4_CO_H2O ict FS/EOL/$YEAR taylort@ucar.edu
 
 ### HARP ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py HARP /scr/raf/Prod_Data/$PROJECT/HARP ict FS/EOL/$YEAR
