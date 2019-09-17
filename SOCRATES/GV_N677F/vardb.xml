@@ -60,7 +60,7 @@
       <long_name>2D-C Accumulation, 260X Emulation (per cell)</long_name>
       <is_analog>false</is_analog>
       <category>PMS Probe</category>
-      <derive>C1DC CONC1DC DBAR1DC DISP1DC PLWC1DC DBZ1DC REFF2DC CONC1DC100 CONC1DC150</derive>
+      <derive>C1DC CONC1DC DBAR1DC DISP1DC PLWC1DC DBZ1DC REFF2DC CONC1DC100 CONC1DC150 IWC1DC</derive>
       <reference>false</reference>
     </variable>
     <variable name="A1DP">
@@ -244,7 +244,7 @@
       <long_name>Attack Angle, Radome Diff. Pressure</long_name>
       <is_analog>false</is_analog>
       <category>Aircraft State</category>
-      <dependencies>ADIFR QCF</dependencies>
+      <dependencies>ADIFR QCF WOW_A</dependencies>
       <reference>false</reference>
     </variable>
     <variable name="ALT">
@@ -2810,6 +2810,15 @@
       <category>Uncorr'd Raw</category>
       <reference>false</reference>
     </variable>
+    <variable name="IWC1DC">
+      <units>g m-3</units>
+      <long_name>2D-C Ice Water Content, 260X Emulation</long_name>
+      <is_analog>false</is_analog>
+      <category>PMS Probe</category>
+      <dependencies>AREA TASX</dependencies>
+      <standard_name>atmosphere_cloud_liquid_water_content</standard_name>
+      <reference>false</reference>
+    </variable>
     <variable name="JNO2">
       <units>1/sec</units>
       <long_name>HARP JNO2 Proxy</long_name>
@@ -3694,7 +3703,7 @@
       <voltage_range>0 10</voltage_range>
       <default_sample_rate>10</default_sample_rate>
       <category>Uncorr'd Raw</category>
-      <derive>PLWCC PDRY</derive>
+      <derive>PLWCC PDRY THETAQ</derive>
       <reference>false</reference>
     </variable>
     <variable name="PLWC1">
