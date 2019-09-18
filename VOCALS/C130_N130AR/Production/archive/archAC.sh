@@ -8,17 +8,22 @@
 ###############
 set PROJECT = "VOCALS"
 # Source Rate
-#/net/work/bin/scripts/mass_store/archAC/archAC.py SRT /scr/raf/Prod_Data/$PROJECT srt.nc ATDdata
-
+# /net/work/bin/scripts/mass_store/archAC/archAC.py SRT /scr/raf/Prod_Data/$PROJECT srt.nc ATDdata
 
 # UNALTERED LRT - updated 6/30/09
 #/net/work/bin/scripts/mass_store/archAC/archAC.py UNALTERED/LRT /scr/productiondata ${PROJECT}rf...nc RAF
+
+# old version LRT datasets (archived 12/2018)
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version_20080430 /scr/raf/Prod_Data/$PROJECT/LRT/Version_20080430 nc FS/EOL/2008 taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version_20090706 /scr/raf/Prod_Data/$PROJECT/LRT/Version_20090706 nc FS/EOL/2008 taylort@ucar.edu
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version_20100607 /scr/raf/Prod_Data/$PROJECT/LRT/Version_20100607 nc FS/EOL/2008 taylort@ucar.edu
+
 # UNALTERED HRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py UNALTERED/HRT /scr/productiondata ${PROJECT}rf..h.nc RAF
 
 #### Final (merged) Datasets ####
 # LRT - DONE - updated 6/30/09, 7/9/09, 7/7/2010, 10/5/2011
-/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT .nc EOL
+# /net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT .nc EOL
 
 # HRT - DONE - updated 7/8/2010
 #/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT h.nc ATDdata
