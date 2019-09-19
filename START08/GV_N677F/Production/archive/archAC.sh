@@ -1,3 +1,6 @@
+#! /bin/csh -f
+
+set PROJECT = "START08"
 # ADS - done
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf2/Raw_Data/START08 ads RAF
 
@@ -14,7 +17,10 @@
 #CAMERA - use archcam.510, not this script.
 
 # FINAL MOVIES - Do NOT archive prelim movies!
-/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -m /scr/raf/Raw_Data/START08/camera/final_movies mp4 ATDdata
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -m /scr/raf/Raw_Data/START08/camera/final_movies mp4 ATDdata
+
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version_20081211 /scr/raf/Prod_Data/$PROJECT/Version_20081211 .nc FS/EOL/2008 taylort@ucar.edu
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version2_20190124 /scr/raf/Prod_Data/$PROJECT/Version2_20190124 .nc FS/EOL/2008 taylort@ucar.edu
 
 # DGPS - not done, waiting for final, usable data from Pavel
 #/net/work/bin/scripts/mass_store/archAC/archAC.py DGPS /scr/raf2/Raw_Data/START08/dgps ads ATDdata
