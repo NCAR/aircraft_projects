@@ -26,7 +26,7 @@ set PROJECT = "SOCRATES"
 
 ########################## Preliminary Data Files ##########################
 ### Preliminary LRT 
-#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/LRT/version0_2 /scr/raf/local_data/$PROJECT/LRT nc FS/EOL/2018
 
 ### Preliminary LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py preliminary/ICARTT /scr/raf/Raw_Data/$PROJECT/preliminary/icartt asc EOL/2018
@@ -37,13 +37,12 @@ set PROJECT = "SOCRATES"
 ### Preliminary HRT 
 #/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/HRT /scr/raf/Raw_Data/$PROJECT/field_phase/HRT nc FS/EOL/2018
 
-
 ### Preliminary SRT 
 #/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/SRT /scr/raf/Raw_Data/$PROJECT/field_phase/SRT nc FS/EOL/2018
 
 
 ### Preliminary HRT KML
-/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/KMLh /scr/raf/Raw_Data/$PROJECT/field_phase/HRT/kml kml FS/EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/KMLh /scr/raf/Raw_Data/$PROJECT/field_phase/HRT/kml kml FS/EOL/2018
 
 ### Preliminary CO ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/CO /scr/raf/Raw_Data/$PROJECT/field_phase/CO ict EOL/2018
@@ -69,10 +68,10 @@ set PROJECT = "SOCRATES"
 
 ########################## Production Data Files ##########################
 ### LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT Z.nc EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/version1_3 /scr/raf/Prod_Data/$PROJECT/LRT/V1.3_20190412 nc FS/EOL/2018 taylort@ucar.edu
 
 ### KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml EOL/2018
+#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT/KML kml FS/EOL/2018 taylort@ucar.edu
 
 ### LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT asc EOL/2018
@@ -82,7 +81,7 @@ set PROJECT = "SOCRATES"
 
 
 ### HRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc EOL/2018
+/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT/V1.0_20190412 nc FS/EOL/2018 taylort@ucar.edu
 
 ### HRT KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KMLh /scr/raf/Prod_Data/$PROJECT/HRT kml EOL/2018
