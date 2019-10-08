@@ -9,10 +9,10 @@
 setenv PROJECT OTREC
 setenv YEAR 2019
 ### ADS 
-/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads FS/EOL/$YEAR taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py ADS/maint_days /scr/raf/Raw_Data/$PROJECT/maint_days ads FS/EOL/$YEAR taylort@ucar.edu
 
 ### CAMERA
-#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg FS/EOL/$YEAR
+/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg FS/EOL/$YEAR taylort@ucar.edu
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
