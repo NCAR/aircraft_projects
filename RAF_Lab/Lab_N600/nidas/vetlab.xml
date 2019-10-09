@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 
 <!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
-<project xmlns="http://www.eol.ucar.edu/nidas" name="VETDSM" system="Lab_N600" version="$LastChangedRevision: 2514 $" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd">
+<project xmlns="http://www.eol.ucar.edu/nidas" name="RAF_Lab" system="Lab_N600" version="$LastChangedRevision: 2514 $" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd">
   <sensorcatalog>
     <sensor ID="IRIG" class="raf.IRIGSensor">
       <sample id="1">
@@ -1521,8 +1521,84 @@
         </processor>
       </service>
     </server>
-
-
+    <dsm derivedData="sock::31000" id="25" location="bench" name="dsm325" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_325"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="10" latency="0.25">
+        <parameter name="SerialNumber" type="string" value="W474510"/>
+        <parameter name="rate" type="int" value="100"/>
+        <sample id="1" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="10"/>
+          <variable longname="" name="dsm325_A0_ch0" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm325_A0_ch0.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm325_A0_ch1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm325_A0_ch1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm325_A0_ch2" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm325_A0_ch2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm325_A0_ch3" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm325_A0_ch3.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm325_A0_ch4" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm325_A0_ch4.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm325_A0_ch5" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm325_A0_ch5.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm325_A0_ch6" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm325_A0_ch6.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="dsm325_A0_ch7" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm325_A0_ch7.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+    </dsm>
     <dsm derivedData="sock::7071" id="107" location="Bench" name="dsmLAB7" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LAB7"/>
       <output class="RawSampleOutputStream">
@@ -1769,14 +1845,13 @@
         </sample>
       </sensor>
     </dsm>
-
     <dsm derivedData="sock::7071" id="56" location="bench" name="bigblu" rserialPort="30002" statusAddr="sock::30001">
-      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_BigBlu"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_BigBlu"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
-        <calfile file="A2D014.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <calfile file="A2D1711.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
@@ -1852,19 +1927,16 @@
         </sample>
       </sensor>
     </dsm>
-
     <dsm derivedData="sock::7071" id="57" location="bench" name="dsmTEST" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_TEST"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-
       <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="1500">
         <sample id="1" rate="100">
           <variable count="true" longname="TSI CN Counter Output" name="CNTS" units="count"/>
         </sample>
       </sensor>
-
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
         <calfile file="A2D001.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
@@ -1942,19 +2014,16 @@
         </sample>
       </sensor>
     </dsm>
-
     <dsm derivedData="sock::7071" id="55" location="bench" name="dsmWRD" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_WRD"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-
       <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="1500">
         <sample id="1" rate="100">
           <variable count="true" longname="TSI CN Counter Output" name="CNTS_WRD" units="count"/>
         </sample>
       </sensor>
-
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
         <calfile file="A2D019.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
@@ -1991,6 +2060,12 @@
           </variable>
         </sample>
       </sensor>
+    </dsm>
+    <dsm derivedData="sock::31000" id="99" location="acserver" name="acserver" statusAddr="sock:192.168.84.2:30001">
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+
     </dsm>
   </site>
 </project>

@@ -1685,7 +1685,7 @@
         <socket type="mcrequest"/>
       </output>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
-        <calfile file="A2D019.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <calfile file="A2D1602.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
@@ -1767,7 +1767,7 @@
         <socket type="mcrequest"/>
       </output>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
-        <calfile file="A2D1706.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <calfile file="A2D018.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
@@ -1853,9 +1853,6 @@
         <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="10"/>
-
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
           <variable longname="" name="dsmLWO_A0_ch0" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
@@ -2263,9 +2260,6 @@
         <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="10"/>
-
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
           <variable longname="" name="dsmRWO_A0_ch0" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
@@ -2656,6 +2650,7 @@
           </variable>
         </sample>
       </sensor>
+
 <!--
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="500">
         <calfile file="A2D002.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
@@ -2674,7 +2669,6 @@
         <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="10"/>
-
           <variable longname="" name="dsm320_A1_ch0" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="2"/>
@@ -2983,16 +2977,11 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
-        <calfile file="A2D1606.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
-        <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_323A0" units="deg_C"/>
-        </sample>
-        <sample id="2" rate="10">
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200" latency="0.25">
+        <parameter name="rate" type="int" value="100"/>
+        <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="10"/>
           <variable longname="" name="dsm323_A0_ch0" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="4"/>
@@ -3057,76 +3046,64 @@
               <calfile file="dsm323_A0_ch7.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
             </poly>
           </variable>
-        </sample>
-      </sensor>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="500">
-        <calfile file="A2D018.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
-        <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_323A1" units="deg_C"/>
-        </sample>
-        <sample id="2" rate="10">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="" name="dsm323_A1_ch0" units="V">
-            <parameter name="channel" type="int" value="0"/>
+          <variable longname="" name="dsm323_A0_ch8" units="V">
+            <parameter name="channel" type="int" value="8"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="">
               <calfile file="dsm323_A1_ch0.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
             </poly>
           </variable>
-          <variable longname="" name="dsm323_A1_ch1" units="V">
-            <parameter name="channel" type="int" value="1"/>
+          <variable longname="" name="dsm323_A0_ch9" units="V">
+            <parameter name="channel" type="int" value="9"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="">
               <calfile file="dsm323_A1_ch1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
             </poly>
           </variable>
-          <variable longname="" name="dsm323_A1_ch2" units="V">
-            <parameter name="channel" type="int" value="2"/>
+          <variable longname="" name="dsm323_A0_ch10" units="V">
+            <parameter name="channel" type="int" value="10"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="">
               <calfile file="dsm323_A1_ch2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
             </poly>
           </variable>
-          <variable longname="" name="dsm323_A1_ch3" units="V">
-            <parameter name="channel" type="int" value="3"/>
+          <variable longname="" name="dsm323_A0_ch11" units="V">
+            <parameter name="channel" type="int" value="11"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="">
               <calfile file="dsm323_A1_ch3.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
             </poly>
           </variable>
-          <variable longname="" name="dsm323_A1_ch4" units="V">
-            <parameter name="channel" type="int" value="4"/>
+          <variable longname="" name="dsm323_A0_ch12" units="V">
+            <parameter name="channel" type="int" value="12"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="">
               <calfile file="dsm323_A1_ch4.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
             </poly>
           </variable>
-          <variable longname="" name="dsm323_A1_ch5" units="V">
-            <parameter name="channel" type="int" value="5"/>
+          <variable longname="" name="dsm323_A0_ch13" units="V">
+            <parameter name="channel" type="int" value="13"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="">
-              <calfile file="dsm323_A1_ch5.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+              <calfile file="dsm323_A1_ch15.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
             </poly>
           </variable>
-          <variable longname="" name="dsm323_A1_ch6" units="V">
-            <parameter name="channel" type="int" value="6"/>
+          <variable longname="" name="dsm323_A0_ch14" units="V">
+            <parameter name="channel" type="int" value="14"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="">
               <calfile file="dsm323_A1_ch6.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
             </poly>
           </variable>
-          <variable longname="" name="dsm323_A1_ch7" units="V">
-            <parameter name="channel" type="int" value="7"/>
+          <variable longname="" name="dsm323_A0_ch15" units="V">
+            <parameter name="channel" type="int" value="15"/>
             <parameter name="gain" type="float" value="4"/>
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="">
@@ -3377,6 +3354,7 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+
 <!--
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
         <calfile file="A2D1701.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
@@ -3628,7 +3606,6 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300" latency="0.25">
         <parameter name="SerialNumber" type="string" value="W513089"/>
         <parameter name="rate" type="int" value="500"/>
@@ -3701,6 +3678,7 @@
           </variable>
         </sample>
       </sensor>
+
 <!--
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="500">
         <calfile file="A2D1709.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
@@ -4120,6 +4098,7 @@
           <variable count="true" longname="TSI CN Counter Output" name="CNTS" units="count"/>
         </sample>
       </sensor>
+
 <!--
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="1700">
         <calfile file="A2D1708.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
@@ -4204,6 +4183,93 @@
           </variable>
         </sample>
       </sensor>
+    </dsm>
+    <dsm derivedData="sock::7071" id="30" location="bench" name="bigblu" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_603"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="640">
+        <calfile file="A2D1606.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_bigbluA0" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="" name="bigblu_A0_ch0" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm303_A0_ch0.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="bigblu_A0_ch1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm303_A0_ch1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+   </poly>
+          </variable>
+          <variable longname="" name="bigblu_A0_ch2" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm303_A0_ch2.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="bigblu_A0_ch3" units="V">
+            <parameter name="channel" type="int" value="3"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm303_A0_ch3.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="bigblu_A0_ch4" units="V">
+            <parameter name="channel" type="int" value="4"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm303_A0_ch4.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="bigblu_A0_ch5" units="V">
+            <parameter name="channel" type="int" value="5"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm303_A0_ch5.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="bigblu_A0_ch6" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm303_A0_ch6.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+          <variable longname="" name="bigblu_A0_ch7" units="V">
+            <parameter name="channel" type="int" value="7"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="dsm303_A0_ch7.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/Lab_N600"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+     </dsm>
+    <dsm derivedData="sock::31000" id="99" location="acserver" name="acserver" statusAddr="sock:192.168.84.2:30001">
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
   </site>
 </project>

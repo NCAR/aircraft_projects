@@ -58,8 +58,135 @@
 
     </dsm>
 
-    <dsm id="20" name="dsmwrd" statusAddr="sock:192.168.84.2:30001">
-      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LAB8"/>
+
+    <dsm id="40" name="dsmwrd" statusAddr="sock:192.168.84.2:30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="600" suffix="_WRD"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+
+        <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="60" latency="0.25">
+            <parameter name="rate" type="int" value="100"/>
+
+<!--
+            		gain=16, bipolar="false":  0 to 1.25V
+	            	gain=8, bipolar="false":  0 to 2.5V
+	            	gain=4, bipolar="false":  0 to 5V
+	            	gain=2, bipolar="false":  0 to 10V
+            		gain=16, bipolar="true":  -.625 to .625
+	            	gain=8, bipolar="true":  -1.25 to 1.25
+	            	gain=4, bipolar="true":  -2.5 to 2.5
+	            	gain=2, bipolar="true":  -5  to 5
+	            	gain=1, bipolar="true":  -10  to 10
+	        -->
+            <sample id="1" rate="10">
+                <parameter name="filter" type="string" value="boxcar"/>
+                <parameter name="numpoints" type="int" value="10"/>
+                <variable name="diamond0_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond1_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond2_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond3_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond4_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond5_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond6_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond7_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond8_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond9_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond10_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond11_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond12_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond13_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond14_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+                <variable name="diamond15_WRD" units="V">
+                    <parameter name="gain" type="float" value="1"/>
+                    <parameter name="bipolar" type="bool" value="true"/>
+                    <parameter name="corSlope" type="float" value="1.0"/>
+                    <parameter name="corIntercept" type="float" value="0.0"/>
+                </variable>
+            </sample>
+        </sensor>
+	  <output class="RawSampleOutputStream">
+	    <socket port="30000" type="server"/>
+	  </output>
+    </dsm>
+
+    <dsm id="20" name="bigblu" statusAddr="sock:192.168.84.2:30001">
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_bigblu"/>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
