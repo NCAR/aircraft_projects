@@ -25,7 +25,7 @@
 ### Define settings for NAS in the field
 #############################################################################
 import os
-project = 'OTREC'
+project = 'MethaneAIR'
 DATA_DIR = os.environ['DATA_DIR']
 RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 
