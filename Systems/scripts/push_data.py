@@ -607,7 +607,7 @@ if FTP == True:
     print 'opening FTP connection to: ' + ftp_site
 
     ftp = ftplib.FTP(ftp_site)
-    ftp.login(string.lower(project), password)
+    ftp.login(user, password)
     print ""
     print datetime.datetime.now().time()
 
