@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#/usr/bin/python
 #
 #   Be sure to ask the systems group to create a directory:
 #   /net/ftp/pub/data/incoming/<project> and then to create the tree below it:
@@ -21,75 +21,65 @@
 # Taylor Thomas - Updates including pulling ADS config to this file from 
 # push_data.py, updating this file with the config portion for 
 # dist_field_data.py paths for new sync_field_data.py script. 01/16/2019
-############################################################################
-### Define settings for NAS in the field
-#############################################################################
+
 import os
 project = 'MethaneAIR'
 DATA_DIR = os.environ['DATA_DIR']
 RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
+dat_parent_dir =  DATA_DIR+'/'     # Where nc and kml files go
+rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 
-# Do we have local SWIG RAID storage.
-NAS =     False
-
+#############################################################################
+### Define settings for NAS in the field
+#############################################################################
+# Do we have local CWIG RAID storage?
+NAS = False
 # Does NAS have a permanent mount?
-NAS_permanent_mount = True
-nas_url =        '192.168.1.30:/data'
-nas_mnt_pt =     '/mnt/Data/'
+NAS_permanent_mount = False
+nas_url = '192.168.1.30:/data'
+nas_mnt_pt =     '/mnt/Data'
+
+#############################################################################
+### FTP configuration - not used if using NAS
+#############################################################################
+FTP = True
+ftp_site = 'ftp.eol.ucar.edu'
+user = 'anonymous'
+password = ''
+ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
+ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
 
 #############################################################################
 ### Define which files should be generated
 #############################################################################
-
-# Set to true if you want 'em
 ICARTT = False # Generate ICARTT
 IWG1 = False # Generate IWG1 packet
-RstudioHTML = False # Generate a PDF of the QC plots
-catalog = False # Send QC to field catalog
-HRT =    False # Generate HRT .nc file
-HRTonly = False # If processing was already done, and now someone wants HRT data,
-                # to avoid reprocessing LRT, regenerating plots, etc, set HRTonly to 
-                # True
+
+HRT = False # Generate HRT .nc file
 SRT = False # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
-zip_ads = False # Bzips the ads file independently of processed files
+zip_ADS = False # Bzips the ads file independently of processed files
 # you can have both sendzipped and zip_ads set to True if you want
+
+# Do you want to transfer ADS file back to Boulder (is the connection good enough?)
+ship_ADS = True
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
 PMS2D = True            #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
-#############################################################################
+Rstudio = True # Generate a PDF of the QC plots
+catalog = False # Send QC plots to field catalog, leave as False
 
+#############################################################################
 # Plots - set path to RStudio dir
 rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
-# rstudio_dir =    '/h/eol/ads/RStudio/' # Data dir to run on EOL servers
 
 # Software - set locations of needed software
 translate2ds = '/opt/local/bin/translate2ds '
 
-############################################################################
-# FTP configuration - not used if using NAS
 #############################################################################
-ftp_site =       'ftp.eol.ucar.edu'
-user =           'anonymous'
-qpassword =       'ads@ucar.edu'
-ftp_data_dir='pub/data/incoming/otrec/EOL_data/RAF_data'
-
-#############################################################################
-# To trim flights when processing, create a setup file for the flight under
-# Production. The process script will read that if it exists.
-# Configuration for the distribution - modify the following
-# Choose between NAS_in_field and FTP
-#############################################################################
-NAS_in_field =    False                            # Set to false for ftp
-FTP = True
-dat_parent_dir =  DATA_DIR+'/'     # Where nc files go
-rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
-ftp_parent_dir =  '/net/ftp/pub/data/incoming/otrec/'   # Where nc files go for PIs
-
-############################################################################
 # Temp file that exists if program is running.
 # Allows script to not clobber itself
 #############################################################################
@@ -100,18 +90,3 @@ ftp_parent_dir =  '/net/ftp/pub/data/incoming/otrec/'   # Where nc files go for 
 # section of push_data and set command as you want.
 #############################################################################
 datadump = False
-
-#############################################################################
-### local FTP setup ###
-#############################################################################
-#local_ftp_site = '192.168.1.10'
-#local_user     = 'anonymous'
-#local_password = 'cjw@ucar.edu'
-#local_ftp_dir  = '/FieldStorage/FieldProjects/' + project + '/C130nc'
-#rlocal_ftp_dir = '/FieldStorage/FieldProjects/' + project + '/RAFqc'
-
-#############################################################################
-# Stuff that I am not sure if push_data uses anymore...
-#############################################################################
-#nas_sync_dir =   nas_mnt_pt + '/data/synced_data/'
-#nas_data_dir =   nas_mnt_pt + '/data/scr_data/'
