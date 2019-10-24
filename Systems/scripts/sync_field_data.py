@@ -7,7 +7,6 @@
 # Runs from cron on tikal as user ads. 
 #
 # Script should be in /h/eol/ads/crontab
-#
 #############################################################################
 
 import logging, logging.handlers
@@ -21,8 +20,8 @@ temp_dir = sys.argv[1]
 project = sys.argv[2]
 aircraft = sys.argv[3] 
 
+# Set up directories
 proj_dir = os.getenv("PROJ_DIR")+'/'+project+'/'+aircraft+'/'
-# Initialization
 sys.path.insert(0,proj_dir)
 from fieldProc_setup import *
 
@@ -30,10 +29,10 @@ dat_dir = dat_parent_dir+project
 ftp_dir = ftp_parent_dir
 rdat_dir = rdat_parent_dir+project
 eol_dir = temp_dir+'/EOL_data/'
+
 #############################################################################
 # Directory checks
 #############################################################################
-
 def dir_check():
 
     # Check to make sure the rdat + project dir exists
@@ -78,7 +77,6 @@ def dir_check():
 #############################################################################
 # Unzip if you have any of those pesky .zip files
 #############################################################################
-
 def unzip():
 
     final_message = 'Unzipping files if they are present\n'
@@ -103,9 +101,8 @@ def unzip():
     return(final_message)
 
 #############################################################################
-# Function to distribute RAF raw data
+# Function to distribute RAF raw data from ingest to FTP plus others
 #############################################################################
-
 def dist_raw():
 
     final_message = 'Starting distribution of RAF raw data\n'
@@ -147,9 +144,8 @@ def dist_raw():
     return(final_message)
 
 #############################################################################
-# Function to distribute RAF prod data
+# Function to distribute RAF prod data from ingest point to FTP plus others
 #############################################################################
-
 def dist_prod():
 
     final_message = 'Starting distribution of RAF prod data\n' 
@@ -204,7 +200,6 @@ def dist_prod():
 # and for reprocessing by software group internally. Leave the /field_data
 # directory as a copy of the incoming ftp and the NAS in the field
 #############################################################################
-
 def dist_field():
 
     final_message = 'Continuing distribution of RAF prod data\n'
@@ -224,9 +219,8 @@ def dist_field():
     return(final_message)
 
 #############################################################################
-# Function to distribute PI data
+# Function to distribute PI data from ingest to FTP
 #############################################################################
-
 def dist_PI(directory):
     
     final_message = 'Starting distribution of PI data\n'
@@ -254,9 +248,41 @@ def dist_recursive(directory):
     return(final_message)
 
 #############################################################################
+# Function to distribute data from FTP to local dirs for QAQC and backup
+# to be used if no NAS in the field and data goes from Ground Station to 
+# FTP site directly.
+#############################################################################
+def ftp_to_local(filetype, local_dir):
+    final_message = 'Starting distribution of data from the FTP to localdirs/\n'
+
+    if filetype == 'PMS2D':
+        command = 'rsync -qu '+ftp_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir+'/'+filetype
+        message = 'Syncing dir into place: '+command+'\n'
+        os.system(command)
+
+        final_message = final_message + message
+        logging.info(final_message)
+
+        return(final_message)
+
+    elif filetype == 'ADS':
+        command = 'rsync -qu '+ftp_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir
+        message = 'Syncing dir into place: '+command+'\n'
+        os.system(command)
+
+    else:
+        command = 'rsync -qu '+ftp_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir
+        message = 'Syncing dir into place: '+command+'\n'
+        os.system(command)
+
+        final_message = final_message + message
+        logging.info(final_message)
+
+        return(final_message)
+
+#############################################################################
 # Email function
 #############################################################################
-
 def send_mail_and_die(body):
 
     emailfilename = 'email.addr.txt'
@@ -281,22 +307,29 @@ def send_mail_and_die(body):
 #############################################################################
 # Define main function
 #############################################################################
-
 def main():
-    
-    dir_check()
-    dist_raw()
-    unzip()
-    dist_prod()
-    dist_field()
-    dist_PI('PI_data')
-    dist_recursive('HCR_data')
-    dist_recursive('AVAPS_data')
+    if NAS == True:    
+        dir_check()
+        dist_raw()
+        unzip()
+        dist_prod()
+        dist_field()
+        dist_PI('PI_data')
+        
+        dist_recursive('HCR_data')
+        dist_recursive('AVAPS_data')
+
+    elif NAS == False and FTP == True:
+        ftp_to_local('ADS', rdat_dir)
+        ftp_to_local('PMS2D', rdat_dir)
+        ftp_to_local('LRT', dat_dir+'/field_data')
+        ftp_to_local('KML', dat_dir+'/field_data')
+        dist_field()
     # send_mail_and_die(body)
     exit(1)
 
 ##############################################################################
-### MAIN
+# MAIN
 ##############################################################################
 if __name__ == '__main__':
 
