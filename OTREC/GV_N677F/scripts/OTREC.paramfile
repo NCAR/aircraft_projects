@@ -1,0 +1,51 @@
+# You must change the project name everywhere to the project this is for.
+includeData = yes
+includeProjectName = yes
+netcdfFile = /scr/raf_Raw_Data/OTREC/field_phase/LRT/OTREC####.nc 
+gravityD = East
+# Times will be determined from the images in the imageDirectory
+# All other image dirs will try to match these times.
+imageDir1 = /scr/raf/Raw_Data/OTREC/camera_images/flight_number_####/forward
+gravity1 = North
+
+movieDirectory = /scr/raf_Raw_Data/OTREC/Movies 
+overlayImageTime = yes
+overlayImagePointing = yes
+numCameras = 4
+# If numCameras > 1, add additional dirs and cameras here:
+imageDir2 = /scr/raf_Raw_Data/OTREC/camera_images/flight_number_####/down
+gravity2 = South
+imageDir3 = /scr/raf_Raw_Data/OTREC/camera_images/flight_number_####/right
+gravity3 = East
+imageDir4 = /scr/raf_Raw_Data/OTREC/camera_images/flight_number_####/left
+gravity4 = West
+
+# For the moment, assume all cameras are the same type.
+cameraName = Flea
+
+# The outputResolution should be proportional to the scale:
+# For one image per frame, leave the ht and add 200 to the width
+# For two images, double the ht and add 50 or so padding, 
+#   and add 200 to the width
+# For three images, double the ht and width (plus padding).
+scale = 512x384!
+outputResolution=1024x1168
+outputResolutionD=1224x1168
+outputFrameRate = 15
+mp4BitRate = 1500000
+endParameters
+
+GGALT
+GGLAT
+GGLON
+ATX
+DPXC
+PSXC
+RHUM
+TASX
+THDG
+PITCH
+ROLL
+WSC
+WDC
+endVariablesLT

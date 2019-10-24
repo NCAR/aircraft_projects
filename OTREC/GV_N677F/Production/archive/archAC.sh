@@ -12,11 +12,12 @@ setenv YEAR 2019
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS/maint_days /scr/raf/Raw_Data/$PROJECT/maint_days ads FS/EOL/$YEAR taylort@ucar.edu
 
 ### CAMERA
-/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg FS/EOL/$YEAR taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg FS/EOL/$YEAR taylort@ucar.edu
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc FS/EOL/$YEAR taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc FS/EOL/$YEAR taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/LRT/Version02 /scr/raf/Raw_Data/$PROJECT/field_phase/LRT/Version02 nc FS/EOL/$YEAR taylort@ucar.edu
 
 ### Preliminary LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/LRT/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict FS/EOL/$YEAR
@@ -25,7 +26,7 @@ setenv YEAR 2019
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/IWG1 /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/IWG1 iwg1 FS/EOL/$YEAR
 
 ### Preliminary KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml FS/EOL/$YEAR taylort@ucar.edu
 
 ### Preliminary CO ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/CO /scr/raf/Raw_Data/$PROJECT/field_phase/CO ict FS/EOL/$YEAR
@@ -57,7 +58,7 @@ setenv YEAR 2019
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict FS/EOL/$YEAR
 
 ### PMS2D
-#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/$YEAR
+/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/$YEAR taylort@ucar.edu
 
 ### KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml FS/EOL/$YEAR
