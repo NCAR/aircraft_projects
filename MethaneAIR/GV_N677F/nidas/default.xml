@@ -1766,9 +1766,7 @@
 	</sample>
       </serialSensor>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
-      <output class="RawSampleOutputStream">
-        <socket type="mcrequest"/>
-      </output>
+      <serialSensor IDREF="PIC1301_CO2" devicename="/dev/ttyS9" id="500" suffix="_PIC1301"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="400">
         <calfile file="A2D1605.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
@@ -1789,6 +1787,9 @@
           </variable>
         </sample>
       </sensor>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
