@@ -698,7 +698,6 @@
         <variable longname="TOGA Isoprene" name="ISOPRENE" units="pptv"/>
       </sample>
     </sensor>
-
     <serialSensor ID="TDLH2O" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="20" scanfFormat="%f %f %f %f %*f %*f %f %f %f %f %f %f %f %f">
         <variable longname="Raw Water Mixing Ratio, TDL Short Path" name="XRAWMRS" units="hPa"/>
@@ -958,7 +957,6 @@
       </sample>
       <message length="0" position="end" separator="#\r\n"/>
     </serialSensor>
-
     <sensor ID="CFDC" class="UDPSocketSensor" devicename="usock::30105" suffix="_CFDC">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
             <variable longname="CFDC IN Count" name="INC" units="counts/sec"/>
@@ -971,7 +969,6 @@
             <variable longname="CFDC Filter (ON=1)" name="FILTER" units="bool"/>
         </sample>
     </sensor>
-
     <serialSensor ID="CCN" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="%f, %f, %f, %f, %f, %f, %f, %f, %f">
         <variable longname="CCN Sample Temperature" name="AT" units="deg_C"/>
@@ -1007,7 +1004,6 @@
       </sample>
 -->
     </sensor>
-
     <sensor ID="MTPATP" class="UDPSocketSensor" devicename="usock::30102" suffix="_MTP">
         <sample id="1" rate="1" scanfFormat="MTPP,%4d%2d%2dT%2d%2d%2d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="MTP ATP Year" name="PYEAR" units="count"/>
@@ -1158,7 +1154,6 @@
             <variable longname="AWAS Sample Now" name="SAMPNW" units=""/>
         </sample>
     </sensor>
-
     <sensor ID="GTCIMS" class="UDPSocketSensor" devicename="usock::30110" suffix="_GTCIMS">
         <sample id="1" rate="1" scanfFormat="GTCIMS, %*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%*f">
 
@@ -1384,11 +1379,10 @@
         <variable length="98" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
     </sensor>
-
     <serialSensor ID="CUUHSAS" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <parameter name="SerialNumber" type="string" value="UHSAS002"/>
 
-      <!-- Time Format is mm/dd/yyyy hh:mm:ss.msec pm -->
+<!-- Time Format is mm/dd/yyyy hh:mm:ss.msec pm -->
       <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
         <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
         <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
@@ -1407,7 +1401,6 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-
     <sensor ID="NOAASP2" class="UDPSocketSensor" devicename="usock::30105">
       <sample id="1" rate="1" scanfFormat="NOAA_SP2,%*dT%*d,%f,%f,%f,%f,%f">
         <variable longname="NOAA SP2 Back Carbon Particle Concentration" name="BCPC" units="#/cm3"/>
@@ -1439,7 +1432,6 @@
       </sample>
       <message length="0" position="end" separator="\r"/>
     </serialSensor>
-
     <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41002">
         <sample id="1" rate="50">
             <variable longname="LAMS Sequence Number, Beam 1" name="SEQ1" units="none"/>
@@ -1666,6 +1658,7 @@
         </processor>
       </service>
     </server>
+
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.84.2:30001">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
@@ -1682,6 +1675,7 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
+
     <dsm derivedData="sock::7071" id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
@@ -1766,6 +1760,7 @@
 	</sample>
       </serialSensor>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
+      <serialSensor IDREF="PIC2401_CO2" devicename="/dev/ttyS8" id="550" suffix="_PIC2401"/>
       <serialSensor IDREF="PIC1301_CO2" devicename="/dev/ttyS9" id="500" suffix="_PIC1301"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="400">
         <calfile file="A2D1605.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
@@ -1826,20 +1821,20 @@
         </sample>
       </serialSensor>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS10" id="150">
-	<sample id="1">
-	  <variable longname="Raw Dynamic Pressure, Windscreen" name="QCTF" units="hPa"/>
+        <sample id="1">
+          <variable longname="Raw Dynamic Pressure, Windscreen" name="QCTF" units="hPa"/>
 	</sample>
-	<sample id="2">
-	  <variable longname="Temperature of QCTF Probe" name="QCTFTEMP" units="deg_C"/>
+        <sample id="2">
+          <variable longname="Temperature of QCTF Probe" name="QCTFTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
       <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS11" id="160">
-	<sample id="1">
-	  <variable longname="Raw Static Pressure, Fuselage" name="PSTF" units="hPa"/>
+        <sample id="1">
+          <variable longname="Raw Static Pressure, Fuselage" name="PSTF" units="hPa"/>
 	</sample>
       </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-        <calfile file="A2D1710.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <calfile file="A2D014.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
@@ -1848,14 +1843,6 @@
         <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Recovery Air Temperature, Unheated" name="RTF1" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="RTF1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
           <variable longname="Recovery Air Temperature, Deiced Right, HARCO" name="RTH2" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="4"/>
@@ -1903,14 +1890,12 @@
       </output>
     </dsm>
     <dsm derivedData="sock::7071" id="93" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
-
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300" latency="0.25">
         <calfile file="A2DW462188.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/DMMAT"/>
         <parameter name="rate" type="int" value="100"/>
         <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="10"/>
-
           <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="2"/>
@@ -1921,7 +1906,6 @@
           </variable>
         </sample>
       </sensor>
-
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
