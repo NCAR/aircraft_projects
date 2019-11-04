@@ -1382,7 +1382,7 @@
     <serialSensor ID="CUUHSAS" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <parameter name="SerialNumber" type="string" value="UHSAS002"/>
 
-<!-- Time Format is mm/dd/yyyy hh:mm:ss.msec pm -->
+      <!-- Time Format is mm/dd/yyyy hh:mm:ss.msec pm -->
       <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
         <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
         <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
@@ -1432,6 +1432,7 @@
       </sample>
       <message length="0" position="end" separator="\r"/>
     </serialSensor>
+
     <sensor ID="LAMS3" class="raf.LamsNetSensor" devicename="usock::41002">
         <sample id="1" rate="50">
             <variable longname="LAMS Sequence Number, Beam 1" name="SEQ1" units="none"/>
@@ -1664,8 +1665,11 @@
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
 
-      <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="1000" timeout="10">
+      <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="1000" timeout="10" suffix="_AENT1">
         <parameter name="ip" type="string" value="192.168.84.12"/>
+        <sample id="1" rate="1" scanfFormat="STATUS,%d,%*d,%*d">
+          <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+        </sample>
       </sensor>
       <arincSensor IDREF="IRS-GV" devicename="Alta:4" id="3000" suffix="_IE"/>
       <arincSensor IDREF="ADC-GV" devicename="Alta:6" id="5000" suffix="_AE"/>
@@ -1823,7 +1827,7 @@
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS10" id="150">
         <sample id="1">
           <variable longname="Raw Dynamic Pressure, Windscreen" name="QCTF" units="hPa"/>
-	</sample>
+        </sample>
         <sample id="2">
           <variable longname="Temperature of QCTF Probe" name="QCTFTEMP" units="deg_C"/>
         </sample>
@@ -1831,7 +1835,7 @@
       <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS11" id="160">
         <sample id="1">
           <variable longname="Raw Static Pressure, Fuselage" name="PSTF" units="hPa"/>
-	</sample>
+        </sample>
       </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
         <calfile file="A2D014.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
