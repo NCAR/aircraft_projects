@@ -69,10 +69,11 @@
 #	email address so that script fails and notififies user if no email 
 #	is supplied.
 # Modified 8/26/2019 Taylor Thomas
-#      to include functions to create and append SHA-1 cryptographic hashes for
-#      for all files that are archived. 
+#       to include functions to create and append SHA-1 cryptographic hashes for
+#       for all files that are archived. This file can serve as a reference
+#       if there is any doubt about file integrity after disk or tape failure. 
 # Modified 9/16/2019 Taylor Thomas
-#      Updating location where the archive hash file is written to be pdat.
+#       Updated location where the archive hash file is written to pdat.
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -368,7 +369,7 @@ class archRAFdata:
 	return
 
     # define function to create a hash for a given file
-    def hash_file(self, sfiles, sdir, hash_value_file):
+    def hash_file(self, sdir, sfiles, hash_value_file):
         # when function is called, ask user to confirm preference to append file with hashes
         append = raw_input("Would you like to append "+hash_value_file+" with sha1 hash? " + \
                 "yes == enter, no == anything else: ")
@@ -667,4 +668,4 @@ if __name__ == "__main__":
     archraf.archive_files(sdir,sfiles,flag,type,mssroot,email)
     
     # Create hash and append file
-    archraf.hash_file(sfiles, sdir, hash_value_file) 
+    archraf.hash_file(sdir,sfiles,hash_value_file) 
