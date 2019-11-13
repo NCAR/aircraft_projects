@@ -1661,13 +1661,13 @@
     </server>
 
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.84.2:30001">
-      <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
-      <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
 
       <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="1000" timeout="10" suffix="_AENT1">
         <parameter name="ip" type="string" value="192.168.84.12"/>
-        <sample id="1" rate="1" scanfFormat="STATUS,%d,%*d,%*d">
+        <sample id="1" rate="1" scanfFormat="STATUS,%d,%d,%*d,%d,%*d,%*d">
+          <variable longname="ENET status: 0=success" name="BSTAT" units="bits"/>
+          <variable longname="ENET Post Test BIT: 0=good" name="PBIT" units="bits"/>
           <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
         </sample>
       </sensor>
