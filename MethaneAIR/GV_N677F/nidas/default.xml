@@ -1665,10 +1665,13 @@
 
       <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="1000" timeout="10" suffix="_AENT1">
         <parameter name="ip" type="string" value="192.168.84.12"/>
-        <sample id="1" rate="1" scanfFormat="STATUS,%d,%d,%*d,%d,%*d,%*d">
-          <variable longname="ENET status: 0=success" name="BSTAT" units="bits"/>
-          <variable longname="ENET Post Test BIT: 0=good" name="PBIT" units="bits"/>
+        <sample id="1" rate="1" scanfFormat="STATUS,%*d,%d,%*d,%d,%*d,%*d,%d,%d,%d">
+          <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
+          <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
           <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+          <variable longname="ENET Number of Transactions" name="TRANS" units="#"/>
+          <variable longname="ENET Number of Retries" name="RTRY" units="#"/>
+          <variable longname="ENET Number of Failers" name="FAILS" units="#"/>
         </sample>
       </sensor>
       <arincSensor IDREF="IRS-GV" devicename="Alta:4" id="3000" suffix="_IE"/>
