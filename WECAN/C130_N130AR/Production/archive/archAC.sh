@@ -6,7 +6,7 @@
 ###############
 #   Project   #
 ###############
-set PROJECT = "WECAN"
+setenv PROJECT "WECAN"
 set YEAR = 2018
 
 ### ADS 
