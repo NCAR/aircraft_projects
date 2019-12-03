@@ -380,6 +380,11 @@ class archRAFdata:
             os.system("touch "+hash_value_file)
         # if user wants to append file, create hashes
         if append == "":
+
+            # print the file type at the top of the list of corresponding files
+            f = open(hash_value_file, 'a')
+            print >>f, sys.argv[1]
+
             # iterate over each data file in sfiles list            
             for filename in sfiles:
                 with open(sdir+filename, 'rb') as inputfile:
@@ -426,7 +431,8 @@ class archRAFdata:
 	    # Only remove camera tarfiles, since they are an intermediate product on local disk and are HUGE.
 	    match = re.search('CAMERA',type)
 	    if match:
-		options = '-d '
+		#options = '-d '
+                options = ''
 	    else:
 		options = ''
 
