@@ -9,6 +9,24 @@
         <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
       </sample>
     </sensor>
+
+    <serialSensor ID="SerialAnalog" baud="115200" class="raf.A2D_Serial" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
+        <variable longname="Time; Seconds Since Midnight" name="UTSEC" units="seconds"/>
+        <variable longname="A2DTemperature" name="A2DTEMP" units="cnts"/>
+        <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS" units="counter"/>
+      </sample>
+      <sample id="2" rate="100" scanfFormat="#%x,%x,%x,%x,%x,%x\n">
+        <variable longname="Sample Counter" name="CNTR" units="counter"/>
+        <variable longname="Analog Channel 1" name="SAC1" units="Vdc"/>
+        <variable longname="Analog Channel 2" name="SAC2" units="Vdc"/>
+        <variable longname="Analog Channel 3" name="SAC3" units="Vdc"/>
+        <variable longname="Analog Channel 4" name="SAC4" units="Vdc"/>
+        <variable longname="Checksum" name="CKSUM" units="none"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
+    </serialSensor>
+
     <arincSensor ID="LSZ-GV" class="raf.LSZ_HW_EB7032239" speed="low">
       <sample id="0001" rate="1">
         <variable longname="Lightning Preamble / mode" name="LSZMODE" units="none"/>
@@ -1847,6 +1865,17 @@
 	  <variable longname="Raw Static Pressure, Fuselage" name="PSTF" units="hPa"/>
 	</sample>
       </serialSensor>
+
+      <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyS9" id="300">
+        <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
+          <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH3" units="Vdc"/>
+          <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH4" units="Vdc"/>
+          <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="Vdc"/>
+          <variable longname="Analog Channel 4" name="DUMMY" units="Vdc"/>
+        </sample>
+        <message length="0" position="end" separator="\n"/>
+      </serialSensor>
+
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
         <calfile file="A2D014.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
