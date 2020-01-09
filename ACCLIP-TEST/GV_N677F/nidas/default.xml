@@ -1704,6 +1704,23 @@
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.84.2:30001">
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
+      <sensor IDREF="AWAS" devicename="usock::30131" id="200" suffix="_AWAS"/>
+
+      <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="1000" timeout="10" suffix="_AENT1">
+        <parameter name="ip" type="string" value="192.168.84.12"/>
+        <sample id="1" rate="1" scanfFormat="STATUS,%*d,%d,%*d,%d,%*d,%*d,%d,%d,%d">
+          <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
+          <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
+          <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+          <variable longname="ENET Number of Transactions" name="TRANS" units="#"/>
+          <variable longname="ENET Number of Retries" name="RTRY" units="#"/>
+          <variable longname="ENET Number of Failers" name="FAILS" units="#"/>
+        </sample>
+      </sensor>
+      <arincSensor IDREF="IRS-GV" devicename="Alta:4" id="3000" suffix="_IE"/>
+      <arincSensor IDREF="ADC-GV" devicename="Alta:6" id="5000" suffix="_AE"/>
+      <arincSensor IDREF="GPS-GV" devicename="Alta:7" id="4000" suffix="_AE"/>
+
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
