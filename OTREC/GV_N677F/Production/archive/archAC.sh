@@ -8,11 +8,11 @@
 ###############
 setenv PROJECT OTREC
 setenv YEAR 2019
-### ADS 
+### ADS
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS/maint_days /scr/raf/Raw_Data/$PROJECT/maint_days ads FS/EOL/$YEAR taylort@ucar.edu
 
 ### CAMERA
-#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg FS/EOL/$YEAR taylort@ucar.edu
+/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_rf10 jpg FS/EOL/$YEAR taylort@ucar.edu
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
@@ -58,7 +58,7 @@ setenv YEAR 2019
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict FS/EOL/$YEAR
 
 ### PMS2D
-/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/$YEAR taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/$YEAR taylort@ucar.edu
 
 ### KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml FS/EOL/$YEAR
