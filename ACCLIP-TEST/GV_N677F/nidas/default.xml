@@ -10,7 +10,7 @@
       </sample>
     </sensor>
 
-    <serialSensor ID="SerialAnalog" baud="115200" class="raf.A2D_Serial" databits="8" parity="none" stopbits="1">
+    <serialSensor ID="SerialAnalog" class="raf.A2D_Serial" baud="115200" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
         <variable longname="Time; Seconds Since Midnight" name="UTSEC" units="seconds"/>
         <variable longname="A2DTemperature" name="A2DTEMP" units="cnts"/>
@@ -1886,11 +1886,17 @@
       </serialSensor>
 
       <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyS9" id="300">
-        <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
+        <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
+          <variable longname="Time; Seconds Since Midnight" name="UTSEC_305" units="seconds"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_305" units="cnts"/>
+          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_305" units="counter"/>
+        </sample>
+
+        <sample id="2" rate="100" scanfFormat="#%x,%x,%x,%x,%*x,%*x\n">
+          <variable longname="Sample Counter" name="CNTR_305" units="counter"/>
           <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH3" units="Vdc"/>
           <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH4" units="Vdc"/>
           <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="Vdc"/>
-          <variable longname="Analog Channel 4" name="DUMMY" units="Vdc"/>
         </sample>
         <message length="0" position="end" separator="\n"/>
       </serialSensor>
