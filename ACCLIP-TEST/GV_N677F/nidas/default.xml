@@ -1739,7 +1739,7 @@
         </sample>
       </serialSensor>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="250">
-        <calfile file="A2D1706.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <calfile file="A2D1705.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
@@ -1778,7 +1778,7 @@
         <socket type="mcrequest"/>
       </output>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300">
-        <calfile file="A2D006.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
+        <calfile file="A2D016.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
@@ -1837,6 +1837,7 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
+
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS5" id="110">
@@ -1949,6 +1950,7 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
+
     <dsm derivedData="sock::7071" id="93" location="RWO" name="dsmRWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300" latency="0.25">
         <calfile file="A2DW543492.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/DMMAT"/>
@@ -1970,5 +1972,6 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
+
   </site>
 </project>
