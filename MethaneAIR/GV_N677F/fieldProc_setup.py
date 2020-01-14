@@ -24,8 +24,10 @@
 
 import os
 project = 'MethaneAIR'
-DATA_DIR = os.environ['DATA_DIR']
-RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
+DATA_DIR = '/scr/raf_data'
+RAW_DATA_DIR = '/scr/raf/Raw_Data'
+#DATA_DIR = os.environ['DATA_DIR']
+#RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 dat_parent_dir =  DATA_DIR+'/'     # Where nc and kml files go
 rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 
