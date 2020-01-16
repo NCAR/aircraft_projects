@@ -11,6 +11,7 @@
     </sensor>
 
     <serialSensor ID="SerialAnalog" class="raf.A2D_Serial" baud="115200" databits="8" parity="none" stopbits="1">
+<!--
       <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
         <variable longname="Time; Seconds Since Midnight" name="UTSEC" units="seconds"/>
         <variable longname="A2DTemperature" name="A2DTEMP" units="cnts"/>
@@ -25,6 +26,7 @@
         <variable longname="Checksum" name="CKSUM" units="none"/>
       </sample>
       <message length="0" position="end" separator="\n"/>
+-->
     </serialSensor>
 
     <arincSensor ID="LSZ-GV" class="raf.LSZ_HW_EB7032239" speed="low">
@@ -1895,18 +1897,22 @@
         </sample>
 
         <sample id="2" rate="100" scanfFormat="#%x,%x,%x,%x,%*x,%*x\n">
-          <variable longname="Sample Counter" name="CNTR_305" units="counter"/>
+<!--          <variable longname="Sample Counter" name="CNTR_305" units="counter"/> -->
           <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH3" units="cnts">
+            <parameter name="gain" type="float" value="2"/>
             <poly units="deg_C">
               <calfile file="RTH3EX.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
           <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH4" units="cnts">
+            <parameter name="gain" type="float" value="2"/>
             <poly units="deg_C">
               <calfile file="RTH4EX.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
-          <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="Vdc"/>
+          <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="Vdc">
+            <parameter name="gain" type="float" value="2"/>
+          </variable>
         </sample>
         <message length="0" position="end" separator="\n"/>
       </serialSensor>
