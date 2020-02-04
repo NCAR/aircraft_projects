@@ -18,12 +18,12 @@
         <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS" units="counter"/>
       </sample>
       <sample id="2" rate="100" scanfFormat="#%x,%x,%x,%x,%x,%x\n">
-        <variable longname="Sample Counter" name="CNTR" units="counter"/>
+        <variable longname="Sample Counter" name="A2DCNTR" units="counter"/>
         <variable longname="Analog Channel 1" name="SAC1" units="Vdc"/>
         <variable longname="Analog Channel 2" name="SAC2" units="Vdc"/>
         <variable longname="Analog Channel 3" name="SAC3" units="Vdc"/>
         <variable longname="Analog Channel 4" name="SAC4" units="Vdc"/>
-        <variable longname="Checksum" name="CKSUM" units="none"/>
+        <variable longname="Checksum" name="A2DCKSUM" units="none"/>
       </sample>
       <message length="0" position="end" separator="\n"/>
 -->
@@ -1709,7 +1709,7 @@
       <sensor IDREF="AWAS" devicename="usock::30131" id="200" suffix="_AWAS"/>
       <sensor IDREF="GTCIMS" devicename="usock::30110" id="300" suffix="_GTCIMS"/>
 
-      <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="1000" timeout="10" suffix="_AENT1">
+      <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="1000" timeout="0.8" suffix="_AENT1">
         <parameter name="ip" type="string" value="192.168.84.12"/>
         <sample id="1" rate="1" scanfFormat="STATUS,%d,%d,%*d,%d,%*d,%*d,%d,%d,%d">
           <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
