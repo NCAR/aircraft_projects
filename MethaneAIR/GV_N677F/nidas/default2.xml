@@ -1666,16 +1666,21 @@
     <dsm id="99" location="acserver" name="acserver" rserialPort="30002" statusAddr="sock:192.168.84.2:30001">
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
 
-      <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="1000" timeout="0.8" suffix="_AENT1">
-        <parameter name="ip" type="string" value="192.168.84.12"/>
+      <sensor ID="ARINCHK" class="UDPSocketSensor" devicename="usock::56770" id="2000" timeout="0.8" suffix="_AENT1">
         <sample id="1" rate="1" scanfFormat="STATUS,%*d,%d,%*d,%d,%*d,%*d,%d,%d,%d">
           <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
           <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
           <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
-          <variable longname="ENET Number of Transactions" name="TRANS" units="#"/>
-          <variable longname="ENET Number of Retries" name="RTRY" units="#"/>
-          <variable longname="ENET Number of Failers" name="FAILS" units="#"/>
+          <variable longname="ENET Number of Transactions" name="TCPTRANS" units="#"/>
+          <variable longname="ENET Number of Retries" name="TCPRTRY" units="#"/>
+          <variable longname="ENET Number of Failures" name="TCPFAILS" units="#"/>
+          <variable longname="ENET Number of Failers" name="PECTRL" units="#"/>
+          <variable longname="ENET Number of Failers" name="PESTS" units="#"/>
+          <variable longname="ENET Number of Failers" name="PEBIT" units="#"/>
         </sample>
+      </sensor>
+      <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="2100" timeout="10" suffix="_AENT1">
+        <parameter name="ip" type="string" value="192.168.84.12"/>
       </sensor>
       <arincSensor IDREF="IRS-GV" devicename="Alta:4" id="3000" suffix="_IE"/>
       <arincSensor IDREF="ADC-GV" devicename="Alta:6" id="5000" suffix="_AE"/>
@@ -1899,14 +1904,6 @@
             <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
               <calfile file="RTH1.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-          <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="NOSETMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
           <variable longname="Dewpoint Cavity Pressure, Left" name="CAVP_DPL" units="V">
