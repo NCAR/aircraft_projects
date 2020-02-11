@@ -1667,16 +1667,16 @@
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
 
       <sensor ID="ARINCHK" class="UDPSocketSensor" devicename="usock::56770" id="2000" suffix="_AENT1">
-        <sample id="1" rate="1" scanfFormat="STATUS,%*d,%d,%*d,%d,%*d,%*d,%d,%d,%d">
+        <sample id="1" rate="1" scanfFormat="STATUS,%d,%d,%*d,%d,%*d,%*d,%d,%d,%d,%d,%d,%d">
           <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
           <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
           <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
           <variable longname="ENET Number of Transactions" name="TCPTRANS" units="#"/>
           <variable longname="ENET Number of Retries" name="TCPRTRY" units="#"/>
           <variable longname="ENET Number of Failures" name="TCPFAILS" units="#"/>
-          <variable longname="ENET Number of Failers" name="PECTRL" units="#"/>
-          <variable longname="ENET Number of Failers" name="PESTS" units="#"/>
-          <variable longname="ENET Number of Failers" name="PEBIT" units="#"/>
+          <variable longname="ENET ROOT PE Control-Status Register" name="PECTRL" units="bits"/>
+          <variable longname="ENET ROOT PE Status Register" name="PESTS" units="bits"/>
+          <variable longname="ENET PE BIT Register" name="PEBIT" units="bits"/>
         </sample>
       </sensor>
       <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="2100" timeout="10" suffix="_AENT1">
