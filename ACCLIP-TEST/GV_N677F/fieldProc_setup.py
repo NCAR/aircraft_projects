@@ -47,7 +47,7 @@ ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
+ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/'
 
 #############################################################################
 ### Define which files should be generated
@@ -62,7 +62,7 @@ zip_ADS = False # Bzips the ads file independently of processed files
 # you can have both sendzipped and zip_ads set to True if you want
 
 # Do you want to transfer ADS file back to Boulder (is the connection good enough?)
-ship_ADS = True
+ship_ADS = False
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
