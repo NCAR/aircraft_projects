@@ -102,6 +102,21 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
+
+    <serialSensor ID="SDI" baud="19200" class="raf.AlicatSDI" databits="8" parity="none" stopbits="1" timeout="10">
+      <parameter name="nTAS_AVERAGE" type="int" value="5"/>
+      <parameter name="QMIN" type="int" value="100"/>
+      <parameter name="QMAX" type="int" value="500"/>
+      <parameter name="TIP_DIAM" type="float" value="0.64"/>
+
+<!-- Sample Frame "A +0830.1 +024.25 +000.00 +000.00 +000.00    Air" -->
+      <sample id="1" scanfFormat="A %*f %*f %f %*f %*f %*s">
+        <variable longname="SDI Volume" name="QVOL" units="lpm"/>
+      </sample>
+      <message length="0" position="end" separator="\r"/>
+      <prompt rate="1" string="A\r"/>
+    </serialSensor>
+
     <serialSensor ID="Mensor_6100" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
 
 <!-- Turn off internal filtering on the Mensor:
