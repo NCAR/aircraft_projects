@@ -156,6 +156,7 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
+
     <sensor ID="HOLODEC" class="UDPSocketSensor" devicename="inet::30120"/>
 
     <serialSensor ID="Water_CN_Counter" baud="115200" class="DSMSerialSensor" databits="8" init_string="SM,4,1\r" parity="none" stopbits="1" suffix="_WCN">
@@ -556,17 +557,20 @@
     </sensor>
 
     <serialSensor ID="TestSerialWriterAsync" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-      <sample id="1" rate="1" scanfFormat="HDF,,%f">
+      <sample id="1" rate="1" scanfFormat="H%d,%*x\n">
         <variable longname="Header data filler" name="HDF" units="unk"/>
       </sample>
-      <sample id="2" rate="100" scanfFormat="#%x,%x,%x,%x\n">
+      <sample id="2" rate="100" scanfFormat="#%x,%x,%x,%x,%x,%x\n">
+        <variable longname="Serial Channel 1" name="SCNT" units="unk"/>
         <variable longname="Serial Channel 1" name="SC1" units="unk"/>
         <variable longname="Serial Channel 2" name="SC2" units="deg_C"/>
         <variable longname="Serial Channel 3" name="SC3" units="unk"/>
         <variable longname="Serial Channel 4" name="SC4" units="unk"/>
+        <variable longname="Check Sum" name="CKSUM" units="unk"/>
       </sample> 
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
+
     <sensor ID="OZONE_PHOTOMETER" class="UDPSocketSensor" devicename="inet::31222">
       <sample id="1" rate="1" scanfFormat="O3,%f,%f">
         <variable longname="NCAR Ozone Photometer Var 1" name="O3V1" units=""/>
@@ -622,7 +626,6 @@
         <socket type="mcrequest"/>
       </output>
       <sensor IDREF="Novatel_GPS" devicename="usock::52126" id="100" suffix="_UDP"/>
-<!--      <sensor IDREF="LAMS3" devicename="usock::41002" id="500" suffix="_LAMS"/> -->
 
     </dsm>
 
