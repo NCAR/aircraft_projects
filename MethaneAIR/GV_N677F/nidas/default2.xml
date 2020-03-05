@@ -1859,17 +1859,17 @@
           <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_305" units="counter"/>
         </sample>
 
-        <sample id="2" rate="100" scanfFormat="#%*x,%x,%*x,%x,%*x,%*x\n">
-          <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTF1" units="cnts">
+        <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
+          <variable longname="Recovery Air Temperature, Unheated Left" name="RTF1" units="cnts">
             <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="false"/>
+            <parameter name="polarity" type="int" value="0"/>
             <poly units="deg_C">
               <calfile file="RTF1EX.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
           <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="Vdc">
             <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="false"/>
+            <parameter name="polarity" type="int" value="0"/>
             <poly units="deg_C">
               <calfile file="NOSETMP.dat" path="${TMP_PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/raf/cal_files/Engineering/GV_N677F"/>
             </poly>
