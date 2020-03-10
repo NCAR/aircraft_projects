@@ -17,8 +17,11 @@
       <parameter name="TIP_DIAM" type="float" value="0.64"/>
 
 <!-- Sample Frame "A +0830.1 +024.25 +000.00 +000.00 +000.00    Air" -->
-      <sample id="1" scanfFormat="A %*f %*f %f %*f %*f %*s">
-        <variable longname="SDI Volume" name="QVOL" units="lpm"/>
+      <sample id="1" scanfFormat="A %f %f %f %*f %f %*s">
+        <variable longname="SDI Flowmeter Absolute Pressure" name="P" units="mb"/>
+        <variable longname="SDI Flowmeter Air Temperature" name="T" units="deg_C"/>
+        <variable longname="SDI Volumetric Flow" name="FLOW" units="vlpm"/>
+        <variable longname="SDI Volumetric Flow Set Point" name="SETPT" units="vlpm"/>
       </sample>
       <message length="0" position="end" separator="\r"/>
       <prompt rate="1" string="A\r"/>
