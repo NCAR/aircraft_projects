@@ -1890,15 +1890,16 @@
       </serialSensor>
 
       <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyS9" id="300">
-        <calfile file="A2DS001.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <calfile file="A2DS005.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
+        <parameter name="boardID" type="int" value="5"/>
+        <parameter name="FILT" type="int" value="10"/>
         <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
           <variable longname="Time; Seconds Since Midnight" name="UTSEC_305" units="seconds"/>
           <variable longname="A2DTemperature" name="A2DTEMP_305" units="cnts"/>
           <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_305" units="counter"/>
         </sample>
 
-        <sample id="2" rate="100" scanfFormat="#%x,%x,%x,%x,%*x,%*x\n">
-          <variable longname="Sample Counter" name="CNTR_305" units="counter"/>
+        <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
           <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH3" units="cnts">
             <parameter name="gain" type="float" value="2"/>
             <poly units="deg_C">
