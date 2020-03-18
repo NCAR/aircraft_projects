@@ -1,4 +1,4 @@
-#/usr/bin/python
+#! /usr/bin/python
 #
 #   Be sure to ask the systems group to create a directory:
 #   /net/ftp/pub/data/incoming/<project> and then to create the tree below it:
@@ -49,7 +49,7 @@ ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
+ftp_data_dir = '/pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
 
 #############################################################################
 ### Define which files should be generated
