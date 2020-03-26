@@ -11,22 +11,7 @@
     </sensor>
 
     <serialSensor ID="SerialAnalog" class="raf.A2D_Serial" baud="115200" databits="8" parity="none" stopbits="1">
-<!--
-      <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
-        <variable longname="Time; Seconds Since Midnight" name="UTSEC" units="seconds"/>
-        <variable longname="A2DTemperature" name="A2DTEMP" units="cnts"/>
-        <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS" units="counter"/>
-      </sample>
-      <sample id="2" rate="100" scanfFormat="#%x,%x,%x,%x,%x,%x\n">
-        <variable longname="Sample Counter" name="A2DCNTR" units="counter"/>
-        <variable longname="Analog Channel 1" name="SAC1" units="Vdc"/>
-        <variable longname="Analog Channel 2" name="SAC2" units="Vdc"/>
-        <variable longname="Analog Channel 3" name="SAC3" units="Vdc"/>
-        <variable longname="Analog Channel 4" name="SAC4" units="Vdc"/>
-        <variable longname="Checksum" name="A2DCKSUM" units="none"/>
-      </sample>
       <message length="0" position="end" separator="\n"/>
--->
     </serialSensor>
 
     <arincSensor ID="LSZ-GV" class="raf.LSZ_HW_EB7032239" speed="low">
@@ -1893,6 +1878,7 @@
         <calfile file="A2DS005.dat" path="${PROJ_DIR}/Configuration/raf/cal_files/A2D/"/>
         <parameter name="boardID" type="int" value="5"/>
         <parameter name="FILT" type="int" value="10"/>
+
         <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
           <variable longname="Time; Seconds Since Midnight" name="UTSEC_305" units="seconds"/>
           <variable longname="A2DTemperature" name="A2DTEMP_305" units="cnts"/>
