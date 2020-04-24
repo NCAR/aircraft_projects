@@ -12,7 +12,7 @@ setenv YEAR 2019
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS/maint_days /scr/raf/Raw_Data/$PROJECT/maint_days ads FS/EOL/$YEAR taylort@ucar.edu
 
 ### CAMERA
-/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_tf04 jpg FS/EOL/$YEAR taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images/flight_number_tf04 jpg FS/EOL/$YEAR taylort@ucar.edu
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
@@ -52,7 +52,7 @@ setenv YEAR 2019
 
 ########################## Production Data Files ##########################
 ### LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT/LRT nc FS/EOL/$YEAR taylort@ucar.edu
 
 ### LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict FS/EOL/$YEAR
