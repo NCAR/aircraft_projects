@@ -58,7 +58,7 @@ setenv YEAR 2019
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict FS/EOL/$YEAR
 
 ### PMS2D
-#/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/$YEAR taylort@ucar.edu
+/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D/version1_1 /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/$YEAR taylort@ucar.edu
 
 ### KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml FS/EOL/$YEAR
