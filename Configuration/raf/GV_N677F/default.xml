@@ -418,15 +418,16 @@
         <variable longname="GPS equipment id" name="GPS_equipment_id" units=""/>
       </sample>
     </arincSensor>
+
     <serialSensor ID="D_GPS" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <message length="0" position="beg" separator="\xaa\x44\x12"/>
     </serialSensor>
-    <serialSensor ID="Novatel_GPS" baud="115200" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
 
+    <serialSensor ID="Novatel_GPS" baud="115200" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
 <!-- GGA record -->
       <sample id="1" rate="10">
         <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=FRTK" name="GGQUAL" units="none"/>
-        <variable longname="Reference GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
+        <variable longname="Reference GPS Horizontal dilution of position" name="GGHDOP" units="none"/>
       </sample>
 
 <!-- RMC record -->
@@ -459,8 +460,8 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
-    <serialSensor ID="Garmin_GPS" baud="4800" class="GPS_NMEA_Serial" databits="8" parity="none" stopbits="1">
 
+    <serialSensor ID="Garmin_GPS" baud="4800" class="GPS_NMEA_Serial" databits="8" parity="none" stopbits="1">
 <!-- GGA record -->
       <sample id="1" rate="1">
         <variable longname="GPS seconds of day" name="GGSECSDAY" units="sec"/>
@@ -468,7 +469,7 @@
         <variable longname="GPS Longitude" name="GGLON" units="degree_E"/>
         <variable longname="GPS Qual, 0=inval,1=GPS,2=DGPS,5=FRTK" name="GGQUAL" units="none"/>
         <variable longname="GPS number of satellites used" name="GGNSAT" units="count"/>
-        <variable longname="GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
+        <variable longname="GPS Horizontal dilution of position" name="GGHDOP" units="none"/>
         <variable longname="GPS Altitude (MSL)" name="GGALT" units="m"/>
         <variable longname="GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
         <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
@@ -486,6 +487,7 @@
       </sample>
       <message length="0" position="end" separator="\n"/> 
     </serialSensor>
+
     <serialSensor ID="CMIGITS3" baud="38400" class="raf.CMIGITS3_Serial" databits="8" parity="odd" stopbits="1" timeout="5">
       <sample id="1" rate="10">
 
@@ -531,6 +533,7 @@
       </sample>
       <message length="0" position="beg" separator="\xff\x81"/>
     </serialSensor>
+
     <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="%*f,%f,%f,%*f,%*f,%f">
         <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
@@ -539,6 +542,7 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
+
     <serialSensor ID="Mensor_6100" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
 
 <!-- Turn off internal filtering on the Mensor:
