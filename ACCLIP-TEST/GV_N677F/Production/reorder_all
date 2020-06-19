@@ -1,0 +1,23 @@
+#!/bin/csh
+
+set busyFile='reorderInProgress'
+
+cd ${DAT}
+
+if (-f $busyFile) then
+  exit 0
+endif
+
+touch $busyFile
+
+foreach file ( ACCLIP-TEST?f??.nc )
+  echo $file
+  ncdump -h $file | head | grep --quiet UNLIMITED
+  if ($status > 2) then
+    nccopy -u $file reotemp.nc
+    mv -f reotemp.nc $file
+    chmod g+w $file
+  endif
+end
+
+rm $busyFile
