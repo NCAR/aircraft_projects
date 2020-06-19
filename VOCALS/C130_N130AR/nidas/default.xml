@@ -1112,7 +1112,7 @@
                 <parameter name="numpoints" value="50" type="int"/>
                 <variable name="FCN" units="V" longname="Raw CN Counter Sample Flow Rate">
                     <parameter name="gain"     value="2"       type="float"/> <parameter name="bipolar"      value="true"       type="bool"/>
-                    <linear slope="0.3229" intercept="0.0" units="vlpm"/>
+                    <linear slope="0.4" intercept="0.0" units="vlpm"/>
                 </variable>
             </sample>
             <sample id="2" rate="100">
@@ -1498,8 +1498,8 @@
             <message separator="\n" position="end" length="0"/>
         </serialSensor>
 
-        <serialSensor IDREF="UHSAS_CU" devicename="/dev/ttyS7" id="50"
-            suffix="_CVI">
+        <serialSensor IDREF="UHSAS_CU" devicename="/dev/ttyS7" id="50" suffix="_CVI">
+            <parameter name="SerialNumber" type="string" value="UHSAS015"/>
             <parameter name="sendInit" value="false" type="bool"/>
        </serialSensor>
 
