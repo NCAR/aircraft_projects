@@ -1,0 +1,242 @@
+#! /bin/csh -f
+#
+#  Archive raw ADS data files for 2007-599 RAF_Lab
+#   to the CISL Mass Store System under the /RAF path
+#goto movem
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2002                                                         *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Note:  This script runs only in a project's "Production/archive"
+#          subdirectory under the "dmg" login.
+#
+#  File adapted from file $JLOCAL/proj/102/Production/arch_ads.102
+#   by Ron Ruth  28 January 2K
+#  Revised by RLR 19 April 2002 to use DCS "msrcp" instead of MIGS
+#  Revised by RLR  7 July  2006 for new directory structure
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script.  Quitting."
+  exit 1
+endif
+#
+#  Get setup information for this project
+#  Make sure I'm in the "archive" subdirectory
+set cdir = `pwd | awk -F/ '{print $NF}'`
+if ($cdir != "archive") then
+  echo '  This script is not being run from the "archive" subdirectory.'
+  exit 1
+endif
+pushd ../.. >& /dev/null
+set PROJDIR =  `pwd`
+set YEAR = `grep FY $PROJDIR/Production/proj.info | sed -e "s/FY=//"`
+cd ..
+set proj = `pwd | awk -F/ '{print $NF}'`
+#  For this case override project number and use its name.   RLR
+#set proj = (`grep $proj $PROJ_DIR/archives/msfiles/directory_map`)
+set PROJ = $proj
+popd >& /dev/null
+set TYPE = ADS
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+#  set msrcpMachine = "vivaldi"
+endif
+#
+#  Set MSS Read PassWorD if restricted access
+set RPWD = ""
+#set RPWD = "-rpwd ReadPassword"
+#
+#  Choose a source directory
+#set SDIR = $TEMP
+#set SDIR = $PROD_DATA
+set SDIR = $RAW_DATA_DIR/RAF_Lab
+#
+#  1st wave
+#set SFILES = ( \
+#20070831_182832_v6-T0.ads \
+#20070831_183212_v6-T1.ads \
+#20070831_183811_v6-T2.ads \
+#20070831_184428_v6-T3.ads \
+#20070831_185029_v8-T0.ads \
+#20070831_185245_v8-T1.ads \
+#20070831_185518_v8-T2.ads \
+#20070831_185816_v8-T3.ads \
+#20070831_191603_v10-T0.ads \
+#20070831_191814_v10-T1.ads \
+#20070831_191955_v10-T2.ads \
+#20070831_192143_v10-T3.ads \
+#)
+#set DFILES = ( \
+#20070831_182832_v6-T0.ads \
+#20070831_183212_v6-T1.ads \
+#20070831_183811_v6-T2.ads \
+#20070831_184428_v6-T3.ads \
+#20070831_185029_v8-T0.ads \
+#20070831_185245_v8-T1.ads \
+#20070831_185518_v8-T2.ads \
+#20070831_185816_v8-T3.ads \
+#20070831_191603_v10-T0.ads \
+#20070831_191814_v10-T1.ads \
+#20070831_191955_v10-T2.ads \
+#20070831_192143_v10-T3.ads \
+#)
+#
+#  2nd wave (move all files from MSS subdir RAF_Lab to MSS subdir 599)
+#movem:
+#set SFILES = ( \
+#/RAF/2007/RAF_Lab/ADS/20070831_182832_v6-T0.ads \
+#/RAF/2007/RAF_Lab/ADS/20070831_183212_v6-T1.ads \
+#/RAF/2007/RAF_Lab/ADS/20070831_183811_v6-T2.ads \
+#/RAF/2007/RAF_Lab/ADS/20070831_184428_v6-T3.ads \
+#/RAF/2007/RAF_Lab/ADS/20070831_185029_v8-T0.ads \
+#/RAF/2007/RAF_Lab/ADS/20070831_185245_v8-T1.ads \
+#/RAF/2007/RAF_Lab/ADS/20070831_185518_v8-T2.ads \
+#/RAF/2007/RAF_Lab/ADS/20070831_185816_v8-T3.ads \
+#/RAF/2007/RAF_Lab/ADS/20070831_191603_v10-T0.ads \
+#/RAF/2007/RAF_Lab/ADS/20070831_191814_v10-T1.ads \
+#/RAF/2007/RAF_Lab/ADS/20070831_191955_v10-T2.ads \
+#/RAF/2007/RAF_Lab/ADS/20070831_192143_v10-T3.ads \
+#)
+#set DFILES = ( \
+#/RAF/2007/599/ADS/20070831_182832_v6-T0.ads \
+#/RAF/2007/599/ADS/20070831_183212_v6-T1.ads \
+#/RAF/2007/599/ADS/20070831_183811_v6-T2.ads \
+#/RAF/2007/599/ADS/20070831_184428_v6-T3.ads \
+#/RAF/2007/599/ADS/20070831_185029_v8-T0.ads \
+#/RAF/2007/599/ADS/20070831_185245_v8-T1.ads \
+#/RAF/2007/599/ADS/20070831_185518_v8-T2.ads \
+#/RAF/2007/599/ADS/20070831_185816_v8-T3.ads \
+#/RAF/2007/599/ADS/20070831_191603_v10-T0.ads \
+#/RAF/2007/599/ADS/20070831_191814_v10-T1.ads \
+#/RAF/2007/599/ADS/20070831_191955_v10-T2.ads \
+#/RAF/2007/599/ADS/20070831_192143_v10-T3.ads \
+#)
+#echo "#  $#SFILES Job(s) submitted on `date`"
+#set todo = $#SFILES
+#set num = 1
+#while ($num <= $todo)
+#  set SFILE = $SFILES[$num]
+#  set DFILE = $DFILES[$num]
+##  echo \
+#  msmv -wpwd RAFDMG $SFILE $DFILE
+#  set result = $status
+#  if ($result == 0) then
+# if ($result == 0) then
+#    echo "#  msmv job for $DFILE -- OK -- `date`"
+#  else
+#    echo "#  msmv job for $DFILE -- Failed -- `date`"
+#    echo "#                $DFILE: error code $result"
+#  endif
+#  @ num ++
+#end
+#echo "#   Completed on `date`"
+#exit
+#
+#  3rd wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#  4th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#   th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#
+#  Get started:
+echo "#  $#SFILES Job(s) submitted on `date`"
+if ($#SFILES != $#DFILES) then
+  echo " Number of source and destination file names don't match.  Quitting"
+  exit 1
+endif
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe 32767 -pr 41113009 -wpwd RAFDMG $RPWD \
+     $SDIR/$SFILE mss:/RAF/$YEAR/$PROJ/$TYPE/$DFILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp job for $TYPE/$DFILE -- OK -- `date`"
+    else
+      echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+      echo "#                $TYPE/$DFILE: error code $result"
+    endif
+  else
+    echo "#  msrcp job for $TYPE/$DFILE -- Failed -- `date`"
+    echo "#   Cannot access source file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done.
+echo "#   Completed on `date`"
+exit
+#
+#
+#  MSS path for all bitfiles listed below:  /RAF/2007/RAF_Lab/
+#
+#  1st wave
+#  12 Job(s) submitted on Tue Feb 12 15:04:26 MST 2008
+#  msrcp job for ADS/20070831_182832_v6-T0.ads -- OK -- Tue Feb 12 15:04:55 MST 2008
+#  msrcp job for ADS/20070831_183212_v6-T1.ads -- OK -- Tue Feb 12 15:05:08 MST 2008
+#  msrcp job for ADS/20070831_183811_v6-T2.ads -- OK -- Tue Feb 12 15:05:18 MST 2008
+#  msrcp job for ADS/20070831_184428_v6-T3.ads -- OK -- Tue Feb 12 15:05:27 MST 2008
+#  msrcp job for ADS/20070831_185029_v8-T0.ads -- OK -- Tue Feb 12 15:05:41 MST 2008
+#  msrcp job for ADS/20070831_185245_v8-T1.ads -- OK -- Tue Feb 12 15:06:06 MST 2008
+#  msrcp job for ADS/20070831_185518_v8-T2.ads -- OK -- Tue Feb 12 15:06:11 MST 2008
+#  msrcp job for ADS/20070831_185816_v8-T3.ads -- OK -- Tue Feb 12 15:06:20 MST 2008
+#  msrcp job for ADS/20070831_191603_v10-T0.ads -- OK -- Tue Feb 12 15:06:26 MST 2008
+#  msrcp job for ADS/20070831_191814_v10-T1.ads -- OK -- Tue Feb 12 15:06:34 MST 2008
+#  msrcp job for ADS/20070831_191955_v10-T2.ads -- OK -- Tue Feb 12 15:06:46 MST 2008
+#  msrcp job for ADS/20070831_192143_v10-T3.ads -- OK -- Tue Feb 12 15:06:52 MST 2008
+#   Completed on Tue Feb 12 15:06:52 MST 2008
+#
+#  2nd wave
+#  12 Job(s) submitted on Wed Apr  2 11:41:47 MDT 2008
+#  msmv job for /RAF/2007/599/ADS/20070831_182832_v6-T0.ads -- OK -- Wed Apr  2 11:41:50 MDT 2008
+#  msmv job for /RAF/2007/599/ADS/20070831_183212_v6-T1.ads -- OK -- Wed Apr  2 11:41:54 MDT 2008
+#  msmv job for /RAF/2007/599/ADS/20070831_183811_v6-T2.ads -- OK -- Wed Apr  2 11:41:57 MDT 2008
+#  msmv job for /RAF/2007/599/ADS/20070831_184428_v6-T3.ads -- OK -- Wed Apr  2 11:41:58 MDT 2008
+#  msmv job for /RAF/2007/599/ADS/20070831_185029_v8-T0.ads -- OK -- Wed Apr  2 11:42:00 MDT 2008
+#  msmv job for /RAF/2007/599/ADS/20070831_185245_v8-T1.ads -- OK -- Wed Apr  2 11:42:02 MDT 2008
+#  msmv job for /RAF/2007/599/ADS/20070831_185518_v8-T2.ads -- OK -- Wed Apr  2 11:42:05 MDT 2008
+#  msmv job for /RAF/2007/599/ADS/20070831_185816_v8-T3.ads -- OK -- Wed Apr  2 11:42:06 MDT 2008
+#  msmv job for /RAF/2007/599/ADS/20070831_191603_v10-T0.ads -- OK -- Wed Apr  2 11:42:09 MDT 2008
+#  msmv job for /RAF/2007/599/ADS/20070831_191814_v10-T1.ads -- OK -- Wed Apr  2 11:42:11 MDT 2008
+#  msmv job for /RAF/2007/599/ADS/20070831_191955_v10-T2.ads -- OK -- Wed Apr  2 11:42:12 MDT 2008
+#  msmv job for /RAF/2007/599/ADS/20070831_192143_v10-T3.ads -- OK -- Wed Apr  2 11:42:17 MDT 2008
+#   Completed on Wed Apr  2 11:42:17 MDT 2008
+#
+#  3rd wave
+#  Job(s) submitted on 
+#
+#  4th wave
+#  Job(s) submitted on 
+#
+#   th wave
+#  Job(s) submitted on 
+#

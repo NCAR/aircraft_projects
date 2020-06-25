@@ -1,0 +1,210 @@
+#! /bin/csh -f
+#
+#goto movem
+#  Archive preliminary netCDF files for 2007-599 RAF_Lab (Accelerometer tests)
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2006, 2008                                                   *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Note:  This script runs only in a project's "Production/archive"
+#          subdirectory under the "dmg" login.
+#
+#  File adapted fr. $PROJ_DIR/ProgSci/GV_N677F/Production/archive/archprelim.502
+#     by Ron Ruth  12 February 2008
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script.  Quitting."
+  exit 1
+endif
+#
+#  Get setup information for this project
+pushd ../../.. >& /dev/null
+set proj = `pwd | awk -F/ '{print ($NF)}'`
+popd >& /dev/null
+set PROJ = $proj
+set result = $status
+if ($result != 0) then
+  echo " Cannot find project number in this directory path"
+  echo "  Quitting."
+  exit 1
+endif
+pushd ../.. >& /dev/null
+set PLTFRM = `pwd | awk -F/ '{print ($NF)}'`
+popd >& /dev/null
+set YEAR = `grep FY $PROJ_DIR/$PROJ/$PLTFRM/Production/proj.info | sed -e "s/FY=//"`
+set TYPE = "Accelerometer_Test"
+#
+#  To be run on "bora"
+set OK = `echo $HOSTNAME | grep -c "bora"`
+if (! $OK) then
+  echo '  Script set to run only on "bora."  Quitting.'
+  exit
+endif
+#
+#  Set MSS Read PassWorD if restricted access
+set RPWD = ""
+#set RPWD = "-rpwd ReadPassword"
+#
+#  Choose a source directory
+set SDIR = "$DATA_DIR/GVWSVT"
+#
+#  1st wave
+#set SFILES = ( \
+#Nov21_GndTest.nc \
+#v10-t0.nc \
+#v10-t1.nc \
+#v10-t2.nc \
+#v10-t3.nc \
+#v6-t0.nc \
+#v6-t1.nc \
+#v6-t2.nc \
+#v6-t3.nc \
+#v8-t0.nc \
+#v8-t1.nc \
+#v8-t2.nc \
+#v8-t3.nc \
+#)
+#set DFILES = ( \
+#Nov21_GndTest.nc \
+#v10-t0.nc \
+#v10-t1.nc \
+#v10-t2.nc \
+#v10-t3.nc \
+#v6-t0.nc \
+#v6-t1.nc \
+#v6-t2.nc \
+#v6-t3.nc \
+#v8-t0.nc \
+#v8-t1.nc \
+#v8-t2.nc \
+#v8-t3.nc \
+#)
+#
+#  Get started:
+echo "#  $#SFILES Job(s) submitted on `date`"
+if ($#SFILES != $#DFILES) then
+  echo " Number of source and destination file names don't match.  Quitting"
+  exit 1
+endif
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    msrcp -pe 32767 -pr 41113009 -wpwd RAFDMG $RPWD \
+     $SDIR/$SFILE mss:/RAF/$YEAR/$PROJ/$TYPE/$DFILE
+    set result = $status
+    if ($result == 0) then
+      echo "#  msrcp for $TYPE/$DFILE -- OK -- `date`"
+    else
+      echo "#  msrcp for $TYPE/$DFILE -- Failed -- `date`"
+      echo "#            $TYPE/$DFILE: error code $result"
+    endif
+  else
+    echo "#  msrcp for $TYPE/$DFILE -- Failed -- `date`"
+    echo "#^G   Cannot access source file $SDIR/$SFILE"
+  endif
+  @ num ++
+end
+#
+# Done.
+echo "#   Completed on `date`"
+exit
+#
+#
+#  MSS path for all bitfiles listed below:  /RAF/2007/RAF_Lab/
+#
+#  1st wave
+#  13 Job(s) submitted on Tue Feb 12 16:53:43 MST 2008
+#  msrcp for Accelerometer_Test/Nov21_GndTest.nc -- OK -- Tue Feb 12 16:53:51 MST 2008
+#  msrcp for Accelerometer_Test/v10-t0.nc -- OK -- Tue Feb 12 16:53:58 MST 2008
+#  msrcp for Accelerometer_Test/v10-t1.nc -- OK -- Tue Feb 12 16:54:06 MST 2008
+#  msrcp for Accelerometer_Test/v10-t2.nc -- OK -- Tue Feb 12 16:54:11 MST 2008
+#  msrcp for Accelerometer_Test/v10-t3.nc -- OK -- Tue Feb 12 16:54:17 MST 2008
+#  msrcp for Accelerometer_Test/v6-t0.nc -- OK -- Tue Feb 12 16:54:30 MST 2008
+#  msrcp for Accelerometer_Test/v6-t1.nc -- OK -- Tue Feb 12 16:54:35 MST 2008
+#  msrcp for Accelerometer_Test/v6-t2.nc -- OK -- Tue Feb 12 16:54:40 MST 2008
+#  msrcp for Accelerometer_Test/v6-t3.nc -- OK -- Tue Feb 12 16:54:47 MST 2008
+#  msrcp for Accelerometer_Test/v8-t0.nc -- OK -- Tue Feb 12 16:54:53 MST 2008
+#  msrcp for Accelerometer_Test/v8-t1.nc -- OK -- Tue Feb 12 16:55:01 MST 2008
+#  msrcp for Accelerometer_Test/v8-t2.nc -- OK -- Tue Feb 12 16:55:06 MST 2008
+#  msrcp for Accelerometer_Test/v8-t3.nc -- OK -- Tue Feb 12 16:55:14 MST 2008
+#   Completed on Tue Feb 12 16:55:14 MST 2008
+#
+#movem:
+#set SFILES = ( \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/Nov21_GndTest.nc \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/v10-t0.nc \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/v10-t1.nc \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/v10-t2.nc \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/v10-t3.nc \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/v6-t0.nc \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/v6-t1.nc \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/v6-t2.nc \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/v6-t3.nc \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/v8-t0.nc \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/v8-t1.nc \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/v8-t2.nc \
+#/RAF/2007/RAF_Lab/Accelerometer_Test/v8-t3.nc \
+#)
+#set DFILES = ( \
+#/RAF/2007/599/Accelerometer_Test/Nov21_GndTest.nc \
+#/RAF/2007/599/Accelerometer_Test/v10-t0.nc \
+#/RAF/2007/599/Accelerometer_Test/v10-t1.nc \
+#/RAF/2007/599/Accelerometer_Test/v10-t2.nc \
+#/RAF/2007/599/Accelerometer_Test/v10-t3.nc \
+#/RAF/2007/599/Accelerometer_Test/v6-t0.nc \
+#/RAF/2007/599/Accelerometer_Test/v6-t1.nc \
+#/RAF/2007/599/Accelerometer_Test/v6-t2.nc \
+#/RAF/2007/599/Accelerometer_Test/v6-t3.nc \
+#/RAF/2007/599/Accelerometer_Test/v8-t0.nc \
+#/RAF/2007/599/Accelerometer_Test/v8-t1.nc \
+#/RAF/2007/599/Accelerometer_Test/v8-t2.nc \
+#/RAF/2007/599/Accelerometer_Test/v8-t3.nc \
+#)
+#echo "#  $#SFILES Job(s) submitted on `date`"
+#set todo = $#SFILES
+#set num = 1
+#while ($num <= $todo)
+#  set SFILE = $SFILES[$num]
+#  set DFILE = $DFILES[$num]
+##  echo \
+#  msmv -wpwd RAFDMG $SFILE $DFILE
+#  set result = $status
+#  if ($result == 0) then
+# if ($result == 0) then
+#    echo "#  msmv job for $DFILE -- OK -- `date`"
+#  else
+#    echo "#  msmv job for $DFILE -- Failed -- `date`"
+#    echo "#                $DFILE: error code $result"
+#  endif
+#  @ num ++
+#end
+#echo "#   Completed on `date`"
+#exit
+#
+#  13 Job(s) submitted on Wed Apr  2 12:54:03 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/Nov21_GndTest.nc -- OK -- Wed Apr  2 12:54:05 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/v10-t0.nc -- OK -- Wed Apr  2 12:54:09 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/v10-t1.nc -- OK -- Wed Apr  2 12:54:13 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/v10-t2.nc -- OK -- Wed Apr  2 12:54:16 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/v10-t3.nc -- OK -- Wed Apr  2 12:54:20 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/v6-t0.nc -- OK -- Wed Apr  2 12:54:21 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/v6-t1.nc -- OK -- Wed Apr  2 12:54:24 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/v6-t2.nc -- OK -- Wed Apr  2 12:54:26 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/v6-t3.nc -- OK -- Wed Apr  2 12:54:30 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/v8-t0.nc -- OK -- Wed Apr  2 12:54:33 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/v8-t1.nc -- OK -- Wed Apr  2 12:54:37 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/v8-t2.nc -- OK -- Wed Apr  2 12:54:42 MDT 2008
+#  msmv job for /RAF/2007/599/Accelerometer_Test/v8-t3.nc -- OK -- Wed Apr  2 12:54:48 MDT 2008
+#   Completed on Wed Apr  2 12:54:48 MDT 2008
