@@ -1,0 +1,151 @@
+#! /bin/csh -f
+#
+  Archive Quick-Time movie files for yyyy-ppp <project>
+#  to the CISL Mass Store System under the /ATD/DATA path
+#   (files digested from the forward-looking digital camera and production
+#    LRT netCDF files and assembled by Stuart Beaton)
+#
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#  *  Copyright 2005, 2006, 2007                                             *
+#  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
+#  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#  Note:  This script runs only in a project's "Production/archive"
+#          subdirectory under the "dmg" login.
+#
+#  File adapted from file $LOCAL/proj/135/archprodnc_L.135 with help from
+#   the file $LOCAL/proj/135/archskel.135
+#   by Ron Ruth   5 July 2005
+#  Revised by RLR  (Update to current directory structure)           9 Aug 2006
+#  Revised by RLR  (Change destination extent from .mov to .mp4)     1 Sep 2006
+#  Revised by RLR  (fix output success message)                     27 Nov 2007
+#
+#  To find executable (non-comment) lines (from within `vi'), type:
+#   /^[^#]
+#
+#  Check login (only "dmg" login allowed to run this script)
+set user = `whoami`
+if ($user != "dmg") then
+  echo "${0}:  Only the 'dmg' login is allowed to run this script.  Quitting."
+  exit 1
+endif
+#
+#  Set machine on which "msrcp" is to run
+if ($?MSRCP_MACH) then
+  set msrcpMachine = $MSRCP_MACH
+else
+  set msrcpMachine = "bora"
+endif
+#
+#   MSS retention period (days)
+set PE = "32767"
+#   CISL Project number for this archive
+set PR = "41113009"
+#   Write password for MSS file(s)
+set WPWD = "RAFDMG"
+#   Read password for MSS file(s), if needed
+set RPWD = ""
+#
+#   Source file directory
+#set SDIR = "/scr/beaton/#"
+#
+#   Destination MSS bitfile directory/subdirectory
+#set DDIR = "/ATD/DATA/yyyy/proj/C130_N130AR"
+#set DDIR = "/ATD/DATA/yyyy/proj/GV_N677F"
+set DSDIR = "CAMERA"
+#
+#  1st wave
+#set SFILES = ( \
+#    Note:  Put source file list here
+#145ff01.mp4 \
+#)
+#set DFILES = ( \
+#    Note:  Put destination MSS bitfile list here (Start with taplog file
+#           modified by movie file start/end times)
+#FF01.FWD.20060228.154000_195620.mp4 \
+#FF01.LEFT.20060228.154000_195620.mp4 \
+#)
+#
+#   Edit commands to convert taplog.movie* file entries to bitfile names (current naming format)
+#             1          2      3       4            5              6        7 (not used)
+##:'a,'bs#.\(....\)....\(..\).\(..\).\(....\)...\(........\)...\(........\)\(.*\)#\1.FWD.\4\2\3.\5_\6.mp4 \\
+##:'a,'bs#.\(....\)....\(..\).\(..\).\(....\)...\(........\)...\(........\)\(.*\)#\1.LEFT.\4\2\3.\5_\6.mp4 \\
+##:'a,'bs/\([0-9]\):/\1/g
+#)
+#
+#  2nd wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#  3rd wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#  4th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#   th wave
+#set SFILES = ( \
+#)
+#set DFILES = ( \
+#)
+#
+#
+echo "#  $#SFILES job(s) submitted on `date`"
+echo "#  File(s) archived to MSS directory:  $DDIR/$DSDIR/"
+#echo "#  File(s) moved within MSS directory:  $DDIR/$DSDIR/"
+#
+set todo = $#SFILES
+set num = 1
+while ($num <= $todo)
+  set SFILE = $SFILES[$num]
+  set DFILE = $DFILES[$num]
+  if (-r $SDIR/$SFILE) then
+    echo \
+    ssh -x $msrcpMachine msput_job -pe $PE -pr $PR -wpwd $WPWD $RPWD \
+     $SDIR/$SFILE mss:$DDIR/$DSDIR/$DFILE
+    if ($status == 0) then
+      echo "#   $DFILE -- OK -- `date`"
+    else
+      echo "  msrcp job FAILED.  See email message for details."
+    endif
+  else
+    echo " Cannot access file $SDIR/$SFILE"
+  endif
+#   Code to rename extant MSS bitfiles if their names need fixing
+#    msmv -wpwd $WPWD $DDIR/$DSDIR/$SFILE $DDIR/$DSDIR/$DFILE
+#    if ($status == 0) then
+#      echo "#   $DFILE -- OK -- `date`"
+#    else
+#      echo "  msmv job FAILED."
+#    endif
+  @ num ++
+end
+#
+# Done
+echo "#   Completed on `date`"
+exit
+#
+#
+#  1st wave
+#  Job(s) submitted on 
+#
+#  2nd wave
+#  Job(s) submitted on 
+#
+#  3rd wave
+#  Job(s) submitted on 
+#
+#  4th wave
+#  Job(s) submitted on 
+#
+#   th wave
+#  Job(s) submitted on 
+#
