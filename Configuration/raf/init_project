@@ -28,9 +28,8 @@ if ($#argv != 2) then
   echo "\nChoose platform:"
   echo "  1. NCAR C130"
   echo "  2. NCAR GV"
-  echo "  3. NRL P3"
-  echo "  4. Lab system"
-  echo -n "Enter (1-4) ? "
+  echo "  3. Lab system"
+  echo -n "Enter (1-3) ? "
   set platform = $<
 
   switch ($platform)
@@ -41,9 +40,6 @@ if ($#argv != 2) then
       set platform = 'GV_N677F'
       breaksw
     case [3]:
-      set platform = 'P3_NRL-P3'
-      breaksw
-    case [4]:
       set platform = 'Lab_N600'
       breaksw
     default:
@@ -101,7 +97,7 @@ echo $proj > $proj/$platform/ProjectName
 /bin/mv -v $proj/$platform/default.xml $proj/$platform/nidas
 /bin/cp -v Configuration/raf/FlightGroups $proj/$platform/Production
 /bin/cp -v Configuration/raf/archive/archAC.sh $proj/$platform/Production/archive
-/bin/cp -v Configuration/raf/fieldProc_setup.py $proj/$platform
+/bin/cp -v Configuration/raf/scripts/fieldProc_setup.py $proj/$platform
 /bin/cp -v Configuration/raf/scripts/createMovies.sh $proj/$platform/scripts
 /bin/cp -v Configuration/raf/scripts/filterImages.sh $proj/$platform/scripts
 /bin/cp -v Configuration/raf/scripts/PROJECT.paramfile $proj/$platform/scripts
@@ -110,9 +106,10 @@ echo "\nSetting group write permissions."
 /bin/chmod -vR g+w,o-w $PROJ_DIR/$proj $RAW_DATA_DIR/$proj $DATA_DIR/$proj
 /bin/chgrp -vR proj $PROJ_DIR/$proj $RAW_DATA_DIR/$proj $DATA_DIR/$proj
 
-echo "\nGive us a legitimate vardb.xml and xsd ."
-cd $proj/$platform
-/opt/local/bin/vdb2xml VarDB
+# I don't vardb.xml committed at this time.  Breaks clean status. cjw 7/20
+#echo "\nGive us a legitimate vardb.xml and xsd ."
+#cd $proj/$platform
+#/opt/local/bin/vdb2xml VarDB
 
-echo "\nMake sure this gets added to subversion (svn add $PROJ_DIR/$proj)."
+echo "\nMake sure this gets added to github (git add $PROJ_DIR/$proj; git commit; git push)."
 
