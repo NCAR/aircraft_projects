@@ -15,7 +15,7 @@ for repo in *; do
 
   if [ -d "${repo}/.git" ]; then
     cd $repo
-    git pull origin master
+    git pull
     grep -q submodule .git/config
     if [ $? == 0 ]; then
       git submodule update --recursive
