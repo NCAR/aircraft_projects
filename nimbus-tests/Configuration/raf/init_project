@@ -86,17 +86,17 @@ echo "\nCopying files."
 echo $proj > $proj/$platform/ProjectName
 
 /bin/cp -v /opt/nidas/share/xml/nidas.xsd $proj/$platform/nidas
-/bin/cp -v Configuration/raf/Categories $proj/$platform
-#/bin/cp -v Configuration/raf/Despike $proj/$platform
-/bin/cp -v Configuration/raf/PMSspecs $proj/$platform
-/bin/cp -v Configuration/raf/StandardNames $proj/$platform
-/bin/cp -v Configuration/raf/VarDB $proj/$platform
-/bin/cp -v Configuration/raf/ascii_parms $proj/$platform
-/bin/cp -v Configuration/raf/groundvars $proj/$platform
-/bin/cp -v Configuration/raf/landmarks $proj/$platform
-/bin/cp -v Configuration/raf/$platform/* $proj/$platform
+/bin/cp -v Configuration/Categories $proj/$platform
+#/bin/cp -v Configuration/Despike $proj/$platform
+/bin/cp -v Configuration/PMSspecs $proj/$platform
+/bin/cp -v Configuration/StandardNames $proj/$platform
+/bin/cp -v Configuration/VarDB $proj/$platform
+/bin/cp -v Configuration/ascii_parms $proj/$platform
+/bin/cp -v Configuration/groundvars $proj/$platform
+/bin/cp -v Configuration/landmarks $proj/$platform
+/bin/cp -v Configuration/$platform/* $proj/$platform
 /bin/mv -v $proj/$platform/default.xml $proj/$platform/nidas
-/bin/cp -v Configuration/raf/FlightGroups $proj/$platform/Production
+/bin/cp -v Configuration/FlightGroups $proj/$platform/Production
 
 echo "\nSetting group write permissions."
 /bin/chmod -vR g+w,o-w $PROJ_DIR/$proj $RAW_DATA_DIR/$proj
