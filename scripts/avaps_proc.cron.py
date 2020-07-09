@@ -15,7 +15,7 @@
 # If the transfer fails then the file is uncompressed.
 #
 # This is set up to run out of a cron job every minute
-# * * * * * /home/local/Systems/scripts/avaps_proc.cron.py
+# * * * * * /home/local/projects/scripts/avaps_proc.cron.py
 #
 import os
 import sys

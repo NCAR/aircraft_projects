@@ -1,5 +1,5 @@
 #!/bin/bash
 
-/home/local/Systems/scripts/createMovie.py
+${PROJ_DIR}/scripts/createMovie.py
 
 sleep 50

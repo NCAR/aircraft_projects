@@ -1,5 +1,5 @@
 #!/bin/bash
 
-/home/local/Systems/scripts/push_data.py
+${PROJ_DIR}/scripts/push_data.py
 
 sleep 50
