@@ -1,0 +1,93 @@
+#!/bin/bash
+#
+#  This script will recreate the database on the ground
+#    so that inserts sent from the plane will be successful
+#    Takes an argument that is a zipped file of SQL commands
+#    usually found in the directory /tmp/xmit
+#
+#    Called by Nimbus
+#
+
+#GLOBALS
+filename=`basename $1 .gz`
+timer=60 #seconds to wait between retries
+logNot="logger -t sendGroundInitScript -s -p local1.notice"
+logErr="logger -t sendGroundInitScript -s -p local1.err"
+statusFile=${XMIT_DIR}/noconn
+last_compare=0
+
+export PGHOST=eol-rt-data.eol.ucar.edu
+export PGUSER=ads
+export PGDATABASE=$PGGRND
+export PLATFORM_DATABASE='platforms'
+
+function compareChecksum {
+	groundCS=$(psql -t -c "SELECT value FROM global_attributes WHERE key='checksum'")
+	onboardCS=$(psql -h localhost real-time -t -c "SELECT value FROM global_attributes WHERE key='checksum'")
+
+	if [ "$onboardCS" = "$groundCS" ]; then
+		last_compare=1
+	else
+		last_compare=0
+	fi
+}
+
+
+# MAIN SCRIPT
+cd $XMIT_DIR
+
+# LDM start packet to ground.
+prefix=`echo $1 | cut -c1-16`
+pqexpire -v -i 0 -a 0 -p ${prefix}\*
+pqinsert -v $1
+
+gunzip $1
+touch $statusFile #exists only if checksums are not verified
+
+platformID=`head -n 1 $filename`
+flightNum=$(psql -h localhost real-time -t -c "SELECT value FROM global_attributes WHERE key='FlightNumber'" | tr -d ' ')
+projectName=$(psql -h localhost real-time -t -c "SELECT value FROM global_attributes WHERE key='ProjectName'" | tr -d ' ')
+
+
+while [ 1 ]; do 
+
+	compareChecksum
+	if [ $last_compare -eq 1 ]; then
+		$logNot "nimbus checksums match."
+		rm -f $statusFile 
+		psql -U ads -d $PLATFORM_DATABASE -t -c "UPDATE platform_list SET flightnumber='$flightNum' WHERE platformid='$platformID'"
+		psql -U ads -d $PLATFORM_DATABASE -t -c "UPDATE platform_list SET projectname='$projectName' WHERE platformid='$platformID'"
+		exit 0
+
+	else
+		$logNot "nimbus checksum mismatch, sending packet."
+#
+# Uncomment this line if you want the aircraft to perform this.
+# Comment this line out if you have ground LDM setup to execute this commend.
+#		sed 1,1d $filename | psql #send packet
+		stat=$?
+		
+		if [ $stat -eq 0 ]; then #psql connected to ground DB
+			$logNot "ground db connection sucessful."
+		
+		elif [ $stat -eq 1 ]; then #psql fatal error
+			$logErr "FATAL: psql general error."
+			exit 1
+		
+		elif [ $stat -eq 2 ]; then #db connection error
+			$logNot "psql error connecting to $PGHOST, retry again in $timer seconds."
+		
+		elif [ $stat -eq 3 ]; then #sql script error
+			$logErr "FATAL: sqlscript error."
+			exit 1
+		
+		else
+			$logErr "FATAL: unknown error."
+			exit 1
+		
+		fi # if [ $stat -eq 0 ]
+
+	fi # if [ $(compareChecksum) ]
+	sleep $timer
+
+done # while [ 1 ]

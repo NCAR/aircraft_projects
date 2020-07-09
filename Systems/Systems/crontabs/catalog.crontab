@@ -1,0 +1,32 @@
+SHELL=/bin/bash
+BASH_ENV=/home/catalog/.bashrc
+
+#
+# get products via FTP
+#
+
+#
+# Docker Compose echoes 'Starting...' messages to STDERR, so let's grep them out but
+# pass the rest STDERR to STDERR, so that legitimate errors are still emailed
+#
+
+*/5 * * * * cd /home/catalog/catalog-maps && docker-compose run --rm app ./bin/ftp-get-products-all >> /tmp/catalog-ftp-get-products.log 2> >(>&2 grep -v Starting\ catalog-maps)
+
+#
+# IRC check bot
+#
+
+#
+# grep out duplicate 'Lost connection' messages
+#
+#*/5 * * * * cd /home/catalog/irc-bot && docker-compose run --rm app ./bin/rectify-bot >> /tmp/catalog-rectify-bot.log 2> >(>&2 grep -v Lost\ connection)
+
+#
+# Copy flight_track and position to CatalogIngest
+#
+* * * * * /home/local/Systems/scripts/copy_flight_geo_to_catalog.cron >> /tmp/copy_flight_geo_to_catalog.log 2>&1
+
+#
+# Cleanup old Catalog files from filesystem and database
+#
+1 */2 * * * /home/local/Systems/scripts/catalog_delete_files.cron >> /tmp/catalog_delete_files.log 2>&1

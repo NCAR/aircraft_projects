@@ -1,0 +1,14 @@
+#!/bin/bash
+
+ifup em4
+sudo route delete default
+
+if [ $AIRCRAFT == "C130_N130AR" ]; then
+  GW=192.168.99.1
+fi
+
+if [ $AIRCRAFT == "GV_N677F" ]; then
+  GW=192.168.0.1
+fi
+
+sudo route add default gw $GW

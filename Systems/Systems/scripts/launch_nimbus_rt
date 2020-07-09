@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Launches nimbus for real-time aircraft mode.
+
+#
+# SMS text that aircraft is up.
+#
+echo "$AIRCRAFT Datasystem is up" | mail -s "$AIRCRAFT is Online" 3038832241@txt.att.net
+
+# Make sure it exists.
+/bin/mkdir -p $XMIT_DIR
+
+# Remove AVAPS DropSonde files.
+/bin/rm -f /mnt/r1/send_to_grnd/D20*
+/bin/rm -f /tmp/avaps-rt
+/bin/rm /var/www/html/skewt/D*svg
+
+# Fire up nimbus in real-time with transmit on.
+gnome-terminal --title NIMBUS -x nimbus -rt3 -x 5

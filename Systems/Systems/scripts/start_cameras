@@ -1,0 +1,24 @@
+#!/bin/bash
+
+logger "start_cameras shell script called"
+
+# Reset symlink script so it gets new flight number.
+# Let ensure_running start it back up.
+pkill camera_symlink
+
+/etc/init.d/capture.sh stop
+
+# [Re]load firewire drivers.
+sudo modprobe -r firewire_ohci
+sudo modprobe firewire_ohci
+
+# (Re)set camera images symlink for camera web page display
+touch /var/www/html/camera
+cd /var/www/html/camera
+rm camera_images
+cam_path=`get_ac_config.py cameras.path`
+ln -s `dirname ${cam_path}`
+
+sleep 2
+
+/etc/init.d/capture.sh start 

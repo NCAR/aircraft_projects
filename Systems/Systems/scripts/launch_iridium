@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Bring to known state, remove any residual ppp or ddclient stuff
+#sudo pkill ppp
+#sudo pkill ddclient
+
+#ifdown eth2
+
+# Reset eth3.  ifdown mpds does not seem to fully kill the connection.
+ifdown eth3
+sleep 3
+ifup eth3
+
+# set a date/time stamp into the iridium log file to help correllate it's 
+# info with that found in /var/log/messages
+date >> /var/log/pppd_iridium.log
+
+# sudo /usr/sbin/adsl-start
+
+# New way to start pppoe.  Uses options in
+# /etc/sysconfig/network-scripts/ifcfg-ppp0
+
+ifup iridium &
+ 
+tail -f /var/log/messages | grep -e ppp -e ddclient -e chat

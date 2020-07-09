@@ -1,0 +1,85 @@
+#!/bin/sh
+
+#
+# Script to copy flight_track and position to CatalogIngest
+#
+
+plane=`echo $AIRCRAFT | cut -d _ -f 1`
+
+catalog_root=/home/catalog
+catalog_incoming=$catalog_root/products/incoming/${plane,,}
+catalog_ingest_tmp=$catalog_root/catalog-ingest/tmp
+
+files=( /var/www/html/flight_data/GE/real-time.kml /var/www/html/flight_data/position.json )
+
+mtime_file() # filepath
+{
+  f=$(echo "$1")
+  echo $catalog_ingest_tmp/$(basename "$f").mtime
+}
+
+get_file_mtime() # filepath
+{
+  f=$(echo "$1")
+  /bin/echo `stat -c %Y $f`
+}
+
+file_needs_update() # filepath
+{
+  f=$(echo "$1")
+  mf=$(mtime_file $f)
+  #
+  # if mtime file doesn't exist, then file needs update
+  #
+  if [ ! -f $mf ] ; then
+    return 0
+  fi
+
+  #
+  # compare mtime of file to stored mtime
+  #
+  previous_mtime=`cat $mf`
+  current_mtime=`get_file_mtime $f`
+
+  if [[ $current_mtime -gt $previous_mtime ]] ; then
+    return 0 # file needs update
+  else
+    return 1 # file does NOT need update
+  fi
+}
+
+for f in "${files[@]}" ; do
+  #
+  # check for existence of file
+  #
+  if [ -f $f ] ; then
+    if file_needs_update $f ; then
+      #
+      # update stored mtime
+      #
+      current_mtime=$(get_file_mtime $f)
+      catalog_iso_time=$(date --date @$current_mtime +%Y%m%d%H%M)
+      /bin/echo -n $current_mtime > $(mtime_file $f)
+
+      #
+      # determine suffix
+      #
+      if echo $f | grep -q 'real-time.kml' ; then
+        suffix='flight_track.kml'
+      elif echo $f | grep -q 'position.json' ; then
+        suffix='position.json'
+      fi
+
+      #
+      # copy file to ingest w/ catalog-friendly name, e.g.
+      # gis.NSF_NCAR_GV.201508191512.position.json
+      # gis.NSF_NCAR_GV.201508181641.flight_track.kml
+      #
+
+      ingest_file=$catalog_incoming/gis.NSF_NCAR_$plane.$catalog_iso_time.$suffix
+      echo "copying $f to $ingest_file"
+      cp $f $ingest_file
+
+    fi
+  fi
+done

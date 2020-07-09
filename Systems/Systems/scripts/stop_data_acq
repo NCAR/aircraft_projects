@@ -1,0 +1,34 @@
+#!/bin/sh -x
+
+# Script which shuts down dsm_server and sets the end time of the
+# last flight or in-hangar sampling period.
+#
+# This script uses kdialog to look almost GUI-like!
+# 
+#set -x
+
+# source the functions, should be in the same directory as this script
+here=${0%/*}
+
+source $here/data_acq_funcs.sh
+
+create_err_files $0
+
+check_env_vars
+
+set_config_dir
+
+stop_dsm_server
+
+# Shutdown any existing process
+if [ -f /tmp/run/nidas/dsm.pid ]; then
+    pkill -TERM $(</tmp/run/nidas/dsm.pid)
+fi
+
+# purge any cal files - this will allow config editor to have good cals
+#  even after a cal flight has been run.
+export TMP_PROJ_DIR=/tmp/projects
+rm -rf $TMP_PROJ_DIR/Configuration/raf/cal_files/Engineering/$AIRCRAFT
+
+terminate_last_config || exit 1
+
