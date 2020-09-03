@@ -106,6 +106,9 @@ echo "\nSetting group write permissions."
 /bin/chmod -vR g+w,o-w $PROJ_DIR/$proj $RAW_DATA_DIR/$proj $DATA_DIR/$proj
 /bin/chgrp -vR proj $PROJ_DIR/$proj $RAW_DATA_DIR/$proj $DATA_DIR/$proj
 
+set split = ($platform:as/_/ /)
+sed -i "s/$split[1] Project/$proj/" $proj/$platform/nidas/default.xml
+
 # I don't vardb.xml committed at this time.  Breaks clean status. cjw 7/20
 #echo "\nGive us a legitimate vardb.xml and xsd ."
 #cd $proj/$platform
