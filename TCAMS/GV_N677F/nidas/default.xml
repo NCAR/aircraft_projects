@@ -1793,6 +1793,7 @@
         </sample>
       </sensor>
     </dsm>
+
     <dsm derivedData="sock::7071" id="4" location="cabin_mpdb" name="dsm304" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
@@ -1805,10 +1806,6 @@
 	</sample>
       </serialSensor>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
-      <serialSensor IDREF="VCSEL" devicename="/dev/ttyS10" id="330" suffix="_VXL"/>
-      <output class="RawSampleOutputStream">
-        <socket type="mcrequest"/>
-      </output>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="400">
         <calfile file="A2D1602.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
@@ -1829,7 +1826,11 @@
           </variable>
         </sample>
       </sensor>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
+
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS5" id="110">
