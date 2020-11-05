@@ -25,7 +25,7 @@
     </serialSensor>
 
     <serialSensor ID="SerialGeneral" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-      <sample id="1" rate="100" scanfFormat="#%x,%x,%x\n">
+      <sample id="1" rate="25" scanfFormat="#%x,%x,%x\n">
         <variable longname="USB Loopback Ramp" name="RMP_USBLB" units="V"/>
         <variable longname="USB Loopback Toggle" name="TGGL_USBLB" units="V"/>
         <variable longname="USB Loopback Sine Wave" name="SIN_USBLB" units="V"/>
@@ -1988,8 +1988,6 @@
           <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_VTB" units="counter"/>
         </sample>
         <sample id="2" rate="10" scanfFormat="#%x,%x,%x,%x,%x,%x\n">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="10"/>
           <variable longname="Pressure of instrument exhaust duct, right" name="PDUMPPR" units="hPa">
             <parameter name="gain" type="float" value="0"/>
             <parameter name="polarity" type="int" value="0"/>
