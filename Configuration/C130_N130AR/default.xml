@@ -65,28 +65,28 @@
         <variable longname="pos longitude" name="pos_longitude" units="deg"/>
       </sample>
         <sample id="0012" process="false" rate="3.125">
-        <variable longname="ground speed" name="ground_speed" units="knot"/>
+        <variable longname="Ground Speed" name="ground_speed" units="knot"/>
       </sample>
         <sample id="0013" process="false" rate="3.125">
-        <variable longname="trk angle true" name="trk_angle_true" units="deg"/>
+        <variable longname="Track Angle" name="trk_angle" units="deg"/>
       </sample>
         <sample id="0014" process="false" rate="3.125">
-        <variable longname="mag heading 3.125Hz" name="mag_heading_3hz" units="deg"/>
+        <variable longname="Magnetic Heading" name="MAGHDG" units="deg"/>
       </sample>
         <sample id="0015" process="false" rate="3.125">
-        <variable longname="wind speed" name="wind_speed" units="knot"/>
+        <variable longname="Wind Speed" name="wind_speed" units="knot"/>
       </sample>
         <sample id="0016" process="false" rate="3.125">
-        <variable longname="wind dir true" name="wind_dir_true" units="deg"/>
+        <variable longname="Wind Direction" name="wind_dir" units="deg"/>
       </sample>
         <sample id="0044" process="false" rate="3.125">
-        <variable longname="true heading" name="true_heading" units="deg"/>
+        <variable longname="True Heading" name="true_heading" units="deg"/>
       </sample>
         <sample id="0265" process="false" rate="50">
         <variable longname="integ_vert_accel" name="integ_vert_accel" units="G"/>
       </sample>
         <sample id="0270" process="false" rate="3.125">
-        <variable longname="IRS Descretes" name="irs_discretes" units=""/>
+        <variable longname="IRS Discretes" name="irs_discretes" units=""/>
       </sample>
       <sample id="0300" process="false" rate="50">
         <variable longname="delta theta x" name="dtheta_x" units="radian"/>
@@ -194,10 +194,10 @@
         <variable longname="IRS Altitude" name="ALT" units="m"/>
       </sample>
       <sample id="0362" process="false" rate="50">
-        <variable longname="along trk accel" name="along_trk_accel" units="m/s2"/>
+        <variable longname="Along Track Acceleration" name="along_trk_accel" units="m/s2"/>
       </sample>
       <sample id="0363" process="false" rate="50">
-        <variable longname="cross trk accel" name="cross_trk_accel" units="m/s2"/>
+        <variable longname="Cross Track Acceleration" name="cross_trk_accel" units="m/s2"/>
       </sample>
       <sample id="0364" rate="50">
         <variable longname="IRS Vertical Acceleration" name="ACINS" units="m/s2"/>
@@ -227,9 +227,9 @@
 
     <arincSensor ID="ADC" class="raf.ADC_HW_EB7022597" speed="low">
 <!-- 
-            Taken from the Honeywell Engineering Specification A.4.1 spec. no. 
-            EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). 
-        -->
+      Taken from the Honeywell Engineering Specification A.4.1 spec. no. 
+      EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). 
+      -->
       <sample id="0203" rate="16">
         <variable longname="ADC Pressure Altitude" name="PALT" units="m"/>
       </sample>
@@ -265,6 +265,9 @@
       </sample>
       <sample id="0234" rate="16">
         <variable longname="ADC baro correction #1 mB" name="BAROCOR1" units="hPa"/>
+      </sample>
+      <sample id="0235" rate="16" process="false">
+        <variable name="BAROCOR1HG" units="inHg" longname="ADC baro correction #1 inHg"/>
       </sample>
       <sample id="0242" rate="16">
         <variable longname="ADC Total Pressure" name="PT" units="hPa"/>
@@ -367,10 +370,10 @@
         <variable longname="Universal Time Code" name="UTCHM" units="hr:mn"/>
       </sample>
       <sample id="0130" process="false" rate="10">
-        <variable longname="Aut Horz Integrity Limit" name="A_HIL" units="nm"/>
+        <variable longname="Aut Horz Integrity Limit" name="AHIL" units="nm"/>
       </sample>
       <sample id="0133" process="false" rate="10">
-        <variable longname="Aut Vert Integrity Limit" name="A_VIL" units="m"/>
+        <variable longname="Aut Vert Integrity Limit" name="AVIL" units="m"/>
       </sample>
       <sample id="0136" process="false" rate="10">
         <variable longname="Vert Figure of Merit" name="VFOM" units="m"/>
@@ -1200,6 +1203,36 @@
 -->
     </sensor>
 
+    <sensor ID="Fast2DC_v2" class="raf.TwoD64_USB_v3">
+      <parameter name="SerialNumber" type="string" value="F2DC002"/>
+      <parameter name="RESOLUTION" type="int" value="10"/>
+      <parameter name="TAS_RATE" type="int" value="10"/>
+      <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
+      <sample id="1" rate="1">
+        <variable longname="Fast 2DC Board Serial Number" name="BSN" units="#"/>
+        <variable longname="Fast 2DC Date / Time Stamp" name="DATE" units="count"/>
+        <variable longname="Fast 2DC Shadow OR Count" name="SHDOR" units="count"/>
+        <variable longname="Fast 2DC DOF Reject Count" name="DOFOR" units="count"/>
+        <variable longname="Fast 2DC Board Temperature" name="BTMP" units="deg_C"/>
+        <variable longname="Fast 2DC Diode Voltage, Diode 1" name="DIOV01" units="Vdc">
+                <linear intercept="0.0" slope="2" units="Vdc"/>
+        </variable>
+        <variable longname="Fast 2DC Diode Voltage, Diode 32" name="DIOV32" units="Vdc">
+                <linear intercept="0.0" slope="2" units="Vdc"/>
+        </variable>
+        <variable longname="Fast 2DC Diode Voltage, Diode 64" name="DIOV64" units="Vdc">
+                <linear intercept="0.0" slope="2" units="Vdc"/>
+        </variable>
+        <variable longname="Fast 2DC Diode TAS" name="TAS" units="m/s"/>
+      </sample>
+      <sample id="2" rate="1">
+        <variable length="64" longname="Fast 2DC Raw Accumulation, entire-in (per cell)" name="A1DC" units="count"/>
+        <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="msec"/>
+        <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
+        <variable longname="Fast 2DC Total Area of Shadowed Pixels" name="AREA" units="mm2"/>
+      </sample>
+    </sensor>
+
     <sensor ID="CFDC" class="UDPSocketSensor" devicename="usock::30105" suffix="_CFDC">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
             <variable longname="CFDC IN Count" name="INC" units="counts/sec"/>
@@ -1456,15 +1489,15 @@
         <socket type="mcrequest"/>
       </output>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="300">
-        <calfile file="A2D001.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
+        <calfile file="A2D007.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
         <parameter name="rate" type="int" value="500"/>
         <sample id="1" rate="1">
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_3181" units="deg_C"/>
         </sample>
-        <sample id="2" rate="10">
+        <sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="5"/>
           <variable longname="Recovery Air Temperature, Deiced Left, HARCO" name="RTH1" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="4"/>
@@ -1490,9 +1523,9 @@
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2D Temperature" name="A2DTEMP_3182" units="deg_C"/>
         </sample>
-	<sample id="2" rate="10">
+	<sample id="2" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
+          <parameter name="numpoints" type="int" value="5"/>
           <variable longname="Radiometric Surface Temperature" name="RSTB" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="1"/>
@@ -1665,9 +1698,9 @@
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="220">
         <parameter name="SerialNumber" type="string" value="W477534"/>
         <parameter name="rate" type="int" value="1000"/>
-        <sample id="1" rate="10">
+        <sample id="1" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="100"/>
+          <parameter name="numpoints" type="int" value="10"/>
           <variable longname="Interior Cabin Static Pressure" name="PCAB" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="2"/>
@@ -1775,7 +1808,7 @@
         </sample>
       </sensor>
 
-      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="500" suffix="_LPB">
+      <sensor IDREF="Fast2DC_v2" devicename="/dev/usbtwod_64_0" id="500" suffix="_LPB">
         <parameter name="SerialNumber" type="string" value="F2DC001"/>
         <parameter name="RESOLUTION" type="int" value="25"/>
       </sensor>
@@ -1928,7 +1961,9 @@
           <parameter name="temperature" type="bool" value="true"/>
           <variable longname="A2DTemperature" name="A2DTEMP_AFTR1" units="deg_C"/>
         </sample>
-        <sample id="3" rate="500">
+        <sample id="3" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="5"/>
           <variable longname="Dummy to facilitate delivery of A2D Temperature" name="DUMMY_AFTR1" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="1"/>
