@@ -85,8 +85,8 @@
         <sample id="0265" process="false" rate="50">
         <variable longname="integ_vert_accel" name="integ_vert_accel" units="G"/>
       </sample>
-        <sample id="0270" process="false" rate="2">
-        <variable longname="irs_discretes" name="irs_discretes" units=""/>
+        <sample id="0270" process="false" rate="3.125">
+        <variable longname="IRS Descretes" name="irs_discretes" units=""/>
       </sample>
       <sample id="0300" process="false" rate="50">
         <variable longname="delta theta x" name="dtheta_x" units="radian"/>
@@ -211,21 +211,21 @@
       <sample id="0367" rate="12.5">
         <variable longname="IRS Ground Speed Vector, East Component" name="VEW" units="m/s"/>
       </sample>
-      <sample id="0370" process="false" rate="6.25">
+      <sample id="0370" process="false" rate="12.5">
         <variable longname="norm_accel" name="norm_accel" units="G"/>
       </sample>
       <sample id="0371" process="false" rate="3.125">
         <variable longname="IRS equipment id" name="IRS_equipment_id" units=""/>
       </sample>
       <sample id="0375" process="false" rate="50">
-        <variable longname="along hdg accel" name="along_hdg_accel" units="m/s2"/>
+        <variable longname="Along Heading Acceleration" name="along_hdg_accel" units="m/s2"/>
       </sample>
       <sample id="0376" process="false" rate="50">
-        <variable longname="cross hdg accel" name="cross_hdg_accel" units="m/s2"/>
+        <variable longname="Cross Heading Acceleration" name="cross_hdg_accel" units="m/s2"/>
       </sample>
     </arincSensor>
-    <arincSensor ID="ADC" class="raf.ADC_HW_EB7022597" speed="low">
 
+    <arincSensor ID="ADC" class="raf.ADC_HW_EB7022597" speed="low">
 <!-- 
             Taken from the Honeywell Engineering Specification A.4.1 spec. no. 
             EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). 
@@ -233,227 +233,206 @@
       <sample id="0203" rate="16">
         <variable longname="ADC Pressure Altitude" name="PALT" units="m"/>
       </sample>
-        <sample id="0204" rate="16">
+      <sample id="0204" rate="16">
         <variable longname="ADC Baro Altitude" name="BALT1" units="m"/>
       </sample>
-        <sample id="0205" rate="8">
+      <sample id="0205" rate="8">
         <variable longname="ADC Mach Number" name="MACH" units="none"/>
       </sample>
-        <sample id="0206" rate="8">
+      <sample id="0206" rate="8">
         <variable longname="ADC Computed Air Speed" name="CAS" units="m/s"/>
       </sample>
-        <sample id="0210" rate="16">
+      <sample id="0207" process="false" rate="8">
+        <variable longname="ADC Maximum Operating Speed" name="max_op_speed" units="m/s"/>
+      </sample>
+      <sample id="0210" rate="16">
         <variable longname="ADC True Air Speed" name="TAS" units="m/s"/>
       </sample>
-        <sample id="0211" rate="2">
+      <sample id="0211" rate="2">
         <variable longname="ADC Recovery Air Temperature" name="RT" units="deg_C"/>
       </sample>
-        <sample id="0213" rate="2">
+      <sample id="0212" process="false" rate="16">
+        <variable longname="ADC Altitude Rate" name="altrate" units="m/s"/>
+      </sample>
+      <sample id="0213" rate="2">
         <variable longname="ADC Ambient Air Temperature" name="AT" units="deg_C"/>
       </sample>
-        <sample id="0215" rate="8">
+      <sample id="0215" rate="8">
         <variable longname="ADC Impact Pressure" name="QC" units="hPa"/>
       </sample>
-        <sample id="0217" rate="8">
+      <sample id="0217" rate="8">
         <variable longname="ADC Static Pressure" name="PS" units="hPa"/>
       </sample>
-        <sample id="0220" rate="16">
-        <variable longname="ADC baro corrected alt #2" name="BALT2" units="m"/>
-      </sample>
-        <sample id="0234" rate="16">
+      <sample id="0234" rate="16">
         <variable longname="ADC baro correction #1 mB" name="BAROCOR1" units="hPa"/>
       </sample>
-
-<!--
-            The following sample as well as 0237 are not used.
-            <sample id="0235" rate="16" process="false"><variable name="BAROCOR1" units="inHg" longname="ADC baro correction #1 inHg"/></sample 
-        -->
-      <sample id="0236" rate="16">
-        <variable longname="ADC baro correction #2 mB" name="BAROCOR2" units="hPa"/>
-      </sample>
-
-<!--
-            <sample id="0237" rate="16" process="false"><variable name="BAROCOR2" units="inHg" longname="ADC baro correction #2 inHg"/></sample 
-        -->
       <sample id="0242" rate="16">
         <variable longname="ADC Total Pressure" name="PT" units="hPa"/>
       </sample>
-        <sample id="0244" process="false" rate="8">
-        <variable longname="ADC Angle of Attack" name="AOA" units="ratio"/>
-      </sample>
-        <sample id="0207" process="false" rate="8">
-        <variable longname="ADC maximum operating speed" name="max_op_speed" units="m/s"/>
-      </sample>
-        <sample id="0212" process="false" rate="16">
-        <variable longname="ADC Altitude Rate" name="altrate" units="m/s"/>
-      </sample>
-        <sample id="0252" process="false" rate="16">
+      <sample id="0252" process="false" rate="16">
         <variable longname="ADC baro corrected alt #4" name="baro_corr_alt_4" units="m"/>
       </sample>
-        <sample id="0270" rate="2">
+      <sample id="0270" rate="2">
         <variable longname="ADC Weight On Wheels" name="WOW" units="bool"/>
       </sample>
-        <sample id="0271" process="false" rate="2">
-        <variable longname="ADC discrete #2" name="discrete_2" units=""/>
+      <sample id="0271" process="false" rate="2">
+        <variable longname="ADC discrete #2" name="DISCRETE2" units=""/>
       </sample>
-        <sample id="0350" process="false" rate="2">
-        <variable longname="ADC maint word #1" name="maint_word_1" units=""/>
+      <sample id="0350" process="false" rate="2">
+        <variable longname="ADC maint word #1" name="ADCMAINT1" units=""/>
       </sample>
-        <sample id="0351" process="false" rate="2">
-        <variable longname="ADC maint word #2" name="maint_word_2" units=""/>
+      <sample id="0351" process="false" rate="2">
+        <variable longname="ADC maint word #2" name="ADCMAINT2" units=""/>
       </sample>
-        <sample id="0352" process="false" rate="2">
-        <variable longname="ADC maint word #3" name="maint_word_3" units=""/>
+      <sample id="0352" process="false" rate="2">
+        <variable longname="ADC maint word #3" name="ADCMAINT3" units=""/>
       </sample>
-        <sample id="0353" process="false" rate="2">
-        <variable longname="ADC maint word #4" name="maint_word_4" units=""/>
+      <sample id="0353" process="false" rate="2">
+        <variable longname="ADC maint word #4" name="ADCMAINT4" units=""/>
       </sample>
-        <sample id="0371" process="false" rate="2">
+      <sample id="0371" process="false" rate="2">
         <variable longname="ADC equipment id" name="ADC_equipment_id" units=""/>
       </sample>
     </arincSensor>
-    <arincSensor ID="GPSHW" class="raf.GPS_HW_HG2021GB02" speed="high">
 
+    <arincSensor ID="GPSHW" class="raf.GPS_HW_HG2021GB02" speed="high">
 <!-- 
-            Taken from the Honeywell Installation Manual PN HG2021GB02/GD02 
-            Table 207 "GNSSU ARINC 429 Output Data" (GPS)  (pages 217-219). 
-        -->
+      Taken from the Honeywell Installation Manual PN HG2021GD04
+      Table 207 "GNSSU ARINC 429 Output Data" (GPS)  (pages A.11 - A.17).
+      -->
       <sample id="0060" process="false" rate="1">
         <variable longname="Measurement Status" name="measurement_Stat" units=""/>
       </sample>
-        <sample id="0061" process="false" rate="1">
+      <sample id="0061" process="false" rate="1">
         <variable longname="Pseudo Range" name="Pseudo_Range" units="m"/>
       </sample>
-        <sample id="0062" process="false" rate="1">
+      <sample id="0062" process="false" rate="1">
         <variable longname="Pseudo Range Fine" name="Pseudo_Rng_Fine" units="m"/>
       </sample>
-        <sample id="0063" process="false" rate="1">
+      <sample id="0063" process="false" rate="1">
         <variable longname="Range Rate" name="Range_Rate" units="m/s"/>
       </sample>
-        <sample id="0064" process="false" rate="1">
+      <sample id="0064" process="false" rate="1">
         <variable longname="Delta Range" name="Delta_Range" units="m"/>
       </sample>
-        <sample id="0065" process="false" rate="1">
+      <sample id="0065" process="false" rate="1">
         <variable longname="SV Position X" name="SV_Pos_X" units="m"/>
       </sample>
-        <sample id="0066" process="false" rate="1">
+      <sample id="0066" process="false" rate="1">
         <variable longname="SV Position X Fine" name="SV_Pos_X_Fine" units="m"/>
       </sample>
-        <sample id="0070" process="false" rate="1">
+      <sample id="0070" process="false" rate="1">
         <variable longname="SV Position Y" name="SV_Pos_Y" units="m"/>
       </sample>
-        <sample id="0071" process="false" rate="1">
+      <sample id="0071" process="false" rate="1">
         <variable longname="SV Position Y Fine" name="SV_Pos_Y_Fine" units="m"/>
       </sample>
-        <sample id="0072" process="false" rate="1">
+      <sample id="0072" process="false" rate="1">
         <variable longname="SV Position Z" name="SV_Pos_Z" units="m"/>
       </sample>
-        <sample id="0073" process="false" rate="1">
+      <sample id="0073" process="false" rate="1">
         <variable longname="SV Position Z Fine" name="SV_Pos_Z_Fine" units="m"/>
       </sample>
-        <sample id="0101" process="false" rate="1">
-        <variable longname="Horz Dilution of Precision" name="H_DOP" units=""/>
-      </sample>
-        <sample id="0102" process="false" rate="1">
-        <variable longname="Vert Dilution of Precision" name="V_DOP" units=""/>
-      </sample>
-        <sample id="0074" rate="1">
+      <sample id="0074" rate="1">
         <variable longname="Avionics GPS UTC Measure Time" name="GTIME" units="s"/>
       </sample>
-        <sample id="0076" rate="5">
+      <sample id="0076" rate="10">
         <variable longname="Avionics GPS Altitude (MSL)" name="ALT" units="m"/>
       </sample>
-        <sample id="0103" rate="5">
+      <sample id="0101" process="false" rate="1">
+        <variable longname="Horz Dilution of Precision" name="HDOP" units=""/>
+      </sample>
+      <sample id="0102" process="false" rate="1">
+        <variable longname="Vert Dilution of Precision" name="VDOP" units=""/>
+      </sample>
+      <sample id="0103" rate="10">
         <variable longname="Avionics GPS Track Angle" name="TKAT" units="degree_T"/>
       </sample>
-        <sample id="0110" rate="5">
+      <sample id="0110" rate="10">
         <variable longname="Avionics GPS Latitude" name="LAT" units="degree_N"/>
       </sample>
-        <sample id="0111" rate="5">
+      <sample id="0111" rate="10">
         <variable longname="Avionics GPS Longitude" name="LON" units="degree_E"/>
       </sample>
-        <sample id="0112" rate="5">
+      <sample id="0112" rate="10">
         <variable longname="Avionics GPS Ground Speed" name="GSPD" units="m/s"/>
       </sample>
-        <sample id="0120" rate="5">
+      <sample id="0120" rate="10">
         <variable longname="Avionics GPS Latitude Fine" name="LATF" units="degree_N"/>
       </sample>
-        <sample id="0121" rate="5">
+      <sample id="0121" rate="10">
         <variable longname="Avionics GPS Longitude Fine" name="LONF" units="degree_E"/>
       </sample>
-        <sample id="0165" rate="5">
-        <variable longname="Avionics GPS Vertical Velocity" name="VSPD" units="m/s"/>
-      </sample>
-        <sample id="0166" rate="5">
-        <variable longname="Avionics GPS Ground Speed Vector, North Component" name="GVNS" units="m/s"/>
-      </sample>
-        <sample id="0174" rate="5">
-        <variable longname="Avionics GPS Ground Speed Vector, East Component" name="GVEW" units="m/s"/>
-      </sample>
-        <sample id="0273" rate="5">
-        <variable longname="Avionics GPS Sensor Status" name="GSTAT" units="none"/>
-      </sample>
-        <sample id="0125" process="false" rate="5">
+      <sample id="0125" process="false" rate="10">
         <variable longname="Universal Time Code" name="UTCHM" units="hr:mn"/>
       </sample>
-        <sample id="0130" process="false" rate="5">
+      <sample id="0130" process="false" rate="10">
         <variable longname="Aut Horz Integrity Limit" name="A_HIL" units="nm"/>
       </sample>
-        <sample id="0133" process="false" rate="5">
+      <sample id="0133" process="false" rate="10">
         <variable longname="Aut Vert Integrity Limit" name="A_VIL" units="m"/>
       </sample>
-        <sample id="0135" process="false" rate="1">
-        <variable longname="Approach Area VIL" name="AA_VIL" units="m"/>
+      <sample id="0136" process="false" rate="10">
+        <variable longname="Vert Figure of Merit" name="VFOM" units="m"/>
       </sample>
-        <sample id="0136" process="false" rate="5">
-        <variable longname="Vert Figure of Merit" name="V_FOM" units="m"/>
-      </sample>
-        <sample id="0140" process="false" rate="5">
+      <sample id="0140" process="false" rate="10">
         <variable longname="UTC Fine" name="UTC_Fine" units="s"/>
       </sample>
-        <sample id="0141" process="false" rate="5">
+      <sample id="0141" process="false" rate="10">
         <variable longname="UTC Fine Fractions" name="UTC_FF" units="s"/>
       </sample>
-        <sample id="0143" process="false" rate="1">
+      <sample id="0143" process="false" rate="1">
         <variable longname="Approach Area HIL" name="AA_HIL" units="nm"/>
       </sample>
-        <sample id="0150" process="false" rate="5">
+      <sample id="0150" process="false" rate="10">
         <variable longname="Universal Time Code" name="UTCHMS" units="hr:mn:sc"/>
       </sample>
-        <sample id="0156" process="false" rate="3">
-        <variable longname="Maintenance 1" name="Maintenance_1" units=""/>
+      <sample id="0156" process="false" rate="5">
+        <variable longname="Maintenance 1" name="MAINT1" units=""/>
       </sample>
-        <sample id="0157" process="false" rate="1">
-        <variable longname="Maintenance 2" name="Maintenance_2" units=""/>
+      <sample id="0157" process="false" rate="1">
+        <variable longname="Maintenance 2" name="MAINT2" units=""/>
       </sample>
-        <sample id="0162" process="false" rate="1">
+      <sample id="0162" process="false" rate="1">
         <variable longname="Dest Wpt ETA" name="Dest_Wpt_ETA" units="hr:mn"/>
       </sample>
-        <sample id="0163" process="false" rate="1">
+      <sample id="0163" process="false" rate="1">
         <variable longname="Altr Wpt ETA" name="Altr_Wpt_ETA" units="hr:mn"/>
       </sample>
-        <sample id="0247" process="false" rate="5">
+      <sample id="0165" rate="10">
+        <variable longname="Avionics GPS Vertical Velocity" name="VSPD" units="m/s"/>
+      </sample>
+      <sample id="0166" rate="10">
+        <variable longname="Avionics GPS Ground Speed Vector, North Component" name="GVNS" units="m/s"/>
+      </sample>
+      <sample id="0174" rate="10">
+        <variable longname="Avionics GPS Ground Speed Vector, East Component" name="GVEW" units="m/s"/>
+      </sample>
+      <sample id="0247" process="false" rate="10">
         <variable longname="Horz Figure of Merit" name="H_FOM" units="nm"/>
       </sample>
-        <sample id="0260" process="false" rate="5">
+      <sample id="0260" process="false" rate="10">
         <variable longname="UTC Date" name="UTCdate" units="dy:mn:yr"/>
       </sample>
-        <sample id="0343" process="false" rate="1">
+      <sample id="0273" rate="10">
+        <variable longname="Avionics GPS Sensor Status" name="GSTAT" units="none"/>
+      </sample>
+      <sample id="0343" process="false" rate="1">
         <variable longname="Dest Wpt HIL" name="Dest_Wpt_HIL" units="nm"/>
       </sample>
-        <sample id="0347" process="false" rate="1">
+      <sample id="0347" process="false" rate="1">
         <variable longname="Altr Wpt HIL" name="Altr_Wpt_HIL" units="nm"/>
       </sample>
-        <sample id="0352" process="false" rate="1">
-        <variable longname="Maintenance 3" name="Maintenance_3" units=""/>
+      <sample id="0352" process="false" rate="1">
+        <variable longname="Maintenance 3" name="MAINT3" units=""/>
       </sample>
-        <sample id="0354" process="false" rate="1">
+      <sample id="0354" process="false" rate="1">
         <variable longname="Counter" name="Counter" units="sec"/>
       </sample>
-        <sample id="0355" process="false" rate="1">
-        <variable longname="Maintenance 4" name="Maintenance_4" units=""/>
+      <sample id="0355" process="false" rate="1">
+        <variable longname="Maintenance 4" name="MAINT4" units=""/>
       </sample>
-        <sample id="0377" process="false" rate="1">
+      <sample id="0377" process="false" rate="1">
         <variable longname="GPS equipment id" name="GPS_equipment_id" units=""/>
       </sample>
     </arincSensor>
