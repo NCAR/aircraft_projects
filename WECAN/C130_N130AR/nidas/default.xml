@@ -10,7 +10,6 @@
         </sample>
     </sensor>
     <arincSensor ID="IRS-C130" class="raf.IRS_HW_HG2001GD">
-      <parameter name="ttadjust" type="float" value="1 1.5"/>
       <sample id="0132" process="true" rate="25">
         <variable longname="Hybrid True Heading - 132" name="THDGHYB" units="deg_T"/>
       </sample>
@@ -216,7 +215,6 @@
       </sample>
     </arincSensor>
     <arincSensor ID="ADC-GV" class="raf.ADC_HW_EB7022597" speed="low">
-      <parameter name="ttadjust" type="float" value="1 1.5"/>
 <!-- 
             Taken from the Honeywell Engineering Specification A.4.1 spec. no. 
             EB7022597 cage code 55939 "Air Data Computer"    (pages A-53..79). 
@@ -304,7 +302,6 @@
       </sample>
     </arincSensor>
     <arincSensor ID="GPS-GV" class="raf.GPS_HW_HG2021GB02" speed="high">
-      <parameter name="ttadjust" type="float" value="1 1.5"/>
 <!-- 
             Taken from the Honeywell Installation Manual PN HG2021GB02/GD02 
             Table 207 "GNSSU ARINC 429 Output Data" (GPS)  (pages 217-219). 
@@ -606,7 +603,7 @@
 	  *0100EW*0100UN=2	units=millibars
 	  *0100EW*0100PI=10	rate=50
 	-->
-        <sample id="1" rate="50" scanfFormat="*%*2d%*2d%f" ttadjust="1 3">
+        <sample id="1" rate="50" scanfFormat="*%*2d%*2d%f" ttadjust="5.5">
             <variable longname="Raw Static Pressure" name="PRESSURE" units="hPa"/>
 	</sample>
         <message length="0" position="end" separator="\n"/>
@@ -1522,7 +1519,7 @@
         <message length="0" position="end" separator="\n\r"/>
     </serialSensor>
     <serialSensor ID="HoneywellPPT" baud="19200" class="raf.PPT_Serial" databits="8" parity="none" stopbits="1">
-        <sample id="1" scanfFormat="?%*2dCP=%f" ttadjust="1 3">
+        <sample id="1" scanfFormat="?%*2dCP=%f" ttadjust="5.5">
            <variable longname="Raw Dynamic Pressure" name="PA" units="hPa"/>
            <prompt rate="50" string="*00P1\r"/>
         </sample>
