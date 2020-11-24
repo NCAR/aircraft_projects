@@ -36,6 +36,8 @@
 	<xsd:enumeration value="38400"/>
 	<xsd:enumeration value="57600"/>
 	<xsd:enumeration value="115200"/>
+	<xsd:enumeration value="230400"/>
+	<xsd:enumeration value="460800"/>
     </xsd:restriction>
 </xsd:simpleType>
 
@@ -81,8 +83,21 @@
     </xsd:restriction>
 </xsd:simpleType>
 
+<xsd:simpleType name="rts485type">
+    <xsd:restriction base="xsd:token">
+        <!-- 0 or false: don't toggle RTS on read/write -->
+        <!-- 1 or true: raise RTS on write, lower on read -->
+        <!-- -1: lower RTS on write, raise on read -->
+	<xsd:enumeration value="true"/>
+	<xsd:enumeration value="false"/>
+	<xsd:enumeration value="-1"/>
+	<xsd:enumeration value="0"/>
+	<xsd:enumeration value="1"/>
+    </xsd:restriction>
+</xsd:simpleType>
+
 <xsd:complexType name="messageDesc">
-    <xsd:attribute name="separator" type="xsd:normalizedString"/>
+    <xsd:attribute name="separator" type="xsd:string"/>
     <xsd:attribute name="position" use="optional">
 	<xsd:simpleType>
 	    <xsd:restriction base="xsd:token">
@@ -95,8 +110,9 @@
 </xsd:complexType>
 
 <xsd:complexType name="promptType">
-    <xsd:attribute name="string" type="xsd:normalizedString" use="required"/>
+    <xsd:attribute name="string" type="xsd:string" use="required"/>
     <xsd:attribute name="rate" type="xsd:positiveInteger" use="required"/>
+    <xsd:attribute name="offset" type="xsd:float" default="0"/>
 </xsd:complexType>
 
 <xsd:complexType name="calfile">
@@ -148,7 +164,7 @@
 
 <xsd:complexType name="parameter">
     <xsd:attribute name="name" type="xsd:token" use="required"/>
-    <xsd:attribute name="value" type="xsd:normalizedString" use="required"/>
+    <xsd:attribute name="value" type="xsd:string" use="required"/>
     <xsd:attribute name="type" type="parameterType" use="required"/>
 </xsd:complexType>
 
@@ -178,6 +194,25 @@
     <xsd:attribute name="names" type="xsd:normalizedString" use="required"/>
 </xsd:complexType>
 
+<xsd:simpleType name="ttval">
+    <xsd:list itemType="xsd:token"/>
+</xsd:simpleType>
+
+<xsd:simpleType name="tttype">
+    <xsd:annotation>
+        <xsd:documentation>
+            Parameters for the time tag adjuster: the adjustment
+            period, and the number of sample delta-Ts to consider a
+            gap.  These are of the token type, so that they can
+            be a replacement variable of the form $TTGAP.
+        </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="ttval">
+        <xsd:maxLength value="2"/>
+        <xsd:minLength value="1"/>
+    </xsd:restriction>
+</xsd:simpleType>
+
 <xsd:complexType name="sample">
     <xsd:annotation>
         <xsd:documentation>
@@ -204,6 +239,7 @@
     <xsd:attribute name="station" type="xsd:nonNegativeInteger"/>
     <xsd:attribute name="enable" type="xsd:token"/>
     <xsd:attribute name="disable" type="xsd:token"/>
+    <xsd:attribute name="ttadjust" type="tttype"/>
 </xsd:complexType>
 
 <xsd:complexType name="sensorT" abstract="false">
@@ -264,7 +300,7 @@
 	     not null terminating strings.
 	     -->
 	    <xsd:attribute name="nullterm" type="xsd:boolean"/>
-	    <xsd:attribute name="init_string" type="xsd:normalizedString"/>
+	    <xsd:attribute name="init_string" type="xsd:string"/>
 	</xsd:extension>
     </xsd:complexContent>
 </xsd:complexType>
@@ -280,7 +316,7 @@
 	    <xsd:attribute name="parity" type="paritytype"/>
 	    <xsd:attribute name="databits" type="databitstype"/>
 	    <xsd:attribute name="stopbits" type="stopbitstype"/>
-	    <xsd:attribute name="rts485" type="xsd:boolean"/>
+	    <xsd:attribute name="rts485" type="rts485type"/>
 	</xsd:extension>
     </xsd:complexContent>
 </xsd:complexType>
