@@ -601,7 +601,7 @@
 	  *0100EW*0100UN=2	units=millibars
 	  *0100EW*0100PI=10	rate=50
 	-->
-        <sample id="1" rate="50" scanfFormat="*%*2d%*2d%f" ttadjust="0.05">
+        <sample id="1" rate="50" scanfFormat="*%*2d%*2d%f" ttadjust="1">
             <variable longname="Raw Static Pressure" name="PRESSURE" units="hPa"/>
 	</sample>
         <message length="0" position="end" separator="\n"/>
@@ -1348,11 +1348,11 @@
      </serialSensor>
 
     <serialSensor ID="HoneywellPPT" baud="19200" class="raf.PPT_Serial" databits="8" parity="none" stopbits="1">
-        <sample id="1" scanfFormat="?%*2dCP=%f" ttadjust="4.6">
+        <sample id="1" scanfFormat="?%*2dCP=%f" ttadjust="1">
            <variable longname="Raw Dynamic Pressure" name="PA" units="hPa"/>
            <prompt rate="50" string="*00P1\r"/>
         </sample>
-        <sample id="2" scanfFormat="?%*2dCT=%f" ttadjust="5.6">
+        <sample id="2" scanfFormat="?%*2dCT=%f">
            <variable longname="Temperature of Honeywell Pressure Probe" name="PATEMP" units="deg_C"/>
            <prompt rate="1" string="*00T1\r"/>
         </sample>
