@@ -3,24 +3,16 @@
 # Script to update all existing subvserion & git repositories in current directory.
 
 for repo in *; do
-  # Skip cmigits as it is a local git repo on internal servers.
-  if [ $repo = "cmigits-nidas" ]; then
-    continue
-  fi
 
   if [ -d "${repo}/.svn" ]; then
     echo "<<<<  $repo  >>>>"
-    svn update $repo
+    svn status
   fi
 
   if [ -d "${repo}/.git" ]; then
     echo "<<<<  $repo  >>>>"
     cd $repo
-    git pull
-    grep -q submodule .git/config
-    if [ $? == 0 ]; then
-      git submodule update --recursive
-    fi
+    git status -s
     cd ..
   fi
 done
