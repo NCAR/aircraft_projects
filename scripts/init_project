@@ -93,8 +93,13 @@ echo $proj > $proj/$platform/ProjectName
 /bin/cp -v Configuration/ascii_parms $proj/$platform
 /bin/cp -v Configuration/groundvars $proj/$platform
 /bin/cp -v Configuration/landmarks $proj/$platform
+
 /bin/cp -v Configuration/$platform/* $proj/$platform
 /bin/mv -v $proj/$platform/default.xml $proj/$platform/nidas
+echo ProjNum=$proj > $proj/$platform/Production/Flight_All
+/bin/cat $proj/$platform/Flight_All >> $proj/$platform/Production/Flight_All
+/bin/rm $proj/$platform/Flight_All
+
 /bin/cp -v Configuration/FlightGroups $proj/$platform/Production
 /bin/cp -v Configuration/archive/archAC.sh $proj/$platform/Production/archive
 /bin/cp -v Configuration/scripts/fieldProc_setup.py $proj/$platform
