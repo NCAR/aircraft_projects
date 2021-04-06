@@ -1013,6 +1013,7 @@
         <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="msec"/>
         <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
       </sample>
+<<<<<<< HEAD
     <sensor ID="Fast2DC_v2" class="raf.TwoD64_USB_v3">
       <parameter name="SerialNumber" type="string" value="F2DC002"/>
       <parameter name="RESOLUTION" type="int" value="10"/>
@@ -1042,6 +1043,8 @@
       </sample>
     </sensor>
 
+=======
+>>>>>>> fa443ba570302313b8d027d0dd2e4135272da110
 
 <!--
       <sample id="3" rate="1">
@@ -1637,7 +1640,10 @@
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> fa443ba570302313b8d027d0dd2e4135272da110
 <!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
     <sensor ID="PARCELS" class="UDPSocketSensor" devicename="usock::30100">
 
@@ -1792,7 +1798,11 @@
           <variable longname="Raw Static Pressure, Fuselage" name="PSF" units="hPa"/>
 	</sample>
       </serialSensor>
+<<<<<<< HEAD
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
+=======
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="MIRRTMP_DPL"/>
+>>>>>>> fa443ba570302313b8d027d0dd2e4135272da110
 <!-- Picarro 2130 serial channel 8,l1 rack, 232 -->
 
 <!-- CPC serial channel 9, l1 rack, 232 -->
@@ -1916,6 +1926,7 @@
 	  <variable longname="Raw Static Pressure, Fuselage" name="PSTF" units="hPa"/>
 	</sample>
       </serialSensor>
+<<<<<<< HEAD
 
       <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyS9" id="300">
         <calfile file="A2DS006.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
@@ -2102,6 +2113,9 @@
         <parameter name="SerialNumber" type="string" value="CDP016"/>
       </serialSensor>
 
+      <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="100" suffix="_RWIO">
+        <parameter name="SerialNumber" type="string" value="CDP016"/>
+      </serialSensor>
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300" latency="0.25">
         <calfile file="A2DW512986.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT/"/>
         <parameter name="rate" type="int" value="500"/>
@@ -2122,7 +2136,9 @@
         <parameter name="SerialNumber" type="string" value="F2DC003"/>
         <parameter name="RESOLUTION" type="int" value="10"/>
       </sensor>
-
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
 
     <dsm derivedData="sock::7071" id="11" location="LWI" name="dsmLWI" rserialPort="30002" statusAddr="sock::30001">
