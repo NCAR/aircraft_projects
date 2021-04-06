@@ -1013,7 +1013,17 @@
         <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="msec"/>
         <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
       </sample>
-<<<<<<< HEAD
+
+
+<!--
+      <sample id="3" rate="1">
+        <variable name="A2DC" length="128" units="count" longname="Fast 2DC Raw Accumulation, center-in (per cell)"/>
+        <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
+      </sample>
+-->
+    </sensor>
+
+
     <sensor ID="Fast2DC_v2" class="raf.TwoD64_USB_v3">
       <parameter name="SerialNumber" type="string" value="F2DC002"/>
       <parameter name="RESOLUTION" type="int" value="10"/>
@@ -1027,13 +1037,13 @@
         <variable longname="Fast 2DC Board Temperature" name="BTMP" units="deg_C"/>
         <variable longname="Fast 2DC Diode Voltage, Diode 1" name="DIOV01" units="Vdc">
                 <linear intercept="0.0" slope="2" units="Vdc"/>
-        </variable>
+        </variable>  
         <variable longname="Fast 2DC Diode Voltage, Diode 32" name="DIOV32" units="Vdc">
                 <linear intercept="0.0" slope="2" units="Vdc"/>
-        </variable>
+        </variable>  
         <variable longname="Fast 2DC Diode Voltage, Diode 64" name="DIOV64" units="Vdc">
                 <linear intercept="0.0" slope="2" units="Vdc"/>
-        </variable>
+        </variable>  
         <variable longname="Fast 2DC Diode TAS" name="TAS" units="m/s"/>
       </sample>
       <sample id="2" rate="1">
@@ -1043,16 +1053,6 @@
       </sample>
     </sensor>
 
-=======
->>>>>>> fa443ba570302313b8d027d0dd2e4135272da110
-
-<!--
-      <sample id="3" rate="1">
-        <variable name="A2DC" length="128" units="count" longname="Fast 2DC Raw Accumulation, center-in (per cell)"/>
-        <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
-      </sample>
--->
-    </sensor>
 
     <sensor ID="MTP" class="UDPSocketSensor" devicename="usock::30101" suffix="_MTP">
         <sample id="1" rate="1" scanfFormat="MTP,%4d%2d%2dT%2d%2d%2d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d">
@@ -1640,10 +1640,6 @@
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
-<<<<<<< HEAD
-
-=======
->>>>>>> fa443ba570302313b8d027d0dd2e4135272da110
 <!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
     <sensor ID="PARCELS" class="UDPSocketSensor" devicename="usock::30100">
 
@@ -1798,11 +1794,7 @@
           <variable longname="Raw Static Pressure, Fuselage" name="PSF" units="hPa"/>
 	</sample>
       </serialSensor>
-<<<<<<< HEAD
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
-=======
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="MIRRTMP_DPL"/>
->>>>>>> fa443ba570302313b8d027d0dd2e4135272da110
 <!-- Picarro 2130 serial channel 8,l1 rack, 232 -->
 
 <!-- CPC serial channel 9, l1 rack, 232 -->
@@ -1926,8 +1918,6 @@
 	  <variable longname="Raw Static Pressure, Fuselage" name="PSTF" units="hPa"/>
 	</sample>
       </serialSensor>
-<<<<<<< HEAD
-
       <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyS9" id="300">
         <calfile file="A2DS006.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
         <parameter name="boardID" type="int" value="6"/>
@@ -2011,96 +2001,6 @@
         </sample>
       </serialSensor>
 
-
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="200">
-        <calfile file="A2D014.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
-        <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2D Temperature" name="A2DTEMP_RAD" units="deg_C"/>
-        </sample>
-        <sample id="2" rate="100">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="5"/>
-          <variable longname="Recovery Air Temperature, Unheated" name="RTF1" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="RTF1.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-          <variable longname="Recovery Air Temperature, Deiced Right, HARCO" name="RTH2" units="V">
-            <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="RTH2.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-          <variable longname="Recovery Air Temperature, Deiced Right, HARCO" name="RTH1" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="RTH1.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-          <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="deg_C">
-              <calfile file="NOSETMP.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-          <variable longname="Dewpoint Cavity Pressure, Left" name="CAVP_DPL" units="V">
-            <parameter name="channel" type="int" value="5"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="CAVP.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-          <variable longname="Dewpoint Cavity Pressure, Right" name="CAVP_DPR" units="V">
-            <parameter name="channel" type="int" value="6"/>
-            <parameter name="gain" type="float" value="4"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="hPa">
-              <calfile file="CAVP.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-        </sample>
-      </sensor>
-      <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyS9" id="300">
-        <calfile file="A2DS005.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
-        <parameter name="boardID" type="int" value="5"/>
-        <parameter name="FILT" type="int" value="10"/>
-        <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
-          <variable longname="Recovery Air Temperature, Heated Left" name="RTH3" units="cnts">
-            <parameter name="ifsr" type="float" value="1"/>
-            <parameter name="ipol" type="int" value="0"/>
-            <poly units="deg_C">
-              <calfile file="RTH3EX.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-          <variable longname="Recovery Air Temperature, Heated Left" name="RTH4" units="cnts">
-            <parameter name="ifsr" type="float" value="1"/>
-            <parameter name="ipol" type="int" value="0"/>
-            <poly units="deg_C">
-              <calfile file="RTH4EX.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-          <variable longname="Radome Environmental Box Temperature" name="NOSETMP_TEST" units="Vdc">
-            <parameter name="channel" type="int" value="2"/>
-            <parameter name="ifsr" type="float" value="1"/>
-            <parameter name="ipol" type="int" value="0"/>
-            <poly units="deg_C">
-              <calfile file="NOSETMP.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-        </sample>
-      </serialSensor>
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -2108,14 +2008,14 @@
 
     <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmLWO" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
 
-      <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="100" suffix="_LWIO">
+      <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="200" suffix="_LWIO">
         <parameter name="SerialNumber" type="string" value="CDP016"/>
       </serialSensor>
 
-      <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="100" suffix="_RWIO">
-        <parameter name="SerialNumber" type="string" value="CDP016"/>
-      </serialSensor>
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="300" latency="0.25">
         <calfile file="A2DW512986.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT/"/>
         <parameter name="rate" type="int" value="500"/>
@@ -2132,13 +2032,11 @@
           </variable>
         </sample>
       </sensor>
-     <sensor IDREF="Fast2DC_v2" devicename="/dev/usbtwod_64_0" id="300" suffix="_LWOO">
+
+      <sensor IDREF="Fast2DC_v2" devicename="/dev/usbtwod_64_0" id="400" suffix="_LWOO">
         <parameter name="SerialNumber" type="string" value="F2DC003"/>
         <parameter name="RESOLUTION" type="int" value="10"/>
       </sensor>
-      <output class="RawSampleOutputStream">
-        <socket type="mcrequest"/>
-      </output>
     </dsm>
 
     <dsm derivedData="sock::7071" id="11" location="LWI" name="dsmLWI" rserialPort="30002" statusAddr="sock::30001">
