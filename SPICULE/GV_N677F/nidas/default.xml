@@ -37,9 +37,7 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
-<!--
     <serialSensor ID="SerialTestPattern" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1"/>
--->
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
 
 <!-- Taken from the Honeywell installation manual for the         -->
@@ -1677,8 +1675,6 @@
       </sample>
     </sensor>
 
- <serialSensor ID="SerialTestPattern" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1"/>
-
   </sensorcatalog>
   <site applyCals="true" class="raf.Aircraft" name="GV_N677F">
     <parameter name="tailNumber" type="string" value="N677F"/>
@@ -1723,6 +1719,28 @@
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
+
+      <sensor ID="ARINCHK" class="UDPSocketSensor" devicename="usock::56770" id="2000" suffix="_AENT1">
+        <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
+          <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
+          <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
+          <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+          <variable longname="ENET Number of Transactions" name="TCPTRANS" units="#"/>
+          <variable longname="ENET Number of Retries" name="TCPRTRY" units="#"/>
+          <variable longname="ENET Number of Failures" name="TCPFAILS" units="#"/>
+          <variable longname="ENET ROOT PE Control-Status Register" name="PECTRL" units="bits"/>
+          <variable longname="ENET ROOT PE Status Register" name="PESTS" units="bits"/>
+          <variable longname="ENET PE BIT Register" name="PEBIT" units="bits"/>
+        </sample>
+      </sensor>
+      <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="2100" timeout="10" suffix="_AENT1">
+        <parameter name="ip" type="string" value="192.168.84.12"/>
+      </sensor>
+      <arincSensor IDREF="IRS-GV" devicename="Alta:4" id="2200" suffix="_IE"/>
+      <arincSensor IDREF="ADC-GV" devicename="Alta:6" id="2600" suffix="_AE"/>
+      <arincSensor IDREF="GPS-GV" devicename="Alta:7" id="2900" suffix="_AE"/>
+
+
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -1893,6 +1911,9 @@
           </variable>
         </sample>
       </sensor>
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
@@ -1954,6 +1975,14 @@
         </sample>
 
         <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
+          <variable longname="Recovery Air Temperature, Unheated" name="RTF1" units="V">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="gain" type="float" value="4"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="deg_C">
+              <calfile file="RTF1.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
           <variable longname="Recovery Air Temperature, Heated Left" name="RTH3" units="C">
             <parameter name="ifsr" type="int" value="1"/>
             <parameter name="ipol" type="int" value="0"/>
