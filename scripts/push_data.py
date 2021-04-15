@@ -32,10 +32,12 @@ def read_env(env_var):
     sys.exit(1)
 
 project = read_env("PROJECT")
-print("project =", project)
-aircraft = read_env("AIRCRAFT")
+print "project ="+ project
 data_dir = read_env("DATA_DIR") + '/' + project + '/'
 raw_dir  = read_env("RAW_DATA_DIR") + '/' + project + '/'
+# Get aircraft from proj dir
+aircraft = os.listdir(read_env("PROJ_DIR") + '/' + project)[0]
+print "aircraft ="+ aircraft
 proj_dir  = read_env("PROJ_DIR") + '/' + project + '/' + aircraft + '/'
 
 # Initialization
@@ -535,6 +537,7 @@ if NAS:
 emailfilename = 'email.addr.txt'
 emailfile = data_dir+emailfilename
 command = 'rm '+emailfile
+print command
 os.system(command)
 fo = open(emailfile, 'w+')
 fo.write(email+'\n')
@@ -616,6 +619,7 @@ if FTP == True:
     print 'Error connecting to FTP site ' + ftp_site
     print e
     ftp.quit()
+
   print "Putting files: "
   print ""
   for key in file_ext:
@@ -637,9 +641,21 @@ if FTP == True:
           file_name = file_name
         ftp.cwd('/'+ftp_data_dir+'/'+key)
       except ftplib.all_errors as e:
-        print "Change dir to "+ftp_data_dir+'/'+key+" failed"
-        print e
-        continue
+          # Attempt to create needed dir
+          print "Attempt to create dir /"+ftp_data_dir+"/"+key
+          try:
+              ftp.mkd('/'+ftp_data_dir+'/'+key)
+          except:
+              print "Make dir "+ftp_data_dir+'/'+key+" failed"
+              print e
+              continue
+          # Try to change to dir again
+          try:
+              ftp.cwd('/'+ftp_data_dir+'/'+key)
+          except:
+              print "Change dir to "+ftp_data_dir+'/'+key+" failed"
+              print e
+              continue
 
       if file_name in ftp.nlst():
         print 'File '+file_name+' already exists on ftp server.'
