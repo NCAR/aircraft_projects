@@ -23,7 +23,7 @@
 # dist_field_data.py paths for new sync_field_data.py script. 01/16/2019
 
 import os
-project = ''
+project = os.environ['PROJECT']
 DATA_DIR = os.environ['DATA_DIR']
 RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 dat_parent_dir =  DATA_DIR+'/'     # Where nc and kml files go
@@ -44,10 +44,10 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 FTP = True
 ftp_site = 'ftp.eol.ucar.edu'
-user = 'anonymous'
-password = ''
+user = 'spicule'
+password = 'Talk2clouds!'
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
+ftp_data_dir = '/EOL_data/RAF_data'
 
 #############################################################################
 ### Define which files should be generated
@@ -55,14 +55,14 @@ ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
 ICARTT = False # Generate ICARTT
 IWG1 = False # Generate IWG1 packet
 
-HRT = False # Generate HRT .nc file
-SRT = False # Generate SRT .nc file
+HRT = True # Generate HRT .nc file
+SRT =True # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
 zip_ADS = False # Bzips the ads file independently of processed files
 # you can have both sendzipped and zip_ads set to True if you want
 
 # Do you want to transfer ADS file back to Boulder (is the connection good enough?)
-ship_ADS = True
+ship_ADS = False
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
@@ -74,7 +74,8 @@ catalog = False # Send QC plots to field catalog, leave as False
 
 #############################################################################
 # Plots - set path to RStudio dir
-rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
+#rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
+rstudio_dir =    '/h/eol/ads/RStudio/'  # Data dir to run on barolo
 
 # Software - set locations of needed software
 translate2ds = '/opt/local/bin/translate2ds '
