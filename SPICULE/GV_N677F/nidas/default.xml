@@ -1675,6 +1675,12 @@
       </sample>
     </sensor>
 
+    <sensor ID="DSMTEMP" class="UDPSocketSensor" devicename="usock::30200">
+      <sample id="1" rate="1" scanfFormat="T=%f">
+        <variable longname="DSM Temperature" name="DSMTEMP" units="C"/>
+      </sample>
+    </sensor>
+
   </sensorcatalog>
   <site applyCals="true" class="raf.Aircraft" name="GV_N677F">
     <parameter name="tailNumber" type="string" value="N677F"/>
@@ -1719,6 +1725,8 @@
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
+
+      <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30200" id="600" suffix="_303"/>
 
       <sensor ID="ARINCHK" class="UDPSocketSensor" devicename="usock::56770" id="2000" suffix="_AENT1">
         <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
