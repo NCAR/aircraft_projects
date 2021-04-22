@@ -1516,6 +1516,16 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+    <serialSensor ID="PIC2130_H20" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC2130">
+      <sample id="1" rate="5" scanfFormat="%*f %*f %*f %*f %*f %*f %*f %*f %f %f %*f %*f %*f %*f %*f %*f %*f %f %f %f %*f %*f %*f %*f %*f %*f">
+        <variable longname="Picarro Cavity Pressure" name="CAVP" units="hPa"/>
+        <variable longname="Picarro Cavity Temperature" name="TEMP" units="deg_C"/>
+        <variable longname="Picarro H20" name="H20" units="ppmv"/>
+        <variable longname="Picarro Delta_18_16" name="1816" units="ppmv"/>
+        <variable longname="Picarro Delta_D_H" name="DH" units="ppmv"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
     <serialSensor ID="PIC2311_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC2311">
       <sample id="1" rate="20" scanfFormat="%f %f %f %f %f %f %*d %*f">
         <variable longname="Picarro Time" name="TIME" units="s"/>
@@ -1680,6 +1690,18 @@
         <variable longname="DSM Temperature" name="DSMTEMP" units="C"/>
       </sample>
     </sensor>
+<!--
+       Model 3010 Condensation Particle Counter
+-->
+    <serialSensor ID="CPC" baud="9600" class="DSMSerialSensor" databits="7" parity="even" stopbits="1">
+      <sample id="1" scanfFormat="%f,%f">
+        <variable name="TME" units="time" longname="Time"/>
+        <variable name="CTS" units="counts" longname="ParticleCounts"/>
+      </sample>
+      <prompt rate="1" string="DC\r"/>
+      <message length="0" position="end" separator="\r"/>
+    </serialSensor>
+
 
   </sensorcatalog>
   <site applyCals="true" class="raf.Aircraft" name="GV_N677F">
@@ -1823,8 +1845,10 @@
       </serialSensor>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
 <!-- Picarro 2130 serial channel 8,l1 rack, 232 -->
+      <serialSensor IDREF="PIC2130_H20" devicename="/dev/ttyS8" id="160" suffix="_PIC2130"/>
 
 <!-- CPC serial channel 9, l1 rack, 232 -->
+      <serialSensor IDREF="CPC" devicename="/dev/ttyS9" id="170" suffix="_CPC"/>
 
       <serialSensor IDREF="VCSEL" devicename="/dev/ttyS10" id="330" suffix="_VXL"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="400">
