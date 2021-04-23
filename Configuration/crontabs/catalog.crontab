@@ -24,9 +24,10 @@ BASH_ENV=/home/catalog/.bashrc
 #
 # Copy flight_track and position to CatalogIngest
 #
-* * * * * /home/local/Systems/scripts/copy_flight_geo_to_catalog.cron >> /tmp/copy_flight_geo_to_catalog.log 2>&1
+* * * * * /home/local/projects/scripts/copy_flight_geo_to_catalog.cron >> /tmp/copy_flight_geo_to_catalog.log 2>&1
+* * * * * /home/local/projects/scripts/copy_flight_geo_to_catalog_LEAR.cron >> /tmp/copy_flight_geo_to_catalog_LEAR.log 2>&1
 
 #
 # Cleanup old Catalog files from filesystem and database
 #
-1 */2 * * * /home/local/Systems/scripts/catalog_delete_files.cron >> /tmp/catalog_delete_files.log 2>&1
+1 */2 * * * /home/local/projects/scripts/catalog_delete_files.cron >> /tmp/catalog_delete_files.log 2>&1
