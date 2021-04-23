@@ -449,19 +449,19 @@
 
     <serialSensor ID="Novatel_GPS" baud="115200" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
 <!-- GGA record -->
-      <sample id="1" rate="10">
+      <sample id="1" rate="20">
         <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=FRTK" name="GGQUAL" units="none"/>
         <variable longname="Reference GPS Horizontal dilution of position" name="GGHDOP" units="none"/>
       </sample>
 
 <!-- RMC record -->
-      <sample id="2" rate="10">
+      <sample id="2" rate="20">
         <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="none"/>
         <variable longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)" name="GGRepLag" units="s"/>
       </sample>
 
 <!-- BESTPOS record -->
-      <sample id="4" rate="10">
+      <sample id="4" rate="20">
           <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
           <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
           <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
@@ -475,7 +475,7 @@
       </sample>
 
 <!-- BESTVEL record -->
-      <sample id="5" rate="10">
+      <sample id="5" rate="20">
         <variable longname="Reference GPS Ground Speed" name="GGSPD" units="m/s"/>
         <variable longname="Reference GPS Track Angle" name="GGTRK" units="degree_T"/>
         <variable longname="Reference GPS Ground Speed Vector, East Component" name="GGVEW" units="m/s"/>
@@ -936,7 +936,7 @@
         <variable longname="VCSEL AC Gain" name="ACGAIN" units="count"/>
         <variable longname="VCSEL Averaged Laser Intensity" name="LSRINT" units="count"/>
       </sample>
-      <sample id="2" rate="25" scanfFormat="%f %f %*f %*f">
+      <sample id="2" rate="50" scanfFormat="%f %f %*f %*f">
         <variable longname="VCSEL Moisture Number Density" name="RAWCONC" units="#/cm3"/>
         <variable longname="VCSEL Sample Laser Intensity" name="SMPLSRINT" units="mV"/>
 
@@ -1516,6 +1516,16 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+    <serialSensor ID="PIC2130_H20" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC2130">
+      <sample id="1" rate="5" scanfFormat="%*f %*f %*f %*f %*f %*f %*f %*f %f %f %*f %*f %*f %*f %*f %*f %*f %f %f %f %*f %*f %*f %*f %*f %*f">
+        <variable longname="Picarro Cavity Pressure" name="CAVP" units="hPa"/>
+        <variable longname="Picarro Cavity Temperature" name="TEMP" units="deg_C"/>
+        <variable longname="Picarro H20" name="H20" units="ppmv"/>
+        <variable longname="Picarro Delta_18_16" name="1816" units="ppmv"/>
+        <variable longname="Picarro Delta_D_H" name="DH" units="ppmv"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
     <serialSensor ID="PIC2311_CO2" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_PIC2311">
       <sample id="1" rate="20" scanfFormat="%f %f %f %f %f %f %*d %*f">
         <variable longname="Picarro Time" name="TIME" units="s"/>
@@ -1675,6 +1685,24 @@
       </sample>
     </sensor>
 
+    <sensor ID="DSMTEMP" class="UDPSocketSensor" devicename="usock::30200">
+      <sample id="1" rate="1" scanfFormat="T=%f">
+        <variable longname="DSM Temperature" name="DSMTEMP" units="C"/>
+      </sample>
+    </sensor>
+<!--
+       Model 3010 Condensation Particle Counter
+-->
+    <serialSensor ID="CPC" baud="9600" class="DSMSerialSensor" databits="7" parity="even" stopbits="1">
+      <sample id="1" scanfFormat="%f,%f">
+        <variable name="TME" units="time" longname="Time"/>
+        <variable name="CTS" units="counts" longname="ParticleCounts"/>
+      </sample>
+      <prompt rate="1" string="DC\r"/>
+      <message length="0" position="end" separator="\r"/>
+    </serialSensor>
+
+
   </sensorcatalog>
   <site applyCals="true" class="raf.Aircraft" name="GV_N677F">
     <parameter name="tailNumber" type="string" value="N677F"/>
@@ -1719,6 +1747,8 @@
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
+
+      <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30200" id="600" suffix="_303"/>
 
       <sensor ID="ARINCHK" class="UDPSocketSensor" devicename="usock::56770" id="2000" suffix="_AENT1">
         <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
@@ -1798,26 +1828,6 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300">
-        <calfile file="A2D016.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D"/>
-        <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_ADS1" units="deg_C"/>
-        </sample>
-        <sample id="2" rate="10">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="Facilitate storage of A2D Temperature" name="DUMMY_ADS1" units="V">
-            <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="">
-              <calfile file="DUMMY_ADS1.dat" path="${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-        </sample>
-      </sensor>
     </dsm>
 
     <dsm derivedData="sock::7071" id="4" location="cabin_mpdb" name="dsm304" rserialPort="30002" statusAddr="sock::30001">
@@ -1835,8 +1845,10 @@
       </serialSensor>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
 <!-- Picarro 2130 serial channel 8,l1 rack, 232 -->
+      <serialSensor IDREF="PIC2130_H20" devicename="/dev/ttyS8" id="160" suffix="_PIC2130"/>
 
 <!-- CPC serial channel 9, l1 rack, 232 -->
+      <serialSensor IDREF="CPC" devicename="/dev/ttyS9" id="170" suffix="_CPC"/>
 
       <serialSensor IDREF="VCSEL" devicename="/dev/ttyS10" id="330" suffix="_VXL"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="400">
@@ -2037,6 +2049,26 @@
           </variable>
         </sample>
       </serialSensor>
+      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="5555500">
+        <calfile file="A2D016.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D"/>
+        <parameter name="rate" type="int" value="500"/>
+        <sample id="1" rate="1">
+          <parameter name="temperature" type="bool" value="true"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_305" units="deg_C"/>
+        </sample>
+        <sample id="2" rate="10">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="50"/>
+          <variable longname="Facilitate storage of A2D Temperature" name="DUMMY_ADS1" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
+            <poly units="">
+              <calfile file="DUMMY_ADS1.dat" path="${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
 
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
@@ -2047,9 +2079,6 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-
-      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LWO"/>
-      <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_LWO"/>
 
       <serialSensor IDREF="CDP" devicename="/dev/ttyS3" id="200" suffix="_LWOI">
         <parameter name="SerialNumber" type="string" value="CDP016"/>
@@ -2077,6 +2106,7 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
+
       <sensor IDREF="Fast2DC_v2" devicename="/dev/usbtwod_64_0" id="400" suffix="_RWOO">
         <parameter name="SerialNumber" type="string" value="F2DC003"/>
         <parameter name="RESOLUTION" type="int" value="10"/>
