@@ -10,7 +10,7 @@ catalog_root=/home/catalog
 catalog_incoming=$catalog_root/products/incoming/${plane,,}
 catalog_ingest_tmp=$catalog_root/catalog-ingest/tmp
 
-files=( /var/www/html/flight_data/GE/real-time.kml /var/www/html/flight_data/position.json )
+files=( /var/www/html/flight_data/GE/real-time.kml /var/www/html/flight_data/position.json /var/www/html/flight_data/LEAR/GE/real-time.kml /var/www/html/flight_data/LEAR/position.json )
 
 mtime_file() # filepath
 {
@@ -76,7 +76,7 @@ for f in "${files[@]}" ; do
       if echo $f | grep -q 'LEAR' ; then
         platform='SPEC_LEAR'
       else
-        platform='NSF_NCAR_$plane'
+        platform=NSF_NCAR_$plane
       fi
 
       #
