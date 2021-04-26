@@ -1,0 +1,200 @@
+#!/bin/sh
+#
+# copy GIS files to catalog ingest
+# fetches flight_track and position from legacy flight_data
+# additional aircraft supported
+#
+# Usage: copy_flight_geo_to_catalog [-v] [aircraft...]
+#  -v  : verrbose messages to stderr
+#
+# copy_flight_geo_to_catalog
+#   => fetches all files found
+#
+# copy_flight_geo_to_catalog FOO BAR
+#   => fetches this aircraft's files,
+#      plus any found for FOO or BAR,
+#      but not BAHZ or QUUX
+#
+
+debugflag=0  # set >0 to see debug messages on stderr
+debug()
+{
+if [ $debugflag -gt 0 ] ; then
+  echo "$@" 1>&2
+fi
+}
+
+if [ "$1" = "-v" ] ; then
+  shift
+  debugflag=1
+  debug verbose messages on
+  debug args "$@"
+fi
+
+plane=`echo $AIRCRAFT | cut -d _ -f 1`
+catalog_root=/home/catalog
+catalog_incoming=$catalog_root/products/incoming/${plane,,}
+catalog_ingest_tmp=$catalog_root/catalog-ingest/tmp
+datasubdir=flight_data
+datadir=/var/www/html/$datasubdir
+
+debug plane $plane
+debug catalog_root $catalog_root
+debug catalog_incoming $catalog_incoming
+debug catalog_ingest_tmp $catalog_ingest_tmp
+debug datasubdir $datasubdir
+debug datadir $datadir
+
+# translate subdirectory names to catalog platform strings
+# an entry MUST appear here for files to be copied
+# [SUBDIR]=CATALOG_PLATFORM
+#
+declare -A platform_translations=(
+  [LEAR]=SPEC_LEAR
+  )
+
+mtime_file() # filepath platform
+{
+  echo $catalog_ingest_tmp/$2.$(basename "$1").mtime
+}
+
+get_file_mtime() # filepath
+{
+  echo `stat -c %Y $1`
+}
+
+file_needs_update() # filepath platform
+{
+  mf=$(mtime_file $1 $2)
+  f="$1"
+  #
+  # if mtime file doesn't exist, then file needs update
+  #
+  if [ ! -f $mf ] ; then
+    return 0
+  fi
+
+  #
+  # compare mtime of file to stored mtime
+  #
+  previous_mtime=`cat $mf`
+  current_mtime=`get_file_mtime $f`
+
+  if [ $current_mtime -gt $previous_mtime ] ; then
+    return 0 # file needs update
+  else
+    return 1 # file does NOT need update
+  fi
+}
+
+# convert filenames to catalog platform strings
+get_platform_name() # filepath
+{
+  # /var/www/html/flight_data/GE/real-time.kml
+  # /var/www/html/flight_data/position.json
+  # /var/www/html/flight_data/LEAR/GE/real-time.kml
+  # /var/www/html/flight_data/LEAR/position.json
+
+  match=''
+  if [[ "$f" =~ ${datasubdir}\/(.*)\/ ]] ; then
+    match=`echo "${BASH_REMATCH[1]}" | cut -d/ -f1`
+  fi
+  if [ -n "$match" ] ; then
+    debug match $match
+
+    if [ "GE" = "$match" ] ; then
+      echo NSF_NCAR_$plane
+      return
+    fi
+
+    p=${platform_translations["$match"]}
+    debug translated platform $p
+    if [ -n "$p" ] ; then
+      echo $p
+      return
+    fi
+  fi
+
+  if [[ "$f" =~ ${datasubdir}\/position.json ]] ; then
+    echo NSF_NCAR_$plane
+    return
+  fi
+
+# platform unknown to catalog
+echo ''
+}
+
+#
+# main
+#
+
+shopt -s nullglob
+files=(
+    # always get this aircraft's files
+    $datadir/GE/real-time.kml
+    $datadir/position.json
+    )
+
+if [ $# -eq 0 ] ; then
+  # all additional aircraft
+  files=(${files[@]}
+    $datadir/*/GE/real-time.kml
+    $datadir/*/position.json
+    )
+else
+  # only get specified extra aircraft
+  for a in "$@" ; do
+    files=(${files[@]}
+      $datadir/$a/GE/real-time.km[l]
+      $datadir/$a/position.jso[n]
+      )
+  done
+fi
+
+debug getting files ${files[@]}
+
+for f in "${files[@]}" ; do
+  debug file $f
+
+  if [ ! -f $f ] ; then
+    debug file does not exist
+    continue
+  fi
+
+  platform=$(get_platform_name $f)
+  if [ -z "$platform" ] ; then
+    debug unknown platform
+    continue
+  fi
+
+  if ! file_needs_update $f $platform; then
+    debug file does not need update
+    continue
+  fi
+
+  #
+  # update stored mtime
+  #
+  current_mtime=$(get_file_mtime $f $platform)
+  catalog_iso_time=$(date --date @$current_mtime +%Y%m%d%H%M)
+  echo -n $current_mtime > $(mtime_file $f $platform)
+
+  #
+  # determine suffix
+  #
+  if [[ $f =~ real-time.kml ]] ; then
+    suffix='flight_track.kml'
+  elif [[ $f =~ position.json ]] ; then
+    suffix='position.json'
+  fi
+
+  #
+  # copy file to ingest w/ catalog-friendly name, e.g.
+  # gis.NSF_NCAR_GV.201508191512.position.json
+  # gis.NSF_NCAR_GV.201508181641.flight_track.kml
+  #
+  ingest_file=$catalog_incoming/gis.$platform.$catalog_iso_time.$suffix
+  debug "copying $f to $ingest_file"
+  cp $f $ingest_file
+
+done
