@@ -71,12 +71,17 @@ for f in "${files[@]}" ; do
       fi
 
       #
-      # copy file to ingest w/ catalog-friendly name, e.g.
-      # gis.NSF_NCAR_GV.201508191512.position.json
-      # gis.NSF_NCAR_GV.201508181641.flight_track.kml
+      # determine suffix
       #
+      if echo $f | grep -q 'LEAR' ; then
+        platform='SPEC_Learjet'
+      else
+        platform='NSF_NCAR_$plane'
+      fi
 
-      ingest_file=$catalog_incoming/gis.NSF_NCAR_$plane.$catalog_iso_time.$suffix
+      #
+      # copy file to ingest w/ catalog-friendly name, e.g.
+      ingest_file=$catalog_incoming/gis.$platform.$catalog_iso_time.$suffix
       echo "copying $f to $ingest_file"
       cp $f $ingest_file
 
