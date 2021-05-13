@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 #
 ################################################################################
 # Script to archive raw RAF datasets to the CISL Mass Storage System under the 
@@ -384,7 +384,6 @@ class archRAFdata:
             # print the file type at the top of the list of corresponding files
             f = open(hash_value_file, 'a')
             print >>f, sys.argv[1]
-
             # iterate over each data file in sfiles list            
             for filename in sfiles:
                 with open(sdir+filename, 'rb') as inputfile:
@@ -394,7 +393,7 @@ class archRAFdata:
                     f = open(hash_value_file, 'a')
                     print >>f, current_datetime+","+filename+",sha1,"+hashlib.sha1(data).hexdigest()
             print("SHA-1 cryptographic hash values have been appended to "+hash_value_file)
-    
+            print("You still need to archive the hash file: "+hash_value_file) 
     def archive_files(self,sdir,sfiles,flag,type,mssroot,email = ""):
 	'''
         Now archive the data!
@@ -411,7 +410,6 @@ class archRAFdata:
 	    else:
 		# all files are in highest dir, no recursion
 	        sfile = path_components[len(path_components)-1]
-
 
 	    match = re.search("(LRT|lrt)",type)
 	    if match:
@@ -466,8 +464,6 @@ class archRAFdata:
 	            print "#  hsi job for "+type+"/"+sfile+" -- Failed -- "+ archraf.today()
 	            print "#                "+type+"/"+sfile+": error code " + str(result)
 		    archraf.sendMail("hsi job for "+type+"/"+sfile+" -- Failed -- " + archraf.today(), "\nSTDOUT:\n" + output + "\n\nSTDERR:\n" + errors, email)
-
-
 
         print "#   Successful completion on "+archraf.today()+"\n"
 
