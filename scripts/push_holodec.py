@@ -15,7 +15,7 @@ def main():
     email = raw_input('Input email address to send results:')
 
     # Hardcode path and ftp site
-    disk_data_dir =  '/run/media/ads/' + disk + '/holodec'
+    disk_data_dir =  '/run/media/ads/' + disk + '/holodec' + '/Camera 1/'
     ftp_site = 'ftp.eol.ucar.edu'
     ftp_data_dir = 'pub/data/incoming/spicule/EOL_data/holodec'
 
