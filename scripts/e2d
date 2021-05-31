@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Script to run extract2d over a projects raw data.  User should be in
+# $RAW_DATA_DIR/$PROJECT or somewhere with the ads files of interest.
+#
+
+# Match test, ferry, and research flights.
+pattern='*[trf]f*ads'
+
+# Bail out if no ads files.
+if [ -z "`ls $pattern 2> /dev/null`" ]
+then
+  exit
+fi
+
+/bin/mkdir -p PMS2D
+
+# Remove any pre-existing index files.
+/bin/rm PMS2D/*idx 2> /dev/null
+
+for file in $pattern
+do
+  echo $file
+  extract2d PMS2D/`basename $file .ads`.2d $file
+done
