@@ -347,10 +347,10 @@ if __name__ == '__main__':
     except IndexError:
 
         # Usage statement
-        print "\nUsage: %s path temp_dir logfile"
-        print "path - path to script  "
-        print "(i.e. /h/eol/ads/crontab)"
-        print "logfile - logfile name (i.e. /tmp/sync.log)"
+        print("\nUsage: %s path temp_dir logfile")
+        print("path - path to script  ")
+        print("(i.e. /h/eol/ads/crontab)")
+        print("logfile - logfile name (i.e. /tmp/sync.log)")
 
     main()   
 
