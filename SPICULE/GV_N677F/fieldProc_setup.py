@@ -70,12 +70,12 @@ PMS2D = True            #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
 Rstudio = True # Generate a PDF of the QC plots
-catalog = False # Send QC plots to field catalog, leave as False
+catalog = True # Send QC plots to field catalog
 
 #############################################################################
 # Plots - set path to RStudio dir
-#rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
-rstudio_dir =    '/h/eol/ads/RStudio/'  # Data dir to run on barolo
+rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
+#rstudio_dir =    '/h/eol/ads/RStudio/'  # Data dir to run on barolo
 
 # Software - set locations of needed software
 translate2ds = '/opt/local/bin/translate2ds '
