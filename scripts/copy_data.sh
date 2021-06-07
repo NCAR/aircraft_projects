@@ -28,7 +28,7 @@ echo "Do you have a removable drive connected?"
 echo "Please type Y or y and press enter to confirm. Anything else and enter will stop script."
 read DRIVE_CONNECTION
 if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
-   mkdir -P $TRANSFER_MEDIA/$PROJECT
+   mkdir -p $TRANSFER_MEDIA/$PROJECT
    echo "You entered $DRIVE_CONNECTION, which means you have a drive connected.";
    rsync -cavP --no-perms  $DATA_LOCATION/*$FLIGHT* $TRANSFER_MEDIA/$PROJECT
    EXIT="$?"
