@@ -15,7 +15,7 @@ SHELL=/bin/tcsh
 echo "starting backup of calib db"
 
 # Set up variables to be used in script
-set logfile=/tmp/backupCalib.cron.log
+set logfile = /tmp/backupCalib.cron.log
 set diffile = /tmp/backupCalib.diff.txt
 set dbserver = barolo.eol.ucar.edu
 
@@ -31,15 +31,14 @@ set emailaddr = "ads@eol.ucar.edu"
 set subject = "Master Calibrations Database Backup Notice"
 
 # Set up log file
-rm -f   $logfile
-echo "Logfile:"
-echo $logfile
-touch   $logfile
+rm -f $logfile
+echo Logfile: $logfile
+touch $logfile
 
 # Check for previous backup which have not yet been addressed
 # if we find this is the case, back up curent database, make notice and bail
 echo "checking previous backup"
-set res = `svn diff $sqlfile | wc -l`
+set res = `git diff $sqlfile | wc -l`
 if ($res != 0) then
   echo "We're in the diff clause!"
   echo "Previous difference in backup of calibrations database has not been addressed" >> $logfile
@@ -113,7 +112,7 @@ else
   echo " found on the postgres server on: $dbserver" >> $diffile
   echo "The changes have been backed up in the file:" >> $diffile
   echo " $sqlfile" >> $diffile
-  echo " Which should now be checked into subversion." >> $diffile
+  echo " Which should now be committed into git." >> $diffile
   echo "" >> $diffile
   echo " The changes (in SQL code) follow in two parts -" >> $diffile
   echo " INSERT differences and then non-INSERT differences:" >> $diffile
