@@ -9,7 +9,6 @@ PROJECT="SPICULE"
 DATA_LOCATION="/var/r1/$PROJECT"
 
 TRANSFER_MEDIA="/run/media/ads/*"
-TRANSFER_MEDIA_ESSD="/run/media/ads/Extreme SSD"
 
 echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
 read FLIGHT
@@ -29,10 +28,9 @@ echo "Do you have a removable drive connected?"
 echo "Please type Y or y and press enter to confirm. Anything else and enter will stop script."
 read DRIVE_CONNECTION
 if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
+   mkdir -P $TRANSFER_MEDIA/$PROJECT
    echo "You entered $DRIVE_CONNECTION, which means you have a drive connected.";
    rsync -cavP --no-perms  $DATA_LOCATION/*$FLIGHT* $TRANSFER_MEDIA/$PROJECT
-#   rsync -cavP --no-perms $DATA_LOCATION/*$FLIGHT* "$TRANSFER_MEDIA_ESSD/$PROJECT"
-#   scp $Data_Location/*$FLIGHT* "$TRANSFER_MEDIA/$PROJECT"
    EXIT="$?"
    echo "rsync exit status: $EXIT"
    if [ "$EXIT" -eq 0 ]; then
