@@ -4,10 +4,9 @@
 # Script monitors ingest directories for newly written files and then syncs
 # the file to the appropriate directory based on the file type.
 #
-# Runs from cron on tikal as user ads. 
+# This script runs from cron on tikal as user ads.
+# The crontab expects the script to be in /net/jlocal/projects/scripts.
 #
-# WARNING: Script must be copied to and run from /h/eol/ads/crontab. The cron
-# tab does not access it here.
 #############################################################################
 
 import logging, logging.handlers
