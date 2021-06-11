@@ -6,7 +6,8 @@
 #
 # Runs from cron on tikal as user ads. 
 #
-# Script should be in /h/eol/ads/crontab
+# WARNING: Script must be copied to and run from /h/eol/ads/crontab. The cron
+# tab does not access it here.
 #############################################################################
 
 import logging, logging.handlers
@@ -21,7 +22,7 @@ project = sys.argv[2]
 aircraft = sys.argv[3] 
 
 # Set up directories
-proj_dir = os.getenv("PROJ_DIR")+'/'+project+'/'+aircraft+'/'
+proj_dir = str(os.getenv("PROJ_DIR"))+'/'+project+'/'+aircraft+'/'
 sys.path.insert(0,proj_dir)
 from fieldProc_setup import *
 
@@ -323,6 +324,8 @@ def main():
         ftp_to_local('ADS', rdat_dir)
         ftp_to_local('PMS2D', rdat_dir)
         ftp_to_local('LRT', dat_dir+'/field_data')
+        ftp_to_local('SRT', dat_dir+'/field_data')
+        ftp_to_local('HRT', dat_dir+'/field_data')
         ftp_to_local('KML', dat_dir+'/field_data')
         dist_field()
     # send_mail_and_die(body)
