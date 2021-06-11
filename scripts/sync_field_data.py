@@ -271,6 +271,11 @@ def ftp_to_local(filetype, local_dir):
         message = 'Syncing dir into place: '+command+'\n'
         os.system(command)
 
+        final_message = final_message + message
+        logging.info(final_message)
+
+        return(final_message)
+
     else:
         command = 'rsync -qu '+ftp_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir
         message = 'Syncing dir into place: '+command+'\n'
