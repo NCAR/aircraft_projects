@@ -607,22 +607,12 @@
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
     <sensor ID="HOLODEC" class="UDPSocketSensor" devicename="usock::30120">
-      <sample id="1" rate="1" scanfFormat="HOLO,%*fl,%f,%f,%f,%f,%f">
-        <variable longname="Holodec temperature, heat zone 1" name="HTEMP1" units="deg_C">
-          <linear intercept="0.0" slope="0.1" units="vlpm"/>
-        </variable>
-        <variable longname="Holodec temperature, heat zone 2" name="HTEMP2" units="deg_C">
-          <linear intercept="0.0" slope="0.1" units="deg_C"/>
-        </variable>
-        <variable longname="Holodec temperature, heat zone 3" name="HTEMP3" units="deg_C">
-          <linear intercept="0.0" slope="0.1" units="deg_C"/>
-        </variable>
-        <variable longname="Holodec temperature, heat zone 4" name="HTEMP4" units="deg_C">
-          <linear intercept="0.0" slope="0.1" units="deg_C"/>
-        </variable>
-        <variable longname="Holodec temperature, heat zone 5" name="HTEMP5" units="deg_C">
-          <linear intercept="0.0" slope="0.1" units="deg_C"/>
-        </variable>
+      <sample id="1" rate="1" scanfFormat="HOLO,%*f,%f,%f,%f,%f,%f">
+        <variable longname="Holodec temperature, heat zone 1" name="HTEMP1" units="deg_C"/>
+        <variable longname="Holodec temperature, heat zone 2" name="HTEMP2" units="deg_C"/>
+        <variable longname="Holodec temperature, heat zone 3" name="HTEMP3" units="deg_C"/>
+        <variable longname="Holodec temperature, heat zone 4" name="HTEMP4" units="deg_C"/>
+        <variable longname="Holodec temperature, heat zone 5" name="HTEMP5" units="deg_C"/>
       </sample>
     </sensor>
 
@@ -1754,7 +1744,7 @@
           <socket type="mcaccept"/>
         </output>
       </service>
-      <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.0">
+      <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.1" rawHeapMax="100M" rawSorterLength="0.0">
 
 <!-- input from every DSM on this aircraft that has
              a socket output of type RawSampleOutputStream -->
@@ -1774,7 +1764,8 @@
         </processor>
         <processor class="raf.SyncRecordGenerator">
           <output class="SampleOutputStream">
-            <socket port="30001" type="server"/>
+<!-- add block='false' to make non-blocking socket to nimbus, debugging data system freeze -->
+            <socket port="30001" type="server" block="false"/>
           </output>
         </processor>
       </service>
@@ -1800,12 +1791,12 @@
           <variable longname="Flow user" name="f_user_slpm" units="slpm"/>
           <variable longname="Flow byp" name="f_byp_slpm" units="slpm"/>
           <variable longname="Flow dry" name="f_dry_slpm" units="slpm"/>
+          <variable longname="Temperature back" name="temp_back_C" units="deg_C"/>
           <variable longname="V Flow" name="vflow" units="units"/>
           <variable longname="Dilution" name="dilution" units="units"/>
           <variable longname="Enhancement" name="enhancement" units="units"/>
           <variable longname="dcut50" name="dcut50" units="units"/>
           <variable longname="lwc" name="lwc" units="units"/>
-          <variable longname="Temperature back" name="temp_back_C" units="deg_C"/>
           <variable longname="TDL H2O" name="tdl_h2o" units="g/m^3"/>
           <variable longname="TDL Pressure" name="tdl_pres" units="mb"/>
           <variable longname="TDL Temperature" name="tdl_temp" units="deg_C"/>
