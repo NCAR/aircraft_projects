@@ -62,7 +62,7 @@ zip_ADS = False # Bzips the ads file independently of processed files
 # you can have both sendzipped and zip_ads set to True if you want
 
 # Do you want to transfer ADS file back to Boulder (is the connection good enough?)
-ship_ADS = False
+ship_ADS = True
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
