@@ -1778,6 +1778,7 @@
       <sensor IDREF="NOAAPANTHER" devicename="usock::30103" id="350" suffix="_PANTHER"/>
 
       <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30200" id="600" suffix="_303"/>
+      <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30201" id="610" suffix="_304"/>
 
       <sensor ID="ARINCHK" class="UDPSocketSensor" devicename="usock::56770" id="2000" suffix="_AENT1">
         <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
@@ -1798,6 +1799,7 @@
       <arincSensor IDREF="IRS-GV" devicename="Alta:4" id="2200" suffix="_IE"/>
       <arincSensor IDREF="ADC-GV" devicename="Alta:6" id="2600" suffix="_AE"/>
       <arincSensor IDREF="GPS-GV" devicename="Alta:7" id="2900" suffix="_AE"/>
+
 
 
       <output class="RawSampleOutputStream">
@@ -1864,18 +1866,15 @@
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2"/>
       <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
       <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A"/>
-      <!-- Nothing on new serial card in setup sheet? or just change to the ttyCTI# format
-      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS5" id="110">
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI0" id="110">
         <sample id="1">
           <variable longname="Raw Static Pressure, Fuselage" name="PSF" units="hPa"/>
 	</sample>
       </serialSensor>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS6" id="120" suffix="_DPL"/>
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI1" id="120" suffix="_DPL"/>
 
-      <serialSensor IDREF="PIC2130" devicename="/dev/ttyS8" id="160" suffix="_WVISO2346">
-        <parameter name="SerialNumber" type="string" value="HIDS2346"/>
-      </serialSensor>
 
+      <!-- Nothing on new serial card in setup sheet? or just change to the ttyCTI# format
 
       <serialSensor IDREF="VCSEL" devicename="/dev/ttyS10" id="330" suffix="_VXL"/>
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d0" id="400">
