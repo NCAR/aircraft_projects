@@ -29,9 +29,10 @@ set PROJECT = "CONTRAST"
 
 ### LRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1.2_20181015 /scr/raf/Prod_Data/$PROJECT/LRT/V1.2_20181015 nc FS/EOL/2014 taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1.3_20210424 /scr/raf/Prod_Data/$PROJECT/LRT/V1.3_20210424 nc FS/EOL/2014 janine@ucar.edu
 
 ### ICARTT
-/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/ICARTT/V3_20181015 /scr/raf/Prod_Data/$PROJECT/LRT/V1.2_20181015 GV FS/EOL/2014 taylort@ucar.edu 
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/ICARTT/V3_20181015 /scr/raf/Prod_Data/$PROJECT/LRT/V1.2_20181015 GV FS/EOL/2014 taylort@ucar.edu
 
 ### KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml EOL/2014
