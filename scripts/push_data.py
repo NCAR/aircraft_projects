@@ -61,7 +61,7 @@ qc_ftp_site =    'catalog.eol.ucar.edu'
 
 # Hard-code around project name inconsistency. Revert for next project.
 #qc_ftp_dir =     '/pub/incoming/catalog/'+ project.lower()
-qc_ftp_dir =     '/pub/incoming/catalog/otrec'
+qc_ftp_dir =     '/pub/incoming/catalog/spicule'
 if aircraft == "GV_N677F":
   raircraft      = 'aircraft.NSF_NCAR_GV.'
 elif aircraft == "C130_N130AR":
@@ -463,13 +463,10 @@ if process:
         # Process2d $RAW_DATA_DIR/$proj/PMS2D/input.2d -o $DATA_DIR/$proj/output.nc
         command = 'process2d '+filename["PMS2D"]+' -o '+filename["LRT"]
         print '2D merge command: '+command
-
-       # if os.system(command) == 0:
-       #   status["PMS2D"]["proc"] = 'Yes'
-       # status["PMS2D"]["ship"] = 'Yes'
-       # status["PMS2D"]["stor"] = 'Yes'
-
-      #print
+        if os.system(command) == 0:
+          status["PMS2D"]["proc"] = 'Yes'
+        #status["PMS2D"]["ship"] = 'Yes'
+        #status["PMS2D"]["stor"] = 'Yes'
 
   # Run Al Cooper's R code for QA/QC production
   #
@@ -587,7 +584,7 @@ if catalog:
       print "Sending file "+raircraft+date+".RAF_QC_plots.pdf to catalog"
       os.chdir(rstudio_dir+"/QAtools")
       file = open(raircraft+date+".RAF_QC_plots.pdf", 'r')
-      ftp.storbinary('STOR ' + raircraft+date+".RAF_QC_plots.pdf", file)
+      print ftp.storbinary('STOR ' + raircraft+date+".RAF_QC_plots.pdf", file)
       file.close()
     else:
        message= "ERROR: Rename of plots failed\n"
@@ -602,6 +599,7 @@ if catalog:
       print 'Could not close ftp connection:'
       print e
 
+print "*************************** End Catalog transfer *************\n"
 # No NAS this project, so put files to EOL server. Put
 # zipped files if they exist.
 # This has not been tested as of OTREC (2018)
