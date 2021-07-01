@@ -958,6 +958,21 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+    <sensor ID="VCSEL2" class="UDPSocketSensor" devicename="usock:30134" suffix="_VXL2">
+        <sample id="1" rate="1" scanfFormat="%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="VCSEL Ambient Pressure" name="PS" units="hPa"/>
+            <variable longname="VCSEL Ambient Temperature" name="AT" units="deg_C"/>
+            <variable longname="VCSEL Laser TEC Voltage" name="TECV" units="V"/>
+            <variable longname="VCSEL Power Supply Plus 15" name="PLUS15" units="V"/>
+            <variable longname="VCSEL Power Supply Minus 15" name="MINUS15" units="V"/>
+            <variable longname="VCSEL Power Supply Plus 12" name="PLUS12" units="V"/>
+            <variable longname="VCSEL Power Supply Plus 5" name="PLUS5" units="V"/>
+            <variable longname="VCSEL Reference Index" name="REFIDX" units=""/>
+            <variable longname="VCSEL Laser Intensity Reference" name="LSRREF" units="V"/>
+            <variable longname="VCSEL Laser Intensity Ambient" name="LSRAMB" units="V"/>
+            <variable longname="VCSEL Strong Line Transmission" name="STRONG" units=""/>
+        </sample>
+    </sensor>
 
 <!--  
       The AeroLaser instrument can provide both CO Mixing Ratio and Raw CO values
@@ -1779,6 +1794,8 @@
 
       <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30200" id="600" suffix="_303"/>
       <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30201" id="610" suffix="_304"/>
+      <sensor IDREF="VCSEL2" devicename="usock::30134" id="800"/>
+
 
       <sensor ID="ARINCHK" class="UDPSocketSensor" devicename="usock::56770" id="2000" suffix="_AENT1">
         <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
