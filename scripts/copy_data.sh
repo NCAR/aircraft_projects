@@ -4,7 +4,10 @@
 # after connecting removable drive, run script to transfer file(s)
 ###----------------------------------------------------------------------------
 # assign list of parameters for transferring data
-PROJECT="SPICULE"
+
+# On planes and lab stations $PROJECT environment variable should be set by 
+# the script ads3_environment.sh currently in /home/ads 
+#PROJECT="ASPIRE-TEST"
 
 DATA_LOCATION="/var/r1/$PROJECT"
 
