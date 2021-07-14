@@ -4,7 +4,7 @@
 # after connecting removable drive, run script to transfer file(s)
 ###----------------------------------------------------------------------------
 # assign list of parameters for transferring data
-PROJECT="OTREC"
+#PROJECT="OTREC"
 
 DATA_LOCATION="/var/r1/$PROJECT/camera_images"
 
