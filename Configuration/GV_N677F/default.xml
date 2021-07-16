@@ -1719,9 +1719,9 @@
       <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000" suffix="_IRS3"/>
       <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A2"/>
       <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A2"/>
-      <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS7" id="150" suffix="_232"/>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS8" id="200" suffix="_DPR"/>
-      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS9" id="110">
+      <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyCTI2" id="150" suffix="_232"/>
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI3" id="200" suffix="_DPR"/>
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI4" id="110">
         <sample id="1">
           <variable longname="Interior Cabin Static Pressure" name="PCAB" units="hPa"/>
         </sample>
@@ -1759,7 +1759,7 @@
         </sample>
       </sensor>
 
-      <!-- Swapped to Diamond card
+      <!-- Swapped to Diamond card from ncar A2D
       <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300">
         <calfile file="A2D016.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D"/>
         <parameter name="rate" type="int" value="500"/>
