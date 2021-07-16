@@ -4,7 +4,7 @@ import SimpleXMLRPCServer, os
 PORT=30009
 
 def do_cmd(params):
-    call= "gnome-terminal --window-with-profile=\"%s\" -t \"%s\" -x %s " % (params)
+    call= "gnome-terminal --window-with-profile=\"%s\" -t \"%s\" -- %s " % (params)
     os.system(call)
 
 #The server object
