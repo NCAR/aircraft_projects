@@ -1613,7 +1613,21 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
-
+<!-- Aerodyne Research, Inc Mini 108 CO-N2O instrument. First flown 2018
+-->
+    <serialSensor ID="ARI108" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_ARI">
+      <sample id="1" rate="1" scanfFormat="c%*f,%f,%f,%f,%f,%f,,,,%f,%f">
+              <!--variable longname="Aerodyne Research Inc Mini 108 Igor Pro time" name="IgorTime" units="s"/-->
+              <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2O" units="ppbv"/>
+              <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="CO" units="ppbv"/>
+              <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2OA" units="ppbv"/>
+              <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="COA" units="ppbv"/>
+              <variable longname="Aerodyne Research Inc Mini 108 Water Mixing Ratio" name="H2O" units="ppbv"/>
+              <variable longname="Aerodyne Research Inc Mini 108 Temperature" name="T" units="C"/>
+              <variable longname="Aerodyne Research Inc Mini 108 Pressure" name="P" units="hPa"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
 <!--
       AMS Documentation of Serial Interface:
       Definition         Chars         Type
@@ -1896,7 +1910,7 @@
       </serialSensor>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI1" id="120" suffix="_DPL"/>
       <serialSensor IDREF="PIC2401_CO2" devicename="/dev/ttyCTI3" id="150" suffix="_PIC2401"/>
-      <serialSensor IDREF="PIC1301_CO2" devicename="/dev/ttyCTI4" id="200" suffix="_PIC1301"/>
+      <serialSensor IDREF="ARI108" devicename="/dev/ttyCTI4" id="200" suffix="_ARI108"/>
        
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="400" latency="0.25" suffix="_304">
         <calfile file="A2DW543511.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
