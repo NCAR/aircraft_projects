@@ -15,19 +15,24 @@ import time
 import smtplib
 from email.mime.text import MIMEText
 
-# Get the arguments from the command line
+#get the arguments from the command line
 temp_dir = sys.argv[1]
-project = sys.argv[2]
+project = "MethaneAIR21"
+
+#project = sys.argv[2]
 aircraft = sys.argv[3] 
 
-# Set up directories
+#set up directories
 proj_dir = str(os.getenv("PROJ_DIR"))+'/'+project+'/'+aircraft+'/'
+#proj_dir = str(os.getenv("PROJ_DIR"))+'/ASPIRE-TEST/'+aircraft+'/'
 sys.path.insert(0,proj_dir)
 from fieldProc_setup import *
 
-dat_dir = dat_parent_dir+project
-ftp_dir = ftp_parent_dir
-rdat_dir = rdat_parent_dir+project
+#dat_dir = dat_parent_dir+project
+dat_dir = dat_parent_dir+'/'+project+'/'
+ftp_dir = ftp_parent_dir+'/'+project+'/'
+#rdat_dir = rdat_parent_dir+project
+rdat_dir = rdat_parent_dir+'/'+project+'/'
 eol_dir = temp_dir+'/EOL_data/'
 
 #############################################################################
