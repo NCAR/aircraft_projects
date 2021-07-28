@@ -558,6 +558,20 @@
       <message length="0" position="beg" separator="\xff\x81"/>
     </serialSensor>
 
+    <sensor ID="ALTASTATUS" class="UDPSocketSensor" devicename="usock::30220">
+      <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
+        <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
+        <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
+        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+        <variable longname="ENET Number of Transactions" name="TCPTRANS" units="#"/>
+        <variable longname="ENET Number of Retries" name="TCPRTRY" units="#"/>
+        <variable longname="ENET Number of Failures" name="TCPFAILS" units="#"/>
+        <variable longname="ENET ROOT PE Control-Status Register" name="PECTRL" units="bits"/>
+        <variable longname="ENET ROOT PE Status Register" name="PESTS" units="bits"/>
+        <variable longname="ENET PE BIT Register" name="PEBIT" units="bits"/>
+      </sample>
+    </sensor>
+
     <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="%*f,%f,%f,%*f,%*f,%f">
         <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
@@ -1815,21 +1829,8 @@
       <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30200" id="600" suffix="_303"/>
       <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30201" id="610" suffix="_304"/>
       <sensor IDREF="VCSEL2" devicename="usock::30134" id="800"/>
+      <sensor IDREF="ALTASTATUS" devicename="usock::56772" id="2000" suffix="_AENT1"/>
 
-
-      <sensor ID="ARINCHK" class="UDPSocketSensor" devicename="usock::56770" id="2000" suffix="_AENT1">
-        <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
-          <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
-          <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
-          <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
-          <variable longname="ENET Number of Transactions" name="TCPTRANS" units="#"/>
-          <variable longname="ENET Number of Retries" name="TCPRTRY" units="#"/>
-          <variable longname="ENET Number of Failures" name="TCPFAILS" units="#"/>
-          <variable longname="ENET ROOT PE Control-Status Register" name="PECTRL" units="bits"/>
-          <variable longname="ENET ROOT PE Status Register" name="PESTS" units="bits"/>
-          <variable longname="ENET PE BIT Register" name="PEBIT" units="bits"/>
-        </sample>
-      </sensor>
       <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="2100" timeout="10" suffix="_AENT1">
         <parameter name="ip" type="string" value="192.168.84.12"/>
       </sensor>
