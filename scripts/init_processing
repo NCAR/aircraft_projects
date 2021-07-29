@@ -62,6 +62,11 @@ nice ./run_nimbus
 nice ./reorder_all
 nice ./run_proc2d
 
+# Must be user nimbus to run R scripts. Requires access to ~nimbus/RStudio
+if ($uid == 20000) then
+  #nice ./AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
+endif
+
 kill $xvpid
 exit 0
 
@@ -150,5 +155,38 @@ end
 endif
 
 
-chmod +x run_all run_nimbus reorder_all run_proc2d
-chmod g+w run_all run_nimbus reorder_all run_proc2d setup_*
+# ---------------------------------------------------------
+# Terrain Height variable creation script.
+#
+cat > AddHtTerrain << "EOFZ"
+#!/bin/csh
+"EOFZ"
+
+echo 'set project='${proj} >> AddHtTerrain
+
+cat >> AddHtTerrain << "EOFZ2"
+set Directory=${DAT}
+# Default lat/lon to roughly Colorado. Must be set for each project. This is
+# the area for which the Terrain database will be downloaded. Set to minimum
+# area needed to speed up processing and save disk space.
+set lt_s="35"
+set lt_n="42"
+set lg_w="-110"
+set lg_e="-100"
+# Set Tdb to yes the first time this is run to download the Terrain database.
+# Set to no after first run to save time.
+set Tdb="yes"
+
+echo 'Adding Terrain Ht vars to production netCDF files for project $project'
+echo 'Using lat/long range '${lt_s}' - '${lt_n}', '${lg_w}' - '${lg_e}
+
+foreach file ( ${DAT}/${project}[rtf]f??.nc )
+  set flight=`echo $file | awk '{print substr($0,length($0)-6,4)}'`
+  Rscript ~nimbus/RStudio/HeightOfTerrain/HeightOfTerrain.R $project $flight $Directory $lt_s $lt_n $lg_w $lg_e $Tdb
+end
+"EOFZ2"
+
+
+
+chmod +x run_all run_nimbus reorder_all run_proc2d AddHtTerrain
+chmod g+w run_all run_nimbus reorder_all run_proc2d setup_* AddHtTerrain
