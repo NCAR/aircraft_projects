@@ -558,7 +558,7 @@
       <message length="0" position="beg" separator="\xff\x81"/>
     </serialSensor>
 
-    <sensor ID="ALTASTATUS" class="UDPSocketSensor" devicename="usock::30221">
+    <sensor ID="ALTASTATUS" class="UDPSocketSensor" devicename="usock::30220">
       <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
         <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
         <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
@@ -1830,14 +1830,15 @@
       <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30201" id="610" suffix="_304"/>
       <sensor IDREF="VCSEL2" devicename="usock::30134" id="800"/>
 
+
       <sensor IDREF="ALTASTATUS" devicename="usock::30221" id="2000" suffix="_AENT2"/>
       <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56771" id="2100" timeout="10" suffix="_AENT2">
         <parameter name="ip" type="string" value="192.168.84.17"/>
         <parameter name="status_port" type="int" value="30221"/>
       </sensor>
-      <arincSensor IDREF="IRS-GV" devicename="Alta:4" id="2200" suffix="_IRS3"/>
-      <arincSensor IDREF="ADC-GV" devicename="Alta:6" id="2600" suffix="_A2"/>
-      <arincSensor IDREF="GPS-GV" devicename="Alta:7" id="2900" suffix="_A2"/>
+      <arincSensor IDREF="IRS-GV" devicename="Alta:2100:4" id="2200" suffix="_IRS3"/>
+      <arincSensor IDREF="ADC-GV" devicename="Alta:2100:6" id="2600" suffix="_A2"/>
+      <arincSensor IDREF="GPS-GV" devicename="Alta:2100:7" id="2900" suffix="_A2"/>
 
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
