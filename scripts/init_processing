@@ -61,11 +61,8 @@ mkdir ${DAT}
 nice ./run_nimbus
 nice ./reorder_all
 nice ./run_proc2d
-
-# Must be user nimbus to run R scripts. Requires access to ~nimbus/RStudio
-if ($uid == 20000) then
-  #nice ./AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
-endif
+#nice ./AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
+#nice ./run_kalmanFilter  # Changes working dir, so run last.
 
 kill $xvpid
 exit 0
@@ -177,7 +174,7 @@ set lg_e="-100"
 # Set to no after first run to save time.
 set Tdb="yes"
 
-echo 'Adding Terrain Ht vars to production netCDF files for project $project'
+echo 'Adding Terrain Ht vars to netCDF files in '${DAT}' for project $project'
 echo 'Using lat/long range '${lt_s}' - '${lt_n}', '${lg_w}' - '${lg_e}
 
 foreach file ( ${DAT}/${project}[rtf]f??.nc )
@@ -187,6 +184,25 @@ end
 "EOFZ2"
 
 
+# ---------------------------------------------------------
+# Kalman Filter script.
+#
+cat > run_kalmanFilter << "EOFKF"
+#!/bin/csh
+"EOFKF"
 
-chmod +x run_all run_nimbus reorder_all run_proc2d AddHtTerrain
-chmod g+w run_all run_nimbus reorder_all run_proc2d setup_* AddHtTerrain
+echo 'set project='${proj} >> run_kalmanFilter
+
+cat >> run_kalmanFilter << "EOFKF2"
+cd ~nimbus/RStudio/KalmanFilter
+# To apply the corrections to a high-rate file, supply the flight with an h
+# # e.g.  Rscript KalmanFilter.R WCR-TEST tf01h y y n 15
+foreach file ( ${DAT}/${project}[rtf]f??.nc )
+  set flight=`echo $file | awk '{print substr($0,length($0)-6,4)}'`
+  Rscript KalmanFilter.R $project $flight y y n 15
+end
+"EOFKF2"
+
+
+chmod +x run_all run_nimbus reorder_all run_proc2d AddHtTerrain run_kalmanFilter
+chmod g+w run_all run_nimbus reorder_all run_proc2d setup_* AddHtTerrain run_kalmanFilter
