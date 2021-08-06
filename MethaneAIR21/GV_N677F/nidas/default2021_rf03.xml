@@ -7,7 +7,7 @@
     <sensor ID="IRIG" class="raf.IRIGSensor">
       <sample id="1">
         <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
-        <variable longname="ENET IRIG Detect status: 0=NODETECT, 8=DETECT" name="IRIG_Status" units="bits"/>
+        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
       </sample>
     </sensor>
 
@@ -562,7 +562,7 @@
       <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
         <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
         <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
-        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+        <variable longname="ENET IRIG Detect status: 0=NODETECT, 8=DETECT" name="IRIG_Status" units="bits"/>
         <variable longname="ENET Number of Transactions" name="TCPTRANS" units="#"/>
         <variable longname="ENET Number of Retries" name="TCPRTRY" units="#"/>
         <variable longname="ENET Number of Failures" name="TCPFAILS" units="#"/>
