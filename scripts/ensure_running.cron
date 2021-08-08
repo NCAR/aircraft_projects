@@ -9,6 +9,7 @@ PATH=$PATH:/opt/nidas/bin
 #    (e.g. parcel track packets)
 ps ax | grep -w dsm | grep -qv grep
 if [ $? -eq 1 ]; then
+  rm /tmp/run/nidas/dsm.pid
   nohup dsm > /tmp/dsm.log &
 fi
 
