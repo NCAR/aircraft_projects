@@ -10,4 +10,9 @@ if  test -f "/tmp/run/nidas/dsm.pid" ; then
     rm /tmp/run/nidas/dsm.pid
     done
 fi
+ps ax | grep -w dsm | grep -qv grep
+if [ $? -eq 1 ]; then
+  rm /tmp/run/nidas/dsm.pid
+  nohup dsm > /tmp/dsm.log &
+fi
 #dsm "$xmlchoice"
