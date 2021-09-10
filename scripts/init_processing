@@ -182,6 +182,12 @@ set lg_e=(`printf '%f.0' $area[12]`)
 # Set to no after first run to save time.
 set Tdb="yes"
 
+# Expand everything out a degree to ensure we don't loose any edge data.
+set lt_s = (`expr $lt_s - 1`)
+set lt_n = (`expr $lt_n + 1`)
+set lg_w = (`expr $lg_w - 1`)
+set lg_e = (`expr $lg_e + 1`)
+
 echo 'Adding Terrain Ht vars to netCDF files in '${DAT}' for project '$project
 echo 'Using lat/long range '${lt_s}' - '${lt_n}', '${lg_w}' - '${lg_e}
 
