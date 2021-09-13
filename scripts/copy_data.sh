@@ -8,10 +8,8 @@
 # On planes and lab stations $PROJECT environment variable should be set by 
 # the script ads3_environment.sh currently in /home/ads 
 
-#DATA_LOCATION="/var/r1/$PROJECT"
-DATA_LOCATION="/scr/tmp/taylort/data_location"
-#TRANSFER_MEDIA="/run/media/ads/*"
-TRANSFER_MEDIA="/scr/tmp/taylort/transfer_media/"
+DATA_LOCATION="/var/r1/$PROJECT"
+TRANSFER_MEDIA="/run/media/ads/*"
 
 echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
 read FLIGHT
@@ -23,7 +21,7 @@ elif [[ "$FLIGHT" = *"ff"* ]]; then
    echo "Ferry flight from $PROJECT selected for copying."
 elif [[ "$FLIGHT" = *"cf"* ]]; then
    echo "Calibration flight from $PROJECT selected for copying."
-else 
+else
    echo "You have selected something other than a research, test, ferry, or calibration flight from $PROJECT."
 fi
 
