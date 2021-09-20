@@ -80,7 +80,7 @@
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
 import sys, getopt, re
-import os
+import os, getpass
 import string
 import re
 import time
@@ -97,6 +97,15 @@ import hashlib
 
 user = "dmg"
 rpwd = ""
+
+getuser = getpass.getuser()
+print "User is [%s]" % (getuser);
+
+if getuser == "eoldata":
+    pass
+else:
+    print "You are running script as: "+getuser+". Change to eoldata and start over."
+    sys.exit()
 
 # For bora logins, $PROJ_DIR is an environment variable set to the 
 # project working dir (currently /jnet/local/projects).'''
