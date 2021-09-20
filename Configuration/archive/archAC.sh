@@ -9,78 +9,80 @@
 setenv PROJECT "XXXPROJECTXXX"
 setenv YEAR 20XX
 setenv PLATFORM "XXXAIRCRAFTXXX"
-
+setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
+setenv CS_LOCATION "/glade/campaign/eol/archive/"
+setenv EMAIL "name@ucar.edu"
+########################## Raw Data Files ##############################
 ### ADS 
-#/net/jlocal/projects/Configuration/scripts/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR $EMAIL
 
 ### CAMERA
-#/net/jlocal/projects/Configuration/scripts/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg $CS_LOCATION$YEAR $EMAIL
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-#/net/jlocal/projects/Configuration/scripts/archAC.py FIELD/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary LRT ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py FIELD/LRT/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT field_phase/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary LRT IWG1
-#/net/jlocal/projects/Configuration/scripts/archAC.py FIELD/IWG1 /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/IWG1 iwg1 FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT field_phase/IWG1 /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/IWG1 iwg1 $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary KML
-#/net/jlocal/projects/Configuration/scripts/archAC.py FIELD/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT field_phase/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary CO ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py FIELD_INTERNAL_ONLY/CO /scr/raf/Raw_Data/$PROJECT/field_phase/CO ict FS/EOL/$YEAR
+#ARCHIVE_SCRIPT field_phase/CO /scr/raf/Raw_Data/$PROJECT/field_phase/CO ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary CO2CH4 ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py FIELD_INTERNAL_ONLY/CO2CH4 /scr/raf/Raw_Data/$PROJECT/field_phase/CO2CH4 ict FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT field_phase/CO2CH4 /scr/raf/Raw_Data/$PROJECT/field_phase/CO2CH4 ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary NONO2O3 ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py FIELD_INTERNAL_ONLY/NONOyO3 /scr/raf/Raw_Data/$PROJECT/field_phase/NO_NOy_O3 ict FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT field_phase/NONOyO3 /scr/raf/Raw_Data/$PROJECT/field_phase/NO_NOy_O3 ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary TOGA ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py FIELD_INTERNAL_ONLY/TOGA /scr/raf/Raw_Data/$PROJECT/field_phase/TOGA ict FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT field_phase/TOGA /scr/raf/Raw_Data/$PROJECT/field_phase/TOGA ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary TOF-AMS ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py FIELD_INTERNAL_ONLY/TOF-AMS /scr/raf/Raw_Data/$PROJECT/field_phase/CU-HRAMS ict FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT field_phase/TOF-AMS /scr/raf/Raw_Data/$PROJECT/field_phase/CU-HRAMS ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary HARP Actinic Flux ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py FIELD_INTERNAL_ONLY/HARP /scr/raf/Raw_Data/$PROJECT/field_phase/HARP_Jvalues ict FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT field_phase/HARP /scr/raf/Raw_Data/$PROJECT/field_phase/HARP_Jvalues ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary ARNOLD ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py FIELD_INTERNAL_ONLY/ARNOLD /scr/raf/Raw_Data/$PROJECT/field_phase/ARNOLD ict FS/EOL/$YEAR
-
+#ARCHIVE_SCRIPT field_phase/ARNOLD /scr/raf/Raw_Data/$PROJECT/field_phase/ARNOLD ict $CS_LOCATION$YEAR $EMAIL
 
 ########################## Production Data Files ##########################
 ### LRT
-#/net/jlocal/projects/Configuration/scripts/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT LRT /scr/raf/Prod_Data/$PROJECT nc $CS_LOCATION$YEAR $EMAIL
 
 ### LRT ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict $CS_LOCATION$YEAR $EMAIL
 
 ### PMS2D
-#/net/jlocal/projects/Configuration/scripts/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR $EMAIL
 
 ### KML
-#/net/jlocal/projects/Configuration/scripts/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT KML /scr/raf/Prod_Data/$PROJECT kml $CS_LOCATION$YEAR $EMAIL
 
 ### HRT
-#/net/jlocal/projects/Configuration/scripts/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT HRT /scr/raf/Prod_Data/$PROJECT/HRT nc $CS_LOCATION$YEAR $EMAIL
 
 ### HRT KML
-#/net/jlocal/projects/Configuration/scripts/archAC.py KMLh /scr/raf/Prod_Data/$PROJECT/HRT kml FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT KMLh /scr/raf/Prod_Data/$PROJECT/HRT kml $CS_LOCATION$YEAR $EMAIL
 
 ### CO ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py CO /scr/raf/Prod_Data/$PROJECT/CO ict FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT CO /scr/raf/Prod_Data/$PROJECT/CO ict $CS_LOCATION$YEAR $EMAIL
 
 ### CO2CH4 ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py CO2CH4 /scr/raf/Prod_Data/$PROJECT/CO2CH4 ict FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT CO2CH4 /scr/raf/Prod_Data/$PROJECT/CO2CH4 ict $CS_LOCATION$YEAR $EMAIL
 
 ### HARP ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py HARP /scr/raf/Prod_Data/$PROJECT/HARP ict FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT HARP /scr/raf/Prod_Data/$PROJECT/HARP ict $CS_LOCATION$YEAR $EMAIL
 
 ### GT-CIMS ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py GT-CIMS /scr/raf/Prod_Data/$PROJECT/GT-CIMS ict FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT GT-CIMS /scr/raf/Prod_Data/$PROJECT/GT-CIMS ict $CS_LOCATION$YEAR $EMAIL
 
 ### NONO2O3 ICT
-#/net/jlocal/projects/Configuration/scripts/archAC.py NONO2O3 /scr/raf/Prod_Data/$PROJECT/NONO2O3 ict FS/EOL/$YEAR
+#$ARCHIVE_SCRIPT NONO2O3 /scr/raf/Prod_Data/$PROJECT/NONO2O3 ict $CS_LOCATION$YEAR $EMAIL
