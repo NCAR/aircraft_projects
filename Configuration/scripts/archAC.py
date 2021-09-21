@@ -80,7 +80,7 @@
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
 import sys, getopt, re
-import os
+import os, getpass
 import string
 import re
 import time
@@ -98,6 +98,15 @@ import hashlib
 user = "dmg"
 rpwd = ""
 
+getuser = getpass.getuser()
+print "User is [%s]" % (getuser);
+
+if getuser == "eoldata":
+    pass
+else:
+    print "You are running script as: "+getuser+". Change to eoldata and start over."
+    sys.exit()
+
 # For bora logins, $PROJ_DIR is an environment variable set to the 
 # project working dir (currently /jnet/local/projects).'''
 # File that contains map between project and Mass Store directories where
@@ -105,6 +114,9 @@ rpwd = ""
 dirmapfile = "/scr/raf/Prod_Data/archives/msfiles/directory_map"
 hash_value_file = "/scr/raf/Prod_Data/"+os.environ["PROJECT"]+\
                   "/"+os.environ["PROJECT"]+"_archive_hash_file.txt"
+
+calendaryear = os.environ["YEAR"]
+print calendaryear
 
 class archRAFdata:
 
@@ -594,7 +606,7 @@ if __name__ == "__main__":
     match = re.search("EOL",cs_location)
 #    if not match:
 #	print "\033[1;4;33mWarning: "+sys.argv[index+2]+" is depreciated!\033[0m\n"
-    (dir,calendaryear) = string.rsplit(cs_location,'/',1)
+#    (dir,calendaryear) = string.rsplit(cs_location,'/',1)
     #Optional e-mail argument
     if len(sys.argv)-1 >= index+3:
          email = sys.argv[index+3]
