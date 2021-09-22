@@ -80,7 +80,7 @@
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
 import sys, getopt, re
-import os
+import os, getpass
 import string
 import re
 import time
@@ -98,6 +98,15 @@ import hashlib
 user = "dmg"
 rpwd = ""
 
+getuser = getpass.getuser()
+print "User is [%s]" % (getuser);
+
+if getuser == "eoldata":
+    pass
+else:
+    print "You are running script as: "+getuser+". Change to eoldata and start over."
+    sys.exit()
+
 # For bora logins, $PROJ_DIR is an environment variable set to the 
 # project working dir (currently /jnet/local/projects).'''
 # File that contains map between project and Mass Store directories where
@@ -105,6 +114,9 @@ rpwd = ""
 dirmapfile = "/scr/raf/Prod_Data/archives/msfiles/directory_map"
 hash_value_file = "/scr/raf/Prod_Data/"+os.environ["PROJECT"]+\
                   "/"+os.environ["PROJECT"]+"_archive_hash_file.txt"
+
+calendaryear = os.environ["YEAR"]
+print calendaryear
 
 class archRAFdata:
 
@@ -373,7 +385,7 @@ class archRAFdata:
     # define function to create a hash for a given file
     def hash_file(self, sdir, sfiles, hash_value_file):
         # when function is called, ask user to confirm preference to append file with hashes
-        append = raw_input("Would you like to append "+hash_value_file+" with sha1 hash? " + \
+        append = raw_input("Would you like to append "+hash_value_file+" with sha256 hash? " + \
                 "yes == enter, no == anything else: ")
         # check to see if hash file already exists, create if not
         if os.path.isfile(hash_value_file):
@@ -391,9 +403,9 @@ class archRAFdata:
                 with open(sdir+filename, 'rb') as inputfile:
                     current_datetime = str(datetime.now())
                     data = inputfile.read()
-                    print(filename, current_datetime, hashlib.sha1(data).hexdigest())
+                    print(filename, current_datetime, hashlib.sha256(data).hexdigest())
                     f = open(hash_value_file, 'a')
-                    print >>f, current_datetime+","+filename+",sha1,"+hashlib.sha1(data).hexdigest()
+                    print >>f, current_datetime+","+filename+",sha256,"+hashlib.sha256(data).hexdigest()
             print("SHA-1 cryptographic hash values have been appended to "+hash_value_file)
             print("You still need to archive the hash file: "+hash_value_file) 
 
@@ -473,79 +485,80 @@ class archRAFdata:
         print "#   Successful completion on "+archraf.today()+"\n"
 
 
-    def archive_files(self,sdir,sfiles,flag,type,mssroot,email = ""):
-	'''
-        Now archive the data!
-	'''
-        print '#  '+str(len(sfiles))+' Job(s) submitted on '+ archraf.today()
-
-        command = []
-        for spath in sfiles:
-            path_components = string.split(spath,'/')
-            if flag == "-r": 
-		# recursive searching, so path has subdir components
-		sfile = path_components[len(path_components)-2]+'/'+\
-		        path_components[len(path_components)-1]
-	    else:
-		# all files are in highest dir, no recursion
-	        sfile = path_components[len(path_components)-1]
-
-	    match = re.search("(LRT|lrt)",type)
-	    if match:
-	        sfile = archraf.rename(sdir,sfile)
-	    match = re.search("(HRT|hrt)",type)
-	    if match:
-	        sfile = archraf.rename(sdir,sfile)
-	    match = re.search("(KML|kml)",type)
-	    if match:
-	        sfile = archraf.renameKML(sdir,sfile)
-
-            (msrcpMachine,wpwd)=archraf.setMSSenv()
-
-            # http://www.mgleicher.us/GEL/hsi/hsi_reference_manual_2/hsi_commands/put_command.html
-	    # -P : create intermediate HPSS subdirectories for the file(s) if they do not exist
-	    # -d : remove local files after success transfer to HPSS
-	    # Only remove camera tarfiles, since they are an intermediate product on local disk and are HUGE.
-	    match = re.search('CAMERA',type)
-	    if match:
-		#options = '-d '
-                options = ''
-	    else:
-		options = ''
-
-	    match = re.search(sdir,spath)
-	    if match:
-	    	command.append('/opt/local/bin/hsi put -X1 -P ' + options + spath + ' :' + mssroot + type + '/' + sfile) 
-	    else: 
-	    	command.append('/opt/local/bin/hsi put -X1 -P ' + options + sdir + spath + ' :' + mssroot + type + '/' + sfile) 
-
-        for line in command:
-	    print line
-
-        process = raw_input("Run the commands as listed? " + \
-		"yes == enter, no == anything else: ")
-
-	match = re.search('CAMERA',type)
-
-	if match:
-	    process = ""
-
-        if process == "":
-            for line in command:
-		p = subprocess.Popen(line,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
-		output, errors = p.communicate();
-		result = p.returncode
-		#result = os.system(line)
-                path_components = string.split(line,'/')
-	        sfile = path_components[len(path_components)-1]
-	        if result == 0:
-	            print "#  hsi job for "+type+"/"+sfile+" -- OK -- "+ archraf.today()
-	        else:
-	            print "#  hsi job for "+type+"/"+sfile+" -- Failed -- "+ archraf.today()
-	            print "#                "+type+"/"+sfile+": error code " + str(result)
-		    archraf.sendMail("hsi job for "+type+"/"+sfile+" -- Failed -- " + archraf.today(), "\nSTDOUT:\n" + output + "\n\nSTDERR:\n" + errors, email)
-
-        print "#   Successful completion on "+archraf.today()+"\n"
+#    def archive_files(self,sdir,sfiles,flag,type,mssroot,email = ""):
+#	'''
+#        Now archive the data!
+#	'''
+#        print '#  '+str(len(sfiles))+' Job(s) submitted on '+ archraf.today()
+#
+#        command = []
+#        for spath in sfiles:
+#            path_components = string.split(spath,'/')
+#            if flag == "-r": 
+#		# recursive searching, so path has subdir components
+#		sfile = path_components[len(path_components)-2]+'/'+\
+#		        path_components[len(path_components)-1]
+#	    else:
+#		# all files are in highest dir, no recursion
+#	        sfile = path_components[len(path_components)-1]
+#
+#	    match = re.search("(LRT|lrt)",type)
+#	    if match:
+#	        sfile = archraf.rename(sdir,sfile)
+#	    match = re.search("(HRT|hrt)",type)
+#	    if match:
+#	        sfile = archraf.rename(sdir,sfile)
+#	    match = re.search("(KML|kml)",type)
+#	    if match:
+#	        sfile = archraf.renameKML(sdir,sfile)
+#
+#            (msrcpMachine,wpwd)=archraf.setMSSenv()
+#
+#            # http://www.mgleicher.us/GEL/hsi/hsi_reference_manual_2/hsi_commands/put_command.html
+#	    # -P : create intermediate HPSS subdirectories for the file(s) if they do not exist
+#	    # -d : remove local files after success transfer to HPSS
+#	    # Only remove camera tarfiles, since they are an intermediate product on local disk and are HUGE.
+#	    match = re.search('CAMERA',type)
+#	    if match:
+#		#options = '-d '
+#                options = ''
+#	    else:
+#		options = ''
+#
+#	    match = re.search(sdir,spath)
+#	    if match:
+#	    	command.append('/opt/local/bin/hsi put -X1 -P ' + options + spath + ' :' + mssroot + type + '/' + sfile) 
+#	    else: 
+#	    	command.append('/opt/local/bin/hsi put -X1 -P ' + options + sdir + spath + ' :' + mssroot + type + '/' + sfile) 
+#
+#        for line in command:
+#	    print line
+#
+#        process = raw_input("Run the commands as listed? " + \
+#		"yes == enter, no == anything else: ")
+#
+#	match = re.search('CAMERA',type)
+#
+#	if match:
+#	    process = ""
+#
+#        if process == "":
+#            for line in command:
+#		p = subprocess.Popen(line,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+#		output, errors = p.communicate();
+#		result = p.returncode
+#		#result = os.system(line)
+#                path_components = string.split(line,'/')
+#	        sfile = path_components[len(path_components)-1]
+#	        if result == 0:
+#	            print "#  hsi job for "+type+"/"+sfile+" -- OK -- "+ archraf.today()
+#	        else:
+#	            print "#  hsi job for "+type+"/"+sfile+" -- Failed -- "+ archraf.today()
+#	            print "#                "+type+"/"+sfile+": error code " + str(result)
+#		    archraf.sendMail("hsi job for "+type+"/"+sfile+" -- Failed -- " + archraf.today(), "\nSTDOUT:\n" + output + "\n\nSTDERR:\n" + errors, email)
+#
+#        print "#   Successful completion on "+archraf.today()+"\n"
+#
 
 ##########################
 ### MAIN
@@ -588,15 +601,15 @@ if __name__ == "__main__":
         flag = ""
     sdir = sys.argv[index]
     searchstr = sys.argv[index+1]
-    location = sys.argv[index+2]
-    cs_location = sys.argv[index+3]
-    match = re.search("EOL",location)
-    if not match:
-	print "\033[1;4;33mWarning: "+sys.argv[index+2]+" is depreciated!\033[0m\n"
-    (dir,calendaryear) = string.rsplit(location,'/',1)
+#    location = sys.argv[index+2]
+    cs_location = sys.argv[index+2]
+    match = re.search("EOL",cs_location)
+#    if not match:
+#	print "\033[1;4;33mWarning: "+sys.argv[index+2]+" is depreciated!\033[0m\n"
+#    (dir,calendaryear) = string.rsplit(cs_location,'/',1)
     #Optional e-mail argument
-    if len(sys.argv)-1 >= index+4:
-         email = sys.argv[index+4]
+    if len(sys.argv)-1 >= index+3:
+         email = sys.argv[index+3]
     else:
          print "You must supply an email address as the last argument. If the script fails, you will receive an email."
 
@@ -746,11 +759,11 @@ if __name__ == "__main__":
     # Sort the files to be processed so they are processed in alphabetical order
     sfiles.sort()
     
-    mssroot = ' /'+location+'/'+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
+#    mssroot = ' /'+location+'/'+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
     csroot = '/'+cs_location+'/'+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
 
     # Now archive the data!
-    archraf.archive_files(sdir,sfiles,flag,type,mssroot,email)
+#    archraf.archive_files(sdir,sfiles,flag,type,mssroot,email)
     archraf.archive_files_cs(sdir,sfiles,flag,type,csroot,email)
     # Create hash and append file
     archraf.hash_file(sdir,sfiles,hash_value_file) 
