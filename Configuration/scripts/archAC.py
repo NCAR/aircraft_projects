@@ -115,6 +115,9 @@ dirmapfile = "/scr/raf/Prod_Data/archives/msfiles/directory_map"
 hash_value_file = "/scr/raf/Prod_Data/"+os.environ["PROJECT"]+\
                   "/"+os.environ["PROJECT"]+"_archive_hash_file.txt"
 
+calendaryear = os.environ["YEAR"]
+print calendaryear
+
 class archRAFdata:
 
     def sendMail(self, subject, body, email):
@@ -382,7 +385,7 @@ class archRAFdata:
     # define function to create a hash for a given file
     def hash_file(self, sdir, sfiles, hash_value_file):
         # when function is called, ask user to confirm preference to append file with hashes
-        append = raw_input("Would you like to append "+hash_value_file+" with sha1 hash? " + \
+        append = raw_input("Would you like to append "+hash_value_file+" with sha256 hash? " + \
                 "yes == enter, no == anything else: ")
         # check to see if hash file already exists, create if not
         if os.path.isfile(hash_value_file):
@@ -400,9 +403,9 @@ class archRAFdata:
                 with open(sdir+filename, 'rb') as inputfile:
                     current_datetime = str(datetime.now())
                     data = inputfile.read()
-                    print(filename, current_datetime, hashlib.sha1(data).hexdigest())
+                    print(filename, current_datetime, hashlib.sha256(data).hexdigest())
                     f = open(hash_value_file, 'a')
-                    print >>f, current_datetime+","+filename+",sha1,"+hashlib.sha1(data).hexdigest()
+                    print >>f, current_datetime+","+filename+",sha256,"+hashlib.sha256(data).hexdigest()
             print("SHA-1 cryptographic hash values have been appended to "+hash_value_file)
             print("You still need to archive the hash file: "+hash_value_file) 
 
@@ -603,7 +606,7 @@ if __name__ == "__main__":
     match = re.search("EOL",cs_location)
 #    if not match:
 #	print "\033[1;4;33mWarning: "+sys.argv[index+2]+" is depreciated!\033[0m\n"
-    (dir,calendaryear) = string.rsplit(cs_location,'/',1)
+#    (dir,calendaryear) = string.rsplit(cs_location,'/',1)
     #Optional e-mail argument
     if len(sys.argv)-1 >= index+3:
          email = sys.argv[index+3]
