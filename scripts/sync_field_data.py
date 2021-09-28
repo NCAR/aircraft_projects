@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 #############################################################################
 # Script monitors ingest directories for newly written files and then syncs
@@ -17,21 +17,18 @@ from email.mime.text import MIMEText
 
 #get the arguments from the command line
 temp_dir = sys.argv[1]
-project = "MethaneAIR21"
+project = os.getenv('PROJECT')
 
-#project = sys.argv[2]
 aircraft = sys.argv[3] 
 
 #set up directories
-proj_dir = str(os.getenv("PROJ_DIR"))+'/'+project+'/'+aircraft+'/'
-#proj_dir = str(os.getenv("PROJ_DIR"))+'/ASPIRE-TEST/'+aircraft+'/'
+proj_dir = str(os.getenv('PROJ_DIR'))+'/'+project+'/'+aircraft+'/'
+
 sys.path.insert(0,proj_dir)
 from fieldProc_setup import *
 
-#dat_dir = dat_parent_dir+project
 dat_dir = dat_parent_dir+'/'+project+'/'
-ftp_dir = ftp_parent_dir+'/'+project+'/'
-#rdat_dir = rdat_parent_dir+project
+ftp_dir = ftp_parent_dir+'/'
 rdat_dir = rdat_parent_dir+'/'+project+'/'
 eol_dir = temp_dir+'/EOL_data/'
 
