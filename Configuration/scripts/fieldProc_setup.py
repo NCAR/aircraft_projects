@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 #   Be sure to ask the systems group to create a directory:
 #   /net/ftp/pub/data/incoming/<project> and then to create the tree below it:
