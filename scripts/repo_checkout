@@ -63,7 +63,7 @@ fi
 dir=nimbus
 if [ ! -d $dir ]; then
   # We need --recursive for nidas for the ARINC driver.
-  git clone --recursive https://$GITKEY@github.com/ncareol/$dir
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir
 else
   echo "$dir checked out previously"
 fi
@@ -79,14 +79,14 @@ fi
 
 dir=aircraft_nc_utils
 if [ ! -d $dir ]; then
-  git clone https://$GITKEY@github.com/ncar/$dir nc_utils
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir nc_utils
 else
   echo "$dir checked out previously"
 fi
 
 dir=aircraft_oap
 if [ ! -d $dir ]; then
-  git clone https://$GITKEY@github.com/ncar/$dir oap
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir oap
 else
   echo "$dir checked out previously"
 fi
