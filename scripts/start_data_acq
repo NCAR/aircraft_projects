@@ -41,7 +41,7 @@ set_config_dir
 nidasxmls=(`get_nidas_xmls`)
 
 if [ ${#nidasxmls} -eq 0 ]; then
-    kdialog --caption "No XML Configurations Available" \
+    kdialog --title "No XML Configurations Available" \
         --warningcontinuecancel "No nidas XML files found on $cfgdir ($PWD)"
     exit 1
 fi
@@ -118,7 +118,7 @@ while [ $topchoice == display ]; do
         display "display all sampling periods for this project" off)
 
     # Prior to kde 3.4, kdialog doesn't use geometry
-    topchoice=`kdialog --caption "Start Data Acquisition" --geometry 600x400 \
+    topchoice=`kdialog --title "Start Data Acquisition" --geometry 600x400 \
             --radiolist "Choose from the following:" "${choices[@]}"`
     [ $? -ne 0 ] && exit 1
     [ $topchoice == display ] && { display_configs || exit 1; }
@@ -172,7 +172,7 @@ if [ $topchoice == newflight ]; then
 
     fname=""
     while [ -z $fname ]; do
-        fname=`kdialog --caption "New Flight" --radiolist "Choose a new flight name:" "${lst[@]}"`
+        fname=`kdialog --title "New Flight" --radiolist "Choose a new flight name:" "${lst[@]}"`
         [ $? -eq 0 ] || exit 1
     done
 
@@ -194,11 +194,11 @@ elif [ $topchoice == newhang ]; then
     while true; do
         fname=""
         while [ -z $fname ]; do
-            fname=`kdialog --caption "New Hangar" --inputbox "Enter a new hangar name:" " "`
+            fname=`kdialog --title "New Hangar" --inputbox "Enter a new hangar name:" " "`
             [ $? -eq 0 ] || exit 1
         done
         if [ `config_type $fname` == flight ]; then
-            kdialog --caption "Bad Hangar Config" \
+            kdialog --title "Bad Hangar Config" \
                 --warningcontinuecancel \
                 "hangar period names should not start with tf, cf, ff, or rf.\n\
                 Press continue to choose another name"
@@ -212,7 +212,7 @@ elif [ $topchoice == newhang ]; then
 echo "temp = '$temp'"
 echo "fname = '$fname'"
         if [ $temp -gt 0 ]; then
-            kdialog --caption "Bad Hangar Config" \
+            kdialog --title "Bad Hangar Config" \
                 --warningcontinuecancel \
                 "hangar period names should not contain dots or slashes.\n\
                 Press continue to choose another name"
@@ -229,7 +229,7 @@ echo "fname = '$fname'"
         done
         $existing || break
 
-        kdialog --caption "Sampling Periods Name Exists" --warningyesnocancel \
+        kdialog --title "Sampling Periods Name Exists" --warningyesnocancel \
             "$fname exists, do you want to use it?"
         # $?: yes/continue=0, no=1, cancel=2
         stat=$?
@@ -252,7 +252,7 @@ elif [ $topchoice == ctdflight ]; then
 
     fname=""
     while [ -z $fname ]; do
-        fname=`kdialog --caption "Continue Flight" --radiolist "Choose a flight:" ${lst[@]}`
+        fname=`kdialog --title "Continue Flight" --radiolist "Choose a flight:" ${lst[@]}`
         [ $? -eq 0 ] || exit 1
     done
     prevflight=$fname
@@ -270,26 +270,26 @@ elif [ $topchoice == ctdhang ]; then
 
     fname=""
     while [ -z $fname ]; do
-        fname=`kdialog --caption "Continue Hangar" --radiolist "Choose a hangar:" ${lst[@]}`
+        fname=`kdialog --title "Continue Hangar" --radiolist "Choose a hangar:" ${lst[@]}`
         [ $? -eq 0 ] || exit 1
     done
     prevhangar=$fname
 else
-    kdialog --caption "Error: Flight type not valid." \
+    kdialog --title "Error: Flight type not valid." \
         --warningcontinuecancel "Error: topchoice variable did not match valid choices, = [$topchoice].\n\
 	This is most likely what causes the flights.xml mess up.  Call Chris"
     exit 1
 fi
 
 #if [ -z $lastconfig ]; then
-#    kdialog --caption "Error: lastconfig variable is empty." \
+#    kdialog --title "Error: lastconfig variable is empty." \
 #        --warningcontinuecancel "Error: lastconfig variable is empty, something wrong, not proceeding.\n\
 #	This is most likely what causes the flights.xml mess up.  Call Chris"
 #    exit 1
 #fi
 
 if [ -z $fname ]; then
-    kdialog --caption "Error: fname variable is empty." \
+    kdialog --title "Error: fname variable is empty." \
         --warningcontinuecancel "Error: fname variable is empty, something wrong, not proceeding.\n\
 	This is most likely what causes the flights.xml mess up.  Call Chris"
     exit 1
@@ -360,7 +360,7 @@ if $choosexml; then
             xmllist=(${xmllist[@]} $ff ${ff##*/} off)
         fi
     done
-    xmlchoice=`kdialog --caption "Choose XML File"  \
+    xmlchoice=`kdialog --title "Choose XML File"  \
         --radiolist \
         "Choose an XML file in $cfgdir for $fname" \
         "${xmllist[@]}"`
@@ -370,7 +370,7 @@ fi
 xmlname=`eval echo $xmlchoice`
 
 if ! ck_xml $xmlname > $txtfile 2> $errfile; then
-    kdialog --caption "XML Syntax Error" \
+    kdialog --title "XML Syntax Error" \
         -error "Error parsing $xmlchoice:\n$(<$errfile)"
     # --warningcontinuecancel "Error parsing $xmlchoice:\n$(<$errfile)"
     # $?: continue=0, cancel=2
@@ -378,7 +378,7 @@ if ! ck_xml $xmlname > $txtfile 2> $errfile; then
 fi
 
 if $addconfig; then
-    kdialog --caption "Confirm" --warningcontinuecancel \
+    kdialog --title "Confirm" --warningcontinuecancel \
         "Add this `config_type $fname` configuration?\n\
         name: $fname\n\
         xml: $xmlchoice"
@@ -392,13 +392,13 @@ if $addconfig; then
     tend=$(($tend - ($tend % (24 * 3600))))
 echo "calling proj_configs -a $fname $xmlchoice $tnow $tend flights.xml 2> $errfile"
     if ! proj_configs -a $fname $xmlchoice $tnow $tend flights.xml 2> $errfile; then
-        kdialog --caption "Add Configuration Error" \
+        kdialog --title "Add Configuration Error" \
             --warningcontinuecancel "`head -5 $errfile`"
         # $?: continue=0, cancel=2
         [ $? -eq 2 ] && exit 1
     fi
 else
-    kdialog --caption "Confirm" --warningcontinuecancel \
+    kdialog --title "Confirm" --warningcontinuecancel \
         "continue this `config_type $fname` configuration?\n\
         name: $fname\n\
         xml: $xmlchoice"
@@ -431,7 +431,7 @@ export FLIGHT=$fname
 #dsm "$xmlchoice"
 
 if [ -z $fname ]; then
-    kdialog --caption "Error: fname empty" \
+    kdialog --title "Error: fname empty" \
         --warningcontinuecancel "Exception: variable fname is empty.  Will not proceed.\n\
         You can try again, or call cjw."
     exit 1
@@ -446,7 +446,7 @@ if [ `flight_type $fname` == cf ]; then
         cp -p $PROJ_DIR/Configuration/cal_files/Engineering/$AIRCRAFT/VOLTS.dat \
           $TMP_PROJ_DIR/Configuration/cal_files/Engineering/$AIRCRAFT/$datfile
     done
-    kdialog --caption "a cal flight was chosen" --msgbox "$contents\n"
+    kdialog --title "a cal flight was chosen" --msgbox "$contents\n"
 fi
 
 # finally!

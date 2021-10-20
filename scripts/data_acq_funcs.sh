@@ -25,7 +25,7 @@ create_err_files() {
 check_env_vars() {
     # Check required environment variables.
     if [ -z "$LOCAL" -o -z "$PROJECT" -o -z "$AIRCRAFT" ]; then
-        kdialog --caption "Environment Error" \
+        kdialog --title "Environment Error" \
             --warningcontinuecancel "one of LOCAL, PROJECT or AIRCRAFT environment variables are not defined"
         exit 1
     fi
@@ -39,7 +39,7 @@ set_config_dir() {
     cfgdir=\$PROJ_DIR/$PROJECT/$AIRCRAFT/nidas
     local cdir=`eval echo $cfgdir`
     if [ ! -d $cdir ]; then
-        kdialog --caption "Missing Folder" \
+        kdialog --title "Missing Folder" \
             --warningcontinuecancel "$cdir does not exist"
         exit 1
     fi
@@ -62,7 +62,7 @@ get_flights () {
     if proj_configs -n flights.xml > $txtfile 2> $errfile; then
         cat $txtfile
     else
-        kdialog --caption "get_flights Error" \
+        kdialog --title "get_flights Error" \
             --warningcontinuecancel "`head -5 $errfile`"
         # $?: continue=0, cancel=2
         [ $? -eq 2 ] && return 1
@@ -123,7 +123,7 @@ get_config () {
         # don't want to expand them, so use cat here
         cat $txtfile
     else
-        kdialog --caption "get_config Error" \
+        kdialog --title "get_config Error" \
             --warningcontinuecancel "`head -5 $errfile`"
         # $?: continue=0, cancel=2
         [ $? -eq 2 ] && return 1
@@ -139,7 +139,7 @@ display_configs () {
             --passivepopup \
                 "`proj_configs -l -f flights.xml 2>&1 | sed s,$cfgdir/,,g`" 30
     else
-        kdialog --caption "Data System Configurations" \
+        kdialog --title "Data System Configurations" \
             --warningcontinuecancel \
                 "`proj_configs -l -f flights.xml 2>&1 | sed s,$cfgdir/,,g`"
         # $?: continue=0, cancel=2
@@ -158,7 +158,7 @@ terminate_config () {
             --passivepopup \
             "Setting end time of $1 to `utime $tterm +'%Y %b %d %H:%M:%S'`, previous=`utime $edate +'%Y %m %d %H:%M:%S'`" 5
         if ! proj_configs -t $tterm flights.xml 2> $errfile; then
-            kdialog --caption "terminate_config Error" \
+            kdialog --title "terminate_config Error" \
                 --warningcontinuecancel "`head -5 $errfile`"
             # $?: continue=0, cancel=2
             [ $? -eq 2 ] && return 1
@@ -174,7 +174,7 @@ terminate_last_config () {
     local prevconfig=`get_last ${cfgs[@]}`
 
     if [ -z "$prevconfig" ]; then
-        kdialog --caption "No Data Configuration" \
+        kdialog --title "No Data Configuration" \
                 --warningcontinuecancel "no data configurations found"
         # $?: continue=0, cancel=2
         [ $? -eq 2 ] && exit 1
@@ -188,7 +188,7 @@ terminate_last_config () {
 # Extend the end time of a configuration
 extend_config () {
     if ! proj_configs -t $1 flights.xml 2> $errfile; then
-        kdialog --caption "extend_config Error" \
+        kdialog --title "extend_config Error" \
             --warningcontinuecancel "`head -5 $errfile`"
         # $?: continue=0, cancel=2
         [ $? -eq 2 ] && return 1
@@ -202,7 +202,7 @@ generate_error () {
         local n=${#cfg[@]}
         echo ${cfg[$(($n-3))]} ${cfg[$(($n-2))]} ${cfg[$(($n-1))]}
     else
-        kdialog --caption "get_config Error" \
+        kdialog --title "get_config Error" \
             --warningcontinuecancel "`head -5 $errfile`"
         # $?: continue=0, cancel=2
         [ $? -eq 2 ] && return 1
@@ -238,13 +238,13 @@ start_dsm_server() {
             sleep 1
         done
         if [ $ntry -eq 0 ]; then
-            kdialog --caption "dsm_server Is Not Starting" \
+            kdialog --title "dsm_server Is Not Starting" \
                 --error "`head -10 $errfile`"
             exit 1
         fi
 
         totalflight=$((12 * 3600))
-        kdialog --geometry "600x100-140+73" --caption "dsm_server" \
+        kdialog --geometry "600x100-140+73" --title "dsm_server" \
             --progressbar "pid=$pid, config=$config. Progress is % of 12 hour flight. Press Cancel to shut down (X button does nothing)" $totalflight > /tmp/dsm_server.dlgRef
         local dlgRef=$(</tmp/dsm_server.dlgRef)
         qdbus $dlgRef org.kde.kdialog.ProgressDialog.showCancelButton true > /dev/null
@@ -265,7 +265,7 @@ start_dsm_server() {
             if [ ! -d /proc/"$pid" ];then
                 qdbus $dlgRef org.kde.kdialog.ProgressDialog.close 2> /dev/null
                 rm -f /tmp/dsm_server.dlgRef
-                kdialog --caption "dsm_server Has Quit" \
+                kdialog --title "dsm_server Has Quit" \
                     --error "dsm_server, pid=$pid is not running"
                 terminate_last_config
                 exit 1
@@ -276,7 +276,7 @@ start_dsm_server() {
             fi
         done
     else
-        kdialog --caption "dsm_server Failed" \
+        kdialog --title "dsm_server Failed" \
             --error "`head -10 $errfile`"
         exit 1
     fi
@@ -287,7 +287,7 @@ stop_dsm_server() {
 
     if [ -f $pidfile ]; then
         local pid=$(<$pidfile)
-        kdialog --caption "Shutdown dsm_server" --warningcontinuecancel \
+        kdialog --title "Shutdown dsm_server" --warningcontinuecancel \
             "Shutdown dsm_server (pid=$pid)?"
         # $?: continue=0, cancel=2
         stat=$?
