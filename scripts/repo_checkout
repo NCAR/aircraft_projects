@@ -1,0 +1,197 @@
+#!/bin/bash
+
+# Start of a script for installing/updating software on an aircraft server.
+
+$USER=ads
+# Check if user ads
+if [ $(whoami) != 'ads' ]; then
+	echo "Checkouts should be done as user ads";
+        echo "You are not ads"
+        exit 1
+fi
+
+# Check for read only git checkout key
+if [ -f "/home/ads/.git-credentials" ];
+then
+        echo "Checking out git repos with found key"
+else
+    echo "/home/ads/.git-credentials doesn't exist. Create, change permissions to -rw-------, copy in key"
+    exit 1
+fi
+GITKEY=$(cat /home/ads/.git-credentials)
+# GITKEY="$GITKEY@"
+
+# Check that /home/local exists
+# currently only an issue on a new groundstation
+[ -d /home/local] || mkdir /home/local
+cd /home/local
+
+# Ask what type of install (1)plane/server, 2)groundstation, 3)lab)
+
+
+# Think the biggest thing left in svn is the Manufacture Manuals
+# And the camera script
+# Believe checkouts can happen in any order
+# builds should have nidas first, then aeros or the other tools
+#dir=raf
+#if [ ! -d $dir ]; then
+#  svn co http://svn.eol.ucar.edu/svn/raf/trunk $dir
+#else
+#  svn update $dir
+#fi
+#
+#dir=aircraft_projects
+#if [ ! -d $dir ]; then
+#  git clone https://github.com/NCAR/$dir projects
+#else
+#  git pull $dir
+#fi
+
+dir=nidas
+if [ ! -d $dir ]; then
+  # We need --recursive for nidas for the ARINC driver.
+  git clone --recursive https://$GITKEY@github.com/ncareol/$dir
+else
+  echo "$dir checked out previously"
+fi
+
+# CMIGITS Code.  ITAR controlled.
+# git clone file:///net/cds/git/cmigits-nidas.git
+# cd cmigits-nidas/
+# Onboard build >>>>  make BUILDS='armbe'
+
+dir=nimbus
+if [ ! -d $dir ]; then
+  # We need --recursive for nidas for the ARINC driver.
+  git clone --recursive https://$GITKEY@github.com/ncareol/$dir
+else
+  echo "$dir checked out previously"
+fi
+
+
+dir=aeros
+if [ ! -d $dir ]; then
+  # We need --recursive for aeros to get eol_scons.
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+else
+  echo "$dir checked out previously"
+fi
+
+dir=aircraft_nc_utils
+if [ ! -d $dir ]; then
+  git clone https://$GITKEY@github.com/ncar/$dir nc_utils
+else
+  echo "$dir checked out previously"
+fi
+
+dir=aircraft_oap
+if [ ! -d $dir ]; then
+  git clone https://$GITKEY@github.com/ncar/$dir oap
+else
+  echo "$dir checked out previously"
+fi
+
+dir=ncpp
+if [ ! -d $dir ]; then
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+else
+  echo "$dir checked out previously"
+fi
+
+dir=ncplot
+if [ ! -d $dir ]; then
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+else
+  echo "$dir checked out previously"
+fi
+
+
+dir=ric
+if [ ! -d $dir ]; then
+  git clone --recursive https://$GITKEY@github.com/ncareol/$dir
+else
+  echo "$dir checked out previously"
+fi
+
+dir=aircraft_auto_cal
+if [ ! -d $dir ]; then
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir auto_cal
+else
+  echo "$dir checked out previously"
+fi
+
+dir=aircraft_config_edit
+if [ ! -d $dir ]; then
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir config_edit
+else
+  echo "$dir checked out previously"
+fi
+
+dir=kml_tools
+if [ ! -d $dir ]; then
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+else
+  echo "$dir checked out previously"
+fi
+
+dir=aircraft_caledit
+if [ ! -d $dir ]; then
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir caledit
+else
+  echo "$dir checked out previously"
+fi
+
+# instrument specific
+dir=gni
+if [ ! -d $dir ]; then
+  git clone --recursive https://$GITKEY@github.com/ncareol/$dir
+else
+  echo "$dir checked out previously"
+fi
+
+
+#Servers only
+dir=aircraft_arinc_enet
+if [ ! -d $dir ]; then
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+else
+  echo "$dir checked out previously"
+fi
+
+dir=embedded-daq
+if [ ! -d $dir ]; then
+  git clone --recursive https://$GITKEY@github.com/ncareol/$dir
+else
+  echo "$dir checked out previously"
+fi
+
+dir=aircraft_rpms
+if [ ! -d $dir ]; then
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+else
+  echo "$dir checked out previously"
+fi
+
+dir=aircraft_vardb
+if [ ! -d $dir ]; then
+  git clone --recursive https://$GITKEY@github.com/ncar/$dir vardb
+else
+  echo "$dir checked out previously"
+fi
+
+
+
+# List of git repos
+# RIC
+# GNI
+# Auto Cal
+# Configedit
+# Caledit
+# aircraft arinc enet- rpm check if in lab/server common, need to checkout/qmake make
+# embeded-daq, embedded dsm with build bot, planes reference, dsm equivalent of ads user
+# Embeded-linux, nope old, for flashing compact flash cards
+# eol_scons - is a rpm
+# KML tools - everywhere but laptops
+# Aircraft rpms - to build packages,
+# Libraf - submodule for ncpp/ncplot, not necessary
+# vardb - submodule and rpm, rpm for binaries, so both for servers
