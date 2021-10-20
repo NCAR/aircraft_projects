@@ -1,0 +1,31 @@
+#!/bin/csh
+
+/bin/rm adif_gap.out
+foreach file (SOCRATES?f??.nc)
+  echo $file >> adif_gap.out
+  nc_gap -l 200 -g 10 $file | grep ADIF_GP >> adif_gap.out
+end
+
+/bin/rm bdif_gap.out
+foreach file (SOCRATES?f??.nc)
+  echo $file >> bdif_gap.out
+  nc_gap -l 200 -g 10 $file | grep BDIF_GP >> bdif_gap.out
+end
+
+/bin/rm qc_gap.out
+foreach file (SOCRATES?f??.nc)
+  echo $file >> qc_gap.out
+  nc_gap -l 200 -g 10 $file | grep QC_GP >> qc_gap.out
+end
+
+/bin/rm ps_gap.out
+foreach file (SOCRATES?f??.nc)
+  echo $file >> ps_gap.out
+  nc_gap -l 200 -g 10 $file | grep PS_GP >> ps_gap.out
+end
+
+/bin/rm cmode_gap.out
+foreach file (SOCRATES?f??.nc)
+  echo $file >> cmode_gap.out
+  nc_gap -l 200 -g 10 $file | grep MODE_GP >> cmode_gap.out
+end
