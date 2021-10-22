@@ -1693,7 +1693,16 @@
         <variable longname="Do Not Record" name="NOREC" units="bool"/>
       </sample>
     </sensor>
+
+    <sensor ID="DSMTEMP" class="UDPSocketSensor" devicename="usock::30200">
+      <sample id="1" rate="1" scanfFormat="T=%f">
+        <variable longname="DSM Temperature" name="DSMTEMP" units="C"/>
+      </sample>
+    </sensor>
   </sensorcatalog>
+
+
+
   <site applyCals="true" class="raf.Aircraft" name="GV_N677F">
     <parameter name="tailNumber" type="string" value="N677F"/>
     <parameter name="applyCals" type="bool" value="true"/>
@@ -1739,6 +1748,11 @@
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
+      <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30200" id="600" suffix="_303"/>
+      <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30201" id="605" suffix="_304"/>
+<!-- Uncomment after ASPIRE
+      <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30202" id="610" suffix="_305"/>
+-->
 
 
 
@@ -1771,13 +1785,14 @@
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_303"/>
 
-      <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyCTI2" id="150" suffix="_232"/>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI3" id="200" suffix="_DPR"/>
-      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI4" id="110">
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI0" id="110">
         <sample id="1">
           <variable longname="Interior Cabin Static Pressure" name="PCAB" units="hPa"/>
         </sample>
       </serialSensor>
+      <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyCTI2" id="150" suffix="_232"/>
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI3" id="200" suffix="_DPR"/>
+
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="250" latency="0.25">
         <calfile file="W543527.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT"/>
@@ -1794,7 +1809,7 @@
             </poly>
           </variable>
           <variable longname="Pressure of instrument exhaust duct, right" name="PDUMPPR" units="V">
-            <parameter name="channel" type="int" value="2"/>
+            <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="hPa">
@@ -1802,7 +1817,7 @@
             </poly>
           </variable>
           <variable longname="Pressure of instrument exhaust duct, left" name="PDUMPPL" units="V">
-            <parameter name="channel" type="int" value="3"/>
+            <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="hPa">
@@ -1812,28 +1827,6 @@
         </sample>
       </sensor>
 
-      <!-- Swapped to Diamond card from ncar A2D
-      <sensor class="raf.DSMAnalogSensor" devicename="/dev/ncar_a2d1" id="300">
-        <calfile file="A2D016.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D"/>
-        <parameter name="rate" type="int" value="500"/>
-        <sample id="1" rate="1">
-          <parameter name="temperature" type="bool" value="true"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_ADS1" units="deg_C"/>
-        </sample>
-        <sample id="2" rate="10">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="50"/>
-          <variable longname="Facilitate storage of A2D Temperature" name="DUMMY_ADS1" units="V">
-            <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="false"/>
-            <poly units="">
-              <calfile file="DUMMY_ADS1.dat" path="${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-        </sample>
-      </sensor>
-      -->
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -1852,9 +1845,8 @@
 	</sample>
       </serialSensor>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI1" id="120" suffix="_DPL"/>
-      <serialSensor IDREF="VCSEL" devicename="/dev/ttyS10" id="330" suffix="_VXL"/>
+      <serialSensor IDREF="VCSEL" devicename="/dev/ttyCTI7" id="330" suffix="_VXL"/>
 
-<!-- Dummy sensor for testing, see Josh for specifics
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="400" latency="0.25" suffix="_304">
         <calfile file="W543511.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT"/>
@@ -1862,57 +1854,8 @@
         <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="100"/>
-          <variable longname="Channel 0" name="DA2D_CH0" units="V">
+          <variable longname="Channel 0" name="DUMMY_CH0" units="V">
             <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-            </poly>
-          </variable>
-          <variable longname="Channel 1" name="DA2D_CH1" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-            </poly>
-          </variable>
-          <variable longname="Channel 2" name="DA2D_CH2" units="V">
-            <parameter name="channel" type="int" value="2"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-            </poly>
-          </variable>
-          <variable longname="Channel 3" name="DA2D_CH3" units="V">
-            <parameter name="channel" type="int" value="3"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-            </poly>
-          </variable>
-          <variable longname="Channel 4" name="DA2D_CH4" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-            </poly>
-          </variable>
-          <variable longname="Channel 5" name="DA2D_CH5" units="V">
-            <parameter name="channel" type="int" value="5"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-            </poly>
-          </variable>
-          <variable longname="Channel 6" name="DA2D_CH6" units="V">
-            <parameter name="channel" type="int" value="6"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-            </poly>
-          </variable>
-          <variable longname="Channel 7" name="DA2D_CH7" units="V">
-            <parameter name="channel" type="int" value="7"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="V">
@@ -1920,7 +1863,6 @@
           </variable>
         </sample>
       </sensor>
--->
 
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
@@ -1987,6 +1929,22 @@
           <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TDACQ1_305" units="counter"/>
         </sample>
         <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
+          <variable longname="Recovery Air Temperature, Heated Left" name="RTH3" units="C">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="ifsr" type="int" value="0"/>
+            <parameter name="ipol" type="int" value="0"/>
+            <poly units="deg_C">
+              <calfile file="RTH3.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+          <variable longname="Recovery Air Temperature, Heated Left" name="RTH4" units="C">
+            <parameter name="channel" type="int" value="1"/>
+            <parameter name="ifsr" type="int" value="0"/>
+            <parameter name="ipol" type="int" value="0"/>
+            <poly units="deg_C">
+              <calfile file="RTH4.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
           <variable longname="Radome Environmental Box Temperature" name="NOSETMP_TEST" units="C">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="ifsr" type="float" value="0"/>
