@@ -1,0 +1,105 @@
+#!/bin/csh
+
+@ num = 0
+if ($#argv > 0) then
+  @ num = $1
+endif
+
+# Environment variables that are needed:
+if ( ! $?JLOCAL ) then
+    setenv JLOCAL /opt/local
+    echo "Environment variable JLOCAL not set, setting to $JLOCAL."
+endif
+
+# Check for netCDF installation.
+if (`uname -i` == x86_64) then
+    set libdir=/usr/lib64
+else
+    set libdir=/usr/lib
+endif
+
+ls $libdir/libnetcdf* >& /dev/null
+set rc1 = $status
+ls $JLOCAL/lib/libnetcdf* >& /dev/null
+set rc2 = $status
+
+if ($rc1 == 1 && $rc2 == 1) then
+    echo "netCDF appears to NOT be installed in either /usr/lib or $JLOCAL."
+    exit 1
+endif
+
+if ( ! $?WINDS ) then
+    echo "WINDS not set, ADS2 and winds will NOT be built."
+endif
+
+# Pre-req's that most likely exist on your system, Motif, Qt.
+# Pre-req's that you will need to install are netcdf & Qwt.
+
+if ($#argv > 0) then
+  if ("$argv[1]" == init) then
+    # Copy the netcdf dependencies into place
+    setenv OPT_LOCAL /net/opt_lnx/local_fc2/.
+    echo "Copying netcdf dependencies from $OPT_LOCAL..."
+    ( cd $OPT_LOCAL && rsync -avR `find . -name "*netcdf*" -o -name "*ncvalues*"` $JLOCAL )
+  endif
+endif
+
+# Make sure all the [obvious] directories exist
+test -d ${JLOCAL}/bin || mkdir ${JLOCAL}/bin
+test -d ${JLOCAL}/lib || mkdir ${JLOCAL}/lib
+test -d ${JLOCAL}/include/raf || mkdir -p ${JLOCAL}/include/raf
+test -d ${JLOCAL}/man || mkdir ${JLOCAL}/man
+test -d ${JLOCAL}/man/man1 || mkdir ${JLOCAL}/man/man1
+test -d ${JLOCAL}/man/man3 || mkdir ${JLOCAL}/man/man3
+
+# Build libraries first.
+
+foreach file ( ads2/hdr_api )
+  (cd $file; echo $file; make install)
+  if ($num > 0) then
+    echo "$file BUILT"
+    sleep $num
+    reset
+  endif
+end
+
+scons -C vardb install
+
+# Programs using 'make install'.
+
+foreach file ( ads2/hdrbld ads2/xhd instruments/rdma ads_utils/edADShdr )
+  (cd $file; echo ""; make install)
+  if ($num > 0) then
+    echo "$file BUILT"
+    sleep $num
+    reset
+  endif
+en
+
+# Programs using 'scons' and 'scons install'.
+
+foreach file ( nimbus caledit kml_tools/acTrack2kml instruments/sid2h instruments/cpi/cpidisplay )
+  (cd $file; echo $file; scons install)
+  if ($num > 0) then
+    echo "$file BUILT"
+    sleep $num
+    reset
+  endif
+end
+
+
+# Programs withOUT install target.  WINDS requires xview toolkit.
+
+if ( $?WINDS ) then
+  cd ads2
+  foreach file ( ads/disc/src ads/dsm/src winds/src )
+    (cd $file; echo $file; make)
+    if ($num > 0) then
+      echo "$file BUILT"
+      sleep $num
+      reset
+    endif
+  end
+  cd ..
+endif
+
