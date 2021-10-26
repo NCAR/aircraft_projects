@@ -368,6 +368,14 @@ def zip_file(filename,datadir):
       message = message + command
       print_message(message)
 
+# define function to create sha256sum checksums for contents of data dirs 
+def checksum(myDirectory)
+    try:
+        os.chdir(myDirectory)
+        os.system('find -maxdepth 1 -type f! -name 'sha256sum*' -exec sha256sum '{}'\; | sed 's/\.\///'> sha256sum.'+myDirectory)
+    except:
+        print('Error creating sha256sum index file for '+myDirectory)
+
 ####################   End function definitions ##########################
 
 ######################   Begin main function  ############################
@@ -478,6 +486,11 @@ if process:
     command = "cp -p "+project+flight+"Plots.pdf /home/ads/Desktop"
     print("copying QAQC pdf to desktop")
     os.system(command)
+
+  # call checksum function to create checksum files on raw and processed data
+  checksum(raw_dir)
+  checksum(data_dir)
+  checksum(raw_dir+'PMS2D/')
 
 ###################  Beginning of Shipping ##############################
 else:
