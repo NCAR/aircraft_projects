@@ -8,8 +8,11 @@
 # On planes and lab stations $PROJECT environment variable should be set by 
 # the script ads3_environment.sh currently in /home/ads 
 
-DATA_LOCATION="/var/r1/$PROJECT"
-TRANSFER_MEDIA="/run/media/ads/*"
+#DATA_LOCATION="/var/r1/$PROJECT"
+#TRANSFER_MEDIA="/run/media/ads/*"
+
+DATA_LOCATION="/scr/tmp/taylort/data_location"
+TRANSFER_MEDIA="/scr/tmp/taylort/transfer_media"
 
 echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
 read FLIGHT
@@ -47,9 +50,13 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    echo "rsync exit status: $EXIT_RSYNC"
    echo "****Starting file integrity checking. Please wait for process to complete.****"
    echo "Calculating sha256sum for original file(s)..."
-   sha256sum $DATA_LOCATION/*$FLIGHT* >> $DATA_LOCATION/checksum
+   sha256sum $DATA_LOCATION/*$FLIGHT* >> $DATA_LOCATION/sha256sum.ads_station
    echo "Calculating sha256sum for copied file(s)..."
-   sha256sum $TRANSFER_MEDIA/$PROJECT/*$FLIGHT* >> $TRANSFER_MEDIA/$PROJECT/checksum
+   sha256sum $TRANSFER_MEDIA/$PROJECT/*$FLIGHT* >> $TRANSFER_MEDIA/$PROJECT/sha256sum.transfer_media
+
+   sha_original="$DATA_LOCATION/sha256sum.ads_station"
+   sha_transfer="$TRANSFER_MEDIA/$PROJECT/sha256sum.transfer_media"
+
    echo "************************************************************"
 
    if [ $sha_copy == $sha_orig ]; then
