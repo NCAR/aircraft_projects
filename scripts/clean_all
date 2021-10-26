@@ -1,0 +1,30 @@
+#!/bin/csh
+
+# This could all be one big for loop, but I broke it down for readability.
+
+foreach file ( a2d_cals nimbus/src/qc ads_utils/edADShdr )
+  (cd $file; echo $file; make clean)
+end
+
+cd ads2
+foreach file ( ads/disc/src ads/dsm/src hdr_api hdrbld rtplot xhd )
+  (cd $file; echo $file; make clean)
+end
+cd ..
+
+cd instruments
+foreach file ( mcr/display/src mcr/processor/src rdma hvps/hvpsdiag pms2d/usb2d/usb2diag )
+  (cd $file; echo $file; make clean)
+end
+cd ..
+
+foreach file ( nimbus kml_tools/acTrack2kml kml_tools/avaps2kml caledit )
+  (cd $file; echo $file; scons -c)
+end
+
+
+# Programs withOUT clean"" target.  WINDS requires xview toolkit.
+
+foreach file ( ads2/winds/src )
+  (cd $file; echo $file; rm *.o)
+end

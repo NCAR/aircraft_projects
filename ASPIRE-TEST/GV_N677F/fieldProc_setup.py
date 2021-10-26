@@ -23,7 +23,7 @@
 # dist_field_data.py paths for new sync_field_data.py script. 01/16/2019
 
 import os
-project = ''
+project = 'ASPIRE-TEST'
 DATA_DIR = os.environ['DATA_DIR']
 RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 dat_parent_dir =  DATA_DIR+'/'     # Where nc and kml files go
@@ -55,7 +55,7 @@ ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
 ICARTT = False # Generate ICARTT
 IWG1 = False # Generate IWG1 packet
 
-HRT = False # Generate HRT .nc file
+HRT = True # Generate HRT .nc file
 SRT = False # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
 zip_ADS = False # Bzips the ads file independently of processed files
@@ -66,7 +66,7 @@ ship_ADS = True
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
-PMS2D = True            #PMS2D from 2D-C
+PMS2D = False            #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
 Rstudio = False # Generate a PDF of the QC plots
