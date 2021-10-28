@@ -256,8 +256,8 @@ start_dsm_server() {
             sleep $nsec
             # qdbus fails if stop_dsm_server closes the progressbar
             # In which case we exit
-            res=`qdbus $dlgRef org.kde.kdialog.ProgressDialog.wasCancelled 2>/dev/null` || exit 1
-            if [ $res == "true" ]; then
+            res=`qdbus $dlgRef org.kde.kdialog.ProgressDialog.wasCancelled 2>/dev/null`
+            if [ "$res" != "false" ]; then
                 stop_dsm_server
                 terminate_last_config
                 break
