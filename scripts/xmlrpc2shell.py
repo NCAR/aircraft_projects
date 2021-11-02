@@ -1,6 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
-import SimpleXMLRPCServer, os
+from xmlrpc.server import SimpleXMLRPCServer
+import os
 PORT=30009
 
 def do_cmd(params):
@@ -11,19 +12,19 @@ def do_cmd(params):
 class shell_com_server:
     def shell_exec(self, p,t,c):
 
-	if (os.forkpty()[0] == 0):
+        if (os.forkpty()[0] == 0):
             do_cmd((p,t,c))
 
-	else:
+        else:
             return "Launched %s"%(c)
 
 scs = shell_com_server()
-serv = SimpleXMLRPCServer.SimpleXMLRPCServer(("localhost", PORT))
+serv = SimpleXMLRPCServer(("localhost", PORT))
 serv.register_instance(scs)
 
 if (os.fork()==0):
-    print "Listening on port %d"%(PORT)
+    print("Listening on port %d"%(PORT))
     serv.serve_forever()
 
 else:
-    print 'Started xmlrpc2shell server'
+    print('Started xmlrpc2shell server')
