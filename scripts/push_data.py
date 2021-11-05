@@ -372,7 +372,7 @@ def zip_file(filename,datadir):
 def checksum(myDirectory):
     try:
         os.chdir(myDirectory)
-        command = "find -maxdepth 1 -type f! -name 'sha256sum*' -exec sha256sum '{}'\; | sed 's/\.\///'> sha256sum.'+myDirectory"
+        command = "sha256sum * > sha256sum.directory"
         os.system(command)
     except:
         print('Error creating sha256sum index file for '+myDirectory)
@@ -479,7 +479,7 @@ if process:
   # Currently requires being run from the ~/RStudio/QAtools directory.
   # To run interactively: launch rstudio, then type "shiny::runApp()"
   if Rstudio:
-    os.chdir(rstudio_dir+"QAtools")
+    os.chdir(rstudio_dir+"aircraft_QAtools")
     command = "Rscript DataReview.R "+project+" "+flight
     print("about to execute : "+command)
     os.system(command)
@@ -798,9 +798,9 @@ msg['From'] = 'ads@groundstation'
 msg['To'] = email
 
 # Temporary comment on mail section while configuring 9/22/2021 Taylor Thomas
-#s = smtplib.SMTP('localhost')
-#s.sendmail('ads@groundstation',email, msg.as_string())
-#s.quit()
+s = smtplib.SMTP('localhost')
+s.sendmail('ads@groundstation',email, msg.as_string())
+s.quit()
 
 print("\r\nSuccessful completion. Close window to exit.")
 sys.exit(1)
