@@ -62,7 +62,7 @@ qc_ftp_site =    'catalog.eol.ucar.edu'
 
 # Hard-code around project name inconsistency. Revert for next project.
 #qc_ftp_dir =     '/pub/incoming/catalog/'+ project.lower()
-qc_ftp_dir =     '/pub/incoming/catalog/spicule'
+qc_ftp_dir =     '/pub/incoming/catalog/aspire'
 if aircraft == "GV_N677F":
   raircraft      = 'aircraft.NSF_NCAR_GV.'
 elif aircraft == "C130_N130AR":
@@ -369,10 +369,11 @@ def zip_file(filename,datadir):
       print_message(message)
 
 # define function to create sha256sum checksums for contents of data dirs 
-def checksum(myDirectory)
+def checksum(myDirectory):
     try:
         os.chdir(myDirectory)
-        os.system('find -maxdepth 1 -type f! -name 'sha256sum*' -exec sha256sum '{}'\; | sed 's/\.\///'> sha256sum.'+myDirectory)
+        command = "find -maxdepth 1 -type f! -name 'sha256sum*' -exec sha256sum '{}'\; | sed 's/\.\///'> sha256sum.'+myDirectory"
+        os.system(command)
     except:
         print('Error creating sha256sum index file for '+myDirectory)
 
