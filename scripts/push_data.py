@@ -369,13 +369,13 @@ def zip_file(filename,datadir):
       print_message(message)
 
 # define function to create sha256sum checksums for contents of data dirs 
-def checksum(myDirectory):
-    try:
-        os.chdir(myDirectory)
-        command = "sha256sum * > sha256sum.directory"
-        os.system(command)
-    except:
-        print('Error creating sha256sum index file for '+myDirectory)
+#def checksum(myDirectory):
+#    try:
+#        os.chdir(myDirectory)
+#        command = "sha256sum * > sha256sum.directory"
+#        os.system(command)
+#    except:
+#        print('Error creating sha256sum index file for '+myDirectory)
 
 ####################   End function definitions ##########################
 
@@ -489,9 +489,9 @@ if process:
     os.system(command)
 
   # call checksum function to create checksum files on raw and processed data
-  checksum(raw_dir)
-  checksum(data_dir)
-  checksum(raw_dir+'PMS2D/')
+#  checksum(raw_dir)
+#  checksum(data_dir)
+#  checksum(raw_dir+'PMS2D/')
 
 ###################  Beginning of Shipping ##############################
 else:
