@@ -1,0 +1,19 @@
+           <!-- Picarro -->
+            <serialSensor class="DSMSerialSensor"
+                baud="9600" parity="none" databits="8" stopbits="1"
+                devicename="/dev/ttyS18" id="130" suffix=".pic" station="0">
+                <sample id="1" scanfFormat="%*d/%*d/%*d %*d:%*d:%*f;%f; %*d/%*d/%*d %*d:%*d:%*f;%f; %*d/%*d/%*d %*d:%*d:%*f;%f; %*d/%*d/%*d %*d:%*d:%*f;%f; %*d
+/%*d/%*d %*d:%*d:%*f;%f; %*d/%*d/%*d %*d:%*d:%*f;%f; %*d/%*d/%*d %*d:%*d:%*f;%f; %*d/%*d/%*d %*d:%*d:%*f;%f; %*d/%*d/%*d %*d:%*d:%*f;%f;">
+                      <variable name="Tcell" units="degC" plotrange="40 50"/> 
+                      <variable name="SV" units="" plotrange="-1 1"/> 
+                      <variable name="MPV" units="" plotrange="0 600"/> 
+                      <variable name="Tbox" units="degC" plotrange="$T_RANGE"/> 
+                      <variable name="co2" units="ppmV" plotrange="$CO2_PPM_RANGE"/> 
+                      <variable name="co2cor" units="ppmV" plotrange="$CO2_PPM_RANGE"/> 
+                      <variable name="ch4" units="ppmV" plotrange="$CH4_RANGE"/> 
+                      <variable name="h2o" units="%" plotrange="$RH_RANGE"/> 
+                      <variable name="Pcell" units="" plotrange="120 150"/>  <!-- I can't find any documentation on these units! -->
+                </sample>
+                <message separator="\r" position="end" length="0"/>
+                <prompt string="_Meas_GetBufferFirst\r" rate="1"/>
+            </serialSensor>
