@@ -76,6 +76,8 @@
 #       Updated location where the archive hash file is written to pdat.
 # Modified 9/16/2021 Taylor Thomas
 #       Archive to HPSS and Campaign Storage.
+# Modified 11/29/2021 Taylor Thomas
+#       EOL DMS now has a checksum utility, commented out hash file function
 ################################################################################
 # Import modules used by this code. Some are part of the python library. Others
 # were written here and will exist in the same dir as this code.
@@ -383,31 +385,31 @@ class archRAFdata:
 	return
 
     # define function to create a hash for a given file
-    def hash_file(self, sdir, sfiles, hash_value_file):
-        # when function is called, ask user to confirm preference to append file with hashes
-        append = raw_input("Would you like to append "+hash_value_file+" with sha256 hash? " + \
-                "yes == enter, no == anything else: ")
-        # check to see if hash file already exists, create if not
-        if os.path.isfile(hash_value_file):
-            pass
-        else:
-            os.system("touch "+hash_value_file)
-        # if user wants to append file, create hashes
-        if append == "":
-
-            # print the file type at the top of the list of corresponding files
-            f = open(hash_value_file, 'a')
-            print >>f, sys.argv[1]
-            # iterate over each data file in sfiles list            
-            for filename in sfiles:
-                with open(sdir+filename, 'rb') as inputfile:
-                    current_datetime = str(datetime.now())
-                    data = inputfile.read()
-                    print(filename, current_datetime, hashlib.sha256(data).hexdigest())
-                    f = open(hash_value_file, 'a')
-                    print >>f, current_datetime+","+filename+",sha256,"+hashlib.sha256(data).hexdigest()
-            print("SHA-1 cryptographic hash values have been appended to "+hash_value_file)
-            print("You still need to archive the hash file: "+hash_value_file) 
+#    def hash_file(self, sdir, sfiles, hash_value_file):
+#        # when function is called, ask user to confirm preference to append file with hashes
+#        append = raw_input("Would you like to append "+hash_value_file+" with sha256 hash? " + \
+#                "yes == enter, no == anything else: ")
+#        # check to see if hash file already exists, create if not
+#        if os.path.isfile(hash_value_file):
+#            pass
+#        else:
+#            os.system("touch "+hash_value_file)
+#        # if user wants to append file, create hashes
+#        if append == "":
+#
+#            # print the file type at the top of the list of corresponding files
+#            f = open(hash_value_file, 'a')
+#            print >>f, sys.argv[1]
+#            # iterate over each data file in sfiles list            
+#            for filename in sfiles:
+#                with open(sdir+filename, 'rb') as inputfile:
+#                    current_datetime = str(datetime.now())
+#                    data = inputfile.read()
+#                    print(filename, current_datetime, hashlib.sha256(data).hexdigest())
+#                    f = open(hash_value_file, 'a')
+#                    print >>f, current_datetime+","+filename+",sha256,"+hashlib.sha256(data).hexdigest()
+#            print("SHA-1 cryptographic hash values have been appended to "+hash_value_file)
+#            print("You still need to archive the hash file: "+hash_value_file) 
 
     def archive_files_cs(self,sdir,sfiles,flag,type,csroot,email = ""):
         '''
@@ -766,4 +768,4 @@ if __name__ == "__main__":
 #    archraf.archive_files(sdir,sfiles,flag,type,mssroot,email)
     archraf.archive_files_cs(sdir,sfiles,flag,type,csroot,email)
     # Create hash and append file
-    archraf.hash_file(sdir,sfiles,hash_value_file) 
+#    archraf.hash_file(sdir,sfiles,hash_value_file) 
