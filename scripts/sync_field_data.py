@@ -255,6 +255,7 @@ def dist_recursive(directory):
 # FTP site directly.
 #############################################################################
 def ftp_to_local(filetype, local_dir):
+
     final_message = 'Starting distribution of data from the FTP to localdirs/\n'
 
     if filetype == 'PMS2D':
@@ -315,6 +316,7 @@ def send_mail_and_die(body):
 # Define main function
 #############################################################################
 def main():
+
     if NAS == True:    
         dir_check()
         dist_raw()
