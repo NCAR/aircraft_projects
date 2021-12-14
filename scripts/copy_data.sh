@@ -8,11 +8,8 @@
 # On planes and lab stations $PROJECT environment variable should be set by 
 # the script ads3_environment.sh currently in /home/ads 
 
-#DATA_LOCATION="/var/r1/$PROJECT"
-#TRANSFER_MEDIA="/run/media/ads/*"
-
-DATA_LOCATION="/scr/tmp/taylort/data_location"
-TRANSFER_MEDIA="/scr/tmp/taylort/transfer_media"
+DATA_LOCATION="/var/r1/$PROJECT"
+TRANSFER_MEDIA="/run/media/ads/*"
 
 echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
 read FLIGHT
