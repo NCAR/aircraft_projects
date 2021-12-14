@@ -6,28 +6,34 @@
 ###############
 #   Project   #
 ###############
-setenv PROJECT "XXXPROJECTXXX"
-setenv YEAR 20XX
-setenv PLATFORM "XXXAIRCRAFTXXX"
-
+setenv PROJECT "MethaneAIR21"
+setenv YEAR 2021
+setenv PLATFORM "GV_N677F"
+setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
 ### ADS 
-#/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads FS/EOL/$YEAR
+#/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads FS/EOL/$YEAR taylort@ucar.edu
 
 ### CAMERA
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg FS/EOL/$YEAR
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc FS/EOL/$YEAR
+$ARCHIVE_SCRIPT TEST/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc glade/campaign/eol/archive/$YEAR taylort@ucar.edu
+
+### Preliminary HRT
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/HRT/Version02 /scr/raf/Raw_Data/$PROJECT/field_phase/HRT/Version02 nc FS/EOL/$YEAR taylort@ucar.edu
+
+### Preliminary SRT
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/SRT /scr/raf/Raw_Data/$PROJECT/field_phase/SRT nc FS/EOL/$YEAR taylort@ucar.edu
+
+### Preliminary KML
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml FS/EOL/$YEAR taylort@ucar.edu
 
 ### Preliminary LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/LRT/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict FS/EOL/$YEAR
 
 ### Preliminary LRT IWG1
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/IWG1 /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/IWG1 iwg1 FS/EOL/$YEAR
-
-### Preliminary KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml FS/EOL/$YEAR
 
 ### Preliminary CO ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py FIELD_INTERNAL_ONLY/CO /scr/raf/Raw_Data/$PROJECT/field_phase/CO ict FS/EOL/$YEAR

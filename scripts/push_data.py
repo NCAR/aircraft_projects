@@ -43,7 +43,7 @@ print("aircraft: "+ aircraft)
 proj_dir  = read_env("PROJ_DIR") + '/' + project + '/' + aircraft + '/'
 
 # Initialization
-sys.path.insert(0,proj_dir)
+sys.path.insert(0,proj_dir+'/scripts')
 from fieldProc_setup import *
 
 # Query user for the flight designation and place to send output

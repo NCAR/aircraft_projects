@@ -1,0 +1,9 @@
+#!/bin/csh
+set project=MethaneAIR21
+cd ~nimbus/RStudio/KalmanFilter
+# To apply the corrections to a high-rate file, supply the flight with an h
+# # e.g.  Rscript KalmanFilter.R WCR-TEST tf01h y y n 15
+foreach file ( ${DAT}/${project}[rtf]f??.nc )
+  set flight=`echo $file | awk '{print substr($0,length($0)-6,4)}'`
+  Rscript KalmanFilter.R $project $flight y y n 15
+end
