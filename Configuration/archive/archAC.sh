@@ -12,6 +12,8 @@ setenv PLATFORM "XXXAIRCRAFTXXX"
 setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
 setenv CS_LOCATION "/glade/campaign/eol/archive/"
 setenv EMAIL "name@ucar.edu"
+setenv projectlower "xxxprojectxxx"
+setenv platformlower "xxxaircraftxxx"
 ########################## Raw Data Files ##############################
 ### ADS 
 #$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR $EMAIL
@@ -21,7 +23,7 @@ setenv EMAIL "name@ucar.edu"
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-#$ARCHIVE_SCRIPT field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc /net/archive/data/$projectlower/aircraft/$platform_lower/field_phase/LRT $EMAIL
 
 ### Preliminary LRT ICT
 #$ARCHIVE_SCRIPT field_phase/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict $CS_LOCATION$YEAR $EMAIL
@@ -55,7 +57,7 @@ setenv EMAIL "name@ucar.edu"
 
 ########################## Production Data Files ##########################
 ### LRT
-#$ARCHIVE_SCRIPT LRT /scr/raf/Prod_Data/$PROJECT nc $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT LRT /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/$projectlower/aircraft/$platformlower/LRT $EMAIL
 
 ### LRT ICT
 #$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict $CS_LOCATION$YEAR $EMAIL
