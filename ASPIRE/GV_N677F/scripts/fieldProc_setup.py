@@ -23,9 +23,12 @@
 # dist_field_data.py paths for new sync_field_data.py script. 01/16/2019
 
 import os
-project = os.environ['PROJECT']
-DATA_DIR = os.environ['DATA_DIR']
-RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
+#project = os.environ['PROJECT']
+project = 'aspire'
+#DATA_DIR = os.environ['DATA_DIR']
+DATA_DIR = '/scr/raf_data/'
+#RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
+RAW_DATA_DIR = '/scr/raf/Raw_Data/'
 dat_parent_dir =  DATA_DIR+'/'     # Where nc and kml files go
 rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 

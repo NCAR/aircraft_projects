@@ -6,12 +6,12 @@
 ###############
 #   Project   #
 ###############
-setenv PROJECT "XXXPROJECTXXX"
-setenv YEAR 20XX
-setenv PLATFORM "XXXAIRCRAFTXXX"
+setenv PROJECT "ASPIRE"
+setenv YEAR 2021
+setenv PLATFORM "GV_N677F"
 setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
 setenv CS_LOCATION "/glade/campaign/eol/archive/"
-setenv EMAIL "name@ucar.edu"
+setenv EMAIL "taylort@ucar.edu"
 ########################## Raw Data Files ##############################
 ### ADS 
 #$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR $EMAIL
@@ -21,7 +21,13 @@ setenv EMAIL "name@ucar.edu"
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-#$ARCHIVE_SCRIPT field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc net/archive/data $EMAIL
+
+### Preliminary HRT
+#$ARCHIVE_SCRIPT field_phase/HRT /scr/raf/Raw_Data/$PROJECT/field_phase/HRT nc $CS_LOCATION$YEAR $EMAIL
+
+### Preliminary SRT
+$ARCHIVE_SCRIPT field_phase/SRT /scr/raf/Raw_Data/$PROJECT/field_phase/SRT nc $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary LRT ICT
 #$ARCHIVE_SCRIPT field_phase/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict $CS_LOCATION$YEAR $EMAIL
