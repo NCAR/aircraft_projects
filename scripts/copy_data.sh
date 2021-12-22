@@ -8,11 +8,11 @@
 # On planes and lab stations $PROJECT environment variable should be set by 
 # the script ads3_environment.sh currently in /home/ads 
 
-#DATA_LOCATION="/var/r1/$PROJECT"
-#TRANSFER_MEDIA="/run/media/ads/*"
+DATA_LOCATION="/var/r1/$PROJECT"
+TRANSFER_MEDIA="/run/media/ads/*"
 
-DATA_LOCATION="/scr/tmp/taylort/data_location"
-TRANSFER_MEDIA="/scr/tmp/taylort/transfer_media"
+#DATA_LOCATION="/scr/tmp/taylort/data_location"
+#TRANSFER_MEDIA="/scr/tmp/taylort/transfer_media"
 
 echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
 read FLIGHT
@@ -66,6 +66,24 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    fi
 
    echo "************************************************************"
+   echo "Starting log file copy process"
+   mkdir -p $TRANSFER_MEDIA/$PROJECT/logs
+   EXIT_MKDIR_LOGS="$?"
+
+   if [ "$EXIT_MKDIR_LOGS" -eq 0 ]; then
+      echo "WARNING: command mkdir -p $TRANSFER_MEDIA/$PROJECT/logs failed!"
+   else
+      echo "command mkdir -p $TRANSFER_MEDIA/$PROJECT/logs was successful"
+   fi
+   rsync /var/log/messages $TRANSER_MEDIA/$PROJECT/logs
+   rsync /var/log/ads3.log $TRANSFER_MEDIA/$PROJECT/logs
+   rsync /var/log/ads3_kernel.log $TRANSFER_MEDIA/$PROJECT/logs
+   rsync /var/log/router $TRANSFER_MEDIA/$PROJECT/logs
+   rsync /var/log/nagios/nagios.log $TRANSFER_MEDIA/$PROJECT/logs
+   rsync /var/log/boot.log $TRANSFER_MEDIA/$PROJECT/logs
+   rsync /var/log/cron $TRANSFER_MEDIA/$PROJECT/logs
+   rsync /var/log/dnf.log $TRANSFER_MEDIA/$PROJECT/logs
+   rsync /var/log/kdump.log $TRANSFER_MEDIA/$PROJECT/logs
 
    if [ "$EXIT_RSYNC" -eq 0 ] && [ $sha_copy == $sha_orig ]; then
       umount $TRANSFER_MEDIA;
