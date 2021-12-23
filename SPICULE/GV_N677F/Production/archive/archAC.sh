@@ -29,7 +29,7 @@ setenv YEAR 2021
 #/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/HRT /scr/raf/Raw_Data/$PROJECT/field_phase/HRT nc FS/EOL/$YEAR taylort@ucar.edu
 
 ### Preliminary SRT
-/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/SRT /scr/raf/Raw_Data/$PROJECT/field_phase/SRT nc FS/EOL/$YEAR taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/SRT /scr/raf/Raw_Data/$PROJECT/field_phase/SRT nc FS/EOL/$YEAR taylort@ucar.edu
 
 ### Preliminary KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml FS/EOL/$YEAR taylort@ucar.edu
@@ -58,7 +58,7 @@ setenv YEAR 2021
 
 ########################## Production Data Files ##########################
 ### LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc FS/EOL/$YEAR
+/net/jlocal/projects/Configuration/scripts/archAC.py LRT /scr/raf/Prod_Data/$PROJECT/LRT nc /glade/campaign/eol/archive/$YEAR taylort@ucar.edu
 
 ### LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict FS/EOL/$YEAR
@@ -67,7 +67,7 @@ setenv YEAR 2021
 #/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/$YEAR taylort@ucar.edu
 
 ### KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml FS/EOL/$YEAR
+#/net/jlocal/projects/Configuration/scripts/archAC.py KML /scr/raf/Prod_Data/$PROJECT/KML kml glade/campaign/eol/archive/$YEAR taylort@ucar.edu
 
 ### HRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc FS/EOL/$YEAR

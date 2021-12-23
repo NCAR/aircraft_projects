@@ -1,0 +1,60 @@
+# You must change the project name everywhere to the project this is for.
+includeData = no
+includeProjectName = yes
+netcdfFile = /scr/raf_Raw_Data/field_phase/LRT/SPICULE####.nc 
+gravityD = East
+# Times will be determined from the images in the imageDirectory
+# All other image dirs will try to match these times.
+imageDir1 = /scr/raf/Raw_Data/SPICULE/camera_images/flight_number_####/forward
+#imageDir1 = /scr/raf/Raw_Data/XXXPROJECTXXX/camera_images/flight_number_####/down
+gravity1 = East
+#gravity1 = North
+#gravity1 = NorthEast
+movieDirectory = /scr/raf_Raw_Data/SPICULE/Movies 
+overlayImageTime = yes
+overlayImagePointing = yes
+numCameras = 1
+# If numCameras > 1, add additional dirs and cameras here:
+#imageDir2 = /scr/raf/Raw_Data/XXXPROJECTXXX/camera_images/flight_number_####/down
+#gravity2 = SouthEast
+#gravity2 = South
+#gravity2 = NorthWest
+#imageDir3 = /scr/raf/Raw_Data/XXXPROJECTXXX/camera_images/flight_number_####/right
+#gravity3 = SouthEast
+#gravity3 = East
+#gravity3 = SouthEast
+#imageDir4 = /scr/raf/Raw_Data/XXXPROJECTXXX/camera_images/flight_number_####/down
+#gravity4 = NorthEast
+#gravity4 = South
+#gravity4 = SouthWest
+
+# For the moment, assume all cameras are the same type.
+cameraName = Flea
+
+# The outputResolution should be proportional to the scale:
+# For one image per frame, leave the ht and add 200 to the width
+# For two images, double the ht and add 50 or so padding, 
+#   and add 200 to the width
+# For three images, double the ht and width (plus padding).
+scale = 512x384!
+outputResolution=512x384
+outputResolutionD=712x768
+#scale = 341x256!
+outputFrameRate = 15
+mp4BitRate = 1500000
+endParameters
+
+GGALT
+GGLAT
+GGLON
+ATX
+DPXC
+PSXC
+RHUM
+TASX
+THDG
+PITCH
+ROLL
+WSC
+WDC
+endVariablesLT
