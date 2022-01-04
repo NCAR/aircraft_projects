@@ -58,7 +58,7 @@ setenv YEAR 2021
 
 ########################## Production Data Files ##########################
 ### LRT
-/net/jlocal/projects/Configuration/scripts/archAC.py LRT /scr/raf/Prod_Data/$PROJECT/LRT nc /glade/campaign/eol/archive/$YEAR taylort@ucar.edu
+#/net/jlocal/projects/Configuration/scripts/archAC.py LRT /scr/raf/Prod_Data/$PROJECT/LRT nc /glade/campaign/eol/archive/$YEAR taylort@ucar.edu
 
 ### LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict FS/EOL/$YEAR
@@ -74,6 +74,12 @@ setenv YEAR 2021
 
 ### HRT KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KMLh /scr/raf/Prod_Data/$PROJECT/HRT kml FS/EOL/$YEAR
+
+### VCSEL ASCII
+#/net/jlocal/projects/Configuration/scripts/archAC.py VCSEL /scr/raf/Prod_Data/$PROJECT/VCSEL txt /glade/campaign/eol/archive/$YEAR taylort@ucar.edu
+
+### CVI
+/net/jlocal/projects/Configuration/scripts/archAC.py CVI /scr/raf/Prod_Data/$PROJECT/CVI nc /glade/campaign/eol/archive/$YEAR taylort@ucar.edu
 
 ### CO ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CO /scr/raf/Prod_Data/$PROJECT/CO ict FS/EOL/$YEAR
