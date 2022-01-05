@@ -6,10 +6,8 @@
 # On planes and lab stations $PROJECT environment variable should be set by 
 # the script ads3_environment.sh currently in /home/ads 
 
-#DATA_LOCATION="/var/r1/$PROJECT"
-DATA_LOCATION="/home/ads/data_location"
-#TRANSFER_MEDIA="/run/media/ads/*"
-TRANSFER_MEDIA="/home/ads/transfer_media"
+TRANSFER_MEDIA="/run/media/ads/*"
+
 echo "***********************************************************************"
 echo "Scrip must be run as root user, since log files are owned by root."
 echo "/usr/bin/su root"
@@ -34,11 +32,11 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    echo "Please type Y or y and press enter to confirm. Anything else and enter will not copy log files."
    read COPY_LOGS
    if [ $COPY_LOGS == "Y" ] || [ $COPY_LOGS == "y" ]; then
-      #rsync /var/log/messages $TRANSER_MEDIA/$PROJECT/logs
-      #rsync /var/log/ads3.log $TRANSFER_MEDIA/$PROJECT/logs
-      #rsync /var/log/ads3_kernel.log $TRANSFER_MEDIA/$PROJECT/logs
-      #rsync /var/log/router $TRANSFER_MEDIA/$PROJECT/logs
-      #rsync /var/log/nagios/nagios.log $TRANSFER_MEDIA/$PROJECT/logs
+      rsync -va /var/log/messages $TRANSER_MEDIA/$PROJECT/logs
+      rsync -va /var/log/ads3.log $TRANSFER_MEDIA/$PROJECT/logs
+      rsync -va /var/log/ads3_kernel.log $TRANSFER_MEDIA/$PROJECT/logs
+      rsync -va /var/log/router $TRANSFER_MEDIA/$PROJECT/logs
+      rsync -va /var/log/nagios/nagios.log $TRANSFER_MEDIA/$PROJECT/logs
       rsync -va /var/log/boot.log $TRANSFER_MEDIA/$PROJECT/logs
       rsync -va /var/log/cron $TRANSFER_MEDIA/$PROJECT/logs
       rsync -va /var/log/dnf.log $TRANSFER_MEDIA/$PROJECT/logs
