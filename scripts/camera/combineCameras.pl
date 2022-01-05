@@ -554,7 +554,7 @@ print "$command\n";
 if (system "$command") {die "Unable to create MPEG file $outputFilename, pass 2 using command $command"};
 
 # keep proj dir clean by moving log files created during MPEG encoding to /tmp
-system "mv *ffmpeg* /tmp"
+system "mv *ffmpeg* /tmp";
 
 # --------------------------------------------------------------------
 #-------------------------------- END --------------------------------

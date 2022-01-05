@@ -18,7 +18,7 @@ set PROJECT = "FRAPPE"
 #/net/work/bin/scripts/mass_store/archAC/archAC.py CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg EOL/2014
 
 ### LRT
-/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version2_20190617 /scr/raf/Prod_Data/$PROJECT/LRT_V2_20190617 Z.nc FS/EOL/2014 taylort@ucar.edu
+#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version2_20190617 /scr/raf/Prod_Data/$PROJECT/LRT_V2_20190617 Z.nc FS/EOL/2014 taylort@ucar.edu
 
 ### LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format R2.ict EOL/2014
@@ -47,3 +47,5 @@ set PROJECT = "FRAPPE"
 ### NONO2O3 ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py NONO2O3 /scr/raf/Prod_Data/$PROJECT/NONO2O3 ict EOL/2014
 
+### TOGA ICT
+/net/work/bin/scripts/mass_store/archAC/archAC.py TOGA /scr/raf/Prod_Data/$PROJECT/TOGA ict EOL/2014 taylort@ucar.edu
