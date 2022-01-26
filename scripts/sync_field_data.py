@@ -14,24 +14,23 @@ import os, sys, re, sys
 import time
 import smtplib
 from email.mime.text import MIMEText
-
-#get the arguments from the command line
-temp_dir = sys.argv[1]
-project = os.getenv('PROJECT')
-
-aircraft = sys.argv[3] 
-
-#set up directories
-proj_dir = str(os.getenv('PROJ_DIR'))+'/'+project+'/'+aircraft+'/'
-
-sys.path.insert(0,proj_dir)
+sys.path.insert(0,'/net/jlocal/projects/TI3GER/GV_N677F/scripts')
 from fieldProc_setup import *
 
-dat_dir = dat_parent_dir+'/'+project+'/'
-ftp_dir = ftp_parent_dir+'/'
-rdat_dir = rdat_parent_dir+'/'+project+'/'
-eol_dir = temp_dir+'/EOL_data/'
+#get the arguments from the command line
+temp_dir = '/net/ftp/pub/data/incoming/ti3ger'
 
+project = os.getenv('PROJECT')
+aircraft = 'GV_N677F' 
+
+#set up directories
+proj_dir = '/net/jlocal/projects/'+project+'/'+aircraft+'/'
+sys.path.insert(0,proj_dir)
+
+dat_dir = dat_parent_dir+project+'/'
+ftp_dir = ftp_parent_dir+'/'
+rdat_dir = rdat_parent_dir+project+'/'
+eol_dir = temp_dir+'/EOL_data/'
 #############################################################################
 # Directory checks
 #############################################################################
@@ -118,7 +117,7 @@ def dist_raw():
             os.system(command)
             final_message = final_message + message 
             logging.info(final_message)
-
+            print(command)
         # push_data.py can generate a .bz2 file, so must accommodate 
         elif fname.endswith('.bz2'):
             command = 'rsync -qu '+eol_dir+'RAF_data/ADS/*.bz2 '+rdat_dir
@@ -160,13 +159,13 @@ def dist_prod():
             os.system(command)
             final_message = final_message + message
             logging.info(final_message)
-       
+            print(command)
             command = 'rsync -qu '+eol_dir+'RAF_data/*.nc '+ftp_dir+'/EOL_data/RAF_data'
             message = 'Syncing production data to ftp: '+command+'\n'
             os.system(command)
             final_message = final_message + message
             logging.info(final_message)
-
+            print(command)
         elif fname.endswith('kml'):
             command = 'rsync -qu '+eol_dir+'RAF_data/*.kml '+dat_dir+'/field_data'
             message = 'Syncing production data: '+command+'\n'

@@ -6,7 +6,7 @@
 ###############
 #   Project   #
 ###############
-set PROJECT = "PREDICT"
+set PROJECT = PREDICT
 set YEAR = 2010
 #echo "Make sure netCDF files have been reordered before archiving!"
 
@@ -18,8 +18,7 @@ set YEAR = 2010
 
 ###LRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version1_2001Feb02 /scr/raf/Prod_Data/$PROJECT/Version1_2001Feb02 .nc FS/EOL/$YEAR taylort@ucar.edu
-/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version2_2019Jan24 /scr/raf/Prod_Data/$PROJECT/Version2_2019Jan24 .nc FS/EOL/$YEAR taylort@ucar.edu
-
+/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/Version3_2021Aug06 /scr/raf/Prod_Data/$PROJECT/LRT/Version3_2021Aug06 .nc FS/EOL/$YEAR taylort@ucar.edu
 
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT/ordered rf26.nc ATDdata
 

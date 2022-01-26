@@ -9,7 +9,9 @@
 # the script ads3_environment.sh currently in /home/ads 
 
 DATA_LOCATION="/var/r1/$PROJECT"
+#DATA_LOCATION="/home/ads/data_location"
 TRANSFER_MEDIA="/run/media/ads/*"
+#TRANSFER_MEDIA="/home/ads/transfer_media"
 
 echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
 read FLIGHT
@@ -62,9 +64,7 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
       echo "ERROR! sha256sums do not match";
    fi
 
-   echo "************************************************************"
-
-   if [ "$EXIT_RSYNC" -eq 0 ] && [ $sha_copy == $sha_orig ]; then
+if [ "$EXIT_RSYNC" -eq 0 ] && [ $sha_copy == $sha_orig ]; then
       umount $TRANSFER_MEDIA;
       echo "Copy of .ads file(s) for $PROJECT$FLIGHT SUCCESSFUL."
       echo "When terminal closes you can safely remove the drive by right-clicking the desktop icon."

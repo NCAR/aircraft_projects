@@ -34,8 +34,8 @@ def read_env(env_var):
 
 project = read_env("PROJECT")
 print("project: "+ project)
-data_dir = read_env("DATA_DIR") + '/' + project + '/'
-raw_dir  = read_env("RAW_DATA_DIR") + '/' + project + '/'
+data_dir = read_env("DATA_DIR") + '/' + project.upper() + '/'
+raw_dir  = read_env("RAW_DATA_DIR") + '/' + project.upper() + '/'
 
 # Get aircraft from proj dir
 aircraft = os.listdir(read_env("PROJ_DIR") + '/' + project)[0]
@@ -43,7 +43,7 @@ print("aircraft: "+ aircraft)
 proj_dir  = read_env("PROJ_DIR") + '/' + project + '/' + aircraft + '/'
 
 # Initialization
-sys.path.insert(0,proj_dir)
+sys.path.insert(0,proj_dir+'/scripts')
 from fieldProc_setup import *
 
 # Query user for the flight designation and place to send output
@@ -62,7 +62,7 @@ qc_ftp_site =    'catalog.eol.ucar.edu'
 
 # Hard-code around project name inconsistency. Revert for next project.
 #qc_ftp_dir =     '/pub/incoming/catalog/'+ project.lower()
-qc_ftp_dir =     '/pub/incoming/catalog/aspire'
+qc_ftp_dir =     '/pub/incoming/catalog/ti3ger'
 if aircraft == "GV_N677F":
   raircraft      = 'aircraft.NSF_NCAR_GV.'
 elif aircraft == "C130_N130AR":
@@ -360,6 +360,7 @@ def reorder_nc(ncfile):
     print_message(message)
     proc_nc_file  =    'Yes'
   return(proc_nc_file)
+
 def zip_file(filename,datadir):
     os.chdir(datadir)
     command = "zip " + filename + ".zip " + filename
@@ -367,15 +368,6 @@ def zip_file(filename,datadir):
       message =  "\nERROR!: Zipping up " + filename + " with command:\n  "
       message = message + command
       print_message(message)
-
-# define function to create sha256sum checksums for contents of data dirs 
-#def checksum(myDirectory):
-#    try:
-#        os.chdir(myDirectory)
-#        command = "sha256sum * > sha256sum.directory"
-#        os.system(command)
-#    except:
-#        print('Error creating sha256sum index file for '+myDirectory)
 
 ####################   End function definitions ##########################
 
@@ -487,11 +479,6 @@ if process:
     command = "cp -p "+project+flight+"Plots.pdf /home/ads/Desktop"
     print("copying QAQC pdf to desktop")
     os.system(command)
-
-  # call checksum function to create checksum files on raw and processed data
-#  checksum(raw_dir)
-#  checksum(data_dir)
-#  checksum(raw_dir+'PMS2D/')
 
 ###################  Beginning of Shipping ##############################
 else:
@@ -797,8 +784,8 @@ msg['Subject'] = 'Process & Push message for:'+project+'  flight:'+flight
 msg['From'] = 'ads@groundstation'
 msg['To'] = email
 
-# Temporary comment on mail section while configuring 9/22/2021 Taylor Thomas
 s = smtplib.SMTP('localhost')
+print(s)
 s.sendmail('ads@groundstation',email, msg.as_string())
 s.quit()
 

@@ -1,0 +1,71 @@
+RAF Aircraft Camera Image processing notes
+==========================================
+
+Cameras
+-------
+
+Currently (as of Jan 28, 2010) there are two camera types used at the RAF.
+
+1) AXIS network camera
+	
+Used as the C130 forward-pointing camera.
+This could be changed out for a 'FLEA' (see below) in the future.
+704x480 pixels, rectangular, equivalent to 640c480 square pixels.
+Images have date and time stamped on them.
+images name: c130_fwd_YYMMDD_HHMMSS.jpg 
+	(May want to change '_' to '-' in future).
+
+
+
+2) Point Grey color FLEA.
+
+Used as the C130 down, GV forward, GV left, GV right
+Powered only during flight
+1024x768 square pixels.
+image name: YYMMDD-HHMMSS.jpg
+Directory: YYMMDD-HHMMSS from time when camera DSM was powered on, 
+	typically 1/2 hour pre-flight.
+
+
+Processing tasks
+----------------
+
+Post-flight:
+	Back up images.
+	delete nighttime images.
+	delete C130 images taken prior to takeoff, after landing, in hanger, etc
+
+	Generate preliminary movies:
+
+	-Axis camera
+		No adjustments are necessary.
+		Reducing resolution is optional.
+		Create movie with Quicktime or ffmpeg.
+
+	-Flea camera
+		Run moviePrelim.pl to sharpen, rescale, & timestamp images.
+		Create movie with quicktime or ffmpeg.
+
+Post-project:
+	Send image to mass store.
+	Determine desired annotation variables and set up parameters file.
+
+	Generate final movies
+		Create ParamFile for this project.
+		Run combineCameras.pl to generate movies with ffmpeg.
+		(Possibly use Quicktime in the future)
+
+	Produce README file.
+	Optional - Convert Axis images to 640x480 for square pixels,
+	Optional - Apply sharpening, possibly reduce resolution for Flea images.
+	Archive
+
+Movie parameters
+	The H.264 codec is the best I've seen for quality and size and is 
+	widely supported.  Presumably ffmpeg supports this codec but I don't 
+	think our installation currently does.
+	Quicktime supports H.264.
+
+	Final H & V resolutions should be a multiple of 16.
+	Typical bit rate is 1000 - 1500 Mb/s. Downward images might need more 
+	- faster scene change.
