@@ -36,7 +36,7 @@ rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 NAS = False
 # Does NAS have a permanent mount?
 NAS_permanent_mount = False
-nas_url = '192.168.1.30:/data'
+nas_url = '/field-data/t13ger/EOL_data/RAF_data'
 nas_mnt_pt =     '/mnt/Data'
 
 #############################################################################
@@ -44,10 +44,16 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 FTP = True
 ftp_site = 'ftp.eol.ucar.edu'
-user = 'anonymous'
-password = ''
-ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
+user = 'ti3ger'
+password = '1od!n3'
+
+# with an authenticated user, the daemon shell puts into /net/ft/pub/data/incoming/<project>
+ftp_parent_dir = '.'
+ftp_data_dir = './EOL_data/RAF_data'
+
+# when using anonymous, must provide the full path (comment out if using auth user)
+#ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
+#ftp_data_dir = '/pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
 
 #############################################################################
 ### Define which files should be generated
