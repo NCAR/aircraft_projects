@@ -426,7 +426,7 @@ if process:
 
     # Generate IWG1 file from LRT, if requested
     if (key == "IWG1"):
-      command = "nc2iwg1 "+filename["LRT"]+" > "+filename[key];
+      command = "nc2iwg1 "+filename["LRT"]+" -o "+filename[key];
       print("about to execute : "+command)
       if os.system(command) == 0:
         status[key]["proc"] = 'Yes'
