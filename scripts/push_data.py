@@ -502,9 +502,9 @@ if NAS:
 
   # Put copies of files to local store
   # in dirs to sync to ftp site in Boulder...
-  nas_sync_dir = nas_mnt_pt + '/data/' + project + '/Sync_to_Boulder/EOL_data/RAF_data'
+  nas_sync_dir = nas_mnt_pt+'/FTP_sync/EOL_data/RAF_data/'
   # and in dirs for local use...
-  nas_data_dir = nas_mnt_pt + '/data/' + project + '/EOL_data/RAF_data'
+  nas_data_dir = nas_mnt_pt+'/EOL_data/RAF_data/'
 
   print("")
   print("*************** Copy files to NAS scratch area ***************")
@@ -515,11 +515,11 @@ if NAS:
         print('Copying '+filename[key]+' to '+nas_data_dir+'/ADS')
         status[key]["stor"] = rsync_file(filename[key],nas_data_dir+'/ADS')
     elif (key == "PMS2D"):
-        print('Copying '+filename[key]+' to '+nas_data_dir+'/PMS2D')
-        status[key]["stor"] = rsync_file(filename[key],nas_data_dir+'/PMS2D')
+        print('Copying '+filename[key]+' to '+nas_data_dir+'/PMS2D/')
+        status[key]["stor"] = rsync_file(filename[key],nas_data_dir+'/PMS2D/')
     else:
-      print('Copying '+filename[key]+' to '+nas_data_dir)
-      status[key]["stor"] = rsync_file(filename[key],nas_data_dir)
+      print('Copying '+filename[key]+' to '+nas_data_dir+'/'+key)
+      status[key]["stor"] = rsync_file(filename[key],nas_data_dir+'/'+key)
 
   if catalog:
     ensure_dir(nas_data_dir+"/qc")
@@ -751,12 +751,12 @@ if NAS == True:
         print('Done')
     else:
       if sendzipped == True:
-        print('Copying '+filename[key]+'.zip file to '+nas_sync_dir)
-        status[key]["ship"] = rsync_file(filename[key]+'.zip',nas_sync_dir)
+        print('Copying '+filename[key]+'.zip file to '+nas_sync_dir+'/'+key)
+        status[key]["ship"] = rsync_file(filename[key]+'.zip',nas_sync_dir+'/'+key)
         print('Done')
       else:
-        print('Copying '+filename[key]+' file to '+nas_sync_dir)
-        status[key]["ship"] = rsync_file(filename[key],nas_sync_dir)
+        print('Copying '+filename[key]+' file to '+nas_sync_dir+'/'+key)
+        status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/'+key)
         print('Done')
 
   # unmount NAS

@@ -33,16 +33,17 @@ rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 ### Define settings for NAS in the field
 #############################################################################
 # Do we have local CWIG RAID storage?
-NAS = False
+NAS = True
+
 # Does NAS have a permanent mount?
-NAS_permanent_mount = False
-nas_url = '/field-data/t13ger/EOL_data/RAF_data'
-nas_mnt_pt =     '/mnt/Data'
+NAS_permanent_mount = True
+nas_url = '192.168.1.5:/field-data/'+project.lower()
+nas_mnt_pt = '/mnt/Data/'+project.lower()
 
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = True
+FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'ti3ger'
 password = '1od!n3'
@@ -58,11 +59,11 @@ ftp_data_dir = './EOL_data/RAF_data'
 #############################################################################
 ### Define which files should be generated
 #############################################################################
-ICARTT = False # Generate ICARTT
-IWG1 = False # Generate IWG1 packet
+ICARTT = True # Generate ICARTT
+IWG1 =True # Generate IWG1 packet
 
-HRT = False # Generate HRT .nc file
-SRT = False # Generate SRT .nc file
+HRT = True # Generate HRT .nc file
+SRT = True # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
 zip_ADS = False # Bzips the ads file independently of processed files
 # you can have both sendzipped and zip_ads set to True if you want
