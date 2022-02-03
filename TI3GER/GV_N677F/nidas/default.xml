@@ -638,6 +638,23 @@
         </variable>
       </sample>
     </sensor>
+<!-- Aerodyne Research, Inc Mini 108 CO-N2O instrument. First flown 2018
+-->
+    <serialSensor ID="CON2O" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_ARI">
+      <sample id="1" rate="1" scanfFormat="c%*f,%f,%f,%f,%f,%f,,,,%f,%f">
+              <!--variable longname="Aerodyne Research Inc Mini 108 Igor Pro time" name="IgorTime" units="s"/-->
+              <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2O" units="ppbv"/>
+              <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="CO" units="ppbv"/>
+              <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2OA" units="ppbv"/>
+              <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="COA" units="ppbv"/>
+              <variable longname="Aerodyne Research Inc Mini 108 Water Mixing Ratio" name="H2O" units="ppbv"/>
+              <variable longname="Aerodyne Research Inc Mini 108 Temperature" name="T" units="C"/>
+              <variable longname="Aerodyne Research Inc Mini 108 Pressure" name="P" units="hPa"/>
+      </sample>
+      <!--prompt rate="5" string="SIG?\r"/-->
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
+
 
 <!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
       the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
@@ -1750,13 +1767,10 @@
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
       <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30200" id="600" suffix="_303"/>
       <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30201" id="605" suffix="_304"/>
-<!-- Uncomment after ASPIRE
       <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30202" id="610" suffix="_305"/>
--->
 
 
 
-<!-- Uncomment when we remove ARINC from dsm304.
       <sensor IDREF="ALTASTATUS" devicename="usock::30220" id="6000" suffix="_AENT1"/>
       <sensor ID="ARINCENET1" class="raf.UDPArincSensor" devicename="usock::56769" id="6100" timeout="10">
         <parameter name="ip" type="string" value="192.168.84.16"/>
@@ -1766,7 +1780,7 @@
       <arincSensor IDREF="IRS-GV" devicename="Alta:6100:5" id="6500" suffix="_IRS2"/>
       <arincSensor IDREF="ADC-GV" devicename="Alta:6100:6" id="6800" suffix="_A"/>
       <arincSensor IDREF="GPS-GV" devicename="Alta:6100:7" id="7100" suffix="_A"/>
--->
+
       <sensor IDREF="ALTASTATUS" devicename="usock::30221" id="8000" suffix="_AENT2"/>
       <sensor ID="ARINCENET2" class="raf.UDPArincSensor" devicename="usock::56771" id="8100" timeout="10">
         <parameter name="ip" type="string" value="192.168.84.17"/>
@@ -1785,13 +1799,18 @@
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_303"/>
 
-      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI0" id="110">
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS0" id="110">
         <sample id="1">
           <variable longname="Interior Cabin Static Pressure" name="PCAB" units="hPa"/>
         </sample>
       </serialSensor>
-      <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyCTI2" id="150" suffix="_232"/>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI3" id="200" suffix="_DPR"/>
+      <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyS2" id="150" suffix="_232"/>
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS3" id="200" suffix="_DPR"/>
+      <!--      <serialSensor IDREF="GCR" devicename="/dev/ttyCTI4" id="300" suffix="_LWO"/>
+      -->
+      <serialSensor IDREF="CDP" devicename="/dev/ttyS5" id="400" suffix="_RWOO">
+	      <parameter name="SerialNumber" type="string" value="CDP016"/>
+      </serialSensor>
 
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="250" latency="0.25">
@@ -1826,6 +1845,32 @@
           </variable>
         </sample>
       </sensor>
+      <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyS1" id="300">
+        <calfile file="A2DS042.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
+        <parameter name="boardID" type="int" value="42"/>
+        <parameter name="FILT" type="int" value="6"/>
+	<sample id="1" rate="1" scanfFormat="H%d,%x,%x">
+          <variable longname="Time; Seconds Since Midnight" name="UTSEC_GPDAQ_303" units="seconds"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_GPDAQ_303" units="cnts"/>
+          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_GPDAQ_303" units="counter"/>
+        </sample>
+        <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
+          <variable longname="Raw Icing-Rate Indicator" name="RICE" units="V">
+            <parameter name="ifsr" type="float" value="0"/>
+            <parameter name="ipol" type="int" value="0"/>
+            <poly units="V">
+		    <calfile file="RICE.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+	  <variable longname="Raw PMS-King Liquid Water Content Output" name="PLWC" units="V">
+            <parameter name="ifsr" type="float" value="0"/>
+            <parameter name="ipol" type="int" value="0"/>
+            <poly units="W">
+              <calfile file="PLWC.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+        </sample>
+      </serialSensor>
 
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
@@ -1835,18 +1880,19 @@
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_304"/>
 
-      <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000"/>
-      <arincSensor IDREF="IRS-GV" devicename="/dev/arinc1" id="2000" suffix="_IRS2"/>
-      <arincSensor IDREF="ADC-GV" devicename="/dev/arinc2" id="3000" suffix="_A"/>
-      <arincSensor IDREF="GPS-GV" devicename="/dev/arinc3" id="4000" suffix="_A"/>
-      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI0" id="110">
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS0" id="110">
         <sample id="1">
           <variable longname="Raw Static Pressure, Fuselage" name="PSF" units="hPa"/>
 	</sample>
       </serialSensor>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI1" id="120" suffix="_DPL"/>
-      <serialSensor IDREF="VCSEL" devicename="/dev/ttyCTI7" id="330" suffix="_VXL"/>
-
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyS1" id="120" suffix="_DPL"/>
+      <serialSensor IDREF="UHSAS" devicename="/dev/ttyS2" id="150" suffix="_FBTM">
+        <parameter name="SerialNumber" type="string" value="UHSAS001"/>
+      </serialSensor>
+      <serialSensor IDREF="CON2O" devicename="/dev/ttyS4" id="200" suffix="_ARI"/>
+      <serialSensor IDREF="PIC2401_CO2" devicename="/dev/ttyS3" id="250" suffix="_PIC2401"/>
+      <serialSensor IDREF="VCSEL" devicename="/dev/ttyS8" id="330" suffix="_VXL"/>
+      <!--
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="400" latency="0.25" suffix="_304">
         <calfile file="W543511.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT"/>
@@ -1863,7 +1909,7 @@
           </variable>
         </sample>
       </sensor>
-
+      -->
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -1873,7 +1919,7 @@
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_305"/>
 
-      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS5" id="110">
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS0" id="110">
         <sample id="1">
           <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="hPa"/>
         </sample>
@@ -1881,7 +1927,7 @@
           <variable longname="Temperature of QCF Probe" name="QCFTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
-      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS6" id="120">
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS1" id="120">
         <sample id="1">
           <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="hPa"/>
         </sample>
@@ -1889,7 +1935,7 @@
           <variable longname="Temperature of QCR Probe" name="QCRTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
-      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS7" id="130">
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS2" id="130">
         <sample id="1">
           <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="hPa"/>
         </sample>
@@ -1897,7 +1943,7 @@
           <variable longname="Temperature of ADIFR Probe" name="ADIFRTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
-      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS8" id="140">
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS3" id="140">
         <sample id="1">
           <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="hPa"/>
         </sample>
@@ -1905,7 +1951,7 @@
           <variable longname="Temperature of BDIFR Probe" name="BDIFRTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
-      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS10" id="150">
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyS5" id="150">
 	<sample id="1">
 	  <variable longname="Raw Dynamic Pressure, Windscreen" name="QCTF" units="hPa"/>
 	</sample>
@@ -1913,36 +1959,28 @@
 	  <variable longname="Temperature of QCTF Probe" name="QCTFTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
-      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS11" id="160">
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyS6" id="160">
 	<sample id="1">
 	  <variable longname="Raw Static Pressure, Fuselage" name="PSTF" units="hPa"/>
 	</sample>
       </serialSensor>
 
-      <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyS9" id="300">
+      <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyS4" id="300">
         <calfile file="A2DS006.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
         <parameter name="boardID" type="int" value="6"/>
         <parameter name="FILT" type="int" value="10"/>
         <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
-          <variable longname="Time; Seconds Since Midnight" name="UTSEC_TDACQ1_305" units="seconds"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_TDACQ1_305" units="cnts"/>
-          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TDACQ1_305" units="counter"/>
+          <variable longname="Time; Seconds Since Midnight" name="UTSEC_TDAQ1_305" units="seconds"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_TDAQ1_305" units="cnts"/>
+          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TDAQ1_305" units="counter"/>
         </sample>
         <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
-          <variable longname="Recovery Air Temperature, Heated Left" name="RTH3" units="C">
+          <variable longname="Recovery Air Temperature, Unheated Left" name="RTF1" units="C">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="ifsr" type="int" value="0"/>
             <parameter name="ipol" type="int" value="0"/>
             <poly units="deg_C">
-              <calfile file="RTH3.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
-            </poly>
-          </variable>
-          <variable longname="Recovery Air Temperature, Heated Left" name="RTH4" units="C">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="ifsr" type="int" value="0"/>
-            <parameter name="ipol" type="int" value="0"/>
-            <poly units="deg_C">
-              <calfile file="RTH4.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
+              <calfile file="RTF1.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
           <variable longname="Radome Environmental Box Temperature" name="NOSETMP_TEST" units="C">
@@ -1956,14 +1994,14 @@
         </sample>
       </serialSensor>
 
-      <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyS12" id="310">
+      <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyS7" id="310">
         <calfile file="A2DS005.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
         <parameter name="boardID" type="int" value="5"/>
         <parameter name="FILT" type="int" value="10"/>
         <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
-          <variable longname="Time; Seconds Since Midnight" name="UTSEC_TDACQ2_305" units="seconds"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_TDACQ2_305" units="cnts"/>
-          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TDACQ2_305" units="counter"/>
+          <variable longname="Time; Seconds Since Midnight" name="UTSEC_TDAQ2_305" units="seconds"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_TDAQ2_305" units="cnts"/>
+          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TDAQ2_305" units="counter"/>
         </sample>
         <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
           <variable longname="Recovery Air Temperature, Heated Right" name="RTH1" units="C">
@@ -2023,7 +2061,7 @@
 
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
-      </output>
+	</output>
     </dsm>
 
     <dsm derivedData="sock::7071" id="83" location="LWO" name="dsmGustPod" rserialPort="30002" statusAddr="sock::30001">
