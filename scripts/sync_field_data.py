@@ -18,7 +18,7 @@ sys.path.insert(0,'/net/jlocal/projects/TI3GER/GV_N677F/scripts')
 from fieldProc_setup import *
 
 #get the arguments from the command line
-temp_dir = '/net/ftp/pub/data/incoming/ti3ger'
+temp_dir = '/scr/raf_Raw_Data/TI3GER/field_sync/'
 
 project = os.getenv('PROJECT')
 aircraft = 'GV_N677F' 
@@ -151,49 +151,72 @@ def dist_prod():
 
     final_message = 'Starting distribution of RAF prod data\n' 
     # Check for the production file
-    for fname in os.listdir(eol_dir+'RAF_data'):
-
-        if fname.endswith('nc'):
-            command = 'rsync -qu '+eol_dir+'RAF_data/*.nc '+dat_dir+'/field_data'
-            message = 'Syncing production data: '+command+'\n'
-            os.system(command)
-            final_message = final_message + message
-            logging.info(final_message)
-            print(command)
-            command = 'rsync -qu '+eol_dir+'RAF_data/*.nc '+ftp_dir+'/EOL_data/RAF_data'
-            message = 'Syncing production data to ftp: '+command+'\n'
-            os.system(command)
-            final_message = final_message + message
-            logging.info(final_message)
-            print(command)
-        elif fname.endswith('kml'):
-            command = 'rsync -qu '+eol_dir+'RAF_data/*.kml '+dat_dir+'/field_data'
-            message = 'Syncing production data: '+command+'\n'
-            os.system(command)
-            final_message = final_message + message
-            logging.info(final_message)
-
-            command = 'rsync -qu '+eol_dir+'RAF_data/*.kml '+ftp_dir+'/EOL_data/RAF_data'
-            message = 'Syncing production data to ftp: '+command+'\n'
-            os.system(command)
-            final_message = final_message + message
-            logging.info(final_message)
-
-        elif fname.endswith('.ict'):
-            command = 'rsync -qu '+eol_dir+'RAF_data/*.ict '+dat_dir+'/field_data'
-            message = 'Syncing production data: '+command+'\n'
-            os.system(command)
-            final_message = final_message + message
-            logging.info(final_message)
-
-            command = 'rsync -qu '+eol_dir+'RAF_data/*.ict '+ftp_dir+'/EOL_data/RAF_data'
-            message = 'Syncing production data to ftp: '+command+'\n'
-            os.system(command)
-            final_message = final_message + message
-            logging.info(final_message)
-        else:
-            pass
-    
+    for fname in os.listdir(eol_dir+'RAF_data/LRT'):
+        command = 'rsync -qu '+eol_dir+'RAF_data/LRT/*.nc '+dat_dir+'/field_data'
+        message = 'Syncing production data: '+command+'\n'
+        os.system(command)
+        final_message = final_message + message
+        logging.info(final_message)
+        command = 'rsync -qu '+eol_dir+'RAF_data/LRT/*.nc '+ftp_dir+'/EOL_data/RAF_data/LRT'
+        message = 'Syncing production data: '+command+'\n'
+        os.system(command)
+        final_message = final_message + message
+        logging.info(final_message)
+    for fname in os.listdir(eol_dir+'RAF_data/HRT'):
+        command = 'rsync -qu '+eol_dir+'RAF_data/HRT/*.nc '+dat_dir+'/field_data'
+        message = 'Syncing production data: '+command+'\n'
+        os.system(command)
+        final_message = final_message + message
+        logging.info(final_message)
+        command = 'rsync -qu '+eol_dir+'RAF_data/HRT/*.nc '+ftp_dir+'/EOL_data/RAF_data/HRT'
+        message = 'Syncing production data to ftp: '+command+'\n'
+        os.system(command)
+        final_message = final_message + message
+        logging.info(final_message)
+    for fname in os.listdir(eol_dir+'RAF_data/SRT'):
+        command = 'rsync -qu '+eol_dir+'RAF_data/SRT/*.nc '+dat_dir+'/field_data'
+        message = 'Syncing production data: '+command+'\n'
+        os.system(command)
+        final_message = final_message + message
+        logging.info(final_message)
+        command = 'rsync -qu '+eol_dir+'RAF_data/SRT/*.nc '+ftp_dir+'/EOL_data/RAF_data/SRT'
+        message = 'Syncing production data to ftp: '+command+'\n'
+        os.system(command)
+        final_message = final_message + message
+        logging.info(final_message)
+    for fname in os.listdir(eol_dir+'RAF_data/KML'):
+        command = 'rsync -qu '+eol_dir+'RAF_data/KML/*.kml '+dat_dir+'/field_data'
+        message = 'Syncing production data: '+command+'\n'
+        os.system(command)
+        final_message = final_message + message
+        logging.info(final_message)
+        command = 'rsync -qu '+eol_dir+'RAF_data/KML/*.kml '+ftp_dir+'/EOL_data/RAF_data/KML'
+        message = 'Syncing production data to ftp: '+command+'\n'
+        os.system(command)
+        final_message = final_message + message
+        logging.info(final_message)
+    for fname in os.listdir(eol_dir+'RAF_data/ICARTT'):
+        command = 'rsync -qu '+eol_dir+'RAF_data/ICARTT/*.ict '+dat_dir+'/field_data'
+        message = 'Syncing production data: '+command+'\n'
+        os.system(command)
+        final_message = final_message + message
+        logging.info(final_message)
+        command = 'rsync -qu '+eol_dir+'RAF_data/ICARTT/*.ict '+ftp_dir+'/EOL_data/RAF_data/ICARTT'
+        message = 'Syncing production data to ftp: '+command+'\n'
+        os.system(command)
+        final_message = final_message + message
+        logging.info(final_message)
+    for fname in os.listdir(eol_dir+'RAF_data/IWG1'):
+        command = 'rsync -qu '+eol_dir+'RAF_data/IWG1/*.iwg '+dat_dir+'/field_data'
+        message = 'Syncing production data: '+command+'\n'
+        os.system(command)
+        final_message = final_message + message
+        logging.info(final_message)
+        command = 'rsync -qu '+eol_dir+'RAF_data/IWG1/*.iwg '+ftp_dir+'/EOL_data/RAF_data/IWG1'
+        message = 'Syncing production data to ftp: '+command+'\n'
+        os.system(command)
+        final_message = final_message + message
+        logging.info(final_message)
     return(final_message)
 
 #############################################################################
@@ -319,13 +342,13 @@ def main():
     if NAS == True:    
         dir_check()
         dist_raw()
-        unzip()
+        #unzip()
         dist_prod()
         dist_field()
         dist_PI('PI_data')
         
-        dist_recursive('HCR_data')
-        dist_recursive('AVAPS_data')
+#        dist_recursive('HCR_data')
+#        dist_recursive('AVAPS_data')
 
     elif NAS == False and FTP == True:
         ftp_to_local('ADS', rdat_dir)
