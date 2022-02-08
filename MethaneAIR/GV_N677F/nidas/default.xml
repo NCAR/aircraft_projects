@@ -1653,6 +1653,7 @@
 
       <sensor ID="ARINCENET" class="raf.UDPArincSensor" devicename="usock::56769" id="1000" timeout="0.8" suffix="_AENT1">
         <parameter name="ip" type="string" value="192.168.84.12"/>
+        <parameter name="status_port" type="int" value="30221"/>
         <sample id="1" rate="1" scanfFormat="STATUS,%d,%d,%*d,%d,%*d,%*d,%d,%d,%d">
           <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
           <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
@@ -1662,9 +1663,9 @@
           <variable longname="ENET Number of Failers" name="FAILS" units="#"/>
         </sample>
       </sensor>
-      <arincSensor IDREF="IRS-GV" devicename="Alta:4" id="3000" suffix="_IE"/>
-      <arincSensor IDREF="ADC-GV" devicename="Alta:6" id="5000" suffix="_AE"/>
-      <arincSensor IDREF="GPS-GV" devicename="Alta:7" id="4000" suffix="_AE"/>
+      <arincSensor IDREF="IRS-GV" devicename="Alta:1000:4" id="3000" suffix="_IE"/>
+      <arincSensor IDREF="ADC-GV" devicename="Alta:1000:6" id="5000" suffix="_AE"/>
+      <arincSensor IDREF="GPS-GV" devicename="Alta:1000:7" id="4000" suffix="_AE"/>
 
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>

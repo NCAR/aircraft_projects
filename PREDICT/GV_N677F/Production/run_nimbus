@@ -4,5 +4,6 @@
 #/bin/rm ${DAT}/PREDICT?f??.nc
 
 foreach setup_file ( setup_?f?? )
-  nimbus -b $setup_file
+# Using this nimbus to avoid the dual element recovery factor.
+  /scr/raf/cjw/nimbus/src/filter/nimbus -b $setup_file
 end

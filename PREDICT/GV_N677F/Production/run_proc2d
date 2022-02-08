@@ -1,6 +1,7 @@
 #!/bin/csh
 
-setenv DAT /scr/raf_data/PREDICT
+#setenv DAT /scr/raf_data/PREDICT
+#setenv DAT /scr/raf/local_productiondata
 
 process2d ${RAW_DATA_DIR}/PREDICT/PMS2D/20100812_133637_ff01.2d -o ${DAT}/PREDICTff01.nc
 process2d ${RAW_DATA_DIR}/PREDICT/PMS2D/20100815_092442_rf01.2d -o ${DAT}/PREDICTrf01.nc
@@ -33,6 +34,7 @@ process2d ${RAW_DATA_DIR}/PREDICT/PMS2D/20100930_101022_rf26.2d -o ${DAT}/PREDIC
 process2d ${RAW_DATA_DIR}/PREDICT/PMS2D/20101002_141827_ff04.2d -o ${DAT}/PREDICTff04.nc
 
 echo "PREDICT Fast2D processing done" | mail -s "PREDICT Fast2D Processing done" cjw@ucar.edu
+exit
 
 process2d ${RAW_DATA_DIR}/PREDICT/3v-cpi/oapfiles/20100815094918_RF01.2d -o ${DAT}/PREDICTrf01.nc
 process2d ${RAW_DATA_DIR}/PREDICT/3v-cpi/oapfiles/20100821081406_RF04.2d -o ${DAT}/PREDICTrf04.nc
