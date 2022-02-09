@@ -49,7 +49,7 @@ user = 'ti3ger'
 password = '1od!n3'
 
 # with an authenticated user, the daemon shell puts into /net/ft/pub/data/incoming/<project>
-ftp_parent_dir = '/net/ftp/pub/data/incoming/ti3ger/'
+ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()+'/'
 ftp_data_dir = './EOL_data/RAF_data'
 
 # when using anonymous, must provide the full path (comment out if using auth user)
