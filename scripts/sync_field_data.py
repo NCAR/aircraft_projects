@@ -271,6 +271,19 @@ def dist_recursive(directory):
     logging.info(final_message)
     return(final_message)
 
+def dist_recursive_MTP(directory):
+
+    final_message = 'Starting distribution of MTP data\n'
+
+    # Rsync anything and everything in the MTP dir
+    command = 'rsync -rqu '+eol_dir+directory+' '+rdat_dir+'/MTP/field'
+    message = 'Syncing MTP dir into place: '+command+'\n'
+    os.system(command)
+
+    final_message = final_message + message
+    logging.info(final_message)
+    return(final_message)
+
 #############################################################################
 # Function to distribute data from FTP to local dirs for QAQC and backup
 # to be used if no NAS in the field and data goes from Ground Station to 
@@ -347,7 +360,7 @@ def main():
         dist_field()
         dist_PI('PI_data')
         
-#        dist_recursive('HCR_data')
+        dist_recursive('RAF_data/MTP')
 #        dist_recursive('AVAPS_data')
 
     elif NAS == False and FTP == True:
