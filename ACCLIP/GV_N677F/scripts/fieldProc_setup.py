@@ -33,7 +33,7 @@ rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 ### Define settings for NAS in the field
 #############################################################################
 # Do we have local CWIG RAID storage?
-NAS = True
+NAS = False
 # Does NAS have a permanent mount?
 NAS_permanent_mount = True
 nas_url = '192.168.1.5:/field-data/'+project.lower()
@@ -42,7 +42,7 @@ nas_mnt_pt = '/mnt/Data/'+project.lower()
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = False
+FTP = True
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'acclip'
 password = 'm0ns00n!'
