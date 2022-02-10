@@ -13,17 +13,20 @@ echo "Scrip must be run as root user, since log files are owned by root."
 echo "/usr/bin/su root"
 echo "***********************************************************************"
 
+echo "Enter corresponding flight for logs from $PROJECT e.g. rf01 or ff03:"
+read FLIGHT
+
 echo "Do you have a removable drive connected?"
 echo "Please type Y or y and press enter to confirm. Anything else and enter will stop script."
 read DRIVE_CONNECTION
 if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
-   mkdir -p $TRANSFER_MEDIA/$PROJECT/logs
+   mkdir -p $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
    EXIT_MKDIR="$?"
 
-   if [ "$EXIT_MKDIR" -eq 0 ]; then
-      echo "WARNING: command mkdir -p $TRANSFER_MEDIA/$PROJECT failed!"
+   if [ "$EXIT_MKDIR" -gt 0 ]; then
+      echo "WARNING: command mkdir -p $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT failed!"
    else
-      echo "command mkdir -p $TRANSFER_MEDIA/$PROJECT was successful"
+      echo "command mkdir -p $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT was successful"
    fi
 
    echo "You entered $DRIVE_CONNECTION, which means you have a drive connected.";
@@ -32,15 +35,15 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    echo "Please type Y or y and press enter to confirm. Anything else and enter will not copy log files."
    read COPY_LOGS
    if [ $COPY_LOGS == "Y" ] || [ $COPY_LOGS == "y" ]; then
-      rsync -va /var/log/messages $TRANSER_MEDIA/$PROJECT/logs
-      rsync -va /var/log/ads3.log $TRANSFER_MEDIA/$PROJECT/logs
-      rsync -va /var/log/ads3_kernel.log $TRANSFER_MEDIA/$PROJECT/logs
-      rsync -va /var/log/router $TRANSFER_MEDIA/$PROJECT/logs
-      rsync -va /var/log/nagios/nagios.log $TRANSFER_MEDIA/$PROJECT/logs
-      rsync -va /var/log/boot.log $TRANSFER_MEDIA/$PROJECT/logs
-      rsync -va /var/log/cron $TRANSFER_MEDIA/$PROJECT/logs
-      rsync -va /var/log/dnf.log $TRANSFER_MEDIA/$PROJECT/logs
-      rsync -va /var/log/kdump.log $TRANSFER_MEDIA/$PROJECT/logs
+      rsync -va /var/log/messages $TRANSER_MEDIA/$PROJECT/logs/$FLIGHT
+      rsync -va /var/log/ads3.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
+      rsync -va /var/log/ads3_kernel.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
+      rsync -va /var/log/router $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
+      rsync -va /var/log/nagios/nagios.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
+      rsync -va /var/log/boot.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
+      rsync -va /var/log/cron $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
+      rsync -va /var/log/dnf.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
+      rsync -va /var/log/kdump.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
    else
       echo "Log files are not being copied."
    fi
