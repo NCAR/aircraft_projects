@@ -22,7 +22,7 @@ fi
 
 ps ax | grep "acTrack2kml -o" | grep -qv grep
 if [ $? -eq 1 ]; then
-  nohup /opt/local/bin/acTrack2kml -o -v > /tmp/acTrack2kml.log &
+  nohup /opt/local/bin/acTrack2kml -o -v > /tmp/acTrack2kml.log 2>&1
 fi
 
 # from DC3 project

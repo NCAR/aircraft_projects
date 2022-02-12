@@ -44,6 +44,7 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
       rsync -va /var/log/cron $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
       rsync -va /var/log/dnf.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
       rsync -va /var/log/kdump.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
+      rsync -va /tmp/nimbus_*.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
    else
       echo "Log files are not being copied."
    fi
