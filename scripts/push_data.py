@@ -219,7 +219,7 @@ def find_lrt_netcdf(filetype):
 # See if a file exists already and query user about what to do.
 def find_file(data_dir,flight,file_prefix,filetype,fileext,flag):
   datafile = ''
-  datalist = glob.glob(data_dir+'*'+flight+filetype+'.'+fileext)
+  datalist = glob.glob(data_dir+'*.'+fileext)
   if (datalist.__len__() == 1):
     if (flag == False):
       reproc = input('Found file: datalist[0]. Reprocess?(Y/N)')
@@ -433,7 +433,7 @@ if process:
     
     # Generate ICARTT file from LRT, if requested
     if (key == "ICARTT"):
-      command = "nc2asc -b "+nc2ascBatch+" -i "+filename["LRT"]+" -o "+filename[key];
+      command = "nc2asc_cl -i "+filename["LRT"]+" -o "+filename[key]+" -b "+nc2ascBatch;
       print("about to execute : "+command)
       if os.system(command) == 0:
         status[key]["proc"] = 'Yes'
