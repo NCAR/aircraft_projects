@@ -18,7 +18,7 @@ setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-$ARCHIVE_SCRIPT TEST/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc glade/campaign/eol/archive/$YEAR taylort@ucar.edu
+#$ARCHIVE_SCRIPT TEST/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc glade/campaign/eol/archive/$YEAR taylort@ucar.edu
 
 ### Preliminary HRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/HRT/Version02 /scr/raf/Raw_Data/$PROJECT/field_phase/HRT/Version02 nc FS/EOL/$YEAR taylort@ucar.edu
@@ -59,8 +59,7 @@ $ARCHIVE_SCRIPT TEST/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc glade/cam
 
 ########################## Production Data Files ##########################
 ### LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py LRT /scr/raf/Prod_Data/$PROJECT nc FS/EOL/$YEAR
-
+#$ARCHIVE_SCRIPT LRT /scr/raf/Prod_Data/$PROJECT/LRT nc glade/campaign/eol/archive/$YEAR taylort@ucar.edu
 ### LRT ICT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict FS/EOL/$YEAR
 
@@ -68,7 +67,7 @@ $ARCHIVE_SCRIPT TEST/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc glade/cam
 #/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/$YEAR
 
 ### KML
-#/net/work/bin/scripts/mass_store/archAC/archAC.py KML /scr/raf/Prod_Data/$PROJECT kml FS/EOL/$YEAR
+/net/jlocal/projects/Configuration/scripts/archAC.py KML /scr/raf/Prod_Data/$PROJECT/KML kml /glade/campaign/eol/archive/$YEAR taylort@ucar.edu
 
 ### HRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc FS/EOL/$YEAR
