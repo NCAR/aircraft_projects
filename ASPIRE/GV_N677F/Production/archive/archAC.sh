@@ -27,7 +27,7 @@ setenv EMAIL "taylort@ucar.edu"
 #$ARCHIVE_SCRIPT field_phase/HRT /scr/raf/Raw_Data/$PROJECT/field_phase/HRT nc $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary SRT
-$ARCHIVE_SCRIPT field_phase/SRT /scr/raf/Raw_Data/$PROJECT/field_phase/SRT nc $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT field_phase/SRT /scr/raf/Raw_Data/$PROJECT/field_phase/SRT nc $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary LRT ICT
 #$ARCHIVE_SCRIPT field_phase/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict $CS_LOCATION$YEAR $EMAIL
@@ -70,7 +70,7 @@ $ARCHIVE_SCRIPT field_phase/SRT /scr/raf/Raw_Data/$PROJECT/field_phase/SRT nc $C
 #$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR $EMAIL
 
 ### KML
-#$ARCHIVE_SCRIPT KML /scr/raf/Prod_Data/$PROJECT kml $CS_LOCATION$YEAR $EMAIL
+$ARCHIVE_SCRIPT KML /scr/raf/Prod_Data/$PROJECT/KML kml $CS_LOCATION$YEAR $EMAIL
 
 ### HRT
 #$ARCHIVE_SCRIPT HRT /scr/raf/Prod_Data/$PROJECT/HRT nc $CS_LOCATION$YEAR $EMAIL
