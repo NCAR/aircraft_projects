@@ -64,10 +64,10 @@ setenv YEAR 2021
 #/net/work/bin/scripts/mass_store/archAC/archAC.py PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d FS/EOL/$YEAR
 
 ### KML
-/net/jlocal/projects/Configuration/scripts/archAC.py KML /scr/raf/Prod_Data/$PROJECT/KML kml glade/campaign/eol/archive/$YEAR taylort@ucar.edu
+#/net/jlocal/projects/Configuration/scripts/archAC.py KML /scr/raf/Prod_Data/$PROJECT/KML kml glade/campaign/eol/archive/$YEAR taylort@ucar.edu
 
 ### HRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc FS/EOL/$YEAR
+/net/jlocal/projects/Configuration/scripts/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc glade/campaign/eol/archive/$YEAR taylort@ucar.edu
 
 ### HRT KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KMLh /scr/raf/Prod_Data/$PROJECT/HRT kml FS/EOL/$YEAR
