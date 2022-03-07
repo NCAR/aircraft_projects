@@ -1312,84 +1312,17 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
-<!--
-      AMS Documentation of Serial Interface:
-      Definition         Chars         Type
-      Year                     4       Integer
-      Day of Year              3       Integer
-      Sec After Midnight       8       Integer
-      ToF Type                 1       Integer
-      Ion Type                 1       Integer
-      MS Air Beam              8       Float
-      PToF Air Beam            8       Float
-      Flow Rate                5       Float
-      Sulfate Loadings         5       Float
-      Nitrate Loadings         5       Float
-      Org <60 Loadings         5       Float
-      Chloride Loadings        5       Float
-      m/z 43 Stick Area        5       Float
-      m/z 44 Stick Area        5       Float
-      m/z 57 Stick Area        5       Float
-      User mz1 ID              4       Integer
-      Use mz1 Stick Area       5       Float
-      User mz2 ID              4       Integer
-      Use mz2 Stick Area       5       Float
-      User mz3 ID              4       Integer
-      Use mz3 Stick Area       5       Float
-      User mz4 ID              4       Integer
-      Use mz4 Stick Area       5       Float
-      User mz5 ID              4       Integer
-      Use mz5 Stick Area       5       Float
-      User mz6 ID              4       Integer
-      Use mz6 Stick Area       5       Float
-      User mz7 ID              4       Integer
-      Use mz7 Stick Area       5       Float
-      User mz8 ID              4       Integer
-      Use mz8 Stick Area       5       Float
-      User mz9 ID              4       Integer
-      Use mz9 Stick Area       5       Float
-      User mz10 ID             4       Integer
-      Use mz10 Stick Area      5       Float
-      Analog Ch0 Volts         5       Float
-      Analog Ch1 Volts         5       Float
-      Analog Ch2 Volts         5       Float
-      Analog Ch3 Volts         5       Float
-      Analog Ch4 Volts         5       Float
-      Analog Ch5 Volts         5       Float
-      Analog Ch6 Volts         5       Float
-      Analog Ch7 Volts         5       Float
-    -->
     <sensor ID="AMS" class="UDPSocketSensor" devicename="usock::30115" suffix="_AMS">
-        <sample id="1" rate="1" scanfFormat="AMS %*d %*d %f %*d %*d %f %f %f %f %f %f %f %f %f %f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
-            <variable longname="AMS Time (Seconds since midnight)" name="UTSEC" units="sec"/>
-            <variable longname="AMS Air Beam Reference" name="AIRBM" units="Hz"/>
-            <variable longname="AMS Particle Time of Flight" name="PTAB" units=""/>
-            <variable longname="AMS Sampling Flow Rate" name="FLOW" units="sccs"/>
+        <sample id="1" rate="1" scanfFormat="AMS,%*f,%*f,%*f,%f,%f,%f,%f,%*f,%f,%*f,%f,%*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%*f,%f,%f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f">
             <variable longname="AMS Sulfate PM1 mass as measured by HRAMS" name="SO4" units="ug/m3"/>
             <variable longname="AMS Nitrate PM1 mass as measured by HRAMS" name="NO3" units="ug/m3"/>
             <variable longname="AMS Organic Aerosol mass as measured by HRAMS" name="OA" units="ug/m3"/>
             <variable longname="AMS Chloride PM1 mass as measured by HRAMS" name="CL" units="ug/m3"/>
-            <variable longname="AMS Organics; Intensity of m/z 43" name="ORG43" units="Hz"/>
-            <variable longname="AMS Organics; Intensity of m/z 44" name="ORG44" units="Hz"/>
-            <variable longname="AMS Organics; Intensity of m/z 57" name="ORG57" units="Hz"/>
 
-            <variable longname="AMS Blankflag (0=ambient, 5=filter)" name="VALID" units="V"/>
-            <variable longname="AMS Vaporizer Temperature " name="TVAP" units="V">
-                <linear intercept="0.0" slope="131.0" units="deg_C"/>
-            </variable>
-            <variable longname="AMS Inlet Pressure " name="INLETP" units="V">
-                <linear intercept="0.0" slope="100.0" units="Torr"/>
-            </variable>
-            <variable longname="AMS Lens Pressure" name="LENSP" units="Torr"/>
-            <variable longname="AMS Sample Flag #4 (0Vdc=OFR, 5Vdc=Ambient" name="SAMPFLG" units="V"/>
-            <variable longname="AMS PCI Flow Meter" name="PCIF" units="V">
-                <linear intercept="0.0" slope="100.0" units="sccm"/>
-            </variable>
-            <variable longname="AMS OFR UV Light Meter" name="OFRUV" units="V"/>
-            <variable longname="AMS OFR Ozone Monitor" name="O3" units="V">
-                <linear intercept="0.0" slope="2000.0" units="ppmv"/>
-            </variable>
-            <variable longname="AMS Filament Emission Current" name="FILEM" units="mA"/>
+            <variable longname="AMS US M1 Signal" name="M1SIG" units="Hz"/>
+            <variable longname="AMS US M2 Signal" name="M2SIG" units="Hz"/>
+            <variable longname="AMS US M3 Signal" name="M3SIG" units="Hz"/>
+
             <variable longname="AMS Ammonium PM1 mass as measured by HRAMS" name="NH4" units="ug/m3"/>
             <variable longname="AMS Fraction of OA from m/z 43" name="F43" units=""/>
             <variable longname="AMS Fraction of OA from m/z 44" name="F44" units=""/>
