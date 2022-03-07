@@ -17,9 +17,9 @@ setenv YEAR 2021
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-#/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc FS/EOL/$YEAR taylort@ucar.edu
+/net/jlocal/projects/Configuration/scripts/archAC.py LRT /scr/raf_data/$PROJECT nc glade/campaign/eol/archive/$YEAR taylort@ucar.edu
 
-### Preliminary LRT
+### Preliminary HRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py field_phase/HRT /scr/raf/Raw_Data/$PROJECT/field_phase/HRT nc FS/EOL/$YEAR taylort@ucar.edu
 
 ### Preliminary LRT ICT
@@ -67,7 +67,7 @@ setenv YEAR 2021
 #/net/jlocal/projects/Configuration/scripts/archAC.py KML /scr/raf/Prod_Data/$PROJECT/KML kml glade/campaign/eol/archive/$YEAR taylort@ucar.edu
 
 ### HRT
-/net/jlocal/projects/Configuration/scripts/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc glade/campaign/eol/archive/$YEAR taylort@ucar.edu
+#/net/jlocal/projects/Configuration/scripts/archAC.py HRT /scr/raf/Prod_Data/$PROJECT/HRT nc glade/campaign/eol/archive/$YEAR taylort@ucar.edu
 
 ### HRT KML
 #/net/work/bin/scripts/mass_store/archAC/archAC.py KMLh /scr/raf/Prod_Data/$PROJECT/HRT kml FS/EOL/$YEAR
