@@ -46,7 +46,7 @@ nas_mnt_pt = '/mnt/Data/'+project.lower()
 FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'ti3ger'
-password = '1od!n3'
+password = 'T!3g3r'
 
 # with an authenticated user, the daemon shell puts into /net/ft/pub/data/incoming/<project>
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()+'/'
