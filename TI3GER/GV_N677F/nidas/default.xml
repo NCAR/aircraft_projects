@@ -1317,24 +1317,63 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
-    <sensor ID="AMS" class="UDPSocketSensor" devicename="usock::30115" suffix="_AMS">
-        <sample id="1" rate="1" scanfFormat="AMS,%*f,%*f,%*f,%f,%f,%f,%f,%*f,%f,%*f,%f,%*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%*f,%f,%f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f">
-            <variable longname="AMS Sulfate PM1 mass as measured by HRAMS" name="SO4" units="ug/m3"/>
-            <variable longname="AMS Nitrate PM1 mass as measured by HRAMS" name="NO3" units="ug/m3"/>
-            <variable longname="AMS Organic Aerosol mass as measured by HRAMS" name="OA" units="ug/m3"/>
-            <variable longname="AMS Chloride PM1 mass as measured by HRAMS" name="CL" units="ug/m3"/>
-
-            <variable longname="AMS US M1 Signal" name="M1SIG" units="Hz"/>
-            <variable longname="AMS US M2 Signal" name="M2SIG" units="Hz"/>
-            <variable longname="AMS US M3 Signal" name="M3SIG" units="Hz"/>
-
-            <variable longname="AMS Ammonium PM1 mass as measured by HRAMS" name="NH4" units="ug/m3"/>
-            <variable longname="AMS Fraction of OA from m/z 43" name="F43" units=""/>
-            <variable longname="AMS Fraction of OA from m/z 44" name="F44" units=""/>
-            <variable longname="AMS Fraction of OA from m/z 57" name="F57" units=""/>
-            <variable longname="AMS Fraction of OA from m/z 60" name="F60" units=""/>
-        </sample>
-    </sensor>
+<!--
+      AMS Documentation of Serial Interface:
+      Definition         Chars         Type
+      Year                     4       Integer
+      Day of Year              3       Integer
+      Sec After Midnight       8       Integer
+      ToF Type                 1       Integer
+      Ion Type                 1       Integer
+      MS Air Beam              8       Float
+      PToF Air Beam            8       Float
+      Flow Rate                5       Float
+      Sulfate Loadings         5       Float
+      Nitrate Loadings         5       Float
+      Org <60 Loadings         5       Float
+      Chloride Loadings        5       Float
+      m/z 43 Stick Area        5       Float
+      m/z 44 Stick Area        5       Float
+      m/z 57 Stick Area        5       Float
+      User mz1 ID              4       Integer
+      Use mz1 Stick Area       5       Float
+      User mz2 ID              4       Integer
+      Use mz2 Stick Area       5       Float
+      User mz3 ID              4       Integer
+      Use mz3 Stick Area       5       Float
+      User mz4 ID              4       Integer
+      Use mz4 Stick Area       5       Float
+      User mz5 ID              4       Integer
+      Use mz5 Stick Area       5       Float
+      User mz6 ID              4       Integer
+      Use mz6 Stick Area       5       Float
+      User mz7 ID              4       Integer
+      Use mz7 Stick Area       5       Float
+      User mz8 ID              4       Integer
+      Use mz8 Stick Area       5       Float
+      User mz9 ID              4       Integer
+      Use mz9 Stick Area       5       Float
+      User mz10 ID             4       Integer
+      Use mz10 Stick Area      5       Float
+      Analog Ch0 Volts         5       Float
+      Analog Ch1 Volts         5       Float
+      Analog Ch2 Volts         5       Float
+      Analog Ch3 Volts         5       Float
+      Analog Ch4 Volts         5       Float
+      Analog Ch5 Volts         5       Float
+      Analog Ch6 Volts         5       Float
+      Analog Ch7 Volts         5       Float
+    -->
+    <serialSensor ID="AMS" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="%*d %*d %*d %*d %*d %*f %*f %f %f %f %f %f %*f %*f %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*f %*f %*f %*f %*f %*f %*f %*f">
+        <variable longname="AMS Flow Rate" name="FLOW" units="unk"/>
+        <variable longname="AMS Sulfate Loadings" name="SO4" units="unk"/>
+        <variable longname="AMS Nitrate Loadings" name="NO3" units="unk"/>
+        <variable longname="AMS Organics less than 60 Loadings" name="R" units="unk"/>
+        <variable longname="AMS Cloride Loadings" name="CL" units="unk"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
 
     <serialSensor ID="FAIRO" class="UDPSocketSensor" devicename="usock::30300">
       <sample id="1" rate="1" scanfFormat="FAIRO,%*f,%f\n">
@@ -1449,12 +1488,8 @@
       <sensor IDREF="NONOYO3" devicename="usock::30107" id="700"/>
       <sensor IDREF="FAIRO" devicename="usock::30300" id="620" suffix="_F1"/>
       <sensor IDREF="FAIRO" devicename="usock::30301" id="630" suffix="_F2"/>
-<<<<<<< HEAD
       <sensor IDREF="HARP_ACTINIC_FLUX" devicename="usock::30108" id="650" suffix="_HARP"/>
       <sensor IDREF="AMS" devicename="usock::30115" id="750" suffix="_AMS"/>
-=======
-      <sensor IDREF="AMS" devicename="usock::30301" id="750" suffix="_AMS"/>
->>>>>>> f0c5940ed94fbb6ef041170ad1a69061d38ffc5f
 
 
       <sensor IDREF="ALTASTATUS" devicename="usock::30220" id="6000" suffix="_AENT1"/>
@@ -1583,14 +1618,15 @@
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="400" latency="0.25" suffix="_304">
         <calfile file="W543511.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT"/>
         <parameter name="rate" type="int" value="1000"/>
-        <sample id="1" rate="50">
+        <sample id="1" rate="10">
           <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="20"/>
-          <variable longname="CU Pitot" name="CUPITOT" units="Vdc">
+          <parameter name="numpoints" type="int" value="100"/>
+          <variable longname="CU's CIMS" name="CUCIMS" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
-            <linear units="Torr" slope="0.2" intercept="0.0"/>
+            <poly units="V">
+            </poly>
           </variable>
         </sample>
       </sensor>
