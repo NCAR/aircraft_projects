@@ -17,9 +17,7 @@ from email.mime.text import MIMEText
 sys.path.insert(0,'/net/jlocal/projects/TI3GER/GV_N677F/scripts')
 from fieldProc_setup import *
 
-#get the arguments from the command line
 temp_dir = '/scr/raf_Raw_Data/TI3GER/field_sync/'
-
 project = os.getenv('PROJECT')
 aircraft = 'GV_N677F' 
 
@@ -359,9 +357,7 @@ def main():
         dist_prod()
         dist_field()
         dist_PI('PI_data')
-        
-        dist_recursive('RAF_data/MTP')
-#        dist_recursive('AVAPS_data')
+        dist_recursive_MTP('/RAF_data/MTP')
 
     elif NAS == False and FTP == True:
         ftp_to_local('ADS', rdat_dir)
