@@ -674,15 +674,20 @@
     </sensor>
 
     <sensor ID="HARP_ACTINIC_FLUX" class="UDPSocketSensor" devicename="usock::30108" suffix="_HARP">
-        <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%d,%d,%f">
-            <variable longname="UVN 315 nm Counts" name="UVN315" units="counts"/>
-            <variable longname="UVN 382 nm Counts" name="UVN382" units="counts"/>
+        <sample id="1" rate="1" scanfFormat="HARP_ACTFL,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="UVN 340 nm Counts" name="UVN340" units="counts"/>
+            <variable longname="UVN 380 nm Counts" name="UVN380" units="counts"/>
+            <variable longname="UVN NO2 Photolysis Frequency" name="UVNJNO2" units="1/s"/> 
+            <variable longname="UVN O3 Photolysis Frequency" name="UVNJO3" units="1/s"/>  
             <variable longname="UVN Relative Humidity" name="UVNRH" units="%"/>
-        </sample>
-        <sample id="2" rate="1" scanfFormat="HRP_AFZ,%*dT%*d,%d,%d,%f">
-            <variable longname="UVZ 315 nm Counts" name="UVZ315" units="counts"/>
-            <variable longname="UVZ 382 nm Counts" name="UVZ382" units="counts"/>
+            <variable longname="UVN Spectro" name="UVNSPECTRO" units="counts"/>
+
+            <variable longname="UVZ 340 nm Counts" name="UVZ340" units="counts"/>
+            <variable longname="UVZ 380 nm Counts" name="UVZ380" units="counts"/>
+            <variable longname="UVZ NO2 Photolysis Frequency" name="UVZJNO2" units="1/s"/>     
+            <variable longname="UVZ O3 Photolysis Frequency" name="UVZJO3" units="1/s"/>     
             <variable longname="UVZ Relative Humidity" name="UVZRH" units="%"/>
+            <variable longname="UVZ Spectro" name="UVZSPECTRO" units="counts"/>
         </sample>
     </sensor>
     <sensor ID="HARP_IRRADIANCE" class="UDPSocketSensor" devicename="usock::30108" suffix="_HARP">
@@ -1444,7 +1449,12 @@
       <sensor IDREF="NONOYO3" devicename="usock::30107" id="700"/>
       <sensor IDREF="FAIRO" devicename="usock::30300" id="620" suffix="_F1"/>
       <sensor IDREF="FAIRO" devicename="usock::30301" id="630" suffix="_F2"/>
+<<<<<<< HEAD
+      <sensor IDREF="HARP_ACTINIC_FLUX" devicename="usock::30108" id="650" suffix="_HARP"/>
+      <sensor IDREF="AMS" devicename="usock::30115" id="750" suffix="_AMS"/>
+=======
       <sensor IDREF="AMS" devicename="usock::30301" id="750" suffix="_AMS"/>
+>>>>>>> f0c5940ed94fbb6ef041170ad1a69061d38ffc5f
 
 
       <sensor IDREF="ALTASTATUS" devicename="usock::30220" id="6000" suffix="_AENT1"/>
