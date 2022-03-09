@@ -709,16 +709,20 @@
       </sample>
     </sensor>
     <sensor ID="HARP_ACTINIC_FLUX" class="UDPSocketSensor" devicename="usock::30108" suffix="_HARP">
-      <sample id="1" rate="1" scanfFormat="HRP_AFN,%*dT%*d,%d,%d,%f">
-        <variable longname="UVN 315 nm Counts" name="UVN315" units="counts"/>
-        <variable longname="UVN 382 nm Counts" name="UVN382" units="counts"/>
-        <variable longname="UVN Relative Humidity" name="UVNRH" units="%"/>
-      </sample>
-      <sample id="2" rate="1" scanfFormat="HRP_AFZ,%*dT%*d,%d,%d,%f">
-        <variable longname="UVZ 315 nm Counts" name="UVZ315" units="counts"/>
-        <variable longname="UVZ 382 nm Counts" name="UVZ382" units="counts"/>
-        <variable longname="UVZ Relative Humidity" name="UVZRH" units="%"/>
-      </sample>
+        <sample id="1" rate="1" scanfFormat="HARPactfl,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="UVN 340 nm Counts" name="UVN340" units="counts"/>
+            <variable longname="UVN 380 nm Counts" name="UVN380" units="counts"/>
+            <variable longname="UVN NO2 Photolysis Frequency" name="UVNJNO2" units="1/s"/>
+            <variable longname="UVN O3 Photolysis Frequency" name="UVNJO3" units="1/s"/>
+            <variable longname="UVN Relative Humidity" name="UVNRH" units="%"/>
+            <variable longname="UVN Spectro Temperature" name="UVNTSPECTRO" units="C"/>
+            <variable longname="UVZ 340 nm Counts" name="UVZ340" units="counts"/>
+            <variable longname="UVZ 380 nm Counts" name="UVZ380" units="counts"/>
+            <variable longname="UVZ NO2 Photolysis Frequency" name="UVZJNO2" units="1/s"/>
+            <variable longname="UVZ O3 Photolysis Frequency" name="UVZJO3" units="1/s"/>
+            <variable longname="UVZ Relative Humidity" name="UVZRH" units="%"/>
+            <variable longname="UVZ Spectro Temperature" name="UVZTSPECTRO" units="C"/>
+        </sample>
     </sensor>
     <sensor ID="HARP_IRRADIANCE" class="UDPSocketSensor" devicename="usock::30108" suffix="_HARP">
       <sample id="1" rate="1" scanfFormat="HRP_VISN,%*dT%*d,%d,%d">
