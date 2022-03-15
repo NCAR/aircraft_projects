@@ -6,10 +6,10 @@
 # On planes and lab stations $PROJECT environment variable should be set by 
 # the script ads3_environment.sh currently in /home/ads 
 
-TRANSFER_MEDIA="/run/media/ads/*"
+TRANSFER_MEDIA="/run/media/ads/*/"
 
 echo "***********************************************************************"
-echo "Scrip must be run as root user, since log files are owned by root."
+echo "Script must be run as root user, since log files are owned by root."
 echo "/usr/bin/su root"
 echo "***********************************************************************"
 
@@ -20,7 +20,8 @@ echo "Do you have a removable drive connected?"
 echo "Please type Y or y and press enter to confirm. Anything else and enter will stop script."
 read DRIVE_CONNECTION
 if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
-   mkdir -p $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
+   cd $TRANSFER_MEDIA/$PROJECT/logs
+   mkdir -p $FLIGHT
    EXIT_MKDIR="$?"
 
    if [ "$EXIT_MKDIR" -gt 0 ]; then
