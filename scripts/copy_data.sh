@@ -33,7 +33,7 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    EXIT_MKDIR="$?"
 
    if [ "$EXIT_MKDIR" -eq 0 ]; then
-      echo "WARNING: command mkdir -p $TRANSFER_MEDIA/$PROJECT failed!"
+      echo "command mkdir -p $TRANSFER_MEDIA/$PROJECT not done, if folder was already made, no issues..."
    else
       echo "command mkdir -p $TRANSFER_MEDIA/$PROJECT was successful"
    fi
@@ -66,7 +66,7 @@ if [ "$EXIT_RSYNC" -eq 0 ] && [ $sha_copy == $sha_orig ]; then
       umount $TRANSFER_MEDIA;
       echo "Copy of .ads file(s) for $PROJECT$FLIGHT SUCCESSFUL."
       echo "When terminal closes you can safely remove the drive by right-clicking the desktop icon."
-      sleep 80
+      sleep 20
 
    elif [ "$EXIT" -gt 0 ] || [ $sha_copy != $sha_orig ]; then
       echo "Copy of .ads file(s) for $PROJECT$FLIGHT UNSUCCESSFUL."
@@ -74,7 +74,7 @@ if [ "$EXIT_RSYNC" -eq 0 ] && [ $sha_copy == $sha_orig ]; then
 
    else
       echo "rsync error"
-      sleep 80
+      sleep 20
    fi
 
 else
