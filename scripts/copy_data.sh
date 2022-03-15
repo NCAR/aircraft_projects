@@ -9,9 +9,7 @@
 # the script ads3_environment.sh currently in /home/ads 
 
 DATA_LOCATION="/var/r1/$PROJECT"
-#DATA_LOCATION="/home/ads/data_location"
 TRANSFER_MEDIA="/run/media/ads/*"
-#TRANSFER_MEDIA="/home/ads/transfer_media"
 
 echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
 read FLIGHT
@@ -53,8 +51,8 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    echo "Calculating sha256sum for copied file(s)..."
    sha256sum $TRANSFER_MEDIA/$PROJECT/*$FLIGHT* >> $TRANSFER_MEDIA/$PROJECT/sha256sum.transfer_media
 
-   sha_original="$DATA_LOCATION/sha256sum.ads_station"
-   sha_transfer="$TRANSFER_MEDIA/$PROJECT/sha256sum.transfer_media"
+   sha_orig="$DATA_LOCATION/sha256sum.ads_station"
+   sha_copy="$TRANSFER_MEDIA/$PROJECT/sha256sum.transfer_media"
 
    echo "************************************************************"
 
