@@ -898,8 +898,6 @@
 
     <serialSensor ID="UHSASG" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <parameter name="SerialNumber" type="string" value="UHSAS059"/>
-
-      <!-- Time Format is mm/dd/yyyy hh:mm:ss.msec pm -->
       <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
         <variable name="UACC" units="sec" longname="UHSAS Accumulation"/>
         <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
@@ -1068,6 +1066,7 @@
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
+
     <sensor ID="Fast2DC" class="raf.TwoD64_USB">
       <parameter name="SerialNumber" type="string" value="F2DC001"/>
       <parameter name="RESOLUTION" type="int" value="25"/>
@@ -1088,6 +1087,65 @@
         <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
       </sample>
 -->
+    </sensor>
+
+    <sensor ID="TWODS" class="UDPSocketSensor" devicename="usock::30113" suffix="_2DS">
+        <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%d,%d,%0.2f,%0.2f,%0.2f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%0.2f,%0.2f,%0.2f,%0.2f,%0.2f,%0.2f,%0.2f,%0.2f,%d,%d,%0.1f,%0.1f,%0.1f,%0.1f,%0.1f,%0.1f,%0.1f,%0.1f,%d,%0.2f,%0.2f">
+<!--
+                            local_UDP_HParticlesDetected,
+                            local_UDP_VParticlesDetected,
+                            local_UDP_totalparticleconcentration,
+                            local_UDP_meanparticlesize,
+                            local_UDP_maxparticlesize,
+                            local_UDP_HSD_1,
+                            local_UDP_HSD_2,
+                            local_UDP_HSD_3,
+                            local_UDP_HSD_4,
+                            local_UDP_HSD_5,
+                            local_UDP_HSD_6_10,
+                            local_UDP_HSD_11_20,
+                            local_UDP_HSD_21_30,
+                            local_UDP_HSD_31_40,
+                            local_UDP_HSD_41_50,
+                            local_UDP_HSD_51_70,
+                            local_UDP_HSD_71_100,
+                            local_UDP_HSD_101_128,
+                            local_UDP_VSD_1,
+                            local_UDP_VSD_2,
+                            local_UDP_VSD_3,
+                            local_UDP_VSD_4,
+                            local_UDP_VSD_5,
+                            local_UDP_VSD_6_10,
+                            local_UDP_VSD_11_20,
+                            local_UDP_VSD_21_30,
+                            local_UDP_VSD_31_40,
+                            local_UDP_VSD_41_50,
+                            local_UDP_VSD_51_70,
+                            local_UDP_VSD_71_100,
+                            local_UDP_VSD_101_128,
+                            local_UDP_HElement___0,
+                            local_UDP_HElement__64,
+                            local_UDP_HElement_127,
+                            local_UDP_VElement___0,
+                            local_UDP_VElement__64,
+                            local_UDP_VElement_127,
+                            local_UDP_p7v,
+                            local_UDP_n7v,
+                            local_UDP_HMask,
+                            local_UDP_VMask,
+                            local_UDP_h_optics_temp,
+                            local_UDP_v_optics_temp,
+                            local_UDP_h_array_top_temp,
+                            local_UDP_v_array_top_temp,
+                            local_UDP_DSPBoardTemp,
+                            local_UDP_HLaserTemp,
+                            local_UDP_VLaserTemp,
+                            local_UDP_PowerSupplyTemp,
+                            local_UDP_HKReceived,
+                            local_UDP_InternalPressure,
+                            local_UDP_RH);
+-->
+        </sample> 
     </sensor>
 
     <sensor ID="MTP" class="UDPSocketSensor" devicename="usock::30101" suffix="_MTP">
@@ -1529,6 +1587,7 @@
       <sensor IDREF="AMS" devicename="usock::30115" id="750" suffix="_AMS"/>
       <sensor IDREF="MTP" id="850" suffix="_MTP"/>
 
+      <sensor IDREF="TWODS" devicename="usock::30113" id="1000"/>
 
       <sensor IDREF="ALTASTATUS" devicename="usock::30220" id="6000" suffix="_AENT1"/>
       <sensor ID="ARINCENET1" class="raf.UDPArincSensor" devicename="usock::56769" id="6100" timeout="10">
