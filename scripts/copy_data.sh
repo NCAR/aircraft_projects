@@ -66,7 +66,7 @@ if [ "$EXIT_RSYNC" -eq 0 ] && [ $sha_copy == $sha_orig ]; then
       # umount $TRANSFER_MEDIA;
       echo "Copy of .ads file(s) for $PROJECT$FLIGHT SUCCESSFUL."
       echo "When terminal closes you can safely remove the drive by right-clicking the desktop icon."
-      sleep 20
+      sleep 80
 
    elif [ "$EXIT" -gt 0 ] || [ $sha_copy != $sha_orig ]; then
       echo "Copy of .ads file(s) for $PROJECT$FLIGHT UNSUCCESSFUL."
@@ -74,7 +74,7 @@ if [ "$EXIT_RSYNC" -eq 0 ] && [ $sha_copy == $sha_orig ]; then
 
    else
       echo "rsync error"
-      sleep 20
+      sleep 80
    fi
 
 else
