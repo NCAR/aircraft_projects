@@ -39,7 +39,7 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
       rsync -va --no-perms --no-owner --no-group /var/log/messages $TRANSER_MEDIA/$PROJECT/logs/$FLIGHT
       rsync -va --no-perms --no-owner --no-group /var/log/ads3.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
       rsync -va --no-perms --no-owner --no-group /var/log/ads3_kernel.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
-      rsync -va --no-perms --no-owner --no-group /var/log/router $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
+      rsync -va --no-perms --no-owner --no-group /var/log/router.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
       rsync -va --no-perms --no-owner --no-group /var/log/nagios/nagios.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
       rsync -va --no-perms --no-owner --no-group /var/log/boot.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
       rsync -va --no-perms --no-owner --no-group /var/log/cron $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
