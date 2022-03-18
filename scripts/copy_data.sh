@@ -43,24 +43,12 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    echo "***Starting file transfer. Please wait for transfer and integrity checking to complete.***"
    rsync -cavP --no-perms  $DATA_LOCATION/*$FLIGHT* $TRANSFER_MEDIA/$PROJECT
    EXIT_RSYNC="$?"
-
    echo "rsync exit status: $EXIT_RSYNC"
-   echo "****Starting file integrity checking. Please wait for process to complete.****"
-   echo "Calculating sha256sum for original file(s)..."
-   sha256sum $DATA_LOCATION/*$FLIGHT* >> $DATA_LOCATION/sha256sum.ads_station
-   echo "Calculating sha256sum for copied file(s)..."
-   sha256sum $TRANSFER_MEDIA/$PROJECT/*$FLIGHT* >> $TRANSFER_MEDIA/$PROJECT/sha256sum.transfer_media
-
-   sha_orig="$DATA_LOCATION/sha256sum.ads_station"
-   sha_copy="$TRANSFER_MEDIA/$PROJECT/sha256sum.transfer_media"
 
    echo "************************************************************"
-
-   if [ $sha_copy == $sha_orig ]; then
-      echo "SUCCESS! sha256sums match";
-   else
-      echo "ERROR! sha256sums do not match";
-   fi
+   echo "Calculating sha256sum for original file(s)..."
+   sha256sum $DATA_LOCATION/*$FLIGHT* >> $DATA_LOCATION/sha256sum.ads_station
+   echo "************************************************************"
 
 if [ "$EXIT_RSYNC" -eq 0 ] && [ $sha_copy == $sha_orig ]; then
       # umount $TRANSFER_MEDIA;
