@@ -634,81 +634,65 @@ if FTP == True:
           pass
           
   for key in file_ext:
-#############################################################################
-    if key == 'ICARTT':
-      for filename in os.listdir(data_dir):
-        if rawfilename.endswith('.ict'):
-          try:
-            os.chdir(data_dir)
-            ftp.cwd('/'+ftp_data_dir+'/ICARTT')
-            ftp.storbinary('STOR '+filename, open(filename, 'rb'))
-            status["ICARTT"]["stor"] = 'Yes-FTP'
-            print(filename+' ftp successful!')
-        except:
-            print(filename+' not sent')
-        else:
-          pass
-#############################################################################
-    else:
-      print('')
-      try:
-        os.chdir(inst_dir[key])
-      except ftplib.all_errors as e:
-        print('Could not change to local dir '+inst_dir[key])
-        print(e)
-        continue
+    print('')
+    try:
+      os.chdir(inst_dir[key])
+    except ftplib.all_errors as e:
+      print('Could not change to local dir '+inst_dir[key])
+      print(e)
+      continue
 
-      print('Putting '+filename[key]+' to '+ftp_site+':/'+ftp_data_dir+'/'+key)
-      if filename[key] != '':
-        try:
-          data_dir,file_name = os.path.split(filename[key])
-          if sendzipped:
-            file_name = file_name+'.zip'
-          else:
-            file_name = file_name
-          ftp.cwd('/'+ftp_data_dir+'/'+key)
-        except ftplib.all_errors as e:
-            # Attempt to create needed dir
-            print ('Attempt to create dir /'+ftp_data_dir+'/'+key)
-            try:
+    print('Putting '+filename[key]+' to '+ftp_site+':/'+ftp_data_dir+'/'+key)
+    if filename[key] != '':
+      try:
+        data_dir,file_name = os.path.split(filename[key])
+        if sendzipped:
+          file_name = file_name+'.zip'
+        else:
+          file_name = file_name
+        ftp.cwd('/'+ftp_data_dir+'/'+key)
+      except ftplib.all_errors as e:
+          # Attempt to create needed dir
+          print ('Attempt to create dir /'+ftp_data_dir+'/'+key)
+          try:
               ftp.mkd('/'+ftp_data_dir+'/'+key)
-            except:
+          except:
               print('Make dir '+ftp_data_dir+'/'+key+' failed')
               print(e)
               continue
-            # Try to change to dir again
-            try:
-                ftp.cwd('/'+ftp_data_dir+'/'+key)
-            except:
-                print('Change dir to '+ftp_data_dir+'/'+key+' failed')
-                print(e)
-                continue
+          # Try to change to dir again
+          try:
+              ftp.cwd('/'+ftp_data_dir+'/'+key)
+          except:
+              print('Change dir to '+ftp_data_dir+'/'+key+' failed')
+              print(e)
+              continue
 
-        if file_name in ftp.nlst():
-          print('File '+file_name+' already exists on ftp server.')
-          print('File will not be transfered to ftp site')
-          print('To force transfer, delete file from ftp site and rerun in Ship mode')
-          continue
+      if file_name in ftp.nlst():
+        print('File '+file_name+' already exists on ftp server.')
+        print('File will not be transfered to ftp site')
+        print('To force transfer, delete file from ftp site and rerun in Ship mode')
+        continue
 
-        try:
-          file = open(file_name, 'rb')
-          print(ftp.storbinary('STOR ' + file_name, file))
-          file.close()
-          status[key]["stor"] = 'Yes-FTP'
+      try:
+        file = open(file_name, 'rb')
+        print(ftp.storbinary('STOR ' + file_name, file))
+        file.close()
+        status[key]["stor"] = 'Yes-FTP'
 
-          print(datetime.datetime.now().time())
-          print('Finished putting data file')
-          print('')
+        print(datetime.datetime.now().time())
+        print('Finished putting data file')
+        print('')
 
-        except ftplib.all_errors as e:
-          print('Error writing '+file_name+' to '+ftp_site+':/'+ftp_data_dir+'/'+key)
-          print(e)
-          continue
+      except ftplib.all_errors as e:
+        print('Error writing '+file_name+' to '+ftp_site+':/'+ftp_data_dir+'/'+key)
+        print(e)
+        continue
 
-      else:
-        print('Filename is empty - nothing to write')
+    else:
+      print('Filename is empty - nothing to write')
 
-    ftp.quit()
+  ftp.quit()
 
 # Put file onto NAS for BTSyncing back home.
 if NAS == True:
@@ -764,10 +748,6 @@ if NAS == True:
     elif (key == "PMS2D"):
         print('Copying '+filename[key]+' file to '+nas_sync_dir+'/PMS2D')
         status[key]["ship"] = rsync_file(filename[key],nas_sync_dir+'/PMS2D')
-        print('Done')
-    elif (key == "ICARTT"):
-        print('Copying ICARTT files to '+nas_sync_dir+'/ICARTT')
-        status[key]["ship"] = rsync_file('*.ict',nas_sync_dir+'/ICARTT')
         print('Done')
     else:
       if sendzipped == True:
