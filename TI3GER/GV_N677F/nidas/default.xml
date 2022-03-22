@@ -1412,64 +1412,17 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
-<!--
-      AMS Documentation of Serial Interface:
-      Definition         Chars         Type
-      Year                     4       Integer
-      Day of Year              3       Integer
-      Sec After Midnight       8       Integer
-      ToF Type                 1       Integer
-      Ion Type                 1       Integer
-      MS Air Beam              8       Float
-      PToF Air Beam            8       Float
-      Flow Rate                5       Float
-      Sulfate Loadings         5       Float
-      Nitrate Loadings         5       Float
-      Org <60 Loadings         5       Float
-      Chloride Loadings        5       Float
-      m/z 43 Stick Area        5       Float
-      m/z 44 Stick Area        5       Float
-      m/z 57 Stick Area        5       Float
-      User mz1 ID              4       Integer
-      Use mz1 Stick Area       5       Float
-      User mz2 ID              4       Integer
-      Use mz2 Stick Area       5       Float
-      User mz3 ID              4       Integer
-      Use mz3 Stick Area       5       Float
-      User mz4 ID              4       Integer
-      Use mz4 Stick Area       5       Float
-      User mz5 ID              4       Integer
-      Use mz5 Stick Area       5       Float
-      User mz6 ID              4       Integer
-      Use mz6 Stick Area       5       Float
-      User mz7 ID              4       Integer
-      Use mz7 Stick Area       5       Float
-      User mz8 ID              4       Integer
-      Use mz8 Stick Area       5       Float
-      User mz9 ID              4       Integer
-      Use mz9 Stick Area       5       Float
-      User mz10 ID             4       Integer
-      Use mz10 Stick Area      5       Float
-      Analog Ch0 Volts         5       Float
-      Analog Ch1 Volts         5       Float
-      Analog Ch2 Volts         5       Float
-      Analog Ch3 Volts         5       Float
-      Analog Ch4 Volts         5       Float
-      Analog Ch5 Volts         5       Float
-      Analog Ch6 Volts         5       Float
-      Analog Ch7 Volts         5       Float
-    -->
     <serialSensor ID="AMS" baud="19200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
-      <sample id="1" rate="1" scanfFormat="%*d %*d %*d %*d %*d %*f %*f %f %f %f %f %f %*f %*f %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*f %*f %*f %*f %*f %*f %*f %*f">
+      <sample id="1" rate="1" scanfFormat="%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="AMS Organic Aerosol Mass" name="OA" units="ug sm-3"/>
         <variable longname="AMS Nitrate Aerosol Mass" name="SO4" units="ug sm-3"/>
-        <variable longname="AMS Sufate Aerosol Mass" name="pNO3" units="ug sm-3"/>
+        <variable longname="AMS Sulfate Aerosol Mass" name="PNO3" units="ug sm-3"/>
         <variable longname="AMS Ammonium Aerosol Mass" name="NH4" units="ug sm-3"/>
-        <variable longname="AMS Cloride Aerosol Mass" name="Chl" units="ug sm-3"/>
-	<variable longname="AMS Mass fraction of m/z 43 contributing to OA" name="f43" units=""/>
-	<variable longname="AMS Mass fraction of m/z 44 contributing to OA" name="f44" units=""/>
-	<variable longname="AMS Mass fraction of m/z 57 contributing to OA" name="f57" units=""/>
-	<variable longname="AMS Mass fraction of m/z 60 contributing to OA" name="f60" units=""/>
+        <variable longname="AMS Chloride Aerosol Mass" name="CHL" units="ug sm-3"/>
+	<variable longname="AMS Mass fraction of m/z 43 contributing to OA" name="F43" units="none"/>
+	<variable longname="AMS Mass fraction of m/z 44 contributing to OA" name="F44" units="none"/>
+	<variable longname="AMS Mass fraction of m/z 57 contributing to OA" name="F57" units="none"/>
+	<variable longname="AMS Mass fraction of m/z 60 contributing to OA" name="F60" units="none"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
