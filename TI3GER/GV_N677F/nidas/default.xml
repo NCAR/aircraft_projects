@@ -1090,7 +1090,21 @@
     </sensor>
 
     <sensor ID="TWODS" class="UDPSocketSensor" devicename="usock::30113" suffix="_2DS">
-        <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%d,%d,%0.2f,%0.2f,%0.2f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%0.2f,%0.2f,%0.2f,%0.2f,%0.2f,%0.2f,%0.2f,%0.2f,%d,%d,%0.1f,%0.1f,%0.1f,%0.1f,%0.1f,%0.1f,%0.1f,%0.1f,%d,%0.2f,%0.2f">
+      <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable name="TACT2H" longname="2DS Total Particles Horizontal" units="count"/>
+        <variable name="TACT2V" longname="2DS Total Particles Vertical" units="count"/>
+        <variable name="CONCS" longname="2DS Total Number Particles" units="#/cm3"/>
+        <variable name="DBARS" longname="2DS Mean Particle Diameter" units="um"/>
+        <variable name="MAXS" longname="2DS Max Particle Diameter" units="um"/>
+        <variable name="A2DSH" longname="2DS Horizontal Accumulation" units="count" length="13"/>
+        <variable name="A2DSV" longname="2DS Vertical Accumulation" units="count" length="13"/>
+        <variable name="DIOVH01" longname="2DS Diode Voltage, Horizontal Diode 1" units="Vdc"/>
+        <variable name="DIOVH64" longname="2DS Diode Voltage, Horizontal Diode 64" units="Vdc"/>
+        <variable name="DIOVH128" longname="2DS Diode Voltage, Horizontal Diode 128" units="Vdc"/>
+        <variable name="DIOVV01" longname="2DS Diode Voltage, Vertical Diode 1" units="Vdc"/>
+        <variable name="DIOVV64" longname="2DS Diode Voltage, Vertical Diode 64" units="Vdc"/>
+        <variable name="DIOVV128" longname="2DS Diode Voltage, Vertical Diode 128" units="Vdc"/>
+
 <!--
                             local_UDP_HParticlesDetected,
                             local_UDP_VParticlesDetected,
@@ -1145,7 +1159,7 @@
                             local_UDP_InternalPressure,
                             local_UDP_RH);
 -->
-        </sample> 
+      </sample> 
     </sensor>
 
     <sensor ID="MTP" class="UDPSocketSensor" devicename="usock::30101" suffix="_MTP">
