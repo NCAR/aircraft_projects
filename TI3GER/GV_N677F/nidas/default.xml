@@ -1090,6 +1090,8 @@
     </sensor>
 
     <sensor ID="TWODS" class="UDPSocketSensor" devicename="usock::30113" suffix="_2DS">
+      <parameter name="SerialNumber" type="string" value="F2DS019"/>
+      <parameter name="RESOLUTION" type="int" value="10"/>
       <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable name="TACT2H" longname="2DS Total Particles Horizontal" units="count"/>
         <variable name="TACT2V" longname="2DS Total Particles Vertical" units="count"/>
@@ -1558,7 +1560,9 @@
       <sensor IDREF="AMS" devicename="usock::30115" id="750" suffix="_AMS"/>
       <sensor IDREF="MTP" id="850" suffix="_MTP"/>
 
-      <sensor IDREF="TWODS" devicename="usock::30113" id="1000"/>
+      <sensor IDREF="TWODS" devicename="usock::30113" id="1000">
+        <parameter name="SerialNumber" type="string" value="F2DS019"/>
+      </sensor>
 
       <sensor IDREF="ALTASTATUS" devicename="usock::30220" id="6000" suffix="_AENT1"/>
       <sensor ID="ARINCENET1" class="raf.UDPArincSensor" devicename="usock::56769" id="6100" timeout="10">
