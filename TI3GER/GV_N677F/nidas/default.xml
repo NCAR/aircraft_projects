@@ -1444,9 +1444,10 @@
     </serialSensor>
 
     <serialSensor ID="FAIRO" class="UDPSocketSensor" devicename="usock::30300">
-      <sample id="1" rate="1" scanfFormat="FAIRO,%*f,%f\n">
+      <sample id="1" rate="1" scanfFormat="FAIRO,%*d-%*d-%*dT%*d:%*d:%*d,%f">
         <variable longname="FAIRO Ozone Mixing Ratio" name="O3MR" units="ppbv"/>
       </sample>
+      <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
     <serialSensor ID="ITR" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
