@@ -361,7 +361,7 @@ def main():
 
     elif NAS == False and FTP == True:
         ftp_to_local('ADS', rdat_dir)
-        ftp_to_local('PMS2D', rdat_dir)
+        #ftp_to_local('PMS2D', rdat_dir)
         ftp_to_local('LRT', dat_dir+'/field_data')
         ftp_to_local('SRT', dat_dir+'/field_data')
         ftp_to_local('HRT', dat_dir+'/field_data')
