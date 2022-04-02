@@ -1,5 +1,9 @@
 #!/bin/bash
-# Start local dsm process
+
+set -x
+
+# Restart local dsm process
+
 # Shutdown any existing process
 if  test -f "/tmp/run/nidas/dsm.pid" ; then
     pkill -F /tmp/run/nidas/dsm.pid;
@@ -15,4 +19,5 @@ if [ $? -eq 1 ]; then
   rm /tmp/run/nidas/dsm.pid
   nohup dsm > /tmp/dsm.log &
 fi
-#dsm "$xmlchoice"
+
+sleep 2
