@@ -73,7 +73,7 @@ ship_ADS = True
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
-PMS2D = True            #PMS2D from 2D-C
+PMS2D = False            #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
 Rstudio = True # Generate a PDF of the QC plots
