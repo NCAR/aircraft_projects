@@ -9,7 +9,7 @@
 import os
 import sys
 
-sys.path.append("/home/local/raf/python")
+sys.path.append("/home/local/projects/scripts")
 import raf.ac_config
 
 if len(sys.argv) < 2:
