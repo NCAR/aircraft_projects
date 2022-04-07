@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo -e "\t\t\tstart_cameras shell script called\n"
 logger "start_cameras shell script called"
 
 # Reset symlink script so it gets new flight number.
@@ -8,13 +7,13 @@ logger "start_cameras shell script called"
 pkill camera_symlink
 
 /etc/init.d/capture.sh stop
+pkill VimbaC
 
-echo "[Re]load firewire drivers."
+# [Re]load firewire drivers.
 sudo modprobe -r firewire_ohci
 sudo modprobe firewire_ohci
 
 # (Re)set camera images symlink for camera web page display
-echo "Reset maps symlink"
 touch /var/www/html/camera
 cd /var/www/html/camera
 rm camera_images
@@ -26,3 +25,8 @@ sleep 2
 /etc/init.d/capture.sh start 
 
 sleep 2
+
+mkdir -p  $cam_path/down
+cd $cam_path/down
+
+/opt/local/Vimba_5_1/VimbaC/Examples/SynchronousGrab/Build/Make/binary/x86_64bit/SynchronousGrab &
