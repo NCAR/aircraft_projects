@@ -22,8 +22,7 @@ import sys
 import glob
 import ftplib
 import syslog
-sys.path.append("/home/local/raf/python")
-import raf.ac_config
+import ac_config
 
 ####################  CONFIGURATION #######################################
 send_Dfiles =  True
