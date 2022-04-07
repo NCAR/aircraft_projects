@@ -739,10 +739,12 @@
         <variable longname="GCR Countrate of all lower counters" name="LOW" units="count"/>
         <variable longname="GCR Countrate of all telescope channel" name="TEL" units="count"/>
         <variable longname="GCR Internal Temperature" name="TEMP" units="deg_C"/>
-        <variable longname="GCR Internal Temperature" name="PS" units="kPa"/>
+        <variable longname="GCR Atmospheric Pressure" name="PS" units="kPa">
+          <linear units="hPa" slope="10.0" intercept="0.0"/>
+        </variable>
         <variable longname="GCR High Power Supply Voltage" name="VOLTS" units="Vdc"/>
       </sample>
-      <message length="0" position="end" separator="\n"/>
+      <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
     <serialSensor ID="TDLH2O" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
