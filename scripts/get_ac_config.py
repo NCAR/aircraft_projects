@@ -8,9 +8,7 @@
 
 import os
 import sys
-
-sys.path.append("/home/local/projects/scripts")
-import raf.ac_config
+import ac_config
 
 if len(sys.argv) < 2:
   sys.exit(1)

@@ -12,9 +12,7 @@ Create a symbolic link to the latest recorded camera image in
 import logging, logging.handlers
 import os, sys, commands, pyinotify, re, time
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
-
-sys.path.append("/home/local/raf/python")
-import raf.ac_config
+import ac_config
 
 mask = pyinotify.IN_CREATE | pyinotify.IN_CLOSE_WRITE
 
