@@ -481,16 +481,6 @@
         <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
         <variable longname="Reference GPS Vertical Speed" name="GGVSPD" units="m/s"/>
       </sample>
-
-<!-- PPPVELA record 
-      <sample id="6" rate="20">
-        <variable longname="Reference GPS Ground Speed" name="GGSPDP" units="m/s"/>
-        <variable longname="Reference GPS Track Angle" name="GGTRKP" units="degree_T"/>
-        <variable longname="Reference GPS Ground Speed Vector, East Component" name="GGVEWP" units="m/s"/>
-        <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNSP" units="m/s"/>
-        <variable longname="Reference GPS Vertical Speed" name="GGVSPDP" units="m/s"/>
-      </sample>
--->
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
 
@@ -1082,7 +1072,29 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
-    <sensor ID="TWODS" class="UDPSocketSensor" devicename="usock::30113" suffix="_LWOI">
+    <sensor ID="Fast2DC" class="raf.TwoD64_USB">
+      <parameter name="SerialNumber" type="string" value="F2DC001"/>
+      <parameter name="RESOLUTION" type="int" value="25"/>
+      <parameter name="TAS_RATE" type="int" value="10"/>
+      <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
+      <sample id="1" rate="10">
+        <variable longname="Fast 2DC Shadow OR Count" name="SHDORC" units="count"/>
+      </sample>
+      <sample id="2" rate="1">
+        <variable length="64" longname="Fast 2DC Raw Accumulation, entire-in (per cell)" name="A1DC" units="count"/>
+        <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="msec"/>
+        <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
+      </sample>
+
+<!--
+      <sample id="3" rate="1">
+        <variable name="A2DC" length="128" units="count" longname="Fast 2DC Raw Accumulation, center-in (per cell)"/>
+        <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
+      </sample>
+-->
+    </sensor>
+
+    <sensor ID="TWODS" class="UDPSocketSensor" devicename="usock::30113" suffix="_2DS">
       <parameter name="SerialNumber" type="string" value="F2DS019"/>
       <parameter name="RESOLUTION" type="int" value="10"/>
       <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
@@ -1091,8 +1103,8 @@
         <variable name="CONCS" longname="2DS Total Number Particles" units="#/cm3"/>
         <variable name="DBARS" longname="2DS Mean Particle Diameter" units="um"/>
         <variable name="MAXS" longname="2DS Max Particle Diameter" units="um"/>
-        <variable length="13" name="A1DSH" longname="2DS Horizontal Accumulation" units="count"/>
-        <variable length="13" name="A1DSV" longname="2DS Vertical Accumulation" units="count"/>
+        <variable length="13" name="A2DSH" longname="2DS Horizontal Accumulation" units="count"/>
+        <variable length="13" name="A2DSV" longname="2DS Vertical Accumulation" units="count"/>
         <variable name="DIOVH01" longname="2DS Diode Voltage, Horizontal Diode 1" units="Vdc"/>
         <variable name="DIOVH64" longname="2DS Diode Voltage, Horizontal Diode 64" units="Vdc"/>
         <variable name="DIOVH128" longname="2DS Diode Voltage, Horizontal Diode 128" units="Vdc"/>
@@ -1114,6 +1126,61 @@
         <variable name="HKR" longname="2DS House Keeping Packets Received" units="counts"/>
         <variable name="CAVP" longname="2DS Internal Pressure " units="psi"/>
         <variable name="RH" longname="2DS Relative Humidity" units="%"/>
+
+<!--
+                            local_UDP_HParticlesDetected,
+                            local_UDP_VParticlesDetected,
+                            local_UDP_totalparticleconcentration,
+                            local_UDP_meanparticlesize,
+                            local_UDP_maxparticlesize,
+                            local_UDP_HSD_1,
+                            local_UDP_HSD_2,
+                            local_UDP_HSD_3,
+                            local_UDP_HSD_4,
+                            local_UDP_HSD_5,
+                            local_UDP_HSD_6_10,
+                            local_UDP_HSD_11_20,
+                            local_UDP_HSD_21_30,
+                            local_UDP_HSD_31_40,
+                            local_UDP_HSD_41_50,
+                            local_UDP_HSD_51_70,
+                            local_UDP_HSD_71_100,
+                            local_UDP_HSD_101_128,
+                            local_UDP_VSD_1,
+                            local_UDP_VSD_2,
+                            local_UDP_VSD_3,
+                            local_UDP_VSD_4,
+                            local_UDP_VSD_5,
+                            local_UDP_VSD_6_10,
+                            local_UDP_VSD_11_20,
+                            local_UDP_VSD_21_30,
+                            local_UDP_VSD_31_40,
+                            local_UDP_VSD_41_50,
+                            local_UDP_VSD_51_70,
+                            local_UDP_VSD_71_100,
+                            local_UDP_VSD_101_128,
+                            local_UDP_HElement___0,
+                            local_UDP_HElement__64,
+                            local_UDP_HElement_127,
+                            local_UDP_VElement___0,
+                            local_UDP_VElement__64,
+                            local_UDP_VElement_127,
+                            local_UDP_p7v,
+                            local_UDP_n7v,
+                            local_UDP_HMask,
+                            local_UDP_VMask,
+                            local_UDP_h_optics_temp,
+                            local_UDP_v_optics_temp,
+                            local_UDP_h_array_top_temp,
+                            local_UDP_v_array_top_temp,
+                            local_UDP_DSPBoardTemp,
+                            local_UDP_HLaserTemp,
+                            local_UDP_VLaserTemp,
+                            local_UDP_PowerSupplyTemp,
+                            local_UDP_HKReceived,
+                            local_UDP_InternalPressure,
+                            local_UDP_RH);
+-->
       </sample> 
     </sensor>
 
@@ -1471,7 +1538,7 @@
           <socket type="mcaccept"/>
         </output>
       </service>
-      <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.0">
+      <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.25" rawHeapMax="100M" rawSorterLength="0.0">
 
 <!-- input from every DSM on this aircraft that has
              a socket output of type RawSampleOutputStream -->
