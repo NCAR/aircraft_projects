@@ -1,0 +1,38 @@
+#!/bin/bash
+
+
+# sleep a few seconds to get more images sent to the ground
+sleep 35
+
+
+#start ethernet camera before getting to firewire drivers
+cam_path=`get_ac_config.py cameras.path`
+mkdir -p  $cam_path/down
+cd $cam_path/down
+
+#/opt/local/Vimba_5_1/VimbaC/Examples/AsynchronousGrab/Build/Make/binary/x86_64bit/AsynchronousGrab > /tmp/VimbaCam.log  & disown
+#if ! cat /tmp/VimbaCam.log |grep -v "Error" > /dev/null
+
+#if ! ps h -C Vimba | grep -v "[Vimba]" > /dev/null; then
+if  ps -a |grep -q 'chronousGrab'; then
+    echo "Vimba process found, checking /tmp/VimbaCam.log for error"
+    if  grep -q 'rror' /tmp/VimbaCam.log; then
+        echo "Error found, killing Vimba, restarting"
+        pkill exiftool
+        pkill chronousGrab
+        tail -1 /tmp/VimbaCam.log >>/tmp/errorVimbaCam.log
+        rm /tmp/VimbaCam.log
+        sleep 0.91
+        /opt/local/Vimba_5_1/VimbaC/Examples/AsynchronousGrab/Build/Make/binary/x86_64bit/AsynchronousGrab >> /tmp/VimbaCam.log  
+        #/opt/local/Vimba_5_1/VimbaC/Examples/SynchronousGrab/Build/Make/binary/x86_64bit/SynchronousGrab >/tmp/VimbaCam.log & disown
+    else
+        echo "Vimba process already running, no Error found in /tmp/VimbaCam.log"
+    fi
+else
+    echo "Vimba process not found, starting"
+    pkill exiftool
+    sleep 0.91
+    /opt/local/Vimba_5_1/VimbaC/Examples/AsynchronousGrab/Build/Make/binary/x86_64bit/AsynchronousGrab >> /tmp/VimbaCam.log  
+   # /opt/local/Vimba_5_1/VimbaC/Examples/SynchronousGrab/Build/Make/binary/x86_64bit/SynchronousGrab >/tmp/VimbaCam.log & disown
+fi
+
