@@ -1,4 +1,4 @@
 #!/bin/csh
 
-nice +19 /net/jlocal/projects/scripts/camera/combineCameras.pl ../movieParamFile rf01
+nice +19 /home/local/projects/scripts/camera/combineCameras.pl ../movieParamFile ff01
 

@@ -36,14 +36,14 @@ rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 NAS = False
 
 # Does NAS have a permanent mount?
-NAS_permanent_mount = True
+NAS_permanent_mount = False
 nas_url = '192.168.1.5:/field-data/'+project.lower()
 nas_mnt_pt = '/mnt/Data/'+project.lower()
 
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = True
+FTP = True 
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'ti3ger'
 password = 'T!3g3r'
@@ -60,7 +60,7 @@ ftp_data_dir = './EOL_data/RAF_data'
 ### Define which files should be generated
 #############################################################################
 ICARTT = True # Generate ICARTT
-IWG1 =True # Generate IWG1 packet
+IWG1 = True # Generate IWG1 packet
 
 HRT = True # Generate HRT .nc file
 SRT = True # Generate SRT .nc file
@@ -76,7 +76,7 @@ ship_ADS = True
 PMS2D = False            #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
-Rstudio = True # Generate a PDF of the QC plots
+Rstudio = False # Generate a PDF of the QC plots
 catalog = False # Send QC plots to field catalog, leave as False
 
 #############################################################################
