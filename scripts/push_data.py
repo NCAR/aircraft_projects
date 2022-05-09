@@ -200,7 +200,7 @@ def find_lrt_netcdf(filetype):
       reprocess = False
 
   elif nclist.__len__() == 0:
-    print("No files found matching form: "+data_dir+'*.'+filetype)
+    print("No files found matching form: "+data_dir+'*'+flight+'.'+filetype)
     print("We must process!")
     process = True
     ncfile = data_dir+file_prefix+".nc"
@@ -219,7 +219,7 @@ def find_lrt_netcdf(filetype):
 # See if a file exists already and query user about what to do.
 def find_file(data_dir,flight,file_prefix,filetype,fileext,flag):
   datafile = ''
-  datalist = glob.glob(data_dir+'*.'+fileext)
+  datalist = glob.glob(data_dir+'*'+flight+filetype+'.'+fileext)
   if (datalist.__len__() == 1):
     if (flag == False):
       reproc = input('Found file: datalist[0]. Reprocess?(Y/N)')
@@ -632,18 +632,7 @@ if FTP == True:
               print(rawfilename+' not sent')
       else:
           pass
-  for fn in os.listdir(data_dir):
-      if fn.endswith('.ict'):
-          try:
-              os.chdir(data_dir)
-              ftp.cwd('/'+ftp_data_dir+'/ICARTT')
-              ftp.storbinary('STOR '+fn, open(fn, 'rb'))
-              status["ICARTT"]["stor"] = 'Yes - FTP'
-              print(fn+' ftp successful')
-          except:
-              print(fn+' not sent')
-      else:
-          pass          
+          
   for key in file_ext:
     print('')
     try:
