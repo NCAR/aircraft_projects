@@ -619,13 +619,24 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
+
     <sensor ID="HOLODEC" class="UDPSocketSensor" devicename="usock::30120">
-      <sample id="1" rate="1" scanfFormat="HOLO,%*f,%f,%f,%f,%f,%f">
-        <variable name="HTEMP1" longname="Holodec temperature, zone 1, Camera" units="deg_C"/>
-        <variable name="HTEMP2" longname="Holodec temperature, zone 2, Laser Head" units="deg_C"/>
-        <variable name="HTEMP3" longname="Holodec temperature, zone 3, Laser Arm" units="deg_C"/>
-        <variable name="HTEMP4" longname="Holodec temperature, zone 4, Camera Arm" units="deg_C"/>
-        <variable name="HTEMP5" longname="Holodec temperature, zone 5, Laser Controller" units="deg_C"/>
+      <sample id="1" rate="1" scanfFormat="HOLO,%*fl,%f,%f,%f,%f,%f">
+        <variable longname="Holodec temperature, heat zone 1" name="HTEMP1" units="deg_C">
+          <linear intercept="0.0" slope="0.1" units="vlpm"/>
+        </variable>
+        <variable longname="Holodec temperature, heat zone 2" name="HTEMP2" units="deg_C">
+          <linear intercept="0.0" slope="0.1" units="deg_C"/>
+        </variable>
+        <variable longname="Holodec temperature, heat zone 3" name="HTEMP3" units="deg_C">
+          <linear intercept="0.0" slope="0.1" units="deg_C"/>
+        </variable>
+        <variable longname="Holodec temperature, heat zone 4" name="HTEMP4" units="deg_C">
+          <linear intercept="0.0" slope="0.1" units="deg_C"/>
+        </variable>
+        <variable longname="Holodec temperature, heat zone 5" name="HTEMP5" units="deg_C">
+          <linear intercept="0.0" slope="0.1" units="deg_C"/>
+        </variable>
       </sample>
     </sensor>
 
@@ -661,53 +672,7 @@
         <variable longname="NOx Mixing Ratio" name="NOX" units="pptv"/>
       </sample>
     </sensor>
-    <sensor ID="THREEVC2D" class="UDPSocketSensor" devicename="usock::30113">
-      <sample id="1" rate="1" scanfFormat="SPEC3V2D,%*f-%*f-%*fT%*f:%*f:%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-        <variable longname="3VCPI Horizontal Particles Detected" name="HPRT" units="count"/>
-        <variable longname="3VCPI Vertical Particles Detected" name="VPRT" units="count"/>
 
-<!--<variable longname="3VCPI Total Particles Detected per second" name="TPRT" units="count"/>-->
-        <variable longname="3VCPI Sample Volume" name="SVOL" units="L"/>
-        <variable longname="3VCPI Mean Particle Size" name="SIZM" units="microns"/>
-        <variable longname="3VCPI Mean Particle Size for all > 50 microns" name="SIZM50" units="microns"/>
-        <variable longname="3VCPI Max Particle Size" name="SIZMAX" units="microns"/>
-        <variable length="13" longname="3VCPI Raw Count Histogram" name="A3VCPI" units="count"/>
-        <variable longname="3VCPI HElement0" name="H0" units="unk"/>
-        <variable longname="3VCPI HElement64" name="H64" units="unk"/>
-        <variable longname="3VCPI HElement127" name="H127" units="unk"/>
-        <variable longname="3VCPI VElement0" name="V0" units="unk"/>
-        <variable longname="3VCPI VElement64" name="V64" units="unk"/>
-        <variable longname="3VCPI VElement127" name="V127" units="unk"/>
-        <variable longname="+7V" name="POS7" units="unk"/>
-        <variable longname="-7V" name="NEG7" units="unk"/>
-        <variable longname="H Mask" name="HMSK" units="unk"/>
-        <variable longname="V Mask" name="VMSK" units="unk"/>
-        <variable longname="H TX Arm Temp" name="THTXARM" units="degC"/>
-        <variable longname="H RX Arm Temp" name="THRXARM" units="degC"/>
-        <variable longname="V TX Arm Temp" name="TVTXARM" units="degC"/>
-        <variable longname="V RX Arm Temp" name="TVRXARM" units="degC"/>
-        <variable longname="DSP Board Temp" name="TBRD" units="degC"/>
-        <variable longname="H Laser Temp" name="THLAS" units="degC"/>
-        <variable longname="V Laser Temp" name="TVLAS" units="degC"/>
-        <variable longname="Power Supply Temp" name="TPS" units="degC"/>
-        <variable longname="HK Received" name="HKREC" units="unk"/>
-        <variable longname="Internal Pressure" name="PINT" units="psi"/>
-      </sample>
-    </sensor>
-    <sensor ID="THREEVCPI" class="UDPSocketSensor" devicename="usock::30114">
-      <sample id="1" rate="1" scanfFormat="SPEC3CPI,%*f-%*f-%*fT%*f:%*f:%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-        <variable longname="3VCPI Frames per Second" name="FRMS" units="count"/>
-        <variable longname="3VCPI # Concentration" name="CONC" units="1/L"/>
-        <variable longname="3VCPI % Valid" name="PRCTVAL" units="percent"/>
-        <variable longname="3VCPI +5 Volts" name="POS5" units="V"/>
-        <variable longname="3VCPI -12 Volts" name="NEG12" units="V"/>
-        <variable longname="3VCPI Nose Temperature" name="TNOSE" units="degC"/>
-        <variable longname="3VCPI Amp Temperature" name="TAMP" units="degC"/>
-        <variable longname="3VCPI DSP Temperature" name="TDSP" units="degC"/>
-        <variable longname="3VCPI Optics Block Temperature" name="TBLK" units="degC"/>
-        <variable longname="3VCPI Background Mean" name="BKGM" units="count"/>
-      </sample>
-    </sensor>
     <sensor ID="HARP_ACTINIC_FLUX" class="UDPSocketSensor" devicename="usock::30108" suffix="_HARP">
         <sample id="1" rate="1" scanfFormat="HARPactfl,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="UVN 340 nm Counts" name="UVN340" units="counts"/>
@@ -804,7 +769,7 @@
             <variable longname="SPP-100 Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
             <variable longname="SPP-100 Rejected Particle Count (Transit-Time)" name="REJAT" units="count"/>
             <variable longname="SPP-100 AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
-            <variable length="31" longname="SPP-100 Raw Accumulation (per cell) - DMT" name="AS100" units="count"/>
+            <variable length="30" longname="SPP-100 Raw Accumulation (per cell) - DMT" name="AS100" units="count"/>
             <variable longname="SPP-100 Time between last sample and this sample" name="DELTAT" units="msec"/>
         </sample>
         <prompt rate="10" string="\x1b\x02\x1d\x00"/>
@@ -831,7 +796,7 @@
 <!-- <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>-->
         </variable>
         <variable longname="SPP-200 Detector Temperature" name="PTMP" units="deg_C"/>
-        <variable length="31" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT" name="AS200" units="count"/>
+        <variable length="30" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT" name="AS200" units="count"/>
         <variable longname="SPP-200 Time between last sample and this sample" name="DELTAT" units="msec"/>
       </sample>
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
@@ -872,15 +837,16 @@
         <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
         <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
         <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
-        <variable length="31" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
+        <variable length="30" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
         <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
       </sample>
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
     </serialSensor>
+
     <serialSensor ID="UHSAS" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1" timeout="10">
       <parameter name="HSKP_SCALE" type="int" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000"/>
       <sample id="1" rate="10">
-        <variable length="100" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
+        <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
         <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
         <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
         <variable longname="UHSAS Sample Flow at Laser" name="USMPFLW" units="V">
@@ -917,6 +883,43 @@
 <!-- look for ffff07 termination sequence after 220 bytes -->
       <message length="220" position="end" separator="\xff\xff\x07"/>
     </serialSensor>
+
+    <serialSensor ID="UHSASG" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <parameter name="SerialNumber" type="string" value="UHSAS059"/>
+      <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
+        <variable name="UACC" units="sec" longname="UHSAS Accumulation"/>
+        <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
+        <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
+        <variable name="USMPFLW" units="sccm" longname="UHSAS Sample Flow at Laser"/>
+        <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
+        <variable name="ULSRTEMP" units="V" longname="UHSAS Laser Temperature"/>
+        <variable name="USHFLW" units="sccm" longname="UHSAS Air Sheath Flow"/>
+        <variable name="UDIFF" units="V" longname="UHSAS Unused Channel"/>
+        <variable name="UBTMP" units="K" longname="UHSAS Temperature in Canister"/>
+        <variable name="UPRGFLW" units="sccm" longname="UHSAS Purge Flow"/>
+        <variable name="UPRESS" units="kPa" longname="UHSAS Absolute Sample Pressure"/>
+        <variable name="UAUX" units="V" longname="UHSAS Auxilliary"/>
+        <variable name="UFLW" units="sccm" longname="UHSAS Flow"/>
+        <variable name="UPSH" units="hPa" longname="Pressure, sheath Alicat"/>
+        <variable name="UTSH" units="deg_C" longname="Temperature, sheath Alicat"/>
+        <variable name="UVSHFL" units="lpm" longname="Volume flow, sheath Alicat"/>
+        <variable name="UMSHFL" units="slpm" longname="Mass flow, sheath Alicat"/>
+        <variable name="USHSP" units="lpm" longname="Setpoint, sheath Alicat"/>
+<!--        <variable name="UDPP" units="hPa" longname="Pressure, dP Alicat"/> -->
+        <variable name="UDPIN" units="inH2O" longname="Differential pressure, dP Alicat"/>
+        <variable name="UVFLIN" units="ccm" longname="Sample (inlet) volume flow calculated from dPinlet">
+            <linear intercept="0.0" slope="0.016667" units="ccs"/>
+        </variable>
+        <variable name="UPSAM" units="hPa" longname="Pressure, sample Alicat (original flow controller on exhaust)"/>
+        <variable name="UTSAM" units="deg_C" longname="Temperature, sample Alicat (on exhaust)"/>
+        <variable name="UVSFL" units="ccm" longname="Volume flow, sample Alicat (on exhaust)"/>
+        <variable name="UMSFL" units="sccm" longname="Mass flow, sample Alicat (on exhaust)"/>
+        <variable name="USAMSP" units="ccm" longname="Setpoint, sample Alicat (on exhaust)"/>
+        <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
+
 
 <!-- CVI TDL original - on ICE-T a second instrument TDL_CVI2 was introduced -->
     <serialSensor ID="TDL_CVI1" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
@@ -1083,6 +1086,41 @@
         <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="msec"/>
         <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
         <variable longname="Fast 2DC Total Area of Shadowed Pixels" name="AREA" units="mm2"/>
+      </sample>
+    </sensor>
+
+    <sensor ID="TWODS" class="UDPSocketSensor" devicename="usock::30113" suffix="_2DS">
+      <parameter name="SerialNumber" type="string" value="F2DS019"/>
+      <parameter name="RESOLUTION" type="int" value="10"/>
+      <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable name="TACT2H" longname="2DS Total Particles Horizontal" units="count"/>
+        <variable name="TACT2V" longname="2DS Total Particles Vertical" units="count"/>
+        <variable name="CONCS" longname="2DS Total Number Particles" units="#/cm3"/>
+        <variable name="DBARS" longname="2DS Mean Particle Diameter" units="um"/>
+        <variable name="MAXS" longname="2DS Max Particle Diameter" units="um"/>
+        <variable length="13" name="A2DSH" longname="2DS Horizontal Accumulation" units="count"/>
+        <variable length="13" name="A2DSV" longname="2DS Vertical Accumulation" units="count"/>
+        <variable name="DIOVH01" longname="2DS Diode Voltage, Horizontal Diode 1" units="Vdc"/>
+        <variable name="DIOVH64" longname="2DS Diode Voltage, Horizontal Diode 64" units="Vdc"/>
+        <variable name="DIOVH128" longname="2DS Diode Voltage, Horizontal Diode 128" units="Vdc"/>
+        <variable name="DIOVV01" longname="2DS Diode Voltage, Vertical Diode 1" units="Vdc"/>
+        <variable name="DIOVV64" longname="2DS Diode Voltage, Vertical Diode 64" units="Vdc"/>
+        <variable name="DIOVV128" longname="2DS Diode Voltage, Vertical Diode 128" units="Vdc"/>
+        <variable name="P7V" longname="2DS " units="Vdc"/>
+        <variable name="N7V" longname="2DS " units="Vdc"/>
+        <variable name="HMASK" longname="2DS Horizontal Mask" units="none"/>
+        <variable name="VMASK" longname="2DS Vertical Mask" units="none"/>
+        <variable name="HOPT" longname="2DS Horizontal Optics Temperature" units="deg_C"/>
+        <variable name="VOPT" longname="2DS Vertical Optics Temperature" units="deg_C"/>
+        <variable name="HARTT" longname="2DS Horizontal Array Top Temperature" units="deg_C"/>
+        <variable name="VARTT" longname="2DS Vertical Array Top Temperature" units="deg_C"/>
+        <variable name="DSPT" longname="2DS DSP Board Temperature" units="deg_C"/>
+        <variable name="HLT" longname="2DS Horizontal Laser Temperature" units="deg_C"/>
+        <variable name="VLT" longname="2DS Vertical Laser Temperature" units="deg_C"/>
+        <variable name="PT" longname="2DS Power Supply Temperature" units="deg_C"/>
+        <variable name="HKR" longname="2DS House Keeping Packets Received" units="counts"/>
+        <variable name="CAVP" longname="2DS Internal Pressure " units="psi"/>
+        <variable name="RH" longname="2DS Relative Humidity" units="%"/>
       </sample>
     </sensor>
 
@@ -1700,6 +1738,7 @@
         <socket type="mcrequest"/>
       </output>
     </dsm>
+
     <dsm derivedData="sock::7071" id="4" location="cabin_mpdb" name="dsm304" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_304"/>

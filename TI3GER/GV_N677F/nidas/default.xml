@@ -1072,26 +1072,34 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
-    <sensor ID="Fast2DC" class="raf.TwoD64_USB">
+    <sensor ID="Fast2DC_v2" class="raf.TwoD64_USB_v3">
       <parameter name="SerialNumber" type="string" value="F2DC001"/>
       <parameter name="RESOLUTION" type="int" value="25"/>
       <parameter name="TAS_RATE" type="int" value="10"/>
       <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
-      <sample id="1" rate="10">
-        <variable longname="Fast 2DC Shadow OR Count" name="SHDORC" units="count"/>
+      <sample id="1" rate="1">
+        <variable longname="Fast 2DC Board Serial Number" name="BSN" units="#"/>
+        <variable longname="Fast 2DC Date / Time Stamp" name="DATE" units="count"/>
+        <variable longname="Fast 2DC Shadow OR Count" name="SHDOR" units="count"/>
+        <variable longname="Fast 2DC DOF Reject Count" name="DOFOR" units="count"/>
+        <variable longname="Fast 2DC Board Temperature" name="BTMP" units="deg_C"/>
+        <variable longname="Fast 2DC Diode Voltage, Diode 1" name="DIOV01" units="Vdc">
+                <linear intercept="0.0" slope="2" units="Vdc"/>
+        </variable>
+        <variable longname="Fast 2DC Diode Voltage, Diode 32" name="DIOV32" units="Vdc">
+                <linear intercept="0.0" slope="2" units="Vdc"/>
+        </variable>
+        <variable longname="Fast 2DC Diode Voltage, Diode 64" name="DIOV64" units="Vdc">
+                <linear intercept="0.0" slope="2" units="Vdc"/>
+        </variable>
+        <variable longname="Fast 2DC Diode TAS" name="TAS" units="m/s"/>
       </sample>
       <sample id="2" rate="1">
         <variable length="64" longname="Fast 2DC Raw Accumulation, entire-in (per cell)" name="A1DC" units="count"/>
         <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="msec"/>
         <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
+        <variable longname="Fast 2DC Total Area of Shadowed Pixels" name="AREA" units="mm2"/>
       </sample>
-
-<!--
-      <sample id="3" rate="1">
-        <variable name="A2DC" length="128" units="count" longname="Fast 2DC Raw Accumulation, center-in (per cell)"/>
-        <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
-      </sample>
--->
     </sensor>
 
     <sensor ID="TWODS" class="UDPSocketSensor" devicename="usock::30113" suffix="_2DS">
