@@ -920,6 +920,36 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
+    <sensor ID="NOAAUHSAS" class="UDPSocketSensor" devicename="usock::30117" suffix='_NUHSAS'> 
+      <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
+        <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
+        <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
+        <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
+        <variable name="USMPFLW" units="sccm" longname="UHSAS Sample Flow at Laser"/>
+        <variable name="UPTOT" units="mb" longname="UHSAS Ptot"/>
+        <variable name="USHFLW" units="lpm" longname="UHSAS Air Sheath Flow"/>
+        <variable name="USAMSP" units="ccm" longname="Setpoint, sample Alicat (on exhaust)"/>
+        <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
+      </sample>
+    </sensor>
+
+    <sensor ID="NMASS" class="UDPSocketSensor" devicename="usock::30136" suffix='_NMASS'> 
+	    <sample id="1" rate="1" scanfFormat="%f %f %f %f %f %f %f %f %f %f %f %f %f">
+	<variable name="T" units="s" longname="NMASS time"/>
+	<variable name="CNT1" units="count" longname="NMASS Counter 1"/>
+	<variable name="FLOW1" units="cm^3/s" longname="NMASS Flow 1"/>
+        <variable name="APDN" units="mb" longname="NMASS Analog Pressure Down"/>
+        <variable name="PBH" units="degC" longname="NMASS Therm Power Bulkhead"/>
+        <variable name="CNT2" units="count" longname="NMASS Counter 2"/>
+        <variable name="CNT3" units="count" longname="NMASS Counter 3"/>
+        <variable name="CNT4" units="count" longname="NMASS Counter 4"/>
+        <variable name="CNT5" units="count" longname="NMASS Counter 5"/>
+        <variable name="APUP" units="mb" longname="NMASS Analog Pressure Up"/>
+        <variable name="TCMEAS" units="degC" longname="NMASS Therm Cond1 Meas"/>
+        <variable name="TSMEAS" units="degC" longname="NMASS Therm Sat1 Meas"/>
+	<variable name="FLOWT" units="cm^3/sec" longname="NMASS Total Flow"/>
+      </sample>
+    </sensor>
 
 <!-- CVI TDL original - on ICE-T a second instrument TDL_CVI2 was introduced -->
     <serialSensor ID="TDL_CVI1" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
