@@ -784,7 +784,7 @@
             <variable longname="SPP-100 Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
             <variable longname="SPP-100 Rejected Particle Count (Transit-Time)" name="REJAT" units="count"/>
             <variable longname="SPP-100 AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
-            <variable length="31" longname="SPP-100 Raw Accumulation (per cell) - DMT" name="AS100" units="count"/>
+            <variable length="30" longname="SPP-100 Raw Accumulation (per cell) - DMT" name="AS100" units="count"/>
             <variable longname="SPP-100 Time between last sample and this sample" name="DELTAT" units="msec"/>
         </sample>
         <prompt rate="10" string="\x1b\x02\x1d\x00"/>
@@ -811,7 +811,7 @@
 <!-- <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>-->
         </variable>
         <variable longname="SPP-200 Detector Temperature" name="PTMP" units="deg_C"/>
-        <variable length="31" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT" name="AS200" units="count"/>
+        <variable length="30" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT" name="AS200" units="count"/>
         <variable longname="SPP-200 Time between last sample and this sample" name="DELTAT" units="msec"/>
       </sample>
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
@@ -1102,7 +1102,7 @@
       </sample>
     </sensor>
 
-    <sensor ID="TWODS" class="UDPSocketSensor" devicename="usock::30113" suffix="_2DS">
+    <sensor ID="TWODS" class="raf.TwoDS" devicename="usock::30113" suffix="_2DS">
       <parameter name="SerialNumber" type="string" value="F2DS019"/>
       <parameter name="RESOLUTION" type="int" value="10"/>
       <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
@@ -1134,61 +1134,6 @@
         <variable name="HKR" longname="2DS House Keeping Packets Received" units="counts"/>
         <variable name="CAVP" longname="2DS Internal Pressure " units="psi"/>
         <variable name="RH" longname="2DS Relative Humidity" units="%"/>
-
-<!--
-                            local_UDP_HParticlesDetected,
-                            local_UDP_VParticlesDetected,
-                            local_UDP_totalparticleconcentration,
-                            local_UDP_meanparticlesize,
-                            local_UDP_maxparticlesize,
-                            local_UDP_HSD_1,
-                            local_UDP_HSD_2,
-                            local_UDP_HSD_3,
-                            local_UDP_HSD_4,
-                            local_UDP_HSD_5,
-                            local_UDP_HSD_6_10,
-                            local_UDP_HSD_11_20,
-                            local_UDP_HSD_21_30,
-                            local_UDP_HSD_31_40,
-                            local_UDP_HSD_41_50,
-                            local_UDP_HSD_51_70,
-                            local_UDP_HSD_71_100,
-                            local_UDP_HSD_101_128,
-                            local_UDP_VSD_1,
-                            local_UDP_VSD_2,
-                            local_UDP_VSD_3,
-                            local_UDP_VSD_4,
-                            local_UDP_VSD_5,
-                            local_UDP_VSD_6_10,
-                            local_UDP_VSD_11_20,
-                            local_UDP_VSD_21_30,
-                            local_UDP_VSD_31_40,
-                            local_UDP_VSD_41_50,
-                            local_UDP_VSD_51_70,
-                            local_UDP_VSD_71_100,
-                            local_UDP_VSD_101_128,
-                            local_UDP_HElement___0,
-                            local_UDP_HElement__64,
-                            local_UDP_HElement_127,
-                            local_UDP_VElement___0,
-                            local_UDP_VElement__64,
-                            local_UDP_VElement_127,
-                            local_UDP_p7v,
-                            local_UDP_n7v,
-                            local_UDP_HMask,
-                            local_UDP_VMask,
-                            local_UDP_h_optics_temp,
-                            local_UDP_v_optics_temp,
-                            local_UDP_h_array_top_temp,
-                            local_UDP_v_array_top_temp,
-                            local_UDP_DSPBoardTemp,
-                            local_UDP_HLaserTemp,
-                            local_UDP_VLaserTemp,
-                            local_UDP_PowerSupplyTemp,
-                            local_UDP_HKReceived,
-                            local_UDP_InternalPressure,
-                            local_UDP_RH);
--->
       </sample> 
     </sensor>
 
