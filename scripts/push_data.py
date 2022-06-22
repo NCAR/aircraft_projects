@@ -62,7 +62,7 @@ qc_ftp_site =    'catalog.eol.ucar.edu'
 
 # Hard-code around project name inconsistency. Revert for next project.
 #qc_ftp_dir =     '/pub/incoming/catalog/'+ project.lower()
-qc_ftp_dir =     '/pub/incoming/catalog/ti3ger'
+qc_ftp_dir =     '/pub/incoming/catalog/acclip'
 if aircraft == "GV_N677F":
   raircraft      = 'aircraft.NSF_NCAR_GV.'
 elif aircraft == "C130_N130AR":
@@ -433,7 +433,7 @@ if process:
     
     # Generate ICARTT file from LRT, if requested
     if (key == "ICARTT"):
-      command = "nc2asc_cl -i "+filename["LRT"]+" -o "+filename[key]+" -b "+nc2ascBatch;
+      command = "nc2asc -i "+filename["LRT"]+" -o "+filename[key]+" -b "+nc2ascBatch;
       print("about to execute : "+command)
       if os.system(command) == 0:
         status[key]["proc"] = 'Yes'
@@ -632,6 +632,17 @@ if FTP == True:
               print(rawfilename+' not sent')
       else:
           pass
+  print('Starting ftp process for all available .ict files')
+  for f in os.listdir(data_dir):
+      if f.endswith('.ict'):
+          try:
+              os.chdir(data_dir)
+              ftp.cwd('/'+ftp_data_dir+'/ICARTT')
+              ftp.storbinary('STOR '+f, open(f, 'rb'))
+              #status["ICARTT"]["stor"] = 'Yes-FTP'
+              print(f+' ftp successful!')
+          except:
+              print(f+' not sent')
           
   for key in file_ext:
     print('')

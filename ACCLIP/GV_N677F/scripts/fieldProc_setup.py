@@ -51,7 +51,7 @@ ftp_data_dir = './EOL_data/RAF_data'
 #############################################################################
 ### Define which files should be generated
 #############################################################################
-ICARTT = False # Generate ICARTT
+ICARTT = True # Generate ICARTT
 IWG1 = False # Generate IWG1 packet
 
 HRT = False # Generate HRT .nc file
@@ -65,7 +65,7 @@ ship_ADS = True
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
-PMS2D = True            #PMS2D from 2D-C
+PMS2D = False            #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
 Rstudio = True # Generate a PDF of the QC plots
