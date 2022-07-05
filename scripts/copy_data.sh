@@ -43,6 +43,7 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    echo "***Starting file transfer. Please wait for transfer and integrity checking to complete.***"
    rsync -cavP --no-perms  $DATA_LOCATION/*$FLIGHT* $TRANSFER_MEDIA/$PROJECT
    EXIT_RSYNC="$?"
+   sync
    echo "rsync exit status: $EXIT_RSYNC"
 
    echo "************************************************************"
@@ -51,14 +52,13 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    echo "************************************************************"
 
 if [ "$EXIT_RSYNC" -eq 0 ] && [ $sha_copy == $sha_orig ]; then
-      # umount $TRANSFER_MEDIA;
-      echo "Copy of .ads file(s) for $PROJECT$FLIGHT SUCCESSFUL."
-      echo "When terminal closes you can safely remove the drive by right-clicking the desktop icon."
+      echo "***Copy of .ads file(s) for $PROJECT$FLIGHT SUCCESSFUL.***"
+      echo "***When terminal closes you can safely remove the drive by right-clicking the desktop icon.***"
       sleep 20
 
    elif [ "$EXIT" -gt 0 ] || [ $sha_copy != $sha_orig ]; then
-      echo "Copy of .ads file(s) for $PROJECT$FLIGHT UNSUCCESSFUL."
-      echo "Check files under /var/r1/$PROJECT and try again."
+      echo "***Copy of .ads file(s) for $PROJECT$FLIGHT UNSUCCESSFUL."
+      echo "***Check files under /var/r1/$PROJECT and try again."
 
    else
       echo "rsync error"
