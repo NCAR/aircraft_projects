@@ -302,10 +302,15 @@ def step_through_files(datalist, fileext):
     datafile = ''
     if reprocess == True:
         print("Stepping through files, please select the right one.")
+        i = 0
         while datafile == '':  # Loop until user chooses
             ans = input(datalist[i]+'? (Y/N)')
             if ans == 'Y' or ans == 'y':
                 datafile = datalist[i]
+            if i < datalist.__len__() - 1:
+                i = i + 1
+            else:
+                i = 0
     else:
         # Not processing so just return the first file, which is all that we
         # need to successfully set off shipping
