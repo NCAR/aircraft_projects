@@ -4,7 +4,6 @@
 # after connecting removable drive, run script to transfer file(s)
 ###----------------------------------------------------------------------------
 # assign list of parameters for transferring data
-#PROJECT="OTREC"
 
 DATA_LOCATION="/var/r1/$PROJECT/camera_images"
 
@@ -38,6 +37,7 @@ if [ $DIR -eq 0 ]; then
       echo "You entered $DRIVE_CONNECTION, which means you have a drive connected."
       if [ $TAR_FILE -eq 0 ]; then
          rsync -cav --no-perms --no-owner --no-group $DATA_LOCATION/flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT
+         sync
          EXIT="$?"
          echo "rsync exit status: $EXIT"
          if [ $EXIT -eq 0 ]; then
@@ -58,6 +58,7 @@ if [ $DIR -eq 0 ]; then
          cd $DATA_LOCATION
          tar -cvf flight_number_$FLIGHT.tar flight_number_$FLIGHT
          rsync -cav --no-perms --no-owner --no-group flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT
+         sync
          EXIT="$?"
          echo "rsync exit status: $EXIT" 
          if [ $EXIT -eq 0 ]; then
