@@ -216,59 +216,104 @@ def find_lrt_netcdf(filetype):
 
   return(process,reprocess,ncfile)
 
-# See if a file exists already and query user about what to do.
-def find_file(data_dir,flight,file_prefix,filetype,fileext,flag):
-  datafile = ''
-  datalist = glob.glob(data_dir+'*'+flight+filetype+'.'+fileext)
-  if (datalist.__len__() == 1):
-    if (flag == False):
-      reproc = input('Found file: datalist[0]. Reprocess?(Y/N)')
-      if reproc == 'Y':
-       flag = True
-    datafile = datalist[0]
-  elif datalist.__len__() == 0:
-    print("No files found matching form: "+data_dir+'*'+flight+filetype+'*.'+fileext)
-    if fileext == 'ads':
-      print("Aborting...")
-      sys.exit(0)
+def find_file(data_dir, flight, project, filetype, fileext, flag, date=""):
+    """
+    See if a file exists already and query user about what to do.
+
+    Look for files in data_dir that match the filename pattern *[rtfc]f##.ext
+    ICARTT files follow the NASA convention project_platform_date_R[A-Z0-9].ict
+    so must be handled separately.
+    Note that LRT files are handled as a special case by find_lrt_netcdf
+
+    Input:
+        flight - flight type designator and number eg rf01
+        project - project + flight e.g. ACCLIPrf01
+        filetype - s for sample rate, h for high rate, etc
+        fileext - .asc, .nc, etc
+    Return:
+        datafile - Name of file found
+        flag - True if file should be reprocessed
+    """
+    datafile = ''
+    if fileext == 'ict':
+        pattern = data_dir + project + '*' + date + '*' + fileext
+        # pattern2 is a dummy placeholder. nc2asc will overwrite the output
+        # filename to match the strict ICARTT filename convention.
+        pattern2 = data_dir + project + date + '.' + fileext
+        datalist = glob.glob(pattern)
     else:
-      if process:
-        print("We are scheduled to process all is good")
-        datafile = data_dir+file_prefix+filetype+'.'+fileext
-      else:
-        print("We have nc file but not "+fileext+" file....  aborting...")
+        # pattern needs a star to match the ads file
+        pattern = data_dir + "*" + flight + filetype + '.' + fileext
+        # pattern2 is the name of files to regenerate, other than ads
+        pattern2 = data_dir + project + flight + filetype + '.' + fileext
+        datalist = glob.glob(pattern)
+
+    if (datalist.__len__() == 1):
+        # Found a single file of the type we are looking for [eg ads or lrt or
+        # nc, etc. Find out if user wants to reprocess the file?
+        if (flag == False):
+            reproc = input('Found file: ' + datalist[0] + '. Reprocess?(Y/N)')
+            if reproc == 'Y':
+               flag = True
+        datafile = datalist[0]  # Return name of file that was found
+
+    elif datalist.__len__() == 0:
+        # Did not find any files with the extension we are looking for
+        print("No files found matching form: " + pattern)
+        if fileext == 'ads':
+            # If we can't find an ads file, then there is nothing to do.
+            print("Aborting...")
+            sys.exit(0)
+        else:
+            # Any other files that can't be found can be regenerated
+            if process:
+                print("We are scheduled to process all is good")
+                datafile = pattern2
+            else:
+                # but if the file is not marked to be regenerated in the
+                # fieldProc_setup.py file, then we have a probem.
+                print("We have an nc file but not "+fileext+" file.... " +
+                      "aborting...")
+                sys.exit(0)
+    else:
+        # Found multiple files that match the type we are looking for.
+        # Step through the files and let the user decide which is the one we
+        # should work with
+        print("More than one "+fileext+" file found.")
+        datafile=step_through_files(datalist, fileext)
+
+    if datafile == '' :
+        # If after all this we haven't identified a file, abort processing.
+        print("No "+datafile+" file identified!")
+        print("Aborting...")
         sys.exit(0)
-  else:
-    print("More than one "+fileext+" file found.")
-    datafile=step_through_files(datalist)
 
-  if datafile == '' :
-    print("No "+datafile+" file identified!")
-    print("Aborting...")
-    sys.exit(0)
+    return(flag, datafile)
 
-  return(flag,datafile)
+def step_through_files(datalist, fileext):
+    """
+    Handle multiple files of a given type for a single flight
 
-# Handle multiple files of a given type for a single flight
-def step_through_files(datalist):
-  if reprocess == True:
-    print("Stepping through files, please select the right one.")
+    Input:
+        datalist - list of files of the same type
+        fileext - file type extesion, just used for user messages
+    Return: File from list selected by user
+    """
     datafile = ''
-    i = 0
-    while datafile == '' :
-      ans = input(datalist[i]+'? (Y/N)')
-      if ans == 'Y' or ans == 'y':
-        datafile = datalist[i]
-      if i < datalist.__len__() - 1:
-        i = i + 1
-      else:
-        i = 0
+    if reprocess == True:
+        print("Stepping through files, please select the right one.")
+        while datafile == '':  # Loop until user chooses
+            ans = input(datalist[i]+'? (Y/N)')
+            if ans == 'Y' or ans == 'y':
+                datafile = datalist[i]
+    else:
+        # Not processing so just return the first file, which is all that we
+        # need to successfully set off shipping
+        datafile = datalist[0]
+        print('Ship is set to True so no need to choose ' + fileext +
+              'to process.')
+
     return(datafile)
-  else:
-    datafile = ''
-    datafile = datalist[0]
-    return(datafile)
-    print('Ship is set to True so no need to choose .ads to process.')
 
 # Run nimbus to create a .nc file (LRT, HRT, or SRT)
 def process_netCDF(rawfile,ncfile,pr,config_ext):
@@ -377,7 +422,7 @@ def zip_file(filename,datadir):
 file_prefix =   project + flight
 
 # Prepare for final message information
-final_message = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n'
+final_message = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n'
 final_message = final_message + 'Process and Push log for Project:' + project
 final_message = final_message + '  Flight:'+flight+'\r\n'
 
@@ -401,17 +446,27 @@ if not os.path.exists(rstudio_dir):
 # Determine if we are in process, reprocess, or ship mode.
 (process,reprocess,filename['LRT']) = find_lrt_netcdf(file_ext['LRT'])
 
-# Now everthing else (skip LRT)
-for key in file_ext:
-  if (key == "LRT"):
-    next;
-  else:
-    (key,filename[key])=find_file(inst_dir[key],flight,file_prefix,file_type[key],file_ext[key],key)
+# Next get the ADS file so we can determine the flight date. This is needed
+# in order to indentify the correct ICARTT file, since ICARTT files follow the
+# NASA naming convention and don't use our flight numbering system.
+(reprocess, filename['ADS']) = \
+    find_file(inst_dir['ADS'], flight, project, file_type['ADS'],
+              file_ext['ADS'], process)
 
 # Get the flight date from the ADS filename
 file_name = filename["ADS"].split(raw_dir)[1]
 date = file_name[:15]
 date = re.sub('_','', date)
+
+# Now everthing else (skip LRT) using the NCAR/EOL/RAF flight number to
+# identify the file associated with the current flight.
+for key in file_ext:
+    if (key == "LRT") or (key == "ADS"):
+        next;
+    else:
+        (reprocess, filename[key]) = \
+            find_file(inst_dir[key], flight, project, file_type[key],
+                      file_ext[key], process, date[0:8])
 
 if process:
   for key in file_ext:
@@ -632,17 +687,6 @@ if FTP == True:
               print(rawfilename+' not sent')
       else:
           pass
-  print('Starting ftp process for all available .ict files')
-  for f in os.listdir(data_dir):
-      if f.endswith('.ict'):
-          try:
-              os.chdir(data_dir)
-              ftp.cwd('/'+ftp_data_dir+'/ICARTT')
-              ftp.storbinary('STOR '+f, open(f, 'rb'))
-              #status["ICARTT"]["stor"] = 'Yes-FTP'
-              print(f+' ftp successful!')
-          except:
-              print(f+' not sent')
           
   for key in file_ext:
     print('')
@@ -778,14 +822,14 @@ if NAS == True:
 
 
 final_message = final_message + '\nREPORT on shipping of files. \n\n'
-final_message = final_message + 'File Type  Stor     Ship\n'
+final_message = final_message + 'File Type\tStor\tShip\n'
 
 for key in file_ext:
   if key != "ADS":
-    final_message = final_message +key+'\t'+str(status[key]["stor"])+'\t'+str(status[key]["ship"])+'\n'
+    final_message = final_message +key+'\t\t'+str(status[key]["stor"])+'\t'+str(status[key]["ship"])+'\n'
   else:
     pass
-  final_message = final_message +key+'\t'+str(status[key]["stor"])+'\t'+str(status[key]["ship"])+'\n'
+  final_message = final_message +key+'\t\t'+str(status[key]["stor"])+'\t'+str(status[key]["ship"])+'\n'
 
 final_message = final_message + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
 
