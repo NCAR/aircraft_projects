@@ -921,12 +921,12 @@
     </serialSensor>
 
     <sensor ID="NOAAUHSAS" class="UDPSocketSensor" devicename="usock::30117" suffix='_NUHSAS'> 
-      <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
+      <sample id="1" rate="1" scanfFormat="%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
         <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
         <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
         <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
-        <variable name="PSAMP" units="mb" longname="UHSAS Sample Pressure"/>
-        <variable name="QSAMP" units="ccm" longname="UHSAS Sample Flow"/>
+        <variable name="UPRESS" units="mb" longname="UHSAS Sample Pressure"/>
+        <variable name="USMPFLW" units="ccm" longname="UHSAS Sample Flow"/>
         <variable name="PTOT" units="mb" longname="UHSAS Ptot"/>
         <variable name="QSHEATH" units="lpm" longname="UHSAS Sheath"/>
         <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
@@ -934,7 +934,7 @@
     </sensor>
 
     <sensor ID="NMASS" class="UDPSocketSensor" devicename="usock::30136" suffix='_NMASS'> 
-	    <sample id="1" rate="1" scanfFormat="%f %f %f %f %f %f %f %f %f %f %f %f %f">
+	    <sample id="1" rate="1" scanfFormat="%f %f %f %f %f %f %f %f %f %f %f %f">
 	<variable name="T" units="s" longname="NMASS time"/>
 	<variable name="CNT1" units="count" longname="NMASS Counter 1"/>
         <variable name="CNT2" units="count" longname="NMASS Counter 2"/>
@@ -1693,7 +1693,9 @@
       <sensor IDREF="NONOYO3" devicename="usock::30107" id="700"/>
       <sensor IDREF="MTP" id="850" suffix="_MTP"/>
       <sensor IDREF="NOAASP2" devicename="usock::30105" id="950" suffix="_SP2"/>
-      <sensor IDREF="NOAAUHSAS" devicename="usock::30117" id="1100" suffix='_NUHSAS'/> 
+      <sensor IDREF="NOAAUHSAS" devicename="usock::30117" id="1100" suffix='_NUHSAS'> 
+        <parameter name="SerialNumber" type="string" value="UHSAS100"/>
+      </sensor>
       <sensor IDREF="NMASS" devicename="usock::30136" id="1200" suffix='_NMASS'/> 
 
       <sensor IDREF="TWODS" devicename="usock::30113" id="1000">
