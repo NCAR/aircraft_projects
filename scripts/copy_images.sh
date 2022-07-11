@@ -41,9 +41,8 @@ if [ $DIR -eq 0 ]; then
          EXIT="$?"
          echo "rsync exit status: $EXIT"
          if [ $EXIT -eq 0 ]; then
-            echo "Copy of camera_images .tar file for $PROJECT$FLIGHT SUCCESSFUL. Please wait for drive to unmount."
-	    umount $TRANSFER_MEDIA;
-            echo "The removable drive has been unmounted and is safe to remove."
+            echo "Copy of camera_images .tar file for $PROJECT$FLIGHT SUCCESSFUL."
+            echo "You can now safely remove the drive by right-clicking the desktop icon."
             sleep 8
          elif [ $EXIT -gt 0 ]; then
             echo "Copy of camera_images .tar file for $PROJECT$FLIGHT UNSUCCESSFUL."
@@ -63,7 +62,6 @@ if [ $DIR -eq 0 ]; then
          echo "rsync exit status: $EXIT" 
          if [ $EXIT -eq 0 ]; then
             echo "Copy of camera_images .tar file for $PROJECT$FLIGHT SUCCESSFUL."
-            umount $TRANSFER_MEDIA;
             echo "You can now safely remove the drive by right-clicking the desktop icon."
             sleep 8
          elif [ $EXIT -gt 0 ]; then
