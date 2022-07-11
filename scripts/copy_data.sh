@@ -38,7 +38,7 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
       echo "command mkdir -p $TRANSFER_MEDIA/$PROJECT was successful"
    fi
 
-   echo "************************************************************"
+   echo "****************************************************************"
    echo "You entered $DRIVE_CONNECTION, which means you have a drive connected.";
    echo "***Starting file transfer. Please wait for transfer and integrity checking to complete.***"
    rsync -cavP --no-perms  $DATA_LOCATION/*$FLIGHT* $TRANSFER_MEDIA/$PROJECT
@@ -46,22 +46,27 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    sync
    echo "rsync exit status: $EXIT_RSYNC"
 
-   echo "************************************************************"
+   echo "****************************************************************"
    echo "Calculating sha256sum for original file(s)..."
+   sha256sum $DATA_LOCATION/*$FLIGHT*
    sha256sum $DATA_LOCATION/*$FLIGHT* >> $DATA_LOCATION/sha256sum.ads_station
    echo "************************************************************"
-
-if [ "$EXIT_RSYNC" -eq 0 ] && [ $sha_copy == $sha_orig ]; then
-      echo "***Copy of .ads file(s) for $PROJECT$FLIGHT SUCCESSFUL.***"
+   echo "****************************************************************"
+   echo "Calculating sha256sum for copied file(s)..."
+   sha256sum $TRANSFER_MEDIA/*$FLIGHT*
+   echo "****************************************************************"
+   if [[ "$EXIT_RSYNC" -eq 0 ]]; then
+      echo "***Copy of .ads file(s) matching $PROJECT$FLIGHT SUCCESSFUL.***"
+      echo "***PLEASE WAIT...***"
       echo "***When terminal closes you can safely remove the drive by right-clicking the desktop icon.***"
-      sleep 20
+      sleep 10
 
-   elif [ "$EXIT" -gt 0 ] || [ $sha_copy != $sha_orig ]; then
+   elif [[ "$EXIT" -gt 0 ]]; then
       echo "***Copy of .ads file(s) for $PROJECT$FLIGHT UNSUCCESSFUL."
       echo "***Check files under /var/r1/$PROJECT and try again."
 
    else
-      echo "rsync error"
+      echo "Rsync error"
       sleep 20
    fi
 
@@ -71,4 +76,4 @@ else
 
 fi
 
-echo "script finished"
+echo "***copy_data.sh script finished. You can now close terminal and safely remove drive.***"
