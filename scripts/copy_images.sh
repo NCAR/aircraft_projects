@@ -5,9 +5,10 @@
 ###----------------------------------------------------------------------------
 # assign list of parameters for transferring data
 
-DATA_LOCATION="/var/r1/$PROJECT/camera_images"
-
-TRANSFER_MEDIA="/run/media/ads/*"
+DATA_LOCATION="/scr/tmp/taylort/data_location1/camera_images"
+TRANSFER_MEDIA="/scr/tmp/taylort/removable_drive"
+#DATA_LOCATION="/var/r1/$PROJECT/camera_images"
+#TRANSFER_MEDIA="/run/media/ads/*"
 
 echo "Enter flight to copy from $PROJECT using lower case e.g. rf01 or ff03:"
 read FLIGHT
@@ -36,7 +37,7 @@ if [ $DIR -eq 0 ]; then
    if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
       echo "You entered $DRIVE_CONNECTION, which means you have a drive connected."
       if [ $TAR_FILE -eq 0 ]; then
-         rsync -cav --no-perms --no-owner --no-group $DATA_LOCATION/flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT
+         rsync -cav --no-perms --no-owner --no-group $DATA_LOCATION/flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT/flight_number_$FLIGHT.tar
          sync
          EXIT="$?"
          echo "rsync exit status: $EXIT"
@@ -56,7 +57,7 @@ if [ $DIR -eq 0 ]; then
          echo "No .tar file for flight_number_$FLIGHT found, creating tar file."
          cd $DATA_LOCATION
          tar -cvf flight_number_$FLIGHT.tar flight_number_$FLIGHT
-         rsync -cav --no-perms --no-owner --no-group flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT
+         rsync -cav --no-perms --no-owner --no-group flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT/flight_number_$FLIGHT.tar
          sync
          EXIT="$?"
          echo "rsync exit status: $EXIT" 
