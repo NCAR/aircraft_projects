@@ -46,6 +46,7 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
       rsync -va --no-perms --no-owner --no-group /var/log/dnf.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
       rsync -va --no-perms --no-owner --no-group /var/log/kdump.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
       rsync -va --no-perms --no-owner --no-group /tmp/nimbus_*.log $TRANSFER_MEDIA/$PROJECT/logs/$FLIGHT
+      sync
    else
       echo "Log files are not being copied."
    fi
@@ -58,4 +59,5 @@ fi
 
 echo "***********************************************************************"
 echo "Log copying script finished"
+echo "Please safely remove drive, if no other copying is needed."
 echo "***********************************************************************"

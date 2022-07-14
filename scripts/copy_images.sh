@@ -4,7 +4,6 @@
 # after connecting removable drive, run script to transfer file(s)
 ###----------------------------------------------------------------------------
 # assign list of parameters for transferring data
-#PROJECT="OTREC"
 
 DATA_LOCATION="/var/r1/$PROJECT/camera_images"
 
@@ -38,12 +37,12 @@ if [ $DIR -eq 0 ]; then
       echo "You entered $DRIVE_CONNECTION, which means you have a drive connected."
       if [ $TAR_FILE -eq 0 ]; then
          rsync -cav --no-perms --no-owner --no-group $DATA_LOCATION/flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT
+         sync
          EXIT="$?"
          echo "rsync exit status: $EXIT"
          if [ $EXIT -eq 0 ]; then
-            echo "Copy of camera_images .tar file for $PROJECT$FLIGHT SUCCESSFUL. Please wait for drive to unmount."
-	    umount $TRANSFER_MEDIA;
-            echo "The removable drive has been unmounted and is safe to remove."
+            echo "Copy of camera_images .tar file for $PROJECT$FLIGHT SUCCESSFUL."
+            echo "You can now safely remove the drive by right-clicking the desktop icon."
             sleep 8
          elif [ $EXIT -gt 0 ]; then
             echo "Copy of camera_images .tar file for $PROJECT$FLIGHT UNSUCCESSFUL."
@@ -58,11 +57,11 @@ if [ $DIR -eq 0 ]; then
          cd $DATA_LOCATION
          tar -cvf flight_number_$FLIGHT.tar flight_number_$FLIGHT
          rsync -cav --no-perms --no-owner --no-group flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT
+         sync
          EXIT="$?"
          echo "rsync exit status: $EXIT" 
          if [ $EXIT -eq 0 ]; then
             echo "Copy of camera_images .tar file for $PROJECT$FLIGHT SUCCESSFUL."
-            umount $TRANSFER_MEDIA;
             echo "You can now safely remove the drive by right-clicking the desktop icon."
             sleep 8
          elif [ $EXIT -gt 0 ]; then
