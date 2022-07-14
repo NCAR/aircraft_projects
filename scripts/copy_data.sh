@@ -41,7 +41,7 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    echo "****************************************************************"
    echo "You entered $DRIVE_CONNECTION, which means you have a drive connected.";
    echo "***Starting file transfer. Please wait for transfer and integrity checking to complete.***"
-   rsync -cavP --no-perms  $DATA_LOCATION/*$FLIGHT* $TRANSFER_MEDIA/$PROJECT
+   rsync -cavP --no-perms  $DATA_LOCATION/*$FLIGHT* $TRANSFER_MEDIA/$PROJECT/*$FLIGHT*
    EXIT_RSYNC="$?"
    sync
    echo "rsync exit status: $EXIT_RSYNC"
@@ -53,7 +53,7 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    echo "************************************************************"
    echo "****************************************************************"
    echo "Calculating sha256sum for copied file(s)..."
-   sha256sum $TRANSFER_MEDIA/*$FLIGHT*
+   sha256sum $TRANSFER_MEDIA/$PROJECT/*$FLIGHT*
    echo "****************************************************************"
    if [[ "$EXIT_RSYNC" -eq 0 ]]; then
       echo "***Copy of .ads file(s) matching $PROJECT$FLIGHT SUCCESSFUL.***"
