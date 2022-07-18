@@ -649,7 +649,7 @@
         <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2OA" units="ppbv"/>
         <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="COA" units="ppbv"/>
         <variable longname="Aerodyne Research Inc Mini 108 Water Mixing Ratio" name="H2O" units="ppbv"/>
-        <variable longname="Aerodyne Research Inc Mini 108 Temperature" name="T" units="C"/>
+        <variable longname="Aerodyne Research Inc Mini 108 Temperature" name="T" units="deg_C"/>
         <variable longname="Aerodyne Research Inc Mini 108 Pressure" name="P" units="hPa"/>
       </sample>
       <!--prompt rate="5" string="SIG?\r"/-->
@@ -679,13 +679,13 @@
             <variable longname="UVN NO2 Photolysis Frequency" name="UVNJNO2" units="1/s"/>
             <variable longname="UVN O3 Photolysis Frequency" name="UVNJO3" units="1/s"/>
             <variable longname="UVN Relative Humidity" name="UVNRH" units="%"/>
-            <variable longname="UVN Spectro Temperature" name="UVNTSPECTRO" units="C"/>
+            <variable longname="UVN Spectro Temperature" name="UVNTSPECTRO" units="deg_C"/>
             <variable longname="UVZ 340 nm Counts" name="UVZ340" units="counts"/>
             <variable longname="UVZ 380 nm Counts" name="UVZ380" units="counts"/>
             <variable longname="UVZ NO2 Photolysis Frequency" name="UVZJNO2" units="1/s"/>
             <variable longname="UVZ O3 Photolysis Frequency" name="UVZJO3" units="1/s"/>
             <variable longname="UVZ Relative Humidity" name="UVZRH" units="%"/>
-            <variable longname="UVZ Spectro Temperature" name="UVZTSPECTRO" units="C"/>
+            <variable longname="UVZ Spectro Temperature" name="UVZTSPECTRO" units="deg_C"/>
         </sample>
     </sensor>
     <sensor ID="HARP_IRRADIANCE" class="UDPSocketSensor" devicename="usock::30108" suffix="_HARP">
@@ -1603,9 +1603,6 @@
       </sample>
     </sensor>
 
-
-
-
     <serialSensor ID="DSMTEMP_MBRTU" class="ModbusRTU" baud="9600" databits="8" parity="none" stopbits="1" timeout="10">
       <parameter name="slaveID" type="int" value="1"/>
       <parameter name="regaddr" type="int" value="0"/>
@@ -1617,6 +1614,7 @@
       <message separator="\x00" position="beg" length="1"/>
     </serialSensor>
 
+  </sensorcatalog>
 
 
 
@@ -1837,7 +1835,7 @@
           <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TDACQ1_305" units="counter"/>
         </sample>
         <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
-          <variable longname="Recovery Air Temperature, Heated Left" name="RTH3" units="C">
+          <variable longname="Recovery Air Temperature, Heated Left" name="RTH3" units="deg_C">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="ifsr" type="int" value="0"/>
             <parameter name="ipol" type="int" value="0"/>
@@ -1845,7 +1843,7 @@
               <calfile file="RTH3.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
-          <variable longname="Recovery Air Temperature, Heated Left" name="RTH4" units="C">
+          <variable longname="Recovery Air Temperature, Heated Left" name="RTH4" units="deg_C">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="ifsr" type="int" value="0"/>
             <parameter name="ipol" type="int" value="0"/>
@@ -1853,7 +1851,7 @@
               <calfile file="RTH4.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
-          <variable longname="Radome Environmental Box Temperature" name="NOSETMP_TEST" units="C">
+          <variable longname="Radome Environmental Box Temperature" name="NOSETMP_TEST" units="deg_C">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="ifsr" type="float" value="0"/>
             <parameter name="ipol" type="int" value="0"/>
@@ -1877,7 +1875,7 @@
           <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TDACQ2_305" units="counter"/>
         </sample>
         <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
-          <variable longname="Recovery Air Temperature, Heated Right" name="RTH1" units="C">
+          <variable longname="Recovery Air Temperature, Heated Right" name="RTH1" units="deg_C">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="ifsr" type="int" value="0"/>
             <parameter name="ipol" type="int" value="0"/>
@@ -1885,7 +1883,7 @@
               <calfile file="RTH1.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
-          <variable longname="Recovery Air Temperature, Heated Right" name="RTH2" units="C">
+          <variable longname="Recovery Air Temperature, Heated Right" name="RTH2" units="deg_C">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="ifsr" type="int" value="0"/>
             <parameter name="ipol" type="int" value="0"/>
