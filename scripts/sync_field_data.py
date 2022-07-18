@@ -14,10 +14,10 @@ import os, sys, re, sys
 import time
 import smtplib
 from email.mime.text import MIMEText
-sys.path.insert(0,'/net/jlocal/projects/TI3GER/GV_N677F/scripts')
+sys.path.insert(0,'/net/jlocal/projects/ACCLIP/GV_N677F/scripts')
 from fieldProc_setup import *
 
-temp_dir = '/scr/raf_Raw_Data/TI3GER/field_sync/'
+temp_dir = '/scr/raf_Raw_Data/ACCLIP/field_sync/'
 project = os.getenv('PROJECT')
 aircraft = 'GV_N677F' 
 
