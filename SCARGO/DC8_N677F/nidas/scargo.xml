@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+<project xmlns="http://www.eol.ucar.edu/nidas" name="SCARGO" system="Lab_N600" version="$LastChangedRevision: 2514 $" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd">
+  <sensorcatalog>
+    <sensor ID="PIC2401" class="UDPSocketSensor" devicename="usock::60666" suffix="_PIC2401">
+        <sample id="1" rate="1" scanfFormat="%*s %f %f %f %f %f %f %f %f %f %f %f %f %f">
+          <variable longname="Picarro Methane Mixing Ratio" name="CH4" units="ppmv"/>
+          <variable longname="Picarro Carbon Dioxide Mixing Ratio" name="CO2" units="ppmv"/>
+          <variable longname="Picarro Carbon Monoxide Mixing Ratio" name="CO" units="ppmv"/>
+          <variable longname="Picarro Water Mixing Ratio" name="H2O" units="vol%"/>
+          <variable longname="GPS Latitude" name="GGLAT" units="degree_N"/>
+          <variable longname="GPS Longitude" name="GGLON" units="degree_E"/>
+          <variable longname="GPS Qual, 0=inval,1=GPS,2=DGPS" name="GGQUAL" units="none"/>
+          <variable longname="GPS seconds of day" name="GGSECSDAY" units="sec"/>
+          <variable longname="GPS number of satellites used" name="GGNSAT" units="count"/>
+          <variable longname="GPS Altitude (MSL)" name="GGALT" units="m"/>
+          <variable longname="GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
+          <variable longname="Picarro date" name="DATE" units="none"/>
+          <variable longname="Picarro seconds past midnight" name="SECS" units="s"/>
+        </sample>
+    </sensor>
+  </sensorcatalog>
+
+  <site applyCals="true" class="raf.Aircraft" name="Lab_N600">
+    <parameter name="tailNumber" type="string" value="N600"/>
+
+    <server statusAddr="sock:127.0.0.1:30001">
+      <service class="XMLConfigService">
+        <output>
+          <socket type="mcaccept"/>
+        </output>
+      </service>
+      <service class="XMLConfigAllService">
+        <output>
+          <socket type="mcaccept"/>
+        </output>
+      </service>
+      <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.0">
+        <!-- input from every DSM on this aircraft that has
+             a socket output of type RawSampleOutputStream -->
+        <input class="RawSampleInputStream">
+          <socket maxIdle="60" type="mcaccept"/>
+        </input>
+        <processor class="SampleArchiver">
+          <output class="RawSampleOutputStream">
+            <fileset dir="/var/r1/${PROJECT}" file="%Y%m%d_%H%M%S_${FLIGHT}.ads" length="0"/>
+          </output>
+          <output class="RawSampleOutputStream">
+            <fileset dir="/var/r2/${PROJECT}" file="%Y%m%d_%H%M%S_${FLIGHT}.ads.bz2" length="0"/>
+          </output>
+          <output class="RawSampleOutputStream">
+            <socket port="30000" type="server"/>
+          </output>
+        </processor>
+        <processor class="raf.SyncRecordGenerator">
+          <output class="SampleOutputStream">
+            <socket port="30001" type="server"/>
+          </output>
+        </processor>
+      </service>
+    </server>
+
+    <dsm id="99" location="acserver" name="acserver">
+        <sensor IDREF="PIC2401" devicename="usock::60666" id="100"/>
+        <output class="RawSampleOutputStream">
+            <socket type="mcrequest"/>
+        </output>
+    </dsm>
+
+  </site>
+</project>
