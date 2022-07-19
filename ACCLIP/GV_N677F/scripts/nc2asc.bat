@@ -4,7 +4,6 @@ dt=NoDate
 sp=comma
 tm=SecOfDay
 fv=-32767
-version=RB
 
 Vars=ACINS
 Vars=ADIFF
