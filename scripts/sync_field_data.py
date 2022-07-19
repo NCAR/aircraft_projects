@@ -23,6 +23,7 @@ aircraft = 'GV_N677F'
 
 #set up directories
 proj_dir = '/net/jlocal/projects/'+project+'/'+aircraft+'/'
+sys.path.insert(0,proj_dir+'scripts/')
 sys.path.insert(0,proj_dir)
 from fieldProc_setup import *
 dat_dir = dat_parent_dir+project+'/'
@@ -361,7 +362,7 @@ def main():
     elif NAS == False and FTP == True:
         ftp_to_local('LRT', dat_dir+'/field_data')
         ftp_to_local('KML', dat_dir+'/field_data')
-        if ADS:
+        if ship_ADS:
             ftp_to_local('ADS', rdat_dir)
         if PMS2D:
             ftp_to_local('PMS2D', rdat_dir)
