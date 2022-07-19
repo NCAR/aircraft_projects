@@ -14,8 +14,8 @@ import os, sys, re, sys
 import time
 import smtplib
 from email.mime.text import MIMEText
-sys.path.insert(0,'/net/jlocal/projects/ACCLIP/GV_N677F/scripts')
-from fieldProc_setup import *
+#sys.path.insert(0,'/net/jlocal/projects/ACCLIP/GV_N677F/scripts')
+#from fieldProc_setup import *
 
 temp_dir = '/scr/raf_Raw_Data/ACCLIP/field_sync/'
 project = os.getenv('PROJECT')
@@ -24,7 +24,7 @@ aircraft = 'GV_N677F'
 #set up directories
 proj_dir = '/net/jlocal/projects/'+project+'/'+aircraft+'/'
 sys.path.insert(0,proj_dir)
-
+from fieldProc_setup import *
 dat_dir = dat_parent_dir+project+'/'
 ftp_dir = ftp_parent_dir+'/'
 rdat_dir = rdat_parent_dir+project+'/'
@@ -353,20 +353,26 @@ def main():
     if NAS == True:    
         dir_check()
         dist_raw()
-        #unzip()
         dist_prod()
         dist_field()
         dist_PI('PI_data')
         dist_recursive_MTP('/RAF_data/MTP')
 
     elif NAS == False and FTP == True:
-        ftp_to_local('ADS', rdat_dir)
-        #ftp_to_local('PMS2D', rdat_dir)
         ftp_to_local('LRT', dat_dir+'/field_data')
-        #ftp_to_local('SRT', dat_dir+'/field_data')
-        #ftp_to_local('HRT', dat_dir+'/field_data')
         ftp_to_local('KML', dat_dir+'/field_data')
-        ftp_to_local('ICARTT', dat_dir+'/field_data')
+        if ADS:
+            ftp_to_local('ADS', rdat_dir)
+        if PMS2D:
+            ftp_to_local('PMS2D', rdat_dir)
+        if HRT:
+            ftp_to_local('HRT', dat_dir+'/field_data')
+        if SRT:
+            ftp_to_local('SRT', dat_dir+'/field_data')
+        if IWG1:
+            ftp_to_local('IWG1', dat_dir+'/field_data')
+        if ICARTT:
+            ftp_to_local('ICARTT', dat_dir+'/field_data')
         dist_field()
     # send_mail_and_die(body)
     exit(1)
