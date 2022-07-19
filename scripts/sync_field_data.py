@@ -14,14 +14,11 @@ import os, sys, re, sys
 import time
 import smtplib
 from email.mime.text import MIMEText
-#sys.path.insert(0,'/net/jlocal/projects/ACCLIP/GV_N677F/scripts')
-#from fieldProc_setup import *
 
+# set up variables
 temp_dir = '/scr/raf_Raw_Data/ACCLIP/field_sync/'
 project = os.getenv('PROJECT')
 aircraft = 'GV_N677F' 
-
-#set up directories
 proj_dir = '/net/jlocal/projects/'+project+'/'+aircraft+'/'
 sys.path.insert(0,proj_dir+'scripts/')
 sys.path.insert(0,proj_dir)
@@ -30,11 +27,12 @@ dat_dir = dat_parent_dir+project+'/'
 ftp_dir = ftp_parent_dir+'/'
 rdat_dir = rdat_parent_dir+project+'/'
 eol_dir = temp_dir+'/EOL_data/'
-#############################################################################
-# Directory checks
-#############################################################################
-def dir_check():
 
+def dir_check():
+    """
+    Function to ensure that directories exist
+    make them if not
+    """
     # Check to make sure the rdat + project dir exists
     rdat_dir = rdat_parent_dir+project
     if not os.path.isdir(rdat_dir):
@@ -74,11 +72,10 @@ def dir_check():
             logging.error('Bailing out')
             send_mail_and_die(final_message+ ' Could not make product directory:'+dat_dir)
 
-#############################################################################
-# Unzip if you have any of those pesky .zip files
-#############################################################################
 def unzip():
-
+    """
+    Unzip if you have any of those pesky .zip files
+    """
     final_message = 'Unzipping files if they are present\n'
     for fname in os.listdir(eol_dir+'RAF_data/'):
 
@@ -100,11 +97,10 @@ def unzip():
 
     return(final_message)
 
-#############################################################################
-# Function to distribute RAF raw data from ingest to FTP plus others
-#############################################################################
 def dist_raw():
-
+    """
+    Function to distribute RAF raw data from ingest to FTP plus others
+    """
     final_message = 'Starting distribution of RAF raw data\n'
 
     # Check the /ADS subdir for files
@@ -143,11 +139,10 @@ def dist_raw():
     
     return(final_message)
 
-#############################################################################
-# Function to distribute RAF prod data from ingest point to FTP plus others
-#############################################################################
 def dist_prod():
-
+    """
+    Function to distribute RAF prod data from ingest point to FTP plus others
+    """
     final_message = 'Starting distribution of RAF prod data\n' 
     # Check for the production file
     for fname in os.listdir(eol_dir+'RAF_data/LRT'):
@@ -218,13 +213,12 @@ def dist_prod():
         logging.info(final_message)
     return(final_message)
 
-#############################################################################
-# Function to rsync .nc files up a dir for ingest by QATools in Boulder
-# and for reprocessing by software group internally. Leave the /field_data
-# directory as a copy of the incoming ftp and the NAS in the field
-#############################################################################
 def dist_field():
-
+    """
+    Function to rsync .nc files up a dir for ingest by QAtools in Boulder
+    and for reprocessing by software group internally. Leave the /field data
+    directory as a copy of the incoming ftp and NAS in the field.
+    """
     final_message = 'Continuing distribution of RAF prod data\n'
 
     for fname in os.listdir(dat_dir+'/field_data'):
@@ -241,11 +235,10 @@ def dist_field():
 
     return(final_message)
 
-#############################################################################
-# Function to distribute PI data from ingest to FTP
-#############################################################################
 def dist_PI(directory):
-    
+    """
+    Function to distribute PI data from ingest to FTP
+    """    
     final_message = 'Starting distribution of PI data\n'
     
     # Rsync anything and everything in the assigned dir
@@ -283,13 +276,12 @@ def dist_recursive_MTP(directory):
     logging.info(final_message)
     return(final_message)
 
-#############################################################################
-# Function to distribute data from FTP to local dirs for QAQC and backup
-# to be used if no NAS in the field and data goes from Ground Station to 
-# FTP site directly.
-#############################################################################
 def ftp_to_local(filetype, local_dir):
-
+    """
+    Function to distribute data from FTP to local dirs for QAQC and backup
+    to be used if no NAS in the field and data goes from Ground Station to
+    FTP site directly.
+    """
     final_message = 'Starting distribution of data from the FTP to localdirs/\n'
 
     if filetype == 'PMS2D':
@@ -322,11 +314,10 @@ def ftp_to_local(filetype, local_dir):
 
         return(final_message)
 
-#############################################################################
-# Email function
-#############################################################################
 def send_mail_and_die(body):
-
+    """ 
+    Email function
+    """
     emailfilename = 'email.addr.txt'
     os.chdir(cwd)
     fo = open(emailfilename, 'r+')
@@ -346,11 +337,10 @@ def send_mail_and_die(body):
 
     exit(1)
 
-#############################################################################
-# Define main function
-#############################################################################
 def main():
-
+    """
+    Define main function
+    """
     if NAS == True:    
         dir_check()
         dist_raw()
@@ -378,9 +368,6 @@ def main():
     # send_mail_and_die(body)
     exit(1)
 
-##############################################################################
-# MAIN
-##############################################################################
 if __name__ == '__main__':
 
     try:
