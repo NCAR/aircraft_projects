@@ -122,15 +122,15 @@ class FieldData():
         datafile = ''
         if fileext == 'ict':
             pattern = data_dir + project + '*' + date + '*' + fileext
-            # pattern2 is a dummy placeholder. nc2asc will overwrite the output
+            # pattern2 is a dummy placeholder. will overwrite the output
             # filename to match the strict ICARTT filename convention.
-            pattern2 = data_dir + project + date + '.' + fileext
+            #pattern2 = data_dir + project + date + '.' + fileext
             datalist = glob.glob(pattern)
         else:
             # pattern needs a star to match the ads file
             pattern = data_dir + "*" + flight + filetype + '.' + fileext
             # pattern2 is the name of files to regenerate, other than ads
-            pattern2 = data_dir + project + flight + filetype + '.' + fileext
+            #pattern2 = data_dir + project + flight + filetype + '.' + fileext
             datalist = glob.glob(pattern)
 
         if (datalist.__len__() == 1):
@@ -332,7 +332,7 @@ from fieldProc_setup import *
 # Query user for the flight designation and place to send output
 flight = input('Input flight designation (e.g. tf01):')
 email = input('Input email address to send results:')
-nc2ascBatch = proj_dir + 'scripts/nc2asc.bat'
+Batch = proj_dir + 'scripts/nc2asc.bat'
 zip_dir = '/tmp/'
 qc_ftp_site = 'catalog.eol.ucar.edu'
 qc_ftp_dir = '/pub/incoming/catalog/'+ project.lower()
@@ -506,7 +506,7 @@ def process():
     
             # Generate ICARTT file from LRT, if requested
             if (key == "ICARTT"):
-                command = "nc2asc -i "+filename["LRT"]+" -o "+filename[key]+" -b "+nc2ascBatch;
+                command = "nc2asc -i "+filename["LRT"]+" -o "+ data_dir+"temp_filename." -b "+nc2ascBatch;
                 print("about to execute : "+command)
                 if os.system(command) == 0:
                     status[key]["proc"] = 'Yes'
@@ -725,7 +725,26 @@ def setup_FTP():
                     print(rawfilename+' not sent')
             else:
                 pass
-          
+            
+        for fn in os.listdir(data_dir):
+            if fn.endswith('.ict'):
+                try:
+                    os.chdir(data_dir)
+                    ftp.cwd('/'+ftp_data_dir+'/ICARTT')
+                    ftp.storbinary('STOR '+fn, open(fn, 'rb'))
+                    status["ICARTT"]["stor"] = 'Yes-FTP'
+                except Exception as e:
+                    print(e)
+  
+            elif fn.endswith('.kml'):
+                try:
+                    os.chdir(data_dir)
+                    ftp.cwd('/'+ftp_data_dir+'/KML')
+                    ftp.storbinary('STOR '+fn, open(fn, 'rb'))
+                    status["KML"]["stor"] = 'Yes-FTP'
+                except Exception as e:
+                    print(e)
+                
         for key in file_ext:
             print('')
             try:
