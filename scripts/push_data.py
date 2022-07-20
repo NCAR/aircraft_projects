@@ -152,7 +152,7 @@ class FieldData():
                 # Any other files that can't be found can be regenerated
                 if process:
                     print("We are scheduled to process all is good")
-                    datafile = pattern2
+                    datafile = pattern
                 else:
                     # but if the file is not marked to be regenerated in the
                     # fieldProc_setup.py file, then we have a probem.
@@ -332,7 +332,7 @@ from fieldProc_setup import *
 # Query user for the flight designation and place to send output
 flight = input('Input flight designation (e.g. tf01):')
 email = input('Input email address to send results:')
-Batch = proj_dir + 'scripts/nc2asc.bat'
+nc2ascBatch = proj_dir + 'scripts/nc2asc.bat'
 zip_dir = '/tmp/'
 qc_ftp_site = 'catalog.eol.ucar.edu'
 qc_ftp_dir = '/pub/incoming/catalog/'+ project.lower()
@@ -506,7 +506,7 @@ def process():
     
             # Generate ICARTT file from LRT, if requested
             if (key == "ICARTT"):
-                command = "nc2asc -i "+filename["LRT"]+" -o "+ data_dir+"temp_filename." -b "+nc2ascBatch;
+                command = "nc2asc -i "+filename["LRT"]+" -o "+ data_dir+"temp_filename. -b "+nc2ascBatch
                 print("about to execute : "+command)
                 if os.system(command) == 0:
                     status[key]["proc"] = 'Yes'
@@ -691,7 +691,7 @@ def datadump():
 
 datadump()
 
-def setup_FTP():
+def setup_FTP(data_dir):
     # No NAS this project, so put files to EOL server. Put
     # zipped files if they exist.
     if FTP == True:
@@ -806,7 +806,7 @@ def setup_FTP():
 
         ftp.quit()
 
-setup_FTP()
+setup_FTP(data_dir)
 
 # Put file onto NAS for BTSyncing back home.
 if NAS == True:
