@@ -1268,24 +1268,14 @@
       </sample>
     </sensor>
     <sensor ID="AWAS" class="UDPSocketSensor" devicename="usock::30131" suffix="_AWAS">
-      <sample id="1" rate="1" scanfFormat="AWAS_STATUS,%*d/%*d/%*dT%*d:%*d:%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-        <variable longname="AWAS Can Number" name="CANNUM" units="number"/>
-        <variable longname="AWAS Manifold Pressure" name="MANP" units="psia"/>
-        <variable longname="AWAS Pneumatic Pressure" name="PNEUP" units="psia"/>
-        <variable longname="AWAS Bottle Pressure" name="BOTTLEP" units="psia"/>
-        <variable longname="AWAS Flow" name="FLOW" units="slpm"/>
+	<sample id="1" rate="1" scanfFormat="AWAS_STATUS,%*s,%*f,%f,%f,%f,%f,%f,%f,%f,\r\n">
+        <variable longname="AWAS Can Number" name="CAN" units="number"/>
+        <variable longname="AWAS LSTCMD" name="LSTCMD" units="slpm"/>
         <variable longname="AWAS Seconds Open" name="SECOPN" units="sec"/>
-        <variable longname="AWAS Wait For Next" name="WAITNXT" units="sec"/>
-        <variable longname="AWAS Maximum Sample Time" name="MAXT" units="sec"/>
-        <variable longname="AWAS Sample Interval" name="INTRVL" units="sec"/>
-        <variable longname="AWAS Maximum Sample Pressure" name="MAXP" units="psia"/>
-        <variable longname="AWAS Slope" name="SLOPE" units=""/>
-        <variable longname="AWAS Offset" name="OFFSET" units=""/>
-        <variable longname="AWAS Pump On" name="PUMPON" units=""/>
-        <variable longname="AWAS XV Open" name="XVOPEN" units=""/>
-        <variable longname="AWAS Can Open" name="CANOPEN" units=""/>
-        <variable longname="AWAS Start Sequence" name="START" units=""/>
-        <variable longname="AWAS Sample Now" name="SAMPNW" units=""/>
+        <variable longname="AWAS Wait For Next" name="WAITING" units="sec"/>
+        <variable longname="AWAS Sample Interval" name="NXT-ITVL" units="sec"/>
+        <variable longname="AWAS Maximum Sample Pressure" name="PMAN" units="psia"/>
+        <variable longname="AWAS Open" name="OPN" units=""/>
       </sample>
     </sensor>
 
@@ -1713,6 +1703,7 @@
         <parameter name="SerialNumber" type="string" value="F2DS020"/>
       </sensor>
       <sensor IDREF="GTCIMS" devicename="usock::30110" id="2000" suffix="_GTCIMS"/>
+      <sensor IDREF="AWAS" devicename="usock::30131" id = "2100" suffix="_AWAS"/>
 
 
 
