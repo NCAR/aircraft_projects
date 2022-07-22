@@ -9,7 +9,10 @@
 # the script ads3_environment.sh currently in /home/ads 
 
 DATA_LOCATION="/var/r1/$PROJECT"
-TRANSFER_MEDIA="/run/media/ads/*"
+cd /run/media/ads
+DRIVE=$(ls)
+echo $DRIVE
+TRANSFER_MEDIA="/run/media/ads/$DRIVE"
 
 echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
 read FLIGHT
@@ -41,7 +44,7 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    echo "****************************************************************"
    echo "You entered $DRIVE_CONNECTION, which means you have a drive connected.";
    echo "***Starting file transfer. Please wait for transfer and integrity checking to complete.***"
-   rsync -cavP --no-perms  $DATA_LOCATION/*$FLIGHT* $TRANSFER_MEDIA/$PROJECT/*$FLIGHT*
+   rsync -cavP --no-perms  $DATA_LOCATION/*$FLIGHT* $TRANSFER_MEDIA/$PROJECT
    EXIT_RSYNC="$?"
    sync
    echo "rsync exit status: $EXIT_RSYNC"
