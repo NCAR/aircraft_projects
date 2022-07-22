@@ -5,10 +5,10 @@
 ###----------------------------------------------------------------------------
 # assign list of parameters for transferring data
 
-DATA_LOCATION="/scr/tmp/taylort/data_location1/camera_images"
-TRANSFER_MEDIA="/scr/tmp/taylort/removable_drive"
-#DATA_LOCATION="/var/r1/$PROJECT/camera_images"
-#TRANSFER_MEDIA="/run/media/ads/*"
+DATA_LOCATION="/var/r1/$PROJECT/camera_images"
+cd /run/media/ads
+DRIVE=$(ls)
+TRANSFER_MEDIA="/run/media/ads/$DRIVE"
 
 echo "Enter flight to copy from $PROJECT using lower case e.g. rf01 or ff03:"
 read FLIGHT
