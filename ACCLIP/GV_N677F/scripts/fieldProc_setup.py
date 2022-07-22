@@ -68,7 +68,7 @@ ship_ADS = True
 PMS2D = False            #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
-Rstudio = False # Generate a PDF of the QC plots
+Rstudio = True # Generate a PDF of the QC plots
 catalog = False # Send QC plots to field catalog, leave as False
 
 #############################################################################
