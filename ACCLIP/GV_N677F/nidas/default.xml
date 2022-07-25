@@ -925,7 +925,9 @@
         <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
         <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
         <variable name="UPRESS" units="mb" longname="UHSAS Sample Pressure"/>
-        <variable name="USMPFLW" units="ccm" longname="UHSAS Sample Flow"/>
+        <variable name="UVFLIN" units="ccm" longname="UHSAS Sample (inlet) volume flow calculated from dPinlet">
+            <linear intercept="0.0" slope="0.016667" units="ccs"/>
+        </variable>
         <variable name="PTOT" units="mb" longname="UHSAS Ptot"/>
         <variable name="QSHEATH" units="lpm" longname="UHSAS Sheath"/>
         <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
@@ -1294,7 +1296,7 @@
 
     <sensor ID="GTCIMS" class="UDPSocketSensor" devicename="usock::30110" suffix="_GTCIMS">
 <!-- 16, 20, 24  91 -->
-        <sample id="1" rate="1" scanfFormat="GTCIMS,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%*f,%*f,%*f,%f,%*f,%*f,%*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f">
+        <sample id="1" rate="1" scanfFormat="GTCIMS,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%*f,%f,%*f,%*f,%*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f">
 
 <!--        <variable longname="GTCIMS time at start of mass sequence" name="UST0" units="sec since 1/1/1970"/>
             <variable longname="GTCIMS duration of mass sequence" name="DT" units="sec"/>
@@ -1309,6 +1311,7 @@
             <variable longname="GTCIMS # of masses in sequence" name="NH" units=""/>
             <variable longname="GTCIMS # of Analog Channels" name="NA" units=""/>
 -->
+            <variable longname="GTCIMS Background BIT" name="BKGB" units="none"/>
             <variable longname="GTCIMS SO2, ion rate at mass #1, Hz102" name="SO2" units="Hz"/>
             <variable longname="GTCIMS SO2 cal, ion rate at mass #2, Hz104" name="SO2CAL" units="Hz"/>
             <variable longname="GTCIMS HNO3, ion rate at mass #3, Hz82" name="HNO3" units="Hz"/>
