@@ -711,20 +711,20 @@ def setup_FTP(data_dir):
         print('Putting files:')
         print('')
 
-        # At each execution, ftp all .ads files from project
-        print('Starting ftp process for all available .ads files')
-        for rawfilename in os.listdir(raw_dir):
-            if rawfilename.endswith('.ads'):
-                try:
-                    os.chdir(raw_dir)
-                    ftp.cwd('/'+ftp_data_dir+'/ADS')
-                    ftp.storbinary('STOR '+rawfilename, open(rawfilename, 'rb'))
-                    status["ADS"]["stor"] = 'Yes-FTP'
-                    print(rawfilename+' ftp successful!')
-                except:
-                    print(rawfilename+' not sent')
-            else:
-                pass
+#        # At each execution, ftp all .ads files from project
+#        print('Starting ftp process for all available .ads files')
+#        for rawfilename in os.listdir(raw_dir):
+#            if rawfilename.endswith('.ads'):
+#                try:
+#                    os.chdir(raw_dir)
+#                    ftp.cwd('/'+ftp_data_dir+'/ADS')
+#                    ftp.storbinary('STOR '+rawfilename, open(rawfilename, 'rb'))
+#                    status["ADS"]["stor"] = 'Yes-FTP'
+#                    print(rawfilename+' ftp successful!')
+#                except:
+#                    print(rawfilename+' not sent')
+#            else:
+#                pass
             
         for fn in os.listdir(data_dir):
             if fn.endswith('.ict'):
