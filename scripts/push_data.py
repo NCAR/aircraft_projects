@@ -754,7 +754,7 @@ def setup_FTP(data_dir):
                 print(e)
                 continue
 
-            print('Putting '+filename[key]+' to '+ftp_site+':/'+ftp_data_dir+'/'+key)
+            #print('Putting '+filename[key]+' to '+ftp_site+':/'+ftp_data_dir+'/'+key)
             if filename[key] != '':
                 try:
                     data_dir,file_name = os.path.split(filename[key])
