@@ -174,7 +174,7 @@ class FieldData():
 
         return(flag, datafile)
 
-    def step_through_files(self, datalist, fileext):
+    def step_through_files(self, datalist, fileext, reprocess):
         """
         Handle multiple files of a given type for a single flight
 
@@ -553,6 +553,7 @@ def process():
         print("copying QAQC pdf to desktop")
         os.system(command)
 
+
 process()
 
 def setup_shipping():
@@ -711,21 +712,24 @@ def setup_FTP(data_dir):
         print('Putting files:')
         print('')
 
-#        # At each execution, ftp all .ads files from project
-#        print('Starting ftp process for all available .ads files')
-#        for rawfilename in os.listdir(raw_dir):
-#            if rawfilename.endswith('.ads'):
-#                try:
-#                    os.chdir(raw_dir)
-#                    ftp.cwd('/'+ftp_data_dir+'/ADS')
-#                    ftp.storbinary('STOR '+rawfilename, open(rawfilename, 'rb'))
-#                    status["ADS"]["stor"] = 'Yes-FTP'
-#                    print(rawfilename+' ftp successful!')
-#                except:
-#                    print(rawfilename+' not sent')
-#            else:
-#                pass
-            
+        # If set in config file script will FTP all ads in rdat
+        # Keep this set to False unless you have time / bandwidth
+        if ship_all_ADS is True:
+            print('Starting ftp process for all available .ads files')
+            for rawfilename in os.listdir(raw_dir):
+                if rawfilename.endswith('.ads'):
+                    try:
+                        os.chdir(raw_dir)
+                        ftp.cwd('/'+ftp_data_dir+'/ADS')
+                        ftp.storbinary('STOR '+rawfilename, open(rawfilename, 'rb'))
+                        status["ADS"]["stor"] = 'Yes-FTP'
+                        print(rawfilename+' ftp successful!')
+                    except:
+                        print(rawfilename+' not sent')
+                else:
+                    pass
+        else:
+            pass    
         for fn in os.listdir(data_dir):
             if fn.endswith('.ict'):
                 try:
@@ -744,63 +748,93 @@ def setup_FTP(data_dir):
                     status["KML"]["stor"] = 'Yes-FTP'
                 except Exception as e:
                     print(e)
-                
         for key in file_ext:
             print('')
-            try:
-                os.chdir(inst_dir[key])
-            except ftplib.all_errors as e:
-                print('Could not change to local dir '+inst_dir[key])
-                print(e)
-                continue
-
-            #print('Putting '+filename[key]+' to '+ftp_site+':/'+ftp_data_dir+'/'+key)
+            if ship_ADS is False:
+                if key == 'ADS':
+                    pass
+                else:
+                    try:
+                        os.chdir(inst_dir[key])
+                    except ftplib.all_errors as e:
+                        print('Could not change to local dir '+inst_dir[key])
+                        print(e)
+                        continue
+            else:
+                    try:
+                        os.chdir(inst_dir[key])
+                    except ftplib.all_errors as e:
+                        print('Could not change to local dir '+inst_dir[key])
+                        print(e)
+                        continue
             if filename[key] != '':
-                try:
-                    data_dir,file_name = os.path.split(filename[key])
-                    if sendzipped:
-                        file_name = file_name+'.zip'
-                    else:
-                        file_name = file_name
-                        ftp.cwd('/'+ftp_data_dir+'/'+key)
-                except ftplib.all_errors as e:
-                    # Attempt to create needed dir
-                    print ('Attempt to create dir /'+ftp_data_dir+'/'+key)
+                if ship_ADS is False:
+                    if filename[key] == '.ads':
+                        pass
+                else:
                     try:
-                        ftp.mkd('/'+ftp_data_dir+'/'+key)
-                    except:
-                        print('Make dir '+ftp_data_dir+'/'+key+' failed')
-                        print(e)
-                        continue
-                    # Try to change to dir again
-                    try:
-                        ftp.cwd('/'+ftp_data_dir+'/'+key)
-                    except:
-                        print('Change dir to '+ftp_data_dir+'/'+key+' failed')
-                        print(e)
-                        continue
+                        data_dir,file_name = os.path.split(filename[key])
+                        if sendzipped:
+                            file_name = file_name+'.zip'
+                        else:
+                            file_name = file_name
+                            ftp.cwd('/'+ftp_data_dir+'/'+key)
+                    except ftplib.all_errors as e:
+                        # Attempt to create needed dir
+                        print ('Attempt to create dir /'+ftp_data_dir+'/'+key)
+                        try:
+                            ftp.mkd('/'+ftp_data_dir+'/'+key)
+                        except:
+                            print('Make dir '+ftp_data_dir+'/'+key+' failed')
+                            print(e)
+                            continue
+                        # Try to change to dir again
+                        try:
+                            ftp.cwd('/'+ftp_data_dir+'/'+key)
+                        except:
+                            print('Change dir to '+ftp_data_dir+'/'+key+' failed')
+                            print(e)
+                            continue
 
                 if file_name in ftp.nlst():
                     print('File '+file_name+' already exists on ftp server.')
                     print('File will not be transfered to ftp site')
                     print('To force transfer, delete file from ftp site and rerun in Ship mode')
                     continue
+                
+                if ship_ADS is False:
+                    if file_name.endswith('.ads'):
+                        pass
+                    else:
+                        try:
+                            file = open(file_name, 'rb')
+                            print(ftp.storbinary('STOR ' + file_name, file))
+                            file.close()
+                            status[key]["stor"] = 'Yes-FTP'
 
-                try:
-                    file = open(file_name, 'rb')
-                    print(ftp.storbinary('STOR ' + file_name, file))
-                    file.close()
-                    status[key]["stor"] = 'Yes-FTP'
+                            print(datetime.datetime.now().time())
+                            print('Finished putting data file')
+                            print('')
 
-                    print(datetime.datetime.now().time())
-                    print('Finished putting data file')
-                    print('')
+                        except ftplib.all_errors as e:
+                            print('Error writing '+file_name+' to '+ftp_site+':/'+ftp_data_dir+'/'+key)
+                            print(e)
+                            continue
+                else:
+                    try:
+                        file = open(file_name, 'rb')
+                        print(ftp.storbinary('STOR ' + file_name, file))
+                        file.close()
+                        status[key]["stor"] = 'Yes-FTP'
 
-                except ftplib.all_errors as e:
-                    print('Error writing '+file_name+' to '+ftp_site+':/'+ftp_data_dir+'/'+key)
-                    print(e)
-                    continue
+                        print(datetime.datetime.now().time())
+                        print('Finished putting data file')
+                        print('')
 
+                    except ftplib.all_errors as e:
+                        print('Error writing '+file_name+' to '+ftp_site+':/'+ftp_data_dir+'/'+key)
+                        print(e)
+                        continue  
             else:
                 print('Filename is empty - nothing to write')
 
