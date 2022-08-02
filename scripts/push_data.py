@@ -740,14 +740,14 @@ def setup_FTP(data_dir):
                 except Exception as e:
                     print(e)
   
-            elif fn.endswith('.kml'):
-                try:
-                    os.chdir(data_dir)
-                    ftp.cwd('/'+ftp_data_dir+'/KML')
-                    ftp.storbinary('STOR '+fn, open(fn, 'rb'))
-                    status["KML"]["stor"] = 'Yes-FTP'
-                except Exception as e:
-                    print(e)
+            #elif fn.endswith('.kml'):
+            #    try:
+            #        os.chdir(data_dir)
+            #        ftp.cwd('/'+ftp_data_dir+'/KML')
+            #        ftp.storbinary('STOR '+fn, open(fn, 'rb'))
+            #        status["KML"]["stor"] = 'Yes-FTP'
+            #    except Exception as e:
+            #        print(e)
         for key in file_ext:
             print('')
             if ship_ADS is False:
@@ -761,24 +761,23 @@ def setup_FTP(data_dir):
                         print(e)
                         continue
             else:
-                    try:
-                        os.chdir(inst_dir[key])
-                    except ftplib.all_errors as e:
-                        print('Could not change to local dir '+inst_dir[key])
-                        print(e)
-                        continue
+                try:
+                    os.chdir(inst_dir[key])
+                except ftplib.all_errors as e:
+                    print('Could not change to local dir '+inst_dir[key])
+                    print(e)
+                    continue
             if filename[key] != '':
+                data_dir,file_name = os.path.split(filename[key])
+                print(data_dir)
+                print(file_name)
                 if ship_ADS is False:
                     if filename[key] == '.ads':
                         pass
                 else:
                     try:
                         data_dir,file_name = os.path.split(filename[key])
-                        if sendzipped:
-                            file_name = file_name+'.zip'
-                        else:
-                            file_name = file_name
-                            ftp.cwd('/'+ftp_data_dir+'/'+key)
+                        ftp.cwd('/'+ftp_data_dir+'/'+key)
                     except ftplib.all_errors as e:
                         # Attempt to create needed dir
                         print ('Attempt to create dir /'+ftp_data_dir+'/'+key)
@@ -808,6 +807,7 @@ def setup_FTP(data_dir):
                     else:
                         try:
                             file = open(file_name, 'rb')
+                            ftp.cwd('/'+ftp_data_dir+'/'+key)
                             print(ftp.storbinary('STOR ' + file_name, file))
                             file.close()
                             status[key]["stor"] = 'Yes-FTP'
