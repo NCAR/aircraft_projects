@@ -174,7 +174,7 @@ class FieldData():
 
         return(flag, datafile)
 
-    def step_through_files(self, datalist, fileext, reprocess):
+    def step_through_files(self, datalist, fileext):
         """
         Handle multiple files of a given type for a single flight
 
@@ -740,14 +740,14 @@ def setup_FTP(data_dir):
                 except Exception as e:
                     print(e)
   
-            #elif fn.endswith('.kml'):
-            #    try:
-            #        os.chdir(data_dir)
-            #        ftp.cwd('/'+ftp_data_dir+'/KML')
-            #        ftp.storbinary('STOR '+fn, open(fn, 'rb'))
-            #        status["KML"]["stor"] = 'Yes-FTP'
-            #    except Exception as e:
-            #        print(e)
+            elif fn.endswith('.kml'):
+                try:
+                    os.chdir(data_dir)
+                    ftp.cwd('/'+ftp_data_dir+'/KML')
+                    ftp.storbinary('STOR '+fn, open(fn, 'rb'))
+                    status["KML"]["stor"] = 'Yes-FTP'
+                except Exception as e:
+                    print(e)
         for key in file_ext:
             print('')
             if ship_ADS is False:
