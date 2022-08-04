@@ -68,8 +68,10 @@ class FieldData():
         """
         See if a LRT file exists already and query user about what to do.
         """
-        process=False
-        reprocess=False
+#        global process
+#        global reprocess
+        process = False
+        reprocess = False
         nclist = glob.glob(data_dir+'*'+flight+'.'+filetype)
         if nclist.__len__() == 1:
             ncfile = nclist[0]
@@ -92,7 +94,7 @@ class FieldData():
             ncfile = data_dir+file_prefix+".nc"
         else:
             print("More than one "+filetype+" file found.")
-            ncfile=fielddata.step_through_files(nclist)
+            ncfile=fielddata.step_through_files(nclist, fileext, reprocess)
 
         if ncfile == '' :
             print("No NetCDF file identified!")
@@ -101,7 +103,7 @@ class FieldData():
 
         return(process,reprocess,ncfile)
 
-    def find_file(self, data_dir, flight, project, filetype, fileext, flag, date=""):
+    def find_file(self, data_dir, flight, project, filetype, fileext, flag, reprocess, date=""):
         """
         See if a file exists already and query user about what to do.
 
@@ -164,7 +166,7 @@ class FieldData():
              # Step through the files and let the user decide which is the one we
              # should work with
              print("More than one "+fileext+" file found.")
-             datafile=fielddata.step_through_files(datalist, fileext)
+             datafile=fielddata.step_through_files(datalist, fileext, reprocess)
 
         if datafile == '' :
             # If after all this we haven't identified a file, abort processing.
@@ -174,7 +176,7 @@ class FieldData():
 
         return(flag, datafile)
 
-    def step_through_files(self, datalist, fileext):
+    def step_through_files(self, datalist, fileext, reprocess):
         """
         Handle multiple files of a given type for a single flight
 
@@ -469,7 +471,7 @@ def process():
     # NASA naming convention and don't use our flight numbering system.
     (reprocess, filename['ADS']) = \
         fielddata.find_file(inst_dir['ADS'], flight, project, file_type['ADS'],
-                  file_ext['ADS'], process)
+                  file_ext['ADS'], process, reprocess)
 
     # Get the flight date from the ADS filename
     file_name = filename["ADS"].split(raw_dir)[1]
@@ -484,7 +486,7 @@ def process():
         else:
             (reprocess, filename[key]) = \
                 fielddata.find_file(inst_dir[key], flight, project, file_type[key],
-                          file_ext[key], process, date[0:8])
+                          file_ext[key], process, reprocess, date[0:8])
 
     if process:
         for key in file_ext:
