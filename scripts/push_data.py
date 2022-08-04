@@ -68,8 +68,10 @@ class FieldData():
         """
         See if a LRT file exists already and query user about what to do.
         """
-        process=False
-        reprocess=False
+        global process
+        global reprocess
+        process = False
+        reprocess = False
         nclist = glob.glob(data_dir+'*'+flight+'.'+filetype)
         if nclist.__len__() == 1:
             ncfile = nclist[0]
@@ -164,7 +166,7 @@ class FieldData():
              # Step through the files and let the user decide which is the one we
              # should work with
              print("More than one "+fileext+" file found.")
-             datafile=fielddata.step_through_files(datalist, fileext)
+             datafile=fielddata.step_through_files(datalist, fileext, reprocess)
 
         if datafile == '' :
             # If after all this we haven't identified a file, abort processing.
@@ -174,7 +176,7 @@ class FieldData():
 
         return(flag, datafile)
 
-    def step_through_files(self, datalist, fileext):
+    def step_through_files(self, datalist, fileext, reprocess):
         """
         Handle multiple files of a given type for a single flight
 
