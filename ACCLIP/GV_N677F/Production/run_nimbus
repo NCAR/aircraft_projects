@@ -1,8 +1,9 @@
 #!/bin/csh
 
 # Remove existing files.  Helps to avoid residual data if nimbus fails.
-/bin/rm ${DAT}/$proj?f??.nc
+/bin/rm ${DAT}/ACCLIP?f??.nc
 
 foreach setup_file ( setup_?f?? )
   nimbus -b $setup_file
+#  /scr/raf/cjw/nimbus/src/filter/nimbus -b $setup_file
 end
