@@ -210,7 +210,7 @@ class FieldData():
             message = '\nERROR!: syncing file: ' + command + '\n'
             fielddata.print_message(message)
 
-    def find_lrt_netcdf(self, filetype, flight, data_dir):
+    def find_lrt_netcdf(self, filetype, flight, data_dir, file_prefix):
         """
         See if a LRT file exists already and query user about what to do.
         """
@@ -241,7 +241,7 @@ class FieldData():
             ncfile = data_dir + file_prefix + ".nc"
         else:
             print("More than one " + filetype + " file found.")
-            ncfile = fielddata.step_through_files(nclist, fileext, reprocess)
+            ncfile = self.step_through_files(nclist, fileext, reprocess)
 
         if ncfile == '':
             print("No NetCDF file identified!")
@@ -272,27 +272,26 @@ class FieldData():
         """
         datafile = ''
         if fileext == 'ict':
-            pattern = data_dir + project + '*' + date + '*' + fileext
-            # pattern2 is a dummy placeholder. will overwrite the output
-            # filename to match the strict ICARTT filename convention.
-            # pattern2 = self.data_dir + project + date + '.' + fileext
+            pattern = data_dir + project + '*' + fileext
             datalist = glob.glob(pattern)
+            print(datalist)
         else:
             # pattern needs a star to match the ads file
             pattern = data_dir + "*" + flight + filetype + '.' + fileext
             # pattern2 is the name of files to regenerate, other than ads
             # pattern2 = self.data_dir + project + flight + filetype + '.' + fileext
             datalist = glob.glob(pattern)
+            print(datalist)
 
         if (datalist.__len__() == 1):
             # Found a single file of the type we are looking for
             # [eg ads or lrt or nc, etc.
             # Find out if user wants to reprocess the file?
-            if (flag is False):
-                reproc = input('Found file: ' + datalist[0]
-                               + '. Reprocess?(Y/N)')
-                if reproc == 'Y':
-                    flag = True
+            #if (flag is False):
+            #    reproc = input('Found file: ' + datalist[0]
+            #                   + '. Correct file?(Y/N)')
+            #    if reproc == 'Y':
+            #        flag = True
             datafile = datalist[0]  # Return name of file that was found
         elif datalist.__len__() == 0:
             # Did not find any files with the extension we are looking for
@@ -303,7 +302,7 @@ class FieldData():
                 sys.exit(0)
             else:
                 # Any other files that can't be found can be regenerated
-                if process:
+                if flag:
                     print("We are scheduled to process all is good")
                     datafile = pattern
                 else:
@@ -317,7 +316,7 @@ class FieldData():
             # Step through the files and let the user decide
             # which is the one we should work with
             print("More than one " + fileext + " file found.")
-            datafile = fielddata.step_through_files(datalist, fileext,
+            datafile = self.step_through_files(datalist, fileext,
                                                     reprocess)
 
         if datafile == '':
@@ -501,7 +500,7 @@ class FieldData():
         print("Expecting to find .ads files in " + raw_dir + ".")
         return self.raircraft
 
-    def process(self, file_ext, data_dir, flight, filename, raw_dir):
+    def process(self, file_ext, data_dir, flight, filename, raw_dir, status):
         '''
         Beginning of Processing ##############################
         Get the netCDF, kml, icartt, IWG1 and raw ADS files for working with ##
@@ -510,13 +509,13 @@ class FieldData():
         because we ALWAYS generate a LRT data file for every flight.
         Determine if we are in process, reprocess, or ship mode.
         '''
-        (process, reprocess, self.filename['LRT']) = self.find_lrt_netcdf(self.file_ext['LRT'], self.flight, self.data_dir)
+        (process, reprocess, self.filename['LRT']) = self.find_lrt_netcdf(self.file_ext['LRT'], self.flight, self.data_dir, self.file_prefix)
         # Next get the ADS file so we can determine the flight date. This is needed
-        # in order to indentify the correct ICARTT file, since ICARTT files follow the
+        # in order to identify the correct ICARTT file, since ICARTT files follow the
         # NASA naming convention and don't use our flight numbering system.
         (reprocess, filename['ADS']) = \
             self.find_file(self.inst_dir['ADS'], self.flight, self.project, self.file_type['ADS'],
-                                self.file_ext['ADS'], process, reprocess)
+                                self.file_ext['ADS'], process, reprocess, self.file_prefix)
 
         # Get the flight date from the ADS filename
         file_name = filename["ADS"].split(raw_dir)[1]
@@ -525,14 +524,14 @@ class FieldData():
 
         # Now everthing else (skip LRT) using the NCAR/EOL/RAF flight number to
         # identify the file associated with the current flight.
-        for key in file_ext:
-            if (key == "LRT") or (key == "ADS"):
-                next
-            else:
-                (reprocess, filename[key]) = \
-                    self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
-                                        self.file_ext[key], process, reprocess, self.date[0:8])
-
+#        for key in file_ext:
+#            if (key == "LRT") or (key == "ADS"):
+#                next
+#            else:
+#                (reprocess, filename[key]) = \
+#                    self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
+#                                        self.file_ext[key], process, reprocess, self.date[0:8])
+#                print(filename[key])
         if process:
             for key in file_ext:
 
@@ -553,7 +552,7 @@ class FieldData():
 
                 # Generate ICARTT file from LRT, if requested
                 if (key == "ICARTT"):
-                    command = "nc2asc -i " + filename["LRT"] + " -o " + self.data_dir + "temp_filename. -b " + self.nc2ascBatch
+                    command = "nc2asc -i " + filename["LRT"] + " -o " + self.data_dir + "tempfile.ict -b " + self.nc2ascBatch
                     print("about to execute : " + command)
                     if os.system(command) == 0:
                         status[key]["proc"] = 'Yes'
@@ -587,6 +586,16 @@ class FieldData():
                             # status["PMS2D"]["ship"] = 'Yes'
                             # status["PMS2D"]["stor"] = 'Yes'
 
+        # Now everthing else (skip LRT) using the NCAR/EOL/RAF flight number to
+        # identify the file associated with the current flight.
+        for key in file_ext:
+            if (key == "LRT") or (key == "ADS"):
+                next
+            else:
+                (reprocess, filename[key]) = \
+                    self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
+                                        self.file_ext[key], process, reprocess, self.date[0:8])
+                print(filename[key])
 
         # Run Al Cooper's R code for QA/QC production
         # Currently requires being run from the ~/RStudio/QAtools directory.
@@ -605,38 +614,37 @@ class FieldData():
         """
         Beginning of Shipping
         """
-        if NAS:
-            if NAS_permanent_mount is False:
-                # Mount NAS
-                command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
-                print('\r\nMounting nas: '+command)
-                os.system(command)
+        if NAS_permanent_mount is False:
+            # Mount NAS
+            command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
+            print('\r\nMounting nas: '+command)
+            os.system(command)
 
-            # Put copies of files to local store
-            # in dirs to sync to ftp site in Boulder...
-            nas_sync_dir = nas_mnt_pt+'/FTP_sync/EOL_data/RAF_data/'
-            # and in dirs for local use...
-            nas_data_dir = nas_mnt_pt+'/EOL_data/RAF_data/'
+        # Put copies of files to local store
+        # in dirs to sync to ftp site in Boulder...
+        nas_sync_dir = nas_mnt_pt+'/FTP_sync/EOL_data/RAF_data/'
+        # and in dirs for local use...
+        nas_data_dir = nas_mnt_pt+'/EOL_data/RAF_data/'
 
-            print("")
-            print("*************** Copy files to NAS scratch area ***************")
-            for key in file_ext:
-                self.ensure_dir(nas_data_dir)
-                if (key == "ADS"):
-                    if (not reprocess) and process:
-                        print('Copying ' + filename[key] + ' to ' + nas_data_dir + '/ADS')
-                        status[key]["stor"] = fielddata.rsync_file(filename[key], nas_data_dir + '/ADS')
-                    elif (key == "PMS2D"):
-                        print('Copying ' + filename[key] + ' to ' + nas_data_dir + '/PMS2D/')
-                        status[key]["stor"] = fielddata.rsync_file(filename[key], nas_data_dir + '/PMS2D/')
-                    else:
-                        print('Copying ' + filename[key] + ' to ' + nas_data_dir + '/' + key)
-                        status[key]["stor"] = fielddata.rsync_file(filename[key], nas_data_dir + '/' + key)
+        print("")
+        print("*************** Copy files to NAS scratch area ***************")
+        for key in file_ext:
+            self.ensure_dir(nas_data_dir)
+            if (key == "ADS"):
+                if (not reprocess) and process:
+                    print('Copying ' + filename[key] + ' to ' + nas_data_dir + '/ADS')
+                    status[key]["stor"] = fielddata.rsync_file(filename[key], nas_data_dir + '/ADS')
+                elif (key == "PMS2D"):
+                    print('Copying ' + filename[key] + ' to ' + nas_data_dir + '/PMS2D/')
+                    status[key]["stor"] = fielddata.rsync_file(filename[key], nas_data_dir + '/PMS2D/')
+                else:
+                    print('Copying ' + filename[key] + ' to ' + nas_data_dir + '/' + key)
+                    status[key]["stor"] = fielddata.rsync_file(filename[key], nas_data_dir + '/' + key)
 
-            if catalog:
-                fielddata.ensure_dir(nas_data_diri + "/qc")
-                print('Copying QC plots to ' + nas_data_dir + "/qc")
-                status[key]["stor"] = fielddata.rsync_file(rstudio_dir + "/QAtools/" + raircraft + date + ".RAF_QC_plots.pdf", nas_data_dir + "/qc")
+        if catalog:
+            self.ensure_dir(nas_data_diri + "/qc")
+            print('Copying QC plots to ' + nas_data_dir + "/qc")
+            status[key]["stor"] = fielddata.rsync_file(rstudio_dir + "/QAtools/" + raircraft + date + ".RAF_QC_plots.pdf", nas_data_dir + "/qc")
 
             print("")
 
@@ -659,17 +667,16 @@ class FieldData():
         ZIP up the files as per expectations back home
         this only affects non-ads files
         """
-        if sendzipped:
-            for key in file_ext:
-                if (key == "ADS"):
-                    print("Raw .ads file found but not zipping, if zip_ads is set, will bzip .ads file next.")
-                elif (key == "PMS2D"):
-                    print("Raw .2d file found but not zipping.")
-                else:
-                    data_dir, file_name = os.path.split(filename[key])
-                    print(key + " filename = " + file_name)
-                    print("data_dir = " + data_dir)
-                    self.zip_file(file_name, inst_dir[key])
+        for key in file_ext:
+            if (key == "ADS"):
+                print("Raw .ads file found but not zipping, if zip_ads is set, will bzip .ads file next.")
+            elif (key == "PMS2D"):
+                print("Raw .2d file found but not zipping.")
+            else:
+                data_dir, file_name = os.path.split(filename[key])
+                print(key + " filename = " + file_name)
+                print("data_dir = " + data_dir)
+                self.zip_file(file_name, inst_dir[key])
 
     def datadump(self, email, project, flight, raircraft, date):
         """
@@ -677,111 +684,102 @@ class FieldData():
         Project specific data_dump's for indivual users.
         """
         # Put QC files into catalog and to the NAS if it exists
-        if catalog:
+        try:
+            print("")
+            print("*************************** Catalog transfer *****************")
+            print('opening FTP connection to: ' + qc_ftp_site)
+            print('- putting QC data in directory: ' + qc_ftp_dir)
+
+            ftp = ftplib.FTP(qc_ftp_site)
+            ftp.login("anonymous", email)
+            ftp.cwd(qc_ftp_dir)
+
+            print("Renaming file "+project+flight+"Plots.pdf")
+            command = "/bin/mv "+rstudio_dir+"/QAtools/"+project+flight+"Plots.pdf "+rstudio_dir+"/QAtools/"+raircraft+date+".RAF_QC_plots.pdf"
+            print("about to execute : " + command)
+            if os.system(command) == 0:
+                status["QCplots"]["ship"] = 'Yes-Cat'
+                print("Sending file " + raircraft + date + ".RAF_QC_plots.pdf to catalog")
+                os.chdir(rstudio_dir + "/QAtools")
+                file = open(raircraft + date + ".RAF_QC_plots.pdf", 'r')
+                print(ftp.storbinary('STOR ' + raircraft + date + ".RAF_QC_plots.pdf", file))
+                file.close()
+            else:
+                message = "ERROR: Rename of plots failed\n"
+
+        except ftplib.all_errors as e:
+            print("")
+            print('Error writing QC data to server')
+            print(e)
             try:
-                print("")
-                print("*************************** Catalog transfer *****************")
-                print('opening FTP connection to: ' + qc_ftp_site)
-                print('- putting QC data in directory: ' + qc_ftp_dir)
-
-                ftp = ftplib.FTP(qc_ftp_site)
-                ftp.login("anonymous", email)
-                ftp.cwd(qc_ftp_dir)
-
-                print("Renaming file "+project+flight+"Plots.pdf")
-                command = "/bin/mv "+rstudio_dir+"/QAtools/"+project+flight+"Plots.pdf "+rstudio_dir+"/QAtools/"+raircraft+date+".RAF_QC_plots.pdf"
-                print("about to execute : " + command)
-                if os.system(command) == 0:
-                    status["QCplots"]["ship"] = 'Yes-Cat'
-                    print("Sending file " + raircraft + date + ".RAF_QC_plots.pdf to catalog")
-                    os.chdir(rstudio_dir + "/QAtools")
-                    file = open(raircraft + date + ".RAF_QC_plots.pdf", 'r')
-                    print(ftp.storbinary('STOR ' + raircraft + date + ".RAF_QC_plots.pdf", file))
-                    file.close()
-                else:
-                    message = "ERROR: Rename of plots failed\n"
-
+                ftp.quit()
             except ftplib.all_errors as e:
-                print("")
-                print('Error writing QC data to server')
+                print('Could not close ftp connection:')
                 print(e)
-                try:
-                    ftp.quit()
-                except ftplib.all_errors as e:
-                    print('Could not close ftp connection:')
-                    print(e)
 
-            print("*************************** End Catalog transfer *************\n")
+        print("*************************** End Catalog transfer *************\n")
 
     def setup_FTP(self, data_dir, raw_dir, status, file_ext, inst_dir, filename):
-        # No NAS this project, so put files to EOL server. Put
-        # zipped files if they exist.
-        if FTP is True:
-            try:
-                print('opening FTP connection to: ' + ftp_site)
-
-                ftp = ftplib.FTP(ftp_site)
-                ftp.login(user, password)
-                print('')
-
-            except ftplib.all_errors as e:
-                print('')
-                print('Error connecting to FTP site ' + ftp_site)
-                print(e)
-                ftp.quit()
-
-            print('Putting files:')
+        '''No NAS this project, so put files to EOL server. Put
+        zipped files if they exist.
+        '''
+        try:
+            print('Opening FTP connection to: ' + ftp_site)
+            ftp = ftplib.FTP(ftp_site)
+            ftp.login(user, password)
             print('')
 
-            # If set in config file script will FTP all ads in rdat
-            # Keep this set to False unless you have time / bandwidth
-            if ship_all_ADS is True:
-                print('Starting ftp process for all available .ads files')
-                for rawfilename in os.listdir(raw_dir):
-                    if rawfilename.endswith('.ads'):
-                        try:
-                            os.chdir(raw_dir)
-                            ftp.cwd('/' + ftp_data_dir + '/ADS')
-                            ftp.storbinary('STOR ' + rawfilename, open(rawfilename, 'rb'))
-                            status["ADS"]["stor"] = 'Yes-FTP'
-                            print(rawfilename + ' ftp successful!')
-                        except Exception as e:
-                            print(rawfilename + ' not sent')
-                    else:
-                        pass
-            else:
-                pass
+        except ftplib.all_errors as e:
+            print('')
+            print('Error connecting to FTP site ' + ftp_site)
+            print(e)
+            ftp.quit()
 
-            for fn in os.listdir(data_dir):
-                if fn.endswith('.ict'):
-                    try:
-                        os.chdir(data_dir)
-                        ftp.cwd('/' + ftp_data_dir + '/ICARTT')
-                        ftp.storbinary('STOR ' + fn, open(fn, 'rb'))
-                        status["ICARTT"]["stor"] = 'Yes-FTP'
-                    except Exception as e:
-                        print(e)
+        print('Putting files to FTP site:')
+        print('')
 
-                elif fn.endswith('.kml'):
+        # If set in config file script will FTP all ads in rdat
+        # Keep this set to False unless you have time / bandwidth
+        if ship_all_ADS is True:
+            print('Starting ftp process for all available .ads files')
+            for rawfilename in os.listdir(inst_dir['ADS']):
+                if rawfilename.endswith('.ads'):
                     try:
-                        os.chdir(data_dir)
-                        ftp.cwd('/' + ftp_data_dir + '/KML')
-                        ftp.storbinary('STOR ' + fn, open(fn, 'rb'))
-                        status["KML"]["stor"] = 'Yes-FTP'
+                        os.chdir(inst_dir['ADS'])
+                        ftp.cwd('/' + ftp_data_dir + '/ADS')
+                        ftp.storbinary('STOR ' + rawfilename, open(rawfilename, 'rb'))
+                        status["ADS"]["stor"] = 'Yes-FTP'
+                        print(rawfilename + ' ftp successful!')
                     except Exception as e:
-                        print(e)
-            for key in file_ext:
-                print('')
-                if ship_ADS is False:
-                    if key == 'ADS':
-                        pass
-                    else:
-                        try:
-                            os.chdir(inst_dir[key])
-                        except ftplib.all_errors as e:
-                            print('Could not change to local dir ' + inst_dir[key])
-                            print(e)
-                            continue
+                        print(rawfilename + ' not sent')
+                else:
+                    pass
+        else:
+            pass
+
+#        for fn in os.listdir(data_dir):
+#            if fn.endswith('.ict'):
+#                try:
+#                    os.chdir(data_dir)
+#                    ftp.cwd('/' + ftp_data_dir + '/ICARTT')
+#                    ftp.storbinary('STOR ' + fn, open(fn, 'rb'))
+#                    status["ICARTT"]["stor"] = 'Yes-FTP'
+#                except Exception as e:
+#                    print(e)
+#
+#            elif fn.endswith('.kml'):
+#                try:
+#                    os.chdir(data_dir)
+#                    ftp.cwd('/' + ftp_data_dir + '/KML')
+#                    ftp.storbinary('STOR ' + fn, open(fn, 'rb'))
+#                    status["KML"]["stor"] = 'Yes-FTP'
+#                except Exception as e:
+#                    print(e)
+        for key in file_ext:
+            print('')
+            if ship_ADS is False:
+                if key == 'ADS':
+                    pass
                 else:
                     try:
                         os.chdir(inst_dir[key])
@@ -789,63 +787,54 @@ class FieldData():
                         print('Could not change to local dir ' + inst_dir[key])
                         print(e)
                         continue
+            else:
+                try:
+                    os.chdir(inst_dir[key])
+                except ftplib.all_errors as e:
+                    print('Could not change to local dir ' + inst_dir[key])
+                    print(e)
+                    continue
 
-                if filename[key] != '':
-                    data_dir, file_name = os.path.split(filename[key])
-                    print(data_dir)
-                    print(file_name)
-                    if ship_ADS is False:
-                        if filename[key] == '.ads':
-                            pass
-                    else:
+            if filename[key] != '':
+                data_dir, file_name = os.path.split(filename[key])
+                print(data_dir)
+                print(file_name)
+                if ship_ADS is False:
+                    if filename[key] == '.ads':
+                        pass
+                else:
+                    try:
+                        ftp.cwd('/' + ftp_data_dir + '/' + key)
+                    except ftplib.all_errors as e:
+                        # Attempt to create needed dir
+                        print('Attempt to create dir /' + ftp_data_dir + '/' + key)
                         try:
-                            data_dir, file_name = os.path.split(filename[key])
+                            ftp.mkd('/' + ftp_data_dir + '/' + key)
+                        except Exception as e:
+                            print('Make dir ' + ftp_data_dir + '/' + key + ' failed')
+                            print(e)
+                            continue
+                        # Try to change to dir again
+                        try:
                             ftp.cwd('/' + ftp_data_dir + '/' + key)
-                        except ftplib.all_errors as e:
-                            # Attempt to create needed dir
-                            print('Attempt to create dir /' + ftp_data_dir + '/' + key)
-                            try:
-                                ftp.mkd('/' + ftp_data_dir + '/' + key)
-                            except Exception as e:
-                                print('Make dir ' + ftp_data_dir + '/' + key + ' failed')
-                                print(e)
-                                continue
-                            # Try to change to dir again
-                            try:
-                                ftp.cwd('/' + ftp_data_dir + '/' + key)
-                            except Exception as e:
-                                print('Change dir to ' + ftp_data_dir + '/' + key + ' failed')
-                                print(e)
-                                continue
+                        except Exception as e:
+                            print('Change dir to ' + ftp_data_dir + '/' + key + ' failed')
+                            print(e)
+                            continue
 
-                    if file_name in ftp.nlst():
-                        print('File ' + file_name + ' already exists on ftp server.')
-                        print('File will not be transfered to ftp site')
-                        print('To force transfer, delete file from ftp site and rerun in Ship mode')
-                        continue
+                if file_name in ftp.nlst():
+                    print('File ' + file_name + ' already exists on ftp server.')
+                    print('File will not be transfered to ftp site')
+                    print('To force transfer, delete file from ftp site and rerun in Ship mode')
+                    continue
 
-                    if ship_ADS is False:
-                        if file_name.endswith('.ads'):
-                            pass
-                        else:
-                            try:
-                                file = open(file_name, 'rb')
-                                ftp.cwd('/' + ftp_data_dir + '/' + key)
-                                print(ftp.storbinary('STOR ' + file_name, file))
-                                file.close()
-                                status[key]["stor"] = 'Yes-FTP'
-
-                                print(datetime.datetime.now().time())
-                                print('Finished putting data file')
-                                print('')
-
-                            except ftplib.all_errors as e:
-                                print('Error writing ' + file_name + ' to ' + ftp_site + ':/' + ftp_data_dir + '/' + key)
-                                print(e)
-                                continue
+                if ship_ADS is False:
+                    if file_name.endswith('.ads'):
+                        pass
                     else:
                         try:
                             file = open(file_name, 'rb')
+                            ftp.cwd('/' + ftp_data_dir + '/' + key)
                             print(ftp.storbinary('STOR ' + file_name, file))
                             file.close()
                             status[key]["stor"] = 'Yes-FTP'
@@ -859,75 +848,89 @@ class FieldData():
                             print(e)
                             continue
                 else:
-                    print('Filename is empty - nothing to write')
+                    try:
+                        file = open(file_name, 'rb')
+                        print(ftp.storbinary('STOR ' + file_name, file))
+                        file.close()
+                        status[key]["stor"] = 'Yes-FTP'
 
-            ftp.quit()
+                        print(datetime.datetime.now().time())
+                        print('Finished putting data file')
+                        print('')
+
+                    except ftplib.all_errors as e:
+                        print('Error writing ' + file_name + ' to ' + ftp_site + ':/' + ftp_data_dir + '/' + key)
+                        print(e)
+                        continue
+            else:
+                print('Filename is empty - nothing to write')
+
+        ftp.quit()
 
     def setup_NAS(self, process, reprocess, file_ext, inst_dir, status, flight, project, email, final_message, filename):
         # Put file onto NAS for BTSyncing back home.
-        if NAS is True:
+        print("")
+        print("***** Copy files to NAS sync area for transfer back home *****")
+
+        if reprocess or (not reprocess and not process):
+            final_message = final_message + '\n***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n'
+            final_message = final_message + 'Reprocessing so assume ADS already shipped during first processing\n'
+            final_message = final_message + 'If this is not the case, run\n\n'
+            final_message = final_message + '"cp /home/data/Raw_Data/' + project + '/*' + flight + '.ads ' + nas_sync_dir + '/ADS"\n\n'
+            final_message = final_message + '"cp /home/data/Raw_Data/' + project + '/*' + flight + '.ads ' + nas_data_dir + '/ADS"\n\n'
+            final_message = final_message + 'when this script is complete\n\n'
+            final_message = final_message + '***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n'
+
+        if zip_ADS:
+            # Now only zip up the ADS file, if requested
+            raw_dir, rawfilename = os.path.split(filename["ADS"])
+            print("zipping " + rawfilename)
+            zip_raw_file = zip_dir + rawfilename + '.bz2'
+            print("rawfilename = " + zip_raw_file)
+            os.chdir(raw_dir)
+            # if not os.path.exists(zip_raw_file):
+            print("Compressing ADS file with command:")
+            command = "bzip2 -kc " + rawfilename + " > " + zip_raw_file
+            print(command)
+            os.system(command)
             print("")
-            print("***** Copy files to NAS sync area for transfer back home *****")
+        else:
+            print('.ads file not being zipped due to preference')
 
-            if reprocess or (not reprocess and not process):
-                final_message = final_message + '\n***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n'
-                final_message = final_message + 'Reprocessing so assume ADS already shipped during first processing\n'
-                final_message = final_message + 'If this is not the case, run\n\n'
-                final_message = final_message + '"cp /home/data/Raw_Data/' + project + '/*' + flight + '.ads ' + nas_sync_dir + '/ADS"\n\n'
-                final_message = final_message + '"cp /home/data/Raw_Data/' + project + '/*' + flight + '.ads ' + nas_data_dir + '/ADS"\n\n'
-                final_message = final_message + 'when this script is complete\n\n'
-                final_message = final_message + '***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n'
+        # mount the NAS and put files to it
+        if NAS_permanent_mount is False:
+            # Mount NAS
+            command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
+            print('\r\nMounting nas: '+command)
+            os.system(command)
 
-            if zip_ADS:
-                # Now only zip up the ADS file, if requested
-                raw_dir, rawfilename = os.path.split(filename["ADS"])
-                print("zipping " + rawfilename)
-                zip_raw_file = zip_dir + rawfilename + '.bz2'
-                print("rawfilename = " + zip_raw_file)
-                os.chdir(raw_dir)
-                # if not os.path.exists(zip_raw_file):
-                print("Compressing ADS file with command:")
-                command = "bzip2 -kc " + rawfilename + " > " + zip_raw_file
-                print(command)
-                os.system(command)
-                print("")
-            else:
-                print('.ads file not being zipped due to preference')
-
-            # mount the NAS and put files to it
-            if NAS_permanent_mount is False:
-                # Mount NAS
-                command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
-                print('\r\nMounting nas: '+command)
-                os.system(command)
-
-            for key in file_ext:
-                os.chdir(inst_dir[key])
-                if (key == "ADS"):
-                    if ship_ADS is True:
-                        if zip_ADS is True:
-                            print('Copying ' + zip_raw_file + ' file to ' + nas_sync_dir + '/ADS')
-                            self.rsync_file(zip_raw_file, nas_sync_dir + '/ADS')
-                            print('Done')
-                        else:
-                            print('Copying ' + filename[key] + ' file to ' + nas_sync_dir + '/ADS')
-                            self.rsync_file(filename[key], nas_sync_dir + '/ADS')
-                            print('Done')
+        for key in file_ext:
+            os.chdir(inst_dir[key])
+            if (key == "ADS"):
+                if ship_ADS is True:
+                    if zip_ADS is True:
+                        print('Copying ' + zip_raw_file + ' file to ' + nas_sync_dir + '/ADS')
+                        self.rsync_file(zip_raw_file, nas_sync_dir + '/ADS')
+                        print('Done')
                     else:
-                        pass
-                elif (key == "PMS2D"):
-                    print('Copying ' + filename[key] + ' file to ' + nas_sync_dir + '/PMS2D')
-                    status[key]["ship"] = self.rsync_file(filename[key], nas_sync_dir + '/PMS2D')
+                        print('Copying ' + filename[key] + ' file to ' + nas_sync_dir + '/ADS')
+                        self.rsync_file(filename[key], nas_sync_dir + '/ADS')
+                        print('Done')
+                else:
+                    pass
+            elif (key == "PMS2D"):
+                print('Copying ' + filename[key] + ' file to ' + nas_sync_dir + '/PMS2D')
+                status[key]["ship"] = self.rsync_file(filename[key], nas_sync_dir + '/PMS2D')
+                print('Done')
+            else:
+                if sendzipped is True:
+                    print('Copying ' + filename[key] + '.zip file to ' + nas_sync_dir + '/' + key)
+                    status[key]["ship"] = self.rsync_file(filename[key] + '.zip', nas_sync_dir + '/' + key)
                     print('Done')
                 else:
-                    if sendzipped is True:
-                        print('Copying ' + filename[key] + '.zip file to ' + nas_sync_dir + '/' + key)
-                        status[key]["ship"] = self.rsync_file(filename[key] + '.zip', nas_sync_dir + '/' + key)
-                        print('Done')
-                    else:
-                        print('Copying ' + filename[key] + ' file to ' + nas_sync_dir + '/' + key)
-                        status[key]["ship"] = self.rsync_file(filename[key], nas_sync_dir + '/' + key)
-                        print('Done')
+                    print('Copying ' + filename[key] + ' file to ' + nas_sync_dir + '/' + key)
+                    status[key]["ship"] = self.rsync_file(filename[key], nas_sync_dir + '/' + key)
+                    print('Done')
 
     def report(self, final_message, status, project, flight, email, file_ext):
         final_message = final_message + '\nREPORT on shipping of files. \n\n'
@@ -958,8 +961,8 @@ class FieldData():
     def main(self):
         self.flight = self.readFlight()
         self.email = self.readEmail()
-        process = False
-        reprocess = False
+        process = True
+        reprocess = True
         self.setup(self.aircraft, self.project, self.raw_dir)
         self.createInstDir(self.raw_dir, self.data_dir, self.project, self.flight)
         self.createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)
@@ -973,13 +976,18 @@ class FieldData():
         self.ensureDataDir(self.data_dir)
         self.createThreeVCPI()
         self.confirmRStudio(rstudio_dir)
-        self.process(self.file_ext, self.data_dir, self.flight, self.filename, self.raw_dir)
-        self.setup_shipping(self.filename, self.file_ext, process, reprocess)
+        self.process(self.file_ext, self.data_dir, self.flight, self.filename, self.raw_dir, self.status)
+        if NAS is True:
+            self.setup_shipping(self.filename, self.file_ext, process, reprocess)
         self.setup_email(self.data_dir, self.email)
-        self.setup_zip(self.file_ext, self.data_dir, self.filename, self.inst_dir)
-        self.datadump(self.email, self.project, self.flight, self.raircraft, self.date)
-        self.setup_FTP(self.data_dir, self.raw_dir, self.status, self.file_ext, self.inst_dir, self.filename)
-        self.setup_NAS(process, reprocess, self.file_ext, self.inst_dir, self.status, self.flight, self.project, self.email, self.final_message, self.filename)
+        if sendzipped is True:
+            self.setup_zip(self.file_ext, self.data_dir, self.filename, self.inst_dir)
+        if catalog is True:
+            self.datadump(self.email, self.project, self.flight, self.raircraft, self.date)
+        if FTP is True:
+            self.setup_FTP(self.data_dir, self.raw_dir, self.status, self.file_ext, self.inst_dir, self.filename)
+        if NAS is True:
+            self.setup_NAS(process, reprocess, self.file_ext, self.inst_dir, self.status, self.flight, self.project, self.email, self.final_message, self.filename)
         self.report(self.final_message, self.status, self.project, self.flight, self.email, self.file_ext)
 
 if __name__ == '__main__':
