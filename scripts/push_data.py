@@ -194,9 +194,8 @@ class FieldData():
         """
         Set up message printing on the screen as well as in the email message
         """
-        global final_message
+        message = ''
         print(message)
-        final_message = final_message + message
 
     def rsync_file(self, file, out_dir):
         """
@@ -207,8 +206,8 @@ class FieldData():
             proc_file = 'Yes-NAS'
             return(str(proc_file))
         else:
-            message = '\nERROR!: syncing file: ' + command + '\n'
-            fielddata.print_message(message)
+            rsync_message = '\nERROR!: syncing file: ' + command + '\n'
+            self.print_message(rsync_message)
 
     def find_lrt_netcdf(self, filetype, flight, data_dir, file_prefix):
         """
@@ -524,24 +523,40 @@ class FieldData():
 
         # Now everthing else (skip LRT) using the NCAR/EOL/RAF flight number to
         # identify the file associated with the current flight.
-#        for key in file_ext:
-#            if (key == "LRT") or (key == "ADS"):
-#                next
-#            else:
-#                (reprocess, filename[key]) = \
-#                    self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
-#                                        self.file_ext[key], process, reprocess, self.date[0:8])
-#                print(filename[key])
+        for key in file_ext:
+            if (key == "HRT") or (key == "SRT"):
+
+                (reprocess, filename[key]) = \
+                    self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
+                                        self.file_ext[key], process, reprocess, self.date[0:8])
+                print(filename[key])
         if process:
             for key in file_ext:
 
                 # Process the ads data to desired netCDF frequencies
-                if ((key == "LRT" or key == "HRT" or key == "SRT") and process):
+                if (key == "LRT"):
                     res = self.process_netCDF(self.filename["ADS"], self.filename[key], self.rate[key], self.config_ext[key], self.proj_dir, self.flight)
                     if res:
                         self.status[key]["proc"] = self.reorder_nc(self.filename[key])
                     else:
                         self.status[key]["proc"] = False
+
+                # Process the ads data to desired netCDF frequencies
+                if (key == "HRT"):
+                    res = self.process_netCDF(self.filename["ADS"], self.filename[key], self.rate[key], self.config_ext[key], self.proj_dir, self.flight)
+                    if res:
+                        self.status[key]["proc"] = self.reorder_nc(self.filename[key])
+                    else:
+                        self.status[key]["proc"] = False
+
+                # Process the ads data to desired netCDF frequencies
+                if (key == "SRT"):
+                    res = self.process_netCDF(self.filename["ADS"], self.filename[key], self.rate[key], self.config_ext[key], self.proj_dir, self.flight)
+                    if res:
+                        self.status[key]["proc"] = self.reorder_nc(self.filename[key])
+                    else:
+                        self.status[key]["proc"] = False
+
 
                 # Generate IWG1 file from LRT, if requested
                 if (key == "IWG1"):
@@ -610,7 +625,7 @@ class FieldData():
             print("copying QAQC pdf to desktop")
             os.system(command)
 
-    def setup_shipping(self, file_ext, filename, process, reprocess):
+    def setup_shipping(self, file_ext, filename, process, reprocess, status):
         """
         Beginning of Shipping
         """
@@ -622,32 +637,32 @@ class FieldData():
 
         # Put copies of files to local store
         # in dirs to sync to ftp site in Boulder...
-        nas_sync_dir = nas_mnt_pt+'/FTP_sync/EOL_data/RAF_data/'
+        self.nas_sync_dir = nas_mnt_pt+'/FTP_sync/EOL_data/RAF_data/'
         # and in dirs for local use...
-        nas_data_dir = nas_mnt_pt+'/EOL_data/RAF_data/'
+        self.nas_data_dir = nas_mnt_pt+'/EOL_data/RAF_data/'
 
         print("")
         print("*************** Copy files to NAS scratch area ***************")
         for key in file_ext:
-            self.ensure_dir(nas_data_dir)
+            self.ensure_dir(self.nas_data_dir)
             if (key == "ADS"):
                 if (not reprocess) and process:
-                    print('Copying ' + filename[key] + ' to ' + nas_data_dir + '/ADS')
-                    status[key]["stor"] = fielddata.rsync_file(filename[key], nas_data_dir + '/ADS')
+                    print('Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/ADS')
+                    status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/ADS')
                 elif (key == "PMS2D"):
-                    print('Copying ' + filename[key] + ' to ' + nas_data_dir + '/PMS2D/')
-                    status[key]["stor"] = fielddata.rsync_file(filename[key], nas_data_dir + '/PMS2D/')
+                    print('Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/PMS2D/')
+                    status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/PMS2D/')
                 else:
-                    print('Copying ' + filename[key] + ' to ' + nas_data_dir + '/' + key)
-                    status[key]["stor"] = fielddata.rsync_file(filename[key], nas_data_dir + '/' + key)
+                    print('Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/' + key)
+                    status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/' + key)
 
         if catalog:
-            self.ensure_dir(nas_data_diri + "/qc")
-            print('Copying QC plots to ' + nas_data_dir + "/qc")
-            status[key]["stor"] = fielddata.rsync_file(rstudio_dir + "/QAtools/" + raircraft + date + ".RAF_QC_plots.pdf", nas_data_dir + "/qc")
+            self.ensure_dir(self.nas_data_dir + "/qc")
+            print('Copying QC plots to ' + self.nas_data_dir + "/qc")
+            status[key]["stor"] = self.rsync_file(rstudio_dir + "/QAtools/" + raircraft + date + ".RAF_QC_plots.pdf", self.nas_data_dir + "/qc")
 
             print("")
-
+        return self.nas_data_dir, self.nas_sync_dir
 
     def setup_email(self, data_dir, email):
         """
@@ -867,7 +882,7 @@ class FieldData():
 
         ftp.quit()
 
-    def setup_NAS(self, process, reprocess, file_ext, inst_dir, status, flight, project, email, final_message, filename):
+    def setup_NAS(self, process, reprocess, file_ext, inst_dir, status, flight, project, email, final_message, filename, nas_sync_dir, nas_data_dir):
         # Put file onto NAS for BTSyncing back home.
         print("")
         print("***** Copy files to NAS sync area for transfer back home *****")
@@ -961,11 +976,12 @@ class FieldData():
     def main(self):
         self.flight = self.readFlight()
         self.email = self.readEmail()
-        process = True
-        reprocess = True
+        process = False
+        reprocess = False
         self.setup(self.aircraft, self.project, self.raw_dir)
         self.createInstDir(self.raw_dir, self.data_dir, self.project, self.flight)
         self.createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)
+        print(self.file_ext)
         self.createFilenameDict()
         self.createFileType()
         self.createRate()
@@ -978,7 +994,7 @@ class FieldData():
         self.confirmRStudio(rstudio_dir)
         self.process(self.file_ext, self.data_dir, self.flight, self.filename, self.raw_dir, self.status)
         if NAS is True:
-            self.setup_shipping(self.filename, self.file_ext, process, reprocess)
+            self.setup_shipping(self.filename, self.file_ext, process, reprocess, self.status)
         self.setup_email(self.data_dir, self.email)
         if sendzipped is True:
             self.setup_zip(self.file_ext, self.data_dir, self.filename, self.inst_dir)
@@ -987,7 +1003,7 @@ class FieldData():
         if FTP is True:
             self.setup_FTP(self.data_dir, self.raw_dir, self.status, self.file_ext, self.inst_dir, self.filename)
         if NAS is True:
-            self.setup_NAS(process, reprocess, self.file_ext, self.inst_dir, self.status, self.flight, self.project, self.email, self.final_message, self.filename)
+            self.setup_NAS(process, reprocess, self.file_ext, self.inst_dir, self.status, self.flight, self.project, self.email, self.final_message, self.filename, self.nas_sync_dir, self.nas_data_dir)
         self.report(self.final_message, self.status, self.project, self.flight, self.email, self.file_ext)
 
 if __name__ == '__main__':
