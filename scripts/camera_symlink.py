@@ -51,7 +51,7 @@ def Monitor(data):
 
 if __name__ == '__main__':
 
-    data     = raf.ac_config.get_config("cameras.path")+"/"
+    data     = ac_config.get_config("cameras.path")+"/"
     logfile  = "/tmp/camera_symlink.log"
     sym_link = "/var/www/html/flight_data/images/latest_forward.jpg"
 
