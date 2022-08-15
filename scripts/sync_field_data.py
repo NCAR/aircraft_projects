@@ -346,10 +346,10 @@ def main():
         dist_raw()
         dist_prod()
         dist_field()
-        dist_PI('PI_data')
         dist_recursive_MTP('/RAF_data/MTP')
 
     elif NAS == False and FTP == True:
+        dist_PI('PI_data')
         ftp_to_local('LRT', dat_dir+'/field_data')
         ftp_to_local('KML', dat_dir+'/field_data')
         if ship_ADS:
