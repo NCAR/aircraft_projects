@@ -32,13 +32,10 @@ class FieldData():
         self.project = self.getProject()
         print('Project: ' + self.project)
         self.data_dir = self.getDataDir() + '/' + self.project.upper() + '/'
-        print('Data Dir: ' + self.data_dir)
         self.raw_dir = self.getRawDir() + '/' + self.project.upper() + '/'
-        print('Raw Data Dir: ' + self.raw_dir)
         self.aircraft = os.listdir(self.getProjDir() + '/' + project)[0]
         print('Aircraft: ' + self.aircraft)
         self.proj_dir = self.getProjDir() + '/' + self.project + '/' + self.aircraft + '/'
-        print('Proj Dir: ' + self.proj_dir)
         self.nc2ascBatch = self.proj_dir + 'scripts/nc2asc.bat'
         self.zip_dir = '/tmp/'
         self.qc_ftp_site = 'catalog.eol.ucar.edu'
@@ -104,18 +101,16 @@ class FieldData():
     def createStatus(self):
         # This dictionary contains a list of all file types you want to report
         # status on.
-        self.status = {
-        "ADS": {"proc": "N/A", "ship": "No!", "stor": "No!"},
-        "LRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
-        "KML": {"proc": "No!", "ship": "No!", "stor": "No!"},
-        "HRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
-        "SRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
-        "ICARTT": {"proc": "No!", "ship": "No!", "stor": "No!"},
-        "IWG1": {"proc": "No!", "ship": "No!", "stor": "No!"},
-        "PMS2D": {"proc": "No!", "ship": "No!", "stor": "No!"},
-        "threeVCPI": {"proc": "No!", "ship": "No!", "stor": "No!"},
-        "QCplots": {"proc": "No!", "ship": "No!", "stor": "No!"}
-        }
+        self.status = {"ADS": {"proc": "N/A", "ship": "No!", "stor": "No!"},
+                       "LRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                       "KML": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                       "HRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                       "SRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                       "ICARTT": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                       "IWG1": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                       "PMS2D": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                       "threeVCPI": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                       "QCplots": {"proc": "No!", "ship": "No!", "stor": "No!"}}
         return self.status
 
     def createFilePrefix(self, project, flight):
@@ -134,11 +129,7 @@ class FieldData():
 
     def createConfigExt(self):
         # nimbus config filename extensions
-        self.config_ext = {
-        "LRT": "",
-        "HRT": "h",
-        "SRT": "s",
-        }
+        self.config_ext = {"LRT": "", "HRT": "h", "SRT": "s", }
         return self.config_ext
 
     def ensureDataDir(self, data_dir):
@@ -217,8 +208,8 @@ class FieldData():
         reprocess = False
         nclist = glob.glob(data_dir + '*' + flight + '.' + filetype)
         if nclist.__len__() == 1:
-            ncfile = nclist[0]
-            print("Found a netCDF file: "+ncfile)
+            self.ncfile = nclist[0]
+            print("Found a netCDF file: "+self.ncfile)
             # Since found a netCDF file
             # query user if they want to reprocess the data,
             # or if they just want to ship the data to the NAS/ftp site.
@@ -237,17 +228,17 @@ class FieldData():
                   data_dir + '*' + flight + '.' + filetype)
             print("We must process!")
             process = True
-            ncfile = data_dir + file_prefix + ".nc"
+            self.ncfile = data_dir + file_prefix + ".nc"
         else:
             print("More than one " + filetype + " file found.")
-            ncfile = self.step_through_files(nclist, fileext, reprocess)
+            self.ncfile = self.step_through_files(nclist, fileext, reprocess)
 
-        if ncfile == '':
+        if self.ncfile == '':
             print("No NetCDF file identified!")
             print("Aborting")
             sys.exit(0)
 
-        return(process, reprocess, ncfile)
+        return(process, reprocess, self.ncfile)
 
     def find_file(self, data_dir, flight, project,
                   filetype, fileext, flag, reprocess, date=""):
@@ -273,24 +264,17 @@ class FieldData():
         if fileext == 'ict':
             pattern = data_dir + project + '*' + fileext
             datalist = glob.glob(pattern)
-            print(datalist)
         else:
             # pattern needs a star to match the ads file
             pattern = data_dir + "*" + flight + filetype + '.' + fileext
             # pattern2 is the name of files to regenerate, other than ads
             # pattern2 = self.data_dir + project + flight + filetype + '.' + fileext
             datalist = glob.glob(pattern)
-            print(datalist)
 
         if (datalist.__len__() == 1):
             # Found a single file of the type we are looking for
             # [eg ads or lrt or nc, etc.
             # Find out if user wants to reprocess the file?
-            #if (flag is False):
-            #    reproc = input('Found file: ' + datalist[0]
-            #                   + '. Correct file?(Y/N)')
-            #    if reproc == 'Y':
-            #        flag = True
             datafile = datalist[0]  # Return name of file that was found
         elif datalist.__len__() == 0:
             # Did not find any files with the extension we are looking for
@@ -316,7 +300,7 @@ class FieldData():
             # which is the one we should work with
             print("More than one " + fileext + " file found.")
             datafile = self.step_through_files(datalist, fileext,
-                                                    reprocess)
+                                               reprocess)
 
         if datafile == '':
             # If after all this we haven't identified a file, abort processing.
@@ -355,7 +339,7 @@ class FieldData():
                   'to process.')
         return(datafile)
 
-    def process_netCDF(self, rawfile, ncfile, pr, config_ext, proj_dir, flight):
+    def process_netCDF(self, rawfile, ncfile, pr, config_ext, proj_dir, flight, project):
         """"
         Run nimbus to create a .nc file (LRT, HRT, or SRT)
         """
@@ -370,7 +354,7 @@ class FieldData():
             line = "if=${RAW_DATA_DIR}/" + project + "/" + sfilename + '\n'
             cf.write(str(line))
             sdir, sfilename = os.path.split(ncfile)
-            line = "of=${DATA_DIR}/" + project + "/" + sfilename + '\n'
+            line = "of=${DATA_DIR}/" + project + "/" + project + flight + config_ext + '.nc\n'
             cf.write(str(line))
             line = "pr=" + pr + '\n'
             cf.write(str(line))
@@ -514,7 +498,7 @@ class FieldData():
         # NASA naming convention and don't use our flight numbering system.
         (reprocess, filename['ADS']) = \
             self.find_file(self.inst_dir['ADS'], self.flight, self.project, self.file_type['ADS'],
-                                self.file_ext['ADS'], process, reprocess, self.file_prefix)
+                           self.file_ext['ADS'], process, reprocess, self.file_prefix)
 
         # Get the flight date from the ADS filename
         file_name = filename["ADS"].split(raw_dir)[1]
@@ -528,14 +512,14 @@ class FieldData():
 
                 (reprocess, filename[key]) = \
                     self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
-                                        self.file_ext[key], process, reprocess, self.date[0:8])
+                                   self.file_ext[key], process, reprocess, self.date[0:8])
                 print(filename[key])
         if process:
             for key in file_ext:
 
                 # Process the ads data to desired netCDF frequencies
                 if (key == "LRT"):
-                    res = self.process_netCDF(self.filename["ADS"], self.filename[key], self.rate[key], self.config_ext[key], self.proj_dir, self.flight)
+                    res = self.process_netCDF(self.filename["ADS"], self.filename[key], self.rate[key], self.config_ext[key], self.proj_dir, self.flight, self.project)
                     if res:
                         self.status[key]["proc"] = self.reorder_nc(self.filename[key])
                     else:
@@ -543,20 +527,19 @@ class FieldData():
 
                 # Process the ads data to desired netCDF frequencies
                 if (key == "HRT"):
-                    res = self.process_netCDF(self.filename["ADS"], self.filename[key], self.rate[key], self.config_ext[key], self.proj_dir, self.flight)
+                    res = self.process_netCDF(self.filename["ADS"], self.ncfile, self.rate[key], self.config_ext[key], self.proj_dir, self.flight, self.project)
                     if res:
-                        self.status[key]["proc"] = self.reorder_nc(self.filename[key])
+                        self.status[key]["proc"] = self.reorder_nc(self.ncfile)
                     else:
                         self.status[key]["proc"] = False
 
                 # Process the ads data to desired netCDF frequencies
                 if (key == "SRT"):
-                    res = self.process_netCDF(self.filename["ADS"], self.filename[key], self.rate[key], self.config_ext[key], self.proj_dir, self.flight)
+                    res = self.process_netCDF(self.filename["ADS"], self.ncfile, self.rate[key], self.config_ext[key], self.proj_dir, self.flight, self.project)
                     if res:
-                        self.status[key]["proc"] = self.reorder_nc(self.filename[key])
+                        self.status[key]["proc"] = self.reorder_nc(self.ncfile)
                     else:
                         self.status[key]["proc"] = False
-
 
                 # Generate IWG1 file from LRT, if requested
                 if (key == "IWG1"):
@@ -609,7 +592,7 @@ class FieldData():
             else:
                 (reprocess, filename[key]) = \
                     self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
-                                        self.file_ext[key], process, reprocess, self.date[0:8])
+                                   self.file_ext[key], process, reprocess, self.date[0:8])
                 print(filename[key])
 
         # Run Al Cooper's R code for QA/QC production
@@ -772,24 +755,6 @@ class FieldData():
         else:
             pass
 
-#        for fn in os.listdir(data_dir):
-#            if fn.endswith('.ict'):
-#                try:
-#                    os.chdir(data_dir)
-#                    ftp.cwd('/' + ftp_data_dir + '/ICARTT')
-#                    ftp.storbinary('STOR ' + fn, open(fn, 'rb'))
-#                    status["ICARTT"]["stor"] = 'Yes-FTP'
-#                except Exception as e:
-#                    print(e)
-#
-#            elif fn.endswith('.kml'):
-#                try:
-#                    os.chdir(data_dir)
-#                    ftp.cwd('/' + ftp_data_dir + '/KML')
-#                    ftp.storbinary('STOR ' + fn, open(fn, 'rb'))
-#                    status["KML"]["stor"] = 'Yes-FTP'
-#                except Exception as e:
-#                    print(e)
         for key in file_ext:
             print('')
             if ship_ADS is False:
@@ -812,8 +777,6 @@ class FieldData():
 
             if filename[key] != '':
                 data_dir, file_name = os.path.split(filename[key])
-                print(data_dir)
-                print(file_name)
                 if ship_ADS is False:
                     if filename[key] == '.ads':
                         pass
@@ -981,7 +944,6 @@ class FieldData():
         self.setup(self.aircraft, self.project, self.raw_dir)
         self.createInstDir(self.raw_dir, self.data_dir, self.project, self.flight)
         self.createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)
-        print(self.file_ext)
         self.createFilenameDict()
         self.createFileType()
         self.createRate()
@@ -993,18 +955,18 @@ class FieldData():
         self.createThreeVCPI()
         self.confirmRStudio(rstudio_dir)
         self.process(self.file_ext, self.data_dir, self.flight, self.filename, self.raw_dir, self.status)
-        if NAS is True:
-            self.setup_shipping(self.filename, self.file_ext, process, reprocess, self.status)
         self.setup_email(self.data_dir, self.email)
-        if sendzipped is True:
+        if sendzipped:
             self.setup_zip(self.file_ext, self.data_dir, self.filename, self.inst_dir)
-        if catalog is True:
+        if catalog:
             self.datadump(self.email, self.project, self.flight, self.raircraft, self.date)
-        if FTP is True:
+        if FTP:
             self.setup_FTP(self.data_dir, self.raw_dir, self.status, self.file_ext, self.inst_dir, self.filename)
-        if NAS is True:
+        if NAS:
+            self.setup_shipping(self.filename, self.file_ext, process, reprocess, self.status)
             self.setup_NAS(process, reprocess, self.file_ext, self.inst_dir, self.status, self.flight, self.project, self.email, self.final_message, self.filename, self.nas_sync_dir, self.nas_data_dir)
         self.report(self.final_message, self.status, self.project, self.flight, self.email, self.file_ext)
+
 
 if __name__ == '__main__':
 
