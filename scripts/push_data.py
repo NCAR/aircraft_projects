@@ -629,15 +629,15 @@ class FieldData():
         for key in file_ext:
             self.ensure_dir(self.nas_data_dir)
             if (key == "ADS"):
-                if (not reprocess) and process:
-                    print('Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/ADS')
-                    status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/ADS')
-                elif (key == "PMS2D"):
-                    print('Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/PMS2D/')
-                    status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/PMS2D/')
-                else:
-                    print('Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/' + key)
-                    status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/' + key)
+                #if (not reprocess) and process:
+                print('Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/ADS')
+                status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/ADS')
+            elif (key == "PMS2D"):
+                print('Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/PMS2D/')
+                status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/PMS2D/')
+            else:
+                print('Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/' + key)
+                status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/' + key)
 
         if catalog:
             self.ensure_dir(self.nas_data_dir + "/qc")
@@ -892,7 +892,7 @@ class FieldData():
                         print('Done')
                     else:
                         print('Copying ' + filename[key] + ' file to ' + nas_sync_dir + '/ADS')
-                        self.rsync_file(filename[key], nas_sync_dir + '/ADS')
+                        status[key]["ship"] = self.rsync_file(filename[key], nas_sync_dir + '/' + key)
                         print('Done')
                 else:
                     pass
@@ -915,10 +915,6 @@ class FieldData():
         final_message = final_message + 'File Type\tStor\tShip\n'
 
         for key in file_ext:
-            if key != "ADS":
-                final_message = final_message + key + '\t\t' + str(status[key]["stor"]) + '\t' + str(status[key]["ship"]) + '\n'
-            else:
-                pass
             final_message = final_message + key + '\t\t' + str(status[key]["stor"]) + '\t' + str(status[key]["ship"]) + '\n'
 
         final_message = final_message + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
@@ -963,7 +959,7 @@ class FieldData():
         if FTP:
             self.setup_FTP(self.data_dir, self.raw_dir, self.status, self.file_ext, self.inst_dir, self.filename)
         if NAS:
-            self.setup_shipping(self.filename, self.file_ext, process, reprocess, self.status)
+            self.setup_shipping(self.file_ext, self.filename, process, reprocess, self.status)
             self.setup_NAS(process, reprocess, self.file_ext, self.inst_dir, self.status, self.flight, self.project, self.email, self.final_message, self.filename, self.nas_sync_dir, self.nas_data_dir)
         self.report(self.final_message, self.status, self.project, self.flight, self.email, self.file_ext)
 
