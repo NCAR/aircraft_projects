@@ -100,10 +100,44 @@ UHSAS lost connection in flight. Unable to ping using "cat/ etc/hosts" in termin
 
 RF06
 8/15/22
+Tech: Ivana
 
 Forward camera did not work at startup. Stopping cameras and starting cameras again did not resolve the issue. Used a script that Catherine prepared to change camera feed going to ground from forward to right camera (/home/local/projects/scripts: python MissionControl.py).
 
 Dewpointers re-balanced after -50.
 
 2DS H channel noisy - masking H channel caused V channel to be noisy as well. Masked in clear air for duration of flight. H laser temp fluctuated +/- 5 degrees C while V laser temps fluctuated +/- 10 degrees C. After removing masks from both channels before flying in clouds again, only H channel picked up cloud particles while V channel picked up noise.
+
+
+FR08
+8/18/22
+Tech: Ivana
+
+-2DS Arm heaters disabled after take-off
+-SP2 not seeing data, asked to check network connection cables. Instrument re-start resolved issue. 
+-Swagelock on TOGA's cylinder came loose. Eric confirmed not an issue and re-attached.
+-0247: Satcom down in-flight for extended period, even though SDU and SBU available lights still green. Pilots cycled SATCOM button which did not resolve issue. Reseting circuit breaker in cockpit did not resolve issue. Pilots called Pavel using SAT phone to check in.
+-During final descent to Osan, onboard cameras lost connection and re-start did not resolve issue. Terminal window read:
+
+"libdc1394 error: juju: Max retries for tcode 0x4, offset f00600
+
+libdc1394 error: Generic failure: in dc1394_video_get_framerate (control.c, line 634): Could not get video framerate
+
+Failed to initialize camera with guid b09d0100537b6e"
+
+-During final descent, Status Page showed all components were red Critical (except for chrony logs) for about 30 seconds. Aeros data still reading normally. Status page components green again after ~30 seconds.
+
+After flight:
+Cameras shut down before landing
+psg firewire
+210164 ?        S<     0:00 [firewire]
+kill -9
+bash: kill: (210164) - Operation not permitted
+
+Networking:
+192.168.0.1 (Thrane & Thrane) not connecting
+192.168.84.1 (RV345) not connecting - nothing at 192.168.0.1 either (default ip)
+Trying reboot - REBOOT RV345 WORKED
+
+
 
