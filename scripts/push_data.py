@@ -73,7 +73,6 @@ class FieldData():
         if threeVCPI:
             self.file_ext["threeVCPI"] = "2ds"
 
-        print(self.file_ext)
         return self.file_ext
 
     def createFilenameDict(self):
