@@ -40,6 +40,23 @@ class FieldData():
         self.zip_dir = '/tmp/'
         self.qc_ftp_site = 'catalog.eol.ucar.edu'
         self.qc_ftp_dir = '/pub/incoming/catalog/' + project.lower()
+        self.flight = self.readFlight()
+        self.email = self.readEmail()
+        process = False
+        reprocess = False
+        self.setup(self.aircraft, self.project, self.raw_dir)
+        self.createInstDir(self.raw_dir, self.data_dir, self.project, self.flight)
+        self.createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)
+        self.createFilenameDict()
+        self.createFileType()
+        self.createRate()
+        self.createConfigExt()
+        self.createStatus()
+        self.createFilePrefix(self.project, self.flight)
+        self.initializeFinalMessage(self.flight, self.project)
+        self.ensureDataDir(self.data_dir)
+        #self.createThreeVCPI()
+        self.confirmRStudio(rstudio_dir)
 
     def createFileExt(self, HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI):
         self.file_ext = OrderedDict([("ADS", "ads"), ("LRT", "nc"), ("KML", "kml")])
@@ -64,7 +81,9 @@ class FieldData():
         return self.filename
 
     def createFileType(self):
-        # NetCDF filename rate indicator
+        '''
+        NetCDF filename rate indicator
+        '''
         self.file_type = {
             "ADS": "",
             "LRT": "",
@@ -78,10 +97,10 @@ class FieldData():
         return self.file_type
 
     def createInstDir(self, raw_dir, data_dir, project, flight):
-
-        # *************************  Dictionaries ************************
-        # These are directories where instrument-specific data files (not
-        # RAF standard data) can be found.
+        '''
+        These are directories where instrument-specific data files (not
+        RAF standard data) can be found.
+        '''
         self.inst_dir = {
                    "ADS": raw_dir,
                    "LRT": data_dir,
@@ -99,8 +118,10 @@ class FieldData():
         return self.inst_dir
 
     def createStatus(self):
-        # This dictionary contains a list of all file types you want to report
-        # status on.
+        '''
+        This dictionary contains a list of all file types you want to report
+        status on.
+        '''
         self.status = {"ADS": {"proc": "N/A", "ship": "No!", "stor": "No!"},
                        "LRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
                        "KML": {"proc": "No!", "ship": "No!", "stor": "No!"},
@@ -114,12 +135,16 @@ class FieldData():
         return self.status
 
     def createFilePrefix(self, project, flight):
-        # Create the project- and flight-specific filename prefix (e.g. WECANrf01)
+        '''
+        Create the project- and flight-specific filename prefix (e.g. WECANrf01)
+        '''
         self.file_prefix = project + flight
         return self.file_prefix
 
     def createRate(self):
-        # nimbus processing rates (for use in config files)
+        '''
+        nimbus processing rates (for use in config files)
+        '''
         self.rate = {
             "LRT": "1",
             "HRT": "25",
@@ -128,44 +153,50 @@ class FieldData():
         return self.rate
 
     def createConfigExt(self):
-        # nimbus config filename extensions
+        '''
+        nimbus config filename extensions
+        '''
         self.config_ext = {"LRT": "", "HRT": "h", "SRT": "s", }
         return self.config_ext
 
     def ensureDataDir(self, data_dir):
         self.ensure_dir(data_dir)
 
-    def createThreeVCPI(self):
-        self.threevcpi2d_file = ''
-        return(self.threevcpi2d_file)
-
     def confirmRStudio(self, rstudio_dir):
-        # Confirm code exists for RStudio plotting
+        '''
+        Confirm code exists for RStudio plotting
+        '''
         if not os.path.exists(rstudio_dir):
             print('RStudio DataReview has not been checked out at : ' + rstudio_dir)
             print('QC plots cannot be generated.')
 
-    def createFinalMessage(self, flight, project):
-        # Prepare for final message information
+    def initializeFinalMessage(self, flight, project):
+        '''
+        Prepare for final message information
+        '''
         self.final_message = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n'
         self.final_message = self.final_message + 'Process and Push log for Project:' + project
         self.final_message = self.final_message + '  Flight:'+flight+'\r\n'
         return self.final_message
 
     def readFlight(self):
-
+        '''
+        Read user input to determine the event
+        '''
         self.flight = input('Input flight designation (e.g. tf01):')
         return self.flight
 
     def readEmail(self):
-
+        '''
+        Read user input to determine the email address
+        '''
         self.email = input('Input email address to send results:')
         return(self.email)
 
     def read_env(self, env_var):
-        """
+        '''
         Read and set environment var
-        """
+        '''
         try:
             var = os.environ[env_var]
             return(var)
@@ -174,24 +205,24 @@ class FieldData():
             sys.exit(1)
 
     def ensure_dir(self, f):
-        """
+        '''
         Check if the directory exists and make if not
-        """
+        '''
         d = os.path.dirname(f)
         if not os.path.exists(d):
             os.makedirs(d)
 
     def print_message(self, message):
-        """
+        '''
         Set up message printing on the screen as well as in the email message
-        """
+        '''
         message = ''
         print(message)
 
     def rsync_file(self, file, out_dir):
-        """
+        '''
         Rsync file to output dir and record success status
-        """
+        '''
         command = 'rsync '+file+" " + out_dir
         if os.system(command) == 0:
             proc_file = 'Yes-NAS'
@@ -201,9 +232,9 @@ class FieldData():
             self.print_message(rsync_message)
 
     def find_lrt_netcdf(self, filetype, flight, data_dir, file_prefix):
-        """
+        '''
         See if a LRT file exists already and query user about what to do.
-        """
+        '''
         process = False
         reprocess = False
         nclist = glob.glob(data_dir + '*' + flight + '.' + filetype)
@@ -242,7 +273,7 @@ class FieldData():
 
     def find_file(self, data_dir, flight, project,
                   filetype, fileext, flag, reprocess, date=""):
-        """
+        '''
         See if a file exists already and query user about what to do.
 
         Look for files in data_dir that match the
@@ -259,7 +290,7 @@ class FieldData():
         Return:
             datafile - Name of file found
             flag - True if file should be reprocessed
-        """
+        '''
         datafile = ''
         if fileext == 'ict':
             pattern = data_dir + project + '*' + fileext
@@ -408,7 +439,7 @@ class FieldData():
                     message = "\nERROR: Couldnt make oapfile dir:"
                     + oapfile_dir
                     message = message + "\nskipping 2d file gen/placement\n"
-                    fielddata.print_message(message)
+                    self.print_message(message)
                     mkdir_fail = True
             if not mkdir_fail:
                 twod_dir, fb_filename = os.path.split(first_base_file)
@@ -439,7 +470,7 @@ class FieldData():
             proc_nc_file = 'Yes'
         else:
             message = "ERROR: ncreorder failed, but NetCDF should be ok\n"
-            fielddata.print_message(message)
+            self.print_message(message)
             proc_nc_file = 'Yes'
         return(proc_nc_file)
 
@@ -452,7 +483,7 @@ class FieldData():
         if os.system(command) != 0:
             message = "\nERROR!: Zipping up " + filename + " with command:\n  "
             message = message + command
-            fielddata.print_message(message)
+            self.print_message(message)
 
     def getProject(self):
         return(self.read_env('PROJECT'))
@@ -932,39 +963,35 @@ class FieldData():
         print("\r\nSuccessful completion. Close window to exit.")
         sys.exit(1)
 
-    def main(self):
-        self.flight = self.readFlight()
-        self.email = self.readEmail()
-        process = False
-        reprocess = False
-        self.setup(self.aircraft, self.project, self.raw_dir)
-        self.createInstDir(self.raw_dir, self.data_dir, self.project, self.flight)
-        self.createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)
-        self.createFilenameDict()
-        self.createFileType()
-        self.createRate()
-        self.createConfigExt()
-        self.createStatus()
-        self.createFilePrefix(self.project, self.flight)
-        self.createFinalMessage(self.flight, self.project)
-        self.ensureDataDir(self.data_dir)
-        self.createThreeVCPI()
-        self.confirmRStudio(rstudio_dir)
-        self.process(self.file_ext, self.data_dir, self.flight, self.filename, self.raw_dir, self.status)
-        self.setup_email(self.data_dir, self.email)
-        if sendzipped:
-            self.setup_zip(self.file_ext, self.data_dir, self.filename, self.inst_dir)
-        if catalog:
-            self.datadump(self.email, self.project, self.flight, self.raircraft, self.date)
-        if FTP:
-            self.setup_FTP(self.data_dir, self.raw_dir, self.status, self.file_ext, self.inst_dir, self.filename)
-        if NAS:
-            self.setup_shipping(self.file_ext, self.filename, process, reprocess, self.status)
-            self.setup_NAS(process, reprocess, self.file_ext, self.inst_dir, self.status, self.flight, self.project, self.email, self.final_message, self.filename, self.nas_sync_dir, self.nas_data_dir)
-        self.report(self.final_message, self.status, self.project, self.flight, self.email, self.file_ext)
+def main():
+    fielddata = FieldData()
+    # process data
+    fielddata.process(fielddata.file_ext, fielddata.data_dir, fielddata.flight, fielddata.filename, fielddata.raw_dir, fielddata.status)
+
+    # set up the email functionality
+    fielddata.setup_email(fielddata.data_dir, fielddata.email)
+
+    # Zip files only if set to True
+    if sendzipped:
+        fieldata.setup_zip(fielddata.file_ext, fielddata.data_dir, fielddata.filename, fielddata.inst_dir)
+
+    # Send data to the Field Catalog if set to True
+    if catalog:
+        fielddata.datadump(fielddata.email, fielddata.project, fielddata.flight, fielddata.raircraft, fielddata.date)
+
+    # Call FTP function if the FTP flag is set to True
+    if FTP:
+        fielddata.setup_FTP(fielddata.data_dir, fielddata.raw_dir, fielddata.status, fielddata.file_ext, fielddata.inst_dir, fielddata.filename)
+
+    # Call NAS functions if the NAS flag is set to True
+    if NAS:
+        fielddata.setup_shipping(fielddata.file_ext, fielddata.filename, process, reprocess, fielddata.status)
+        fielddata.setup_NAS(process, reprocess, fielddata.file_ext, fielddata.inst_dir, fielddata.status, fielddata.flight, fielddata.project, fielddata.email, fielddata.final_message, fielddata.filename, fielddata.nas_sync_dir, fielddata.nas_data_dir)
+
+    # Call the report function which appends the final message for emailing 
+    fielddata.report(fielddata.final_message, fielddata.status, fielddata.project, fielddata.flight, fielddata.email, fielddata.file_ext)
 
 
 if __name__ == '__main__':
 
-    fielddata = FieldData()
-    fielddata.main()
+    main()
