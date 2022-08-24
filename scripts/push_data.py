@@ -5,9 +5,10 @@
 #  user where needed) and does several things:
 #  1: Processes the .ads file to create field data
 #     as defined in fieldProc_setup.py
-#  2: zips up the ads file
-#  3: Creates plots using an Rstudio script
-#  4: copies nc, kml, 2d, ads to NAS dirs for storage and to sync to Boulder
+#  2: zips up the ads file (if defined)
+#  3: Creates plots using an Rstudio script (if defined)
+#  4: copies nc, kml, 2d, ads to NAS dirs for storage and to sync to Boulder OR
+#  5: copies nc, kml, 2d, ads, to FTP directly
 #
 #  August 2022 TMT: Refactor to create functions within class FieldData
 #  Copyright University Corporation for Atmospheric Research (2022)
@@ -19,17 +20,22 @@ import ftplib
 import sys
 import datetime
 import smtplib
+import argparse
 from email.mime.text import MIMEText
 from collections import OrderedDict
-sys.path.insert(0, '/net/jlocal/projects/TI3GER/GV_N677F/' + '/scripts')
-from fieldProc_setup import *
+sys.path.insert(0, '/net/jlocal/projects/' + self.project + '/' + aircraft + '/scripts')
+from fieldProc_setup import FTP, NAS, ship_ADS, ship_all_ADS, zip_ADS, HRT, SRT, ICARTT, IWG1, FTP_dir
 
 
 class FieldData():
 
     def __init__(self):
-
-        self.project = self.getProject()
+        '''
+        Define __init_ function to create objects for paths
+        and various dictionaries for dirs, filenames, etc.
+        '''
+        self.parse_args()
+        self.project = self.args.PROJECT[0]
         print('Project: ' + self.project)
         self.data_dir = self.getDataDir() + '/' + self.project.upper() + '/'
         self.raw_dir = self.getRawDir() + '/' + self.project.upper() + '/'
@@ -55,10 +61,30 @@ class FieldData():
         self.createFilePrefix(self.project, self.flight)
         self.initializeFinalMessage(self.flight, self.project)
         self.ensureDataDir(self.data_dir)
-        #self.createThreeVCPI()
         self.confirmRStudio(rstudio_dir)
 
+    def parse_args(self):
+        # set up argument parsing
+        parser = argparse.ArgumentParser(
+            description='Provide project (e.g. TI3GER):')
+
+        # define input file(s) to process
+        parser.add_argument('PROJECT', type=str, nargs='*',
+                            help='Provide name of project.')
+
+        if len(sys.argv) == 1:
+            parser.print_help(sys.stderr)
+            sys.exit(1)
+
+        self.args = parser.parse_args()
+        return(self.args)
+
+
     def createFileExt(self, HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI):
+        '''
+        Create an ordered dictionary containing the file extensions by
+        file type. Uses the settings from fieldProc_setup.py
+        '''
         self.file_ext = OrderedDict([("ADS", "ads"), ("LRT", "nc"), ("KML", "kml")])
         if HRT:
             self.file_ext["HRT"] = "nc"
@@ -375,7 +401,6 @@ class FieldData():
         """
         # If there is a setup file for this flight in proj_dir/Production
         # use that. If not, create one.
-
         nimConfFile = proj_dir+"Production/setup_"+flight+config_ext
 
         if not os.path.exists(nimConfFile):
@@ -390,9 +415,9 @@ class FieldData():
             cf.write(str(line))
             cf.close()
 
+        # execute nimbus in batch mode using the config file
         command = "/opt/local/bin/nimbus -b " + nimConfFile
         print("about to execute nimbus I hope: " + command)
-
         res = os.system(command)
         print('\nresult of nimbus call = '+str(res))
         print()
@@ -501,9 +526,9 @@ class FieldData():
         Create objects for multiple processing inputs
         """
         if aircraft == "GV_N677F":
-            self.raircraft = 'aircraft.NSF_NCAR_GV.'
+            raircraft = 'aircraft.NSF_NCAR_GV.'
         elif aircraft == "C130_N130AR":
-            self.raircraft = 'aircraft.NSF_NCAR_C-130.'
+            raircraft = 'aircraft.NSF_NCAR_C-130.'
         else:
             print("Unknown aircraft " + aircraft + " Update code\n")
             sys.exit(1)
@@ -511,9 +536,9 @@ class FieldData():
         print("Processing " + project + " from " + aircraft +
               ". If incorrect, edit ~/ads3_environment.")
         print("Expecting to find .ads files in " + raw_dir + ".")
-        return self.raircraft
+        return raircraft
 
-    def process(self, file_ext, data_dir, flight, filename, raw_dir, status):
+    def process(self, file_ext, data_dir, flight, filename, raw_dir, status, project):
         '''
         Beginning of Processing ##############################
         Get the netCDF, kml, icartt, IWG1 and raw ADS files for working with ##
@@ -573,7 +598,7 @@ class FieldData():
 
                 # Generate IWG1 file from LRT, if requested
                 if (key == "IWG1"):
-                    command = "nc2iwg1 "+self.filename["LRT"]+" -o "+self.filename[key]
+                    command = "nc2iwg1 "+self.filename["LRT"]+" -o "+data_dir + project + flight + '.' + file_ext["IWG1"]
                     print("about to execute : "+command)
                     if os.system(command) == 0:
                         self.status[key]["proc"] = 'Yes'
@@ -963,30 +988,27 @@ class FieldData():
         sys.exit(1)
 
 def main():
+    
+    # instantiate FieldData class
     fielddata = FieldData()
-    # process data
-    fielddata.process(fielddata.file_ext, fielddata.data_dir, fielddata.flight, fielddata.filename, fielddata.raw_dir, fielddata.status)
 
+    # process data
+    fielddata.process(fielddata.file_ext, fielddata.data_dir, fielddata.flight, fielddata.filename, fielddata.raw_dir, fielddata.status, fielddata.project)
     # set up the email functionality
     fielddata.setup_email(fielddata.data_dir, fielddata.email)
-
     # Zip files only if set to True
     if sendzipped:
         fieldata.setup_zip(fielddata.file_ext, fielddata.data_dir, fielddata.filename, fielddata.inst_dir)
-
     # Send data to the Field Catalog if set to True
     if catalog:
-        fielddata.datadump(fielddata.email, fielddata.project, fielddata.flight, fielddata.raircraft, fielddata.date)
-
+        fielddata.datadump(fielddata.email, fielddata.project, fielddata.flight, raircraft, fielddata.date)
     # Call FTP function if the FTP flag is set to True
     if FTP:
         fielddata.setup_FTP(fielddata.data_dir, fielddata.raw_dir, fielddata.status, fielddata.file_ext, fielddata.inst_dir, fielddata.filename)
-
     # Call NAS functions if the NAS flag is set to True
     if NAS:
         fielddata.setup_shipping(fielddata.file_ext, fielddata.filename, process, reprocess, fielddata.status)
         fielddata.setup_NAS(process, reprocess, fielddata.file_ext, fielddata.inst_dir, fielddata.status, fielddata.flight, fielddata.project, fielddata.email, fielddata.final_message, fielddata.filename, fielddata.nas_sync_dir, fielddata.nas_data_dir)
-
     # Call the report function which appends the final message for emailing 
     fielddata.report(fielddata.final_message, fielddata.status, fielddata.project, fielddata.flight, fielddata.email, fielddata.file_ext)
 
