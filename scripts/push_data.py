@@ -23,8 +23,9 @@ import smtplib
 import argparse
 from email.mime.text import MIMEText
 from collections import OrderedDict
-sys.path.insert(0, '/net/jlocal/projects/' + self.project + '/' + aircraft + '/scripts')
-from fieldProc_setup import FTP, NAS, ship_ADS, ship_all_ADS, zip_ADS, HRT, SRT, ICARTT, IWG1, FTP_dir
+import logging
+sys.path.insert(0, '/net/jlocal/projects/' + os.environ['PROJECT'] + '/GV_N677F/scripts')
+from fieldProc_setup import user, password, DATA_DIR, RAW_DATA_DIR, dat_parent_dir, rdat_parent_dir, NAS, NAS_permanent_mount, nas_url, nas_mnt_pt, FTP, ftp_site, password, ftp_parent_dir, ftp_data_dir, ICARTT, IWG1, HRT, SRT, sendzipped, zip_ADS, ship_ADS, ship_all_ADS, PMS2D, threeVCPI, Rstudio, catalog, rstudio_dir, translate2ds, datadump
 
 
 class FieldData():
@@ -34,22 +35,32 @@ class FieldData():
         Define __init_ function to create objects for paths
         and various dictionaries for dirs, filenames, etc.
         '''
+        self.logger = logging.getLogger(__name__)  
+        self.logger.setLevel(logging.DEBUG)
+        self.handler = logging.FileHandler('logfile_pushdata.log')
+        self.formatter = logging.Formatter('%(asctime)s : %(name)s  : %(funcName)s : %(levelname)s : %(message)s')
+        self.handler.setFormatter(self.formatter)
+        self.logger.addHandler(self.handler)
+
         self.parse_args()
+
         self.project = self.args.PROJECT[0]
         print('Project: ' + self.project)
         self.data_dir = self.getDataDir() + '/' + self.project.upper() + '/'
         self.raw_dir = self.getRawDir() + '/' + self.project.upper() + '/'
-        self.aircraft = os.listdir(self.getProjDir() + '/' + project)[0]
+        self.aircraft = os.listdir(self.getProjDir() + '/' + self.project)[0]
         print('Aircraft: ' + self.aircraft)
         self.proj_dir = self.getProjDir() + '/' + self.project + '/' + self.aircraft + '/'
         self.nc2ascBatch = self.proj_dir + 'scripts/nc2asc.bat'
         self.zip_dir = '/tmp/'
         self.qc_ftp_site = 'catalog.eol.ucar.edu'
-        self.qc_ftp_dir = '/pub/incoming/catalog/' + project.lower()
+        self.qc_ftp_dir = '/pub/incoming/catalog/' + self.project.lower()
         self.flight = self.readFlight()
         self.email = self.readEmail()
+
         process = False
         reprocess = False
+
         self.setup(self.aircraft, self.project, self.raw_dir)
         self.createInstDir(self.raw_dir, self.data_dir, self.project, self.flight)
         self.createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)
@@ -139,7 +150,6 @@ class FieldData():
                    "oap": raw_dir + '3v_cpi/oapfiles/',
                    "cpi": raw_dir + '3v_cpi/CPI/' + project.upper() + '_' + flight.upper() + '/',
                    }
-        print(self.inst_dir)
         return self.inst_dir
 
     def createStatus(self):
@@ -192,9 +202,12 @@ class FieldData():
         Confirm code exists for RStudio plotting
         '''
         if not os.path.exists(rstudio_dir):
-            print('RStudio DataReview has not been checked out at : ' + rstudio_dir)
-            print('QC plots cannot be generated.')
-
+            message = 'RStudio DataReview has not been checked out at : ' + rstudio_dir
+            print(message)
+            self.logger.info(message)
+            message = 'QC plots cannot be generated.'
+            print(message)
+            self.logger.info(message)
     def initializeFinalMessage(self, flight, project):
         '''
         Prepare for final message information
@@ -226,7 +239,9 @@ class FieldData():
             var = os.environ[env_var]
             return(var)
         except KeyError:
-            print("Please set the environment variable " + env_var)
+            message = 'Please set the environment variable ' + env_var
+            self.logger.error(message)
+            print(message)
             sys.exit(1)
 
     def ensure_dir(self, f):
@@ -242,6 +257,7 @@ class FieldData():
         Set up message printing on the screen as well as in the email message
         '''
         message = ''
+        self.logger.info(message)
         print(message)
 
     def rsync_file(self, file, out_dir):
@@ -265,7 +281,9 @@ class FieldData():
         nclist = glob.glob(data_dir + '*' + flight + '.' + filetype)
         if nclist.__len__() == 1:
             self.ncfile = nclist[0]
-            print("Found a netCDF file: "+self.ncfile)
+            message = "Found a netCDF file: "+self.ncfile
+            self.logger.info(message)
+            print(message)
             # Since found a netCDF file
             # query user if they want to reprocess the data,
             # or if they just want to ship the data to the NAS/ftp site.
@@ -280,18 +298,25 @@ class FieldData():
                 process = False
                 reprocess = False
         elif nclist.__len__() == 0:
-            print("No files found matching form: " +
-                  data_dir + '*' + flight + '.' + filetype)
-            print("We must process!")
+            message = "No files found matching form: " +\
+                  data_dir + '*' + flight + '.' + filetype
+            self.logger.info(message)
+            print(message)
+            message = "We must process!"
+            self.logger.info(message)
+            print(message)
             process = True
             self.ncfile = data_dir + file_prefix + ".nc"
         else:
-            print("More than one " + filetype + " file found.")
+            message = "More than one " + filetype + " file found."
+            self.logger.info(message)
+            print(message)
             self.ncfile = self.step_through_files(nclist, fileext, reprocess)
 
         if self.ncfile == '':
-            print("No NetCDF file identified!")
-            print("Aborting")
+            message = "No NetCDF file identified! Aborting"
+            self.logger.info(message)
+            print(message)
             sys.exit(0)
 
         return(process, reprocess, self.ncfile)
@@ -334,34 +359,45 @@ class FieldData():
             datafile = datalist[0]  # Return name of file that was found
         elif datalist.__len__() == 0:
             # Did not find any files with the extension we are looking for
-            print("No files found matching form: " + pattern)
+            message = "No files found matching form: " + pattern
+            self.logger.info(message)
+            print(message)
             if fileext == 'ads':
                 # If we can't find an ads file, then there is nothing to do.
-                print("Aborting...")
+                message = "Aborting..."
+                self.logger.info(message)
+                print(message)
                 sys.exit(0)
             else:
                 # Any other files that can't be found can be regenerated
                 if flag:
-                    print("We are scheduled to process all is good")
+                    message = "We are scheduled to process all is good."
+                    self.logger.info(message)
+                    print(message)
                     datafile = pattern
                 else:
                     # but if the file is not marked to be regenerated in the
                     # fieldProc_setup.py file, then we have a probem.
-                    print("We have an nc file but not "+fileext+" file.... " +
-                          "aborting...")
+                    message = "We have an nc file but not "+fileext+" file.... " +\
+                          "aborting..."
+                    self.logger.info(message)
+                    print(message)
                     sys.exit(0)
         else:
             # Found multiple files that match the type we are looking for.
             # Step through the files and let the user decide
             # which is the one we should work with
-            print("More than one " + fileext + " file found.")
+            message = "More than one " + fileext + " file found."
+            self.logger.info(message)
+            print(message)
             datafile = self.step_through_files(datalist, fileext,
                                                reprocess)
 
         if datafile == '':
             # If after all this we haven't identified a file, abort processing.
-            print("No " + datafile + " file identified!")
-            print("Aborting...")
+            message = "No " + datafile + " file identified! Aborting..."
+            self.logger.info(message)
+            print(message)
             sys.exit(0)
 
         return(flag, datafile)
@@ -377,7 +413,9 @@ class FieldData():
         """
         datafile = ''
         if reprocess is True:
-            print("Stepping through files, please select the right one.")
+            message = "Stepping through files, please select the right one."
+            self.logger.info(message)
+            print(message)
             i = 0
             while datafile == '':  # Loop until user chooses
                 ans = input(datalist[i]+'? (Y/N)')
@@ -391,8 +429,10 @@ class FieldData():
             # Not processing so just return the first file,
             # which is all that we need to successfully set off shipping
             datafile = datalist[0]
-            print('Ship is set to True so no need to choose ' + fileext +
-                  'to process.')
+            message = 'Ship is set to True so no need to choose ' + fileext +\
+                  'to process.'
+            self.logger.info(message)
+            print(message)
         return(datafile)
 
     def process_netCDF(self, rawfile, ncfile, pr, config_ext, proj_dir, flight, project):
@@ -417,10 +457,13 @@ class FieldData():
 
         # execute nimbus in batch mode using the config file
         command = "/opt/local/bin/nimbus -b " + nimConfFile
-        print("about to execute nimbus I hope: " + command)
+        message = "about to execute nimbus I hope: " + command
+        self.logger.info(message)
+        print(message)
         res = os.system(command)
-        print('\nresult of nimbus call = '+str(res))
-        print()
+        message = '\nresult of nimbus call = '+str(res)
+        self.logger.info(message)
+        print(message)
         return(True)
         return(rawfile)
 
@@ -429,7 +472,9 @@ class FieldData():
         """
         Process 3vCPI
         """
-        print("\n\n *****************  3VCPI **************************\n")
+        message = "\n\n *****************  3VCPI **************************\n"
+        self.logger.info(message)
+        print(message)
         mkdir_fail = False
         first_base_file = ''
         catted_file = 'base_'+flight+'all.2DSCPI'
@@ -445,13 +490,17 @@ class FieldData():
                 if filenum == 1:
                     first_base_file = file
                 command = 'cat '+file+' >> '+catted_file
-                print("cat 3vcPIfiles:"+command)
+                message = "cat 3vcPIfiles:"+command
+                self.logger.info(message)
+                print(message)
                 os.system(command)
 
             command = translate2ds + '-project ' + project
             + ' -flight ' + flight + ' -platform ' + aircraft
             + ' -sn SPEC001 -f ' + catted_file + ' -o .'
-            print(' 3v-cpi command:' + command)
+            message = ' 3v-cpi command:' + command
+            self.logger.info(message)
+            print(message)
             os.system(command)
 
             # move 2DS file to the RAF naming convention and location
@@ -459,7 +508,8 @@ class FieldData():
                 try:
                     os.mkdir(oapfile_dir)
                 except Exception as e:
-                    print(e)
+                    self.logger.error(e)
+                    print(e)              
                     message = "\nERROR: Couldnt make oapfile dir:"
                     + oapfile_dir
                     message = message + "\nskipping 2d file gen/placement\n"
@@ -470,13 +520,17 @@ class FieldData():
                 # Pull out of base{datetime}.2d
                 datetime = fb_filename.split('.')[0].split('e')[1]
                 command = 'mv ' + catted_2d_file + ' ' + oapfile_dir + '20' + datetime + '_' + flight + '.2d'
-                print(' mv command: '+command)
+                message = ' mv command: ' + command
+                self.logger.info(message)
+                print(message)
                 os.system(command)
                 threevcpi2d_file = oapfile_dir + '20' + datetime + '_' + flight + '.2d'
 
                 # Merge 3v-cpi data into netCDF file
                 command = 'process2d ' + threevcpi2d_file + ' -o ' + ncfile
-                print("3v-cpi merge cmd: " + command)
+                message = "3v-cpi merge cmd: " + command
+                self.logger.info(message)
+                print(message)
                 if os.system(command) == 0:
                     proc_3vcpi_files = 'Yes'
 
@@ -485,11 +539,15 @@ class FieldData():
         Reorder netcdf file
         """
         command = "ncReorder " + ncfile + " tmp.nc"
-        print("about to execute : " + command)
+        message = "about to execute : " + command
+        self.logger.info(message)
+        print(message)
         os.system(command)
 
         command = "/bin/mv tmp.nc " + ncfile
-        print("about to execute : " + command)
+        message = "about to execute : " + command
+        self.logger.info(message)
+        print(message)
         if os.system(command) == 0:
             proc_nc_file = 'Yes'
         else:
@@ -530,12 +588,18 @@ class FieldData():
         elif aircraft == "C130_N130AR":
             raircraft = 'aircraft.NSF_NCAR_C-130.'
         else:
-            print("Unknown aircraft " + aircraft + " Update code\n")
+            message = "Unknown aircraft " + aircraft + " Update code\n"
+            self.logger.info(message)
+            print(message)
             sys.exit(1)
 
-        print("Processing " + project + " from " + aircraft +
-              ". If incorrect, edit ~/ads3_environment.")
-        print("Expecting to find .ads files in " + raw_dir + ".")
+        message = "Processing " + project + " from " + aircraft +\
+              ". If incorrect, edit ~/ads3_environment."
+        self.logger.info(message)
+        print(message)
+        message = "Expecting to find .ads files in " + raw_dir + "."
+        self.logger.info(message)
+        print(message)
         return raircraft
 
     def process(self, file_ext, data_dir, flight, filename, raw_dir, status, project):
@@ -568,7 +632,6 @@ class FieldData():
                 (reprocess, filename[key]) = \
                     self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
                                    self.file_ext[key], process, reprocess, self.date[0:8])
-                print(filename[key])
         if process:
             for key in file_ext:
 
@@ -599,14 +662,18 @@ class FieldData():
                 # Generate IWG1 file from LRT, if requested
                 if (key == "IWG1"):
                     command = "nc2iwg1 "+self.filename["LRT"]+" -o "+data_dir + project + flight + '.' + file_ext["IWG1"]
-                    print("about to execute : "+command)
+                    message = "about to execute : "+command
+                    self.logger.info(message)
+                    print(message)
                     if os.system(command) == 0:
                         self.status[key]["proc"] = 'Yes'
 
                 # Generate ICARTT file from LRT, if requested
                 if (key == "ICARTT"):
                     command = "nc2asc -i " + filename["LRT"] + " -o " + self.data_dir + "tempfile.ict -b " + self.nc2ascBatch
-                    print("about to execute : " + command)
+                    message = "about to execute : " + command
+                    self.logger.info(message)
+                    print(message)
                     if os.system(command) == 0:
                         status[key]["proc"] = 'Yes'
 
@@ -626,6 +693,7 @@ class FieldData():
                         # Extract2d PMS2D/output.2d input.ads
                         command = 'extract2d '+filename["PMS2D"]+' '+filename["ADS"]
                         message = '\nExtracting 2D from ads:'+command+'\n'
+                        self.logger.info(message)
                         print(message)
                         os.system(command)
 
@@ -633,7 +701,8 @@ class FieldData():
                         # Process 2D data into netCDF file.  General form is:
                         # Process2d $RAW_DATA_DIR/$proj/PMS2D/input.2d -o $DATA_DIR/$proj/output.nc
                         command = 'process2d '+filename["PMS2D"]+' -o '+filename["LRT"]
-                        print('2D merge command: '+command)
+                        mesage = '2D merge command: '+command
+
                         if os.system(command) == 0:
                             status["PMS2D"]["proc"] = 'Yes'
                             # status["PMS2D"]["ship"] = 'Yes'
@@ -648,7 +717,6 @@ class FieldData():
                 (reprocess, filename[key]) = \
                     self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
                                    self.file_ext[key], process, reprocess, self.date[0:8])
-                print(filename[key])
 
         # Run Al Cooper's R code for QA/QC production
         # Currently requires being run from the ~/RStudio/QAtools directory.
@@ -656,11 +724,13 @@ class FieldData():
         if Rstudio:
             os.chdir(rstudio_dir+"aircraft_QAtools")
             command = "Rscript DataReview.R "+project+" "+flight
-            print("about to execute : "+command)
+            message = "about to execute : "+command
             os.system(command)
 
             command = "cp -p "+project+flight+"Plots.pdf /home/ads/Desktop"
-            print("copying QAQC pdf to desktop")
+            message = "copying QAQC pdf to desktop"
+            self.logger.info(message)
+            print(message)
             os.system(command)
 
     def setup_shipping(self, file_ext, filename, process, reprocess, status):
@@ -670,7 +740,10 @@ class FieldData():
         if NAS_permanent_mount is False:
             # Mount NAS
             command = "sudo /bin/mount -t nfs " + nas_url + " " + nas_mnt_pt
-            print('\r\nMounting nas: '+command)
+            message = '\r\nMounting nas: ' + command
+            self.logger.info(message)
+            print(message)
+
             os.system(command)
 
         # Put copies of files to local store
@@ -679,27 +752,39 @@ class FieldData():
         # and in dirs for local use...
         self.nas_data_dir = nas_mnt_pt+'/EOL_data/RAF_data/'
 
-        print("")
-        print("*************** Copy files to NAS scratch area ***************")
+        message = ""
+        self.logger.info(message)
+        print(message)
+
+        message = "*************** Copy files to NAS scratch area ***************"
+        self.logger.info(message)
+        print(message)
+
         for key in file_ext:
             self.ensure_dir(self.nas_data_dir)
             if (key == "ADS"):
-                #if (not reprocess) and process:
-                print('Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/ADS')
+                message = 'Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/ADS'
+                self.logger.info(message)
+                print(message)
                 status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/ADS')
             elif (key == "PMS2D"):
-                print('Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/PMS2D/')
+                message = 'Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/PMS2D/'
+                self.logger.info(message)
+                print(message)
                 status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/PMS2D/')
             else:
-                print('Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/' + key)
+                message = 'Copying ' + filename[key] + ' to ' + self.nas_data_dir + '/' + key
+                self.logger.info(message)
+                print(message)
                 status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/' + key)
 
         if catalog:
             self.ensure_dir(self.nas_data_dir + "/qc")
-            print('Copying QC plots to ' + self.nas_data_dir + "/qc")
+            message = 'Copying QC plots to ' + self.nas_data_dir + "/qc"
+            self.logger.info(message)
+            print(message)
             status[key]["stor"] = self.rsync_file(rstudio_dir + "/QAtools/" + raircraft + date + ".RAF_QC_plots.pdf", self.nas_data_dir + "/qc")
 
-            print("")
         return self.nas_data_dir, self.nas_sync_dir
 
     def setup_email(self, data_dir, email):
@@ -709,7 +794,6 @@ class FieldData():
         emailfilename = 'email.addr.txt'
         emailfile = data_dir+emailfilename
         command = 'rm '+emailfile
-        print(command)
         os.system(command)
         fo = open(emailfile, 'w+')
         fo.write(email+'\n')
@@ -722,13 +806,21 @@ class FieldData():
         """
         for key in file_ext:
             if (key == "ADS"):
-                print("Raw .ads file found but not zipping, if zip_ads is set, will bzip .ads file next.")
+                message = "Raw .ads file found but not zipping, if zip_ads is set, will bzip .ads file next."
+                self.logger.info(message)
+                print(message)
             elif (key == "PMS2D"):
-                print("Raw .2d file found but not zipping.")
+                message = "Raw .2d file found but not zipping."
+                self.logger.info(message)
+                print(message)
             else:
                 data_dir, file_name = os.path.split(filename[key])
-                print(key + " filename = " + file_name)
-                print("data_dir = " + data_dir)
+                message = key + " filename = " + file_name
+                self.logger.info(message)
+                print(message)
+                message = "data_dir = " + data_dir
+                self.logger.info(message)
+                print(message)
                 self.zip_file(file_name, inst_dir[key])
 
     def datadump(self, email, project, flight, raircraft, date):
@@ -738,28 +830,40 @@ class FieldData():
         """
         # Put QC files into catalog and to the NAS if it exists
         try:
-            print("")
-            print("*************************** Catalog transfer *****************")
-            print('opening FTP connection to: ' + qc_ftp_site)
-            print('- putting QC data in directory: ' + qc_ftp_dir)
+            message = "*************************** Catalog transfer *****************"
+            self.logger.info(message)
+            print(message)
+            message = 'opening FTP connection to: ' + qc_ftp_site
+            self.logger.info(message)
+            print(message)
+            message = '- putting QC data in directory: ' + qc_ftp_dir
+            self.logger.info(message)
+            print(message)
 
             ftp = ftplib.FTP(qc_ftp_site)
             ftp.login("anonymous", email)
             ftp.cwd(qc_ftp_dir)
 
-            print("Renaming file "+project+flight+"Plots.pdf")
+            message = "Renaming file "+project+flight+"Plots.pdf"
+            self.logger.info(message)
+            print(message)
             command = "/bin/mv "+rstudio_dir+"/QAtools/"+project+flight+"Plots.pdf "+rstudio_dir+"/QAtools/"+raircraft+date+".RAF_QC_plots.pdf"
-            print("about to execute : " + command)
+            message = "about to execute : " + command
+            self.logger.info(message)
+            print(message)
             if os.system(command) == 0:
                 status["QCplots"]["ship"] = 'Yes-Cat'
-                print("Sending file " + raircraft + date + ".RAF_QC_plots.pdf to catalog")
+                message = "Sending file " + raircraft + date + ".RAF_QC_plots.pdf to catalog"
+                self.logger.info(message)
+                print(message)
                 os.chdir(rstudio_dir + "/QAtools")
                 file = open(raircraft + date + ".RAF_QC_plots.pdf", 'r')
                 print(ftp.storbinary('STOR ' + raircraft + date + ".RAF_QC_plots.pdf", file))
                 file.close()
             else:
                 message = "ERROR: Rename of plots failed\n"
-
+                self.logger.error(message)
+                print(message)
         except ftplib.all_errors as e:
             print("")
             print('Error writing QC data to server')
@@ -988,7 +1092,7 @@ class FieldData():
         sys.exit(1)
 
 def main():
-    
+
     # instantiate FieldData class
     fielddata = FieldData()
 
