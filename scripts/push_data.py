@@ -37,14 +37,13 @@ class FieldData():
         '''
         self.logger = logging.getLogger(__name__)  
         self.logger.setLevel(logging.DEBUG)
-        self.handler = logging.FileHandler('logfile_pushdata.log')
+        self.handler = logging.FileHandler('/tmp/push_data.log')
         self.formatter = logging.Formatter('%(asctime)s : %(name)s  : %(funcName)s : %(levelname)s : %(message)s')
         self.handler.setFormatter(self.formatter)
         self.logger.addHandler(self.handler)
-
-        self.parse_args()
-
-        self.project = self.args.PROJECT[0]
+        #self.parse_args()
+        #self.project = self.args.PROJECT[0]
+        self.project = self.getProject()
         print('Project: ' + self.project)
         self.data_dir = self.getDataDir() + '/' + self.project.upper() + '/'
         self.raw_dir = self.getRawDir() + '/' + self.project.upper() + '/'
@@ -865,13 +864,18 @@ class FieldData():
                 self.logger.error(message)
                 print(message)
         except ftplib.all_errors as e:
-            print("")
-            print('Error writing QC data to server')
+            message = 'Error writing QC data to server'
+            self.logger.error(message)
+            print(message)
+            self.logger.error(e)
             print(e)
             try:
                 ftp.quit()
             except ftplib.all_errors as e:
-                print('Could not close ftp connection:')
+                message = 'Could not close ftp connection:'
+                self.logger.error(message)
+                print(message)
+                self.logger.error(e)
                 print(e)
 
         print("*************************** End Catalog transfer *************\n")
@@ -881,14 +885,18 @@ class FieldData():
         zipped files if they exist.
         '''
         try:
-            print('Opening FTP connection to: ' + ftp_site)
+            message = 'Opening FTP connection to: ' + ftp_site
+            self.logger.info(message)
+            print(message)
             ftp = ftplib.FTP(ftp_site)
             ftp.login(user, password)
             print('')
 
         except ftplib.all_errors as e:
-            print('')
-            print('Error connecting to FTP site ' + ftp_site)
+            message = 'Error connecting to FTP site ' + ftp_site
+            self.logger.error(message)
+            print(message)
+            self.logger.error(e)
             print(e)
             ftp.quit()
 
@@ -898,7 +906,9 @@ class FieldData():
         # If set in config file script will FTP all ads in rdat
         # Keep this set to False unless you have time / bandwidth
         if ship_all_ADS is True:
-            print('Starting ftp process for all available .ads files')
+            message = 'Starting ftp process for all available .ads files'
+            self.logger.info(message)
+            print(message)
             for rawfilename in os.listdir(inst_dir['ADS']):
                 if rawfilename.endswith('.ads'):
                     try:
@@ -906,9 +916,15 @@ class FieldData():
                         ftp.cwd('/' + ftp_data_dir + '/ADS')
                         ftp.storbinary('STOR ' + rawfilename, open(rawfilename, 'rb'))
                         status["ADS"]["stor"] = 'Yes-FTP'
-                        print(rawfilename + ' ftp successful!')
+                        message = rawfilename + ' ftp successful!'
+                        self.logger.info(message)
+                        print(message)
                     except Exception as e:
-                        print(rawfilename + ' not sent')
+                        message = rawfilename + ' not sent'
+                        self.logger.info(message)
+                        print(message)
+                        self.logger.error(e)
+                        print(e)
                 else:
                     pass
         else:
@@ -925,6 +941,7 @@ class FieldData():
                     except ftplib.all_errors as e:
                         print('Could not change to local dir ' + inst_dir[key])
                         print(e)
+                        self.logger.error(e)
                         continue
             else:
                 try:
@@ -932,6 +949,7 @@ class FieldData():
                 except ftplib.all_errors as e:
                     print('Could not change to local dir ' + inst_dir[key])
                     print(e)
+                    self.logger.error(e)
                     continue
 
             if filename[key] != '':
@@ -950,6 +968,7 @@ class FieldData():
                         except Exception as e:
                             print('Make dir ' + ftp_data_dir + '/' + key + ' failed')
                             print(e)
+                            self.logger.error(e)
                             continue
                         # Try to change to dir again
                         try:
@@ -957,6 +976,7 @@ class FieldData():
                         except Exception as e:
                             print('Change dir to ' + ftp_data_dir + '/' + key + ' failed')
                             print(e)
+                            self.logger.error(e)
                             continue
 
                 if file_name in ftp.nlst():
@@ -983,6 +1003,7 @@ class FieldData():
                         except ftplib.all_errors as e:
                             print('Error writing ' + file_name + ' to ' + ftp_site + ':/' + ftp_data_dir + '/' + key)
                             print(e)
+                            self.logger.error(e)
                             continue
                 else:
                     try:
@@ -998,6 +1019,7 @@ class FieldData():
                     except ftplib.all_errors as e:
                         print('Error writing ' + file_name + ' to ' + ftp_site + ':/' + ftp_data_dir + '/' + key)
                         print(e)
+                        self.logger.error(e)
                         continue
             else:
                 print('Filename is empty - nothing to write')
