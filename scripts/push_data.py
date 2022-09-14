@@ -25,7 +25,7 @@ from email.mime.text import MIMEText
 from collections import OrderedDict
 import logging
 sys.path.insert(0, '/home/local/projects/' + os.environ['PROJECT'] + '/GV_N677F/scripts')
-from fieldProc_setup import user, password, DATA_DIR, RAW_DATA_DIR, dat_parent_dir, rdat_parent_dir, NAS, NAS_permanent_mount, nas_url, nas_mnt_pt, FTP, ftp_site, password, ftp_parent_dir, ftp_data_dir, ICARTT, IWG1, HRT, SRT, sendzipped, zip_ADS, ship_ADS, ship_all_ADS, PMS2D, threeVCPI, Rstudio, catalog, rstudio_dir, translate2ds, datadump
+from fieldProc_setup import user, password, DATA_DIR, RAW_DATA_DIR, dat_parent_dir, rdat_parent_dir, NAS, NAS_permanent_mount, nas_url, nas_mnt_pt, FTP, ftp_site, password, ftp_parent_dir, ftp_data_dir, ICARTT, IWG1, HRT, SRT, sendzipped, zip_ADS, ship_ADS, ship_all_ADS, PMS2D, threeVCPI, Rstudio, catalog, rstudio_dir, translate2ds, datadump, GCP
 
 print(ftp_data_dir)
 
@@ -1030,6 +1030,18 @@ class FieldData():
 
         ftp.quit()
 
+    def setup_GCP(self, flight, project):
+        ''' 
+        Simple function to call gsutil command line utility to send data to GCP bucket.
+        '''
+        print("About to send data to GCP Bucket...")
+        try:
+            command = ('time gsutil cp /home/data/' + project + '/' + project + flight + '* gs://maire_test')
+            os.system(command)
+            print('GCP copy process complete.')
+        except Exception as e:
+            print(e)
+
     def setup_NAS(self, process, reprocess, file_ext, inst_dir, status, flight, project, email, final_message, filename, nas_sync_dir, nas_data_dir):
         # Put file onto NAS for BTSyncing back home.
         print("")
@@ -1135,6 +1147,8 @@ def main():
     # Call FTP function if the FTP flag is set to True
     if FTP:
         fielddata.setup_FTP(fielddata.data_dir, fielddata.raw_dir, fielddata.status, fielddata.file_ext, fielddata.inst_dir, fielddata.filename)
+    if GCP:
+        fielddata.setup_GCP(fielddata.flight, fielddata.project)
     # Call NAS functions if the NAS flag is set to True
     if NAS:
         fielddata.setup_shipping(fielddata.file_ext, fielddata.filename, process, reprocess, fielddata.status)
