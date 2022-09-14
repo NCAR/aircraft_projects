@@ -36,9 +36,9 @@ def sendMail(flight_date):
 
     try:
         msg = MIMEText('gsutil cp process for MAIR-E flight date: ' + flight_date + ' complete. \n\nCheck GCP bucket :' + bucket_url + '\n\nPlease feel free to contact Taylor Thomas (NCAR) at taylort@ucar.edu or (720) 680-4395 with questions.')
-        msg['Subject'] = 'TESTING' + flight_date + ' MAIR-E GCP Data Transfer Process'
+        msg['Subject'] = flight_date + ' MAIR-E GCP Data Transfer Process'
         msg['From'] = 'ads@groundstation'
-        msg['To'] = 'taylort@ucar.edu, mpaxton@ucar.edu'
+        msg['To'] = 'taylort@ucar.edu, mpaxton@ucar.edu, ptsai@ucar.edu, cwolff@ucar.edu'
         s = smtplib.SMTP('localhost')
         s.sendmail('ads@groundstation','taylort@ucar.edu', msg.as_string())
         s.quit()

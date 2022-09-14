@@ -93,3 +93,7 @@ translate2ds = '/opt/local/bin/translate2ds '
 #############################################################################
 datadump = False
 
+# For MAIR-E, PIs want to receive flight data alongside their raw instrument
+# data in a Google Cloud Platform (GCP) bucket. RAF Ground Station is 
+# configured with credentials for MethaneSAT GCP bucket. TMT 9/2022.
+GCP = True
