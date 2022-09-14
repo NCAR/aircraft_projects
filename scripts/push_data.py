@@ -24,9 +24,10 @@ import argparse
 from email.mime.text import MIMEText
 from collections import OrderedDict
 import logging
-sys.path.insert(0, '/net/jlocal/projects/' + os.environ['PROJECT'] + '/GV_N677F/scripts')
+sys.path.insert(0, '/home/local/projects/' + os.environ['PROJECT'] + '/GV_N677F/scripts')
 from fieldProc_setup import user, password, DATA_DIR, RAW_DATA_DIR, dat_parent_dir, rdat_parent_dir, NAS, NAS_permanent_mount, nas_url, nas_mnt_pt, FTP, ftp_site, password, ftp_parent_dir, ftp_data_dir, ICARTT, IWG1, HRT, SRT, sendzipped, zip_ADS, ship_ADS, ship_all_ADS, PMS2D, threeVCPI, Rstudio, catalog, rstudio_dir, translate2ds, datadump
 
+print(ftp_data_dir)
 
 class FieldData():
 
@@ -927,57 +928,60 @@ class FieldData():
                         print(e)
                 else:
                     pass
-        else:
-            pass
 
-        for key in file_ext:
-            print('')
-            if ship_ADS is False:
-                if key == 'ADS':
-                    pass
+        else:
+            for key in file_ext:
+                print(key)
+                print('')
+                if ship_ADS is False:
+                    if key == 'ADS':
+                        pass
+                    else:
+                        try:
+                            os.chdir(inst_dir[key])
+                            print(inst_dir[key])
+                        except ftplib.all_errors as e:
+                            print('Could not change to local dir ' + inst_dir[key])
+                            print(e)
+                            self.logger.error(e)
+                            continue
                 else:
                     try:
                         os.chdir(inst_dir[key])
+                        print(inst_dir[key])
                     except ftplib.all_errors as e:
                         print('Could not change to local dir ' + inst_dir[key])
                         print(e)
                         self.logger.error(e)
                         continue
-            else:
-                try:
-                    os.chdir(inst_dir[key])
-                except ftplib.all_errors as e:
-                    print('Could not change to local dir ' + inst_dir[key])
-                    print(e)
-                    self.logger.error(e)
-                    continue
 
-            if filename[key] != '':
-                data_dir, file_name = os.path.split(filename[key])
-                if ship_ADS is False:
-                    if filename[key] == '.ads':
-                        pass
-                else:
-                    try:
-                        ftp.cwd('/' + ftp_data_dir + '/' + key)
-                    except ftplib.all_errors as e:
-                        # Attempt to create needed dir
-                        print('Attempt to create dir /' + ftp_data_dir + '/' + key)
+                if filename[key] != '':
+                    data_dir, file_name = os.path.split(filename[key])
+                    if ship_ADS is False:
+                        if filename[key] == '.ads':
+                            pass
+                    else:
                         try:
-                            ftp.mkd('/' + ftp_data_dir + '/' + key)
-                        except Exception as e:
-                            print('Make dir ' + ftp_data_dir + '/' + key + ' failed')
+                            ftp.cwd(ftp_data_dir + key)
+                        except ftplib.all_errors as e:
                             print(e)
-                            self.logger.error(e)
-                            continue
-                        # Try to change to dir again
-                        try:
-                            ftp.cwd('/' + ftp_data_dir + '/' + key)
-                        except Exception as e:
-                            print('Change dir to ' + ftp_data_dir + '/' + key + ' failed')
-                            print(e)
-                            self.logger.error(e)
-                            continue
+                            # Attempt to create needed dir
+                            print('Attempt to create dir /' + ftp_data_dir + '/' + key)
+                            try:
+                                ftp.mkd(ftp_data_dir + key)
+                            except Exception as e:
+                                print('Make dir ' + ftp_data_dir + key + ' failed')
+                                print(e)
+                                self.logger.error(e)
+                                continue
+                            # Try to change to dir again
+                            try:
+                                ftp.cwd(ftp_data_dir + key)
+                            except Exception as e:
+                                print('Change dir to ' + ftp_data_dir + '/' + key + ' failed')
+                                print(e)
+                                self.logger.error(e)
+                                continue
 
                 if file_name in ftp.nlst():
                     print('File ' + file_name + ' already exists on ftp server.')
