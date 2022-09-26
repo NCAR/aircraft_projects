@@ -14,8 +14,8 @@ import smtplib
 from email.mime.text import MIMEText
 
 # Variable set up
-#bucket_url = "gs://msat-prod-methaneair-upload"
-bucket_url = "gs://maire_test"
+bucket_url = "gs://msat-prod-methaneair-upload"
+#bucket_url = "gs://maire_test"
 # Function to copy data
 def gcpCopy():
     global flight_date
