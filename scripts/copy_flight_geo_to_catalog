@@ -16,7 +16,7 @@
 #      but not BAHZ or QUUX
 #
 
-debugflag=0  # set >0 to see debug messages on stderr
+debugflag=1  # set >0 to see debug messages on stderr
 debug()
 {
 if [ $debugflag -gt 0 ] ; then
@@ -48,10 +48,9 @@ debug datadir $datadir
 # translate subdirectory names to catalog platform strings
 # an entry MUST appear here for files to be copied
 # [SUBDIR]=CATALOG_PLATFORM
-#
+# eg: [WB57]=NASA_WB-57
 declare -A platform_translations=(
   [LEAR]=SPEC_LEAR
-  [WB57]=WB57
   )
 
 mtime_file() # filepath platform
