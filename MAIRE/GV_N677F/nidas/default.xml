@@ -1697,23 +1697,44 @@
           <variable longname="Interior Cabin Static Pressure" name="PCAB" units="hPa"/>
         </sample>
       </serialSensor>
+
+      <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyCTI1" id="300">
+        <calfile file="A2DS042.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
+        <parameter name="boardID" type="int" value="42"/>
+        <parameter name="FILT" type="int" value="6"/>
+        <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
+          <variable longname="Time; Seconds Since Midnight" name="UTSEC_GPDACQ_303" units="seconds"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_GPDACQ_303" units="cnts"/>
+          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_GPDACQ_303" units="counter"/>
+        </sample>
+        <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
+	  <variable longname="Aerolaser Inlet Pressure Measurement" name="INLETP_AL" units="V">
+            <parameter name="channel" type="int" value="2"/>
+            <parameter name="ifsr" type="int" value="0"/>
+            <parameter name="ipol" type="int" value="0"/>
+            <poly units="V">
+              <calfile file="INLETP_AL.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
+            </poly>
+          </variable>
+        </sample>
+      </serialSensor>
+
      <!-- GP-DACQ 42 for INNLETP_AL -->
+<!--
      <sensor IDREF="SerialAnalog" devicename="/dev/ttyCTI1" id="500" suffix="_CTI1">
         <parameter name="boardID" type="int" value="42"/>
+-->
 	<!-- paramater rate and sample id rate both necessary? -->
+<!--
 	<parameter name="rate" type="int" value="100"/>
 	<sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
 	  <variable longname="Aerolaser Inlet Pressure Measurement" name="INLETP_AL" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="4"/>
-		  <!--<parameter name="bipolar" type="bool" value="false"/>-->
             <poly units="">
-              <calfile file="INLETP_AL.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
 	</sample>
       </sensor>
-
+-->
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyCTI2" id="150" suffix="_232"/>
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI3" id="200" suffix="_DPR"/>
 
