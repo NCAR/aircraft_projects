@@ -5,6 +5,7 @@ sp=comma
 tm=SecOfDay
 fv=-32767
 
+Vars=Time
 Vars=ACINS
 Vars=ADIFF
 Vars=ADIFR
