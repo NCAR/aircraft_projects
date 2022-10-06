@@ -70,7 +70,7 @@ zip_ADS = False # Bzips the ads file independently of processed files
 
 # Do you want to transfer ADS file back to Boulder (is the connection good enough?)
 ship_ADS = True
-
+ship_all_ADS = False
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
 PMS2D = False            #PMS2D from 2D-C
