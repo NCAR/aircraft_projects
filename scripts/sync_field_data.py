@@ -16,7 +16,7 @@ import smtplib
 from email.mime.text import MIMEText
 
 # set up variables
-temp_dir = '/scr/raf_Raw_Data/ACCLIP/field_sync/'
+temp_dir = '/scr/raf_Raw_Data/MAIRE/field_sync/'
 project = os.getenv('PROJECT')
 aircraft = 'GV_N677F' 
 proj_dir = '/net/jlocal/projects/'+project+'/'+aircraft+'/'
@@ -349,7 +349,7 @@ def main():
         dist_recursive_MTP('/RAF_data/MTP')
 
     elif NAS == False and FTP == True:
-        dist_PI('PI_data')
+        #dist_PI('PI_data')
         ftp_to_local('LRT', dat_dir+'/field_data')
         ftp_to_local('KML', dat_dir+'/field_data')
         if ship_ADS:
