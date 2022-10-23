@@ -1036,7 +1036,7 @@ class FieldData():
         '''
         print("About to send data to GCP Bucket...")
         try:
-            command = ('time gsutil cp /home/data/' + project + '/' + project + flight + '* gs://maire_test')
+            command = ('time gsutil cp /home/data/' + project + '/' + project + flight + '* gs://msat-prod-methaneair-upload')
             os.system(command)
             print('GCP copy process complete.')
         except Exception as e:
