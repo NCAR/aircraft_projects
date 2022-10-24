@@ -1127,7 +1127,6 @@ class FieldData():
         s.quit()
 
         print("\r\nSuccessful completion. Close window to exit.")
-        sys.exit(1)
 
 def main():
 
@@ -1147,8 +1146,8 @@ def main():
     # Call FTP function if the FTP flag is set to True
     if FTP:
         fielddata.setup_FTP(fielddata.data_dir, fielddata.raw_dir, fielddata.status, fielddata.file_ext, fielddata.inst_dir, fielddata.filename)
-    if GCP:
-        fielddata.setup_GCP(fielddata.flight, fielddata.project)
+#    if GCP:
+#        fielddata.setup_GCP(fielddata.flight, fielddata.project)
     # Call NAS functions if the NAS flag is set to True
     if NAS:
         fielddata.setup_shipping(fielddata.file_ext, fielddata.filename, process, reprocess, fielddata.status)
