@@ -123,7 +123,8 @@ Vars=VYC
 Vars=WDC
 Vars=WIC
 Vars=WIX
-Vars=WIY
 Vars=WSC
+Vars=WIX_SCALE
+Vars=WIX_OFFSET
+Vars=WIX_FLAG
 Vars=ZERO
-
