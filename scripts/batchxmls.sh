@@ -9,7 +9,7 @@ echo $3
 # exact match (-l) for the word "BESTVEL" in a subset of all the files
 # determined by the find. The find searches all the regular files' names for 
 # *.xml or *.xml*, ignoring dot files 
-# tl;dr will search all xml's in the aircraft_projects subdirs for "BESTVEL"
+# tl;dr will search all xml's in the aircraft_projects subdirs for a keyword
 # Places those names into temporary file batchxmllist.txt
 fileNames=$(grep -rIl "$1" $(find . -type f \( -iname "*.xml*" -or -iname "*.xml" ! -iname ".*" \))) 
 for xmlFile in $fileNames
@@ -55,8 +55,6 @@ Help()
    echo 
    echo "Options:"
    echo "h     Print this Help."
-   echo "v     Verbose mode."
-   echo "V     Print software version and exit."
    echo
    echo "Note: sed here is using # as a separator rather than / as xml
    formatting generally has the latter more than the former. Also to replace
