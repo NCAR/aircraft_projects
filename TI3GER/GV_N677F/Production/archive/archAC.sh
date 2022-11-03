@@ -6,14 +6,14 @@
 ###############
 #   Project   #
 ###############
-setenv PROJECT "XXXPROJECTXXX"
-setenv YEAR 20XX
-setenv PLATFORM "XXXAIRCRAFTXXX"
+setenv PROJECT "TI3GER"
+setenv YEAR 2022
+setenv PLATFORM "GV_N677F"
 setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
 setenv CS_LOCATION "/glade/campaign/eol/archive/"
-setenv EMAIL "name@ucar.edu"
-setenv projectlower "xxxprojectxxx"
-setenv platformlower "xxxaircraftxxx"
+setenv EMAIL "taylort@ucar.edu"
+setenv projectlower "project"
+setenv platformlower "gv_n677f"
 ########################## Raw Data Files ##############################
 ### ADS 
 #$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR $EMAIL
@@ -57,16 +57,17 @@ setenv platformlower "xxxaircraftxxx"
 
 ########################## Production Data Files ##########################
 ### LRT
-#$ARCHIVE_SCRIPT LRT /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/$projectlower/aircraft/$platformlower/LRT $EMAIL
+
+#$ARCHIVE_SCRIPT LRT/version1_0 /scr/raf/Prod_Data/$PROJECT/version1_0 nc /net/archive/data/$projectlower/aircraft/$platformlower/LRT/version1_0 $EMAIL
 
 ### LRT ICT
-#$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT LRT/ICARTT/R1 /scr/raf/Prod_Data/$PROJECT/LRT/ICARTT/R1 ict $CS_LOCATION$YEAR $EMAIL
 
 ### PMS2D
 #$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR $EMAIL
 
 ### KML
-#$ARCHIVE_SCRIPT KML /scr/raf/Prod_Data/$PROJECT kml $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT KML /scr/raf/Prod_Data/$PROJECT/KML/version1_0 kml $CS_LOCATION$YEAR $EMAIL
 
 ### HRT
 #$ARCHIVE_SCRIPT HRT /scr/raf/Prod_Data/$PROJECT/HRT nc $CS_LOCATION$YEAR $EMAIL
