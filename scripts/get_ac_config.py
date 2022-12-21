@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 # Generic script to return aircraft, project, and instrument configuration onboard
 #
@@ -16,4 +16,4 @@ if len(sys.argv) < 2:
 value = ac_config.get_config(sys.argv[1])
 
 if value:
-  print value
+  print (value)

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 """
 This script uses the pyinotify module to monitor
@@ -15,7 +15,7 @@ created.
 """
 
 import logging, logging.handlers
-import os, sys, commands, pyinotify, re, string, time
+import os, sys, subprocess, pyinotify, re, string, time
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
 
 reTime = re.compile("WCL(UP|DN)_(....)(..)(..)(..)([^\.]*)\.jpg")
@@ -108,13 +108,13 @@ if __name__ == '__main__':
         logger.setLevel(logging.DEBUG)
 
     except IndexError:
-        print "\nUsage: %s data delay logfile" % sys.argv[0]
-        print "    data    - path to data files  (i.e. /mnt/r1/uwyo_lidar)"
-        print "    delay   - time (in minutes) between LDM inserts.  Set to 0 to send all."
-        print "    logfile - logfile name (i.e. /tmp/uwyo_lidar.log)"
-        print "\nThe logfile is rotated every 8192 bytes with a backup count of 10."
-        print "\nNote that a 'sent' folder (i.e. /mnt/r1/uwyo_lidar-sent) is created to"
-        print "store files for the LDM client inserts.\n"
+        print ("\nUsage: %s data delay logfile" % sys.argv[0])
+        print ("    data    - path to data files  (i.e. /mnt/r1/uwyo_lidar)")
+        print ("    delay   - time (in minutes) between LDM inserts.  Set to 0 to send all.")
+        print ("    logfile - logfile name (i.e. /tmp/uwyo_lidar.log)")
+        print ("\nThe logfile is rotated every 8192 bytes with a backup count of 10.")
+        print ("\nNote that a 'sent' folder (i.e. /mnt/r1/uwyo_lidar-sent) is created to") 
+        print ("store files for the LDM client inserts.\n")
         sys.exit(1)
 
     else:
