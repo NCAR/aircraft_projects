@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 """
 Create a symbolic link to the latest recorded camera image in
@@ -10,7 +10,7 @@ Create a symbolic link to the latest recorded camera image in
 # manor as the the initial directory is.
 
 import logging, logging.handlers
-import os, sys, commands, pyinotify, re, time
+import os, sys, pyinotify, re, time
 from pyinotify import WatchManager, Notifier, ProcessEvent #, EventsCodes
 import ac_config
 
