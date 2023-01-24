@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 #
+#   Copyright 2015 University Corporation for Atmospheric Research
+#
 #   Be sure to ask the systems group to create a directory:
 #   /net/ftp/pub/data/incoming/<project> and then to create the tree below it:
 #       EOL_data/
@@ -21,6 +23,10 @@
 # Taylor Thomas - Updates including pulling ADS config to this file from 
 # push_data.py, updating this file with the config portion for 
 # dist_field_data.py paths for new sync_field_data.py script. 01/16/2019
+#
+# Taylor Thomas - Update to allow configuration for using rclone and 
+# Google Drive
+#
 
 import os
 project = os.environ['PROJECT']
@@ -28,6 +34,14 @@ DATA_DIR = os.environ['DATA_DIR']
 RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 dat_parent_dir =  DATA_DIR+'/'     # Where nc and kml files go
 rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
+
+#############################################################################
+### Define settings for rclone to Google Drive
+#############################################################################
+# Set GDRIVE to true if you plan to send data to the rclone_staging location
+# and then rclone to Google Drive
+#GDRIVE = True;
+#rclone_mount = '/home/data/rclone_staging/'
 
 #############################################################################
 ### Define settings for NAS in the field
@@ -42,7 +56,7 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = True
+FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
@@ -62,7 +76,7 @@ zip_ADS = False # Bzips the ads file independently of processed files
 # you can have both sendzipped and zip_ads set to True if you want
 
 # Do you want to transfer ADS file back to Boulder (is the connection good enough?)
-ship_ADS = True
+ship_ADS = False
 ship_all_ADS = False
 
 ### Instrument specific processing ###
@@ -70,7 +84,7 @@ ship_all_ADS = False
 PMS2D = True            #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
-Rstudio = True # Generate a PDF of the QC plots
+Rstudio = False # Generate a PDF of the QC plots
 catalog = False # Send QC plots to field catalog, leave as False
 
 #############################################################################
