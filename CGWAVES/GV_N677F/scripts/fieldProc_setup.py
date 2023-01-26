@@ -40,8 +40,8 @@ rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 #############################################################################
 # Set GDRIVE to true if you plan to send data to the rclone_staging location
 # and then rclone to Google Drive
-#GDRIVE = True;
-#rclone_mount = '/home/data/rclone_staging/'
+GDRIVE = True
+rclone_staging_dir = '/home/data/rclone_staging/' + project.lower() + '/EOL_data/RAF_data/'
 
 #############################################################################
 ### Define settings for NAS in the field

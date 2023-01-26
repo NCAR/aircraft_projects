@@ -25,7 +25,7 @@ from email.mime.text import MIMEText
 from collections import OrderedDict
 import logging
 sys.path.insert(0, '/home/local/projects/' + os.environ['PROJECT'] + '/GV_N677F/scripts')
-from fieldProc_setup import user, password, DATA_DIR, RAW_DATA_DIR, dat_parent_dir, rdat_parent_dir, NAS, NAS_permanent_mount, nas_url, nas_mnt_pt, FTP, ftp_site, password, ftp_parent_dir, ftp_data_dir, ICARTT, IWG1, HRT, SRT, sendzipped, zip_ADS, ship_ADS, ship_all_ADS, PMS2D, threeVCPI, Rstudio, catalog, rstudio_dir, translate2ds, datadump, GCP
+from fieldProc_setup import user, password, DATA_DIR, RAW_DATA_DIR, dat_parent_dir, rdat_parent_dir, NAS, NAS_permanent_mount, nas_url, nas_mnt_pt, FTP, ftp_site, password, ftp_parent_dir, ftp_data_dir, ICARTT, IWG1, HRT, SRT, sendzipped, zip_ADS, ship_ADS, ship_all_ADS, PMS2D, threeVCPI, Rstudio, catalog, rstudio_dir, translate2ds, datadump, GDRIVE, rclone_staging_dir
 
 print(ftp_data_dir)
 
@@ -57,7 +57,8 @@ class FieldData():
         self.qc_ftp_dir = '/pub/incoming/catalog/' + self.project.lower()
         self.flight = self.readFlight()
         self.email = self.readEmail()
-
+        self.rclone_staging_dir = rclone_staging_dir 
+        print(self.rclone_staging_dir)
         process = False
         reprocess = False
 
@@ -679,14 +680,14 @@ class FieldData():
 
                 # Convert SPEC file form to oap file form
                 if (key == "threeVCPI"):
-                    self.process_threeVCPI(aircraft, project, flight, inst_dir["twods"], inst_dir["oap"])
+                    self.process_threeVCPI(aircraft, project, flight, self.inst_dir["twods"], self.inst_dir["oap"])
 
                 # Fast 2D data, extract first, then process.
                 if (key == "PMS2D"):
-                    self.ensure_dir(inst_dir["PMS2D"])
+                    self.ensure_dir(self.inst_dir["PMS2D"])
                     file_name = filename["ADS"].split(raw_dir)[1]
                     fileelts = file_name.split('.')
-                    filename["PMS2D"] = inst_dir["PMS2D"] + fileelts[0] + '.2d'
+                    filename["PMS2D"] = self.inst_dir["PMS2D"] + fileelts[0] + '.2d'
 
                     if not os.path.exists(filename["PMS2D"]):
                         # General form of extract2d from RAW_DATA_DIR is:
@@ -881,6 +882,124 @@ class FieldData():
 
         print("*************************** End Catalog transfer *************\n")
 
+    def GDrive(self, data_dir, raw_dir, status, file_ext, inst_dir, filename, rclone_staging_dir):
+        '''No NAS this project, so put files to Google Drive. Put
+        zipped files if they exist.
+        '''
+        print('Putting files to rclone staging location for shipment to Google Drive:')
+
+        # Keep this set to False unless you have time / bandwidth
+        if ship_all_ADS is True:
+            message = 'Starting rsync process for all available .ads files'
+            self.logger.info(message)
+            print(message)
+            for rawfilename in os.listdir(inst_dir['ADS']):
+                if rawfilename.endswith('.ads'):
+                    try:
+                        os.chdir(inst_dir['ADS'])
+                        os.system('rsync -u *.ads ' + rclone_staging_dir + '/ADS')
+                        status["ADS"]["stor"] = 'Yes-GDrive'
+                        message = rawfilename + ' rsync successful!'
+                        self.logger.info(message)
+                        print(message)
+                    except Exception as e:
+                        message = rawfilename + ' not sent'
+                        self.logger.info(message)
+                        print(message)
+                        self.logger.error(e)
+                        print(e)
+                else:
+                    pass
+        else:
+            for key in file_ext:
+                print(key)
+                print('')
+                if ship_ADS is False:
+                    if key == 'ADS':
+                        pass
+                    else:
+                        try:
+                            os.chdir(inst_dir[key])
+                            print(inst_dir[key])
+                        except Exception as e:
+                            print('Could not change to local dir ' + inst_dir[key])
+                            print(e)
+                            self.logger.error(e)
+                            continue
+                else:
+                    try:
+                        os.chdir(inst_dir[key])
+                        print(inst_dir[key])
+                    except Exception as e:
+                        print('Could not change to local dir ' + inst_dir[key])
+                        print(e)
+                        self.logger.error(e)
+                        continue
+
+                if filename[key] != '':
+                    data_dir, file_name = os.path.split(filename[key])
+                    if ship_ADS is False:
+                        if filename[key] == '.ads':
+                            pass
+                    else:
+                        try:
+                            os.chdir(rclone_staging_dir + '/' + key)
+                            os.chdir(inst_dir[key])
+                        except Exception as e:
+                            print(e)
+                            # Attempt to create needed dir
+                            print('Attempt to create dir /' + rclone_staging_dir + '/' + key)
+                            try:
+                                os.system('mkdir ' + rclone_staging_dir + '/' + key)
+                            except Exception as e:
+                                print('Make dir ' + rclone_staging_dir + key + ' failed')
+                                print(e)
+                                self.logger.error(e)
+                                continue
+                            # Try to change to dir again
+                            try:
+                                os.chdir(rclone_staging_dir + '/' + key)
+                                os.chdir(instdir[key])
+                            except Exception as e:
+                                print('Change dir to ' + rclone_staging_dir + '/' + key + ' failed')
+                                print(e)
+                                self.logger.error(e)
+                                continue
+
+                if ship_ADS is False:
+                    if file_name.endswith('.ads'):
+                        pass
+                    else:
+                        try:
+                            os.system('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + '/' + key)
+                            status[key]["stor"] = 'Yes-GDrive'
+
+                            print(datetime.datetime.now().time())
+                            print('Finished putting data file')
+                            print('')
+
+                        except Exception as e:
+                            print('Error writing ' + file_name)
+                            print(e)
+                            self.logger.error(e)
+                            continue
+                else:
+                    try:
+                        os.system('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + '/' + key)
+                        status[key]["stor"] = 'Yes-GDrive'
+
+                        print(datetime.datetime.now().time())
+                        print('Finished putting data file')
+                        print('')
+
+                    except Exception as e:
+                        print('Error writing ' + file_name)
+                        print(e)
+                        self.logger.error(e)
+                        continue
+            else:
+                print('Filename is empty - nothing to write')
+
     def setup_FTP(self, data_dir, raw_dir, status, file_ext, inst_dir, filename):
         '''No NAS this project, so put files to EOL server. Put
         zipped files if they exist.
@@ -1030,18 +1149,6 @@ class FieldData():
 
         ftp.quit()
 
-    def setup_GCP(self, flight, project):
-        ''' 
-        Simple function to call gsutil command line utility to send data to GCP bucket.
-        '''
-        print("About to send data to GCP Bucket...")
-        try:
-            command = ('time gsutil cp /home/data/' + project + '/' + project + flight + '* gs://msat-prod-methaneair-upload')
-            os.system(command)
-            print('GCP copy process complete.')
-        except Exception as e:
-            print(e)
-
     def setup_NAS(self, process, reprocess, file_ext, inst_dir, status, flight, project, email, final_message, filename, nas_sync_dir, nas_data_dir):
         # Put file onto NAS for BTSyncing back home.
         print("")
@@ -1135,23 +1242,31 @@ def main():
 
     # process data
     fielddata.process(fielddata.file_ext, fielddata.data_dir, fielddata.flight, fielddata.filename, fielddata.raw_dir, fielddata.status, fielddata.project)
+
     # set up the email functionality
     fielddata.setup_email(fielddata.data_dir, fielddata.email)
+
     # Zip files only if set to True
     if sendzipped:
         fieldata.setup_zip(fielddata.file_ext, fielddata.data_dir, fielddata.filename, fielddata.inst_dir)
+
     # Send data to the Field Catalog if set to True
     if catalog:
         fielddata.datadump(fielddata.email, fielddata.project, fielddata.flight, raircraft, fielddata.date)
+
     # Call FTP function if the FTP flag is set to True
     if FTP:
         fielddata.setup_FTP(fielddata.data_dir, fielddata.raw_dir, fielddata.status, fielddata.file_ext, fielddata.inst_dir, fielddata.filename)
-#    if GCP:
-#        fielddata.setup_GCP(fielddata.flight, fielddata.project)
+
+    # Call GDrive function if the GDRIVE flag is set to True
+    if GDRIVE:
+        fielddata.GDrive(fielddata.data_dir, fielddata.raw_dir, fielddata.status, fielddata.file_ext, fielddata.inst_dir, fielddata.filename, fielddata.rclone_staging_dir)
+
     # Call NAS functions if the NAS flag is set to True
     if NAS:
         fielddata.setup_shipping(fielddata.file_ext, fielddata.filename, process, reprocess, fielddata.status)
         fielddata.setup_NAS(process, reprocess, fielddata.file_ext, fielddata.inst_dir, fielddata.status, fielddata.flight, fielddata.project, fielddata.email, fielddata.final_message, fielddata.filename, fielddata.nas_sync_dir, fielddata.nas_data_dir)
+
     # Call the report function which appends the final message for emailing 
     fielddata.report(fielddata.final_message, fielddata.status, fielddata.project, fielddata.flight, fielddata.email, fielddata.file_ext)
 
