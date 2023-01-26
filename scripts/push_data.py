@@ -898,12 +898,21 @@ class FieldData():
                     try:
                         os.chdir(inst_dir['ADS'])
                         os.system('rsync -u *.ads ' + rclone_staging_dir + '/ADS')
-                        status["ADS"]["stor"] = 'Yes-GDrive'
+                        status["ADS"]["stor"] = 'Yes-GDrive-staging'
                         message = rawfilename + ' rsync successful!'
                         self.logger.info(message)
                         print(message)
                     except Exception as e:
-                        message = rawfilename + ' not sent'
+                        message = rawfilename + ' not copied to local staging'
+                        self.logger.info(message)
+                        print(message)
+                        self.logger.error(e)
+                        print(e)
+                    try:
+                        os.system('rclone copy ' + rclone_staging_dir + '/ADS' + ' testgdrive:CGWAVES/EOL_data/RAF_data/ADS --ignore-existing')
+                        status["ADS"]["ship"] = 'Yes-GDrive'
+                    except:
+                        message = rawfilename + ' not rcloned to Google Drive'
                         self.logger.info(message)
                         print(message)
                         self.logger.error(e)
@@ -972,28 +981,52 @@ class FieldData():
                     else:
                         try:
                             os.system('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + '/' + key)
-                            status[key]["stor"] = 'Yes-GDrive'
-
+                            status[key]["stor"] = 'Yes-GDrive-staging'
                             print(datetime.datetime.now().time())
-                            print('Finished putting data file')
+                            print('Finished rsyncing data file to staging location')
                             print('')
 
                         except Exception as e:
-                            print('Error writing ' + file_name)
+                            print('Error rsyncing data file to staging location ' + file_name)
+                            print(e)
+                            self.logger.error(e)
+                            continue
+
+                        try:
+                            os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' testgdrive:CGWAVES/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                            status[key]["ship"] = 'Yes-GDrive'
+                            print(datetime.datetime.now().time())
+                            print('Finished rclone process for data file')
+                            print('')
+
+                        except Exception as e:
+                            print('Error with rclone process for ' + file_name)
                             print(e)
                             self.logger.error(e)
                             continue
                 else:
                     try:
                         os.system('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + '/' + key)
-                        status[key]["stor"] = 'Yes-GDrive'
-
+                        status[key]["stor"] = 'Yes-GDrive-staging'
                         print(datetime.datetime.now().time())
-                        print('Finished putting data file')
+                        print('Finished rsyncing data file to staging location')
                         print('')
 
                     except Exception as e:
-                        print('Error writing ' + file_name)
+                        print('Error rsyncing data file to staging location ' + file_name)
+                        print(e)
+                        self.logger.error(e)
+                        continue
+
+                    try:
+                        os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' testgdrive:CGWAVES/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                        status[key]["ship"] = 'Yes-GDrive'
+                        print(datetime.datetime.now().time())
+                        print('Finished rclone process for ' + file_name)
+                        print('')
+
+                    except Exception as e:
+                        print('Error with rclone process for ' + file_name)
                         print(e)
                         self.logger.error(e)
                         continue
