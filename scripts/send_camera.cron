@@ -155,9 +155,10 @@ convert $file -sharpen 0.0x1.0 -scale 33% \
 #
 # copy to CatalogIngest
 #
-plane=`echo $AIRCRAFT | cut -d _ -f 1`
-catalog_ingest_dir=/home/catalog/products/incoming/${plane,,}
-
+catalog_ingest_dir=/data/catalog/incoming
 if [ -d $catalog_ingest_dir ]; then
-  cp ../sent/$key$file $catalog_ingest_dir/aircraft.NSF_NCAR_$plane.`camera_image_to_catalog_time $file`."$camera"_camera.jpg
+  catalog_time=`camera_image_to_catalog_time $file`
+  PLANE=`echo $AIRCRAFT | cut -d _ -f 1`
+  catalog_filename=aircraft.NSF_NCAR_$PLANE.$catalog_time."$camera"_camera.jpg
+  cp ../sent/$key$file $catalog_ingest_dir/$catalog_filename
 fi
