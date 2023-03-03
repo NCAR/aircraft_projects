@@ -1,0 +1,18 @@
+#!/bin/bash
+
+script=run_proc2ds
+proj=ACCLIP
+
+cat << EOF2D > $script
+#!/bin/bash
+
+EOF2D
+
+for file in ${RAW_DATA_DIR}/${proj}/2DS/2ds_oap/*2d
+do
+    bfname=`basename $file`
+    flight=`echo $bfname | cut -b 17-20`
+    echo 'process2d ${RAW_DATA_DIR}/'${proj}/2DS/2ds_oap/${bfname} '-o ${DAT}/'${proj}${flight}.nc >> $script
+done
+
+chmod +x $script
