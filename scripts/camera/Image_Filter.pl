@@ -124,7 +124,7 @@ else {
 		elsif ($a =~ m/-sstart:(\d+)/) { $speedstart = $1; }
 		elsif ($a =~ m/-sstop:(\d+)/) { $speedstop = $1; }
 		
-		#elsif (-d $a) {$dir = abs_path($a); } #target dir
+		elsif (-d $a) {$dir = abs_path($a); } #target dir
 		elsif (-d $a) {$dir = $a; } #target dir
 		elsif ($a eq "" || $a eq "\n") {} #For capturing stangeness
 		else {die "INVALID ARGUMENT: $a";}	
