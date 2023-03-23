@@ -1360,6 +1360,23 @@
         <variable name="HTEMP5" longname="Holodec temperature, zone 5, Laser Controller" units="deg_C"/>
       </sample>
     </sensor>
+
+    <serialSensor ID="SDIflow" baud="19200" class="raf.AlicatSDI" databits="8" parity="none" stopbits="1" timeout="10">
+      <parameter name="nTAS_AVERAGE" type="int" value="5"/>
+      <parameter name="QMIN" type="int" value="100"/>
+      <parameter name="QMAX" type="int" value="500"/>
+      <parameter name="TIP_DIAM" type="float" value="0.64"/>
+
+<!-- Sample Frame "A +0830.1 +024.25 +000.00 +000.00 +000.00    Air" -->
+      <sample id="1" scanfFormat="A %f %f %f %*f %f %*s">
+        <variable longname="SDI Flowmeter Absolute Pressure" name="P" units="mb"/>
+        <variable longname="SDI Flowmeter Air Temperature" name="T" units="deg_C"/>
+        <variable longname="SDI Volumetric Flow" name="FLOW" units="vlpm"/>
+        <variable longname="SDI Volumetric Flow Set Point" name="SETPT" units="vlpm"/>
+      </sample>
+      <message length="0" position="end" separator="\r"/>
+      <prompt rate="1" string="A\r"/>
+    </serialSensor>
   </sensorcatalog>
 
 
@@ -1834,18 +1851,7 @@
 
       <!-- The /dev/ttyCTI# ports connect to the Xtreme Serial I/O Card on the DSM stack. -->
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyCTI0" id="150" suffix="_232"/>
-      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyCTI1" id="110">
-        <sample id="1" rate="10">
-          <variable longname="SDI Inlet Flow" name="INFLOW" units="V">
-            <parameter name="channel" type="int" value="8"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="slpm">
-              <calfile file="INFLOW.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-        </sample>
-      </serialSensor>
+      <serialSensor IDREF="SDIflow" devicename="/dev/ttyCTI1" id="110"/>
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200" latency="0.25">
         <parameter name="rate" type="int" value="1000"/>
