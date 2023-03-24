@@ -993,7 +993,7 @@ class FieldData():
                             continue
 
                         try:
-                            os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' testgdrive:CGWAVES/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                            os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' gdrive_eolfield:CGWAVES/EOL_data/RAF_data/' + key + ' --ignore-existing')
                             status[key]["ship"] = 'Yes-GDrive'
                             print(datetime.datetime.now().time())
                             print('Finished rclone process for data file')
