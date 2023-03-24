@@ -3,8 +3,8 @@
 writeLines("This script must be run from barolo as libraries aren't currently installed elsewhere")
 
 args <- commandArgs(trailingOnly = TRUE)
-TdbData <- "/h/eol/janine/Rstudio/HeightOfTerrain/TerrainData"
-
+#TdbData <- "/h/eol/janine/Rstudio/HeightOfTerrain/TerrainData"
+TdbData <- "/scr/tmp/taylort/Rstudio/HeightOfTerrain/TerrainData"
 if (length(args) == 8) {
    print("Using values from command line")
    Project = args[1] ## project name in caps
@@ -17,19 +17,13 @@ if (length(args) == 8) {
    Tdb <- args[8]
 } else if (length(args) == 0) {
    print("Using hardcoded values. Don't forget to change lat/lon!")
-   Flight <- "rf01" 		
-   Project = "DEEPWAVE"	
-   Directory <- "/scr/raf/Prod_Data/$Project"
-   #range for DEEPWAVE
-   lt_s <- -60
-   lt_n <- -20 
-   lg_w <- 130 
-   lg_e <- -150 
-   # range for NOMADSS&FRAPPE: had to download G13 to L19
-   #lt_s <- 24 # N
-   #lt_n <- 45 # N
-   #lg_w <- -111 # W -- used 106 to get exactly 105 to work
-   #lg_e <-  -72 # W
+   Flight <- "rf08" 		
+   Project = "FRAPPE"	
+   Directory <- "/scr/raf/Prod_Data/FRAPPE/LRT"
+   lt_s <- -90
+   lt_n <- 90 
+   lg_w <- 180 
+   lg_e <- -180 
    Tdb <- "yes"
 } else {
    writeLines("Usage: \n\tTo use in RStudio browser window, edit hard-coded flight and project name
