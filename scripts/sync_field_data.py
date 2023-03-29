@@ -16,7 +16,7 @@ import smtplib
 from email.mime.text import MIMEText
 
 # set up variables
-temp_dir = '/scr/raf_Raw_Data/MAIRE/field_sync/'
+temp_dir = '/scr/raf_Raw_Data/CGWAVES/field_sync/'
 project = os.getenv('PROJECT')
 aircraft = 'GV_N677F' 
 proj_dir = '/net/jlocal/projects/'+project+'/'+aircraft+'/'
@@ -276,7 +276,7 @@ def dist_recursive_MTP(directory):
     logging.info(final_message)
     return(final_message)
 
-def ftp_to_local(filetype, local_dir):
+def ingest_to_local(filetype, local_dir, start_dir):
     """
     Function to distribute data from FTP to local dirs for QAQC and backup
     to be used if no NAS in the field and data goes from Ground Station to
@@ -285,7 +285,7 @@ def ftp_to_local(filetype, local_dir):
     final_message = 'Starting distribution of data from the FTP to localdirs/\n'
 
     if filetype == 'PMS2D':
-        command = 'rsync -qu '+ftp_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir+'/'+filetype
+        command = 'rsync -qu '+start_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir+'/'+filetype
         message = 'Syncing dir into place: '+command+'\n'
         os.system(command)
 
@@ -295,7 +295,7 @@ def ftp_to_local(filetype, local_dir):
         return(final_message)
 
     elif filetype == 'ADS':
-        command = 'rsync -qu '+ftp_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir
+        command = 'rsync -qu '+start_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir
         message = 'Syncing dir into place: '+command+'\n'
         os.system(command)
 
@@ -305,7 +305,7 @@ def ftp_to_local(filetype, local_dir):
         return(final_message)
 
     else:
-        command = 'rsync -qu '+ftp_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir
+        command = 'rsync -qu '+start_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir
         message = 'Syncing dir into place: '+command+'\n'
         os.system(command)
 
@@ -348,22 +348,41 @@ def main():
         dist_field()
         dist_recursive_MTP('/RAF_data/MTP')
 
+    elif NAS == False and GDrive == True:
+        #dist_PI('PI_data')
+        ingest_to_local('LRT', dat_dir+'/field_data', temp_dir)
+        ingest_to_local('KML', dat_dir+'/field_data', temp_dir)
+        if ship_ADS:
+            ingest_to_local('ADS', rdat_dir, temp_dir)
+        if PMS2D:
+            ingest_to_local('PMS2D', rdat_dir, temp_dir)
+        if HRT:
+            ingest_to_local('HRT', dat_dir+'/field_data', temp_dir)
+        if SRT:
+            ingest_to_local('SRT', dat_dir+'/field_data', temp_dir)
+        if IWG1:
+            ingest_to_local('IWG1', dat_dir+'/field_data', temp_dir)
+        if ICARTT:
+            ingest_to_local('ICARTT', dat_dir+'/field_data', temp_dir)
+        dist_field()
+    # send_mail_and_die(body)    exit(1)
+
     elif NAS == False and FTP == True:
         #dist_PI('PI_data')
-        ftp_to_local('LRT', dat_dir+'/field_data')
-        ftp_to_local('KML', dat_dir+'/field_data')
+        ingest_to_local('LRT', dat_dir+'/field_data', ftp_dir)
+        ingest_to_local('KML', dat_dir+'/field_data', ftp_dir)
         if ship_ADS:
-            ftp_to_local('ADS', rdat_dir)
+            ingest_to_local('ADS', rdat_dir, ftp_dir)
         if PMS2D:
-            ftp_to_local('PMS2D', rdat_dir)
+            ingest_to_local('PMS2D', rdat_dir, ftp_dir)
         if HRT:
-            ftp_to_local('HRT', dat_dir+'/field_data')
+            ingest_to_local('HRT', dat_dir+'/field_data', ftp_dir)
         if SRT:
-            ftp_to_local('SRT', dat_dir+'/field_data')
+            ingest_to_local('SRT', dat_dir+'/field_data', ftp_dir)
         if IWG1:
-            ftp_to_local('IWG1', dat_dir+'/field_data')
+            ingest_to_local('IWG1', dat_dir+'/field_data', ftp_dir)
         if ICARTT:
-            ftp_to_local('ICARTT', dat_dir+'/field_data')
+            ingest_to_local('ICARTT', dat_dir+'/field_data', ftp_dir)
         dist_field()
     # send_mail_and_die(body)
     exit(1)
