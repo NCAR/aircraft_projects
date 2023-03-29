@@ -21,7 +21,7 @@ Tdb="yes"
 echo "Adding Terrain Ht vars to production netCDF files for project $project"
 echo "Using lat/long range $lt_s - $lt_n, $lg_w - $lg_e"
 
-for file in `ls $Directory/${project}[rtf]f??.nc`
+for file in `ls /scr/raf_data/FRAPPE/FRAPPErf08.nc`
 do
     flight=${file:(-7):4}
     echo "Rscript ./HeightOfTerrain.R $project $flight $Directory $lt_s $lt_n $lg_w $lg_e $Tdb"
