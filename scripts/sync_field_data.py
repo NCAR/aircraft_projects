@@ -348,7 +348,7 @@ def main():
         dist_field()
         dist_recursive_MTP('/RAF_data/MTP')
 
-    elif NAS == False and GDrive == True:
+    elif NAS == False and GDRIVE == True:
         #dist_PI('PI_data')
         ingest_to_local('LRT', dat_dir+'/field_data', temp_dir)
         ingest_to_local('KML', dat_dir+'/field_data', temp_dir)
