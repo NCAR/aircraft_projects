@@ -542,13 +542,13 @@ my $outputFrameRate = $keywords->{outputFrameRate};;
 my $mp4BitRate = $keywords->{mp4BitRate};;
 
 my $outputFilename = "$flightNumber.$outputFileTimes.mp4";
+
+my $command = "usr/bin/ffmpeg -pattern_type glob -i $annotatedImageDirectory/%05d.jpg  -c:v libx264 -r " $outputFrameRate " -pix_fmt yuv420p -y "$outputFilename";
+
 # First ffmpeg pass
-# .#if (system "ffmpeg -passlogfile ~/ffmpeg_$flightNumber -r $outputFrameRate -b $mp4BitRate -y -title $projectNumber$flightNumber -author 'S. Beaton NCAR/RAF' -pass 1 -i $annotatedImageDirectory/%05d.jpg ~/$flightNumber.mp4") {die "Unable to create MPEG file $flightNumber.mp4, pass 1"};
 my $command = "/usr/bin/ffmpeg -i $annotatedImageDirectory/%05d.jpg -r $outputFrameRate -pix_fmt yuv420p -b:v $mp4BitRate -y -passlogfile ./ffmpeg_$flightNumber -pass 1 ".$keywords->{movieDirectory}."/$outputFilename";
 print "$command\n";
 if (system "$command") { die "Unable to create MPEG file $outputFilename, pass 1 using command $command"}; 
-# Second pass.
-#if (system "ffmpeg -passlogfile ~/ffmpeg_$flightNumber -r $outputFrameRate -b $mp4BitRate -y -title $projectNumber$flightNumber -author 'S. Beaton NCAR/RAF' -pass 2 -i $annotatedImageDirectory/%05d.jpg ~/$flightNumber.mp4") {die "Unable to create MPEG file $flightNumber.mp4, pass 2"};
 $command = "/usr/bin/ffmpeg  -i $annotatedImageDirectory/%05d.jpg -r $outputFrameRate -pix_fmt yuv420p -b:v $mp4BitRate -y -passlogfile ./ffmpeg_$flightNumber -pass 2 ".$keywords->{movieDirectory}."/$outputFilename";
 print "$command\n";
 if (system "$command") {die "Unable to create MPEG file $outputFilename, pass 2 using command $command"};
