@@ -130,8 +130,8 @@ my ($projectNumber,$flightNumber,$time_interval,$headerText,$outputFileTimes);
 # ----------------------------- Usage -------------------------------
 # -------------------------------------------------------------------
 #ffmpeg is only installed in tikal, so must run there
-if ($HOST !~/tikal/) {
-        print " MUST BE RUN ON tikal!!!\n\n";
+if ($HOST !~/mercury/) {
+        print "Run on mercury for higher performance!\n\n";
         exit(0);
 }
 #if no arguments or argument is "-h", print help text and exit.
