@@ -12,12 +12,12 @@
     >
 
 <sensorcatalog>
-    <irigSensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
         <sample id="1">
             <variable name="Clock" units="msec"
                     longname="milliseconds since 1970 Jan 01 00:00 +0"/>
         </sample>
-    </irigSensor>
+    </sensor>
 
     <arincSensor ID="IRS-GV" class="raf.IRS_HW_HG2001GD">
         <!-- Taken from the Honeywell installation manual for the         -->
@@ -464,7 +464,7 @@
     </server>
 
     <dsm name="dsm304" location="cabin_mpdb" id="4" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="304"/>
 
         <arincSensor IDREF="IRS-GV" devicename="/dev/arinc0" id="1000">
           <sample id="0314" rate="25">
@@ -524,13 +524,13 @@
 
         <serialSensor IDREF="Garmin_GPS" devicename="/dev/dsmser5" id="120"/>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm305" location="radome" id="5" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="305"/>
 
         <serialSensor IDREF="Mensor_6100"
                 devicename="/dev/ttyS5" id="110">
@@ -610,43 +610,53 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm301" location="lams_bb" id="6" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="301"/>
 
         <sensor class="raf.LamsSensor" devicename="/dev/lams0" id="140" suffix="_bb">
+            <parameter name="TAS_level"  type="float" value="155.0"/>
+            <parameter name="calm"  type="int" value="1"/>
+            <parameter name="nAVG"  type="int" value="4"/>
+            <parameter name="nSKIP" type="int" value="0"/>
+            <parameter name="nPEAK" type="int" value="1500"/>
             <sample id="1" rate="2">
                 <variable name="LAMS_MAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
                 <variable name="LAMS_AVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
    
     <dsm name="dsm311" location="lams" id="7" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="311"/>
 
         <sensor class="raf.LamsSensor" devicename="/dev/lams0" id="140">
+            <parameter name="TAS_level"  type="float" value="155.0"/>
+            <parameter name="calm"  type="int" value="1"/>
+            <parameter name="nAVG"  type="int" value="4"/>
+            <parameter name="nSKIP" type="int" value="0"/>
+            <parameter name="nPEAK" type="int" value="1500"/>
             <sample id="1" rate="2">
                 <variable name="LAMS_MAX"  length="512" units="Mhz" longname="LAMS histogram maximums"/>
                 <variable name="LAMS_AVG"  length="512" units="Mhz" longname="LAMS histogram averages"/>
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
    
     <dsm name="dsm313" location="MTP Rack R-4" id="8" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="313"/>
 
         <serialSensor IDREF="VCSEL" devicename="/dev/ttyS5" id="130" suffix="_VXL"/>
 
@@ -708,23 +718,23 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsm312" location="TDL Rack L-1" id="10" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="312"/>
 
         <serialSensor IDREF="TDLH2O" devicename="/dev/ttyS5" id="110" suffix="_MC"/>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
     </dsm>
 
     <dsm name="dsmLWO" location="LWO" id="46" rserialPort="30002" derivedData="sock::58800">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="LWO"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="LWO"/>
 
         <serialSensor IDREF="CDP" devicename="/dev/ttyS1" id="730" suffix="_LWI">
             <parameter name="SerialNumber" type="string" value="CDP016"/>
@@ -746,16 +756,16 @@
             </sample>
         </sensor>
 
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
 
     <dsm name="dsmRWO" location="RWO" id="47" rserialPort="30002">
-        <irigSensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="RWO"/>
+        <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="RWO"/>
 
         <serialSensor IDREF="UHSAS" devicename="/dev/ttyS1" id="530" suffix="_RWI">
             <parameter name="SerialNumber" type="string" value="UHSAS001"/>
@@ -777,10 +787,10 @@
             </sample>
         </sensor>
 -->
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
     </dsm>
@@ -790,17 +800,17 @@
         <serialSensor IDREF="D_GPS" devicename="/dev/ttyS0" id="800"/>
 
 	<!--
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="mcrequest"/>
         </output>
 -->
-	<output class="RawSampleOutputStream" sorterLength="0">
+	<output class="RawSampleOutputStream">
 	    <fileset dir="/var/r1/${PROJECT}"
                         file="dgps_%Y%m%d_%H%M%S_${FLIGHT}.ads"
                         length="0"/>
         </output>
 	<!--
-        <output class="RawSampleOutputStream" sorterLength="0">
+        <output class="RawSampleOutputStream">
             <socket type="server" port="30000"/>
         </output>
 	-->
