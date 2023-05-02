@@ -11,23 +11,28 @@ if [ $(whoami) != 'ads' ]; then
 fi
 
 # Check for read only git checkout key
+# Or check for ssh-add -l blank message
 if [ -f "/home/ads/.git-credentials" ];
 then
         echo "Checking out git repos with found key"
 else
-    echo "/home/ads/.git-credentials doesn't exist. Create, change permissions to -rw-------, copy in key"
-    exit 1
+    echo "/home/ads/.git-credentials doesn't exist. Create, change permissions to -rw-------, copy in key \r\n Or check that ssh-add -l produces appropriate ssh key"
 fi
-GITKEY=$(cat /home/ads/.git-credentials)
+# GITKEY=$(cat /home/ads/.git-credentials)
 # GITKEY="$GITKEY@"
 
 # Check that /home/local exists
 # currently only an issue on a new groundstation
+# Or whenever ads-user rpm is checked out without server-common
 [ -d /home/local] || mkdir /home/local
 cd /home/local
 
-# Ask what type of install (1)plane/server, 2)groundstation, 3)lab)
-
+# Ask what type of install (1)plane server, 2)groundstation, 3)lab-minimal
+#
+if [ $1 ]; then
+echo "There is a variable"
+exit 1
+fi
 
 # Think the biggest thing left in svn is the Manufacture Manuals
 # And the camera script
@@ -50,7 +55,7 @@ cd /home/local
 dir=nidas
 if [ ! -d $dir ]; then
   # We need --recursive for nidas for the ARINC driver.
-  git clone --recursive https://$GITKEY@github.com/ncareol/$dir
+  git clone --recursive git@github.com:ncareol/$dir.git 
 else
   echo "$dir checked out previously"
 fi
@@ -63,7 +68,7 @@ fi
 dir=nimbus
 if [ ! -d $dir ]; then
   # We need --recursive for nidas for the ARINC driver.
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+  git clone --recursive git@github.com:ncar/$dir.git 
 else
   echo "$dir checked out previously"
 fi
@@ -72,71 +77,77 @@ fi
 dir=aeros
 if [ ! -d $dir ]; then
   # We need --recursive for aeros to get eol_scons.
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+  git clone --recursive git@github.com:ncar/$dir.git 
 else
   echo "$dir checked out previously"
 fi
 
 dir=aircraft_nc_utils
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir nc_utils
+  git clone --recursive git@github.com:ncar/$dir.git nc_utils 
 else
   echo "$dir checked out previously"
 fi
 
 dir=aircraft_oap
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir oap
+  git clone --recursive git@github.com:ncar/$dir.git oap
 else
   echo "$dir checked out previously"
 fi
 
 dir=ncpp
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+  git clone --recursive git@github.com:ncar/$dir.git
 else
   echo "$dir checked out previously"
 fi
 
 dir=ncplot
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+  git clone --recursive git@github.com:ncar/$dir.git
 else
   echo "$dir checked out previously"
 fi
 
+dir=eol_scons
+if [ ! -d $dir ]; then
+  git clone --recursive git@github.com:ncar/$dir.git
+else
+  echo "$dir checked out previously"
+fi
 
 dir=ric
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncareol/$dir
+  git clone --recursive git@github.com:ncar/$dir.git
 else
   echo "$dir checked out previously"
 fi
 
 dir=aircraft_auto_cal
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir auto_cal
+  git clone --recursive git@github.com:ncar/$dir.git auto_cal
 else
   echo "$dir checked out previously"
 fi
 
 dir=aircraft_config_edit
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir config_edit
+  git clone --recursive git@github.com:ncar/$dir.git config_edit
 else
   echo "$dir checked out previously"
 fi
 
 dir=kml_tools
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+  git clone --recursive git@github.com:ncar/$dir.git 
 else
   echo "$dir checked out previously"
 fi
 
 dir=aircraft_caledit
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir caledit
+  git clone --recursive git@github.com:ncar/$dir.git caledit
 else
   echo "$dir checked out previously"
 fi
@@ -144,7 +155,7 @@ fi
 # instrument specific
 dir=gni
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncareol/$dir
+  git clone --recursive git@github.com:ncar/$dir.git
 else
   echo "$dir checked out previously"
 fi
@@ -153,28 +164,28 @@ fi
 #Servers only
 dir=aircraft_arinc_enet
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+  git clone --recursive git@github.com:ncar/$dir.git
 else
   echo "$dir checked out previously"
 fi
 
 dir=embedded-daq
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncareol/$dir
+  git clone --recursive git@github.com:ncar/$dir.git
 else
   echo "$dir checked out previously"
 fi
 
 dir=aircraft_rpms
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir
+  git clone --recursive git@github.com:ncar/$dir.git
 else
   echo "$dir checked out previously"
 fi
 
 dir=aircraft_vardb
 if [ ! -d $dir ]; then
-  git clone --recursive https://$GITKEY@github.com/ncar/$dir vardb
+  git clone --recursive git@github.com:ncar/$dir.git vardb
 else
   echo "$dir checked out previously"
 fi
