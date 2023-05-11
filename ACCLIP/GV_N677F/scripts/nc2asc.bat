@@ -78,3 +78,6 @@ Vars=WIC
 Vars=WIX
 Vars=WIY
 Vars=WSC
+Vars=CloudBuffer
+Vars=CloudClass
+Vars=CloudFlag
