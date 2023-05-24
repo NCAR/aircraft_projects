@@ -6,7 +6,12 @@
 ###############
 #   Project   #
 ###############
-set PROJECT = "CONTRAST"
+setenv PROJECT "CONTRAST"
+setenv YEAR 2014
+setenv PLATFORM "GV_N677F"
+setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
+setenv CS_LOCATION "/glade/campaign/eol/archive/"
+setenv EMAIL "taylort@ucar.edu"
 
 ### ADS
 #/net/work/bin/scripts/mass_store/archAC/archAC.py ADS /scr/raf/Raw_Data/$PROJECT ads EOL/2014
@@ -30,6 +35,9 @@ set PROJECT = "CONTRAST"
 ### LRT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1.2_20181015 /scr/raf/Prod_Data/$PROJECT/LRT/V1.2_20181015 nc FS/EOL/2014 taylort@ucar.edu
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/V1.3_20210424 /scr/raf/Prod_Data/$PROJECT/LRT/V1.3_20210424 nc FS/EOL/2014 janine@ucar.edu
+
+### HRT
+$ARCHIVE_SCRIPT HRT /scr/raf/Prod_Data/$PROJECT/HRT nc  $CS_LOCATION$YEAR $EMAIL
 
 ### ICARTT
 #/net/work/bin/scripts/mass_store/archAC/archAC.py LRT/ICARTT/V3_20181015 /scr/raf/Prod_Data/$PROJECT/LRT/V1.2_20181015 GV FS/EOL/2014 taylort@ucar.edu
