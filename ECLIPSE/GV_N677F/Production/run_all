@@ -10,13 +10,18 @@ setenv DISPLAY :9.1
 if ($uid == 20000) then
   setenv DAT /scr/raf/local_productiondata/
 else
-  setenv DAT ${DATA_DIR}/MITTS
+  setenv DAT ${DATA_DIR}/ECLIPSE
 endif
 
 mkdir ${DAT}
 
 nice ./run_nimbus
 nice ./reorder_all
+nice ./run_proc2d
+#nice ./AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
+if ($uid == 20000) then
+  #nice ./run_kalmanFilter  # Changes working dir, so run last.
+endif
 
 kill $xvpid
 exit 0

@@ -16,6 +16,11 @@ endif
 mkdir ${DAT}
 
 nice ./run_nimbus
+#nice ./run_nimbus_hrt
+# Based on feedback from aerosol and cloud probe scientists Mike Reeves and Sarah Woods
+# remove USHAS and CDP vars from high rate processing. Use ncks instead of Flight_ files per Chris Webster
+# ex ncks -a -x -v ACDP_RWOO,CCDP_RWOO,AUHSAS_RWOI,CUHSAS_RWOI CONTRAST####h.nc CONTRAST####h.nc
+
 nice ./reorder_all
 nice ./run_proc2d
 
