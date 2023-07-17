@@ -1,105 +1,237 @@
-#!/bin/csh
+#!/bin/bash
+# for scons alias: bash doesn't expand aliases by default
+source .bashrc
 
-@ num = 0
-if ($#argv > 0) then
-  @ num = $1
-endif
+   
+
+
+# Notes:
+# Does not cover: instrument repos (GNI, MTP), package repos (aircraft_rpms)
+# project/scripts, or anything in svn (ADS2 related, mostly) as of 2023 
+# nidas isn't built: preference given to packages
+
+# Default is scons install rather than just build.
+# End of script has odd builds ( aeros, ric, camera and ncplot ) 
+
+
+# TODO:
+# pretty print for REPORT/replace echo for more portability
+# verify camera build
+
+CLEAN=0
+while getopts "hc:" flag; do
+   case $flag in
+      h) # display Help
+         echo "help"
+	 echo "
+  build_all [-c]
+  Builds all major ads software 
+ 
+  Provides a quick way to build several repos at once
+  with different build instructions.
+  Script assumes it is being run from a directory
+  that contains at least one of the target repos.  
+  Must be run from /home/local directory if project/scripts in \$PATH
+  OR copied from project/scripts to /home/local
+  or /home/local equivalent
+
+  Should be used after repo_checkout
+  script intended for maintence builds, less for inital
+
+
+  Options:
+    -c      clean all known directories: both make and scons
+    "
+         exit;;
+      c) # clean_all
+	 CLEAN=1
+	 ;;
+   esac
+done
+
+
+num=0
+if [ $#argv > 0 ]; then
+  num=$1
+fi
 
 # Environment variables that are needed:
-if ( ! $?JLOCAL ) then
-    setenv JLOCAL /opt/local
-    echo "Environment variable JLOCAL not set, setting to $JLOCAL."
-endif
+if [ ! $?LOCAL ]; then
+    setenv LOCAL /opt/local
+    echo "Environment variable LOCAL not set, setting to $LOCAL."
+fi
+
+REPORT=''
+HOMEDIR=$(pwd)
+sleep=0
 
 # Check for netCDF installation.
-if (`uname -i` == x86_64) then
+if [ `/usr/bin/uname -i` = 'x86_64' ]; then
     set libdir=/usr/lib64
 else
     set libdir=/usr/lib
-endif
+fi
 
 ls $libdir/libnetcdf* >& /dev/null
 set rc1 = $status
-ls $JLOCAL/lib/libnetcdf* >& /dev/null
+ls $LOCAL/lib/libnetcdf* >& /dev/null
 set rc2 = $status
 
-if ($rc1 == 1 && $rc2 == 1) then
-    echo "netCDF appears to NOT be installed in either /usr/lib or $JLOCAL."
+# Checks for pre-req's netcdf, Qt, Qwt, motif/.
+if [ [ $rc1 = 1 ] && [ $rc2 = 1] ]; then
+    echo "netCDF appears to NOT be installed in either /usr/lib or $LOCAL."
     exit 1
-endif
-
-if ( ! $?WINDS ) then
-    echo "WINDS not set, ADS2 and winds will NOT be built."
-endif
-
-# Pre-req's that most likely exist on your system, Motif, Qt.
-# Pre-req's that you will need to install are netcdf & Qwt.
-
-if ($#argv > 0) then
-  if ("$argv[1]" == init) then
-    # Copy the netcdf dependencies into place
-    setenv OPT_LOCAL /net/opt_lnx/local_fc2/.
-    echo "Copying netcdf dependencies from $OPT_LOCAL..."
-    ( cd $OPT_LOCAL && rsync -avR `find . -name "*netcdf*" -o -name "*ncvalues*"` $JLOCAL )
-  endif
-endif
+fi
 
 # Make sure all the [obvious] directories exist
-test -d ${JLOCAL}/bin || mkdir ${JLOCAL}/bin
-test -d ${JLOCAL}/lib || mkdir ${JLOCAL}/lib
-test -d ${JLOCAL}/include/raf || mkdir -p ${JLOCAL}/include/raf
-test -d ${JLOCAL}/man || mkdir ${JLOCAL}/man
-test -d ${JLOCAL}/man/man1 || mkdir ${JLOCAL}/man/man1
-test -d ${JLOCAL}/man/man3 || mkdir ${JLOCAL}/man/man3
+test -d ${LOCAL}/bin || mkdir ${LOCAL}/bin
+test -d ${LOCAL}/man/man1 || mkdir -p ${LOCAL}/man/man1
+test -d ${LOCAL}/man/man3 || mkdir -p ${LOCAL}/man/man3
 
-# Build libraries first.
+checkCleanStatus(){
+    if [ $EXITSTATUS = 0 ]; then
+      REPORT="${REPORT} Clean Status OK\n"
+    else
+      REPORT="${REPORT} Clean Error\n"
+    fi
+}
+checkStatus(){
+    if [ $EXITSTATUS = 0 ]; then
+      REPORT="${REPORT} Build, Install Status OK\n"
+    else
+      REPORT="${REPORT} Build or Install Error\n"
+    fi
+}
 
-foreach file ( ads2/hdr_api )
-  (cd $file; echo $file; make install)
-  if ($num > 0) then
-    echo "$file BUILT"
-    sleep $num
-    reset
-  endif
-end
+#-------------------------------------------------------------------------------
+# Programs using 'scons -j 8 install' 
+# Add with explicit path to SConstruct from /home/local or equivalent
+sconsPrograms=( "nimbus" "nc_utils" "caledit" "auto_cal" "kml_tools/acTrack2kml" "ncpp" "oap" "vardb" );	
+for file in "${sconsPrograms[@]}"; 
+do
+  # check for $name or aircraft_$name
+  if [ -d $file ] || [ -d "aircraft_${file}" ];
+  then
+    REPORT="${REPORT} ${file} FOUND:"
+    cd $file || cd "aircraft_${file}"; echo "";
+    if [ $CLEAN = 0 ] ; 
+    then
+      scons -c 
+      EXITSTATUS=$?
+      checkCleanStatus
+    else
+      scons install
+      EXITSTATUS=$?
+      checkStatus
+    fi
+  else
+      REPORT="${REPORT} ${file} NOT FOUND\n"
+  fi
+  cd $HOMEDIR
+done
+#-------------------------------------------------------------------------------
+# Aeros
+if [ -d aeros/source ] ;
+then
+  REPORT="${REPORT} aeros FOUND:"
+  cd aeros/source; echo "";
+    if [ $CLEAN = 0 ] ; 
+    then
+      scons -c 
+      EXITSTATUS=$?
+      checkCleanStatus
+    else
+      scons deploy
+      EXITSTATUS=$?
+      if [ $EXITSTATUS = 0 ]; then
+        REPORT="${REPORT} Build, Deploy Status OK\n"
+      else
+        REPORT="${REPORT} Build or Deploy Error\n"
+      fi
+    fi
+else
+    REPORT="${REPORT} aeros NOT FOUND\n"
+fi
+cd $HOMEDIR
+#------------------------
+# Ric install only for main ric server
+if [ -d ric/src ] ;
+then
+  REPORT="${REPORT} ric FOUND:"
+  cd ric/src; echo "";
+    if [ $CLEAN = 0 ] ; 
+    then
+      scons -c 
+      EXITSTATUS=$?
+      checkCleanStatus
+    else
+      scons 
+      EXITSTATUS=$?
+      if [ $EXITSTATUS = 0 ]; then
+        REPORT="${REPORT} Build Status OK\n"
+      else
+        REPORT="${REPORT} Build Error\n"
+      fi
+    fi
+else
+    REPORT="${REPORT} ric NOT FOUND\n"
+fi
+cd $HOMEDIR
 
-scons -C vardb install
-
+#-------------------------------------------------------------------------------
 # Programs using 'make install'.
+# currently only ncplot, camera
+#
+if [ -d ncplot ]; 
+then
+  REPORT="${REPORT} ncplot FOUND:"
+  cd ncplot
+  echo ""
+  if [ $CLEAN = 0 ] ; 
+    then
+      make clean
+      EXITSTATUS=$?
+      checkCleanStatus
+    else
+      make install
+      EXITSTATUS=$?
+      if [ $EXITSTATUS = 0 ];
+      then
+        REPORT="${REPORT} Build OK: check install in /opt/local/bin \n"
+      else
+        REPORT="${REPORT} Build ERROR \n"
+      fi
+  fi
+else
+  REPORT="${REPORT} ncplot NOT FOUND\n"
+fi
 
-foreach file ( ads2/hdrbld ads2/xhd instruments/rdma ads_utils/edADShdr )
-  (cd $file; echo ""; make install)
-  if ($num > 0) then
-    echo "$file BUILT"
-    sleep $num
-    reset
-  endif
-en
+cd $HOMEDIR
+#------------------------
+if [ -d camera ] || [ -d aircraft_camera ]; 
+then
+  REPORT="${REPORT} camera FOUND:"
+  cd camera || cd aircraft_camera; echo "" 
+  if [ $CLEAN = 0 ] ; 
+    then
+      make clean
+      EXITSTATUS=$?
+      checkCleanStatus
+    else
+      make install
+      EXITSTATUS=$?
+      if [ $EXITSTATUS = 0 ];
+      then
+        REPORT="${REPORT} Build OK: requires sudo install \n"
+      else
+        REPORT="${REPORT} Build ERROR \n"
+      fi
+  fi
+else
+  REPORT="${REPORT} camera NOT FOUND\n"
+fi
 
-# Programs using 'scons' and 'scons install'.
+cd $HOMEDIR
+#-------------------------------------------------------------------------------
 
-foreach file ( nimbus caledit kml_tools/acTrack2kml instruments/sid2h instruments/cpi/cpidisplay )
-  (cd $file; echo $file; scons install)
-  if ($num > 0) then
-    echo "$file BUILT"
-    sleep $num
-    reset
-  endif
-end
-
-
-# Programs withOUT install target.  WINDS requires xview toolkit.
-
-if ( $?WINDS ) then
-  cd ads2
-  foreach file ( ads/disc/src ads/dsm/src winds/src )
-    (cd $file; echo $file; make)
-    if ($num > 0) then
-      echo "$file BUILT"
-      sleep $num
-      reset
-    endif
-  end
-  cd ..
-endif
-
+echo -e "\n\n\n$REPORT"
