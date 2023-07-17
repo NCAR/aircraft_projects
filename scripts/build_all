@@ -50,6 +50,7 @@ while getopts "hc:" flag; do
 done
 
 
+
 num=0
 if [ $#argv > 0 ]; then
   num=$1
@@ -114,7 +115,7 @@ do
   then
     REPORT="${REPORT} ${file} FOUND:"
     cd $file || cd "aircraft_${file}"; echo "";
-    if [ $CLEAN = 0 ] ; 
+    if [ $CLEAN = 1 ] ; 
     then
       scons -c 
       EXITSTATUS=$?
@@ -135,7 +136,7 @@ if [ -d aeros/source ] ;
 then
   REPORT="${REPORT} aeros FOUND:"
   cd aeros/source; echo "";
-    if [ $CLEAN = 0 ] ; 
+    if [ $CLEAN = 1 ] ; 
     then
       scons -c 
       EXITSTATUS=$?
@@ -159,7 +160,7 @@ if [ -d ric/src ] ;
 then
   REPORT="${REPORT} ric FOUND:"
   cd ric/src; echo "";
-    if [ $CLEAN = 0 ] ; 
+    if [ $CLEAN = 1] ; 
     then
       scons -c 
       EXITSTATUS=$?
@@ -187,7 +188,7 @@ then
   REPORT="${REPORT} ncplot FOUND:"
   cd ncplot
   echo ""
-  if [ $CLEAN = 0 ] ; 
+  if [ $CLEAN = 1 ] ; 
     then
       make clean
       EXITSTATUS=$?
@@ -212,7 +213,7 @@ if [ -d camera ] || [ -d aircraft_camera ];
 then
   REPORT="${REPORT} camera FOUND:"
   cd camera || cd aircraft_camera; echo "" 
-  if [ $CLEAN = 0 ] ; 
+  if [ $CLEAN = 1 ] ; 
     then
       make clean
       EXITSTATUS=$?
@@ -235,3 +236,4 @@ cd $HOMEDIR
 #-------------------------------------------------------------------------------
 
 echo -e "\n\n\n$REPORT"
+echo $CLEAN
