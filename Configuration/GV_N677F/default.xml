@@ -922,6 +922,32 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
+    <sensor ID="CVI" class="UDPSocketSensor" devicename="usock::30135" id="400" suffix="_CVI">
+       <!--
+       CVI has 69 total variables in current (may 2021) udp string, last one used is 48
+       -->
+      <sample id="1" rate="1" scanfFormat="CVI,%*f-%*f-%*fT%*f:%*f:%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable longname="CVI Pressure ONB" name="PONB" units="hpa"/>
+        <variable longname="CVI User Pressure" name="PUSER" units="hpa"/>
+        <variable longname="CVI Bypass Pressure" name="PBYP" units="hpa"/>
+        <variable longname="CVI External Temperature" name="TEXT" units="deg_C"/>
+        <variable longname="CVI Fan Temperature" name="TFAN" units="deg_C"/>
+        <variable longname="CVI Sample Pressure" name="PSAMP" units="hpa"/>
+        <variable longname="CVI User Flow" name="USRFLW" units="slpm"/>
+        <variable longname="CVI Bypass Flow" name="BYPFLW" units="slpm"/>
+        <variable longname="CVI Flow Dry" name="DRYFLW" units="slpm"/>
+        <variable longname="CVI Temperature back" name="TBACK" units="deg_C"/>
+        <variable longname="CVI V Flow" name="VFLOW" units="units"/>
+        <variable longname="CVI Dilution" name="dilution" units="units"/>
+        <variable longname="CVI Enhancement Factor" name="enhancement" units="units"/>
+        <variable longname="CVI D Cut 50 um" name="DCUT50" units="units"/>
+        <variable longname="CVI Liquid Water Content" name="LWC" units="g/m^3"/>
+        <variable longname="TDL Water Concentration" name="H2OR" units="g/m^3"/>
+        <variable longname="TDL Pressure" name="PTDLR" units="mb"/>
+        <variable longname="TDL Temperature" name="TTDLR" units="deg_C"/>
+      </sample>
+    </sensor>
+
     <serialSensor ID="VCSEL" baud="38400" class="raf.VCSEL_Serial" databits="8" parity="none" stopbits="1" suffix="_VXL">
 
 <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
