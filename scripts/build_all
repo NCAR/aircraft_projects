@@ -82,18 +82,22 @@ test -d ${LOCAL}/bin || mkdir ${LOCAL}/bin
 test -d ${LOCAL}/man/man1 || mkdir -p ${LOCAL}/man/man1
 test -d ${LOCAL}/man/man3 || mkdir -p ${LOCAL}/man/man3
 
+BLACK="\033[30m"
+RED="\033[31m"
+GREEN="\033[32m"
+
 checkCleanStatus(){
     if [ $EXITSTATUS = 0 ]; then
-      REPORT="${REPORT} Clean Status OK\n"
+      REPORT="${REPORT} Clean Status ${GREEN} OK${BLACK}\n"
     else
-      REPORT="${REPORT} Clean Error\n"
+      REPORT="${REPORT} Clean ${RED}Error${BLACK}\n"
     fi
 }
 checkStatus(){
     if [ $EXITSTATUS = 0 ]; then
-      REPORT="${REPORT} Build, Install Status OK\n"
+      REPORT="${REPORT} Build, Install Status ${GREEN} OK${BLACK}\n"
     else
-      REPORT="${REPORT} Build or Install Error\n"
+      REPORT="${REPORT} Build or Install ${RED} Error${BLACK}\n"
     fi
 }
 
@@ -138,9 +142,9 @@ then
       scons deploy
       EXITSTATUS=$?
       if [ $EXITSTATUS = 0 ]; then
-        REPORT="${REPORT} Build, Deploy Status OK\n"
+        REPORT="${REPORT} Build, Deploy Status ${GREEN} OK${BLACK}\n"
       else
-        REPORT="${REPORT} Build or Deploy Error\n"
+        REPORT="${REPORT} Build or Deploy ${RED} Error${BLACK}\n"
       fi
     fi
 else
@@ -162,9 +166,9 @@ then
       scons 
       EXITSTATUS=$?
       if [ $EXITSTATUS = 0 ]; then
-        REPORT="${REPORT} Build Status OK\n"
+        REPORT="${REPORT} Build Status ${GREEN} OK${BLACK}\n"
       else
-        REPORT="${REPORT} Build Error\n"
+        REPORT="${REPORT} Build ${RED} Error${BLACK}\n"
       fi
     fi
 else
@@ -191,9 +195,9 @@ then
       EXITSTATUS=$?
       if [ $EXITSTATUS = 0 ];
       then
-        REPORT="${REPORT} Build OK: check install in /opt/local/bin \n"
+        REPORT="${REPORT} Build ${GREEN} OK ${BLACK}: check install in /opt/local/bin \n"
       else
-        REPORT="${REPORT} Build ERROR \n"
+        REPORT="${REPORT} Build ${RED} ERROR ${BLACK}\n"
       fi
   fi
 else
@@ -216,13 +220,13 @@ then
       EXITSTATUS=$?
       if [ $EXITSTATUS = 0 ];
       then
-        REPORT="${REPORT} Build OK: requires sudo install \n"
+        REPORT="${REPORT} Build ${GREEN} OK${BLACK}: requires sudo install \n"
       else
-        REPORT="${REPORT} Build ERROR \n"
+        REPORT="${REPORT} Build ${RED} ERROR ${BLACK}\n"
       fi
   fi
 else
-  REPORT="${REPORT} camera NOT FOUND\n"
+  REPORT="${REPORT} camera ${RED} NOT FOUND${BLACK}\n"
 fi
 
 cd $HOMEDIR
@@ -230,3 +234,4 @@ cd $HOMEDIR
 
 echo -e "\n\n\n$REPORT"
 echo $CLEAN
+echo ${BLACK}
