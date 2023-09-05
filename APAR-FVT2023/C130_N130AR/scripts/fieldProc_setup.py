@@ -42,7 +42,7 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = True
+FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
@@ -55,8 +55,8 @@ ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
 ICARTT = False # Generate ICARTT
 IWG1 = False # Generate IWG1 packet
 
-HRT = False # Generate HRT .nc file
-SRT = False # Generate SRT .nc file
+HRT = True # Generate HRT .nc file
+SRT = True # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
 zip_ADS = False # Bzips the ads file independently of processed files
 # you can have both sendzipped and zip_ads set to True if you want
@@ -67,10 +67,10 @@ ship_all_ADS = False
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
-PMS2D = True            #PMS2D from 2D-C
+PMS2D = False           #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
-Rstudio = True # Generate a PDF of the QC plots
+Rstudio = False # Generate a PDF of the QC plots
 catalog = False # Send QC plots to field catalog, leave as False
 
 #############################################################################
