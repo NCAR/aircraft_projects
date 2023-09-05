@@ -25,7 +25,7 @@ from email.mime.text import MIMEText
 from collections import OrderedDict
 import logging
 sys.path.insert(0, '/home/local/projects/' + os.environ['PROJECT'] + '/GV_N677F/scripts')
-from fieldProc_setup import user, password, DATA_DIR, RAW_DATA_DIR, dat_parent_dir, rdat_parent_dir, NAS, NAS_permanent_mount, nas_url, nas_mnt_pt, FTP, ftp_site, password, ftp_parent_dir, ftp_data_dir, ICARTT, IWG1, HRT, SRT, sendzipped, zip_ADS, ship_ADS, ship_all_ADS, PMS2D, threeVCPI, Rstudio, catalog, rstudio_dir, translate2ds, datadump, GDRIVE, rclone_staging_dir
+from fieldProc_setup import user, password, DATA_DIR, RAW_DATA_DIR, dat_parent_dir, rdat_parent_dir, NAS, NAS_permanent_mount, nas_url, nas_mnt_pt, FTP, ftp_site, password, ftp_parent_dir, ftp_data_dir, ICARTT, IWG1, HRT, SRT, sendzipped, zip_ADS, ship_ADS, ship_all_ADS, PMS2D, threeVCPI, QA_notebook, catalog, rstudio_dir, translate2ds, datadump, GDRIVE, rclone_staging_dir
 
 print(ftp_data_dir)
 
@@ -722,14 +722,14 @@ class FieldData():
         # Run Al Cooper's R code for QA/QC production
         # Currently requires being run from the ~/RStudio/QAtools directory.
         # To run interactively: launch rstudio, then type "shiny::runApp()"
-        if Rstudio:
+        if QA_notebook:
             os.chdir(rstudio_dir+"aircraft_QAtools")
-            command = "Rscript DataReview.R "+project+" "+flight
+            command = "./home/local/aircraft_QAtools_notebook/auto_export.py --project "+project+" --flight "+flight
             message = "about to execute : "+command
             os.system(command)
 
-            command = "cp -p "+project+flight+"Plots.pdf /home/ads/Desktop"
-            message = "copying QAQC pdf to desktop"
+            command = "cp -p "+project+flight+".html /home/ads/Desktop"
+            message = "copying QAQC html to desktop"
             self.logger.info(message)
             print(message)
             os.system(command)

@@ -70,7 +70,7 @@ ship_all_ADS = False
 PMS2D = False           #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
-Rstudio = False # Generate a PDF of the QC plots
+QA_notebook = True # Generate HTML of the QA plots
 catalog = False # Send QC plots to field catalog, leave as False
 
 #############################################################################
