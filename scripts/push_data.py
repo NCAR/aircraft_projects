@@ -27,8 +27,6 @@ import logging
 sys.path.insert(0, '/home/local/projects/' + os.environ['PROJECT'] + '/GV_N677F/scripts')
 from fieldProc_setup import user, password, DATA_DIR, RAW_DATA_DIR, dat_parent_dir, rdat_parent_dir, NAS, NAS_permanent_mount, nas_url, nas_mnt_pt, FTP, ftp_site, password, ftp_parent_dir, ftp_data_dir, ICARTT, IWG1, HRT, SRT, sendzipped, zip_ADS, ship_ADS, ship_all_ADS, PMS2D, threeVCPI, QA_notebook, catalog, rstudio_dir, translate2ds, datadump, GDRIVE, rclone_staging_dir
 
-print(ftp_data_dir)
-
 class FieldData():
 
     def __init__(self):
@@ -73,7 +71,6 @@ class FieldData():
         self.createFilePrefix(self.project, self.flight)
         self.initializeFinalMessage(self.flight, self.project)
         self.ensureDataDir(self.data_dir)
-        self.confirmRStudio(rstudio_dir)
 
     def parse_args(self):
         # set up argument parsing
@@ -198,17 +195,6 @@ class FieldData():
     def ensureDataDir(self, data_dir):
         self.ensure_dir(data_dir)
 
-    def confirmRStudio(self, rstudio_dir):
-        '''
-        Confirm code exists for RStudio plotting
-        '''
-        if not os.path.exists(rstudio_dir):
-            message = 'RStudio DataReview has not been checked out at : ' + rstudio_dir
-            print(message)
-            self.logger.info(message)
-            message = 'QC plots cannot be generated.'
-            print(message)
-            self.logger.info(message)
     def initializeFinalMessage(self, flight, project):
         '''
         Prepare for final message information
@@ -719,12 +705,10 @@ class FieldData():
                     self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
                                    self.file_ext[key], process, reprocess, self.date[0:8])
 
-        # Run Al Cooper's R code for QA/QC production
-        # Currently requires being run from the ~/RStudio/QAtools directory.
-        # To run interactively: launch rstudio, then type "shiny::runApp()"
+        # Generate the QAtools_notebook HTML and copy to desktop
         if QA_notebook:
-            os.chdir(rstudio_dir+"aircraft_QAtools")
-            command = "./home/local/aircraft_QAtools_notebook/auto_export.py --project "+project+" --flight "+flight
+            os.chdir("/home/local/aircraft_QAtools_notebook/")
+            command = "./auto_export.py --project "+project+" --flight "+flight
             message = "about to execute : "+command
             os.system(command)
 
@@ -779,12 +763,12 @@ class FieldData():
                 print(message)
                 status[key]["stor"] = self.rsync_file(filename[key], self.nas_data_dir + '/' + key)
 
-        if catalog:
-            self.ensure_dir(self.nas_data_dir + "/qc")
-            message = 'Copying QC plots to ' + self.nas_data_dir + "/qc"
-            self.logger.info(message)
-            print(message)
-            status[key]["stor"] = self.rsync_file(rstudio_dir + "/QAtools/" + raircraft + date + ".RAF_QC_plots.pdf", self.nas_data_dir + "/qc")
+        #if catalog:
+        #    self.ensure_dir(self.nas_data_dir + "/qc")
+        #    message = 'Copying QC plots to ' + self.nas_data_dir + "/qc"
+        #    self.logger.info(message)
+        #    print(message)
+        #    status[key]["stor"] = self.rsync_file(rstudio_dir + "/QAtools/" + raircraft + date + ".RAF_QC_plots.pdf", self.nas_data_dir + "/qc")
 
         return self.nas_data_dir, self.nas_sync_dir
 
@@ -824,64 +808,6 @@ class FieldData():
                 print(message)
                 self.zip_file(file_name, inst_dir[key])
 
-    def datadump(self, email, project, flight, raircraft, date):
-        """
-        Data_dump section
-        Project specific data_dump's for indivual users.
-        """
-        # Put QC files into catalog and to the NAS if it exists
-        try:
-            message = "*************************** Catalog transfer *****************"
-            self.logger.info(message)
-            print(message)
-            message = 'opening FTP connection to: ' + qc_ftp_site
-            self.logger.info(message)
-            print(message)
-            message = '- putting QC data in directory: ' + qc_ftp_dir
-            self.logger.info(message)
-            print(message)
-
-            ftp = ftplib.FTP(qc_ftp_site)
-            ftp.login("anonymous", email)
-            ftp.cwd(qc_ftp_dir)
-
-            message = "Renaming file "+project+flight+"Plots.pdf"
-            self.logger.info(message)
-            print(message)
-            command = "/bin/mv "+rstudio_dir+"/QAtools/"+project+flight+"Plots.pdf "+rstudio_dir+"/QAtools/"+raircraft+date+".RAF_QC_plots.pdf"
-            message = "about to execute : " + command
-            self.logger.info(message)
-            print(message)
-            if os.system(command) == 0:
-                status["QCplots"]["ship"] = 'Yes-Cat'
-                message = "Sending file " + raircraft + date + ".RAF_QC_plots.pdf to catalog"
-                self.logger.info(message)
-                print(message)
-                os.chdir(rstudio_dir + "/QAtools")
-                file = open(raircraft + date + ".RAF_QC_plots.pdf", 'r')
-                print(ftp.storbinary('STOR ' + raircraft + date + ".RAF_QC_plots.pdf", file))
-                file.close()
-            else:
-                message = "ERROR: Rename of plots failed\n"
-                self.logger.error(message)
-                print(message)
-        except ftplib.all_errors as e:
-            message = 'Error writing QC data to server'
-            self.logger.error(message)
-            print(message)
-            self.logger.error(e)
-            print(e)
-            try:
-                ftp.quit()
-            except ftplib.all_errors as e:
-                message = 'Could not close ftp connection:'
-                self.logger.error(message)
-                print(message)
-                self.logger.error(e)
-                print(e)
-
-        print("*************************** End Catalog transfer *************\n")
-
     def GDrive(self, data_dir, raw_dir, status, file_ext, inst_dir, filename, rclone_staging_dir):
         '''No NAS this project, so put files to Google Drive. Put
         zipped files if they exist.
@@ -909,7 +835,7 @@ class FieldData():
                         self.logger.error(e)
                         print(e)
                     try:
-                        os.system('rclone copy ' + rclone_staging_dir + '/ADS' + ' testgdrive:CGWAVES/EOL_data/RAF_data/ADS --ignore-existing')
+                        os.system('rclone copy ' + rclone_staging_dir + '/ADS' + ' gdrive_eolfield:/APAR-FVT2023/EOL_data/RAF_data/ADS --ignore-existing')
                         status["ADS"]["ship"] = 'Yes-GDrive'
                     except:
                         message = rawfilename + ' not rcloned to Google Drive'
@@ -993,7 +919,7 @@ class FieldData():
                             continue
 
                         try:
-                            os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' gdrive_eolfield:CGWAVES/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                            os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' gdrive_eolfield:APAR-FVT2023/EOL_data/RAF_data/' + key + ' --ignore-existing')
                             status[key]["ship"] = 'Yes-GDrive'
                             print(datetime.datetime.now().time())
                             print('Finished rclone process for data file')
@@ -1019,7 +945,7 @@ class FieldData():
                         continue
 
                     try:
-                        os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' testgdrive:CGWAVES/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                        os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' gdrive_eolfield:APAR-FVT2023/EOL_data/RAF_data/' + key + ' --ignore-existing')
                         status[key]["ship"] = 'Yes-GDrive'
                         print(datetime.datetime.now().time())
                         print('Finished rclone process for ' + file_name)
@@ -1282,10 +1208,6 @@ def main():
     # Zip files only if set to True
     if sendzipped:
         fieldata.setup_zip(fielddata.file_ext, fielddata.data_dir, fielddata.filename, fielddata.inst_dir)
-
-    # Send data to the Field Catalog if set to True
-    if catalog:
-        fielddata.datadump(fielddata.email, fielddata.project, fielddata.flight, raircraft, fielddata.date)
 
     # Call FTP function if the FTP flag is set to True
     if FTP:

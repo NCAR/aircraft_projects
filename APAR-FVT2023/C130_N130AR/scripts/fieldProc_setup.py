@@ -93,3 +93,5 @@ translate2ds = '/opt/local/bin/translate2ds '
 #############################################################################
 datadump = False
 
+GDRIVE = True
+rclone_staging_dir = '/home/data/rclone_staging/apar-fvt2023'

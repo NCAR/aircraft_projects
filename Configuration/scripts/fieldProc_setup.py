@@ -93,3 +93,5 @@ translate2ds = '/opt/local/bin/translate2ds '
 #############################################################################
 datadump = False
 
+GRDIVE = False
+rclone_staging_dir = ''
