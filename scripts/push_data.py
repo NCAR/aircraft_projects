@@ -835,7 +835,7 @@ class FieldData():
                         self.logger.error(e)
                         print(e)
                     try:
-                        os.system('rclone copy ' + rclone_staging_dir + '/ADS' + ' gdrive_eolfield:/APAR-FVT2023/EOL_data/RAF_data/ADS --ignore-existing')
+                        os.system('rclone copy ' + rclone_staging_dir + '/ADS' + ' gdrive_eolfield:/' + os.environ['PROJECT'] + '/EOL_data/RAF_data/ADS --ignore-existing')
                         status["ADS"]["ship"] = 'Yes-GDrive'
                     except:
                         message = rawfilename + ' not rcloned to Google Drive'
@@ -919,7 +919,7 @@ class FieldData():
                             continue
 
                         try:
-                            os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' gdrive_eolfield:APAR-FVT2023/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                            os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' gdrive_eolfield:' + os.environ['PROJECT'] + '/EOL_data/RAF_data/' + key + ' --ignore-existing')
                             status[key]["ship"] = 'Yes-GDrive'
                             print(datetime.datetime.now().time())
                             print('Finished rclone process for data file')
@@ -945,7 +945,7 @@ class FieldData():
                         continue
 
                     try:
-                        os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' gdrive_eolfield:APAR-FVT2023/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                        os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' gdrive_eolfield:' + os.environ['PROJECT'] + '/EOL_data/RAF_data/' + key + ' --ignore-existing')
                         status[key]["ship"] = 'Yes-GDrive'
                         print(datetime.datetime.now().time())
                         print('Finished rclone process for ' + file_name)
