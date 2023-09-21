@@ -16,9 +16,9 @@ import smtplib
 from email.mime.text import MIMEText
 
 # set up variables
-temp_dir = '/scr/raf_Raw_Data/CGWAVES/field_sync/'
+temp_dir = '/scr/raf_Raw_Data/APAR-FVT2023/field_sync/'
 project = os.getenv('PROJECT')
-aircraft = 'GV_N677F' 
+aircraft = 'C130_N130AR' 
 proj_dir = '/net/jlocal/projects/'+project+'/'+aircraft+'/'
 sys.path.insert(0,proj_dir+'scripts/')
 sys.path.insert(0,proj_dir)
@@ -276,6 +276,17 @@ def dist_recursive_MTP(directory):
     logging.info(final_message)
     return(final_message)
 
+def dist_recursive_QAtools(directory):
+    final_message = 'Starting distribution of QAtools.html\n'
+
+    # Rsync anything and everything in the MTP dir
+    command = 'rsync -rqu '+eol_dir+directory+' /net/www/raf/'
+    message = 'Syncing QAtools dir into place: '+command+'\n'
+    os.system(command)
+    final_message = final_message + message
+    logging.info(final_message)
+    return(final_message)
+
 def ingest_to_local(filetype, local_dir, start_dir):
     """
     Function to distribute data from FTP to local dirs for QAQC and backup
@@ -347,7 +358,6 @@ def main():
         dist_prod()
         dist_field()
         dist_recursive_MTP('/RAF_data/MTP')
-
     elif NAS == False and GDRIVE == True:
         #dist_PI('PI_data')
         ingest_to_local('LRT', dat_dir+'/field_data', temp_dir)
@@ -365,7 +375,7 @@ def main():
         if ICARTT:
             ingest_to_local('ICARTT', dat_dir+'/field_data', temp_dir)
         dist_field()
-    # send_mail_and_die(body)    exit(1)
+        dist_recursive_QAtools('/RAF_data/QAtools')      
 
     elif NAS == False and FTP == True:
         #dist_PI('PI_data')
