@@ -75,3 +75,16 @@ ps ax | grep ric_switch | grep -qv grep
 if [ $? -eq 1 ]; then
   /home/local/ric/src/switch/ric_switch > /tmp/ric_switch.log &
 fi
+
+
+# Check for arincenet 1
+#ps ax | grep arinc_enet | grep 192.168.84.17 |grep -qv grep
+#if [ $? -eq 1 ]; then
+#  arinc_ctrl -i 192.168.84.17 -p 56771 -s 4,0 -s 6,1 -s 7,0 -u 30221 &
+#fi
+
+# Check for arincenet 2
+#ps ax | grep arinc_enet | grep 192.168.84.16 |grep -qv grep
+#if [ $? -eq 1 ]; then
+#  arinc_ctrl -i 192.168.84.16 -p 56769 -s 4,0 -s 6,1 -s 7,0 -u 30220 &
+#fi
