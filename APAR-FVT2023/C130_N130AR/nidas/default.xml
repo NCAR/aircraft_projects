@@ -1402,6 +1402,18 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable name="HTEMP5" longname="Holodec temperature, zone 5, Laser Controller" units="deg_C"/>
       </sample>
     </sensor>
+
+    <sensor ID="VCSEL2" class="UDPSocketSensor" devicename="usock:30134" suffix="_VXL2">
+        <sample id="1" rate="1" scanfFormat="%f,%f,%f,%f,%f,%f,%f">
+            <variable longname="VCSEL2 Reference Position" name="REFPOS" units=""/>
+            <variable longname="VCSEL2 MODE" name="MODE" units="none"/>
+            <variable longname="VCSEL2 WMSAMP" name="WMSAMP" units=""/>
+            <variable longname="VCSEL2 WMSWIDTH" name="WMSWIDTH" units=""/>
+            <variable longname="VCSEL2 PEAKABS" name="PEAKABS" units=""/>
+            <variable longname="VCSEL2 RAWCONC" name="RAWCONC" units="#/cm3"/>
+            <variable longname="VCSEL2 RAWPPMV" name="RAWPPMV" units=""/>
+        </sample>
+    </sensor>
   </sensorcatalog>
 
 
@@ -1467,6 +1479,7 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
 
+      <sensor IDREF="VCSEL2" devicename="usock::30134" id="800"/>
 
       <sensor IDREF="TWODS" devicename="usock::30113" id="1000">
         <parameter name="SerialNumber" type="string" value="F2DS019"/>
