@@ -464,39 +464,55 @@
       </sample>
     </arincSensor>
 
-    <sensor ID="SPEC2DS" class="UDPSocketSensor" devicename="inet::42420">
-      <sample id="1" rate="1" scanfFormat="SPEC2D,%*f-%*f-%*fT%*f:%*f:%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-        <variable longname="3VCPI Horizontal Particles Detected" name="HPRT" units="count"/>
-        <variable longname="3VCPI Vertical Particles Detected" name="VPRT" units="count"/>
-
-<!--<variable longname="3VCPI Total Particles Detected per second" name="TPRT" units="count"/>-->
-        <variable longname="3VCPI Sample Volume" name="SVOL" units="L"/>
-        <variable longname="3VCPI Mean Particle Size" name="SIZM" units="microns"/>
-        <variable longname="3VCPI Mean Particle Size for all > 50 microns" name="SIZM50" units="microns"/>
-        <variable longname="3VCPI Max Particle Size" name="SIZMAX" units="microns"/>
-        <variable length="13" longname="3VCPI Raw Count Histogram" name="A3VCPI" units="count"/>
-        <variable longname="3VCPI HElement0" name="H0" units="unk"/>
-        <variable longname="3VCPI HElement64" name="H64" units="unk"/>
-        <variable longname="3VCPI HElement127" name="H127" units="unk"/>
-        <variable longname="3VCPI VElement0" name="V0" units="unk"/>
-        <variable longname="3VCPI VElement64" name="V64" units="unk"/>
-        <variable longname="3VCPI VElement127" name="V127" units="unk"/>
-        <variable longname="+7V" name="POS7" units="unk"/>
-        <variable longname="-7V" name="NEG7" units="unk"/>
-        <variable longname="H Mask" name="HMSK" units="unk"/>
-        <variable longname="V Mask" name="VMSK" units="unk"/>
-        <variable longname="H TX Arm Temp" name="THTXARM" units="degC"/>
-        <variable longname="H RX Arm Temp" name="THRXARM" units="degC"/>
-        <variable longname="V TX Arm Temp" name="TVTXARM" units="degC"/>
-        <variable longname="V RX Arm Temp" name="TVRXARM" units="degC"/>
-        <variable longname="DSP Board Temp" name="TBRD" units="degC"/>
-        <variable longname="H Laser Temp" name="THLAS" units="degC"/>
-        <variable longname="V Laser Temp" name="TVLAS" units="degC"/>
-        <variable longname="Power Supply Temp" name="TPS" units="degC"/>
-        <variable longname="HK Received" name="HKREC" units="unk"/>
-        <variable longname="Internal Pressure" name="PINT" units="psi"/>
+    <sensor ID="ALTASTATUS" class="UDPSocketSensor" devicename="usock::30220">
+      <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
+        <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
+        <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
+        <variable longname="ENET IRIG Detect status: 0=NODETECT, 8=DETECT" name="IRIG_Status" units="bits"/>
+        <variable longname="ENET Number of Transactions" name="TCPTRANS" units="#"/>
+        <variable longname="ENET Number of Retries" name="TCPRTRY" units="#"/>
+        <variable longname="ENET Number of Failures" name="TCPFAILS" units="#"/>
+        <variable longname="ENET ROOT PE Control-Status Register" name="PECTRL" units="bits"/>
+        <variable longname="ENET ROOT PE Status Register" name="PESTS" units="bits"/>
+        <variable longname="ENET PE BIT Register" name="PEBIT" units="bits"/>
       </sample>
     </sensor>
+
+    <sensor ID="TWODS" class="raf.TwoDS" devicename="usock::30113" suffix="_2DS">
+      <parameter name="SerialNumber" type="string" value="F2DS019"/>
+      <parameter name="RESOLUTION" type="int" value="10"/>
+      <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable name="TACT2H" longname="2DS Total Particles Horizontal" units="count"/>
+        <variable name="TACT2V" longname="2DS Total Particles Vertical" units="count"/>
+        <variable name="CONCS" longname="2DS Total Number Particles" units="#/cm3"/>
+        <variable name="DBARS" longname="2DS Mean Particle Diameter" units="um"/>
+        <variable name="MAXS" longname="2DS Max Particle Diameter" units="um"/>
+        <variable length="13" name="A2DSH" longname="2DS Horizontal Accumulation" units="count"/>
+        <variable length="13" name="A2DSV" longname="2DS Vertical Accumulation" units="count"/>
+        <variable name="DIOVH01" longname="2DS Diode Voltage, Horizontal Diode 1" units="Vdc"/>
+        <variable name="DIOVH64" longname="2DS Diode Voltage, Horizontal Diode 64" units="Vdc"/>
+        <variable name="DIOVH128" longname="2DS Diode Voltage, Horizontal Diode 128" units="Vdc"/>
+        <variable name="DIOVV01" longname="2DS Diode Voltage, Vertical Diode 1" units="Vdc"/>
+        <variable name="DIOVV64" longname="2DS Diode Voltage, Vertical Diode 64" units="Vdc"/>
+        <variable name="DIOVV128" longname="2DS Diode Voltage, Vertical Diode 128" units="Vdc"/>
+        <variable name="P7V" longname="2DS " units="Vdc"/>
+        <variable name="N7V" longname="2DS " units="Vdc"/>
+        <variable name="HMASK" longname="2DS Horizontal Mask" units="none"/>
+        <variable name="VMASK" longname="2DS Vertical Mask" units="none"/>
+        <variable name="HOPT" longname="2DS Horizontal Optics Temperature" units="deg_C"/>
+        <variable name="VOPT" longname="2DS Vertical Optics Temperature" units="deg_C"/>
+        <variable name="HARTT" longname="2DS Horizontal Array Top Temperature" units="deg_C"/>
+        <variable name="VARTT" longname="2DS Vertical Array Top Temperature" units="deg_C"/>
+        <variable name="DSPT" longname="2DS DSP Board Temperature" units="deg_C"/>
+        <variable name="HLT" longname="2DS Horizontal Laser Temperature" units="deg_C"/>
+        <variable name="VLT" longname="2DS Vertical Laser Temperature" units="deg_C"/>
+        <variable name="PT" longname="2DS Power Supply Temperature" units="deg_C"/>
+        <variable name="HKR" longname="2DS House Keeping Packets Received" units="counts"/>
+        <variable name="CANP" longname="2DS Internal Pressure" units="psi"/>
+        <variable name="RH" longname="2DS Relative Humidity" units="%"/>
+      </sample>
+    </sensor>
+
 
         <serialSensor ID="SerialGeneral" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
           <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
@@ -559,6 +575,7 @@
 	    <variable longname="Fast 2DC Total Area of shadowed pixels" name="AREA" units="mm2"/>
           </sample>
         </sensor>
+
         <sensor ID="DSMTEMP_UDP" class="UDPSocketSensor" devicename="usock::30200">
           <sample id="1" rate="1" scanfFormat="T=%f">
             <variable longname="DSM Temperature" name="DSMTEMP" units="C"/>
@@ -575,6 +592,7 @@
             </sample>
 	</serialSensor>
     </sensorcatalog>
+
 
     <site class="raf.Aircraft" name="Lab_N600" applyCals="true">
         <parameter name="tailNumber" type="string" value="N600"/>
@@ -614,13 +632,31 @@
         </server>
 
     <dsm derivedData="sock::31000" id="99" location="acserver" name="acserver" statusAddr="sock:192.168.84.2:30001">
+
+      <sensor IDREF="TWODS" devicename="usock::30113" id="1000">
+        <parameter name="SerialNumber" type="string" value="F2DS020"/>
+      </sensor>
+
+      <sensor IDREF="ALTASTATUS" devicename="usock::30220" id="6000" suffix="_AENT1"/>
+      <sensor ID="ARINCENET1" class="raf.UDPArincSensor" devicename="usock::56769" id="6100" timeout="10">
+        <parameter name="ip" type="string" value="192.168.84.16"/>
+        <parameter name="status_port" type="int" value="30220"/>
+      </sensor>
+      <arincSensor IDREF="IRS-C130" devicename="Alta:6100:4" id="6200"/>
+      <arincSensor IDREF="ADC" devicename="Alta:6100:6" id="6800" suffix="_A"/>
+      <arincSensor IDREF="GPSHW" devicename="Alta:6100:7" id="7100" suffix="_A"/>
+
+      <sensor IDREF="ALTASTATUS" devicename="usock::30221" id="8000" suffix="_AENT2"/>
+      <sensor ID="ARINCENET2" class="raf.UDPArincSensor" devicename="usock::56771" id="8100" timeout="10">
+        <parameter name="ip" type="string" value="192.168.84.17"/>
+        <parameter name="status_port" type="int" value="30221"/>
+      </sensor>
+      <arincSensor IDREF="IRS-C130" devicename="Alta:8100:4" id="8200" suffix="_IRS3"/>
+      <arincSensor IDREF="ADC" devicename="Alta:8100:6" id="8800" suffix="_A2"/>
+      <arincSensor IDREF="GPSHW" devicename="Alta:8100:7" id="9100" suffix="_A2"/>
+
+
 <!--
-      <sensor IDREF="SPEC2DS" devicename="usock::42420" id="500" suffix="_2DS"/>
--->
-
-      <sensor IDREF="SPEC2DS" devicename="usock::42420" id="500" suffix="_HVPS"/>
-
-      <!--
       <sensor IDREF="DSMTEMP" class="UDPSocketSensor" devicename="usock::30202" id="100" suffix="_DSMSPARE"/>
 -->
       <output class="RawSampleOutputStream">
