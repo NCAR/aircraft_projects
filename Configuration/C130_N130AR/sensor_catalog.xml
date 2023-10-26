@@ -845,6 +845,26 @@ must be imported into default.xml -->
         <message length="154"/>
     </serialSensor>
 
+    <serialSensor ID="SDIflow" baud="19200" class="raf.AlicatSDI" databits="8" parity="none" stopbits="1" timeout="3">
+      <parameter name="nTAS_AVERAGE" type="int" value="5"/>
+      <parameter name="QMIN" type="int" value="100"/>
+      <parameter name="QMAX" type="int" value="500"/>
+      <parameter name="TIP_DIAM" type="float" value="0.64"/>
+      <!-- Q_VOL_OFFSET is project dependant based on what instruments are using the exhaust line, defaults to 0.0 -->
+      <parameter name="Q_VOL_OFFSET" type="float" value="0.0"/>
+
+<!-- Sample Frame "A +0830.1 +024.25 +000.00 +000.00 +000.00    Air" -->
+      <sample id="1" scanfFormat="A %f %f %f %f %f %*s">
+        <variable longname="SDI Flowmeter Absolute Pressure" name="P" units="mb"/>
+        <variable longname="SDI Flowmeter Air Temperature" name="T" units="deg_C"/>
+        <variable longname="SDI Volumetric Flow" name="FLOW" units="vlpm"/>
+        <variable longname="SDI Mass Flow" name="MFLOW" units="slpm"/>
+        <variable longname="SDI Mass Flow Set Point" name="SETPT" units="slpm"/>
+      </sample>
+      <message length="0" position="end" separator="\r"/>
+      <prompt rate="1" string="A\r"/>
+    </serialSensor>
+
 <!-- 
     CDP notes:  
       - The CDP can be either a 38400 or 57600 baud instrument.  This is controlled via a jumper that is on the back side
