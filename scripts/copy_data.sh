@@ -1,7 +1,8 @@
 #!/bin/bash
+SECONDS=0  # Time this script
 ###----------------------------------------------------------------------------
-# script to copy .ads files from aircraft to transfer media for a given flight
-# after connecting removable drive, run script to transfer file(s)
+# Script to copy .ads files from aircraft to transfer media for a given flight
+# After connecting removable drive, run script to transfer file(s)
 ###----------------------------------------------------------------------------
 # assign list of parameters for transferring data
 
@@ -14,7 +15,7 @@ DRIVE=$(ls)
 echo $DRIVE
 TRANSFER_MEDIA="/run/media/ads/$DRIVE"
 
-echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
+echo "Enter flight to copy from $PROJECT using lower case e.g. rf01 or ff03:"
 read FLIGHT
 if [[ $FLIGHT = *"rf"* ]]; then
    echo "Research flight from $PROJECT selected for copying."
@@ -32,51 +33,65 @@ echo "Do you have a removable drive connected?"
 echo "Please type Y or y and press enter to confirm. Anything else and enter will stop script."
 read DRIVE_CONNECTION
 if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
+   echo "****************************************************************"
+   echo "You entered $DRIVE_CONNECTION, which means you have a drive connected.";
+
    mkdir -p $TRANSFER_MEDIA/$PROJECT
    EXIT_MKDIR="$?"
 
-   if [ "$EXIT_MKDIR" -eq 0 ]; then
+   if [ "$EXIT_MKDIR" -ne 0 ]; then
       echo "command mkdir -p $TRANSFER_MEDIA/$PROJECT not done, if folder was already made, no issues..."
    else
       echo "command mkdir -p $TRANSFER_MEDIA/$PROJECT was successful"
    fi
 
-   echo "****************************************************************"
-   echo "You entered $DRIVE_CONNECTION, which means you have a drive connected.";
-   echo "***Starting file transfer. Please wait for transfer and integrity checking to complete.***"
-   rsync -cavP --no-perms  $DATA_LOCATION/*$FLIGHT* $TRANSFER_MEDIA/$PROJECT
-   EXIT_RSYNC="$?"
-   sync
-   echo "rsync exit status: $EXIT_RSYNC"
+   test -d $TRANSFER_MEDIA/$PROJECT/
+   DRIVEDIR=$?
+   if [ "$DRIVEDIR" -eq 0 ]; then
 
-   echo "****************************************************************"
-   echo "Calculating sha256sum for original file(s)..."
-   sha256sum $DATA_LOCATION/*$FLIGHT*
-   sha256sum $DATA_LOCATION/*$FLIGHT* >> $DATA_LOCATION/sha256sum.ads_station
-   echo "************************************************************"
-   echo "****************************************************************"
-   echo "Calculating sha256sum for copied file(s)..."
-   sha256sum $TRANSFER_MEDIA/$PROJECT/*$FLIGHT*
-   echo "****************************************************************"
-   if [[ "$EXIT_RSYNC" -eq 0 ]]; then
-      echo "***Copy of .ads file(s) matching $PROJECT$FLIGHT SUCCESSFUL.***"
-      echo "***PLEASE WAIT...***"
-      echo "***When terminal closes you can safely remove the drive by right-clicking the desktop icon.***"
-      sleep 10
+      echo "***Starting file transfer. Please wait for transfer and integrity checking to complete.***"
+      rsync -cavP --no-perms  $DATA_LOCATION/*$FLIGHT* $TRANSFER_MEDIA/$PROJECT
+      EXIT_RSYNC="$?"
+      echo "***Sync cached data to permanent memory - can take 2-5 minutes.***"
+      echo "sync started at $(date)"
+      sync
+      echo "rsync exit status: $EXIT_RSYNC"
 
-   elif [[ "$EXIT" -gt 0 ]]; then
-      echo "***Copy of .ads file(s) for $PROJECT$FLIGHT UNSUCCESSFUL."
-      echo "***Check files under /var/r1/$PROJECT and try again."
+      echo "****************************************************************"
+      echo "Calculating sha256sum for original file(s)..."
+      sha256sum $DATA_LOCATION/*$FLIGHT* >> $DATA_LOCATION/sha256sum.ads_station
+      echo "************************************************************"
+      echo "****************************************************************"
+      echo "Calculating sha256sum for copied file(s)..."
+      sha256sum $TRANSFER_MEDIA/$PROJECT/*$FLIGHT*
+      echo "****************************************************************"
+
+      if [[ "$EXIT_RSYNC" -eq 0 ]]; then
+         echo "***Copy of .ads file(s) matching $PROJECT$FLIGHT SUCCESSFUL.***"
+         echo "***You can safely remove the drive by right-clicking the desktop icon.***"
+         echo "*** Note: This script does not eject the drive in case you still need to copy camera images.***"
+
+      elif [[ "$EXIT" -gt 0 ]]; then
+         echo "***Copy of .ads file(s) for $PROJECT$FLIGHT UNSUCCESSFUL."
+         echo "***Check files under /var/r1/$PROJECT and try again."
+
+      else
+         echo "Rsync error"
+      fi
 
    else
-      echo "Rsync error"
-      sleep 20
+      echo "Cound not locate dir $TRANSFER_MEDIA/$PROJECT"
    fi
 
 else
    echo "You don't have a drive connected. Stopping script. Connect a removable drive and restart script."
-   sleep 8
 
 fi
 
-echo "***copy_data.sh script finished. You can now close terminal and safely remove drive.***"
+echo "****************************************************************"
+echo "*** Note: This script does not eject the drive in case you still need to copy camera images.***"
+echo "****************************************************************"
+
+echo "Script took $(($SECONDS / 60)) minutes and $(($SECONDS % 60)) seconds"
+
+read -p "Press enter key to exit script and close terminal"

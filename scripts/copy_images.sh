@@ -1,18 +1,22 @@
 #! /bin/bash
+SECONDS=0  # Time script
 ###----------------------------------------------------------------------------
-# script to tar and copy image files from aircraft to transfer media for a given flight
-# after connecting removable drive, run script to transfer file(s)
+# Script to tar and copy image files from aircraft to transfer media for a given
+# flight. After connecting removable drive, run script to transfer file(s)
 ###----------------------------------------------------------------------------
 # assign list of parameters for transferring data
+
+# On planes and lab stations $PROJECT environment variable should be set by
+# the script ads3_environment.sh currently in /home/ads
 
 DATA_LOCATION="/var/r1/$PROJECT/camera_images"
 cd /run/media/ads
 DRIVE=$(ls)
+echo $DRIVE
 TRANSFER_MEDIA="/run/media/ads/$DRIVE"
 
 echo "Enter flight to copy from $PROJECT using lower case e.g. rf01 or ff03:"
 read FLIGHT
-
 if [[ $FLIGHT = *"rf"* ]]; then
    echo "Research flight images from $PROJECT selected for copying."
 elif [[ "$FLIGHT" = *"tf"* ]]; then
@@ -30,58 +34,74 @@ DIR=$?
 test -f $DATA_LOCATION/flight_number_$FLIGHT.tar
 TAR_FILE=$?
 
-if [ $DIR -eq 0 ]; then
+if [ $DIR -ne 0 ]; then
+   echo "There is no directory containing the $PROJECT$FLIGHT images you selected."
+else
    echo "Do you have a removable drive connected?"
    echo "Please type Y or y and press enter to confirm. Anything else and enter will stop script."
    read DRIVE_CONNECTION
    if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
+      echo "****************************************************************"
       echo "You entered $DRIVE_CONNECTION, which means you have a drive connected."
-      if [ $TAR_FILE -eq 0 ]; then
-         rsync -cav --no-perms --no-owner --no-group $DATA_LOCATION/flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT/flight_number_$FLIGHT.tar
-         sync
-         EXIT="$?"
-         echo "rsync exit status: $EXIT"
-         if [ $EXIT -eq 0 ]; then
-            echo "Copy of camera_images .tar file for $PROJECT$FLIGHT SUCCESSFUL."
-            echo "You can now safely remove the drive by right-clicking the desktop icon."
-            sleep 8
-         elif [ $EXIT -gt 0 ]; then
-            echo "Copy of camera_images .tar file for $PROJECT$FLIGHT UNSUCCESSFUL."
-            echo "Please check the files and try again."
-            sleep 8
-         else
-            echo "rsync error"
-            sleep 8
-         fi
-      elif [ $TAR_FILE -gt 0 ]; then
-         echo "No .tar file for flight_number_$FLIGHT found, creating tar file."
-         cd $DATA_LOCATION
-         tar -cvf flight_number_$FLIGHT.tar flight_number_$FLIGHT
-         rsync -cav --no-perms --no-owner --no-group flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT/flight_number_$FLIGHT.tar
-         sync
-         EXIT="$?"
-         echo "rsync exit status: $EXIT" 
-         if [ $EXIT -eq 0 ]; then
-            echo "Copy of camera_images .tar file for $PROJECT$FLIGHT SUCCESSFUL."
-            echo "You can now safely remove the drive by right-clicking the desktop icon."
-            sleep 8
-         elif [ $EXIT -gt 0 ]; then
-            echo "Copy of camera_images .tar file for $PROJECT$FLIGHT UNSUCCESSFUL."
-            echo "Please check the files and try again."
-            sleep 8
-         else
-            echo "rsync error"
-            sleep 8
-         fi
+
+      mkdir -p $TRANSFER_MEDIA/$PROJECT
+      EXIT_MKDIR="$?"
+
+      if [ "$EXIT_MKDIR" -ne 0 ]; then
+         echo "command mkdir -p $TRANSFER_MEDIA/$PROJECT not done, if folder was already made, no issues..."
       else
-         echo "Unable to determine existence of a .tar file for the images."
-         sleep 8        
-      fi  
+         echo "command mkdir -p $TRANSFER_MEDIA/$PROJECT was successful"
+      fi
+
+      test -d $TRANSFER_MEDIA/$PROJECT/
+      DRIVEDIR=$?
+      if [ "$DRIVEDIR" -eq 0 ]; then
+
+         if [ $TAR_FILE -gt 0 ]; then
+            echo "No .tar file for flight_number_$FLIGHT found, creating tar file."
+            tar -cvf $DATA_LOCATION/flight_number_$FLIGHT.tar $DATA_LOCATION/flight_number_$FLIGHT
+         fi
+
+         echo "***Starting file transfer. Please wait for transfer and integrity checking to complete.***"
+         rsync -cavP --no-perms --no-owner --no-group $DATA_LOCATION/flight_number_$FLIGHT.tar $TRANSFER_MEDIA/$PROJECT/flight_number_$FLIGHT.tar
+         echo "***Sync cached data to permanent memory - can take 2-5 minutes.***"
+         echo "sync started at $(date)"
+         sync
+         EXIT_RSYNC="$?"
+         echo "rsync exit status: $EXIT_RSYNC"
+
+         echo "****************************************************************"
+         echo "Calculating sha256sum for original file(s)..."
+         sha256sum $DATA_LOCATION/*$FLIGHT*.tar >> $DATA_LOCATION/sha256sum.ads_station
+         echo "************************************************************"
+         echo "****************************************************************"
+         echo "Calculating sha256sum for copied file(s)..."
+         sha256sum $TRANSFER_MEDIA/$PROJECT/*$FLIGHT*.tar
+         echo "****************************************************************"
+
+         if [ $EXIT_RSYNC -eq 0 ]; then
+            echo "Copy of camera_images .tar file for $PROJECT$FLIGHT SUCCESSFUL."
+            echo "You can now safely remove the drive by right-clicking the desktop icon."
+            echo "*** Note: This script does not eject the drive in case you still need to copy camera images.***"
+         elif [ $EXIT_RSYNC -gt 0 ]; then
+            echo "Copy of camera_images .tar file for $PROJECT$FLIGHT UNSUCCESSFUL."
+            echo "Please check the files and try again."
+         else
+            echo "rsync error"
+         fi
+
+      else
+         echo "Cound not locate dir $TRANSFER_MEDIA/$PROJECT"
+      fi
+
    else
       echo "You don't have a drive connected. Stopping script. Connect a removable drive and restart script."
-      sleep 8
    fi
-else
-   echo "There is no directory containing the $PROJECT$FLIGHT images you selected."
-   sleep 8
 fi
+
+echo "****************************************************************"
+echo "*** Note: This script does not eject the drive in case you still need to copy data files.***"
+echo "****************************************************************"
+echo "Script took $(($SECONDS / 60)) minutes and $(($SECONDS % 60)) seconds"
+
+read -p "Press enter key to exit script and close terminal"
