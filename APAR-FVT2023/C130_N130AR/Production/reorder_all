@@ -1,0 +1,27 @@
+#!/bin/csh
+
+set busyFile='reorderInProgress'
+
+cd ${DAT}
+
+if (-f $busyFile) then
+  exit 0
+endif
+
+touch $busyFile
+
+# Sample rate files are failing to reorder at this time.
+#  NetCDF: One or more variable sizes violate format constraints
+#  Location: file /tmp/build/80754af9/libnetcdf_1582139698333/work/ncdump/nccopy.c; line 2010
+
+foreach file ( APAR-FVT2023?f??.nc APAR-FVT2023?f??h.nc)
+  echo $file
+  ncdump -h $file | head | grep --quiet UNLIMITED
+  if ($status > 2) then
+    nccopy -u $file reotemp.nc
+    mv -f reotemp.nc $file
+    chmod g+w $file
+  endif
+end
+
+/bin/rm $busyFile
