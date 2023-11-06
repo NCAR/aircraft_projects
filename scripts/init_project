@@ -25,6 +25,21 @@ if ($#argv != 2) then
     exit(0)
   endif
 
+  # check for non-existance of /opt/nidas/share/xml/nidas.xsd
+  if (! -f /opt/nidas/share/xml/nidas.xsd) then
+    echo
+    echo
+    echo "File /opt/nidas/share/xml/nidas.xsd not found."
+    echo "Run this script on a system with nidas installed or copy it manually before pushing."
+    echo
+    echo -n "Proceed (y/N) ? "
+    set proceed = $<
+  endif 
+
+  if ($proceed != "y") then
+    exit(1)
+  endif
+
   echo "\nChoose platform:"
   echo "  1. NCAR C130"
   echo "  2. NCAR GV"
