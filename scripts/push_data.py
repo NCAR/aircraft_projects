@@ -422,7 +422,7 @@ class FieldData():
             print(message)
         return(datafile)
 
-    def process_netCDF(self, rawfile, ncfile, pr, config_ext, proj_dir, flight, project):
+    def process_netCDF(self, rawfile, ncfile, pr, config_ext, proj_dir, flight, project, flags):
         """"
         Run nimbus to create a .nc file (LRT, HRT, or SRT)
         """
@@ -443,7 +443,7 @@ class FieldData():
             cf.close()
 
         # execute nimbus in batch mode using the config file
-        command = "/opt/local/bin/nimbus -b " + nimConfFile
+        command = "/opt/local/bin/nimbus" + flags + nimConfFile
         message = "about to execute nimbus I hope: " + command
         self.logger.info(message)
         print(message)
@@ -624,7 +624,8 @@ class FieldData():
 
                 # Process the ads data to desired netCDF frequencies
                 if (key == "LRT"):
-                    res = self.process_netCDF(self.filename["ADS"], self.filename[key], self.rate[key], self.config_ext[key], self.proj_dir, self.flight, self.project)
+                    self.flags = " -b "
+                    res = self.process_netCDF(self.filename["ADS"], self.filename[key], self.rate[key], self.config_ext[key], self.proj_dir, self.flight, self.project, self.flags)
                     if res:
                         self.status[key]["proc"] = self.reorder_nc(self.filename[key])
                     else:
@@ -632,7 +633,8 @@ class FieldData():
 
                 # Process the ads data to desired netCDF frequencies
                 if (key == "HRT"):
-                    res = self.process_netCDF(self.filename["ADS"], self.ncfile, self.rate[key], self.config_ext[key], self.proj_dir, self.flight, self.project)
+                    self.flags = " -b "
+                    res = self.process_netCDF(self.filename["ADS"], self.ncfile, self.rate[key], self.config_ext[key], self.proj_dir, self.flight, self.project, self.flags)
                     if res:
                         self.status[key]["proc"] = self.reorder_nc(self.ncfile)
                     else:
@@ -640,7 +642,8 @@ class FieldData():
 
                 # Process the ads data to desired netCDF frequencies
                 if (key == "SRT"):
-                    res = self.process_netCDF(self.filename["ADS"], self.ncfile, self.rate[key], self.config_ext[key], self.proj_dir, self.flight, self.project)
+                    self.flags = " -b "
+                    res = self.process_netCDF(self.filename["ADS"], self.ncfile, self.rate[key], self.config_ext[key], self.proj_dir, self.flight, self.project, self.flags)
                     if res:
                         self.status[key]["proc"] = self.reorder_nc(self.ncfile)
                     else:
