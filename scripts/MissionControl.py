@@ -21,11 +21,11 @@ restrict calibration and recording of research data.
 import sys
 import functools
 
-from PyQt4.QtCore import (Qt, QObject, QTimer, QTime, QDateTime, SIGNAL, QString, QSocketNotifier)
-from PyQt4.QtGui import (QWidget, QLabel, QPushButton, QLineEdit, QTimeEdit, QGridLayout,
+from PyQt5.QtCore import (Qt, QObject, QTimer, QTime, QDateTime, QSocketNotifier)
+from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QLineEdit, QTimeEdit, QGridLayout,
                          QApplication, QMessageBox, QGroupBox, QHBoxLayout, QButtonGroup,
                          QStackedWidget, QFrame, QComboBox)
-from PyQt4.QtNetwork import (QHostAddress, QUdpSocket)
+from PyQt5.QtNetwork import (QHostAddress, QUdpSocket)
 
 from psycopg2 import *
 
@@ -78,7 +78,8 @@ class MissionControl(QWidget):
         self.DoNotRecordWarnTime = QDateTime()
 
         self.timer = QTimer()
-        QObject.connect(self.timer, SIGNAL("timeout()"), self.timeout)
+        #QObject.connect(self.timer, SIGNAL("timeout()"), self.timeout)
+        self.timer.timeout.connect(self.timeout)
         self.timer.start(1000)
 
         self.updateSelectionCnt = 0;
@@ -92,7 +93,7 @@ class MissionControl(QWidget):
         exceptionValue = sys.exc_info()[1]
         # Exit the script and show an error telling what happened.
         QMessageBox.warning(None, "open 'real-time'",
-          QString("Database connection failed!\n -> %s" % exceptionValue))
+          str("Database connection failed!\n -> %s" % exceptionValue))
         sys.exit(1)
 
     def showRemainingTime(self, currentDateTime):
@@ -248,7 +249,8 @@ class MissionControl(QWidget):
             group.addButton(rb)
             if (val == default):
               rb.setChecked(True)
-            QObject.connect(rb, SIGNAL("toggled(bool)"), self.RadioButtonSelected)
+            #QObject.connect(rb, SIGNAL("toggled(bool)"), self.RadioButtonSelected)
+            rb.toggled.connect(self.RadioButtonSelected)
             self.rbs[key, val] = rb
 
         groupBox.setLayout(hbox)
@@ -257,7 +259,7 @@ class MissionControl(QWidget):
     def horizontalEntryGroup(self, title, key, default, aRange):
 
 #       print "horizontalEntryGroup:", QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW)
-        default = QString.number(default)
+        default = str(default)
 #       print "key:", key, "default:", default
 
         # use current setting in database for default
@@ -268,14 +270,18 @@ class MissionControl(QWidget):
         hbox.addWidget( QLabel("<b>"+title+"</b>") )
         entry = QComboBox()
         for item in range(aRange[0], aRange[1]+1):
-            entry.addItem( QString.number(item) )
+            entry.addItem( str(item) )
 
         entry.setCurrentIndex( entry.findText( default ) )
 
         hbox.addWidget(entry)
         self.entries[key] = entry
 
-        QObject.connect(entry, SIGNAL("currentIndexChanged(QString)"), functools.partial(self.currentIndexChanged, key))
+        #QObject.connect(entry, SIGNAL("currentIndexChanged(QString)"), functools.partial(self.currentIndexChanged, key))
+        # using lambda function instead of partial because that's built in, and partial isn't
+        # All to pass a callable object that will connect at some time in the future. Not right here. 
+        # key=key: is to capture value of key here (passed by reference)
+        entry.currentIndexChanged.connect(lambda index, key=key: self.currentIndexChanged(key))
         return hbox
 
     def getCameraList(self):
@@ -349,7 +355,8 @@ class MissionControl(QWidget):
         self.remainingTime.setDisplayFormat(TIME_FORMAT_VIEW)
         self.remainingTime.setEnabled(False)
 
-        QObject.connect(self.remainingTime, SIGNAL("timeChanged(QTime)"), self.timeChanged)
+        #QObject.connect(self.remainingTime, SIGNAL("timeChanged(QTime)"), self.timeChanged)
+        self.remainingTime.timeChanged.connect(self.timeChanged)
 
         # setup DoNotRecord
         self.DoNotRecord = QPushButton('Do Not Record', self)
@@ -393,7 +400,8 @@ class MissionControl(QWidget):
 	
 	# To get this script to work on the cockpit laptop during WE-CAN, I had to 
 	# comment this line out.
-        QObject.connect(self.notify, SIGNAL("activated(int)"), self.updateSelection)
+        #QObject.connect(self.notify, SIGNAL("activated(int)"), self.updateSelection)
+        self.notify.activated.connect(self.updateSelection)
         self.cursor.execute("LISTEN missioncontrol")
         self.conn.commit()
 
