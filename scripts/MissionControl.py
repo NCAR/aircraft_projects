@@ -104,7 +104,7 @@ class MissionControl(QWidget):
             secsTo = secsTo - (hwrsTo * 3600)
             minsTo = secsTo / 60
             secsTo = secsTo - (minsTo * 60)
-            self.remainingTime.setTime( QTime(hwrsTo, minsTo, secsTo) )
+            self.remainingTime.setTime( QTime(int(hwrsTo),int(minsTo), int(secsTo)) )
             self.hwrs = hwrsTo
             self.mins = minsTo
             self.secs = secsTo
@@ -157,11 +157,11 @@ class MissionControl(QWidget):
         NOREC = "NOREC,%s,1" % datetime
 
         if self.DoNotCalibrate.isChecked():
-            self.udpSocket.writeDatagram(NOCAL, QHostAddress("192.168.84.2"), PORT)
+            self.udpSocket.writeDatagram(bytes(NOCAL, 'utf-8'), QHostAddress("192.168.84.2"), PORT)
             print("Sending: ",str(NOCAL)," to port:",str(PORT))
 
         if self.DoNotRecord.isChecked():
-            self.udpSocket.writeDatagram(NOREC, QHostAddress("192.168.84.2"), PORT)
+            self.udpSocket.writeDatagram(bytes(NOREC, 'utf-8'), QHostAddress("192.168.84.2"), PORT)
 
     # prevent operator from leaving while actively enforcing
     def closeEvent(self, event):
@@ -191,7 +191,7 @@ class MissionControl(QWidget):
 
     def RadioButtonSelected(self):
 #       print("RadioButtonSelected: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
-        for (key, value), rb in self.rbs.iteritems():
+        for (key, value), rb in self.rbs.items():
 #           print "key: %s\tvalue: %s\tisChecked: %d" % (key, value, rb.isChecked())
             if rb.isChecked():
 #               print "key: %s\tvalue: %s\t %d" % (key, value, rb.isChecked())
@@ -306,7 +306,7 @@ class MissionControl(QWidget):
 #       print("updateSelection: %s" % QDateTime.currentDateTime().toString(DATETIME_FORMAT_VIEW))
         self.updateCameraList()
 
-        for (key, value), rb in self.rbs.iteritems():
+        for (key, value), rb in self.rbs.items():
 #           print "key: %s\tvalue: %s\tisChecked: %d" % (key, value, rb.isChecked())
             try:
 #               print("SELECT value from mission_control WHERE key='%s'" % key)
@@ -319,7 +319,7 @@ class MissionControl(QWidget):
                 if (key != 'camera'):
                     self.failExit()
 
-        for key, entry in self.entries.iteritems():
+        for key, entry in self.entries.items():
 #           print "key: %s" % key
 #           print("SELECT value from mission_control WHERE key='%s'" % key)
             self.cursor.execute("SELECT value from mission_control WHERE key='%s'" % key)
