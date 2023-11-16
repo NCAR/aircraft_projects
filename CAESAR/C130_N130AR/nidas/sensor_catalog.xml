@@ -865,6 +865,23 @@ must be imported into default.xml -->
       <prompt rate="1" string="A\r"/>
     </serialSensor>
 
+    <serialSensor ID="StabilizedPlatform" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_SP">
+      <sample id="1" rate="10" scanfFormat="#%f,%d,%d,%f,%d,%f,%d,%d,%f,%d,%d">
+        <variable longname="Platform Pitch Angle" name="PITCH" units="deg"/>
+        <variable longname="Platform Pitch Motor PWM" name="PPWM" units="cnts"/>
+        <variable longname="Platform Pitch Encoder" name="PENC" units="cnts"/>
+        <variable longname="Platform Pitch Loop FB" name="PLFB" units="deg"/>
+        <variable longname="Platform Pitch Motor Current Monitor" name="POVCR" units="cnts"/>
+        <variable longname="Platform Roll Angle" name="ROLL" units="deg"/>
+        <variable longname="Platform Roll Motor PWM" name="RPWM" units="cnts"/>
+        <variable longname="Platform Roll Encoder" name="RENC" units="cnts"/>
+        <variable longname="Platform Roll Loop FB" name="RLFB" units="deg"/>
+        <variable longname="Platform Roll Motor Current Monitor" name="ROVCR" units="cnts"/>
+        <variable longname="Platform Attitude Limited (=0:Norm,!=0:Limit)" name="LIMIT" units="bits"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
+    </serialSensor>
+
 <!-- 
     CDP notes:  
       - The CDP can be either a 38400 or 57600 baud instrument.  This is controlled via a jumper that is on the back side
