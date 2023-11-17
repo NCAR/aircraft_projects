@@ -1114,6 +1114,21 @@ must be imported into default.xml -->
       <message length="0" position="end" separator="\r"/>
     </serialSensor>
 
+    <serialSensor ID="CON2O" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_ARI">
+      <sample id="1" rate="1" scanfFormat="c%*f,%f,%f,%f,%f,%f,,,,%f,%f">
+          <!--variable longname="Aerodyne Research Inc Mini 108 Igor Pro time" name="IgorTime" units="s"/-->
+          <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2O" units="ppbv"/>
+          <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="CO" units="ppbv"/>
+          <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2OA" units="ppbv"/>
+          <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="COA" units="ppbv"/>
+          <variable longname="Aerodyne Research Inc Mini 108 Water Mixing Ratio" name="H2O" units="ppbv"/>
+          <variable longname="Aerodyne Research Inc Mini 108 Temperature" name="T" units="C"/>
+          <variable longname="Aerodyne Research Inc Mini 108 Pressure" name="P" units="hPa"/>
+      </sample>
+      <!--prompt rate="5" string="SIG?\r"/-->
+      <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
+
 <!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
       the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
 -->
