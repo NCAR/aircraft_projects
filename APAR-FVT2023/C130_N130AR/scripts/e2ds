@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Using code in /scr/raf/cjw/builds/cent8/oap/extract2ds (run on mercury)
+#
+# cp this to rdat APAR-FVT2023/2DS and run from there.
+
+cd RF01
+extract2ds -project APAR-FVT2023 -platform C130_N130AR -flight RF01 -sn F2DS020 -o ../2ds_oap/20231011_164000_rf01.2d base2310*F2DS > output.rf01
+
+cd ../RF02
+extract2ds -project APAR-FVT2023 -platform C130_N130AR -flight RF02 -sn F2DS020 -o ../2ds_oap/20231018_143600_rf02.2d base2310*F2DS > output.rf02
+
+cd ../RF04
+extract2ds -project APAR-FVT2023 -platform C130_N130AR -flight RF04 -sn F2DS020 -o ../2ds_oap/20231021_211800_rf04.2d base2310*F2DS > output.rf04
+
+cd ../RF05
+extract2ds -project APAR-FVT2023 -platform C130_N130AR -flight RF05 -sn F2DS020 -o ../2ds_oap/20231022_174000_rf05.2d base2310*F2DS > output.rf05
