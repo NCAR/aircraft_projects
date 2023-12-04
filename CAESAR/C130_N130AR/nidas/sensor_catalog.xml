@@ -1267,6 +1267,41 @@ must be imported into default.xml -->
       </sample>
     </sensor>
 
+    <sensor ID="TWODS" class="raf.TwoDS" devicename="usock::30113" suffix="_2DS">
+      <parameter name="SerialNumber" type="string" value="F2DS019"/>
+      <parameter name="RESOLUTION" type="int" value="10"/>
+      <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable name="TACT2H" longname="2DS Total Particles Horizontal" units="count"/>
+        <variable name="TACT2V" longname="2DS Total Particles Vertical" units="count"/>
+        <variable name="CONCS" longname="2DS Total Number Particles" units="#/cm3"/>
+        <variable name="DBARS" longname="2DS Mean Particle Diameter" units="um"/>
+        <variable name="MAXS" longname="2DS Max Particle Diameter" units="um"/>
+        <variable length="13" name="A2DSH" longname="2DS Horizontal Accumulation" units="count"/>
+        <variable length="13" name="A2DSV" longname="2DS Vertical Accumulation" units="count"/>
+        <variable name="DIOVH01" longname="2DS Diode Voltage, Horizontal Diode 1" units="Vdc"/>
+        <variable name="DIOVH64" longname="2DS Diode Voltage, Horizontal Diode 64" units="Vdc"/>
+        <variable name="DIOVH128" longname="2DS Diode Voltage, Horizontal Diode 128" units="Vdc"/>
+        <variable name="DIOVV01" longname="2DS Diode Voltage, Vertical Diode 1" units="Vdc"/>
+        <variable name="DIOVV64" longname="2DS Diode Voltage, Vertical Diode 64" units="Vdc"/>
+        <variable name="DIOVV128" longname="2DS Diode Voltage, Vertical Diode 128" units="Vdc"/>
+        <variable name="P7V" longname="2DS " units="Vdc"/>
+        <variable name="N7V" longname="2DS " units="Vdc"/>
+        <variable name="HMASK" longname="2DS Horizontal Mask" units="none"/>
+        <variable name="VMASK" longname="2DS Vertical Mask" units="none"/>
+        <variable name="HOPT" longname="2DS Horizontal Optics Temperature" units="deg_C"/>
+        <variable name="VOPT" longname="2DS Vertical Optics Temperature" units="deg_C"/>
+        <variable name="HARTT" longname="2DS Horizontal Array Top Temperature" units="deg_C"/>
+        <variable name="VARTT" longname="2DS Vertical Array Top Temperature" units="deg_C"/>
+        <variable name="DSPT" longname="2DS DSP Board Temperature" units="deg_C"/>
+        <variable name="HLT" longname="2DS Horizontal Laser Temperature" units="deg_C"/>
+        <variable name="VLT" longname="2DS Vertical Laser Temperature" units="deg_C"/>
+        <variable name="PT" longname="2DS Power Supply Temperature" units="deg_C"/>
+        <variable name="HKR" longname="2DS House Keeping Packets Received" units="counts"/>
+        <variable name="CANP" longname="2DS Internal Pressure" units="psi"/>
+        <variable name="RH" longname="2DS Relative Humidity" units="%"/>
+      </sample>
+    </sensor>
+
     <sensor ID="CFDC" class="UDPSocketSensor" devicename="usock::30105" suffix="_CFDC">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
             <variable longname="CFDC IN Count" name="INC" units="counts/sec"/>
