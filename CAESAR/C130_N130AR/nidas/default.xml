@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
-
 <!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
 <project
         xmlns="http://www.eol.ucar.edu/nidas"
@@ -1223,26 +1222,6 @@
             <variable longname="Hydroperoxy radical" name="HO2" units="pptv"/>
         </sample>
     </sensor>
-    <sensor ID="Fast2DC" class="raf.TwoD64_USB">
-        <parameter name="SerialNumber" type="string" value="F2DC001"/>
-        <parameter name="RESOLUTION" type="int" value="25"/>
-        <parameter name="TAS_RATE" type="int" value="10"/>
-        <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
-        <sample id="1" rate="10">
-            <variable longname="Fast 2DC Shadow OR Count" name="SHDORC" units="count"/>
-        </sample>
-        <sample id="2" rate="1">
-            <variable length="64" longname="Fast 2DC Raw Accumulation, entire-in (per cell)" name="A1DC" units="count"/>
-            <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="msec"/>
-        </sample>
-
-<!--
-        <sample id="3" rate="1">
-            <variable length="128" longname="Fast 2DC Raw Accumulation, center-in (per cell)" name="A2DC" units="count"/>
-            <variable longname="Fast 2DC Probe Dead Time" name="DT2DC" units="msec"/>
-        </sample>
--->
-    </sensor>
 
     <sensor ID="Fast2DC_v2" class="raf.TwoD64_USB_v3">
       <parameter name="SerialNumber" type="string" value="F2DC002"/>
@@ -1530,6 +1509,7 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
       <sensor IDREF="PARCELS" devicename="usock::30100" id="100"/>
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
+      <sensor IDREF="HOLODEC" devicename="usock::30120" id="300"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
 
       <sensor IDREF="TWODS" devicename="usock::30113" id="1000">
@@ -2113,7 +2093,6 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
 	      </variable>
         </sample>
       </sensor>
-
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -2124,7 +2103,8 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
 
       <!-- /dev/ttys[0-3] connect to serial ports that are native to the CPU card -->
       <serialSensor IDREF="DSMTEMP_MBRTU" devicename="/dev/ttyS2" id="400" suffix="_325"/>
-      <sensor IDREF="Fast2DC" devicename="/dev/ttyUSB0" id="900" suffix="_LPO">
+      <sensor IDREF="Fast2DC_v2" devicename="/dev/usbtwod_64_0" id="900" suffix="_RPM">
+
         <parameter name="SerialNumber" type="string" value="F2DC003"/>
         <parameter name="RESOLUTION" type="int" value="25"/>
       </sensor>
