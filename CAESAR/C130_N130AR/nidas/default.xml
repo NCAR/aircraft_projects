@@ -950,7 +950,6 @@
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
     </serialSensor>
 
-
     <serialSensor ID="UHSASUWYO" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1">
       <parameter name="SerialNumber" type="string" value="UHSAS011"/>
 
@@ -1306,6 +1305,36 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
       </sample>
     </sensor>
 
+    <serialSensor ID="VCSEL" id="600" devicename="/dev/ttyCTI2" baud="38400" class="raf.VCSEL_Serial" databits="8" parity="none" stopbits="1" suffix="_VXL">
+
+<!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
+       <sample id="1" rate="1" scanfFormat="SWS %f %f %f %f %f %c %f %*f %*f %f %f %f">
+         <variable longname="VCSEL Status Code" name="STATUS" units="none"/>
+         <variable longname="VCSEL Ambient Temperature" name="AT" units="deg_K"/>
+         <variable longname="VCSEL Ambient Pressure" name="PS" units="torr">
+             <linear intercept="0.0" slope="1.333223" units="hPa"/>
+         </variable>
+         <variable longname="VCSEL Laser Temperature" name="LSRTMP" units="ohm"/>
+         <variable longname="VCSEL Set Temperature" name="SETTMP" units="ohm"/>
+         <variable longname="VCSEL Mode" name="MODE" units="none"/>
+         <variable longname="VCSEL Center Current" name="CNTRCUR" units="count"/>
+         <variable longname="VCSEL Peak Position" name="PKPOS" units="count"/>
+         <variable longname="VCSEL Pre Gain" name="PREGAIN" units="count"/>
+         <variable longname="VCSEL AC Gain" name="ACGAIN" units="count"/>
+       </sample>
+       <sample id="2" rate="25" scanfFormat="%f %f %*f %*f">
+         <variable longname="VCSEL Moisture Number Density" name="RAWCONC" units="#/cm3"/>
+         <variable longname="VCSEL Sample Laser Intensity" name="SMPLSRINT" units="mV"/>
+<!--        <variable longname="VCSEL Frost Dew Point" name="DPV" units="deg_C"/>  third %f above -->
+        </sample>
+
+<!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
+        <sample id="3" rate="1" scanfFormat="SPEC %98f">
+          <variable length="98" longname="VCSEL Absorbption Spectrum" name="ABSPEC" units="count"/>
+        </sample>
+        <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
+
     <serialSensor ID="HoneywellPPT" baud="19200" class="raf.PPT_Serial" databits="8" parity="none" stopbits="1">
         <sample id="1" scanfFormat="?%*2dCP=%f" ttadjust="1">
            <variable longname="Raw Dynamic Pressure" name="PA" units="hPa"/>
@@ -1451,10 +1480,6 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
       <sensor IDREF="HOLODEC" devicename="usock::30120" id="300"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
-
-      <sensor IDREF="UHSASUWYO" devicename="usock::30117" id="1100" suffix="_WYO">
-        <parameter name="SerialNumber" type="string" value="UHSAS011"/>
-      </sensor>
 
       <sensor IDREF="TWODS" devicename="usock::30113" id="1000">
         <parameter name="SerialNumber" type="string" value="F2DS020"/>
@@ -1902,6 +1927,10 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
       </serialSensor>
 
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI1" id="130" suffix="_DPB"/>
+      <serialSensor IDREF="VCSEL" devicename="/dev/ttyCTI2" id="140" suffix="_VXL"/>
+      <serialSensor IDREF="UHSASUWYO" devicename="/dev/ttyCTI3" id="150" suffix="_WYO">
+        <parameter name="SerialNumber" type="string" value="UHSAS011"/>
+      </serialSensor>
 
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
