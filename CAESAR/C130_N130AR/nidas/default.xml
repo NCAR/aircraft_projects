@@ -1209,8 +1209,8 @@
         <variable name="DIOVV01" longname="2DS Diode Voltage, Vertical Diode 1" units="Vdc"/>
         <variable name="DIOVV64" longname="2DS Diode Voltage, Vertical Diode 64" units="Vdc"/>
         <variable name="DIOVV128" longname="2DS Diode Voltage, Vertical Diode 128" units="Vdc"/>
-        <variable name="P7V" longname="2DS " units="Vdc"/>
-        <variable name="N7V" longname="2DS " units="Vdc"/>
+        <variable name="P7V" longname="2DS Positive seven volts DC" units="Vdc"/>
+        <variable name="N7V" longname="2DS Negative seven volts DC" units="Vdc"/>
         <variable name="HMASK" longname="2DS Horizontal Mask" units="none"/>
         <variable name="VMASK" longname="2DS Vertical Mask" units="none"/>
         <variable name="HOPT" longname="2DS Horizontal Optics Temperature" units="deg_C"/>
@@ -1224,6 +1224,35 @@
         <variable name="HKR" longname="2DS House Keeping Packets Received" units="counts"/>
         <variable name="CANP" longname="2DS Internal Pressure" units="psi"/>
         <variable name="RH" longname="2DS Relative Humidity" units="%"/>
+      </sample>
+    </sensor>
+
+    <sensor ID="HVPS_HK" class="UDPSocetSensor" devicename="usock::30113" suffix="_HVPS">
+      <parameter name="SerialNumber" type="string" value="HVPS315"/>
+      <parameter name="RESOLUTION" type="int" value="150"/>
+      <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable name="TACT2V" longname="HVPS Total Particles Vertical" units="count"/>
+        <variable name="CONCS" longname="HVPS Total Number Particles" units="#/cm3"/>
+        <variable name="DBARS" longname="HVPS Mean Particle Diameter" units="um"/>
+        <variable name="MAXS" longname="HVPS Max Particle Diameter" units="um"/>
+        <variable length="13" name="AHVPS" longname="HVPS Vertical Accumulation" units="count"/>
+        <variable name="DIOVV01" longname="HVPS Diode Voltage, Vertical Diode 1" units="Vdc"/>
+        <variable name="DIOVV64" longname="HVPS Diode Voltage, Vertical Diode 64" units="Vdc"/>
+        <variable name="DIOVV128" longname="HVPS Diode Voltage, Vertical Diode 128" units="Vdc"/>
+        <variable name="P7V" longname="HVPS Positive seven volts DC" units="Vdc"/>
+        <variable name="N7V" longname="HVPS Negative seven volts DC" units="Vdc"/>
+        <variable name="VMASK" longname="HVPS Vertical Mask" units="none"/>
+        <variable name="WINTXT" longname="HVPS Window Temperature" units="deg_C"/>
+        <variable name="WINRXT" longname="HVPS Window Temperature" units="deg_C"/>
+        <variable name="ARMTXT" longname="HVPS Arm Temperature" units="deg_C"/>
+        <variable name="ARMRXT" longname="HVPS Arm Temperature" units="deg_C"/>
+        <variable name="NETEMP" longname="HVPS Nose Edge Temperature" units="deg_C"/>
+        <variable name="NSTEMP" longname="HVPS Nose Surface Temperature" units="deg_C"/>
+        <variable name="DSPT" longname="HVPS DSP Board Temperature" units="deg_C"/>
+        <variable name="VLT" longname="HVPS Vertical Laser Temperature" units="deg_C"/>
+        <variable name="PT" longname="HVPS Power Supply Temperature" units="deg_C"/>
+        <variable name="HKR" longname="HVPS House Keeping Packets Received" units="counts"/>
+        <variable name="CANP" longname="HVPS Internal Pressure" units="psi"/>
       </sample>
     </sensor>
 
