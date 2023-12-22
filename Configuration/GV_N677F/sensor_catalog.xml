@@ -850,47 +850,6 @@
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
     </serialSensor>
 
-    <serialSensor ID="UHSAS" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1" timeout="10">
-      <parameter name="HSKP_SCALE" type="int" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000"/>
-      <sample id="1" rate="10">
-        <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
-        <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
-        <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
-        <variable longname="UHSAS Sample Flow at Laser" name="USMPFLW" units="V">
-          <linear units="vccs">
-            <calfile file="USMPFLW.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/UHSAS001:${PROJ_DIR}/Configuration/cal_files/Instruments/UHSAS001"/>
-          </linear>
-        </variable>
-        <variable longname="UHSAS Reference Intensity" name="UREF" units="V"/>
-        <variable longname="UHSAS Optical Block Temperature, signal" name="UTEMP" units="V"/>
-        <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="V">
-          <linear units="vccs">
-            <calfile file="USHFLW.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/UHSAS001:${PROJ_DIR}/Configuration/cal_files/Instruments/UHSAS001"/>
-          </linear>
-        </variable>
-        <variable longname="UHSAS Unused Channel" name="UDIFF" units="V"/>
-        <variable longname="UHSAS Optical Block Temperature" name="UBTMP" units="V">
-          <linear units="K">
-            <calfile file="UBTMP.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/UHSAS001:${PROJ_DIR}/Configuration/cal_files/Instruments/UHSAS001"/>
-          </linear>
-        </variable>
-
-<!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/-->
-        <variable longname="UHSAS Absolute Sample Pressure" name="UPRESS" units="V">
-          <linear units="kPa">
-            <calfile file="UPRESS.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/UHSAS001:${PROJ_DIR}/Configuration/cal_files/Instruments/UHSAS001"/>
-          </linear>
-        </variable>
-
-<!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
-
-<!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
-      </sample>
-
-<!-- look for ffff07 termination sequence after 220 bytes -->
-      <message length="220" position="end" separator="\xff\xff\x07"/>
-    </serialSensor>
-
     <serialSensor ID="UHSASG" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <parameter name="SerialNumber" type="string" value="UHSAS059"/>
       <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
