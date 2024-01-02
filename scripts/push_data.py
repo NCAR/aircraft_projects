@@ -525,7 +525,7 @@ class FieldData():
         """
         Reorder netcdf file
         """
-        command = "ncReorder " + ncfile + " tmp.nc"
+        command = "nccopy -u " + ncfile + " tmp.nc"
         message = "about to execute : " + command
         self.logger.info(message)
         print(message)
