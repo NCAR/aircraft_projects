@@ -713,6 +713,8 @@ class FieldData():
             os.chdir("/home/local/aircraft_QAtools_notebook/")
             command = "./auto_export.py --project "+project+" --flight "+flight
             message = "about to execute : "+command
+            self.logger.info(message)
+            print(message)
             os.system(command)
 
             command = "cp -p "+project+flight+".html /home/ads/Desktop"
@@ -959,8 +961,6 @@ class FieldData():
                         print(e)
                         self.logger.error(e)
                         continue
-            else:
-                print('Filename is empty - nothing to write')
 
     def setup_FTP(self, data_dir, raw_dir, status, file_ext, inst_dir, filename):
         '''No NAS this project, so put files to EOL server. Put
@@ -1012,6 +1012,7 @@ class FieldData():
 
         else:
             for key in file_ext:
+                print('')
                 print(key)
                 print('')
                 if ship_ADS is False:
@@ -1020,7 +1021,7 @@ class FieldData():
                     else:
                         try:
                             os.chdir(inst_dir[key])
-                            print(inst_dir[key])
+                            print('Attempt to change to local dir ' + inst_dir[key])
                         except ftplib.all_errors as e:
                             print('Could not change to local dir ' + inst_dir[key])
                             print(e)
@@ -1029,7 +1030,7 @@ class FieldData():
                 else:
                     try:
                         os.chdir(inst_dir[key])
-                        print(inst_dir[key])
+                        print('Attempt to change to local dir ' + inst_dir[key])
                     except ftplib.all_errors as e:
                         print('Could not change to local dir ' + inst_dir[key])
                         print(e)
@@ -1043,21 +1044,23 @@ class FieldData():
                             pass
                     else:
                         try:
-                            ftp.cwd(ftp_data_dir + key)
+                            print('Attempt to change to ftp dir /' + ftp_data_dir + '/' + key)
+                            ftp.cwd('/' + ftp_data_dir + '/' + key)
                         except ftplib.all_errors as e:
+                            print('Could not change to dir ' + ftp_data_dir + '/' + key)
                             print(e)
                             # Attempt to create needed dir
                             print('Attempt to create dir /' + ftp_data_dir + '/' + key)
                             try:
-                                ftp.mkd(ftp_data_dir + key)
+                                ftp.mkd('/' + ftp_data_dir + '/' + key)
                             except Exception as e:
-                                print('Make dir ' + ftp_data_dir + key + ' failed')
+                                print('Make dir /' + ftp_data_dir + '/' + key + ' failed')
                                 print(e)
                                 self.logger.error(e)
                                 continue
                             # Try to change to dir again
                             try:
-                                ftp.cwd(ftp_data_dir + key)
+                                ftp.cwd('/' + ftp_data_dir + '/' + key)
                             except Exception as e:
                                 print('Change dir to ' + ftp_data_dir + '/' + key + ' failed')
                                 print(e)
@@ -1092,6 +1095,7 @@ class FieldData():
                             continue
                 else:
                     try:
+                        print('Transferring file...')
                         file = open(file_name, 'rb')
                         print(ftp.storbinary('STOR ' + file_name, file))
                         file.close()
@@ -1106,8 +1110,6 @@ class FieldData():
                         print(e)
                         self.logger.error(e)
                         continue
-            else:
-                print('Filename is empty - nothing to write')
 
         ftp.quit()
 

@@ -41,13 +41,15 @@ nas_mnt_pt =     '/mnt/Data'
 
 #############################################################################
 ### FTP configuration - not used if using NAS
+### Note: anonymous FTP is no longer allowed per NSF NCAR Office of
+### Information Security (OIS) policy
 #############################################################################
 FTP = True
 ftp_site = 'ftp.eol.ucar.edu'
-user = 'anonymous'
-password = ''
-ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
+user = 'caesar'
+password = 'cao-kiruna'
+ftp_parent_dir = '.'
+ftp_data_dir = 'EOL_data/RAF_data'
 
 #############################################################################
 ### Define which files should be generated
