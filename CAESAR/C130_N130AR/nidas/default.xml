@@ -1088,8 +1088,8 @@
           <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2OA" units="ppbv"/>
           <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="COA" units="ppbv"/>
           <variable longname="Aerodyne Research Inc Mini 108 Water Mixing Ratio" name="H2O" units="ppbv"/>
-          <variable longname="Aerodyne Research Inc Mini 108 Temperature" name="T" units="C"/>
-          <variable longname="Aerodyne Research Inc Mini 108 Pressure" name="P" units="hPa"/>
+          <variable longname="Aerodyne Research Inc Mini 108 Temperature" name="T" units="K"/>
+          <variable longname="Aerodyne Research Inc Mini 108 Pressure" name="P" units="Torr"/>
       </sample>
       <!--prompt rate="5" string="SIG?\r"/-->
       <message length="0" position="end" separator="\r\n"/>
@@ -1508,6 +1508,7 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
       <sensor IDREF="D_GPS" devicename="usock::30118" id="140"/>
       <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150"/>
       <sensor IDREF="HOLODEC" devicename="usock::30120" id="300"/>
+      <sensor IDREF="ACDFO3" devicename="usock::30107" id="700"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
 
       <sensor IDREF="TWODS_HK" devicename="usock::30113" id="1000">
@@ -2022,7 +2023,7 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
         </sample>
       </sensor>
 
-      <serialSensor IDREF="CON2O" devicename="/dev/ttyCTI0" id="1200" suffix="_ARI"/> <!-- Aerodyne -->
+      <serialSensor IDREF="CON2O" devicename="/dev/ttyCTI1" id="1200" suffix="_ARI"/> <!-- Aerodyne -->
       <serialSensor IDREF="CDP" devicename="/dev/ttyCTI5" id="300" suffix="_LWI">
         <parameter name="SerialNumber" type="string" value="CDP016"/>
       </serialSensor>
