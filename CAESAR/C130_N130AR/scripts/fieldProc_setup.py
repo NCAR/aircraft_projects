@@ -46,10 +46,10 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 FTP = True
 ftp_site = 'ftp.eol.ucar.edu'
-user = 'caesar'
-password = 'cao-kiruna'
+user = os.environ['FTPUSER']
+password = os.environ['FTPPWD']
 ftp_parent_dir = '.'
-ftp_data_dir = 'EOL_data/RAF_data'
+ftp_data_dir = os.environ['FTPDATADIR']
 
 #############################################################################
 ### Define which files should be generated
