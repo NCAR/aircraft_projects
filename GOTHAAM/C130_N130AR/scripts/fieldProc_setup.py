@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 #
-#   Be sure to ask the systems group to create a directory:
-#   /net/ftp/pub/data/incoming/<project> and then to create the tree below it:
+#   Be sure to ask the systems group to create a directory <project> under the
+#   standard incoming data dir and then to create the tree below it:
 #       EOL_data/
 #           RAF_data/
-#              ADS/
-#              PMS2D/
 #   If NAS_permanent_mount then NAS will copy files to that dir.
 #
 #   Note that the CWIG standard and the standard expected by the 
@@ -44,10 +42,10 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 FTP = True
 ftp_site = 'ftp.eol.ucar.edu'
-user = 'anonymous'
-password = ''
-ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
+user = os.environ['FTPUSER']
+password = os.environ['FTPPWD']
+ftp_parent_dir = '.'
+ftp_data_dir = os.environ['FTPDATADIR']
 
 #############################################################################
 ### Define which files should be generated

@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 #
-#   Be sure to ask the systems group to create a directory on the server:
-#   /net/ftp/pub/data/incoming/<project> and then to create the tree below it:
+#   Be sure to ask the systems group to create a directory <project> under the
+#   standard incoming data dir and then to create the tree below it:
 #       EOL_data/
 #           RAF_data/
-#              ADS/
-#              PMS2D/
 #   If NAS_permanent_mount then NAS will copy files to that dir.
 #
 #   Note that the CWIG standard and the standard expected by the 
@@ -42,7 +40,9 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 ### FTP configuration - not used if using NAS
 ### Note: anonymous FTP is no longer allowed per NSF NCAR Office of
-### Information Security (OIS) policy
+### Information Security (OIS) policy. login and path info are now stored in
+### ~/.ftpconfig which defines the environment variables FTPUSER, FTPPWD, and
+### FTPDATADIR
 #############################################################################
 FTP = True
 ftp_site = 'ftp.eol.ucar.edu'

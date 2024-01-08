@@ -1,7 +1,8 @@
 #!/usr/bin/python
-#  NOTE = Be sure to ask the systems group to create a directory:
-#   /net/ftp/pub/data/incoming/<project>/data_synced. If NAS_permanent_mount
-#   then NAS will copy files to that dir.
+#   Be sure to ask the systems group to create a directory <project> under the
+#   standard incoming data dir and then to create the tree below it:
+#       data_synced
+#   If NAS_permanent_mount then NAS will copy files to that dir.
 #   Note that the CWIG standard and the standard expected by the 
 #   catcher script will be that <project> above will be the lower
 #   case version of the project name e.g. icebridge2015 not ICEBRIDGE2015
@@ -37,8 +38,8 @@ nas_data_dir =   nas_mnt_pt + '/data/SOCRATES/scr_data/'
 
 ### remote FTP setup (if no NAS) ###
 #ftp_site =       'data.eol.ucar.edu'
-#user =           'orcas'
-#password =       'all4thepod'
+user = os.environ['FTPUSER']
+password = os.environ['FTPPWD']
 #ftp_data_dir =   'synced_data'
 
 ### local FTP setup ###

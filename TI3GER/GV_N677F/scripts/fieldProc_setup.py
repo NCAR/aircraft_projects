@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 #
-#   Be sure to ask the systems group to create a directory:
-#   /net/ftp/pub/data/incoming/<project> and then to create the tree below it:
+#   Be sure to ask the systems group to create a directory <project> under the
+#   standard incoming data dir and then to create the tree below it:
 #       EOL_data/
 #           RAF_data/
-#              ADS/
-#              PMS2D/
 #   If NAS_permanent_mount then NAS will copy files to that dir.
 #
 #   Note that the CWIG standard and the standard expected by the 
@@ -45,16 +43,17 @@ nas_mnt_pt = '/mnt/Data/'+project.lower()
 #############################################################################
 FTP = True 
 ftp_site = 'ftp.eol.ucar.edu'
-user = 'ti3ger'
-password = 'T!3g3r'
+user = os.environ['FTPUSER']
+password = os.environ['FTPPWD']
 
-# with an authenticated user, the daemon shell puts into /net/ft/pub/data/incoming/<project>
-ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()+'/'
-ftp_data_dir = './EOL_data/RAF_data'
+# with an authenticated user, the daemon shell puts into the project dir under
+# the standard incoming path
+ftp_parent_dir = '.'
+ftp_data_dir = os.environ['FTPDATADIR']
 
 # when using anonymous, must provide the full path (comment out if using auth user)
-#ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-#ftp_data_dir = '/pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
+#ftp_parent_dir = <redacted - anonymous ftp no longer allowed>
+#ftp_data_dir = <redacted - anonymous ftp no longer allowed>
 
 #############################################################################
 ### Define which files should be generated
