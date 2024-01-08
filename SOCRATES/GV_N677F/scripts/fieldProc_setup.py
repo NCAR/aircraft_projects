@@ -44,10 +44,10 @@ password = os.environ['FTPPWD']
 
 ### local FTP setup ###
 #local_ftp_site = '192.168.1.10'
-#local_user     = 'anonymous'
-#local_password = 'cjw@ucar.edu'
-#local_ftp_dir  = '/FieldStorage/FieldProjects/' + project + '/C130nc'
-#rlocal_ftp_dir = '/FieldStorage/FieldProjects/' + project + '/RAFqc'
+#local_user     = <redacted>
+#local_password = <redacted>
+#local_ftp_dir  = <redacted>
+#rlocal_ftp_dir = <redacted>
 
 ### R stuff ###
 # The Rstudio shiny app is in the repository: https://github.com/WilliamCooper/QAtools 
