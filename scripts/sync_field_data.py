@@ -418,6 +418,7 @@ def main():
 
     elif NAS == False and FTP == True:
         logging.info("Syncing from FTP...\n")
+        dir_check()
         #dist_PI('PI_data')
         ingest_to_local('LRT', dat_dir+'/field_data', ftp_dir)
         ingest_to_local('KML', dat_dir+'/field_data', ftp_dir)
