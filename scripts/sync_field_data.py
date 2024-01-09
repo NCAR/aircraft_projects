@@ -21,12 +21,12 @@ aircraft = os.getenv('AIRCRAFT')
 proj_dir = os.getenv('PROJ_DIR')
 rdat = os.getenv('RAW_DATA_DIR')
 temp_dir = rdat + '/' + project + '/field_sync/'
-full_proj_dir = proj_dir + project + '/' + aircraft+'/'
+full_proj_dir = proj_dir + '/' + project + '/' + aircraft+'/'
 sys.path.insert(0,full_proj_dir+'scripts/')
 sys.path.insert(0,full_proj_dir)
 from fieldProc_setup import *
-dat_dir = dat_parent_dir+project+'/'
-ftp_dir = ftp_parent_dir+'/'
+dat_dir = dat_parent_dir+project
+ftp_dir = ftp_parent_dir
 rdat_dir = rdat_parent_dir+project+'/'
 eol_dir = temp_dir+'/EOL_data/'
 
@@ -39,6 +39,8 @@ def dir_check():
     rdat_dir = rdat_parent_dir+project
     if not os.path.isdir(rdat_dir):
         try:
+            message = 'Directory ' + rdat_dir + 'does not exist. Creating...'
+            logging.info(message)
             os.mkdir(rdat_dir)
         except:
             message = 'Could not make raw directory:'+rdat_dir
@@ -46,11 +48,39 @@ def dir_check():
             logging.error('Bailing out')
             # send_mail_and_die(final_message + message)
             exit(1)
+    # ... and for FTP that field_sync exists under rdat + project
+    if FTP == True:
+        if not os.path.isdir(rdat_dir + '/field_sync'):
+            try:
+                message = 'Directory ' + rdat_dir + '/field_sync does not exist. Creating...'
+                logging.info(message)
+                os.mkdir(rdat_dir + '/field_sync')
+            except:
+                message = 'Could not make raw directory:'+rdat_dir + 'field_sync'
+                logging.error(message)
+                logging.error('Bailing out')
+                # send_mail_and_die(final_message + message)
+                exit(1)
+    # ... and for FTP if there is PMS2D data that PMS2D exists under field_sync
+    if FTP == True and PMS2D:
+        if not os.path.isdir(rdat_dir + '/field_sync/PMS2D'):
+            try:
+                message = 'Directory ' + rdat_dir + '/field_sync/PMS2D does not exist. Creating...'
+                logging.info(message)
+                os.mkdir(rdat_dir + '/field_sync/PMS2D')
+            except:
+                message = 'Could not make raw directory:'+rdat_dir + '/field_sync/PMS2D'
+                logging.error(message)
+                logging.error('Bailing out')
+                # send_mail_and_die(final_message + message)
+                exit(1)
 
     # Check to make sure the incoming ftp + project dir exists
     ftp_dir = ftp_parent_dir
     if not os.path.isdir(ftp_dir):
         try:
+            message = 'Directory ' + ftp_dir + 'does not exist. Creating...'
+            logging.info(message)
             os.mkdir(ftp_dir)
         except:
             message = 'Could not make ftp directory:'+ftp_dir
@@ -59,20 +89,25 @@ def dir_check():
             send_mail_and_die(final_message + message)
             exit(1)
 
-    if os.path.isdir(dat_parent_dir+project):
+    # Check to make sure dat + project dir exists
+    if os.path.isdir(dat_parent_dir+project):  # check for upper case project
         dat_dir = dat_parent_dir+project
 
-    elif os.path.isdir(dat_parent_dir+project.lower()):
+    elif os.path.isdir(dat_parent_dir+project.lower()):  # check for lower case project
         dat_dir = dat_parent_dir+project.lower()
 
-    else:
+    else:  # Neither exists, so create
         dat_dir = dat_parent_dir+project
         try:
+            message = 'Directory ' + dat_dir + 'does not exist. Creating...'
+            logging.info(message)
             os.mkdir(dat_dir)
         except:
-            logging.error('Could not make product directory:'+dat_dir)
+            message = 'Could not make product directory:'+dat_dir
+            logging.error(message)
             logging.error('Bailing out')
-            send_mail_and_die(final_message+ ' Could not make product directory:'+dat_dir)
+            # send_mail_and_die(final_message + message)
+            exit(1)
 
 def unzip():
     """
@@ -298,7 +333,7 @@ def ingest_to_local(filetype, local_dir, start_dir):
     final_message = 'Starting distribution of data from the FTP to localdirs/\n'
 
     if filetype == 'PMS2D':
-        command = 'rsync -qu '+start_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir+'/'+filetype
+        command = 'rsync -qu '+start_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir+'/'+filetype+'/.'
         message = 'Syncing dir into place: '+command+'\n'
         os.system(command)
 
@@ -308,7 +343,7 @@ def ingest_to_local(filetype, local_dir, start_dir):
         return(final_message)
 
     elif filetype == 'ADS':
-        command = 'rsync -qu '+start_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir
+        command = 'rsync -qu '+start_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir+'/'+filetype+'/.'
         message = 'Syncing dir into place: '+command+'\n'
         os.system(command)
 
@@ -355,12 +390,14 @@ def main():
     Define main function
     """
     if NAS == True:    
+        logging.info("Syncing from NAS...\n")
         dir_check()
         dist_raw()
         dist_prod()
         dist_field()
         dist_recursive_MTP('/RAF_data/MTP')
     elif NAS == False and GDRIVE == True:
+        logging.info("Syncing from GDRIVE...\n")
         #dist_PI('PI_data')
         ingest_to_local('LRT', dat_dir+'/field_data', temp_dir)
         ingest_to_local('KML', dat_dir+'/field_data', temp_dir)
@@ -380,6 +417,7 @@ def main():
         dist_recursive_QAtools('/RAF_data/QAtools')      
 
     elif NAS == False and FTP == True:
+        logging.info("Syncing from FTP...\n")
         #dist_PI('PI_data')
         ingest_to_local('LRT', dat_dir+'/field_data', ftp_dir)
         ingest_to_local('KML', dat_dir+'/field_data', ftp_dir)
