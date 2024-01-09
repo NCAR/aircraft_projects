@@ -4,12 +4,13 @@
 # Script monitors ingest directories for newly written files and then syncs
 # the file to the appropriate directory based on the file type.
 #
-# This script runs from cron on tikal as user ads.
+# This script runs from cron on eol-rosetta as user ads.
 # The crontab expects the script to be in /net/jlocal/projects/scripts.
 #
 #############################################################################
 
 import logging, logging.handlers
+import argparse
 import os, sys, re, sys
 import time
 import smtplib
@@ -48,28 +49,15 @@ def dir_check():
             logging.error('Bailing out')
             # send_mail_and_die(final_message + message)
             exit(1)
-    # ... and for FTP that field_sync exists under rdat + project
-    if FTP == True:
-        if not os.path.isdir(rdat_dir + '/field_sync'):
-            try:
-                message = 'Directory ' + rdat_dir + '/field_sync does not exist. Creating...'
-                logging.info(message)
-                os.mkdir(rdat_dir + '/field_sync')
-            except:
-                message = 'Could not make raw directory:'+rdat_dir + 'field_sync'
-                logging.error(message)
-                logging.error('Bailing out')
-                # send_mail_and_die(final_message + message)
-                exit(1)
-    # ... and for FTP if there is PMS2D data that PMS2D exists under field_sync
+    # ... and for FTP if there is PMS2D data that PMS2D exists under project
     if FTP == True and PMS2D:
-        if not os.path.isdir(rdat_dir + '/field_sync/PMS2D'):
+        if not os.path.isdir(rdat_dir + '/PMS2D'):
             try:
-                message = 'Directory ' + rdat_dir + '/field_sync/PMS2D does not exist. Creating...'
+                message = 'Directory ' + rdat_dir + '/PMS2D does not exist. Creating...'
                 logging.info(message)
-                os.mkdir(rdat_dir + '/field_sync/PMS2D')
+                os.mkdir(rdat_dir + '/PMS2D')
             except:
-                message = 'Could not make raw directory:'+rdat_dir + '/field_sync/PMS2D'
+                message = 'Could not make raw directory:'+rdat_dir + '/PMS2D'
                 logging.error(message)
                 logging.error('Bailing out')
                 # send_mail_and_die(final_message + message)
@@ -95,7 +83,6 @@ def dir_check():
 
     elif os.path.isdir(dat_parent_dir+project.lower()):  # check for lower case project
         dat_dir = dat_parent_dir+project.lower()
-
     else:  # Neither exists, so create
         dat_dir = dat_parent_dir+project
         try:
@@ -149,7 +136,6 @@ def dist_raw():
             os.system(command)
             final_message = final_message + message 
             logging.info(final_message)
-            print(command)
         # push_data.py can generate a .bz2 file, so must accommodate 
         elif fname.endswith('.bz2'):
             command = 'rsync -qu '+eol_dir+'RAF_data/ADS/*.bz2 '+rdat_dir
@@ -340,8 +326,6 @@ def ingest_to_local(filetype, local_dir, start_dir):
         final_message = final_message + message
         logging.info(final_message)
 
-        return(final_message)
-
     elif filetype == 'ADS':
         command = 'rsync -qu '+start_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir+'/.'
         message = 'Syncing dir into place: '+command+'\n'
@@ -350,8 +334,6 @@ def ingest_to_local(filetype, local_dir, start_dir):
         final_message = final_message + message
         logging.info(final_message)
 
-        return(final_message)
-
     else:
         command = 'rsync -qu '+start_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir
         message = 'Syncing dir into place: '+command+'\n'
@@ -359,8 +341,6 @@ def ingest_to_local(filetype, local_dir, start_dir):
 
         final_message = final_message + message
         logging.info(final_message)
-
-        return(final_message)
 
 def send_mail_and_die(body):
     """ 
@@ -420,7 +400,7 @@ def main():
         logging.info("Syncing from FTP...\n")
         dir_check()
         #dist_PI('PI_data')
-        logging.info('Syncing ADS and PMS2D data from ' + ftp_dir + ' to ' + rdat_dir + '/field_sync\n')
+        logging.info('Syncing ADS and PMS2D data from ' + ftp_dir + ' to ' + rdat_dir + '\n')
         if ship_ADS:
             ingest_to_local('ADS', rdat_dir, ftp_dir)
         if PMS2D:
@@ -436,31 +416,42 @@ def main():
             ingest_to_local('IWG1', dat_dir+'/field_data', ftp_dir)
         if ICARTT:
             ingest_to_local('ICARTT', dat_dir+'/field_data', ftp_dir)
+
         dist_field()
     # send_mail_and_die(body)
     exit(1)
 
+def parse_args():
+    """ Instantiate a command line argument parser """
+
+    # Define command line arguments which can be provided
+    parser = argparse.ArgumentParser(
+        description="Script to monitor ingest directories for newly written " +
+        "files and sync them to the appropriate directory based on file type.")
+    parser.add_argument('--logfile', type=str, required=False, default=False,
+        help="Optional file to save logs to (defaults to writing to screen)")
+
+    args = parser.parse_args()
+
+    return args
+
+
 if __name__ == '__main__':
 
-    try:
-        # Set up logging
-        logger = logging.getLogger()
-        # If you want to revert to a log file uncomment
-        #handler = logging.handlers.RotatingFileHandler(logfile, maxBytes=1000000, backupCount=9)
+    args = parse_args()
+
+    # Set up logging
+    logger = logging.getLogger()
+    # If a logfile name is specified on the command line, set up log rotation
+    if args.logfile:
+        handler = logging.handlers.RotatingFileHandler(
+            args.logfile, maxBytes=1000000, backupCount=9)
+    else:
         handler = logging.StreamHandler(sys.stdout)
-        formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s")
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
-        logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
 
-    except IndexError:
-
-        # Usage statement
-        print("\nUsage: %s path temp_dir logfile")
-        print("path - path to script  ")
-        print("(i.e. /h/eol/ads/crontab)")
-        print("logfile - logfile name (i.e. /tmp/sync.log)")
 
     main()   
-
-    exit(1)
