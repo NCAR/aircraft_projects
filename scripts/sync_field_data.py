@@ -16,12 +16,14 @@ import smtplib
 from email.mime.text import MIMEText
 
 # set up variables
-temp_dir = '/scr/raf_Raw_Data/APAR-FVT2023/field_sync/'
 project = os.getenv('PROJECT')
-aircraft = 'C130_N130AR' 
-proj_dir = '/net/jlocal/projects/'+project+'/'+aircraft+'/'
-sys.path.insert(0,proj_dir+'scripts/')
-sys.path.insert(0,proj_dir)
+aircraft = os.getenv('AIRCRAFT')
+proj_dir = os.getenv('PROJ_DIR')
+rdat = os.getenv('RAW_DATA_DIR')
+temp_dir = rdat + '/' + project + '/field_sync/'
+full_proj_dir = proj_dir + project + '/' + aircraft+'/'
+sys.path.insert(0,full_proj_dir+'scripts/')
+sys.path.insert(0,full_proj_dir)
 from fieldProc_setup import *
 dat_dir = dat_parent_dir+project+'/'
 ftp_dir = ftp_parent_dir+'/'
