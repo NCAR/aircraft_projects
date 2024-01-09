@@ -343,7 +343,7 @@ def ingest_to_local(filetype, local_dir, start_dir):
         return(final_message)
 
     elif filetype == 'ADS':
-        command = 'rsync -qu '+start_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir+'/'+filetype+'/.'
+        command = 'rsync -qu '+start_dir+'/EOL_data/RAF_data/'+filetype+'/* '+local_dir+'/.'
         message = 'Syncing dir into place: '+command+'\n'
         os.system(command)
 
@@ -399,12 +399,14 @@ def main():
     elif NAS == False and GDRIVE == True:
         logging.info("Syncing from GDRIVE...\n")
         #dist_PI('PI_data')
-        ingest_to_local('LRT', dat_dir+'/field_data', temp_dir)
-        ingest_to_local('KML', dat_dir+'/field_data', temp_dir)
+        logging.info('Syncing ADS and PMS2D data from ' + ftp_dir + ' to ' + rdat_dir + '/field_sync\n')
         if ship_ADS:
             ingest_to_local('ADS', rdat_dir, temp_dir)
         if PMS2D:
             ingest_to_local('PMS2D', rdat_dir, temp_dir)
+        logging.info('Syncing from ' + ftp_dir + ' to ' + dat_dir + '/field_data')
+        ingest_to_local('LRT', dat_dir+'/field_data', temp_dir)
+        ingest_to_local('KML', dat_dir+'/field_data', temp_dir)
         if HRT:
             ingest_to_local('HRT', dat_dir+'/field_data', temp_dir)
         if SRT:
