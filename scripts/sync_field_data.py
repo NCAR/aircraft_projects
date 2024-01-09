@@ -399,14 +399,12 @@ def main():
     elif NAS == False and GDRIVE == True:
         logging.info("Syncing from GDRIVE...\n")
         #dist_PI('PI_data')
-        logging.info('Syncing ADS and PMS2D data from ' + ftp_dir + ' to ' + rdat_dir + '/field_sync\n')
+        ingest_to_local('LRT', dat_dir+'/field_data', temp_dir)
+        ingest_to_local('KML', dat_dir+'/field_data', temp_dir)
         if ship_ADS:
             ingest_to_local('ADS', rdat_dir, temp_dir)
         if PMS2D:
             ingest_to_local('PMS2D', rdat_dir, temp_dir)
-        logging.info('Syncing from ' + ftp_dir + ' to ' + dat_dir + '/field_data')
-        ingest_to_local('LRT', dat_dir+'/field_data', temp_dir)
-        ingest_to_local('KML', dat_dir+'/field_data', temp_dir)
         if HRT:
             ingest_to_local('HRT', dat_dir+'/field_data', temp_dir)
         if SRT:
@@ -422,12 +420,14 @@ def main():
         logging.info("Syncing from FTP...\n")
         dir_check()
         #dist_PI('PI_data')
-        ingest_to_local('LRT', dat_dir+'/field_data', ftp_dir)
-        ingest_to_local('KML', dat_dir+'/field_data', ftp_dir)
+        logging.info('Syncing ADS and PMS2D data from ' + ftp_dir + ' to ' + rdat_dir + '/field_sync\n')
         if ship_ADS:
             ingest_to_local('ADS', rdat_dir, ftp_dir)
         if PMS2D:
             ingest_to_local('PMS2D', rdat_dir, ftp_dir)
+        logging.info('Syncing from ' + ftp_dir + ' to ' + dat_dir + '/field_data')
+        ingest_to_local('LRT', dat_dir+'/field_data', ftp_dir)
+        ingest_to_local('KML', dat_dir+'/field_data', ftp_dir)
         if HRT:
             ingest_to_local('HRT', dat_dir+'/field_data', ftp_dir)
         if SRT:
