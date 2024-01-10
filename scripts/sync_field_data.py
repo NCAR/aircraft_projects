@@ -18,13 +18,19 @@ import smtplib
 from email.mime.text import MIMEText
 
 # set up variables
-from fieldProc_setup import rdat, project, PROJ_DIR, aircraft, dat_parent_dir,\
-    ftp_parent_dir, rdat_parent_dir, FTP, PMS2D, HRT, SRT, IWG1, ICARTT, NAS,\
-    ship_ADS, GDRIVE
-temp_dir = rdat + '/' + project + '/field_sync/'
+# Have to get PROJ_DIR, project and aircraft from env here even though will
+# get them again when import fieldProc_setup, because need them to find
+# location of fieldPro_setup.
+project = os.environ['PROJECT']
+aircraft = os.environ['AIRCRAFT']
+PROJ_DIR = os.environ['PROJ_DIR']
 full_proj_dir = PROJ_DIR + '/' + project + '/' + aircraft+'/'
 sys.path.insert(0, full_proj_dir + 'scripts/')
 sys.path.insert(0, full_proj_dir)
+from fieldProc_setup import project, PROJ_DIR, aircraft, dat_parent_dir,\
+    ftp_parent_dir, rdat_parent_dir, FTP, PMS2D, HRT, SRT, IWG1, ICARTT, NAS,\
+    ship_ADS, GDRIVE, RAW_DATA_DIR
+temp_dir = RAW_DATA_DIR + '/' + project + '/field_sync/'
 dat_dir = dat_parent_dir + project
 ftp_dir = ftp_parent_dir
 rdat_dir = rdat_parent_dir + project+'/'
@@ -47,7 +53,7 @@ def dir_check():
             message = 'Could not make raw directory ' + rdat_dir + ': ' + e
             logging.error(message)
             logging.error('Bailing out')
-            # send_mail_and_die(final_message + message)
+            send_mail_and_die(message)
             exit(1)
     # ... and for FTP if there is PMS2D data that PMS2D exists under project
     if FTP is True and PMS2D is True:
@@ -62,7 +68,7 @@ def dir_check():
                     '/PMS2D: ' + e
                 logging.error(message)
                 logging.error('Bailing out')
-                # send_mail_and_die(final_message + message)
+                send_mail_and_die(message)
                 exit(1)
 
     # Check to make sure the incoming ftp + project dir exists
@@ -98,7 +104,7 @@ def dir_check():
             message = 'Could not make product directory ' + dat_dir + ': ' + e
             logging.error(message)
             logging.error('Bailing out')
-            # send_mail_and_die(final_message + message)
+            send_mail_and_die(message)
             exit(1)
 
 
@@ -369,15 +375,11 @@ def send_mail_and_die(body):
     """
     Email function
     """
-    emailfilename = 'email.addr.txt'
-    os.chdir(cwd)
-    fo = open(emailfilename, 'r+')
-    email = fo.readline()
-    fo.close()
+    email = 'rafsehelp@ucar.edu'
     logging.info("About to send e-mail to: " + email)
-    body = body + 'See /tmp/ads_data_catcher.log\n'
     msg = MIMEText(body)
-    msg['Subject'] = 'Receive and Disribute message for:' + project
+    msg['Subject'] = 'Receive and Distribute message for:' + project + \
+        ' flight:' + flight
     msg['From'] = 'ads@groundstation'
     msg['To'] = email
 
@@ -445,7 +447,6 @@ def main():
             ingest_to_local('ICARTT', dat_dir + '/field_data', ftp_dir)
 
         dist_field()
-    # send_mail_and_die(body)
     exit(1)
 
 
