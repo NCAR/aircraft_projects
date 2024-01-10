@@ -22,6 +22,8 @@
 
 import os
 project = os.environ['PROJECT']
+aircraft = os.wnviron('AIRCRAFT')
+PROJ_DIR = os.getenv('PROJ_DIR')
 DATA_DIR = os.environ['DATA_DIR']
 RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 dat_parent_dir =  DATA_DIR+'/'     # Where nc and kml files go
