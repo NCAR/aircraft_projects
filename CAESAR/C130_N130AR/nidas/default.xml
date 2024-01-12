@@ -1082,14 +1082,14 @@
 
     <serialSensor ID="CON2O" baud="38400" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_ARI">
       <sample id="1" rate="1" scanfFormat="c%*f,%f,%f,%f,%f,%f,,,,%f,%f">
-          <!--variable longname="Aerodyne Research Inc Mini 108 Igor Pro time" name="IgorTime" units="s"/-->
-          <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2O" units="ppbv"/>
-          <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="CO" units="ppbv"/>
-          <variable longname="Aerodyne Research Inc Mini 108 Nitrous Oxide Mixing Ratio" name="N2OA" units="ppbv"/>
-          <variable longname="Aerodyne Research Inc Mini 108 Carbon Monoxide Mixing Ratio" name="COA" units="ppbv"/>
-          <variable longname="Aerodyne Research Inc Mini 108 Water Mixing Ratio" name="H2O" units="ppbv"/>
-          <variable longname="Aerodyne Research Inc Mini 108 Temperature" name="T" units="K"/>
-          <variable longname="Aerodyne Research Inc Mini 108 Pressure" name="P" units="Torr"/>
+          <!--variable longname="Aerodyne Mini 108 Igor Pro time" name="IgorTime" units="s"/-->
+          <variable longname="Aerodyne Mini 108 Nitrous Oxide Mixing Ratio" name="N2O" units="ppbv"/>
+          <variable longname="Aerodyne Mini 108 Carbon Monoxide Mixing Ratio" name="CO" units="ppbv"/>
+          <variable longname="Aerodyne Mini 108 Ambient FSO Nitrous Oxide Mixing Ratio" name="N2OA" units="ppbv"/>
+          <variable longname="Aerodyne Mini 108 Ambient FSO Carbon Monoxide Fit Correction Factor" name="COA" units="ppbv"/>
+          <variable longname="Aerodyne Mini 108 Water Mixing Ratio" name="H2O" units="ppbv"/>
+          <variable longname="Aerodyne Mini 108 Temperature" name="T" units="K"/>
+          <variable longname="Aerodyne Mini 108 Pressure" name="P" units="Torr"/>
       </sample>
       <!--prompt rate="5" string="SIG?\r"/-->
       <message length="0" position="end" separator="\r\n"/>
@@ -1195,7 +1195,7 @@
     <sensor ID="TWODS_HK" class="raf.TwoDS" devicename="usock::30113" suffix="_2DS">
       <parameter name="SerialNumber" type="string" value="F2DS019"/>
       <parameter name="RESOLUTION" type="int" value="10"/>
-      <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+      <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f">
         <variable name="TACT2H" longname="2DS Total Particles Horizontal" units="count"/>
         <variable name="TACT2V" longname="2DS Total Particles Vertical" units="count"/>
         <variable name="CONCS" longname="2DS Total Number Particles" units="#/cm3"/>
@@ -1219,8 +1219,10 @@
         <variable name="VMASK" longname="2DS Vertical Mask" units="none"/>
         <variable name="HOPT" longname="2DS Horizontal Optics Temperature" units="deg_C"/>
         <variable name="VOPT" longname="2DS Vertical Optics Temperature" units="deg_C"/>
+<!--
         <variable name="HARTT" longname="2DS Horizontal Array Top Temperature" units="deg_C"/>
         <variable name="VARTT" longname="2DS Vertical Array Top Temperature" units="deg_C"/>
+-->
         <variable name="DSPT" longname="2DS DSP Board Temperature" units="deg_C"/>
         <variable name="HLT" longname="2DS Horizontal Laser Temperature" units="deg_C"/>
         <variable name="VLT" longname="2DS Vertical Laser Temperature" units="deg_C"/>

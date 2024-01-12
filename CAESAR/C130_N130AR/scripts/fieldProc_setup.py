@@ -22,6 +22,8 @@
 
 import os
 project = os.environ['PROJECT']
+aircraft = os.environ['AIRCRAFT']
+PROJ_DIR = os.environ['PROJ_DIR']
 DATA_DIR = os.environ['DATA_DIR']
 RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 dat_parent_dir =  DATA_DIR+'/'     # Where nc and kml files go
@@ -41,15 +43,19 @@ nas_mnt_pt =     '/mnt/Data'
 ### FTP configuration - not used if using NAS
 ### Note: anonymous FTP is no longer allowed per NSF NCAR Office of
 ### Information Security (OIS) policy. login and path info are now stored in
-### ~/.ftpconfig which defines the environment variables FTPUSER, FTPPWD, and
-### FTPDATADIR
+### ~/.ftpconfig which defines the environment variables FTPUSER, FTPPWD,
+### FTPDATADIR, and $FTPPARENTDIR
 #############################################################################
 FTP = True
 ftp_site = 'ftp.eol.ucar.edu'
-user = os.environ['FTPUSER']
-password = os.environ['FTPPWD']
-ftp_parent_dir = '.'
-ftp_data_dir = os.environ['FTPDATADIR']
+if 'FTPUSER' in os.environ:
+  user = os.environ['FTPUSER']
+  password = os.environ['FTPPWD']
+  ftp_data_dir = os.environ['FTPDATADIR']
+  ftp_parent_dir = os.environ['FTPPARENTDIR']
+elif FTP:
+  print("FTP env vars not defined.")
+  print("Please source ~/.ftpconfig.")
 
 #############################################################################
 ### Define which files should be generated
