@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2012 UCAR, NCAR, All Rights Reserved -->
+
+<!-- this is a nidas XML intended for simple testing.
+
+     Edit it to change the <dsm name="xxxx"> to the host name of the dsm.
+     Or, to change the host name of the DSM:
+        sudo set_hostname dsm306
+     Edit it to add, subtract any sensors.
+     Note the sensor_catalog is bare minimum.
+     It also does not archive any data or send it to a dsm_server, just
+     provides it on port 30000 for listing with data_stats, data_dump, etc.
+
+     To run this on a DSM:
+
+     # stop any existing dsm process
+     stop_dsm
+     # modprobe any modules that you want, that are not in
+     # /etc/modules-load.d/ads.conf
+     # run in background (must specify full path name to adstest.xml)
+     dsm /home/ads/test/adstest.xml
+     # or in foreground
+     dsm -d test/adstest.xml
+
+     # See what data is generated
+     data_stats
+     #  Look at A2D temps on 1,251, for example
+     data_dump -i 1,251 -p
+
+     # shut down background process
+     stop_dsm
+
+-->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    name="RAF_Lab" version="1"
+    system="Lab_N600">
+
+    <sensorcatalog>
+        <sensor ID="IRIG" class="raf.IRIGSensor">
+            <sample id="1">
+                <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
+                <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+            </sample>
+        </sensor>
+
+        <serialSensor ID="SerialAnalog" class="raf.A2D_Serial" baud="115200" databits="8" parity="none" stopbits="1">
+          <calfile file="A2DS032.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
+          <parameter name="boardID" type="int" value="32"/>
+          <parameter name="FILT" type="int" value="6"/>
+          <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
+            <variable longname="Time; Seconds Since Midnight" name="UTSEC_GPDACQ" units="seconds"/>
+            <variable longname="A2DTemperature" name="A2DTEMP_GPDACQ" units="cnts"/>
+            <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_GPDACQ" units="counter"/>
+          </sample>
+          <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
+            <variable longname="GP-DACQ Ch.0" name="GPDACQ_CH0" units="V">
+              <parameter name="channel" type="int" value="0"/>
+              <parameter name="ifsr" type="int" value="0"/>
+              <parameter name="ipol" type="int" value="0"/>
+            </variable>
+            <variable longname="GP-DACQ Ch.1" name="GPDACQ_CH1" units="V">
+              <parameter name="channel" type="int" value="1"/>
+              <parameter name="ifsr" type="int" value="0"/>
+              <parameter name="ipol" type="int" value="0"/>
+            </variable>
+            <variable longname="GP-DACQ Ch.2" name="GPDACQ_CH2" units="V">
+              <parameter name="channel" type="int" value="2"/>
+              <parameter name="ifsr" type="int" value="0"/>
+              <parameter name="ipol" type="int" value="0"/>
+            </variable>
+            <variable longname="GP-DACQ Ch.3" name="GPDACQ_CH3" units="V">
+              <parameter name="channel" type="int" value="3"/>
+              <parameter name="ifsr" type="int" value="0"/>
+              <parameter name="ipol" type="int" value="0"/>
+            </variable>
+          </sample>
+          <message length="0" position="end" separator="\n"/>
+        </serialSensor>
+
+    </sensorcatalog>
+
+    <site class="raf.Aircraft" name="Lab_N600" applyCals="true">
+        <parameter name="tailNumber" type="string" value="N600"/>
+
+        <server statusAddr="sock:127.0.0.1:30001">
+          <service class="XMLConfigService">
+            <output>
+              <socket type="mcaccept"/>
+            </output>
+          </service>
+          <service class="XMLConfigAllService">
+            <output>
+              <socket type="mcaccept"/>
+            </output>
+          </service>
+          <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.0">
+
+    <!-- input from every DSM on this aircraft that has
+                 a socket output of type RawSampleOutputStream -->
+            <input class="RawSampleInputStream">
+              <socket maxIdle="60" type="mcaccept"/>
+            </input>
+            <processor class="SampleArchiver">
+              <output class="RawSampleOutputStream">
+                <fileset dir="/var/r1/${PROJECT}" file="%Y%m%d_%H%M%S_${FLIGHT}.ads" length="0"/>
+              </output>
+              <output class="RawSampleOutputStream">
+                <socket port="30000" type="server"/>
+              </output>
+            </processor>
+            <processor class="raf.SyncRecordGenerator">
+              <output class="SampleOutputStream">
+                <socket port="30001" type="server"/>
+              </output>
+            </processor>
+          </service>
+        </server>
+
+        <dsm derivedData="sock::7071" id="100" name="dsmspare" location="bench" rserialPort="30002" statusAddr="sock::30001">
+            <output class="RawSampleOutputStream">
+                <socket type="mcrequest"/>
+            </output>
+
+            <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_DSMSPARE"/>
+
+            <!-- TEMP-DACQ -->	      
+            <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyCTI0" id="1000">
+              <calfile file="A2DS004.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
+              <parameter name="boardID" type="int" value="4"/>
+              <parameter name="FILT" type="int" value="10"/>
+              <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
+                <variable longname="Time; Seconds Since Midnight" name="UTSEC_TDACQ" units="seconds"/>
+                <variable longname="A2DTemperature" name="A2DTEMP_TDACQ" units="cnts"/>
+                <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TDACQ" units="counter"/>
+              </sample>
+              <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
+                <variable longname="Channel 0 RTD Input" name="TEMPDACQ_CH0" units="V">
+                  <parameter name="channel" type="int" value="0"/>
+                  <parameter name="ifsr" type="int" value="0"/>
+                  <parameter name="ipol" type="int" value="0"/>
+                </variable>
+                <variable longname="Channel 1 RTD Input" name="TEMPDACQ_CH1" units="V">
+                  <parameter name="channel" type="int" value="1"/>
+                  <parameter name="ifsr" type="int" value="0"/>
+                  <parameter name="ipol" type="int" value="0"/>
+                </variable>
+                <variable longname="Channel 2, Auxilliary Input" name="TEMPDACQ_CH2" units="V">
+                  <parameter name="channel" type="int" value="2"/>
+                  <parameter name="ifsr" type="int" value="0"/>
+                  <parameter name="ipol" type="int" value="0"/>
+                </variable>
+                <variable longname="Channel 3, Auxilliary Input" name="TEMPDACQ_CH3" units="V">
+                  <parameter name="channel" type="int" value="3"/>
+                  <parameter name="ifsr" type="int" value="0"/>
+                  <parameter name="ipol" type="int" value="0"/>
+                 </variable>
+              </sample>
+            </serialSensor>
+
+            <!-- GP-DACQ -->
+            <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyCTI1" id="1100">
+              <calfile file="A2DS032.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
+              <parameter name="boardID" type="int" value="32"/>
+              <parameter name="FILT" type="int" value="6"/>
+              <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
+                <variable longname="Time; Seconds Since Midnight" name="UTSEC_GPDACQ" units="seconds"/>
+                <variable longname="A2DTemperature" name="A2DTEMP_GPDACQ" units="cnts"/>
+                <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_GPDACQ" units="counter"/>
+              </sample>
+              <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
+                <variable longname="GP-DACQ Ch.0" name="GPDACQ_CH0" units="V">
+                  <parameter name="channel" type="int" value="0"/>
+                  <parameter name="ifsr" type="int" value="0"/>
+                  <parameter name="ipol" type="int" value="0"/>
+                </variable>
+                <variable longname="GP-DACQ Ch.1" name="GPDACQ_CH1" units="V">
+                  <parameter name="channel" type="int" value="1"/>
+                  <parameter name="ifsr" type="int" value="0"/>
+                  <parameter name="ipol" type="int" value="0"/>
+                </variable>
+                <variable longname="GP-DACQ Ch.2" name="GPDACQ_CH2" units="V">
+                  <parameter name="channel" type="int" value="2"/>
+                  <parameter name="ifsr" type="int" value="0"/>
+                  <parameter name="ipol" type="int" value="0"/>
+                </variable>
+                <variable longname="GP-DACQ Ch.3" name="GPDACQ_CH3" units="V">
+                  <parameter name="channel" type="int" value="3"/>
+                  <parameter name="ifsr" type="int" value="0"/>
+                  <parameter name="ipol" type="int" value="0"/>
+                </variable>
+              </sample>
+            </serialSensor>
+        </dsm>
+
+    </site>
+</project>
