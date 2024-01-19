@@ -55,8 +55,7 @@ class FieldData():
         self.qc_ftp_dir = '/pub/incoming/catalog/' + self.project.lower()
         self.flight = self.readFlight()
         self.email = self.readEmail()
-        self.rclone_staging_dir = rclone_staging_dir 
-        print(self.rclone_staging_dir)
+        self.rclone_staging_dir = rclone_staging_dir
         process = False
         reprocess = False
 
@@ -143,7 +142,7 @@ class FieldData():
                    "SRT": data_dir,
                    "ICARTT": data_dir,
                    "IWG1": data_dir,
-                   "PMS2D": raw_dir + 'PMS2D/',
+                   "PMS2D": raw_dir,
                    "twods": raw_dir + '3v_cpi/2DS/' + project.upper() + '_' + flight.upper() + '/',
                    "oap": raw_dir + '3v_cpi/oapfiles/',
                    "cpi": raw_dir + '3v_cpi/CPI/' + project.upper() + '_' + flight.upper() + '/',
@@ -443,7 +442,7 @@ class FieldData():
             cf.close()
 
         # execute nimbus in batch mode using the config file
-        command = "/opt/local/bin/nimbus" + flags + nimConfFile
+        command = "/usr/local/bin/nimbus" + flags + nimConfFile
         message = "about to execute nimbus I hope: " + command
         self.logger.info(message)
         print(message)
@@ -673,10 +672,10 @@ class FieldData():
 
                 # Fast 2D data, extract first, then process.
                 if (key == "PMS2D"):
-                    self.ensure_dir(self.inst_dir["PMS2D"])
+                    self.ensure_dir(self.inst_dir["PMS2D"] + 'PMS2D')
                     file_name = filename["ADS"].split(raw_dir)[1]
                     fileelts = file_name.split('.')
-                    filename["PMS2D"] = self.inst_dir["PMS2D"] + fileelts[0] + '.2d'
+                    filename["PMS2D"] = self.inst_dir["PMS2D"] + 'PMS2D/' + fileelts[0] + '.2d'
 
                     if not os.path.exists(filename["PMS2D"]):
                         # General form of extract2d from RAW_DATA_DIR is:
@@ -703,6 +702,12 @@ class FieldData():
         for key in file_ext:
             if (key == "LRT") or (key == "ADS"):
                 next
+            elif (key == "PMS2D"):
+                (reprocess, filename[key]) = \
+                    self.find_file(self.inst_dir[key] + "PMS2D/", self.flight,
+                                   self.project, self.file_type[key],
+                                   self.file_ext[key], process, reprocess,
+                                   self.date[0:8])
             else:
                 (reprocess, filename[key]) = \
                     self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
@@ -817,7 +822,7 @@ class FieldData():
         '''No NAS this project, so put files to Google Drive. Put
         zipped files if they exist.
         '''
-        print('Putting files to rclone staging location for shipment to Google Drive:')
+        print('\nPutting files to rclone staging location for shipment to Google Drive:\n')
 
         # Keep this set to False unless you have time / bandwidth
         if ship_all_ADS is True:
@@ -828,7 +833,7 @@ class FieldData():
                 if rawfilename.endswith('.ads'):
                     try:
                         os.chdir(inst_dir['ADS'])
-                        os.system('rsync -u *.ads ' + rclone_staging_dir + '/ADS')
+                        os.system('rsync -u *.ads ' + rclone_staging_dir + 'ADS')
                         status["ADS"]["stor"] = 'Yes-GDrive-staging'
                         message = rawfilename + ' rsync successful!'
                         self.logger.info(message)
@@ -842,6 +847,9 @@ class FieldData():
                     try:
                         os.system('rclone copy ' + rclone_staging_dir + '/ADS' + ' gdrive_eolfield:/' + os.environ['PROJECT'] + '/EOL_data/RAF_data/ADS --ignore-existing')
                         status["ADS"]["ship"] = 'Yes-GDrive'
+                        message = rawfilename + ' rclone successful!'
+                        self.logger.info(message)
+                        print(message)
                     except:
                         message = rawfilename + ' not rcloned to Google Drive'
                         self.logger.info(message)
@@ -852,8 +860,7 @@ class FieldData():
                     pass
         else:
             for key in file_ext:
-                print(key)
-                print('')
+                print('\n' + key + '\n')
                 if ship_ADS is False:
                     if key == 'ADS':
                         pass
@@ -869,7 +876,7 @@ class FieldData():
                 else:
                     try:
                         os.chdir(inst_dir[key])
-                        print(inst_dir[key])
+                        print("Instrument dir is " + inst_dir[key])
                     except Exception as e:
                         print('Could not change to local dir ' + inst_dir[key])
                         print(e)
@@ -883,14 +890,13 @@ class FieldData():
                             pass
                     else:
                         try:
-                            os.chdir(rclone_staging_dir + '/' + key)
                             os.chdir(inst_dir[key])
                         except Exception as e:
                             print(e)
                             # Attempt to create needed dir
-                            print('Attempt to create dir /' + rclone_staging_dir + '/' + key)
+                            print('Attempt to create dir ' + rclone_staging_dir + key)
                             try:
-                                os.system('mkdir ' + rclone_staging_dir + '/' + key)
+                                os.system('mkdir ' + rclone_staging_dir + key)
                             except Exception as e:
                                 print('Make dir ' + rclone_staging_dir + key + ' failed')
                                 print(e)
@@ -898,33 +904,40 @@ class FieldData():
                                 continue
                             # Try to change to dir again
                             try:
-                                os.chdir(rclone_staging_dir + '/' + key)
-                                os.chdir(instdir[key])
+                                os.chdir(rclone_staging_dir + key)
                             except Exception as e:
                                 print('Change dir to ' + rclone_staging_dir + '/' + key + ' failed')
                                 print(e)
                                 self.logger.error(e)
                                 continue
+                        print("In " + os.getcwd())
 
                 if ship_ADS is False:
                     if file_name.endswith('.ads'):
                         pass
                     else:
-                        try:
-                            os.system('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + '/' + key)
-                            status[key]["stor"] = 'Yes-GDrive-staging'
-                            print(datetime.datetime.now().time())
-                            print('Finished rsyncing data file to staging location')
-                            print('')
+                        # PMS2D is already in subdir, so skip rsync
+                        if key == 'PMS2D':
+                            pass;
+                        else:
+                            try:
+                                # Copy files to subdirs to match desired rclone structure
+                                print('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + key)
+                                os.system('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + key)
+                                status[key]["stor"] = 'Yes-GDrive-staging'
+                                print(datetime.datetime.now().time())
+                                print('Finished rsyncing data file to staging location')
+                                print('')
 
-                        except Exception as e:
-                            print('Error rsyncing data file to staging location ' + file_name)
-                            print(e)
-                            self.logger.error(e)
-                            continue
+                            except Exception as e:
+                                print('Error rsyncing data file to staging location ' + file_name)
+                                print(e)
+                                self.logger.error(e)
+                                continue
 
                         try:
-                            os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' gdrive_eolfield:' + os.environ['PROJECT'] + '/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                            print('rclone copy ' + rclone_staging_dir + key + ' gdrive_eolfield:' + os.environ['PROJECT'] + '/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                            os.system('rclone copy ' + rclone_staging_dir + key + ' gdrive_eolfield:' + os.environ['PROJECT'] + '/EOL_data/RAF_data/' + key + ' --ignore-existing')
                             status[key]["ship"] = 'Yes-GDrive'
                             print(datetime.datetime.now().time())
                             print('Finished rclone process for data file')
@@ -936,21 +949,31 @@ class FieldData():
                             self.logger.error(e)
                             continue
                 else:
-                    try:
-                        os.system('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + '/' + key)
-                        status[key]["stor"] = 'Yes-GDrive-staging'
-                        print(datetime.datetime.now().time())
-                        print('Finished rsyncing data file to staging location')
-                        print('')
+                    # PMS2D is already in subdir, so skip rsync
+                    if key == 'PMS2D':
+                       pass;
+                    else:
+                        try:
+                            # os.system doesn't throw an error so this try/except
+                            # never fails even if rsync fails. Need to use subprocess.Popen()
+                            # This is true every place os.system is used in a try/except
+                            print("In " + os.getcwd())
+                            print('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + key)
+                            os.system('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + key)
+                            status[key]["stor"] = 'Yes-GDrive-staging'
+                            print(datetime.datetime.now().time())
+                            print('Finished rsyncing data file to staging location')
+                            print('')
 
-                    except Exception as e:
-                        print('Error rsyncing data file to staging location ' + file_name)
-                        print(e)
-                        self.logger.error(e)
-                        continue
+                        except Exception as e:
+                            print('Error rsyncing data file to staging location ' + file_name)
+                            print(e)
+                            self.logger.error(e)
+                            continue
 
                     try:
-                        os.system('rclone copy ' + rclone_staging_dir + '/' + key + ' gdrive_eolfield:' + os.environ['PROJECT'] + '/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                        print('rclone copy ' + rclone_staging_dir + key + ' gdrive_eolfield:' + os.environ['PROJECT'] + '/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                        os.system('rclone copy ' + rclone_staging_dir + key + ' gdrive_eolfield:' + os.environ['PROJECT'] + '/EOL_data/RAF_data/' + key + ' --ignore-existing')
                         status[key]["ship"] = 'Yes-GDrive'
                         print(datetime.datetime.now().time())
                         print('Finished rclone process for ' + file_name)
@@ -984,6 +1007,9 @@ class FieldData():
 
         print('Putting files to FTP site:')
         print('')
+
+        # When ftping, put PMS2D file in PMS2D subdir
+        inst_dir['PMS2D'] = inst_dir['PMS2D'] + 'PMS2D/'
 
         # If set in config file script will FTP all ads in rdat
         # Keep this set to False unless you have time / bandwidth
@@ -1038,6 +1064,7 @@ class FieldData():
                         continue
 
                 if filename[key] != '':
+                    print('**'+filename[key]+'**')
                     data_dir, file_name = os.path.split(filename[key])
                     if ship_ADS is False:
                         if filename[key] == '.ads':
@@ -1112,6 +1139,11 @@ class FieldData():
                         continue
 
         ftp.quit()
+
+        # Revert PMS2D ftp special case
+        inst_dir['PMS2D'] = re.sub('PMS2D/', '',inst_dir['PMS2D'])
+        print("After FTP: " + inst_dir['PMS2D'])
+
 
     def setup_NAS(self, process, reprocess, file_ext, inst_dir, status, flight, project, email, final_message, filename, nas_sync_dir, nas_data_dir):
         # Put file onto NAS for BTSyncing back home.
