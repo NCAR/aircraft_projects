@@ -46,7 +46,7 @@ nas_mnt_pt =     '/mnt/Data'
 ### ~/.ftpconfig which defines the environment variables FTPUSER, FTPPWD,
 ### FTPDATADIR, and $FTPPARENTDIR
 #############################################################################
-FTP = True
+FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 if 'FTPUSER' in os.environ:
   user = os.environ['FTPUSER']
@@ -101,5 +101,6 @@ translate2ds = '/opt/local/bin/translate2ds '
 #############################################################################
 datadump = False
 
-GDRIVE = False
-rclone_staging_dir = ''
+GDRIVE = True
+# rclone_staging_dir should end with a slash!
+rclone_staging_dir = '/var/r1/rclone_staging/CAESAR/'
