@@ -824,7 +824,8 @@ class FieldData():
         '''
         print('\nPutting files to rclone staging location for shipment to Google Drive:\n')
 
-        # Keep this set to False unless you have time / bandwidth
+        # Keep this set to False unless you have time / bandwidth to ship all
+        # ads files.
         if ship_all_ADS is True:
             message = 'Starting rsync process for all available .ads files'
             self.logger.info(message)
@@ -859,128 +860,97 @@ class FieldData():
                 else:
                     pass
         else:
+            # Loop through requested file extensions to be copied to GDrive
             for key in file_ext:
                 print('\n' + key + '\n')
-                if ship_ADS is False:
-                    if key == 'ADS':
-                        pass
-                    else:
-                        try:
-                            os.chdir(inst_dir[key])
-                            print(inst_dir[key])
-                        except Exception as e:
-                            print('Could not change to local dir ' + inst_dir[key])
-                            print(e)
-                            self.logger.error(e)
-                            continue
+
+                if ship_ADS is False and key == 'ADS':
+                    # Skip ads if requested in fieldProc_setup.py
+                    continue
                 else:
+                    # For all requested extensions, confirm local dir where
+                    # data file is located exists
                     try:
-                        os.chdir(inst_dir[key])
-                        print("Instrument dir is " + inst_dir[key])
+                        print("Data dir is " + inst_dir[key])
+                        os.path.exists(inst_dir[key])
                     except Exception as e:
-                        print('Could not change to local dir ' + inst_dir[key])
+                        print('Data dir ' + inst_dir[key] +  ' does not exist')
                         print(e)
                         self.logger.error(e)
                         continue
 
                 if filename[key] != '':
+                    print('Instrument file is ' + filename[key])
+                    # Get instrument filename; used for error reporting
                     data_dir, file_name = os.path.split(filename[key])
-                    if ship_ADS is False:
-                        if filename[key] == '.ads':
+
+                    # For all requested extensions, confirm there is an
+                    # instrument-specific dir within the rclone_staging_dir
+                    print("GDrive rclone staging dir for instrument is " +
+                          rclone_staging_dir + key)
+                    if not os.path.exists(rclone_staging_dir + key):
+                        e = 'Instrument dir ' + rclone_staging_dir + key + \
+                              ' does not exist'
+                        print(e)
+                        self.logger.error(e)
+                        # Attempt to create needed dir
+                        print('Attempt to create dir ' + rclone_staging_dir +
+                              key)
+                        try:
                             pass
-                    else:
-                        try:
-                            os.chdir(inst_dir[key])
+                            os.system('mkdir ' + rclone_staging_dir + key)
                         except Exception as e:
-                            print(e)
-                            # Attempt to create needed dir
-                            print('Attempt to create dir ' + rclone_staging_dir + key)
-                            try:
-                                os.system('mkdir ' + rclone_staging_dir + key)
-                            except Exception as e:
-                                print('Make dir ' + rclone_staging_dir + key + ' failed')
-                                print(e)
-                                self.logger.error(e)
-                                continue
-                            # Try to change to dir again
-                            try:
-                                os.chdir(rclone_staging_dir + key)
-                            except Exception as e:
-                                print('Change dir to ' + rclone_staging_dir + '/' + key + ' failed')
-                                print(e)
-                                self.logger.error(e)
-                                continue
-                        print("In " + os.getcwd())
-
-                if ship_ADS is False:
-                    if file_name.endswith('.ads'):
-                        pass
-                    else:
-                        # PMS2D is already in subdir, so skip rsync
-                        if key == 'PMS2D':
-                            pass;
-                        else:
-                            try:
-                                # Copy files to subdirs to match desired rclone structure
-                                print('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + key)
-                                os.system('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + key)
-                                status[key]["stor"] = 'Yes-GDrive-staging'
-                                print(datetime.datetime.now().time())
-                                print('Finished rsyncing data file to staging location')
-                                print('')
-
-                            except Exception as e:
-                                print('Error rsyncing data file to staging location ' + file_name)
-                                print(e)
-                                self.logger.error(e)
-                                continue
-
-                        try:
-                            print('rclone copy ' + rclone_staging_dir + key + ' gdrive_eolfield:' + os.environ['PROJECT'] + '/EOL_data/RAF_data/' + key + ' --ignore-existing')
-                            os.system('rclone copy ' + rclone_staging_dir + key + ' gdrive_eolfield:' + os.environ['PROJECT'] + '/EOL_data/RAF_data/' + key + ' --ignore-existing')
-                            status[key]["ship"] = 'Yes-GDrive'
-                            print(datetime.datetime.now().time())
-                            print('Finished rclone process for data file')
-                            print('')
-
-                        except Exception as e:
-                            print('Error with rclone process for ' + file_name)
+                            print('Make dir ' + rclone_staging_dir + key +
+                                  ' failed')
                             print(e)
                             self.logger.error(e)
                             continue
-                else:
-                    # PMS2D is already in subdir, so skip rsync
-                    if key == 'PMS2D':
-                       pass;
-                    else:
-                        try:
-                            # os.system doesn't throw an error so this try/except
-                            # never fails even if rsync fails. Need to use subprocess.Popen()
-                            # This is true every place os.system is used in a try/except
-                            print("In " + os.getcwd())
-                            print('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + key)
-                            os.system('rsync -u ' + str(file_name) + ' ' + rclone_staging_dir + key)
-                            status[key]["stor"] = 'Yes-GDrive-staging'
-                            print(datetime.datetime.now().time())
-                            print('Finished rsyncing data file to staging location')
-                            print('')
-
-                        except Exception as e:
-                            print('Error rsyncing data file to staging location ' + file_name)
+                        # Confirm dir exists again
+                        if not os.path.exists(rclone_staging_dir + key):
+                            e = rclone_staging_dir + '/' + key + \
+                                  ' still does not exist. Cannot stage ' + \
+                                  key + ' data'
                             print(e)
                             self.logger.error(e)
                             continue
 
+                    # Copy files to staging area and match desired rclone structure
                     try:
-                        print('rclone copy ' + rclone_staging_dir + key + ' gdrive_eolfield:' + os.environ['PROJECT'] + '/EOL_data/RAF_data/' + key + ' --ignore-existing')
-                        os.system('rclone copy ' + rclone_staging_dir + key + ' gdrive_eolfield:' + os.environ['PROJECT'] + '/EOL_data/RAF_data/' + key + ' --ignore-existing')
-                        status[key]["ship"] = 'Yes-GDrive'
+                        print('rsync -u ' + filename[key] + ' ' + rclone_staging_dir + key)
+                        # os.system doesn't throw an error so this try/except
+                        # never fails even if rsync fails. Need to use subprocess.Popen()
+                        # This is true every place os.system is used in a try/except
+                        os.system('rsync -u ' + filename[key] + ' ' + rclone_staging_dir + key)
+                        status[key]["stor"] = 'Yes-GDrive-staging'
                         print(datetime.datetime.now().time())
-                        print('Finished rclone process for ' + file_name)
+                        print('Finished rsyncing ' + key + ' file to staging location')
                         print('')
 
                     except Exception as e:
-                        print('Error with rclone process for ' + file_name)
+                        print('Error rsyncing data file to staging location ' + file_name)
+                        print(e)
+                        self.logger.error(e)
+                        continue
+
+                    # Use rclone to sync files to GDrive. Could rclone all at
+                    # once, but chose to sync a file at a time so can report
+                    # status.
+                    try:
+                        print('rclone copy ' + rclone_staging_dir + key +
+                              ' gdrive_eolfield:' + os.environ['PROJECT'] +
+                              '/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                        os.system('rclone copy ' + rclone_staging_dir + key +
+                                  ' gdrive_eolfield:' + os.environ['PROJECT'] +
+                                  '/EOL_data/RAF_data/' + key +
+                                  ' --ignore-existing')
+                        status[key]["ship"] = 'Yes-GDrive'
+                        print(datetime.datetime.now().time())
+                        print('Finished rclone to GDrive for ' + file_name)
+                        print('')
+
+                    except Exception as e:
+                        print('Error with rclone process for ' + file_name +
+                              '. File not copied to GDrive')
                         print(e)
                         self.logger.error(e)
                         continue
@@ -1033,26 +1003,15 @@ class FieldData():
                         print(message)
                         self.logger.error(e)
                         print(e)
-                else:
-                    pass
 
         else:
+            # Loop through requested file extensions to be copied to ftp area
             for key in file_ext:
-                print('')
-                print(key)
-                print('')
-                if ship_ADS is False:
-                    if key == 'ADS':
-                        pass
-                    else:
-                        try:
-                            os.chdir(inst_dir[key])
-                            print('Attempt to change to local dir ' + inst_dir[key])
-                        except ftplib.all_errors as e:
-                            print('Could not change to local dir ' + inst_dir[key])
-                            print(e)
-                            self.logger.error(e)
-                            continue
+                print('\n' + key + '\n')
+
+                if ship_ADS is False and key == 'ADS':
+                    # Skip ads if requested in fieldProc_setup.py
+                    continue
                 else:
                     try:
                         os.chdir(inst_dir[key])
@@ -1064,35 +1023,33 @@ class FieldData():
                         continue
 
                 if filename[key] != '':
-                    print('**'+filename[key]+'**')
+                    print('Instrument file is ' + filename[key])
+                    # Get instrument filename; used for error reporting
                     data_dir, file_name = os.path.split(filename[key])
-                    if ship_ADS is False:
-                        if filename[key] == '.ads':
-                            pass
-                    else:
+
+                    try:
+                        print('Attempt to change to ftp dir /' + ftp_data_dir + '/' + key)
+                        ftp.cwd('/' + ftp_data_dir + '/' + key)
+                    except ftplib.all_errors as e:
+                        print('Could not change to dir ' + ftp_data_dir + '/' + key)
+                        print(e)
+                        # Attempt to create needed dir
+                        print('Attempt to create dir /' + ftp_data_dir + '/' + key)
                         try:
-                            print('Attempt to change to ftp dir /' + ftp_data_dir + '/' + key)
-                            ftp.cwd('/' + ftp_data_dir + '/' + key)
-                        except ftplib.all_errors as e:
-                            print('Could not change to dir ' + ftp_data_dir + '/' + key)
+                            ftp.mkd('/' + ftp_data_dir + '/' + key)
+                        except Exception as e:
+                            print('Make dir /' + ftp_data_dir + '/' + key + ' failed')
                             print(e)
-                            # Attempt to create needed dir
-                            print('Attempt to create dir /' + ftp_data_dir + '/' + key)
-                            try:
-                                ftp.mkd('/' + ftp_data_dir + '/' + key)
-                            except Exception as e:
-                                print('Make dir /' + ftp_data_dir + '/' + key + ' failed')
-                                print(e)
-                                self.logger.error(e)
-                                continue
-                            # Try to change to dir again
-                            try:
-                                ftp.cwd('/' + ftp_data_dir + '/' + key)
-                            except Exception as e:
-                                print('Change dir to ' + ftp_data_dir + '/' + key + ' failed')
-                                print(e)
-                                self.logger.error(e)
-                                continue
+                            self.logger.error(e)
+                            continue
+                        # Try to change to dir again
+                        try:
+                            ftp.cwd('/' + ftp_data_dir + '/' + key)
+                        except Exception as e:
+                            print('Change dir to ' + ftp_data_dir + '/' + key + ' failed')
+                            print(e)
+                            self.logger.error(e)
+                            continue
 
                 if file_name in ftp.nlst():
                     print('File ' + file_name + ' already exists on ftp server.')
@@ -1100,43 +1057,23 @@ class FieldData():
                     print('To force transfer, delete file from ftp site and rerun in Ship mode')
                     continue
 
-                if ship_ADS is False:
-                    if file_name.endswith('.ads'):
-                        pass
-                    else:
-                        try:
-                            file = open(file_name, 'rb')
-                            ftp.cwd('/' + ftp_data_dir + '/' + key)
-                            print(ftp.storbinary('STOR ' + file_name, file))
-                            file.close()
-                            status[key]["stor"] = 'Yes-FTP'
+                # Transfer files to FTP site
+                try:
+                    print('Transferring file...')
+                    file = open(file_name, 'rb')
+                    print(ftp.storbinary('STOR ' + file_name, file))
+                    file.close()
+                    status[key]["stor"] = 'Yes-FTP'
 
-                            print(datetime.datetime.now().time())
-                            print('Finished putting data file')
-                            print('')
+                    print(datetime.datetime.now().time())
+                    print('Finished putting data file')
+                    print('')
 
-                        except ftplib.all_errors as e:
-                            print('Error writing ' + file_name + ' to ' + ftp_site + ':/' + ftp_data_dir + '/' + key)
-                            print(e)
-                            self.logger.error(e)
-                            continue
-                else:
-                    try:
-                        print('Transferring file...')
-                        file = open(file_name, 'rb')
-                        print(ftp.storbinary('STOR ' + file_name, file))
-                        file.close()
-                        status[key]["stor"] = 'Yes-FTP'
-
-                        print(datetime.datetime.now().time())
-                        print('Finished putting data file')
-                        print('')
-
-                    except ftplib.all_errors as e:
-                        print('Error writing ' + file_name + ' to ' + ftp_site + ':/' + ftp_data_dir + '/' + key)
-                        print(e)
-                        self.logger.error(e)
-                        continue
+                except ftplib.all_errors as e:
+                    print('Error writing ' + file_name + ' to ' + ftp_site + ':/' + ftp_data_dir + '/' + key)
+                    print(e)
+                    self.logger.error(e)
+                    continue
 
         ftp.quit()
 
