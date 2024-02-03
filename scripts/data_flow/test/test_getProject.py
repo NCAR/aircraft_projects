@@ -3,13 +3,14 @@
 import unittest
 import imp
 import sys
-sys.path.insert(0, '/net/jlocal/projects/TI3GER/GV_N677F/' + '/scripts')
+import os
+sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
 from fieldProc_setup import *
 
 class TEST_read_env(unittest.TestCase):
 
     def setUp(self):
-        push_data = imp.load_source('push_data', '/scr/tmp/taylort/aircraft_projects/scripts/push_data.py')
+        push_data = imp.load_source('push_data', os.environ['PROJ_DIR'] + '/' + 'scripts/data_flow/push_data.py')
         self.fielddata = push_data.FieldData()
         self.fielddata.getProject()
 
@@ -17,7 +18,7 @@ class TEST_read_env(unittest.TestCase):
         pass
 
     def test_read_env(self):
-        self.assertTrue(project == 'TI3GER')
+        self.assertTrue(os.environ['PROJ_DIR'] == '/Users/srunkel/dev/aircraft_projects/CAESAR/C130_N130AR/')
 
 
 if __name__ == '__main__':
