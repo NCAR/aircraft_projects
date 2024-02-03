@@ -1181,7 +1181,7 @@ def main():
 
     # Zip files only if set to True
     if sendzipped:
-        fieldata.setup_zip(fielddata.file_ext, fielddata.data_dir, fielddata.filename, fielddata.inst_dir)
+        fielddata.setup_zip(fielddata.file_ext, fielddata.data_dir, fielddata.filename, fielddata.inst_dir)
 
     # Call FTP function if the FTP flag is set to True
     if FTP:
