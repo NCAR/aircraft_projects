@@ -1483,6 +1483,15 @@
         <variable name="HTEMP5" longname="Holodec temperature, zone 5, Laser Controller" units="deg_C"/>
       </sample>
     </sensor>
+
+    <sensor ID="VelocimProc" class="UDPSocketSensor" devicename="usock::56780">
+      <sample id="1" rate="1" scanfFormat="VELOCIM,%f,%f,%f,%f">
+        <variable name="VELOCIMP1" longname="Velocimeter Processed, Engine1" units=""/>
+        <variable name="VELOCIMP2" longname="Velocimeter Processed, Engine2" units=""/>
+        <variable name="VELOCIMP3" longname="Velocimeter Processed, Engine3" units=""/>
+        <variable name="VELOCIMP4" longname="Velocimeter Processed, Engine4" units=""/>
+      </sample>
+    </sensor>
   </sensorcatalog>
 
   <site applyCals="true" class="raf.Aircraft" name="C130_N130AR">
@@ -1549,6 +1558,7 @@
       <sensor IDREF="CFDC" devicename="usock::30105" id="600"/>
       <sensor IDREF="ACDFO3" devicename="usock::30107" id="700"/>
       <sensor IDREF="CTRLRESRCH" devicename="usock::41005" id="2500"/>
+      <sensor IDREF="VelocimProc" devicename="usock::56780" id="800"/>
 
       <sensor IDREF="TWODS_HK" devicename="usock::30113" id="1000">
         <parameter name="SerialNumber" type="string" value="F2DS020"/>
