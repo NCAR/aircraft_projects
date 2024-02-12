@@ -1,14 +1,6 @@
 import fnmatch
 import sys
 import os
-
-expected_flag = True
-expected_datafile = '/Users/srunkel/dev/projects/CAESAR/CAESARtf01h.nc'
-fileext = 'nc'
-filetype = 'h'
-flag = True
-reprocess = False
-
 import pytest
 from unittest.mock import patch
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/scripts/data_flow')
