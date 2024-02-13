@@ -61,10 +61,10 @@ elif FTP:
 ### Define which files should be generated
 #############################################################################
 ICARTT = False # Generate ICARTT
-IWG1 = False # Generate IWG1 packet
+IWG1 = True # Generate IWG1 packet
 
-HRT = False # Generate HRT .nc file
-SRT = False # Generate SRT .nc file
+HRT = True # Generate HRT .nc file
+SRT = True # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
 zip_ADS = False # Bzips the ads file independently of processed files
 # you can have both sendzipped and zip_ads set to True if you want
