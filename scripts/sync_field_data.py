@@ -180,6 +180,7 @@ def dist_prod():
     Function to distribute RAF prod data from ingest point to FTP plus others
     """
     final_message = 'Starting distribution of RAF prod data\n'
+    print(eol_dir)
     # Check for the production file
     for fname in os.listdir(eol_dir + 'RAF_data/LRT'):
         command = 'rsync -qu ' + eol_dir + 'RAF_data/LRT/*.nc ' + dat_dir + \
@@ -259,20 +260,6 @@ def dist_prod():
         os.system(command)
         final_message = final_message + message
         logging.info(final_message)
-    for fname in os.listdir(eol_dir + 'AVAPS_data/acsfiles'):
-        command = 'rsync -qu ' + eol_dir + 'AVAPS_data/acsfiles/*.nc ' + \
-            dat_dir + '/field_data'
-        message = 'Syncing production data: ' + command + '\n'
-        os.system(command)
-        final_message = final_message + message
-        logging.info(final_message)
-        command = 'rsync -qu ' + eol_dir + 'AVAPS_data/acsfiles/*.nc ' + \
-            ftp_dir + '/EOL_data/AVAPS_data/acsfiles'
-        message = 'Syncing production data to ftp: ' + command + '\n'
-        os.system(command)
-        final_message = final_message + message
-        logging.info(final_message)
-
 
 def dist_field():
     """
