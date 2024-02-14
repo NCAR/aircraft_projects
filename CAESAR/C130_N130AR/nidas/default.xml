@@ -43,7 +43,7 @@
       <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
         <variable longname="Time; Seconds Since Midnight" name="UTSEC_TEMPLATE" units="seconds"/>
         <variable longname="A2DTemperature" name="A2DTEMP_TEMPLATE" units="cnts"/>
-        <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TEMPLATE" units="counter"/>
+        <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TEMPLATE" units="none"/>
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
@@ -674,7 +674,7 @@
     </serialSensor>
     <serialSensor ID="Butanol_CN_Counter" baud="9600" class="DSMSerialSensor" databits="7" parity="even" stopbits="1">
         <sample id="1" scanfFormat="%d">
-            <variable longname="Butanol particle counts" name="CIICNTS" units="count"/>
+            <variable longname="Butanol particle counts" name="CIICNTS" units="count" count="true"/>
         </sample>
         <prompt rate="1" string="RB\r"/>
         <message length="0" position="end" separator="\r"/>
@@ -1250,7 +1250,7 @@
             <calfile file="TEMP.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/F2DS:${PROJ_DIR}/Configuration/cal_files/Instruments/F2DS"/>
           </poly>
         </variable>
-        <variable name="HKR" longname="2DS Housekeeping Packets Received" units="counts"/>
+        <variable name="HKR" longname="2DS Housekeeping Packets Received" units="count"/>
         <variable name="CANP" longname="2DS Internal Pressure" units="psi">
           <linear units="psi">
             <calfile file="CANP.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/F2DS:${PROJ_DIR}/Configuration/cal_files/Instruments/F2DS"/>
@@ -1288,15 +1288,15 @@
         <variable name="DSPT" longname="HVPS DSP Board Temperature" units="deg_C"/>
         <variable name="VLT" longname="HVPS Laser Temperature" units="deg_C"/>
         <variable name="PT" longname="HVPS Power Supply Temperature" units="deg_C"/>
-        <variable name="HKR" longname="HVPS Housekeeping Packets Received" units="counts"/>
+        <variable name="HKR" longname="HVPS Housekeeping Packets Received" units="count"/>
         <variable name="CANP" longname="HVPS Internal Pressure" units="psi"/>
       </sample>
     </sensor>
 
     <sensor ID="CFDC" class="UDPSocketSensor" devicename="usock::30105" suffix="_CFDC">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
-            <variable longname="CFDC IN Count" name="INC" units="counts/sec"/>
-            <variable longname="CFDC Total Count" name="CNTS" units="counts/sec"/>
+            <variable longname="CFDC IN Count" name="INC" units="count" count="true"/>
+            <variable longname="CFDC Total Count" name="CFCNTS" units="count" count="true"/>
             <variable longname="CFDC Saturation Water" name="SAT" units="%"/>
             <variable longname="CFDC Aerosol Location Temperature" name="CT2" units="deg_C"/>
             <variable longname="CFDC Pressure" name="P" units="hPa"/>
@@ -1715,7 +1715,7 @@
         <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
           <variable longname="Time; Seconds Since Midnight" name="UTSEC_GPDACQ_319" units="seconds"/>
           <variable longname="A2DTemperature" name="A2DTEMP_GPDACQ_319" units="cnts"/>
-          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_GPDACQ_319" units="counter"/>
+          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_GPDACQ_319" units="none"/>
         </sample>
         <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
           <variable longname="Engine 1 Velocimeter" name="VELOCIM1" units="V">
@@ -1982,7 +1982,7 @@
         <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
           <variable longname="Time; Seconds Since Midnight" name="UTSEC_TDACQ_321" units="seconds"/>
           <variable longname="A2DTemperature" name="A2DTEMP_TDACQ_321" units="cnts"/>
-          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TDACQ_321" units="counter"/>
+          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TDACQ_321" units="none"/>
         </sample>
         <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
           <variable longname="Recovery Air Temperature, Heated Left" name="RTH1" units="V">
