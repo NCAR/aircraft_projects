@@ -955,6 +955,49 @@ class FieldData():
                         self.logger.error(e)
                         continue
 
+            ##Rsync the QAtools html to the google drive
+            QA_filename = "/home/ads/Desktop/" + os.environ['PROJECT'] + os.environ['FLIGHT'] + ".html"
+            key = 'QAtools_output'
+            print('Notebook file is '+ QA_filename)
+            print("GDrive rclone staging dir for QATools is " +
+                  rclone_staging_dir + key)
+            if not os.path.exists(rclone_staging_dir + key):
+                e = 'Output dir ' + rclone_staging_dir + key + ' does not exist'
+                print(e)
+                self.logger.error(e)
+                print('Attempt to create dir ' + rclone_staging_dir +
+                      key)
+                try:
+                    # Attempt to create needed dir
+                    os.mkdir(rclone_staging_dir + key)
+                except Exception as e:
+                    print('Make dir ' + rclone_staging_dir + key + ' failed')
+                    print(e)
+                    self.logger.error(e)
+                    pass
+            try:
+                os.system('rsync -u ' + QA_filename + ' ' + rclone_staging_dir + key)
+                print(datetime.datetime.now().time())
+                print('Finished rsyncing ' + key + ' file to staging location')
+                print('')
+            except:
+                print('Error with rclone process for ' + key +
+                      '. File not copied to GDrive')
+                pass
+            try:
+                print('rclone copy ' + rclone_staging_dir + key +
+                      ' gdrive_eolfield:' + os.environ['PROJECT'] +
+                      '/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                os.system('rclone copy ' + rclone_staging_dir + key +
+                          ' gdrive_eolfield:' + os.environ['PROJECT'] +
+                          '/EOL_data/RAF_data/' + key +
+                          ' --ignore-existing')
+            except Exception as e:
+                print('Error with rclone process for ' + key +
+                      '. File not copied to GDrive')
+                print(e)
+                self.logger.error(e)
+
     def setup_FTP(self, data_dir, raw_dir, status, file_ext, inst_dir, filename):
         '''No NAS this project, so put files to EOL server. Put
         zipped files if they exist.
