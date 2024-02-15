@@ -131,32 +131,13 @@ def process(self, file_ext, data_dir, flight, filename, raw_dir, status, project
         for key in file_ext:
 
             # Process the ads data to desired netCDF frequencies
-            if (key == "LRT"):
+            if key in ('LRT', 'HRT', 'SRT'):
+                _ncfile = self.filename[key] if key == 'LRT' else self.ncfile
                 self.flags = " -b "
-                res = self.process_netCDF(self.filename["ADS"], self.filename[key], self.rate[key],
+                res = self.process_netCDF(self.filename["ADS"], _ncfile, self.rate[key],
                                           self.config_ext[key], self.proj_dir, self.flight, self.project, self.flags)
                 if res:
-                    self.status[key]["proc"] = self.reorder_nc(self.filename[key])
-                else:
-                    self.status[key]["proc"] = False
-
-            # Process the ads data to desired netCDF frequencies
-            if (key == "HRT"):
-                self.flags = " -b "
-                res = self.process_netCDF(self.filename["ADS"], self.ncfile, self.rate[key], self.config_ext[key],
-                                          self.proj_dir, self.flight, self.project, self.flags)
-                if res:
-                    self.status[key]["proc"] = self.reorder_nc(self.ncfile)
-                else:
-                    self.status[key]["proc"] = False
-
-            # Process the ads data to desired netCDF frequencies
-            if (key == "SRT"):
-                self.flags = " -b "
-                res = self.process_netCDF(self.filename["ADS"], self.ncfile, self.rate[key], self.config_ext[key],
-                                          self.proj_dir, self.flight, self.project, self.flags)
-                if res:
-                    self.status[key]["proc"] = self.reorder_nc(self.ncfile)
+                    self.status[key]["proc"] = self.reorder_nc(_ncfile)
                 else:
                     self.status[key]["proc"] = False
 
@@ -177,7 +158,7 @@ def process(self, file_ext, data_dir, flight, filename, raw_dir, status, project
                 message = "about to execute : " + command
                 log_and_print(message)
                 if os.system(command) == 0:
-                    status[key]["proc"] = 'Yes'
+                    self.status[key]["proc"] = 'Yes'
 
             # Convert SPEC file form to oap file form
             if (key == "threeVCPI"):
@@ -212,18 +193,15 @@ def process(self, file_ext, data_dir, flight, filename, raw_dir, status, project
     # Now everthing else (skip LRT) using the NCAR/EOL/RAF flight number to
     # identify the file associated with the current flight.
     for key in file_ext:
-        if (key == "LRT") or (key == "ADS"):
+        if key in ("LRT","ADS"):
             next
-        elif (key == "PMS2D"):
+        else:
+            _inst_dir = self.inst_dir[key]+ "PMS2D/" if key == 'PM2SD' else self.inst_dir[key]
             (reprocess, filename[key]) = \
-                self.find_file(self.inst_dir[key] + "PMS2D/", self.flight,
+                self.find_file(_inst_dir + "PMS2D/", self.flight,
                                self.project, self.file_type[key],
                                self.file_ext[key], process, reprocess,
                                self.date[0:8])
-        else:
-            (reprocess, filename[key]) = \
-                self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
-                               self.file_ext[key], process, reprocess, self.date[0:8])
 
     # Generate the QAtools_notebook HTML and copy to desktop
     if QA_notebook:
