@@ -18,7 +18,7 @@ class TEST_read_env(unittest.TestCase):
         pass
 
     def test_read_env(self):
-        self.assertTrue(os.environ['PROJ_DIR'] == '/Users/srunkel/dev/aircraft_projects/CAESAR/C130_N130AR/')
+        self.assertTrue(os.environ['PROJ_DIR'] == '/Users/srunkel/dev/aircraft_projects')
 
 
 if __name__ == '__main__':
