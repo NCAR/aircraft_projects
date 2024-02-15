@@ -90,4 +90,7 @@ fi
 #fi
 
 # Velocimeter data for CAESAR - talk to Josh Carnes for details
-data_dump -i 19,160  |  /home/local/projects/CAESAR/C130_N130AR/scripts/process_ads_data_veloc.py -u -a 192.168.84.2 -p 56780
+ps ax | grep process_ads_data_veloc | grep -qv grep
+if [ $? -eq 1 ]; then
+  data_dump -i 19,160  |  /home/local/projects/CAESAR/C130_N130AR/scripts/process_ads_data_veloc.py -u -a 192.168.84.2 -p 56780
+fi
