@@ -442,7 +442,7 @@ class FieldData():
             cf.close()
 
         # execute nimbus in batch mode using the config file
-        command = "/usr/local/bin/nimbus" + flags + nimConfFile
+        command = "/opt/local/bin/nimbus" + flags + nimConfFile
         message = "about to execute nimbus I hope: " + command
         self.logger.info(message)
         print(message)
