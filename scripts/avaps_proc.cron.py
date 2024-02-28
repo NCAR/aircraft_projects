@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 # This script performs the processing of AVAPS D files received on the server
 # based on descriptions in the "(Remote) AVAPS Operator's Manual" 
@@ -29,8 +29,8 @@ send_Dfiles =  True
 send_prodfiles = True
 # The following probably won't change
 Aspen_QC_exe = '/home/local/aspenqc/bin/Aspen-QC'
-d_file_re = 'D????????_??????_P.?'
-raw_data_dir = "/var/r1//dropsondes"
+d_file_re = 'CAESAR*.nc'
+raw_data_dir = "/var/r1/dropsondes"
 ads_web_dir = "/var/www/html/skewt"
 #raw_data_dir = raf.ac_config.get_config("dropsonde.raw_path")
 #ads_web_dir = raf.ac_config.get_config("dropsonde.skewt_path")
@@ -116,7 +116,7 @@ for file in list:
 
             ftp.quit() 
     
-        except ftplib.all_errors, e:
+        except ftplib.all_errors as e:
             syslog.syslog(ident+':Error putting file: %s' % e)
     
     else:
