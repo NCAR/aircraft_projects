@@ -110,8 +110,12 @@ echo $proj > $proj/$platform/ProjectName
 /bin/cp -v Configuration/landmarks $proj/$platform
 
 /bin/cp -v Configuration/$platform/* $proj/$platform
+# Move the nidas bits down
 /bin/mv -v $proj/$platform/default.xml $proj/$platform/nidas
 /bin/mv -v $proj/$platform/sensor_catalog.xml $proj/$platform/nidas
+# We don't need this file - or grab it manually in the case you need it
+/bin/rm $proj/$platform/gust.xml
+
 echo ProjNum=$proj > $proj/$platform/Production/Flight_All
 /bin/cat $proj/$platform/Flight_All >> $proj/$platform/Production/Flight_All
 /bin/rm $proj/$platform/Flight_All
@@ -131,7 +135,7 @@ echo "\nSetting group write permissions."
 set split = ($platform:as/_/ /)
 sed -i "s/$split[1] Project/$proj/" $proj/$platform/nidas/default.xml
 
-# I don't vardb.xml committed at this time.  Breaks clean status. cjw 7/20
+# I don't want vardb.xml committed at this time.  Breaks clean status. cjw 7/20
 #echo "\nGive us a legitimate vardb.xml and xsd ."
 #cd $proj/$platform
 #/opt/local/bin/vdb2xml VarDB
