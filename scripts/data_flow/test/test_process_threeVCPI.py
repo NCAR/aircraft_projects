@@ -28,7 +28,7 @@ def fielddata():
 def test_process_threeVCPI(fielddata, test_id, aircraft, flight, project, oapfile_dir):
     # Mocking, mainly focusing on file & system interactions
     with (mock.patch('os.path.exists', return_value=False), mock.patch('os.system', return_value=0),
-          mock.patch('builtins.open', new_callable=mock.mock_open)):  # Mock the logger
+            mock.patch('builtins.open', new_callable=mock.mock_open)):  # Mock the logger
         with tempfile.TemporaryDirectory() as twods_raw_dir:
             # Create a file in the temporary directory
             catted_file = os.path.join(twods_raw_dir, "catted_file")
