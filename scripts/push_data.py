@@ -942,11 +942,11 @@ class FieldData():
                     try:
                         print('rclone copy ' + rclone_staging_dir + key +
                               ' gdrive_eolfield:' + os.environ['PROJECT'] +
-                              '/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                              '/EOL_data/RAF_data/' + key + ' --ignore-existing --low-level-retries 20')
                         os.system('rclone copy ' + rclone_staging_dir + key +
                                   ' gdrive_eolfield:' + os.environ['PROJECT'] +
                                   '/EOL_data/RAF_data/' + key +
-                                  ' --ignore-existing')
+                                  ' --ignore-existing --low-level-retries 20')
                         status[key]["ship"] = 'Yes-GDrive'
                         print(datetime.datetime.now().time())
                         print('Finished rclone to GDrive for ' + file_name)
@@ -996,17 +996,27 @@ class FieldData():
                     print('rclone copy ' + rclone_staging_dir + key + '/' +
                           filename[key] +
                           ' gdrive_eolfield:' + os.environ['PROJECT'] +
-                          '/EOL_data/RAF_data/' + key + ' --ignore-existing')
+                          '/EOL_data/RAF_data/' + key + ' --ignore-existing --low-level-retries 20')
                     os.system('rclone copy ' + rclone_staging_dir + key + '/' +
                               filename[key] +
                               ' gdrive_eolfield:' + os.environ['PROJECT'] +
                               '/EOL_data/RAF_data/' + key +
-                              ' --ignore-existing')
+                              ' --ignore-existing --low-level-retries 20')
                 except Exception as e:
                     print('Error with rclone process for ' + key +
                           '. File not copied to GDrive')
                     print(e)
                     self.logger.error(e)
+
+                # Hack to handle the pdf
+                pdffilename = re.sub('html', 'pdf', filename[key])
+                os.system('rsync -u /home/local/aircraft_QAtools_notebook/' +
+                          pdffilename + ' ' + rclone_staging_dir + key)
+                os.system('rclone copy ' + rclone_staging_dir + key + '/' +
+                          pdffilename +
+                          ' gdrive_eolfield:' + os.environ['PROJECT'] +
+                          '/EOL_data/RAF_data/' + key +
+                          ' --ignore-existing --low-level-retries 20')
 
     def setup_FTP(self, data_dir, raw_dir, status, file_ext, inst_dir, filename):
         '''No NAS this project, so put files to EOL server. Put
