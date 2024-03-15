@@ -20,66 +20,66 @@ def gdrive(self, data_dir, raw_dir, status, file_ext, inst_dir, filename, rclone
 
     log_and_print('\nPutting files to rclone staging location for shipment to Google Drive:\n')
 
-    def ship_ads_files():
-        """Handles shipping of all .ads files."""
-        message = 'Starting rsync process for all available .ads files'
-        log_and_print(message)
+def ship_ads_files():
+    """Handles shipping of all .ads files."""
+    message = 'Starting rsync process for all available .ads files'
+    log_and_print(message)
 
-        for rawfilename in os.listdir(inst_dir['ADS']):
-            if rawfilename.endswith('.ads'):
-                self._transfer_file(rawfilename, inst_dir['ADS'], rclone_staging_dir + 'ADS', status['ADS'])
+    for rawfilename in os.listdir(inst_dir['ADS']):
+        if rawfilename.endswith('.ads'):
+            self._transfer_file(rawfilename, inst_dir['ADS'], rclone_staging_dir + 'ADS', status['ADS'])
 
-        #  rclone all at once from the staging directory
-        rclone_cmd = f'rclone copy {rclone_staging_dir}/ADS gdrive_eolfield:/{os.environ["PROJECT"]}/EOL_data/RAF_data/ADS --ignore-existing'
-        self._run_rclone(rclone_cmd, "ADS")
+    #  rclone all at once from the staging directory
+    rclone_cmd = f'rclone copy {rclone_staging_dir}/ADS gdrive_eolfield:/{os.environ["PROJECT"]}/EOL_data/RAF_data/ADS --ignore-existing'
+    self._run_rclone(rclone_cmd, "ADS")
 
-    def _transfer_file(self, file, src_dir, dest_dir, status_entry):
-        """Handles rsync and rclone steps for a single file.
+def _transfer_file(self, file, src_dir, dest_dir, status_entry):
+    """Handles rsync and rclone steps for a single file.
 
-        Args:
-            file: The filename.
-            src_dir: Source directory.
-            dest_dir: Destination (rclone staging) directory.
-            status_entry: The corresponding entry in the `status` dictionary.
-        """
-        rsync_cmd = f'rsync -u {os.path.join(src_dir, file)} {dest_dir}'
-        if subprocess.run(rsync_cmd, shell=True).returncode == 0:  # Check rsync success
-            status_entry["stor"] = 'Yes-GDrive-staging'
-            log_and_print(f'{file} rsync successful!')
-        else:
-            log_and_print(f'{file} not copied to local staging', 'error')
+    Args:
+        file: The filename.
+        src_dir: Source directory.
+        dest_dir: Destination (rclone staging) directory.
+        status_entry: The corresponding entry in the `status` dictionary.
+    """
+    rsync_cmd = f'rsync -u {os.path.join(src_dir, file)} {dest_dir}'
+    if subprocess.run(rsync_cmd, shell=True).returncode == 0:  # Check rsync success
+        status_entry["stor"] = 'Yes-GDrive-staging'
+        log_and_print(f'{file} rsync successful!')
+    else:
+        log_and_print(f'{file} not copied to local staging', 'error')
 
-        rclone_cmd = f'rclone copy {dest_dir} gdrive_eolfield:/{os.environ["PROJECT"]}/EOL_data/RAF_data/{os.path.basename(dest_dir)} --ignore-existing'
-        self._run_rclone(rclone_cmd, file)
+    rclone_cmd = f'rclone copy {dest_dir} gdrive_eolfield:/{os.environ["PROJECT"]}/EOL_data/RAF_data/{os.path.basename(dest_dir)} --ignore-existing'
+    self._run_rclone(rclone_cmd, file)
 
-    def _run_rclone(self, cmd, name):
-        """Executes rclone command and logs result."""
-        if subprocess.run(cmd, shell=True).returncode == 0:
-            status_entry["ship"] = 'Yes-GDrive'
-            log_and_print(f"{name} rclone successful!")
-        else:
-            log_and_print(f"{name} not rcloned to Google Drive", 'error')
+def _run_rclone(self, cmd, name):
+    """Executes rclone command and logs result."""
+    if subprocess.run(cmd, shell=True).returncode == 0:
+        status_entry["ship"] = 'Yes-GDrive'
+        log_and_print(f"{name} rclone successful!")
+    else:
+        log_and_print(f"{name} not rcloned to Google Drive", 'error')
 
-    def _process_instrument_data(self, key, data_dir, inst_dir, filename, rclone_staging_dir, status):
-        # ... Your existing checks for directories and filenames
+def _process_instrument_data(self, key, data_dir, inst_dir, filename, rclone_staging_dir, status):
+    # ... Your existing checks for directories and filenames
 
-        try:
-            print('rsync -u ' + filename[key] + ' ' + rclone_staging_dir + key)
-            os.system('rsync -u ' + filename[key] + ' ' + rclone_staging_dir + key)
-            status[key]["stor"] = 'Yes-GDrive-staging'
-            # ... (Other rsync, rclone logic as before)
-        except Exception as e:
+    try:
+        print('rsync -u ' + filename[key] + ' ' + rclone_staging_dir + key)
+        os.system('rsync -u ' + filename[key] + ' ' + rclone_staging_dir + key)
+        status[key]["stor"] = 'Yes-GDrive-staging'
+        # ... (Other rsync, rclone logic as before)
+    except Exception as e:
 
-    # Handle ADS files (if enabled)
-    if ship_all_ADS:
-        ship_ads_files()
+# Handle ADS files (if enabled)
+if ship_all_ADS:
+    ship_ads_files()
 
-    #  Handle other file extensions
-    for key in file_ext:
-        print(f'\n{key}\n')
+#  Handle other file extensions
+for key in file_ext:
+    print(f'\n{key}\n')
 
-        if ship_ADS is False and key == 'ADS':
-            continue
+    if ship_ADS is False and key == 'ADS':
+        continue
 
         self._process_instrument_data(key, data_dir, inst_dir, filename, rclone_staging_dir, status)
 

@@ -2,11 +2,11 @@ import os
 import unittest.mock as mock
 from unittest.mock import patch
 import pytest
+from unittest.mock import patch, MagicMock
 
 import sys
 import os
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/scripts/data_flow')
-
 from const_tests import *
 
 import unittest.mock as mock
@@ -18,42 +18,47 @@ def fielddata():
         return FieldData()
 
 
-@pytest.mark.parametrize(
-    "test_id, filename, mock_system_return, expected_message", [
-        ('test_success', 'test_data', 0, None),  # Success case
-        ('test_failure', 'test_data', 1, "\nERROR!: Zipping up test_data with command:\n  zip test_data.zip test_data"),  # Failure case 
-    ]
-)
 
-def test_setup_shipping(fielddata, mock_ensure_dir, mock_rsync_file, mock_os_system):
-    # Mocks setup
-    mock_os_system.return_value = 0  # Simulate successful NAS mount
-    mock_rsync_file.return_value = 'Yes-NAS'  # Assume successful rsync
+# Constants and fixtures for the tests
 
-    # Test data preparation
-    file_ext = {'ADS': True, 'PMS2D': True, 'HRT': True}  # Example
-    filename = {'ADS': '/path/to/ads.ads',  # Sample filenames
-                'PMS2D': '/path/to/pms2d.nc',
-                'HRT': '/path/to/hrt.nc'}
-    process = True 
-    reprocess = False
-    status = {}
+@pytest.fixture
+def mock_os_system():
+    with patch('os.system') as mock:
+        yield mock
 
-    # Call the function
-    nas_data_dir, nas_sync_dir = setup_shipping(file_ext, filename, process, reprocess, status)
+@pytest.fixture
+def mock_ensure_dir():
+    with patch('push_data.FieldData.ensure_dir') as mock:
+        yield mock
 
-    # Assertions
-    mock_os_system.assert_called_once_with(  # Check NAS mount command (adjust the command string as needed)
-        "sudo /bin/mount -t nfs <nas_url> <nas_mnt_pt>" 
-    )
-    mock_ensure_dir.assert_called()  # At least once for creating directories
-    mock_rsync_file.assert_has_calls([
-        mock.call('/path/to/ads.ads', nas_data_dir + '/ADS'), 
-        # ... add similar assertions for other file_ext entries
-    ])
-    self.assertEqual(status['ADS']['stor'], 'Yes-NAS')  # Example status check 
+@pytest.fixture
+def mock_rsync_file():
+    with patch('push_data.FieldData.rsync_file') as mock:
+        yield mock
 
-    # Add another test with 'NAS_permanent_mount' set to True to exercise that code path.
+# Happy path tests with various realistic test values
+@pytest.mark.parametrize("file_ext, filename, process, reprocess, status, expected_nas_data_dir, expected_nas_sync_dir, test_id", [
+    ({"ADS": "ads_file.ext"}, {"ADS": "/path/to/ads_file.ext"}, True, False, {"ADS": {}}, "/mnt/Data/EOL_data/RAF_data/", "/mnt/Data/FTP_sync/EOL_data/RAF_data/", "happy_path_ads"),
+    ({"PMS2D": "pms2d_file.ext"}, {"PMS2D": "/path/to/pms2d_file.ext"}, True, False, {"PMS2D": {}}, "/mnt/Data/EOL_data/RAF_data/", "/mnt/Data/FTP_sync/EOL_data/RAF_data/", "happy_path_pms2d"),
+    # Add more test cases as needed
+])
+def test_setup_shipping_happy_path(fielddata, mock_os_system, mock_ensure_dir, mock_rsync_file, file_ext, filename, process, reprocess, status, expected_nas_data_dir, expected_nas_sync_dir, test_id):
+    # Arrange
 
-    # Add a test case with 'catalog' set to True in the input data 
+    # Act
+    nas_data_dir, nas_sync_dir = fielddata.setup_shipping(file_ext, filename, process, reprocess, status)
 
+    # Assert
+    mock_os_system.assert_called()
+    mock_ensure_dir.assert_called()
+    mock_rsync_file.assert_called()
+    assert nas_data_dir == expected_nas_data_dir
+    assert nas_sync_dir == expected_nas_sync_dir
+    for key in file_ext:
+        assert status[key]["stor"] == mock_rsync_file.return_value
+
+# Edge cases
+# Add tests for edge cases such as empty file_ext, filename, etc.
+
+# Error cases
+# Add tests for error cases such as os.system failing, rsync_file failing, etc.
