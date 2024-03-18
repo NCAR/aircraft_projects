@@ -1,13 +1,8 @@
 #
-# Serial Number for C130 radome.  Just making numbers up as we go.  So far 1 and 2.
-# Two was installed August of 2013 (post NOMADSS).  Affects AKRD and SSRD.
+# Serial Number for GV radome.  Just making numbers up as we go.  So far 1 and 2.
+# Two was installed January of 2013.  Affects AKRD and SSRD.
 #
-C130_RADOME_SSN   2
-
-# Temperature blending time constants.
-#
-AT_TAU  300.0
-TT_TAU  300.0
+GV_RADOME_SSN   2
 
 #
 # Recovery factor over-ride.  Remove this line to go back to default
@@ -46,36 +41,12 @@ PSURF_ALT_MAX   7000
 
 # CGR4 Pyrgeometer
 #
-# S/N 090087:      a0 = 84.021,     a1 = 336.74
-IRTC_CAL[2]	84.388, 349.7
+# S/N 090089:      a0 = 90.133,     a1 = 348.97    (Top IR)
+IRTC_CAL[2]	90.133, 348.97
 IRTHT_CAL[2]	26.505, -61.487
-# S/N 090088:      a0 = 88.211,     a1 = 355.92
-IRBC_CAL[2]	89.943, 382.68
+# S/N 090090:      a0 = 87.738,     a1 = 339.53    (Bottom IR)
+IRBC_CAL[2]	87.738, 339.53
 IRBHT_CAL[2]	26.505, -61.487
-
-#
-# UV Hygrometer (2013 and later).
-#
-UV_SIGMA	1.158e-17;
-UV_OFFSET	0.21;
-UV_GAIN		0.9;
-UV_PATHLEN	0.4318;
-
-#
-# Ophir radiometer 
-#
-MAXCNT		62500
-THERM_BIAS	5.0
-THERM_RZ	36.4
-THERM_COEFF	-2700.0
-#DFLT_GAIN	-4.4913167e-5
-DFLT_OFFSET	31515.0
-# Digital signal coefficients
-A1              -3.7473e-05
-A2              -7.4967e-06
-A3		0.0
-A4		1.1161
-A5		0.0
 
 #
 # King Probe wire temperatures (deg_C) - PMS version
@@ -91,6 +62,11 @@ KING1_WIRE_TEMP		150.0
 #KING1_TAU_NUSSELT	120
 
 #KING_CLOUD_CONC_THRESHOLD 1.0
+
+#
+# CN Counter
+#
+DIV	1		# counter card prescale factor
 
 #
 # DNI/DEI start lat and lon
