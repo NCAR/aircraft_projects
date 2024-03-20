@@ -1607,5 +1607,37 @@
       <message separator="\x00" position="beg" length="1"/>
     </serialSensor>
 
+    <sensor ID="iPM_1phase" class="UDPSocketSensor" devicename="usock::30100" suffix="_iPM1">
+        <sample id="1" rate="1" scanfFormat="MEASURE,%f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f">
+            <variable longname="AC Power Frequency" name="FREQ" units="Hz"/>
+            <variable longname="AC Voltage, RMS Phase A" name="VRMSA" units="V"/>
+            <variable longname="AC Voltage, Peak Phase A" name="VPKA" units="V"/>
+            <variable longname="AC Voltage, DC Component Phase A" name="VDCA" units="V"/>
+            <variable longname="AC Phase Angle Phase A" name="PHA" units="deg_C"/>
+            <variable longname="AC Voltage THD Phase A" name="THDA" units="%"/>
+            <variable longname="Power OK" name="POWEROK" units=""/>
+        </sample>
+        <sample id="2" rate="1" scanfFormat="STATUS,%f,%*f,%f,%f,%*f">
+            <variable longname="Operational State" name="OPSTATE" units=""/>
+            <variable longname="Power Trip Flags, performance exceeds limits" name="TRIPFLAGS" units=""/>
+            <variable longname="Power Caution Flags, marginal performance" name="CAUTIONFLAGS" units=""/>
+        </sample>
+        <sample id="3" rate="1" scanfFormat="RECORD,%f,%*f,%*f,%f,%*f,%*f,%f,%f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%*f,%*f,,
+%f,%f,%*f,%*f,%*f,%*f,%f,%f,%*f,%*f,%*f,%*f,%*f">
+            <variable longname="Event Type" name="EVTYPE" units=""/>
+            <variable longname="Elapsed Time since power-up" name="TIME" units="ms"/>
+            <variable longname="Minimum AC Voltage, RMS Phase A" name="VRMSMINA" units="V"/>
+            <variable longname="Maximum AC Voltage, RMS Phase A" name="VRMSMAXA" units="V"/>
+            <variable longname="Minimum AC Power Frequency" name="FREQMIN" units="Hz"/>
+            <variable longname="Maximum AC Power Frequency" name="FREQMAX" units="Hz"/>
+            <variable longname="Minimum AC Voltage, DC Component Phase A" name="VDCMINA" units="V"/>
+            <variable longname="Maximum AC Voltage, DC Component Phase A" name="VDCMAXA" units="V"/>
+            <variable longname="Minimum AC Voltage THD Phase A" name="THDMINA" units="%"/>
+            <variable longname="Maximum AC Voltage THD Phase A" name="THDMAXA" units="%"/>
+            <variable longname="Minimum AC Voltage, Peak Phase A" name="VPKMINA" units="V"/>
+            <variable longname="Maximum AC Voltage, Peak Phase A" name="VPKMAXA" units="V"/>
+        </sample>
+    </sensor>
+
   </sensorcatalog>
 
