@@ -1,5 +1,5 @@
 ##Functions that help initiate push_data
-from _repetition import log_and_print
+from scripts.data_flow.push_data_reorg._logging import log_and_print
 def getProject(self):
     return(self.read_env('PROJECT'))
 
@@ -28,17 +28,41 @@ def setup(self, aircraft, project, raw_dir):
     log_and_print(message)  
     return raircraft
 
+def readFlight(self):
+    '''
+    Read user input to determine the event
+    '''
+    self.flight = input('Input flight designation (e.g. tf01):')
+    return self.flight
+
+def readEmail(self):
+    '''
+    Read user input to determine the email address
+    '''
+    self.email = input('Input email address to send results:')
+    return(self.email)
+
+def read_env(self, env_var):
+    '''
+    Read and set environment var
+    '''
+    try:
+        return os.environ[env_var]
+    except KeyError:
+        log_and_print(f'Please set the environment variable {env_var}')
+        sys.exit(1)
+
+
 def setup_email(self, data_dir, email):
-        """
+    """
         Set up email
         """
-        emailfilename = 'email.addr.txt'
-        emailfile = data_dir+emailfilename
-        command = 'rm '+emailfile
-        os.system(command)
-        fo = open(emailfile, 'w+')
+    emailfilename = 'email.addr.txt'
+    emailfile = data_dir+emailfilename
+    command = 'rm '+emailfile
+    os.system(command)
+    with open(emailfile, 'w+') as fo:
         fo.write(email+'\n')
-        fo.close()
 
 
 ##Maybe this will go in separate zip folder
@@ -48,20 +72,14 @@ def setup_zip(self, file_ext, data_dir, filename, inst_dir):
     this only affects non-ads files
     """
     for key in file_ext:
-        if (key == "ADS"):
-            message = "Raw .ads file found but not zipping, if zip_ads is set, will bzip .ads file next."
-            self.logger.info(message)
-            print(message)
-        elif (key == "PMS2D"):
-            message = "Raw .2d file found but not zipping."
-            self.logger.info(message)
-            print(message)
+        if key == "ADS":
+            log_and_print("Raw .ads file found but not zipping, if zip_ads is set, will bzip .ads file next.")
+        elif key == "PMS2D":
+            log_and_print("Raw .2d file found but not zipping.")
         else:
             data_dir, file_name = os.path.split(filename[key])
-            message = key + " filename = " + file_name
-            self.logger.info(message)
-            print(message)
-            message = "data_dir = " + data_dir
-            self.logger.info(message)
-            print(message)
+            message = f"{key} filename = {file_name}"
+            log_and_print(message)
+            message = f"data_dir = {data_dir}"
+            log_and_print(message)
             self.zip_file(file_name, inst_dir[key])

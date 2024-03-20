@@ -135,18 +135,18 @@ class FieldData():
         RAF standard data) can be found.
         '''
         self.inst_dir = {
-                   "ADS": raw_dir,
-                   "LRT": data_dir,
-                   "KML": data_dir,
-                   "HRT": data_dir,
-                   "SRT": data_dir,
-                   "ICARTT": data_dir,
-                   "IWG1": data_dir,
-                   "PMS2D": raw_dir,
-                   "twods": raw_dir + '3v_cpi/2DS/' + project.upper() + '_' + flight.upper() + '/',
-                   "oap": raw_dir + '3v_cpi/oapfiles/',
-                   "cpi": raw_dir + '3v_cpi/CPI/' + project.upper() + '_' + flight.upper() + '/',
-                   }
+                "ADS": raw_dir,
+                "LRT": data_dir,
+                "KML": data_dir,
+                "HRT": data_dir,
+                "SRT": data_dir,
+                "ICARTT": data_dir,
+                "IWG1": data_dir,
+                "PMS2D": raw_dir,
+                "twods": raw_dir + '3v_cpi/2DS/' + project.upper() + '_' + flight.upper() + '/',
+                "oap": raw_dir + '3v_cpi/oapfiles/',
+                "cpi": raw_dir + '3v_cpi/CPI/' + project.upper() + '_' + flight.upper() + '/',
+                }
         return self.inst_dir
 
     def createStatus(self):
@@ -155,15 +155,15 @@ class FieldData():
         status on.
         '''
         self.status = {"ADS": {"proc": "N/A", "ship": "No!", "stor": "No!"},
-                       "LRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
-                       "KML": {"proc": "No!", "ship": "No!", "stor": "No!"},
-                       "HRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
-                       "SRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
-                       "ICARTT": {"proc": "No!", "ship": "No!", "stor": "No!"},
-                       "IWG1": {"proc": "No!", "ship": "No!", "stor": "No!"},
-                       "PMS2D": {"proc": "No!", "ship": "No!", "stor": "No!"},
-                       "threeVCPI": {"proc": "No!", "ship": "No!", "stor": "No!"},
-                       "QCplots": {"proc": "No!", "ship": "No!", "stor": "No!"}}
+                    "LRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                    "KML": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                    "HRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                    "SRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                    "ICARTT": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                    "IWG1": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                    "PMS2D": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                    "threeVCPI": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                    "QCplots": {"proc": "No!", "ship": "No!", "stor": "No!"}}
         return self.status
 
     def createFilePrefix(self, project, flight):
@@ -285,7 +285,7 @@ class FieldData():
                 reprocess = False
         elif nclist.__len__() == 0:
             message = "No files found matching form: " +\
-                  data_dir + '*' + flight + '.' + filetype
+                data_dir + '*' + flight + '.' + filetype
             self.logger.info(message)
             print(message)
             message = "We must process!"
@@ -365,7 +365,7 @@ class FieldData():
                     # but if the file is not marked to be regenerated in the
                     # fieldProc_setup.py file, then we have a probem.
                     message = "We have an nc file but not "+fileext+" file.... " +\
-                          "aborting..."
+                        "aborting..."
                     self.logger.info(message)
                     print(message)
                     sys.exit(0)
@@ -377,7 +377,7 @@ class FieldData():
             self.logger.info(message)
             print(message)
             datafile = self.step_through_files(datalist, fileext,
-                                               reprocess)
+                                            reprocess)
 
         if datafile == '':
             # If after all this we haven't identified a file, abort processing.
@@ -416,7 +416,7 @@ class FieldData():
             # which is all that we need to successfully set off shipping
             datafile = datalist[0]
             message = 'Ship is set to True so no need to choose ' + fileext +\
-                  'to process.'
+                'to process.'
             self.logger.info(message)
             print(message)
         return(datafile)
@@ -705,13 +705,13 @@ class FieldData():
             elif (key == "PMS2D"):
                 (reprocess, filename[key]) = \
                     self.find_file(self.inst_dir[key] + "PMS2D/", self.flight,
-                                   self.project, self.file_type[key],
-                                   self.file_ext[key], process, reprocess,
-                                   self.date[0:8])
+                                self.project, self.file_type[key],
+                                self.file_ext[key], process, reprocess,
+                                self.date[0:8])
             else:
                 (reprocess, filename[key]) = \
                     self.find_file(self.inst_dir[key], self.flight, self.project, self.file_type[key],
-                                   self.file_ext[key], process, reprocess, self.date[0:8])
+                                self.file_ext[key], process, reprocess, self.date[0:8])
 
         # Generate the QAtools_notebook HTML and copy to desktop
         if QA_notebook:

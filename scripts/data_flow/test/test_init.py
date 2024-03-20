@@ -8,7 +8,6 @@ sys.path.append('/Users/srunkel/dev/aircraft_projects/scripts/data_flow/')
 import push_data
 
 class TEST_init(unittest.TestCase):
-
     def setUp(self):
         push_data = imp.load_source('push_data', 'push_data.py')
         self.fielddata = push_data.FieldData()

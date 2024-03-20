@@ -20,5 +20,26 @@
 # server where the standard RPMs are installed.
 
 # To run a single test use the -p option. To run all tests, omit -p
-python3 -m unittest discover -s test -v -p test_createConfigExt.py
-#python3 -m unittest discover -s test -v
+#python3 -m unittest discover -s test -v -p test_createFileExt.py
+#python3 -m unittest discover -s test -v -p test_step_through_files.py #-p test_find_lrt_netcdf.py
+#python3 -m unittest discover -s test -v -p test_find_file.py
+# --- Unit Tests ---
+
+# Specify how to run your unit tests. Replace with your actual command:
+# Specify how to run your Pytest tests. Adjust or add command line options:
+python3 -m pytest test/
+
+# --- Exit Status Logic ---
+
+# Capture exit codes to determine overall test result
+
+pytest_result=$?
+
+# Basic check for pass/fail based on non-zero exit codes
+if [ $pytest_result -ne 0 ]; then
+    echo "*** Some tests failed ***"
+    exit 1  # Indicate failure
+else
+    echo "*** All tests passed ***"
+    exit 0  # Indicate success
+fi
