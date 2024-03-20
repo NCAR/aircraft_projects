@@ -58,13 +58,21 @@ def _zip_ads(self, filename):
     return result
 
     
-def setup_NAS(self, process, reprocess, file_ext, inst_dir, status, flight, project, email, final_message, filename, nas_sync_dir, nas_data_dir):
+def setup_NAS(self, process, reprocess, file_ext, inst_dir, status, flight, project, final_message, filename, nas_sync_dir, nas_data_dir):
     # Put file onto NAS for BTSyncing back home.
     print("")
     print("***** Copy files to NAS sync area for transfer back home *****")
 
     if reprocess or not process:
-        self._print_final_message(project, flight, nas_sync_dir, nas_data_dir)
+        NAS_message = [
+            "***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n",
+            "Reprocessing, so assume ADS already shipped during first processing\n",
+            "If this is not the case, run the following commands when this script is complete:\n\n",
+            f"cp /home/data/Raw_Data/{project}/*{flight}.ads {nas_sync_dir}/ADS\n",
+            f"cp /home/data/Raw_Data/{project}/*{flight}.ads {nas_data_dir}/ADS\n\n",
+            "***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n"
+        ]
+        final_message += ''.join(NAS_message)
     if zip_ADS:
         zip_raw_file = self._zip_ads(filename)
     else:
@@ -79,26 +87,22 @@ def setup_NAS(self, process, reprocess, file_ext, inst_dir, status, flight, proj
 
     for key in file_ext:
         os.chdir(inst_dir[key])
-        if key == "ADS":
-            if ship_ADS is True:
-                if zip_ADS is True:
-                    print(f'Copying {zip_raw_file} file to {nas_sync_dir}/ADS')
-                    self.rsync_file(zip_raw_file, f'{nas_sync_dir}/ADS')
-                else:
-                    print(f'Copying {filename[key]} file to {nas_sync_dir}/ADS')
-                    status[key]["ship"] = self.rsync_file(filename[key], f'{nas_sync_dir}/{key}')
-                print('Done')
+        if key == "ADS" and ship_ADS is True:
+            if zip_ADS is True:
+                print(f'Copying {zip_raw_file} file to {nas_sync_dir}/ADS')
+                self.rsync_file(zip_raw_file, f'{nas_sync_dir}/ADS')
+            else:
+                print(f'Copying {filename[key]} file to {nas_sync_dir}/ADS')
+                status[key]["ship"] = self.rsync_file(filename[key], f'{nas_sync_dir}/{key}')
         elif key == "PMS2D":
             print(f'Copying {filename[key]} file to {nas_sync_dir}/PMS2D')
             status[key]["ship"] = self.rsync_file(filename[key], f'{nas_sync_dir}/PMS2D')
-            print('Done')
+        elif sendzipped is True:
+            print(f'Copying {filename[key]}.zip file to {nas_sync_dir}/{key}')
+            status[key]["ship"] = self.rsync_file(
+                f'{filename[key]}.zip', f'{nas_sync_dir}/{key}'
+            )
         else:
-            if sendzipped is True:
-                print(f'Copying {filename[key]}.zip file to {nas_sync_dir}/{key}')
-                status[key]["ship"] = self.rsync_file(
-                    f'{filename[key]}.zip', f'{nas_sync_dir}/{key}'
-                )
-            else:
-                print(f'Copying {filename[key]} file to {nas_sync_dir}/{key}')
-                status[key]["ship"] = self.rsync_file(filename[key], f'{nas_sync_dir}/{key}')
-            print('Done')
+            print(f'Copying {filename[key]} file to {nas_sync_dir}/{key}')
+            status[key]["ship"] = self.rsync_file(filename[key], f'{nas_sync_dir}/{key}')
+        print('Done')

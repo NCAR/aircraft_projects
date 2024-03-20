@@ -27,23 +27,6 @@ def _initializeFinalMessage(self, flight, project):
     )
     self.final_message = f'{self.final_message}  Flight:{flight}' + '\r\n'
     return self.final_message
-def _print_final_message(self, project, flight, nas_sync_dir, nas_data_dir):
-    final_message = (
-        '\n***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n'
-        + 'Reprocessing so assume ADS already shipped during first processing\n'
-    )
-    final_message += 'If this is not the case, run\n\n'
-    final_message = (
-        f'{final_message}"cp /home/data/Raw_Data/{project}/*{flight}.ads {nas_sync_dir}'
-        + '/ADS"\n\n'
-    )
-    final_message = (
-        f'{final_message}"cp /home/data/Raw_Data/{project}/*{flight}.ads {nas_data_dir}'
-        + '/ADS"\n\n'
-    )
-    final_message += 'when this script is complete\n\n'
-    final_message += '***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n'
-    log_and_print(final_message)
 
 def report(self, final_message, status, project, flight, email, file_ext):
     final_message = final_message + '\nREPORT on shipping of files. \n\n'
@@ -68,3 +51,17 @@ def report(self, final_message, status, project, flight, email, file_ext):
 def _log_and_abort(self, message):
         log_and_print(message)
         sys.exit(0)
+        
+def run_and_log(command, message):
+    """Executes a command, logs the message, and handles success/failure.
+
+    Args:
+        command (str): The command to execute.
+        message (str): The message to log.
+    
+    Returns:
+        bool: True if the command executed successfully, False otherwise.
+    """
+
+    log_and_print(message)  # Assuming you have a 'log_and_print' function defined
+    return os.system(command) == 0
