@@ -1,6 +1,7 @@
 from scripts.data_flow.push_data_reorg._logging import *
 import os
 import re
+import subprocess
 
 
 def _process_netCDF(self, rawfile, ncfile, pr, config_ext, proj_dir, flight, project, flags):
@@ -44,103 +45,51 @@ def _process_threeVCPI(self, aircraft, project, flight,
     os.chdir(twods_raw_dir)
     if os.path.isfile(catted_file):
         os.remove(catted_file)
-    file_list = glob.glob(f'{twods_raw_dir}base*2DSCPI')
-    if len(file_list) > 0:
+    if file_list := glob.glob(f'{twods_raw_dir}base*2DSCPI'):
         os.chdir(twods_raw_dir)
         filenum = 1
         for file in file_list:
             if filenum == 1:
                 first_base_file = file
-            command = 'cat ' + file + ' >> ' + catted_file
-            message = "cat 3vcPIfiles:" + command
+            command = f'cat {file} >> {catted_file}'
+            message = f"cat 3vcPIfiles:{command}"
             run_and_log(command,message)
 
-        command = translate2ds + '-project ' + project
+        command = f'{translate2ds}-project {project}'
         + ' -flight ' + flight + ' -platform ' + aircraft
         + ' -sn SPEC001 -f ' + catted_file + ' -o .'
-        message = ' 3v-cpi command:' + command
+        message = f' 3v-cpi command:{command}'
         run_and_log(command, message)
 
         # move 2DS file to the RAF naming convention and location
         if not os.path.isdir(oapfile_dir):
             try:
                 os.mkdir(oapfile_dir)
-            except Exception as e:
+            except OSError as e:
                 log_and_print(e,'error')
-                message = "\nERROR: Couldnt make oapfile dir:"
-                + oapfile_dir
-                message = message + "\nskipping 2d file gen/placement\n"
-                self.print_message(message)
+                message = "\nERROR: Couldnt make oapfile dir:"+ oapfile_dir+"\nskipping 2d file gen/placement\n"
+                log_and_print(message)
                 mkdir_fail = True
         if not mkdir_fail:
-            twod_dir, fb_filename = os.path.split(first_base_file)
-            # Pull out of base{datetime}.2d
-            datetime = fb_filename.split('.')[0].split('e')[1]
-            command = 'mv ' + catted_2d_file + ' ' + oapfile_dir + '20' + datetime + '_' + flight + '.2d'
-            message = ' mv command: ' + command
-            run_and_log(command, message)
-            threevcpi2d_file = oapfile_dir + '20' + datetime + '_' + flight + '.2d'
+            self._move_merge_threeVCPI_(
+                first_base_file, catted_2d_file, oapfile_dir, flight
+            )
+
+
+def _move_merge_threeVCPI_(self, first_base_file, catted_2d_file, oapfile_dir, flight):
+    twod_dir, fb_filename = os.path.split(first_base_file)
+    # Pull out of base{datetime}.2d
+    datetime = fb_filename.split('.')[0].split('e')[1]
+    command = f'mv {catted_2d_file} {oapfile_dir}20{datetime}_{flight}.2d'
+    message = f' mv command: {command}'
+    run_and_log(command, message)
+    threevcpi2d_file = f'{oapfile_dir}20{datetime}_{flight}.2d'
 
             # Merge 3v-cpi data into netCDF file
-            command = 'process2d ' + threevcpi2d_file + ' -o ' + ncfile
-            message = "3v-cpi merge cmd: " + command
-            if run_and_log(command, message):
-                proc_3vcpi_files = 'Yes'
-
-
-
-import os
-import subprocess
-
-def process(self, file_ext, data_dir, flight, filename, raw_dir, status, project):
-    """Coordinates file processing for the project.
-
-    Args:
-        file_ext (dict): Dictionary of file extensions and their processing flags.
-        data_dir (str): Base data directory.
-        flight (str): Flight designation.
-        filename (dict): Dictionary containing filenames for each instrument.
-        raw_dir (str): Directory containing raw data files.
-        status (dict): Dictionary to track file processing status.
-        project (str): Project identifier.
-    """
-
-    # LRT netCDF - Determine processing mode
-    process, reprocess, filename['LRT'] = self.find_lrt_netcdf(
-        self.file_ext['LRT'], flight, data_dir, self.file_prefix
-    )
-
-    # ADS - Extract flight date
-    reprocess, filename['ADS'] = self.find_file(
-        self.inst_dir['ADS'], flight, project, self.file_type['ADS'],
-        self.file_ext['ADS'], process, reprocess, self.file_prefix
-    )
-    self.date = self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
-
-    # Other Instruments (using flight number)
-    for key in file_ext:
-        if key in ('HRT', 'SRT'): 
-            reprocess, filename[key] = self.find_file(
-                self.inst_dir[key], flight, project, self.file_type[key],
-                self.file_ext[key], process, reprocess, self.date[:8]
-            )   
-
-    # Process and Generate Files
-    if process: 
-        if key in ('LRT', 'HRT', 'SRT'):
-            self._process_core_data(file_ext, filename, data_dir, flight, project, self.rate, self.config_ext)
-        self._generate_derived_files(data_dir, filename, project, flight, file_ext)
-        if (key == "threeVCPI"):
-            self.process_threeVCPI(aircraft, project, flight, self.inst_dir["twods"], self.inst_dir["oap"])
-        if key in ("ICARTT","IWG1"):
-            self._generate_derived_files(data_dir,filename, project, flight, key)
-    # Process PMS2D Files
-        if key == "PMS2D":
-            self._process_pms2d_files(file_ext, filename, data_dir, flight, project)
-
-    # QA Notebook Generation
-    if QA_notebook:
-        self._generate_qa_notebook(project, flight)
+    command = f'process2d {threevcpi2d_file} -o {ncfile}'
+    message = f"3v-cpi merge cmd: {command}"
+    if run_and_log(command, message):
+        proc_3vcpi_files = 'Yes'
 
 
 def _extract_date_from_ads_filename(self, filename, raw_dir):
@@ -163,7 +112,7 @@ def _process_core_data(self, key, filename, data_dir, flight, project, rates, co
         self.project,
         self.flags,
     ):
-        self.status[key]["proc"] = self.reorder_nc(_ncfile)
+        self.status[key]["proc"] = self._reorder_nc(_ncfile)
     else:
         self.status[key]["proc"] = False
 
@@ -207,3 +156,67 @@ def _generate_qa_notebook(self, project, flight):
     run_and_log(command, f"about to execute : {command}")
     command = f"cp -p {project}{flight}.html /home/ads/Desktop"
     run_and_log(command, "copying QAQC html to desktop")
+    
+def _reorder_nc(self, ncfile):
+    """
+    Reorder netcdf file
+    """
+    command = f"nccopy -u {ncfile} tmp.nc"
+    message = f"about to execute : {command}"
+    run_and_log(command,message)
+
+    command = f"/bin/mv tmp.nc {ncfile}"
+    message = f"about to execute : {command}"
+    if not run_and_log(command, message):
+        log_and_print("ERROR: ncreorder failed, but NetCDF should be ok\n")
+    proc_nc_file = 'Yes'
+    
+
+def process(self, file_ext, data_dir, flight, filename, raw_dir, status, project):
+    """Coordinates file processing for the project.
+
+    Args:
+        file_ext (dict): Dictionary of file extensions and their processing flags.
+        data_dir (str): Base data directory.
+        flight (str): Flight designation.
+        filename (dict): Dictionary containing filenames for each instrument.
+        raw_dir (str): Directory containing raw data files.
+        status (dict): Dictionary to track file processing status.
+        project (str): Project identifier.
+    """
+
+    # LRT netCDF - Determine processing mode
+    process, reprocess, filename['LRT'] = self.find_lrt_netcdf(
+        self.file_ext['LRT'], flight, data_dir, self.file_prefix
+    )
+
+    # ADS - Extract flight date
+    reprocess, filename['ADS'] = self.find_file(
+        self.inst_dir['ADS'], flight, project, self.file_type['ADS'],
+        self.file_ext['ADS'], process, reprocess, self.file_prefix
+    )
+    self.date = self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
+
+    # Other Instruments (using flight number)
+    for key in file_ext:
+        if key in ('HRT', 'SRT'): 
+            reprocess, filename[key] = self.find_file(
+                self.inst_dir[key], flight, project, self.file_type[key],
+                self.file_ext[key], process, reprocess, self.date[:8]
+            )   
+
+    # Process and Generate Files
+    if process: 
+        if key in ('LRT', 'HRT', 'SRT'):
+            self._process_core_data(file_ext, filename, data_dir, flight, project, self.rate, self.config_ext)
+        if (key == "threeVCPI"):
+            self.process_threeVCPI(aircraft, project, flight, self.inst_dir["twods"], self.inst_dir["oap"])
+        if key in ("ICARTT","IWG1"):
+            self._generate_derived_files(data_dir,filename, project, flight, key)
+    # Process PMS2D Files
+        if key == "PMS2D":
+            self._process_pms2d_files(file_ext, filename, data_dir, flight, project)
+
+    # QA Notebook Generation
+    if QA_notebook:
+        self._generate_qa_notebook(project, flight)
