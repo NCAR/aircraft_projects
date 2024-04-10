@@ -89,8 +89,7 @@ import time
 import tarfile
 import subprocess
 import smtplib
-#import email.MIMEText
-from email.MIMEText import MIMEText
+from email.mime.text import MIMEText
 from datetime import datetime
 from os.path import join
 import hashlib
@@ -101,12 +100,10 @@ user = "dmg"
 rpwd = ""
 
 getuser = getpass.getuser()
-print "User is [%s]" % (getuser);
+print(f"User is [{getuser}]")
 
-if getuser == "eoldata":
-    pass
-else:
-    print "You are running script as: "+getuser+". Change to eoldata and start over."
+if getuser != "eoldata":
+    print(f"You are running script as: {getuser}. Change to eoldata and start over.")
     sys.exit()
 
 # For bora logins, $PROJ_DIR is an environment variable set to the 
@@ -118,29 +115,29 @@ hash_value_file = "/scr/raf/Prod_Data/"+os.environ["PROJECT"]+\
                   "/"+os.environ["PROJECT"]+"_archive_hash_file.txt"
 
 calendaryear = os.environ["YEAR"]
-print calendaryear
+print(calendaryear)
 
 class archRAFdata:
 
     def sendMail(self, subject, body, email):
-	msg = MIMEText(body)
-	msg['subject'] = subject
-	msg['from'] = email
-	msg['to'] = email
+        msg = MIMEText(body)
+        msg['subject'] = subject
+        msg['from'] = email
+        msg['to'] = email
 
-	s = smtplib.SMTP("ndir.ucar.edu")
-	s.sendmail(email, [email], msg.as_string())
-	s.quit()
+        s = smtplib.SMTP("ndir.ucar.edu")
+        s.send_message(msg)  # Use send_message for MIME objects
+        s.quit()
 
     def setMSSenv(self):
         # Set some constants here so can easily find and change them
         msrcpMachine = "bora"	# the machine to run the msrcp command from
         wpwd = "RAFDMG" 	# the MSS Write PWD
-	return [msrcpMachine,wpwd]
+        return [msrcpMachine,wpwd]
 
     def today(self):
-	today = time.strftime("%a, %d %b %Y %H:%M:%S local",time.localtime())
-	return today
+        today = time.strftime("%a, %d %b %Y %H:%M:%S local",time.localtime())
+        return today
 
     def checkuser(self):
         '''
@@ -152,274 +149,241 @@ class archRAFdata:
         logname= os.environ['LOGNAME']
 
         if user != logname:
-            print "You are logged in as user "+ logname + \
-	    ".\n Only the 'dmg' login is allowed to run this script.  Quitting.\n"
-	    raise SystemExit
+            print(f"You are logged in as user {logname}.\n Only the 'dmg' login is allowed to run this script.  Quitting.\n")
+            raise SystemExit
 
     def checkpath(self):
-	'''
-	Check current directory to make sure script is being run from the 
-	archive subdir and grab the project name from the path as well. This 
-	assumes the path is of the form 
-	$PROJ_DIR/<PROJ_NAME>/<PLATFORM>/Production/archive'''
+        '''Check current directory to make sure script is being run from the 
+        archive subdir and grab the project name from the path as well. This 
+        assumes the path is of the form 
+        $PROJ_DIR/<PROJ_NAME>/<PLATFORM>/Production/archive'''
 
-	# Get current working directory
-	current_dir = os.getcwd()
-	# split the path of the current dir into it's subdir components
-	path_components = string.split(current_dir,'/')
-	# Check the last section of the path. It should be a dir called "archive". 
-	# If not,  warn user and exit.
-	if path_components[len(path_components)-1] != "archive":
-	    print "You are running from "+current_dir+"\n"
-	    print 'This script must be run from '+ \
-		  os.environ['PROJ_DIR'] + \
-	          '/<proj>/<platform>/Production/archive. Quitting.\n'
-	    raise SystemExit
+        # Get current working directory
+        current_dir = os.getcwd()
+        # split the path of the current dir into it's subdir components
+        path_components = current_dir.split('/')
+        # Check the last section of the path. It should be a dir called "archive". 
+        # If not,  warn user and exit.
+        if path_components[len(path_components)-1] != "archive":
+            print("You are running from "+current_dir+"\n")
+            print('This script must be run from '+ \
+            os.environ['PROJ_DIR'] + \
+                '/<proj>/<platform>/Production/archive. Quitting.\n')
+            raise SystemExit
 
 	# Check the second to last part of the path. It should be a dir called
 	# Production. If not, warn user and exit.
-	if path_components[len(path_components)-2] != "Production":
-	    print "You are running from "+current_dir+"\n"
-	    print 'This script must be run from the '+ \
-		  os.environ['PROJ_DIR'] + \
-		  '/Production/archive subdir. Quitting.\n'
-	    raise SystemExit
+        if path_components[len(path_components)-2] != "Production":
+            print(f"You are running from {current_dir}\n")
+            print('This script must be run from the '+os.environ['PROJ_DIR'] +'/Production/archive subdir. Quitting.\n')
+            raise SystemExit
 
-	# Determine the platform and project name from the path and return
-	# them to the calling routine.
-	platform = path_components[len(path_components)-3]
-	proj_name = path_components[len(path_components)-4]
+        # Determine the platform and project name from the path and return
+        # them to the calling routine.
+        platform = path_components[len(path_components)-3]
+        proj_name = path_components[len(path_components)-4]
 
-	# Create a string containing the path to the dir directly above "archive",
-	# which is the Production dir.
-	projdir = string.join(path_components[0:len(path_components)-1],'/')
+        # Create a string containing the path to the dir directly above "archive",
+        # which is the Production dir.
+        projdir = '/'.join(path_components[0:len(path_components)-1])
 
-	return [platform,proj_name,projdir,current_dir]
+        return [platform,proj_name,projdir,current_dir]
 
-    def projnum (self,dirmapfile):
-	'''
-	PROJ = 3-digit project number - get from 
-	$PROJ_DIR/archives/msfiles/directory_map by searching for the project name
-	which we grabbed from the working dir path using checkpath()'''
-	dirmap = open(dirmapfile,'r')
-	lines = dirmap.readlines()
-	dirmap.close()
-
-	for line in lines:
-	    match = re.search(proj_name,line)
-	    if match:
-		proj = string.split(line)[0]
-		break
-	return proj
+    def projnum(self,dirmapfile):
+        '''PROJ = 3-digit project number - get from $PROJ_DIR/archives/msfiles/directory_map by searching for the project name
+        which we grabbed from the working dir path using checkpath()
+        '''
+        dirmap = open(dirmapfile,'r')
+        lines = dirmap.readlines()
+        dirmap.close()
+        for line in lines:
+            match = re.search(proj_name,line)
+            if match:
+                proj = line.split()[0]#string.split(line)[0]
+                break
+        return proj
 
     def findfiles(self,path,searchstr):
         '''
-        Walk through a dir tree and return a list of all files matching
-        searchstring'''
-        # root - path to the directory
-        # dirs - list of the names of the subdirs in dirpath (excluding . and ..)
-        # files - list of the names of the non-directory files in dirpath
-        # To get a full path to a file or dir in dirpath, os.path.join(dirpath,name)
-	filesfound = []
-	for root, dirs, files in os.walk(path):
-	    for name in files:
-    	        fullname = os.path.join(root,name)
-    	        match = re.search("removed",fullname)
-    	        if match:
-    	            continue;
-	        match = re.search(searchstr+"$",name)
-	        if match:
-		    #if flag == "-r": 
-		    #	root = string.split(root,'/')[-1]
-		    name = os.path.join(root,name)
-		    #print "Found "+name
-		    filesfound.append(name)
-	return filesfound
+            Walk through a dir tree and return a list of all files matching
+            searchstring'''
+            # root - path to the directory
+            # dirs - list of the names of the subdirs in dirpath (excluding . and ..)
+            # files - list of the names of the non-directory files in dirpath
+            # To get a full path to a file or dir in dirpath, os.path.join(dirpath,name)
+        filesfound = []
+        for root, dirs, files in os.walk(path):
+            for name in files:
+                    fullname = os.path.join(root,name)
+                    match = re.search("removed",fullname)
+                    if match:
+                        continue;
+                    match = re.search(searchstr+"$",name)
+            if match:
+                #if flag == "-r": 
+                #	root = string.split(root,'/')[-1]
+                name = os.path.join(root,name)
+                #print "Found "+name
+                filesfound.append(name)
+        return filesfound
 
     def tardir(self,sdir,filedir,tarfilename,tarfiles):
-	'''
-	Create a tarfile called sibdir.tar containing all the files in the
-	dirpath that match pattern. Also create a listing of the contents
-	of the tarfile called subdiir.tar.dir. Return the location on disk
-	of both the tarfile and the listing file.'''
+        '''
+        Create a tarfile called sibdir.tar containing all the files in the
+        dirpath that match pattern. Also create a listing of the contents
+        of the tarfile called subdiir.tar.dir. Return the location on disk
+        of both the tarfile and the listing file.'''
 
-	# Tar up files. If the path was to a file, or there were
-	# no files found in the path, then there is nothing to 
-	# tar so don't return anything.
-	if len(tarfiles) != 0:
-	    print "Creating tarfile for "+os.getcwd()+"/"+filedir
+        # Tar up files. If the path was to a file, or there were
+        # no files found in the path, then there is nothing to 
+        # tar so don't return anything.
+        if len(tarfiles) != 0:
+            print("Creating tarfile for "+os.getcwd()+"/"+filedir)
 
-	    # Create the tarfile
-	    tar = tarfile.open(tarfilename+".tar","w")
-	    tarfiles.sort()
-	    for files in tarfiles:
-		archname = string.split(files,sdir+"/")
-	        tar.add(files,archname[1])
-	    tar.list()	# Echo file info to the screen for each file being 
-	    		# added to the tarfile
-	    tar.close()
-	    # Now create tarfile listing to also be archived
-	    os.system("tar -tvf "+tarfilename+".tar > "+
-		    tarfilename+".tar.dir")
-	    return [tarfilename+'.tar',tarfilename+'.tar.dir']
-	else:
-	    return ["",""]
+            # Create the tarfile
+            tar = tarfile.open(tarfilename+".tar","w")
+            tarfiles.sort()
+            for files in tarfiles:
+                name = files.split(sdir+"/")
+                tar.add(files,archname[1])
+                tar.list()	# Echo file info to the screen for each file being 
+                    # added to the tarfile
+            tar.close()
+            # Now create tarfile listing to also be archived
+            os.system("tar -tvf "+tarfilename+".tar > "+
+                tarfilename+".tar.dir")
+            return [tarfilename+'.tar',tarfilename+'.tar.dir']
+        else:
+            return ["",""]
 
     def renameKML(self,sdir,sfile):
         path = sdir + sfile
 
-	#Some older KML files were renamed locally before this update
-	#We dont want to add the timeinterval twice so watch for these files
-	match = re.search('\d{8}.\d{6}.\d{6}', sfile)
-	if match:
-	    return sfile
+        #Some older KML files were renamed locally before this update
+        #We dont want to add the timeinterval twice so watch for these files
+        match = re.search('\d{8}.\d{6}.\d{6}', sfile)
+        if match:
+            return sfile
 
-	#Use grep to select the dates from the KML file
-	p1 = subprocess.Popen(["grep","<when>",path], stdout=subprocess.PIPE)
-	data = string.split(p1.communicate()[0], "\n")
+        #Use grep to select the dates from the KML file
+        p1 = subprocess.Popen(["grep","<when>",path], stdout=subprocess.PIPE)
+        data = p1.communicate()[0].split("\n")#string.split(p1.communicate()[0], "\n")
 
-	#Extract the begin date and time and fix the formatting
-	match = re.search('(\d\d\d\d-\d\d-\d\d)T(\d\d:\d\d:\d\d)Z', data[0])
-	timeinterval = string.replace(match.group(1),"-","") + "." + string.replace(match.group(2),":","")
+        #Extract the begin date and time and fix the formatting
+        match = re.search('(\d\d\d\d-\d\d-\d\d)T(\d\d:\d\d:\d\d)Z', data[0])
+        timeinterval = match.group(1).replace("-","") + "." + match.group(2).replace(":","")
 
-	#Extract the end time and fix the formatting
-	match = re.search('(\d\d\d\d-\d\d-\d\d)T(\d\d:\d\d:\d\d)Z', data[-2])
-	timeinterval = timeinterval + "_" + string.replace(match.group(2),":","")
+        #Extract the end time and fix the formatting
+        match = re.search('(\d\d\d\d-\d\d-\d\d)T(\d\d:\d\d:\d\d)Z', data[-2])
+        timeinterval = timeinterval + "_" + match.group(2).replace(":","")
 
-	#add the time interval infront of .kml
-	return string.replace(sfile, ".kml", "." + timeinterval + ".kml")
+        #add the time interval infront of .kml
+        return sfile.replace(".kml", "." + timeinterval + ".kml")
 
 
     def rename(self,sdir,sfile):
-	path = sdir + sfile
+        path = sdir + sfile
         dfile = ""
+            
+        # Get flight number
+        # from the filename if we can otherwise from the NetCDF header	
+        p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
+        p2 = subprocess.Popen(["grep","FlightNumber"], stdin=p1.stdout, stdout=subprocess.PIPE)
+        flightnum = (p2.communicate()[0].split('"')[1]).upper()   #string.split(p2.communicate()[0],'"')[1])
+        match = re.search('(\w(F|f)\d\d\w\w?\w?\d?\d?)',sfile)
+        if match:
+            flightnum2 = match.group(0).upper()
+            if len(flightnum) >= 4:
+                if flightnum[0:3] == flightnum2[0:3]:
+                    flightnum = flightnum2
+                else:
+                    print("#WARNING: Ignored possible flight number in filename: " + flightnum2)
         
-	# Get flight number
-	# from the filename if we can otherwise from the NetCDF header	
-	p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
-	p2 = subprocess.Popen(["grep","FlightNumber"], stdin=p1.stdout, stdout=subprocess.PIPE)
-	flightnum = string.upper(string.split(p2.communicate()[0],'"')[1])
-	match = re.search('(\w(F|f)\d\d\w\w?\w?\d?\d?)',sfile)
-	if match:
-	    flightnum2 = match.group(0).upper()
-	    if len(flightnum) >= 4:
-		    if flightnum[0:3] == flightnum2[0:3]:
-		        flightnum = flightnum2
-		    else:
-		        print "#WARNING: Ignored possible flight number in filename: " + flightnum2
-	
-	dfile = dfile+flightnum
+        dfile = dfile+flightnum
 
-	# Get flight date
-	p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
-	p2 = subprocess.Popen(["grep","FlightDate"], stdin=p1.stdout, stdout=subprocess.PIPE)
-	flightdate = string.upper(string.split(p2.communicate()[0],'"')[1])
-	dates = string.split(flightdate,'/')
-	dfile = dfile+'.'+dates[2]+dates[0]+dates[1]
+        # Get flight date
+        p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
+        p2 = subprocess.Popen(["grep","FlightDate"], stdin=p1.stdout, stdout=subprocess.PIPE)
+        flightdate = (p2.communicate()[0].split('"')[1]).upper() #string.upper(string.split(p2.communicate()[0],'"')[1])
+        dates = flightdate.split('/')
+        dfile = dfile+'.'+dates[2]+dates[0]+dates[1]
 
-	# Get Time Interval
-	p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
-	p2 = subprocess.Popen(["grep","TimeInterval"], stdin=p1.stdout, stdout=subprocess.PIPE)
-	timeinterval = string.upper(string.split(p2.communicate()[0],'"')[1])
-	timeinterval = string.replace(timeinterval,'-','_')
-	timeinterval = string.replace(timeinterval,':','')
-	dfile = dfile+'.'+timeinterval+'.PNI.nc'
+        # Get Time Interval
+        p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
+        p2 = subprocess.Popen(["grep","TimeInterval"], stdin=p1.stdout, stdout=subprocess.PIPE)
+        timeinterval = (p2.communicate()[0].split('"')[1]).upper()
+        timeinterval = timeinterval.replace('-','_')
+        timeinterval = timeinterval.replace(':','')
+        dfile = dfile+'.'+timeinterval+'.PNI.nc'
 
-	#params = ["FlightNumber","FlightDate","TimeInterval"]
-	#for param in params:
-	    # Dump the header of the file
-	#    p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
-	#    p2 = subprocess.Popen(["grep",param], stdin=p1.stdout, stdout=subprocess.PIPE)
-	#    dfile = dfile + string.upper(string.split(p2.communicate()[0],'"')[1]) + '.'
-	#    print dfile
+        #params = ["FlightNumber","FlightDate","TimeInterval"]
+        #for param in params:
+            # Dump the header of the file
+        #    p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
+        #    p2 = subprocess.Popen(["grep",param], stdin=p1.stdout, stdout=subprocess.PIPE)
+        #    dfile = dfile + string.upper(string.split(p2.communicate()[0],'"')[1]) + '.'
+        #    print dfile
 
-	return dfile
+        return dfile
 
     def parse_date(self,name):
-	(root, name) = os.path.split(name)
-	match = re.search("[0-9][0-9][0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9][0-9]",name)
-	if match:
-	    print "match found for date format. Parsing date."
-	    name = match.group()
-	    index = 0
-	    year = "20"+name[index:index+2]
-	    month = name[index+2:index+4]
-	    day = name[index+4:index+6]
-	    hour = name[index+7:index+9]
-	    min = name[index+9:index+11]
-	    sec = name[index+11:index+13]
-	    #print year+"/"+month+"/"+day+" "+hour+":"+min+":"+sec
-	    hoursearchstr = name[0:index+9] +'\d\d\d\d.'
-	    print "Searching for files matching "+hoursearchstr
-	else:
-	    print "filename doesn't match \d\d\d\d\d\d.\d\d\d\d\d\d"
-	    print "code can't parse date and will die"
-	    
-	return [year,month,day,hour,min,sec,hoursearchstr]
+        (root, name) = os.path.split(name)
+        match = re.search("[0-9][0-9][0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9][0-9]",name)
+        if match:
+            print("match found for date format. Parsing date.")
+            name = match.group()
+            index = 0
+            year = "20"+name[index:index+2]
+            month = name[index+2:index+4]
+            day = name[index+4:index+6]
+            hour = name[index+7:index+9]
+            min = name[index+9:index+11]
+            sec = name[index+11:index+13]
+            #print year+"/"+month+"/"+day+" "+hour+":"+min+":"+sec
+            hoursearchstr = name[0:index+9] +'\d\d\d\d.'
+            print("Searching for files matching "+hoursearchstr)
+        else:
+            print("filename doesn't match \d\d\d\d\d\d.\d\d\d\d\d\d")
+            print("code can't parse date and will die")
+            
+        return [year,month,day,hour,min,sec,hoursearchstr]
 
     def usage(self):
-	'''
-	Usage statement for this code. This is also the only documentation.
-	'''
+        '''
+        Usage statement for this code. This is also the only documentation.
+        '''
         if len(sys.argv) < 3 or len(sys.argv) > 7:
-	    print '''Usage: archAC.py TYPE <flag> SDIR SFILES <ARCHIVEDIR> [EMAIL]
-	    where:	type is data type being archive (SID-2H, ADS, CAMERA)
-		(will be used a subdir name on mss)
-		flag is an optional argument that can be -r or -t
-			use -r to search for source files recursively
-			use -t to create tarballs of subdirs in the SDIR
-			use -p <pointing> to indicate camera
-			use -a to recover and archive tarfiles in current
-			    dir 
-			use -m to archive movie files to the CAMERA dir on
-			    mss.
-			pointing for CAMERA files if
-			pointing isn't given in path or
-			filename. Possible values are FWD,
-			DOWN, etc.
-		SDIR = source file directory
-		SFILES = source file suffix (i.e. ads)
-		ARCHIVEDIR -> HPSS dir data will be archived to: EOL/<year>
-		EMAIL = Who to send e-mail's too (Optional)'''
-	    raise SystemExit
-	return
-
-    # define function to create a hash for a given file
-#    def hash_file(self, sdir, sfiles, hash_value_file):
-#        # when function is called, ask user to confirm preference to append file with hashes
-#        append = raw_input("Would you like to append "+hash_value_file+" with sha256 hash? " + \
-#                "yes == enter, no == anything else: ")
-#        # check to see if hash file already exists, create if not
-#        if os.path.isfile(hash_value_file):
-#            pass
-#        else:
-#            os.system("touch "+hash_value_file)
-#        # if user wants to append file, create hashes
-#        if append == "":
-#
-#            # print the file type at the top of the list of corresponding files
-#            f = open(hash_value_file, 'a')
-#            print >>f, sys.argv[1]
-#            # iterate over each data file in sfiles list            
-#            for filename in sfiles:
-#                with open(sdir+filename, 'rb') as inputfile:
-#                    current_datetime = str(datetime.now())
-#                    data = inputfile.read()
-#                    print(filename, current_datetime, hashlib.sha256(data).hexdigest())
-#                    f = open(hash_value_file, 'a')
-#                    print >>f, current_datetime+","+filename+",sha256,"+hashlib.sha256(data).hexdigest()
-#            print("SHA-1 cryptographic hash values have been appended to "+hash_value_file)
-#            print("You still need to archive the hash file: "+hash_value_file) 
+            print('''Usage: archAC.py TYPE <flag> SDIR SFILES <ARCHIVEDIR> [EMAIL]
+            where:	type is data type being archive (SID-2H, ADS, CAMERA)
+            (will be used a subdir name on mss)
+            flag is an optional argument that can be -r or -t
+                use -r to search for source files recursively
+                use -t to create tarballs of subdirs in the SDIR
+                use -p <pointing> to indicate camera
+                use -a to recover and archive tarfiles in current
+                    dir 
+                use -m to archive movie files to the CAMERA dir on
+                    mss.
+                pointing for CAMERA files if
+                pointing isn't given in path or
+                filename. Possible values are FWD,
+                DOWN, etc.
+            SDIR = source file directory
+            SFILES = source file suffix (i.e. ads)
+            ARCHIVEDIR -> HPSS dir data will be archived to: EOL/<year>
+            EMAIL = Who to send e-mail's too (Optional)''')
+            raise SystemExit
+        return
 
     def archive_files_cs(self,sdir,sfiles,flag,type,csroot,email = ""):
         '''
         Now archive the data!
         '''
-        print '#  '+str(len(sfiles))+' Job(s) submitted on '+ archraf.today()
+        print(f'#  {str(len(sfiles))} Job(s) submitted on {archraf.today()}')
 
         command = []
         for spath in sfiles:
-            path_components = string.split(spath,'/')
+            path_components = spath.split('/')
             if flag == "-r": 
                 # recursive searching, so path has subdir components
                 sfile = path_components[len(path_components)-2]+'/'+\
@@ -459,9 +423,9 @@ class archRAFdata:
                 command.append('rsync '+sdir+spath+' eoldata@data-access.ucar.edu:'+csroot+type+'/'+sfile)
 
         for line in command:
-            print line
+            print(line)
 
-        process = raw_input("Run the commands as listed? " + \
+        process = input("Run the commands as listed? " + \
                 "yes == enter, no == anything else: ")
 
         match = re.search('CAMERA',type)
@@ -475,16 +439,20 @@ class archRAFdata:
                 output, errors = p.communicate();
                 result = p.returncode
                 #result = os.system(line)
-                path_components = string.split(line,'/')
+                path_components = line.split('/')
                 sfile = path_components[len(path_components)-1]
                 if result == 0:
-                    print "#  rsync job for "+type+"/"+sfile+" -- OK -- "+ archraf.today()
+                    print("#  rsync job for "+type+"/"+sfile+" -- OK -- "+ archraf.today())
                 else:
-                    print "#  rsync job for "+type+"/"+sfile+" -- Failed -- "+ archraf.today()
-                    print "#                "+type+"/"+sfile+": error code " + str(result)
-                    archraf.sendMail("rsync job for "+type+"/"+sfile+" -- Failed -- " + archraf.today(), "\nSTDOUT:\n" + output + "\n\nSTDERR:\n" + errors, email)
+                    print("#  rsync job for "+type+"/"+sfile+" -- Failed -- "+ archraf.today())
+                    print("#                "+type+"/"+sfile+": error code " + str(result))
+                    subj = f"rsync job for {type}/{sfile} -- Failed -- {archraf.today()}"
+                    message = f"\nSTDOUT:\n{output.decode('utf-8')}\n\nSTDERR:\n{errors.decode('utf-8')}"
+                    archraf.sendMail(subj,message, email)
 
-        print "#   Successful completion on "+archraf.today()+"\n"
+                    #archraf.sendMail("rsync job for "+type+"/"+sfile+" -- Failed -- " + archraf.today(), "\nSTDOUT:\n" + output + "\n\nSTDERR:\n" + errors, email)
+
+        print("#   Successful completion on "+archraf.today()+"\n")
 
 
 #    def archive_files(self,sdir,sfiles,flag,type,mssroot,email = ""):
@@ -581,7 +549,7 @@ if __name__ == "__main__":
     # Read the data type from the command line. It must always
     # be the second item on the line, after calling the script
     type = sys.argv[1]
-    print "Processing type " + type
+    print("Processing type " + type)
     
     # sys.argv[0] is the path and filename of this script
     # Don't currently need it for anything, so ignore it.
@@ -613,7 +581,7 @@ if __name__ == "__main__":
     if len(sys.argv)-1 >= index+3:
          email = sys.argv[index+3]
     else:
-         print "You must supply an email address as the last argument. If the script fails, you will receive an email."
+         print("You must supply an email address as the last argument. If the script fails, you will receive an email.")
 
     # Make sure this script is being run from 
     # $PROJ_DIR/<proj>/<platform>/Production/archive.
@@ -631,7 +599,7 @@ if __name__ == "__main__":
     sfiles = []
     if (type == "CAMERA") & (flag != "-a") & (flag != "-m"):
         aircraft = platform
-        print "This project took place aboard the "+aircraft+" aircraft\n"
+        print("This project took place aboard the "+aircraft+" aircraft\n")
     
         # List all the files/dirs in the working dir (sdir)
         for root, dirs, files in os.walk(sdir):
@@ -641,75 +609,73 @@ if __name__ == "__main__":
             for name in files:
                 match = re.search(hoursearchstr,name)
                 if not match:
-                    print "Found file "+name
+                    print("Found file "+name)
                     match = re.search(searchstr,name)
                     if match: 
                         (byr,bmo,bdy,bhr,bmn,bsc,hoursearchstr)=archraf.parse_date(name)
-    
-    	                fullname = os.path.join(root,name)
-    		        print fullname
-    		        # Skip sent dirs (don't archive them)
-    	                match = re.search("sent",fullname)
-    	                if match:
-    	                  continue;
-    		        # Skip montage dirs (don't archive them)
-    	                match = re.search("montage",fullname)
-    	                if match:
-    	                  continue;
-    		        # Skip removed dirs (don't archive them)
-    	                match = re.search("removed",fullname)
-    	                if match:
-    	                  continue;
-    
+                        fullname = os.path.join(root,name)
+                        print(fullname)
+                        # Skip sent dirs (don't archive them) 
+                        match = re.search("sent",fullname)
+                        if match:
+                            continue
+                        # Skip montage dirs (don't archive them)
+                        match = re.search("montage",fullname)
+                        if match:
+                            continue
+                        # Skip removed dirs (don't archive them)
+                        match = re.search("removed",fullname)
+                        if match:
+                            continue;
     		        # Get camera location (fwd, etc) from path
     		        # or make user enter on command line.
-    		        if re.search('left',fullname):
-    			    pointing = 'LEFT'
-    		        if re.search('right',fullname):
-    			    pointing = 'RIGHT'
-    		        if re.search('down',fullname):
-    			    pointing = 'DOWN'
-    		        if re.search('forward',fullname):
-    			    pointing = 'FWD'
-    		        if re.search('FWD',fullname):
-    		            pointing == 'FWD'
-    		        if pointing == "unknown":
-    		            print "ERROR: pointing not given in path "+ \
+                    if re.search('left',fullname):
+                        pointing = 'LEFT'
+                    if re.search('right',fullname):
+                        pointing = 'RIGHT'
+                    if re.search('down',fullname):
+                        pointing = 'DOWN'
+                    if re.search('forward',fullname):
+                        pointing = 'FWD'
+                    if re.search('FWD',fullname):
+                        pointing == 'FWD'
+                    if pointing == "unknown":
+                        print("ERROR: pointing not given in path "+ \
     		            "or filename. Enter using -p on command "+ \
-    		            "line."
-    	                    raise SystemExit
+    		            "line.")
+                        raise SystemExit
     
                         # Return an array containing the complete path to
                         # all the files matching searchstr in the path
-                        hoursearchstr = hoursearchstr+searchstr
-                        print "Finding files in "+root+" that match "+hoursearchstr
-                        tarfiles = archraf.findfiles(root,hoursearchstr)
-    
-                        tarfiles.sort()
-                        Efile = tarfiles[len(tarfiles)-1]
-                        (eyr,emo,edy,ehr,emn,esc,hoursearchstr)=archraf.parse_date(Efile)
-                        # output tarfile name is like 
-                        # RF##.FWD.Sdate.Stime_etime.jpg.tar and tar.dir
-                        match = re.search("[RrTtFf][Ff][0-9][0-9]",fullname)
-                        if not match:
-                            print "Flight number not found in image path. Please"
-                            print " rename camera dirs to contain flight numbers"
-                            print " e.g. RF01\n"
-                            raise SystemExit
-   
-                        flightnum = string.upper(match.group())
-                        tarfilename=flightnum+"."+pointing+"."+\
-                            byr+bmo+bdy+"."+bhr+bmn+bsc+"_"+\
-                            ehr+emn+esc+"."+searchstr
-    
-                        # Create the tarball
-                        [tfile,tfilelist]=archraf.tardir(root,"",tarfilename,tarfiles)
-    
-                        if tfile != "":
-                        # Add the tar file to the array of files to archive
-                            sfiles.append(tfile)
-                            # Add the tar file list to the array of files to archive
-                            sfiles.append(tfilelist)
+                    hoursearchstr = hoursearchstr+searchstr
+                    print( "Finding files in "+root+" that match "+hoursearchstr)
+                    tarfiles = archraf.findfiles(root,hoursearchstr)
+
+                    tarfiles.sort()
+                    Efile = tarfiles[len(tarfiles)-1]
+                    (eyr,emo,edy,ehr,emn,esc,hoursearchstr)=archraf.parse_date(Efile)
+                    # output tarfile name is like 
+                    # RF##.FWD.Sdate.Stime_etime.jpg.tar and tar.dir
+                    match = re.search("[RrTtFf][Ff][0-9][0-9]",fullname)
+                    if not match:
+                        print("Flight number not found in image path. Please")
+                        print(" rename camera dirs to contain flight numbers")
+                        print(" e.g. RF01\n")
+                        raise SystemExit
+
+                    flightnum = (match.group()).upper()
+                    tarfilename=flightnum+"."+pointing+"."+\
+                        byr+bmo+bdy+"."+bhr+bmn+bsc+"_"+\
+                        ehr+emn+esc+"."+searchstr
+
+                    # Create the tarball
+                    [tfile,tfilelist]=archraf.tardir(root,"",tarfilename,tarfiles)
+
+                    if tfile != "":
+                    # Add the tar file to the array of files to archive
+                        sfiles.append(tfile)
+                        # Add the tar file list to the array of files to archive
+                        sfiles.append(tfilelist)
             sdir = os.getcwd() + '/'
     elif flag == "-r":
         sfiles = archraf.findfiles(sdir,searchstr)
@@ -726,7 +692,7 @@ if __name__ == "__main__":
     
             # Return an array containing the complete path to all 
             # the files matching searchstr in the path
-            print "Finding files in "+path+" that match "+searchstr
+            print("Finding files in "+path+" that match "+searchstr)
             tarfiles = archraf.findfiles(path,searchstr)
     
             # For clarity, the tarfile name should contain the 
