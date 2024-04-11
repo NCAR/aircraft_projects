@@ -244,7 +244,7 @@ class archRAFdata:
             tar = tarfile.open(tarfilename+".tar","w")
             tarfiles.sort()
             for files in tarfiles:
-                name = files.split(sdir+"/")
+                archname = files.split(sdir+"/")
                 tar.add(files,archname[1])
                 tar.list()	# Echo file info to the screen for each file being 
                     # added to the tarfile
