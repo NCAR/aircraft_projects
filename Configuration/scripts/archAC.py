@@ -96,6 +96,18 @@ class archRAFdata:
         """
         return time.strftime("%a, %d %b %Y %H:%M:%S local",time.localtime())
 
+    def create_path(self,path):
+        """
+        This function checks if a path exists and creates it if not
+        Args:
+            path (str): The path to check and create.
+
+        Returns:
+            None
+        """
+        if not os.path.exists(path):
+            os.makedirs(path)
+
     def checkuser(self):
         '''
         Check login (only "dmg" login allowed to run this script)
@@ -607,6 +619,8 @@ if __name__ == "__main__":
     # Sort the files to be processed so they are processed in alphabetical order
     sfiles.sort()
     csroot = '/'+cs_location+'/'+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
+    #Make sure archive directory exists and if not, create it
+    archraf.create_path(csroot+type)
 
     # Now archive the data!
     archraf.archive_files_cs(sdir,sfiles,flag,type,csroot,email)
