@@ -273,7 +273,7 @@ class archRAFdata:
         # from the filename if we can otherwise from the NetCDF header	
         p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
         p2 = subprocess.Popen(["grep","FlightNumber"], stdin=p1.stdout, stdout=subprocess.PIPE)
-        flightnum = (p2.communicate()[0].split('"')[1]).upper() 
+        flightnum = (p2.communicate()[0].decode('utf-8').split('"')[1]).upper()
         match= re.search('(\w(F|f)\d\d\w\w?\w?\d?\d?)', sfile)
         if match:
             flightnum2 = match[0].upper()
@@ -288,14 +288,14 @@ class archRAFdata:
         # Get flight date
         p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
         p2 = subprocess.Popen(["grep","FlightDate"], stdin=p1.stdout, stdout=subprocess.PIPE)
-        flightdate = (p2.communicate()[0].split('"')[1]).upper()
+        flightdate = (p2.communicate()[0].decode('utf-8').split('"')[1]).upper()
         dates = flightdate.split('/')
         dfile = f'{dfile}.{dates[2]}{dates[0]}{dates[1]}'
 
         # Get Time Interval
         p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
         p2 = subprocess.Popen(["grep","TimeInterval"], stdin=p1.stdout, stdout=subprocess.PIPE)
-        timeinterval = (p2.communicate()[0].split('"')[1]).upper()
+        timeinterval = (p2.communicate()[0].decode('utf-8').split('"')[1]).upper()
         timeinterval = timeinterval.replace('-','_')
         timeinterval = timeinterval.replace(':','')
         return f'{dfile}.{timeinterval}.PNI.nc'
@@ -392,15 +392,19 @@ class archRAFdata:
             match= re.search(sdir, spath)
             if match:
                 command.append(
-                    f'rsync {spath} eoldata@data-access.ucar.edu:{csroot}{type}/{sfile}'
+                        f'rsync {spath} eoldata@data-access.ucar.edu:{csroot}{type}/{sfile}'
                 )
             else:
-                command.append(
-                    f'rsync {sdir}{spath} eoldata@data-access.ucar.edu:{csroot}'
-                    + type
-                    + '/'
-                    + sfile
-                )
+                if spath.endswith('.nc'):
+                    command.append(
+                        f'rsync {sdir}{spath} {csroot}{type}/{sfile}')
+                else:
+                    command.append(
+                        f'rsync {sdir}{spath} eoldata@data-access.ucar.edu:{csroot}'
+                        + type
+                        + '/'
+                        + sfile
+                    )
 
         for line in command:
             print(line)
@@ -611,14 +615,17 @@ if __name__ == "__main__":
     else:
         lines = os.listdir(sdir)
         for line in lines:
+            form = rf'^{proj_name}[a-z][a-z][0-9][0-9].nc'
             match = re.search(searchstr,line)
             if match:
-                sfiles.append(line)
+                if re.search(form,line):
+                    print(line)
+                    sfiles.append(line)
         sdir = sdir + '/'
     
     # Sort the files to be processed so they are processed in alphabetical order
     sfiles.sort()
-    csroot = '/'+cs_location+'/'+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
+    csroot = cs_location+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
     #Make sure archive directory exists and if not, create it
     archraf.create_path(csroot+type)
 
