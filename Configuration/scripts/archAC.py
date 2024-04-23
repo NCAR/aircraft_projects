@@ -615,19 +615,19 @@ if __name__ == "__main__":
     else:
         lines = os.listdir(sdir)
         for line in lines:
-            form = rf'^{proj_name}[a-z][a-z][0-9][0-9].nc'
+            #form = rf'^{proj_name}[a-z][a-z][0-9][0-9].nc'
             match = re.search(searchstr,line)
             if match:
-                if re.search(form,line):
-                    print(line)
-                    sfiles.append(line)
+           #     if re.search(form,line):
+                print(line)
+                sfiles.append(line)
         sdir = sdir + '/'
     
     # Sort the files to be processed so they are processed in alphabetical order
     sfiles.sort()
     csroot = cs_location+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
     #Make sure archive directory exists and if not, create it
-    archraf.create_path(csroot+type)
+    # archraf.create_path(csroot+type)
 
     # Now archive the data!
     archraf.archive_files_cs(sdir,sfiles,flag,type,csroot,email)
