@@ -241,7 +241,7 @@ class archRAFdata:
 
         #Use grep to select the dates from the KML file
         p1 = subprocess.Popen(["grep","<when>",path], stdout=subprocess.PIPE)
-        data = p1.communicate()[0].split("\n")
+        data = p1.communicate()[0].decode('utf-8').split("\n")
 
         #Extract the begin date and time and fix the formatting
         match = re.search('(\d\d\d\d-\d\d-\d\d)T(\d\d:\d\d:\d\d)Z', data[0])
