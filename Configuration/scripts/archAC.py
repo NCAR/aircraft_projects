@@ -395,7 +395,7 @@ class archRAFdata:
                         f'rsync {spath} eoldata@data-access.ucar.edu:{csroot}{type}/{sfile}'
                 )
             else:
-                if spath.endswith('.nc'):
+                if 'LRT' in type:
                     command.append(
                         f'rsync {sdir}{spath} {csroot}{type}/{sfile}')
                 else:
