@@ -194,28 +194,32 @@ class archRAFdata:
 
     def tardir(self,sdir,filedir,tarfilename,tarfiles):
         '''
-        Create a tarfile called sibdir.tar containing all the files in the
+        Create a tarfile called subdir.tar containing all the files in the
         dirpath that match pattern. Also create a listing of the contents
-        of the tarfile called subdiir.tar.dir. Return the location on disk
+        of the tarfile called subdir.tar.dir. Return the location on disk
         of both the tarfile and the listing file.'''
-
+        scr_dir = '/scr/raf/eoldata'
         # Tar up files. If the path was to a file, or there were
         # no files found in the path, then there is nothing to 
         # tar so don't return anything.
         if len(tarfiles) == 0:
             return ["",""]
         print(f"Creating tarfile for {os.getcwd()}/{filedir}")
+        tfilename = os.path.basename(tarfilename)
 
-        tar = tarfile.open(f"{tarfilename}.tar", "w")
-        tarfiles.sort()
+        tar = tarfile.open(f"{scr_dir}/{tfilename}.tar", "w")
+        for entry in os.listdir(path):
+            full_path = os.path.join(path, entry)
+            print(full_path)
+        """ tarfiles.sort()
         for files in tarfiles:
-            archname = files.split(f"{sdir}/")
+            archname = files.split(f"{scr_dir}/")
             tar.add(files,archname[1])
             tar.list()	# Echo file info to the screen for each file being 
-                        # added to the tarfile
+                        # added to the tarfile """
         tar.close()
-        os.system(f"tar -tvf {tarfilename}.tar > {tarfilename}.tar.dir")
-        return [f'{tarfilename}.tar', f'{tarfilename}.tar.dir']
+        os.system(f"tar -tvf {scr_dir}/{tfilename}.tar > {scr_dir}/{tfilename}.tar.dir")
+        return [f'{tfilename}.tar', f'{tfilename}.tar.dir']
 
     def renameKML(self,sdir,sfile):
         """
@@ -376,6 +380,9 @@ class archRAFdata:
             if match:
                 sfile = archraf.rename(sdir,sfile)
             match= re.search("(HRT|hrt)", type)
+            if match:
+                sfile = archraf.rename(sdir,sfile)
+            match = re.search("(SRT|srt)", type)
             if match:
                 sfile = archraf.rename(sdir,sfile)
             match= re.search("(KML|kml)", type)
@@ -584,6 +591,7 @@ if __name__ == "__main__":
         # List all the files/dirs in the working dir (sdir)
         dirfilelist = os.listdir(sdir)
         dirfilelist.sort()
+        pattern = re.compile(r'.*\/[FRT]F[0-1][0-9]$')
         for file in dirfilelist:
             # Walk through the dirpath (this will ignore paths that 
             # point to a file and
@@ -593,13 +601,15 @@ if __name__ == "__main__":
             # Return an array containing the complete path to all 
             # the files matching searchstr in the path
             print("Finding files in "+path+" that match "+searchstr)
-            tarfiles = archraf.findfiles(path,searchstr)
-    
+            #tarfiles = archraf.findfiles(path,searchstr)
             # For clarity, the tarfile name should contain the 
             # date (yyyymmdd) and flight number. Start with the 
             # directory name.
             tarfilename = file
-    
+            if pattern.match(path):
+                tarfiles = path
+            else:
+                continue
             # If the directory name does not contain a year, 
             # add it to the tarfile name.
             match = re.search(calendaryear,tarfilename)
@@ -611,7 +621,7 @@ if __name__ == "__main__":
                 sfiles.append(tfile)
                 # Add the tar file list to the array of files to archive
                 sfiles.append(tfilelist)
-        sdir = current_dir+"/"
+        sdir = '/scr/raf/eoldata/'
     else:
         lines = os.listdir(sdir)
         for line in lines:
