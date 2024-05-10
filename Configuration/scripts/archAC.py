@@ -15,6 +15,7 @@ import os, getpass
 import re
 import time
 import tarfile
+import glob
 import subprocess
 import smtplib
 from email.mime.text import MIMEText
@@ -39,7 +40,7 @@ hash_value_file = "/scr/raf/Prod_Data/"+os.environ["PROJECT"]+\
 
 calendaryear = os.environ["YEAR"]
 print(calendaryear)
-
+scr_dir = '/scr/raf/eoldata'  ##Scratch directory to write and store tarballs before transferring them to the archive
 class archRAFdata:
     """
     A collection of methods for archiving RAF data and performing related tasks.
@@ -198,26 +199,20 @@ class archRAFdata:
         dirpath that match pattern. Also create a listing of the contents
         of the tarfile called subdir.tar.dir. Return the location on disk
         of both the tarfile and the listing file.'''
-        scr_dir = '/scr/raf/eoldata'
         # Tar up files. If the path was to a file, or there were
         # no files found in the path, then there is nothing to 
         # tar so don't return anything.
         if len(tarfiles) == 0:
             return ["",""]
-        print(f"Creating tarfile for {os.getcwd()}/{filedir}")
-        tfilename = os.path.basename(tarfilename)
-
-        tar = tarfile.open(f"{scr_dir}/{tfilename}.tar", "w")
-        for entry in os.listdir(path):
-            full_path = os.path.join(path, entry)
-            print(full_path)
-        """ tarfiles.sort()
-        for files in tarfiles:
-            archname = files.split(f"{scr_dir}/")
-            tar.add(files,archname[1])
-            tar.list()	# Echo file info to the screen for each file being 
-                        # added to the tarfile """
-        tar.close()
+        event = os.path.basename(tarfilename)
+        match = re.search(calendaryear,event)
+        if not match:
+            tfilename = event.upper() + "_" + calendaryear
+        else:
+            tfilename = event.upper()
+        print(f"Creating tarfile for {sdir}/{filedir}")
+        print(f"Writing tarball to {scr_dir}/{tfilename}")
+        os.system(f"tar -cvf {scr_dir}/{tfilename}.tar {sdir}/{event}")
         os.system(f"tar -tvf {scr_dir}/{tfilename}.tar > {scr_dir}/{tfilename}.tar.dir")
         return [f'{tfilename}.tar', f'{tfilename}.tar.dir']
 
@@ -612,9 +607,6 @@ if __name__ == "__main__":
                 continue
             # If the directory name does not contain a year, 
             # add it to the tarfile name.
-            match = re.search(calendaryear,tarfilename)
-            if not match:
-                tarfilename = file + "_" + calendaryear
             [tfile,tfilelist]=archraf.tardir(sdir,file,tarfilename,tarfiles)
             if tfile != "":
                 # Add the tar file to the array of files to archive
