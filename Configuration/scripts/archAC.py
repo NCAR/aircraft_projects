@@ -212,7 +212,7 @@ class archRAFdata:
             tfilename = event.upper()
         print(f"Creating tarfile for {sdir}/{filedir}")
         print(f"Writing tarball to {scr_dir}/{tfilename}")
-        os.system(f"tar -cvf {scr_dir}/{tfilename}.tar {sdir}/{event}")
+        os.system(f"tar -cvf {scr_dir}/{tfilename}.tar --directory={sdir} {event}")
         os.system(f"tar -tvf {scr_dir}/{tfilename}.tar > {scr_dir}/{tfilename}.tar.dir")
         return [f'{tfilename}.tar', f'{tfilename}.tar.dir']
 
