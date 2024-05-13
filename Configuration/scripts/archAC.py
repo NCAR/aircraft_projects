@@ -613,14 +613,14 @@ if __name__ == "__main__":
                 sfiles.append(tfile)
                 # Add the tar file list to the array of files to archive
                 sfiles.append(tfilelist)
-        sdir = '/scr/raf/eoldata/'
+        sdir = scr_dir +'/'
     else:
         lines = os.listdir(sdir)
         for line in lines:
             #form = rf'^{proj_name}[a-z][a-z][0-9][0-9].nc'
             match = re.search(searchstr,line)
             if match:
-           #     if re.search(form,line):
+            #     if re.search(form,line):
                 print(line)
                 sfiles.append(line)
         sdir = sdir + '/'
