@@ -1,0 +1,19 @@
+G-V Digital Camera Imagery Notes
+
+The NSF/NCAR GV HIAPER flew forward, left, right, and downward facing digital cameras for in-flight image capture.
+
+The forward-looking camera is an Allied Vision Alvium G1-240 (AVT-UA-18175) w/ Sony IMX392 - color, 1936x1216 resolution. The lens is an Allied Vision (AVT-UA-12342) 6mm lens F1.8. This camera is located in the cockpit.
+
+The left-facing camera is a Point Grey Research Scorpion SCOR-20SO - Color, 1600 x 1200 resolution equipped with an Edmund Optics 6mm lens (#67-709). The field of view is 75 x 54 degrees with approximately 7% barrel distortion. Exposure time is automatically controlled by the camera. The image gamma is 1.0 (linear response), resulting in high-contrast images when viewed on ordinary displays.
+
+The right-facing camera is a Point Grey Research Flea 3 (FL3-FW-14S3C-C) - Color, 1384x1032 resolution equipped with an Navitar 3.5 mm lens (DO-3514). The field of view is 94 x 73 degrees. Exposure time is automatically controlled by the camera. The image gamma is 1.0 (linear response), resulting in high-contrast images when viewed on ordinary displays.
+
+The downward-facing camera is a Allied Vision ProSilica GT4907 monochrome camera with Zeiss ZF.2 100mm F/2 lens stopped down to F/8. Field of view is 20 x 15 degrees. The camera was mounted such that the long ('horizontal') dimension is fore-aft to the plane. The images were taken with 3x3 binning giving a resolution of 1621 x 1076 pixels. Exposure time is automatically controlled by the camera. The images were recorded with 8-bit pixel depth. The gamma was set to 0.5, so that the scene contrast is approximately normal when viewed on ordinary displays. The sensor has significant response to wavelengths longer than 700 nm so the image brightness may not match visual brightness.
+
+For all cameras, images were acquired once per second and stored as JPEG-compressed files. No image processing was performed beyond converting the raw pixel data from the color cameras to 24 bit/pixel color images. Applying a sharpening filter as is ordinarily done by consumer digital cameras will considerably improve the appearance. The UTC date and time are encoded in the filename as YYMMDD-HHMMSS.jpg.
+
+H.264 compressed, half-resolution movies (.mp4) were created. Each 1-second image was processed with the linux ImageMagick toolkit. The image was first cropped to 512x384 pixels. Sharpening was then performed [SHARPEN(0.0x1.0)]. Each image was then annotated in the lower left with the time the image was recorded and in the upper right with the pointing. Finally, the images were combined into a single block.
+
+For final movies, timeseries animations [https://github.com/NCAR/aircraft_movies_animations]of a select set of data parameters chosen by the researchers were appended to the right of each image block. These 1-second annotated images were compiled into a video stream running at 15 frames/s, 1500 kbps data rate.
+
+The movies are playable with Quicktime, Windows media player from Windows 7, mplayer, VLC, and others.

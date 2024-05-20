@@ -1,0 +1,13 @@
+C-130 Digital Camera Imagery Notes
+
+The NSF/NCAR C-130 (N130AR) flew two digital cameras for in-flight video capture: forward- and downward-looking. The forward-looking camera is a Point Grey Research Flea 3 (FL3-FW-14S3C-C) - Color, 1280 x 960 resolution equipped with an Edmund Optics 6mm lens (#67-709). The field of view is 68 x 51 degrees with approximately 6% barrel distortion. This camera is located in the cockpit.
+
+The downward looking camera is a Point Grey Research Grasshopper (GRAS-14S5M) monochrome camera, 1280 x 960 resolution equipped with a Sony zoom lens set at about 15 mm focal length giving a field of view of 30x23 degrees. It is located on the belly of the plane. The top of the image is to the front of the plane.
+
+Images were acquired once per second and stored as JPEG-compressed files, roughly 100 kB each. No image processing was performed beyond converting the raw pixel data to 24 bit color images. Applying a sharpening filter as is ordinarily done by consumer digital cameras will considerably improve the appearance. The UTC date and time are encoded in the filename as YYMMDD-HHMMSS.jpg. 
+
+H.264 compressed, half-resolution movies (.mp4) were created. Each 1-second image was processed with the linux ImageMagick toolkit. The image was first cropped to 512x384 pixels. Sharpening was then performed [SHARPEN(0.0x1.0)]. Each image was then annotated in the lower left with the time the image was recorded and in the upper right with the pointing. Finally, the images were combined into a single block.
+
+For final movies, timeseries animations [https://github.com/NCAR/aircraft_movies_animations]of a select set of data parameters chosen by the researchers were appended to the right of each image block. These 1-second annotated images were compiled into a video stream running at 15 frames/s, 1500 kbps data rate.
+
+The movies are playable with Quicktime, Windows media player from Windows 7, mplayer, VLC, and others.
