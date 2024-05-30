@@ -1,5 +1,6 @@
 ##Functions that help initiate push_data
-from scripts.data_flow.push_data_reorg._logging import log_and_print
+import sys
+from _logging import log_and_print
 def getProject(self):
     return(self.read_env('PROJECT'))
 
@@ -11,7 +12,40 @@ def getRawDir(self):
 
 def getProjDir(self):
     return(self.read_env('PROJ_DIR'))
+def createFilePrefix(self, project, flight):
+        '''
+        Create the project- and flight-specific filename prefix (e.g. WECANrf01)
+        '''
+        self.file_prefix = project + flight
+        return self.file_prefix
 
+def create_FileExt(self):
+        _fileExt = {'HRT': {'inc': HRT, 'ext': 'nc'}, 'SRT': {'inc': SRT, 'ext': 'nc'},
+                    'ICARTT': {'inc': ICARTT, 'ext': 'ict'}, 'IWG1': {'inc': IWG1, 'ext': 'iwg'},
+                    'PM2SD': {'inc': PMS2D, 'ext': '2d'}, 'threeVCPI': {'inc': threeVCPI, 'ext': '2ds'}}
+        self.FILE_EXT = OrderedDict([("ADS", "ads"), ("LRT", "nc"), ("KML", "kml")])
+        for type in _fileExt:
+            if _fileExt[type['inc']]:
+                self.FILE_EXT[type] = _fileExt[type['ext']]
+        return self.FILE_EXT
+
+def createRate(self):
+        '''
+        nimbus processing rates (for use in config files)
+        '''
+        self.rate = {
+            "LRT": "1",
+            "HRT": "25",
+            "SRT": "0",
+            }
+        return self.rate
+
+def createConfigExt(self):
+    '''
+    nimbus config filename extensions
+    '''
+    self.config_ext = {"LRT": "", "HRT": "h", "SRT": "s", }
+    return self.config_ext
 def setup(self, aircraft, project, raw_dir):
     """
     Create objects for multiple processing inputs

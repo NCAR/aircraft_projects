@@ -1,5 +1,6 @@
+import _logging, _GDrive, _process, _setup,_NAS,_FTP,_findfiles
+from Status import STATUS
 import logging
-from _GDrive import *
 import sys
 import os
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
@@ -14,31 +15,31 @@ class FieldData():
         self.formatter = logging.Formatter('%(asctime)s : %(name)s  : %(funcName)s : %(levelname)s : %(message)s')
         self.handler.setFormatter(self.formatter)
         self.logger.addHandler(self.handler)
-        self.project = self.getProject()
+        self.project = _setup.getProject()
         print(f'Project: {self.project}')
-        self.data_dir = f'{self.getDataDir()}/{self.project.upper()}/'
-        self.raw_dir = f'{self.getRawDir()}/{self.project.upper()}/'
-        self.aircraft = os.listdir(f'{self.getProjDir()}/{self.project}')[0]
+        self.data_dir = f'{_setup.getDataDir()}/{self.project.upper()}/'
+        self.raw_dir = f'{_setup.getRawDir()}/{self.project.upper()}/'
+        self.aircraft = os.listdir(f'{_setup.getProjDir()}/{self.project}')[0]
         print(f'Aircraft: {self.aircraft}')
-        self.proj_dir = f'{self.getProjDir()}/{self.project}/{self.aircraft}/'
+        self.proj_dir = f'{_setup.getProjDir()}/{self.project}/{self.aircraft}/'
         self.nc2ascBatch = f'{self.proj_dir}scripts/nc2asc.bat'
         self.zip_dir = '/tmp/'
         self.qc_ftp_site = 'catalog.eol.ucar.edu'
         self.qc_ftp_dir = f'/pub/incoming/catalog/{self.project.lower()}'
-        self.flight = self.readFlight()
-        self.email = self.readEmail()
+        self.flight = _setup.readFlight()
+        self.email = _setup.readEmail()
         self.rclone_staging_dir = rclone_staging_dir
-        process = False
-        reprocess = False
+        self.process = False
+        self.reprocess = False
 
-        self.setup(self.aircraft, self.project, self.raw_dir)
-        self.createInstDir(self.raw_dir, self.data_dir, self.project, self.flight)
-        self.createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)
-        self.createFilenameDict()
-        self.createFileType()
-        self.createRate()
-        self.createConfigExt()
-        self.createStatus()
-        self.createFilePrefix(self.project, self.flight)
-        self.initializeFinalMessage(self.flight, self.project)
-        self.ensureDataDir(self.data_dir)
+        _setup.setup(self.aircraft, self.project, self.raw_dir)
+        _setup.createInstDir(self.raw_dir, self.data_dir, self.project, self.flight)
+        _setup.createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)
+        _setup.createFilenameDict()
+        _setup.createFileType()
+        _setup.createRate()
+        _setup.createConfigExt()
+        self.status = STATUS
+        _setup.createFilePrefix(self.project, self.flight)
+        _logging._initializeFinalMessage(self.flight, self.project)
+        _logging.ensureDataDir(self.data_dir)
