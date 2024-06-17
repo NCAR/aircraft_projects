@@ -1,6 +1,10 @@
 ##Functions that help initiate push_data
-import sys
+from collections import OrderedDict
+import sys, os
 from _logging import log_and_print
+sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
+from fieldProc_setup import  ICARTT, IWG1, HRT, SRT, PMS2D, threeVCPI
+
 def getProject(self):
     return(self.read_env('PROJECT'))
 

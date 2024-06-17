@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import ftplib
 from _logging import *
@@ -27,7 +28,7 @@ def setup_ftp(self, status, file_ext, inst_dir, filename):
     if ship_all_ADS:
         self._transfer_all_ads(status, inst_dir)
     else:
-        self._transfer_selected_files(file_ext, inst_dir, filename)
+        self._transfer_selected_files(status,file_ext, inst_dir, filename)
 
     self.ftp.quit()
     # Revert PMS2D ftp special case
@@ -61,7 +62,7 @@ def _transfer_all_ads(self, status, inst_dir):
                 
 
 
-def _transfer_selected_files(self, file_ext, inst_dir, filename):
+def _transfer_selected_files(self,status, file_ext, inst_dir, filename):
     for key in file_ext:
         if key == 'ADS' and not ship_ADS:
             continue

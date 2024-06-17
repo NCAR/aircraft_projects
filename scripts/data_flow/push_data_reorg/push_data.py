@@ -1,5 +1,5 @@
 from field_data import FieldData
-import sys, os
+import sys, os,glob
 import _logging, _GDrive, _process, _setup,_NAS,_FTP
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
 from fieldProc_setup import NAS, FTP, sendzipped,  GDRIVE

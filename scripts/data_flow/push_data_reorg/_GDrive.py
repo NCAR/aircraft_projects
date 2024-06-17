@@ -1,7 +1,8 @@
-import os
-from scripts.data_flow.push_data_reorg._logging import *
+import os, sys
+from _logging import *
 import subprocess  # For more reliable error handling with rsync and rclone
-import shutil  # For potential cleanup operations
+sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
+from fieldProc_setup import ship_all_ADS, ship_ADS, rclone_staging_dir
 
 
 def _ship_all_ads(self, inst_dir, rclone_staging_dir, status):
@@ -36,7 +37,7 @@ def _transfer_instrument_files(self, key, filename, inst_dir, rclone_staging_dir
     staging_dest = os.path.join(rclone_staging_dir, key)
     if not os.path.exists(staging_dest):
         log_and_print(f'Instrument dir {staging_dest} does not exist','error')
-        self._ensure_staging_directory(staging_dest)
+        self._ensure_staging_directory(staging_dest,key)
         
     source_file = os.path.join(inst_dir[key], filename[key])
     gdrive_dest = f"gdrive_eolfield:/{os.environ['PROJECT']}/EOL_data/RAF_data/{key}"
@@ -58,7 +59,7 @@ def _transfer_instrument_files(self, key, filename, inst_dir, rclone_staging_dir
         log_and_print(f"rclone error for {source_file}: {e}. File not copied to GDrive",'error')
 
 
-def _ensure_staging_directory(self, directory):
+def _ensure_staging_directory(self, directory,key):
     try:
         os.makedirs(directory, exist_ok=True)  # Create if doesn't exist
         log_and_print('Created staging directory')

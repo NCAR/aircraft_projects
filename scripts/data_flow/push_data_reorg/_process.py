@@ -1,8 +1,9 @@
-from scripts.data_flow.push_data_reorg._logging import *
-import os
+from _logging import *
+import os, glob, sys
 import re
 import subprocess
-
+sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
+from fieldProc_setup import  translate2ds, QA_notebook
 
 def _process_netCDF(self, rawfile, ncfile, pr, config_ext, proj_dir, flight, project, flags):
     """"
@@ -20,7 +21,7 @@ def _process_netCDF(self, rawfile, ncfile, pr, config_ext, proj_dir, flight, pro
             sdir, sfilename = os.path.split(ncfile)
             line = "of=${DATA_DIR}/" + project + "/" + project + flight + config_ext + '.nc\n'
             cf.write(str(line))
-            line = f"pr={pr}" + '\n'
+            line = f"pr={pr}\n"
             cf.write(str(line))
     # execute nimbus in batch mode using the config file
     command = f"/usr/local/bin/nimbus{flags}{nimConfFile}"
@@ -102,7 +103,7 @@ def _process_core_data(self, key, filename, data_dir, flight, project, rates, co
 
     _ncfile = self.filename[key] if key == 'LRT' else self.ncfile
     self.flags = " -b "
-    if res := self.process_netCDF(
+    res = self.process_netCDF(
         self.filename["ADS"],
         _ncfile,
         self.rate[key],
@@ -111,7 +112,8 @@ def _process_core_data(self, key, filename, data_dir, flight, project, rates, co
         self.flight,
         self.project,
         self.flags,
-    ):
+    )
+    if res:
         self.status[key]["proc"] = self._reorder_nc(_ncfile)
     else:
         self.status[key]["proc"] = False
