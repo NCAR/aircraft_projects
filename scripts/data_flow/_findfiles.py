@@ -1,5 +1,7 @@
 import glob,os
-from _logging import log_and_print, _log_and_abort
+import _logging #import log_and_print, _log_and_abort
+
+myLogger = _logging.MyLogger()
 
 def find_file(self, data_dir, flight, project, filetype, fileext, flag, reprocess, date=""):
     """Finds a file and prompts the user for selection if needed.
@@ -37,7 +39,7 @@ def find_file(self, data_dir, flight, project, filetype, fileext, flag, reproces
 
     else:  # Multiple files found
         message = f"More than one {fileext} file found."
-        log_and_print(message)
+        myLogger.log_and_print(message)
         datafile = self.step_through_files(datalist, fileext,
                                                 reprocess)
         return flag, datafile
@@ -45,12 +47,12 @@ def find_file(self, data_dir, flight, project, filetype, fileext, flag, reproces
 def _handle_no_files_found(self, pattern, fileext, flag):
     """Handles the case where no files are found. Logs, prints messages, and potentially aborts."""
     message = f"No files found matching form: {pattern}"
-    log_and_print(message)
+    myLogger.log_and_print(message)
 
     if fileext == 'ads':
         _log_and_abort("Aborting...")
     elif flag:
-        log_and_print("We are scheduled to process all is good.")
+        myLogger.log_and_print("We are scheduled to process all is good.")
     else:
         message = f"We have an nc file but not {fileext} file.... aborting..."
         _log_and_abort(message)
@@ -68,9 +70,9 @@ def _select_file_from_list(self, datalist, fileext):
     """
     i=0
     while True:
-        log_and_print("Stepping through files, please select the right one.")
+        myLogger.log_and_print("Stepping through files, please select the right one.")
         current_file = datalist[i % len(datalist)]
-        log_and_print(f"Reviewing file: {current_file}")
+        myLogger.log_and_print(f"Reviewing file: {current_file}")
 
         confirmation = input(f"Is this the correct {fileext} file? ({current_file}) (Y/N): ").lower()
         if confirmation == 'y':
@@ -95,7 +97,7 @@ def step_through_files(self, datalist, fileext, reprocess):
     """
 
         if not reprocess:
-            log_and_print(f'Ship is set to True so no need to choose {fileext} to process.')
+            myLogger.log_and_print(f'Ship is set to True so no need to choose {fileext} to process.')
             return datalist[0]  
 
         return _select_file_from_list(self, datalist, fileext)
@@ -112,7 +114,7 @@ def find_lrt_netcdf(self, filetype, flight, data_dir, file_prefix):
         if nclist.__len__() == 1:
                 self.ncfile = nclist[0]
                 message = f"Found a netCDF file: {self.ncfile}"
-                log_and_print(message)
+                myLogger.log_and_print(message)
                 # Since found a netCDF file
                 # query user if they want to reprocess the data,
                 # or if they just want to ship the data to the NAS/ftp site.
@@ -128,16 +130,15 @@ def find_lrt_netcdf(self, filetype, flight, data_dir, file_prefix):
                     reprocess = False
         elif nclist.__len__() == 0:
                 message = f"No files found matching form: {data_dir}*{flight}.{filetype}"
-                log_and_print(message)
-                message = 
-                log_and_print("We must process!")
+                myLogger.log_and_print(message)
+                myLogger.log_and_print("We must process!")
                 process = True
                 self.ncfile = data_dir + file_prefix + ".nc"
         else:
-                log_and_print(f"More than one {filetype} file found.")
+                myLogger.log_and_print(f"More than one {filetype} file found.")
                 self.ncfile = self.step_through_files(nclist, fileext, reprocess)
 
         if self.ncfile == '':
-            _log_and_abort("No NetCDF file identified! Aborting")
+            myLogger._log_and_abort("No NetCDF file identified! Aborting")
 
         return(process, reprocess, self.ncfile)

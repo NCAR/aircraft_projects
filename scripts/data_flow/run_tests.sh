@@ -24,10 +24,10 @@
 #python3 -m unittest discover -s test -v -p test_step_through_files.py #-p test_find_lrt_netcdf.py
 #python3 -m unittest discover -s test -v -p test_find_file.py
 # --- Unit Tests ---
-
+#python -m pytest -s test_push_data.py
 # Specify how to run your unit tests. Replace with your actual command:
 # Specify how to run your Pytest tests. Adjust or add command line options:
-python3 -m pytest test/
+python -m pytest -s test/
 
 # --- Exit Status Logic ---
 
