@@ -1,7 +1,25 @@
 import os
+import logging  
+import sys
+import smtplib  
+from email.mime.text import MIMEText
+
+def init_logger():
+    logger = logging.getLogger('myLogger')
+    logger.setLevel(logging.DEBUG)
+    handler = logging.FileHandler('/tmp/push_data.log')
+    formatter = logging.Formatter('%(asctime)s : %(name)s  : %(funcName)s : %(levelname)s : %(message)s')
+    handler.setFormatter(formatter)
+    if not logger.handlers:
+        logger.addHandler(handler)
+
+init_logger()
 
 class MyLogger:
-
+    
+    def __init__(self):
+        # Retrieve the already configured logger by name
+        self.logger = logging.getLogger('myLogger')
     def log_and_print(self, message, log_level="info"):
         """Logs and prints a message with optional log level.
 
@@ -52,10 +70,10 @@ class MyLogger:
 
         print("\r\nSuccessful completion. Close window to exit.")
     def _log_and_abort(self, message):
-            log_and_print(message)
+            self.log_and_print(message)
             sys.exit(0)
             
-    def run_and_log(command, message):
+    def run_and_log(self,command, message):
         """Executes a command, logs the message, and handles success/failure.
 
         Args:
@@ -65,6 +83,5 @@ class MyLogger:
         Returns:
             bool: True if the command executed successfully, False otherwise.
         """
-
-        log_and_print(message)  # Assuming you have a 'log_and_print' function defined
+        self.log_and_print(message)  # Assuming you have a 'log_and_print' function defined
         return os.system(command) == 0

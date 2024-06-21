@@ -1,13 +1,68 @@
 import _logging
+import logging
 import os, glob, sys
 import re
+import _findfiles
 import subprocess
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
 from fieldProc_setup import  translate2ds, QA_notebook
 
+
 myLogger = _logging.MyLogger()
-    
 class Process:
+    def __init__(self, file_ext, data_dir, flight, filename, raw_dir, status, project, aircraft,
+                inst_dir, rate, config_ext,file_type,proj_dir,file_prefix):
+        
+        """Coordinates file processing for the project.
+
+        Args:
+            file_ext (dict): Dictionary of file extensions and their processing flags.
+            data_dir (str): Base data directory.
+            flight (str): Flight designation.
+            filename (dict): Dictionary containing filenames for each instrument.
+            raw_dir (str): Directory containing raw data files.
+            status (dict): Dictionary to track file processing status.
+            project (str): Project identifier.
+        """
+        findFiles = _findfiles.FindFiles(myLogger)
+        # LRT netCDF - Determine processing mode
+        process, reprocess, filename['LRT'] = findFiles.find_lrt_netcdf(
+            file_ext['LRT'], flight, data_dir, file_prefix
+        )
+
+        # ADS - Extract flight date
+        reprocess, filename['ADS'] = findFiles.find_file(
+            inst_dir['ADS'], flight, project, file_type['ADS'],
+            file_ext['ADS'], process, reprocess, file_prefix
+        )
+        self.date = self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
+
+        # Other Instruments (using flight number)
+        for key in file_ext:
+            if key in ('HRT', 'SRT'): 
+                reprocess, filename[key] = findFiles.find_file(
+                    inst_dir[key], flight, project, file_type[key],
+                    file_ext[key], process, reprocess, self.date[:8]
+                )   
+
+        # Process and Generate Files
+        if process: 
+            if key in ('LRT', 'HRT', 'SRT'):
+                self._process_core_data(key,filename, proj_dir, flight, project, rate, config_ext)
+            if (key == "threeVCPI"):
+                self.process_threeVCPI(aircraft, project, flight, inst_dir["twods"], inst_dir["oap"])
+            if key in ("ICARTT","IWG1"):
+                self._generate_derived_files(data_dir,filename, project, flight, key, file_ext)
+        # Process PMS2D Files
+            if key == "PMS2D":
+                self._process_pms2d_files(inst_dir,status, raw_dir, filename)
+
+        # QA Notebook Generation
+        if QA_notebook:
+            self._generate_qa_notebook(project, flight)
+        self.stat = status
+    
+
     def _process_netCDF(self, rawfile, ncfile, pr, config_ext, proj_dir, flight, project, flags):
         """"
         Run nimbus to create a .nc file (LRT, HRT, or SRT)
@@ -93,7 +148,7 @@ class Process:
         command = f'process2d {threevcpi2d_file} -o {ncfile}'
         message = f"3v-cpi merge cmd: {command}"
         if myLogger.run_and_log(command, message):
-            proc_3vcpi_files = 'Yes'
+            self.proc_3vcpi_files = 'Yes'
 
 
     def _extract_date_from_ads_filename(self, filename, raw_dir):
@@ -101,19 +156,19 @@ class Process:
         self.date = file_name[:15]
         self.date = re.sub('_', '', self.date)
 
-    def _process_core_data(self, key, filename, data_dir, flight, project, rates, config_ext):
+    def _process_core_data(self, key, filename, proj_dir, flight, project, rate, config_ext):
         # Process the ads data to desired netCDF frequencies
 
-        _ncfile = self.filename[key] if key == 'LRT' else self.ncfile
+        _ncfile = filename[key] if key == 'LRT' else self.ncfile
         self.flags = " -b "
         res = self.process_netCDF(
-            self.filename["ADS"],
+            filename["ADS"],
             _ncfile,
-            self.rate[key],
-            self.config_ext[key],
-            self.proj_dir,
-            self.flight,
-            self.project,
+            rate[key],
+            config_ext[key],
+            proj_dir,
+            flight,
+            project,
             self.flags,
         )
         if res:
@@ -122,8 +177,7 @@ class Process:
             self.status[key]["proc"] = False
 
 
-
-    def _generate_derived_files(self, data_dir, filename, project, flight, key):
+    def _generate_derived_files(self, data_dir, filename, project, flight, key,file_ext):
             # Generate IWG1 file from LRT, if requested
         command_dict = {'IWG1':"nc2iwg1 " + self.filename["LRT"] + " -o " + data_dir + project + flight + '.' + file_ext["IWG1"],
                         'ICARTT':"nc2asc -i " + filename["LRT"] + " -o " + self.data_dir + "tempfile.ict -b " + self.nc2ascBatch}
@@ -132,12 +186,12 @@ class Process:
             self.status[key]["proc"] = 'Yes'
 
 
-    def _process_pms2d_files(self, key, file_ext, filename, data_dir, flight, project):
+    def _process_pms2d_files(self, inst_dir,status, raw_dir, filename):
 
-        self.ensure_dir(self.inst_dir["PMS2D"] + 'PMS2D')
+        self.ensure_dir(inst_dir["PMS2D"] + 'PMS2D')
         file_name = filename["ADS"].split(raw_dir)[1]
         fileelts = file_name.split('.')
-        filename["PMS2D"] = self.inst_dir["PMS2D"] + 'PMS2D/' + fileelts[0] + '.2d'
+        filename["PMS2D"] = inst_dir["PMS2D"] + 'PMS2D/' + fileelts[0] + '.2d'
 
         if not os.path.exists(filename["PMS2D"]):
             # General form of extract2d from RAW_DATA_DIR is:
@@ -174,54 +228,5 @@ class Process:
         message = f"about to execute : {command}"
         if not myLogger.run_and_log(command, message):
             myLogger.log_and_print("ERROR: ncreorder failed, but NetCDF should be ok\n")
-        proc_nc_file = 'Yes'
+        self.proc_nc_file = 'Yes'
         
-
-    def process(self, file_ext, data_dir, flight, filename, raw_dir, status, project):
-        """Coordinates file processing for the project.
-
-        Args:
-            file_ext (dict): Dictionary of file extensions and their processing flags.
-            data_dir (str): Base data directory.
-            flight (str): Flight designation.
-            filename (dict): Dictionary containing filenames for each instrument.
-            raw_dir (str): Directory containing raw data files.
-            status (dict): Dictionary to track file processing status.
-            project (str): Project identifier.
-        """
-
-        # LRT netCDF - Determine processing mode
-        process, reprocess, filename['LRT'] = self.find_lrt_netcdf(
-            self.file_ext['LRT'], flight, data_dir, self.file_prefix
-        )
-
-        # ADS - Extract flight date
-        reprocess, filename['ADS'] = self.find_file(
-            self.inst_dir['ADS'], flight, project, self.file_type['ADS'],
-            self.file_ext['ADS'], process, reprocess, self.file_prefix
-        )
-        self.date = self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
-
-        # Other Instruments (using flight number)
-        for key in file_ext:
-            if key in ('HRT', 'SRT'): 
-                reprocess, filename[key] = self.find_file(
-                    self.inst_dir[key], flight, project, self.file_type[key],
-                    self.file_ext[key], process, reprocess, self.date[:8]
-                )   
-
-        # Process and Generate Files
-        if process: 
-            if key in ('LRT', 'HRT', 'SRT'):
-                self._process_core_data(file_ext, filename, data_dir, flight, project, self.rate, self.config_ext)
-            if (key == "threeVCPI"):
-                self.process_threeVCPI(aircraft, project, flight, self.inst_dir["twods"], self.inst_dir["oap"])
-            if key in ("ICARTT","IWG1"):
-                self._generate_derived_files(data_dir,filename, project, flight, key)
-        # Process PMS2D Files
-            if key == "PMS2D":
-                self._process_pms2d_files(file_ext, filename, data_dir, flight, project)
-
-        # QA Notebook Generation
-        if QA_notebook:
-            self._generate_qa_notebook(project, flight)

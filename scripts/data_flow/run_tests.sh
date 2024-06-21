@@ -27,7 +27,7 @@
 #python -m pytest -s test_push_data.py
 # Specify how to run your unit tests. Replace with your actual command:
 # Specify how to run your Pytest tests. Adjust or add command line options:
-python -m pytest -s test/
+python -m pytest -s test/t2/
 
 # --- Exit Status Logic ---
 
