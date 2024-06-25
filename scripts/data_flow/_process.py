@@ -24,22 +24,31 @@ class Process:
             status (dict): Dictionary to track file processing status.
             project (str): Project identifier.
         """
+        QA_notebook=False ##TEMPORARY FOR TESTING
+        self.nc2ascBatch = proj_dir + 'scripts/nc2asc.bat'
         findFiles = _findfiles.FindFiles(myLogger)
         # LRT netCDF - Determine processing mode
         process, reprocess, filename['LRT'] = findFiles.find_lrt_netcdf(
             file_ext['LRT'], flight, data_dir, file_prefix
         )
-
-        # ADS - Extract flight date
+        
+        self.ncfile =filename['LRT'] ## Set the default ncfile to the LRT file
+        
+        # Next get the ADS file so we can determine the flight date. This is needed
+        # in order to identify the correct ICARTT file, since ICARTT files follow the
+        # NASA naming convention and don't use our flight numbering system.
         reprocess, filename['ADS'] = findFiles.find_file(
             inst_dir['ADS'], flight, project, file_type['ADS'],
             file_ext['ADS'], process, reprocess, file_prefix
         )
-        self.date = self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
+        # ADS - Extract flight date
+        self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
+    
 
         # Other Instruments (using flight number)
         for key in file_ext:
             if key in ('HRT', 'SRT'): 
+                myLogger.log_and_print(f"Processing {key} data")
                 reprocess, filename[key] = findFiles.find_file(
                     inst_dir[key], flight, project, file_type[key],
                     file_ext[key], process, reprocess, self.date[:8]
@@ -47,20 +56,22 @@ class Process:
 
         # Process and Generate Files
         if process: 
-            if key in ('LRT', 'HRT', 'SRT'):
-                self._process_core_data(key,filename, proj_dir, flight, project, rate, config_ext)
-            if (key == "threeVCPI"):
-                self.process_threeVCPI(aircraft, project, flight, inst_dir["twods"], inst_dir["oap"])
-            if key in ("ICARTT","IWG1"):
-                self._generate_derived_files(data_dir,filename, project, flight, key, file_ext)
-        # Process PMS2D Files
-            if key == "PMS2D":
-                self._process_pms2d_files(inst_dir,status, raw_dir, filename)
+            for key in file_ext:
+                if key in ('LRT', 'HRT', 'SRT'):
+                    self._process_core_data(key,filename, proj_dir, flight, project, rate, config_ext,status)
+                if (key == "threeVCPI"):
+                    self._process_threeVCPI(aircraft, project, flight, inst_dir["twods"], inst_dir["oap"])
+                if key in ("ICARTT","IWG1"):
+                    self._generate_derived_files(data_dir,filename, project, flight, key, file_ext,status)
+            # Process PMS2D Files
+                if key == "PMS2D":
+                    self._process_pms2d_files(inst_dir,status, raw_dir, filename)
 
         # QA Notebook Generation
         if QA_notebook:
             self._generate_qa_notebook(project, flight)
         self.stat = status
+        myLogger.log_and_print(self.stat)
     
 
     def _process_netCDF(self, rawfile, ncfile, pr, config_ext, proj_dir, flight, project, flags):
@@ -70,6 +81,7 @@ class Process:
         # If there is a setup file for this flight in proj_dir/Production
         # use that. If not, create one.
         nimConfFile = f"{proj_dir}Production/setup_{flight}{config_ext}"
+        
 
         if not os.path.exists(nimConfFile):
             with open(nimConfFile, 'w') as cf:
@@ -85,7 +97,7 @@ class Process:
         command = f"/usr/local/bin/nimbus{flags}{nimConfFile}"
         message = f"about to execute nimbus I hope: {command}"
         if not myLogger.run_and_log(command, message):
-            myLogger.log_and_print('\nrNimbus call failed')
+            myLogger.log_and_print('\nNimbus call failed')
             return False
 
         return True
@@ -145,23 +157,24 @@ class Process:
         threevcpi2d_file = f'{oapfile_dir}20{datetime}_{flight}.2d'
 
                 # Merge 3v-cpi data into netCDF file
-        command = f'process2d {threevcpi2d_file} -o {ncfile}'
+        command = f'process2d {threevcpi2d_file} -o {self.ncfile}'
         message = f"3v-cpi merge cmd: {command}"
         if myLogger.run_and_log(command, message):
             self.proc_3vcpi_files = 'Yes'
 
 
-    def _extract_date_from_ads_filename(self, filename, raw_dir):
-        file_name = filename["ADS"].split(raw_dir)[1]
+    def _extract_date_from_ads_filename(self, fname, raw_dir):
+        file_name = fname.split(raw_dir)[1]
         self.date = file_name[:15]
         self.date = re.sub('_', '', self.date)
 
-    def _process_core_data(self, key, filename, proj_dir, flight, project, rate, config_ext):
+    def _process_core_data(self, key, filename, proj_dir, flight, project, rate, config_ext,status):
         # Process the ads data to desired netCDF frequencies
 
         _ncfile = filename[key] if key == 'LRT' else self.ncfile
         self.flags = " -b "
-        res = self.process_netCDF(
+        
+        res = self._process_netCDF(
             filename["ADS"],
             _ncfile,
             rate[key],
@@ -172,18 +185,18 @@ class Process:
             self.flags,
         )
         if res:
-            self.status[key]["proc"] = self._reorder_nc(_ncfile)
+            status[key]["proc"] = self._reorder_nc(_ncfile)
         else:
-            self.status[key]["proc"] = False
+            status[key]["proc"] = False
 
 
-    def _generate_derived_files(self, data_dir, filename, project, flight, key,file_ext):
+    def _generate_derived_files(self, data_dir, filename, project, flight, key,file_ext,status):
             # Generate IWG1 file from LRT, if requested
-        command_dict = {'IWG1':"nc2iwg1 " + self.filename["LRT"] + " -o " + data_dir + project + flight + '.' + file_ext["IWG1"],
-                        'ICARTT':"nc2asc -i " + filename["LRT"] + " -o " + self.data_dir + "tempfile.ict -b " + self.nc2ascBatch}
+        command_dict = {'IWG1':"nc2iwg1 " + filename["LRT"] + " -o " + data_dir + project + flight + '.' + file_ext["IWG1"],
+                        'ICARTT':"nc2asc -i " + filename["LRT"] + " -o " + data_dir + "tempfile.ict -b " + self.nc2ascBatch}
         message = f"about to execute : {command_dict[key]}"
         if myLogger.run_and_log(command_dict[key],message):
-            self.status[key]["proc"] = 'Yes'
+            status[key]["proc"] = 'Yes'
 
 
     def _process_pms2d_files(self, inst_dir,status, raw_dir, filename):

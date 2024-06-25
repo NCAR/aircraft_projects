@@ -2,12 +2,15 @@
 from collections import OrderedDict
 import sys, os
 import _logging
+import logging
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
 from fieldProc_setup import  ICARTT, IWG1, HRT, SRT, PMS2D, threeVCPI
 
 myLogger = _logging.MyLogger()
 class Setup():
     def __init__(self):
+        self.init_logger()
+        self.myLogger = myLogger
         self.PROJECT = self.read_env('PROJECT')
         self.RAWDIR = self.read_env('RAW_DATA_DIR')
         self.DATADIR = self.read_env('DATA_DIR')
@@ -23,7 +26,14 @@ class Setup():
         self.setup(self.AIRCRAFT,self.PROJECT, self.RAWDIR)
         self.createFileType()
         
-
+    def init_logger(self):
+        logger = logging.getLogger('myLogger')
+        logger.setLevel(logging.DEBUG)
+        handler = logging.FileHandler('/tmp/push_data.log')
+        formatter = logging.Formatter('%(asctime)s : %(name)s  : %(funcName)s : %(levelname)s : %(message)s')
+        handler.setFormatter(formatter)
+        if not logger.handlers:
+            logger.addHandler(handler)
     def createFileType(self):
             '''
             NetCDF filename rate indicator

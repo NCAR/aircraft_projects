@@ -4,22 +4,34 @@ import sys
 import smtplib  
 from email.mime.text import MIMEText
 
-def init_logger():
-    logger = logging.getLogger('myLogger')
-    logger.setLevel(logging.DEBUG)
-    handler = logging.FileHandler('/tmp/push_data.log')
-    formatter = logging.Formatter('%(asctime)s : %(name)s  : %(funcName)s : %(levelname)s : %(message)s')
-    handler.setFormatter(formatter)
-    if not logger.handlers:
-        logger.addHandler(handler)
 
-init_logger()
 
 class MyLogger:
+    """
+    A class for logging and printing messages.
+
+    Args:
+        flight (str): The flight information.
+        project (str): The project information.
+        data_dir (str): The directory path for data.
+
+    Attributes:
+        logger (logging.Logger): The logger object.
+        final_message (str): The final message for reporting.
+
+    Methods:
+        log_and_print: Logs and prints a message with optional log level.
+        ensure_dir: Checks if the directory exists and creates it if not.
+        initializeFinalMessage: Prepares the final message information.
+        report: Generates a report and sends an email.
+        _log_and_abort: Logs a message and aborts the program.
+        run_and_log: Executes a command, logs the message, and handles success/failure.
+    """
     
     def __init__(self):
         # Retrieve the already configured logger by name
         self.logger = logging.getLogger('myLogger')
+
     def log_and_print(self, message, log_level="info"):
         """Logs and prints a message with optional log level.
 
@@ -37,8 +49,9 @@ class MyLogger:
         d = os.path.dirname(f)
         if not os.path.exists(d):
             os.makedirs(d)
+            self.log_and_print(f'Directory {d} created')
             
-    def _initializeFinalMessage(self, flight, project):
+    def initializeFinalMessage(self, flight, project):
         '''
         Prepare for final message information
         '''

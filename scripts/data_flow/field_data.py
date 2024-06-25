@@ -12,7 +12,7 @@ class FieldData():
 
     def __init__(self):
         self.setup = _setup.Setup()
-        self.myLogger = _logging.MyLogger()
+        self.myLogger=self.setup.myLogger
         self.project = self.setup.PROJECT
         print(f'Project: {self.project}')
         self.data_dir = f'{self.setup.DATADIR}/{self.project.upper()}/'
@@ -20,7 +20,6 @@ class FieldData():
         self.aircraft = self.setup.AIRCRAFT#os.listdir(f'{self.setup.PROJDIR}/{self.project}')[0]
         print(f'Aircraft: {self.aircraft}')
         self.proj_dir = f'{self.setup.PROJDIR}/{self.project}/{self.aircraft}/'
-        self.nc2ascBatch = f'{self.proj_dir}scripts/nc2asc.bat'
         self.zip_dir = '/tmp/'
         self.qc_ftp_site = 'catalog.eol.ucar.edu'
         self.qc_ftp_dir = f'/pub/incoming/catalog/{self.project.lower()}'
@@ -29,6 +28,8 @@ class FieldData():
         self.rclone_staging_dir = rclone_staging_dir
         self.process = False
         self.reprocess = False
+        
+        
 
         self.setup.setup(self.aircraft, self.project, self.raw_dir)
         self.inst_dir = self.setup.INST_DIR
@@ -39,5 +40,4 @@ class FieldData():
         self.config_ext = self.setup.CONFIG_EXT
         self.status = STATUS
         self.file_prefix = self.setup.FILE_PREFIX
-        self.myLogger._initializeFinalMessage(self.flight, self.project)
         self.myLogger.ensure_dir(self.data_dir)

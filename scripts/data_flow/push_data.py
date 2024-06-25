@@ -10,12 +10,14 @@ def main():
 
     # instantiate FieldData class
     fielddata = FieldData()
+    # set up the email functionality
+    fielddata.setup.setup_email(fielddata.data_dir, fielddata.email)
+    
     _process.Process(fielddata.file_ext, fielddata.data_dir, fielddata.flight, fielddata.filename, fielddata.raw_dir, 
                     fielddata.status, fielddata.project,fielddata.aircraft, fielddata.inst_dir,fielddata.rate, fielddata.config_ext,
                     fielddata.file_type,fielddata.proj_dir,fielddata.file_prefix)
 
-    # set up the email functionality
-    fielddata.setup.setup_email(fielddata.data_dir, fielddata.email)
+    
 
     # Zip files only if set to True
     if sendzipped:
@@ -27,7 +29,7 @@ def main():
 
     # Call GDrive function if the GDRIVE flag is set to True
     if GDRIVE:
-        _GDrive.GDrive(fielddata.data_dir, fielddata.raw_dir, fielddata.status, fielddata.file_ext, fielddata.inst_dir, fielddata.filename, fielddata.rclone_staging_dir)
+        _GDrive.GDrive(fielddata.data_dir, fielddata.raw_dir, fielddata.status, fielddata.file_ext, fielddata.inst_dir, fielddata.filename)
 
     # Call NAS functions if the NAS flag is set to True
     if NAS:

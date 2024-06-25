@@ -1,5 +1,4 @@
 import glob,os
-import _logging #import log_and_print, _log_and_abort
 
 class FindFiles:
     def __init__(self,myLogger):
@@ -55,7 +54,7 @@ class FindFiles:
         elif flag:
             self.myLogger.log_and_print("We are scheduled to process all is good.")
         else:
-            message = f"We have an nc file but not {fileext} file.... aborting..."
+            message = f"We have an nc file but no {fileext} file.... aborting..."
             self.myLogger._log_and_abort(message)
 
 
@@ -130,14 +129,14 @@ class FindFiles:
                         process = False
                         reprocess = False
             elif nclist.__len__() == 0:
-                    message = f"No files found matching form: {data_dir}/*{flight}.{filetype}"
+                    message = f"No files found matching form: {data_dir}*{flight}.{filetype}"
                     self.myLogger.log_and_print(message)
                     self.myLogger.log_and_print("We must process!")
                     process = True
                     self.ncfile = data_dir + file_prefix + ".nc"
             else:
                     self.myLogger.log_and_print(f"More than one {filetype} file found.")
-                    self.ncfile = self.step_through_files(nclist, fileext, reprocess)
+                    self.ncfile = self.step_through_files(nclist, filetype, reprocess)
 
             if self.ncfile == '':
                 self.myLogger._log_and_abort("No NetCDF file identified! Aborting")
