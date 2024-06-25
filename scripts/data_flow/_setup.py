@@ -7,7 +7,7 @@ sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + 
 from fieldProc_setup import  ICARTT, IWG1, HRT, SRT, PMS2D, threeVCPI
 
 myLogger = _logging.MyLogger()
-class Setup():
+class Setup:
     def __init__(self):
         self.init_logger()
         self.myLogger = myLogger
@@ -25,6 +25,7 @@ class Setup():
         self.createFilePrefix(self.PROJECT, self.FLIGHT)
         self.setup(self.AIRCRAFT,self.PROJECT, self.RAWDIR)
         self.createFileType()
+        self.initializeFinalMessage(self.FLIGHT,self.PROJECT)
         
     def init_logger(self):
         logger = logging.getLogger('myLogger')
@@ -34,6 +35,17 @@ class Setup():
         handler.setFormatter(formatter)
         if not logger.handlers:
             logger.addHandler(handler)
+            
+    def initializeFinalMessage(self, flight, project):
+        '''
+        Prepare for final message information
+        '''
+        self.final_message = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n'
+        self.final_message = (
+            f'{self.final_message}Process and Push log for Project:{project}'
+        )
+        self.final_message = f'{self.final_message}  Flight:{flight}' + '\r\n'
+
     def createFileType(self):
             '''
             NetCDF filename rate indicator

@@ -51,37 +51,8 @@ class MyLogger:
             os.makedirs(d)
             self.log_and_print(f'Directory {d} created')
             
-    def initializeFinalMessage(self, flight, project):
-        '''
-        Prepare for final message information
-        '''
-        self.final_message = '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n'
-        self.final_message = (
-            f'{self.final_message}Process and Push log for Project:{project}'
-        )
-        self.final_message = f'{self.final_message}  Flight:{flight}' + '\r\n'
-        return self.final_message
 
-    def report(self, final_message, status, project, flight, email, file_ext):
-        final_message = final_message + '\nREPORT on shipping of files. \n\n'
-        final_message = final_message + 'File Type\tStor\tShip\n'
-
-        for key in file_ext:
-            final_message = final_message + key + '\t\t' + str(status[key]["stor"]) + '\t' + str(status[key]["ship"]) + '\n'
-
-        final_message = final_message + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-
-        print(final_message)
-        msg = MIMEText(final_message)
-        msg['Subject'] = f'Process & Push message for:{project}  flight:{flight}'
-        msg['From'] = 'ads@groundstation'
-        msg['To'] = email
-
-        s = smtplib.SMTP('localhost')
-        s.sendmail('ads@groundstation', email, msg.as_string())
-        s.quit()
-
-        print("\r\nSuccessful completion. Close window to exit.")
+    
     def _log_and_abort(self, message):
             self.log_and_print(message)
             sys.exit(0)
