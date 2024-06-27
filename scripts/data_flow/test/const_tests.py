@@ -3,7 +3,7 @@ import os
 # Constants for use in tests
 PROJECT = "project_name"
 FLIGHT = "tf01"
-AIRCRAFT = "aircraft"
+AIRCRAFT = "C130_N130AR"
 DATA_DIR = "data_directory"
 RAW_DIR = "raw_data_directory"
 PROJ_DIR = "project_directory"
