@@ -86,7 +86,6 @@ class Process:
         # QA Notebook Generation
         if QA_notebook:
             self._generate_qa_notebook(project, flight)
-        myLogger.log_and_print(self.stat)
 
     
 
@@ -257,6 +256,5 @@ class Process:
         message = f"about to execute : {command}"
         if not myLogger.run_and_log(command, message):
             myLogger.log_and_print("ERROR: ncreorder failed, but NetCDF should be ok\n")
-        self.proc_nc_file = 'Yes'
-        return self.proc_nc_file
+        return 'Yes'
         

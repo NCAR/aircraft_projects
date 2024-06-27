@@ -76,7 +76,7 @@ class TransferFTP:
                 self._create_ftp_dir_if_needed(key)
                 self._transfer_file(key, inst_dir[key], filename[key])
             except (ftplib.all_errors, OSError) as e:
-                self.logger.error(f"Error processing {key}: {e}")
+                myLogger.log_and_print(f"Error processing {key}: {e}",'error')
 
 
     def _create_ftp_dir_if_needed(self, instrument):
@@ -86,9 +86,9 @@ class TransferFTP:
         except ftplib.all_errors:
             try:
                 self.ftp.mkd(remote_dir)  # Create if it doesn't
-                self.logger.info(f"Created FTP directory: {remote_dir}")
+                myLogger.log_and_print(f"Created FTP directory: {remote_dir}")
             except ftplib.all_errors as e:
-                self.logger.error(f"Failed to create FTP directory {remote_dir}: {e}")
+                myLogger.log_and_print(f"Failed to create FTP directory {remote_dir}: {e}",'error')
 
 
     def _transfer_file(self, instrument, local_dir, file_name, ):
@@ -100,4 +100,4 @@ class TransferFTP:
                 self.stat[instrument]["stor"] = 'Yes-FTP'
                 print(f"Successfully transferred {file_name}")
             except (ftplib.all_errors, OSError) as e:
-                self.logger.error(f"Error transferring {file_name}: {e}")
+                myLogger.log_and_print(f"Error transferring {file_name}: {e}",'error')

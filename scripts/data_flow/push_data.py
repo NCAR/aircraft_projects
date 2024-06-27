@@ -16,19 +16,21 @@ def main():
     process=_process.Process(setup.FILE_EXT, setup.DATA_DIR, setup.FLIGHT, setup.FILENAME, setup.RAW_DIR, 
                     status, setup.PROJECT,setup.AIRCRAFT, setup.INST_DIR,setup.RATE, setup.CONFIG_EXT,
                     setup.FILE_TYPE,setup.PROJ_DIR,setup.FILE_PREFIX)
+
     status = process.stat
-    _zip.SetupZip(setup.FILE_EXT, setup.DATA_DIR,setup.FILENAME,  setup.INST_DIR)   
+    if sendzipped:
+        _zip.SetupZip(setup.FILE_EXT, setup.DATA_DIR,setup.FILENAME,  setup.INST_DIR)   
     
     # Call FTP function if the FTP flag is set to True
-    if FTP:
-        ftp= _FTP.TransferFTP(status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
-        status = ftp.stat
+    #if FTP:
+    #    ftp= _FTP.TransferFTP(status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
+    #    status = ftp.stat
 
     # Call GDrive function if the GDRIVE flag is set to True
+    GDRIVE = True
     if GDRIVE:
         gdrive= _GDrive.GDrive(setup.DATA_DIR, status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
         status = gdrive.stat
-
     # Call NAS functions if the NAS flag is set to True
     if NAS:
         _NAS.DataShipping(setup.FILE_EXT, setup.FILENAME,status, setup.process, setup.reprocess, 
