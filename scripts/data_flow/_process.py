@@ -24,9 +24,10 @@ class Process:
             status (dict): Dictionary to track file processing status.
             project (str): Project identifier.
         """
+        self.stat = status
         QA_notebook=False ##TEMPORARY FOR TESTING
         self.nc2ascBatch = proj_dir + 'scripts/nc2asc.bat'
-        findFiles = _findfiles.FindFiles(myLogger)
+        findFiles = _findfiles.FindFiles()
         # LRT netCDF - Determine processing mode
         process, reprocess, filename['LRT'] = findFiles.find_lrt_netcdf(
             file_ext['LRT'], flight, data_dir, file_prefix
@@ -58,20 +59,35 @@ class Process:
         if process: 
             for key in file_ext:
                 if key in ('LRT', 'HRT', 'SRT'):
-                    self._process_core_data(key,filename, proj_dir, flight, project, rate, config_ext,status)
+                    self._process_core_data(key,filename, proj_dir, flight, project, rate, config_ext)
                 if (key == "threeVCPI"):
                     self._process_threeVCPI(aircraft, project, flight, inst_dir["twods"], inst_dir["oap"])
                 if key in ("ICARTT","IWG1"):
-                    self._generate_derived_files(data_dir,filename, project, flight, key, file_ext,status)
+                    self._generate_derived_files(data_dir,filename, project, flight, key, file_ext)
             # Process PMS2D Files
                 if key == "PMS2D":
-                    self._process_pms2d_files(inst_dir,status, raw_dir, filename)
-
+                    self._process_pms2d_files(inst_dir, raw_dir, filename)
+        
+        for key in file_ext:
+            if (key == "LRT") or (key == "ADS"):
+                next
+            elif (key == "PMS2D"):
+                (reprocess, filename[key]) = \
+                    findFiles.find_file(inst_dir[key] + "PMS2D/", flight,
+                                project, file_type[key],
+                                file_ext[key], process, reprocess,
+                                self.date[0:8])
+            else:
+                (reprocess, filename[key]) = \
+                    findFiles.find_file(inst_dir[key] + "PMS2D/", flight,
+                                project, file_type[key],
+                                file_ext[key], process, reprocess,
+                                self.date[0:8])
         # QA Notebook Generation
         if QA_notebook:
             self._generate_qa_notebook(project, flight)
-        self.stat = status
         myLogger.log_and_print(self.stat)
+
     
 
     def _process_netCDF(self, rawfile, ncfile, pr, config_ext, proj_dir, flight, project, flags):
@@ -97,7 +113,7 @@ class Process:
         command = f"/usr/local/bin/nimbus{flags}{nimConfFile}"
         message = f"about to execute nimbus I hope: {command}"
         if not myLogger.run_and_log(command, message):
-            myLogger.log_and_print('\nNimbus call failed')
+            myLogger.log_and_print('\nNimbus call failed',log_level='error')
             return False
 
         return True
@@ -168,7 +184,7 @@ class Process:
         self.date = file_name[:15]
         self.date = re.sub('_', '', self.date)
 
-    def _process_core_data(self, key, filename, proj_dir, flight, project, rate, config_ext,status):
+    def _process_core_data(self, key, filename, proj_dir, flight, project, rate, config_ext):
         # Process the ads data to desired netCDF frequencies
 
         _ncfile = filename[key] if key == 'LRT' else self.ncfile
@@ -185,23 +201,23 @@ class Process:
             self.flags,
         )
         if res:
-            status[key]["proc"] = self._reorder_nc(_ncfile)
+            self.stat[key]["proc"] = self._reorder_nc(_ncfile)
         else:
-            status[key]["proc"] = False
+            self.stat[key]["proc"] = False
 
 
-    def _generate_derived_files(self, data_dir, filename, project, flight, key,file_ext,status):
+    def _generate_derived_files(self, data_dir, filename, project, flight, key,file_ext):
             # Generate IWG1 file from LRT, if requested
         command_dict = {'IWG1':"nc2iwg1 " + filename["LRT"] + " -o " + data_dir + project + flight + '.' + file_ext["IWG1"],
                         'ICARTT':"nc2asc -i " + filename["LRT"] + " -o " + data_dir + "tempfile.ict -b " + self.nc2ascBatch}
         message = f"about to execute : {command_dict[key]}"
         if myLogger.run_and_log(command_dict[key],message):
-            status[key]["proc"] = 'Yes'
+            self.stat[key]["proc"] = 'Yes'
 
 
-    def _process_pms2d_files(self, inst_dir,status, raw_dir, filename):
+    def _process_pms2d_files(self, inst_dir, raw_dir, filename):
 
-        self.ensure_dir(inst_dir["PMS2D"] + 'PMS2D')
+        myLogger.ensure_dir(inst_dir["PMS2D"] + 'PMS2D')
         file_name = filename["ADS"].split(raw_dir)[1]
         fileelts = file_name.split('.')
         filename["PMS2D"] = inst_dir["PMS2D"] + 'PMS2D/' + fileelts[0] + '.2d'
@@ -220,7 +236,7 @@ class Process:
             command = 'process2d ' + filename["PMS2D"] + ' -o ' + filename["LRT"]
             message = f'2D merge command: {command}'
             if myLogger.run_and_log(command, message):
-                status["PMS2D"]["proc"] = 'Yes'
+                self.stat["PMS2D"]["proc"] = 'Yes'
 
     def _generate_qa_notebook(self, project, flight):
         os.chdir("/home/local/aircraft_QAtools_notebook/")
@@ -242,4 +258,5 @@ class Process:
         if not myLogger.run_and_log(command, message):
             myLogger.log_and_print("ERROR: ncreorder failed, but NetCDF should be ok\n")
         self.proc_nc_file = 'Yes'
+        return self.proc_nc_file
         

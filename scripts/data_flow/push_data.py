@@ -1,39 +1,44 @@
-from field_data import FieldData #setup, myLogger
+from _setup import Setup #setup, myLogger
 import sys, os,glob
 import  _GDrive, _process,_NAS,_FTP
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
 from fieldProc_setup import NAS, FTP,  GDRIVE
 
 
-
 def main():
 
     # instantiate FieldData class
-    fielddata = FieldData()
+    setup = Setup()
+    final_message = setup.final_message
     # set up the email functionality
-    
-    _process.Process(fielddata.file_ext, fielddata.data_dir, fielddata.flight, fielddata.filename, fielddata.raw_dir, 
-                    fielddata.status, fielddata.project,fielddata.aircraft, fielddata.inst_dir,fielddata.rate, fielddata.config_ext,
-                    fielddata.file_type,fielddata.proj_dir,fielddata.file_prefix)
+    status = setup.STATUS
 
+    process=_process.Process(setup.FILE_EXT, setup.DATA_DIR, setup.FLIGHT, setup.FILENAME, setup.RAW_DIR, 
+                    status, setup.PROJECT,setup.AIRCRAFT, setup.INST_DIR,setup.RATE, setup.CONFIG_EXT,
+                    setup.FILE_TYPE,setup.PROJ_DIR,setup.FILE_PREFIX)
+    status = process.stat
     
     
-
     # Call FTP function if the FTP flag is set to True
     if FTP:
-        _FTP.TransferFTP(fielddata.status, fielddata.file_ext, fielddata.inst_dir, fielddata.filename)
+        ftp= _FTP.TransferFTP(status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
+        status = ftp.stat
 
     # Call GDrive function if the GDRIVE flag is set to True
     if GDRIVE:
-        _GDrive.GDrive(fielddata.data_dir, fielddata.raw_dir, fielddata.status, fielddata.file_ext, fielddata.inst_dir, fielddata.filename)
+        gdrive= _GDrive.GDrive(setup.DATA_DIR, status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
+        status = gdrive.stat
 
     # Call NAS functions if the NAS flag is set to True
     if NAS:
-        _NAS.DataShipping(fielddata.file_ext, fielddata.filename, fielddata.status, fielddata.process, fielddata.reprocess, 
-                        fielddata.inst_dir, fielddata.flight, fielddata.project, fielddata.final_message)
+        _NAS.DataShipping(setup.FILE_EXT, setup.FILENAME,status, setup.process, setup.reprocess, 
+                        setup.INST_DIR, setup.FLIGHT, setup.PROJECT, final_message)
+        status  = _NAS.stat
+        final_message = _NAS.final_message
+        
 
     # Call the report function which appends the final message for emailing 
-    fielddata.report(fielddata.final_message, fielddata.status, fielddata.project, fielddata.flight, fielddata.email, fielddata.file_ext)
+    setup.report(status, setup.PROJECT, setup.FLIGHT, setup.EMAIL, setup.FILE_EXT,final_message)
 
 
 if __name__ == "__main__":

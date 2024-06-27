@@ -18,7 +18,7 @@ class TransferFTP:
             inst_dir (dict): Dictionary of instrument directories.
             filename (dict): Dictionary containing filenames for each instrument.
         """
-
+        self.stat = status
         try:
             self._connect_to_ftp()
         except ftplib.all_errors as e:
@@ -28,9 +28,9 @@ class TransferFTP:
         print('Putting files to FTP site:')
 
         if ship_all_ADS:
-            self._transfer_all_ads(status, inst_dir)
+            self._transfer_all_ads(inst_dir)
         else:
-            self._transfer_selected_files(status,file_ext, inst_dir, filename)
+            self._transfer_selected_files(file_ext, inst_dir, filename)
 
         self.ftp.quit()
         # Revert PMS2D ftp special case
@@ -45,7 +45,7 @@ class TransferFTP:
         self.ftp.login(user, password)
 
 
-    def _transfer_all_ads(self, status, inst_dir):
+    def _transfer_all_ads(self, inst_dir):
         # ... Implementation for transferring all ADS files ...
         message = 'Starting ftp process for all available .ads files'
         myLogger.log_and_print(message)
@@ -55,7 +55,7 @@ class TransferFTP:
                     os.chdir(inst_dir['ADS'])
                     self.ftp.cwd(f'/{ftp_data_dir}/ADS')
                     self.ftp.storbinary(f'STOR {rawfilename}', open(rawfilename, 'rb'))
-                    status["ADS"]["stor"] = 'Yes-FTP'
+                    self.stat["ADS"]["stor"] = 'Yes-FTP'
                     message = f'{rawfilename} ftp successful!'
                     myLogger.log_and_print(message)
                 except Exception as e:
@@ -64,7 +64,7 @@ class TransferFTP:
                     
 
 
-    def _transfer_selected_files(self,status, file_ext, inst_dir, filename):
+    def _transfer_selected_files(self, file_ext, inst_dir, filename):
         for key in file_ext:
             if key == 'ADS' and not ship_ADS:
                 continue
@@ -74,7 +74,7 @@ class TransferFTP:
 
             try:
                 self._create_ftp_dir_if_needed(key)
-                self._transfer_file(key, inst_dir[key], filename[key], status)
+                self._transfer_file(key, inst_dir[key], filename[key])
             except (ftplib.all_errors, OSError) as e:
                 self.logger.error(f"Error processing {key}: {e}")
 
@@ -91,13 +91,13 @@ class TransferFTP:
                 self.logger.error(f"Failed to create FTP directory {remote_dir}: {e}")
 
 
-    def _transfer_file(self, instrument, local_dir, file_name, status):
+    def _transfer_file(self, instrument, local_dir, file_name, ):
         remote_path = f'/{ftp_data_dir}/{instrument}/{file_name}'
         if remote_path not in self.ftp.nlst():  # Check for existing file 
             try:
                 with open(os.path.join(local_dir, file_name), 'rb') as file:
                     self.ftp.storbinary(f'STOR {remote_path}', file)
-                status[instrument]["stor"] = 'Yes-FTP'
+                self.stat[instrument]["stor"] = 'Yes-FTP'
                 print(f"Successfully transferred {file_name}")
             except (ftplib.all_errors, OSError) as e:
                 self.logger.error(f"Error transferring {file_name}: {e}")

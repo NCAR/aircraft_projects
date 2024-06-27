@@ -16,10 +16,10 @@ class GDrive:
             filename (dict): Dictionary containing filenames for each instrument.
     """
     def __init__(self, data_dir, status, file_ext, inst_dir, filename):
-        
+        self.stat = status
         myLogger.log_and_print('\nPutting files to rclone staging location for shipment to Google Drive:\n')
         if ship_all_ADS:  
-            self._ship_all_ads(inst_dir, rclone_staging_dir, status)
+            self._ship_all_ads(inst_dir, rclone_staging_dir)
         else:
             for key in file_ext:
                 print('\n' + key + '\n')
@@ -31,9 +31,9 @@ class GDrive:
                     continue
                 print(f"Data dir is {inst_dir[key]}")
                 if filename[key] != '':
-                    self._transfer_instrument_files(key, data_dir, filename, inst_dir, rclone_staging_dir, status)
+                    self._transfer_instrument_files(key, filename, inst_dir, rclone_staging_dir)
             
-    def _ship_all_ads(self, inst_dir, rclone_staging_dir, status):
+    def _ship_all_ads(self, inst_dir, rclone_staging_dir):
         # ... (Implementation for shipping all ADS files) ...
         message = 'Starting rsync process for all available .ads files'
         myLogger.log_and_print(message)
@@ -42,14 +42,14 @@ class GDrive:
                 try:
                     os.chdir(inst_dir['ADS'])
                     subprocess.run(f'rsync -u *.ads {rclone_staging_dir}ADS', check = True)
-                    status["ADS"]["stor"] = 'Yes-GDrive-staging'
+                    self.stat["ADS"]["stor"] = 'Yes-GDrive-staging'
                     myLogger.log_and_print(f'{rawfilename} rsync successful!')
                 except subprocess.CalledProcessError as e:
                     myLogger.log_and_print('{rawfilename} not copied to local staging')
                     myLogger.log_and_print(e,'error')
                 try:
                     subprocess.run(f'rclone copy {rclone_staging_dir}/ADS gdrive_eolfield:/'+os.environ['PROJECT']+'/EOL_data/RAF_data/ADS --ignore-existing',check=True)
-                    status["ADS"]["ship"] = 'Yes-GDrive'
+                    self.stat["ADS"]["ship"] = 'Yes-GDrive'
                     myLogger.log_and_print(f'{rawfilename} rclone successful!')
 
                 except subprocess.CalledProcessError as e:
@@ -57,7 +57,7 @@ class GDrive:
                     myLogger.log_and_print(message)
                     myLogger.log_and_print(e,'error')
 
-    def _transfer_instrument_files(self, key, filename, inst_dir, rclone_staging_dir, status):
+    def _transfer_instrument_files(self, key, filename, inst_dir, rclone_staging_dir):
         print(f'Instrument file is {filename[key]}')
         # Get instrument filename; used for error reporting
         print(f'\nProcessing: {key}\n')
@@ -73,7 +73,7 @@ class GDrive:
         # Use subprocess for rsync
         try:
             subprocess.run(['rsync', '-u', source_file, staging_dest], check=True)
-            status[key]["stor"] = 'Yes-GDrive-staging'
+            self.stat[key]["stor"] = 'Yes-GDrive-staging'
             print(f'Finished rsyncing {key} file to staging location')
         except subprocess.CalledProcessError as e:
             myLogger.log_and_print(f"rsync error for {source_file}: {e}")
@@ -81,7 +81,7 @@ class GDrive:
         # Use subprocess for rclone
         try:
             subprocess.run(['rclone', 'copy', staging_dest, gdrive_dest, '--ignore-existing'], check=True)
-            status[key]["ship"] = 'Yes-GDrive'
+            self.stat[key]["ship"] = 'Yes-GDrive'
             print(f'Finished rclone to GDrive for {filename[key]}')
         except subprocess.CalledProcessError as e:
             myLogger.log_and_print(f"rclone error for {source_file}: {e}. File not copied to GDrive",'error')

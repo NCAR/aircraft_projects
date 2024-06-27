@@ -1,10 +1,12 @@
 ##Functions that help initiate push_data
 from collections import OrderedDict
+from email.mime.text import MIMEText
+import smtplib
 import sys, os
 import _logging
 import logging
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
-from fieldProc_setup import  ICARTT, IWG1, HRT, SRT, PMS2D, threeVCPI
+from fieldProc_setup import  ICARTT, IWG1, HRT, SRT, PMS2D, threeVCPI, sendzipped
 
 myLogger = _logging.MyLogger()
 class Setup:
@@ -12,21 +14,44 @@ class Setup:
         self.init_logger()
         self.myLogger = myLogger
         self.PROJECT = self.read_env('PROJECT')
-        self.RAWDIR = self.read_env('RAW_DATA_DIR')
-        self.DATADIR = self.read_env('DATA_DIR')
+        self.DATA_DIR = f"{self.read_env('DATA_DIR')}/{self.PROJECT.upper()}/"
+        self.RAW_DIR = f"{self.read_env('RAW_DATA_DIR')}/{self.PROJECT.upper()}/"
         self.PROJDIR = self.read_env('PROJ_DIR')
         self.AIRCRAFT = self.read_env('AIRCRAFT')
+        self.PROJ_DIR = f'{self.PROJDIR}/{self.PROJECT}/{self.AIRCRAFT}/'
+        
         self.createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)
         self.readFlight()
         self.readEmail()
-        self.createInstDir(self.RAWDIR, self.DATADIR, self.PROJECT, self.FLIGHT)
+        self.createInstDir(self.RAW_DIR, self.DATA_DIR, self.PROJECT, self.FLIGHT)
         self.createRate()
         self.createConfigExt()
+        self.FILENAME = {}
         self.createFilePrefix(self.PROJECT, self.FLIGHT)
-        self.setup(self.AIRCRAFT,self.PROJECT, self.RAWDIR)
+        self.setup(self.AIRCRAFT,self.PROJECT, self.RAW_DIR)
         self.createFileType()
         self.initializeFinalMessage(self.FLIGHT,self.PROJECT)
         
+        
+        self.setup_email(self.DATA_DIR, self.EMAIL)
+        self.setup(self.AIRCRAFT, self.PROJECT, self.RAW_DIR)
+        self.create_status()
+        # Zip files only if set to True       
+        if sendzipped:
+            self.setup_zip(self.FILE_EXT, self.DATA_DIR, self.filename, self.INST_DIR)  
+    
+    def create_status(self):
+        self.STATUS = {"ADS": {"proc": "N/A", "ship": "No!", "stor": "No!"},
+                        "LRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                        "KML": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                        "HRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                        "SRT": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                        "ICARTT": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                        "IWG1": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                        "PMS2D": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                        "threeVCPI": {"proc": "No!", "ship": "No!", "stor": "No!"},
+                        "QCplots": {"proc": "No!", "ship": "No!", "stor": "No!"}}
+
     def init_logger(self):
         logger = logging.getLogger('myLogger')
         logger.setLevel(logging.DEBUG)
@@ -35,6 +60,27 @@ class Setup:
         handler.setFormatter(formatter)
         if not logger.handlers:
             logger.addHandler(handler)
+            
+    def report(self, status, project, flight, email, file_ext,final_message):
+        final_message = final_message + '\nREPORT on shipping of files. \n\n'
+        final_message = final_message + 'File Type\tStor\tShip\n'
+
+        for key in file_ext:
+            final_message = final_message + key + '\t\t' + str(status[key]["stor"]) + '\t' + str(status[key]["ship"]) + '\n'
+
+        final_message = final_message + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+
+        print(final_message)
+        msg = MIMEText(final_message)
+        msg['Subject'] = f'Process & Push message for:{project}  flight:{flight}'
+        msg['From'] = 'ads@groundstation'
+        msg['To'] = email
+
+        s = smtplib.SMTP('localhost')
+        s.sendmail('ads@groundstation', email, msg.as_string())
+        s.quit()
+
+        print("\r\nSuccessful completion. Close window to exit.")
             
     def initializeFinalMessage(self, flight, project):
         '''

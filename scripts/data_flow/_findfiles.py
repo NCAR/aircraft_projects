@@ -1,8 +1,9 @@
-import glob,os
+import glob,os,logging, sys
 
 class FindFiles:
-    def __init__(self,myLogger):
-        self.myLogger = myLogger
+    def __init__(self):
+        self.logger = logging.getLogger('myLogger')
+        
     def find_file(self, data_dir, flight, project, filetype, fileext, flag, reprocess, date=""):
         """Finds a file and prompts the user for selection if needed.
 
@@ -39,7 +40,7 @@ class FindFiles:
 
         else:  # Multiple files found
             message = f"More than one {fileext} file found."
-            self.myLogger.log_and_print(message)
+            self.logger.info(message)
             datafile = self.step_through_files(datalist, fileext,
                                                     reprocess)
             return flag, datafile
@@ -47,15 +48,17 @@ class FindFiles:
     def _handle_no_files_found(self, pattern, fileext, flag):
         """Handles the case where no files are found. Logs, prints messages, and potentially aborts."""
         message = f"No files found matching form: {pattern}"
-        self.myLogger.log_and_print(message)
+        self.logger.info(message)
 
         if fileext == 'ads':
-            self.myLogger._log_and_abort("Aborting...")
+            self.logger.error("Aborting...")
+            sys.exit(0)
         elif flag:
-            self.myLogger.log_and_print("We are scheduled to process all is good.")
+            self.logger.info("We are scheduled to process all is good.")
         else:
             message = f"We have an nc file but no {fileext} file.... aborting..."
-            self.myLogger._log_and_abort(message)
+            self.logger.error(message)
+            sys.exit(0)
 
 
     def _select_file_from_list(self, datalist, fileext):
@@ -70,9 +73,9 @@ class FindFiles:
         """
         i=0
         while True:
-            self.myLogger.log_and_print("Stepping through files, please select the right one.")
+            self.logger.info("Stepping through files, please select the right one.")
             current_file = datalist[i % len(datalist)]
-            self.myLogger.log_and_print(f"Reviewing file: {current_file}")
+            self.loffer.info(f"Reviewing file: {current_file}")
 
             confirmation = input(f"Is this the correct {fileext} file? ({current_file}) (Y/N): ").lower()
             if confirmation == 'y':
@@ -97,7 +100,7 @@ class FindFiles:
         """
 
             if not reprocess:
-                self.myLogger.log_and_print(f'Ship is set to True so no need to choose {fileext} to process.')
+                self.logger.info(f'Ship is set to True so no need to choose {fileext} to process.')
                 return datalist[0]  
 
             return self._select_file_from_list(self, datalist, fileext)
@@ -114,7 +117,7 @@ class FindFiles:
             if nclist.__len__() == 1:
                     self.ncfile = nclist[0]
                     message = f"Found a netCDF file: {self.ncfile}"
-                    self.myLogger.log_and_print(message)
+                    self.logger.info(message)
                     # Since found a netCDF file
                     # query user if they want to reprocess the data,
                     # or if they just want to ship the data to the NAS/ftp site.
@@ -130,15 +133,16 @@ class FindFiles:
                         reprocess = False
             elif nclist.__len__() == 0:
                     message = f"No files found matching form: {data_dir}*{flight}.{filetype}"
-                    self.myLogger.log_and_print(message)
-                    self.myLogger.log_and_print("We must process!")
+                    self.logger.info(message)
+                    self.logger.info("We must process!")
                     process = True
                     self.ncfile = data_dir + file_prefix + ".nc"
             else:
-                    self.myLogger.log_and_print(f"More than one {filetype} file found.")
+                    self.logger.info(f"More than one {filetype} file found.")
                     self.ncfile = self.step_through_files(nclist, filetype, reprocess)
 
             if self.ncfile == '':
-                self.myLogger._log_and_abort("No NetCDF file identified! Aborting")
+                self.logger.error("No NetCDF file identified! Aborting")
+                sys.exit(0)
 
             return(process, reprocess, self.ncfile)

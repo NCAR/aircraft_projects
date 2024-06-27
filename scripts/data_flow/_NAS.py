@@ -6,10 +6,11 @@ from fieldProc_setup import  NAS_permanent_mount, nas_url, nas_mnt_pt, sendzippe
 myLogger = _logging.MyLogger()
 
 class DataShipping:
-    def __init__(self,file_ext, filename, status, process, reprocess, inst_dir, flight, project, final_message):
+    def __init__(self,file_ext, filename,status, process, reprocess, inst_dir, flight, project,final_message):
         """
         Beginning of Shipping
         """
+        self.stat = status
         self.zip_dir = '/tmp/'
         if NAS_permanent_mount is False:
             # Mount NAS
@@ -36,11 +37,11 @@ class DataShipping:
                 dir_key = f'{key}/'
             message = f'Copying {filename[key]} to {self.nas_data_dir}/{dir_key}'
             myLogger.log_and_print(message)
-            status[key]["stor"] = self.rsync_file(
+            self.stat[key]["stor"] = self.rsync_file(
                 filename[key], f'{self.nas_data_dir}/{dir_key}'
             )
             
-        self.setup_NAS(process, reprocess, file_ext, inst_dir, status, flight, project, final_message, filename)
+        self.setup_NAS(process, reprocess, file_ext, inst_dir, flight, project, final_message, filename)
 
     def _zip_ads(self, filename):
         # Now only zip up the ADS file, if requested
@@ -70,7 +71,7 @@ class DataShipping:
             self.print_message(rsync_message)
 
         
-    def setup_NAS(self, process, reprocess, file_ext, inst_dir, status, flight, project, final_message, filename):
+    def setup_NAS(self, process, reprocess, file_ext, inst_dir, flight, project, final_message, filename):
         # Put file onto NAS for BTSyncing back home.
         print("")
         print("***** Copy files to NAS sync area for transfer back home *****")
@@ -85,6 +86,7 @@ class DataShipping:
                 "***CAUTION*CAUTION*CAUTION*CAUTION*CAUTION*CAUTION***\n\n"
             ]
             final_message += ''.join(NAS_message)
+            self.final_message = final_message
         if zip_ADS:
             zip_raw_file = self._zip_ads(filename)
         else:
@@ -105,16 +107,16 @@ class DataShipping:
                     self.rsync_file(zip_raw_file, f'{self.nas_sync_dir}/ADS')
                 else:
                     print(f'Copying {filename[key]} file to {self.nas_sync_dir}/ADS')
-                    status[key]["ship"] = self.rsync_file(filename[key], f'{self.nas_sync_dir}/{key}')
+                    self.stat[key]["ship"] = self.rsync_file(filename[key], f'{self.nas_sync_dir}/{key}')
             elif key == "PMS2D":
                 print(f'Copying {filename[key]} file to {self.nas_sync_dir}/PMS2D')
-                status[key]["ship"] = self.rsync_file(filename[key], f'{self.nas_sync_dir}/PMS2D')
+                self.stat[key]["ship"] = self.rsync_file(filename[key], f'{self.nas_sync_dir}/PMS2D')
             elif sendzipped is True:
                 print(f'Copying {filename[key]}.zip file to {self.nas_sync_dir}/{key}')
-                status[key]["ship"] = self.rsync_file(
+                self.stat[key]["ship"] = self.rsync_file(
                     f'{filename[key]}.zip', f'{self.nas_sync_dir}/{key}'
                 )
             else:
                 print(f'Copying {filename[key]} file to {self.nas_sync_dir}/{key}')
-                status[key]["ship"] = self.rsync_file(filename[key], f'{self.nas_sync_dir}/{key}')
+                self.stat[key]["ship"] = self.rsync_file(filename[key], f'{self.nas_sync_dir}/{key}')
             print('Done')
