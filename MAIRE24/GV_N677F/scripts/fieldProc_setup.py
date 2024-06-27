@@ -42,12 +42,13 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = True
+FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
-ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
+##SET MANUALLY FOR MAIRE24 --using the same ftp as MAIRE
+ftp_parent_dir = '/net/ftp/pub/data/incoming/maire'#+project.lower()
+ftp_data_dir = 'pub/data/incoming/maire/EOL_data/RAF_data'
 
 #############################################################################
 ### Define which files should be generated
@@ -93,5 +94,5 @@ translate2ds = '/opt/local/bin/translate2ds '
 #############################################################################
 datadump = False
 
-GDRIVE = False
+GDRIVE = True
 rclone_staging_dir = ''

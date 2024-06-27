@@ -22,9 +22,9 @@ def main():
         _zip.SetupZip(setup.FILE_EXT, setup.DATA_DIR,setup.FILENAME,  setup.INST_DIR)   
     
     # Call FTP function if the FTP flag is set to True
-    #if FTP:
-    #    ftp= _FTP.TransferFTP(status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
-    #    status = ftp.stat
+    if FTP:
+        ftp= _FTP.TransferFTP(status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
+        status = ftp.stat
 
     # Call GDrive function if the GDRIVE flag is set to True
     GDRIVE = True

@@ -25,7 +25,7 @@ class Process:
             project (str): Project identifier.
         """
         self.stat = status
-        QA_notebook=False ##TEMPORARY FOR TESTING
+        #QA_notebook=False ##TEMPORARY FOR TESTING
         self.nc2ascBatch = proj_dir + 'scripts/nc2asc.bat'
         findFiles = _findfiles.FindFiles()
         # LRT netCDF - Determine processing mode
@@ -109,7 +109,7 @@ class Process:
                 line = f"pr={pr}\n"
                 cf.write(str(line))
         # execute nimbus in batch mode using the config file
-        command = f"/usr/local/bin/nimbus{flags}{nimConfFile}"
+        command = f"/opt/local/bin/nimbus{flags}{nimConfFile}"
         message = f"about to execute nimbus I hope: {command}"
         if not myLogger.run_and_log(command, message):
             myLogger.log_and_print('Nimbus call failed',log_level='warning')
