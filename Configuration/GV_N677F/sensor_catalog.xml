@@ -488,32 +488,6 @@
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
-    <serialSensor ID="Garmin_GPS" baud="4800" class="GPS_NMEA_Serial" databits="8" parity="none" stopbits="1">
-<!-- GGA record -->
-      <sample id="1" rate="1">
-        <variable longname="GPS seconds of day" name="GGSECSDAY" units="sec"/>
-        <variable longname="GPS Latitude" name="GGLAT" units="degree_N"/>
-        <variable longname="GPS Longitude" name="GGLON" units="degree_E"/>
-        <variable longname="GPS Qual, 0=inval,1=GPS,2=DGPS,5=FRTK" name="GGQUAL" units="none"/>
-        <variable longname="GPS number of satellites used" name="GGNSAT" units="count"/>
-        <variable longname="GPS Horizontal dilution of position" name="GGHDOP" units="none"/>
-        <variable longname="GPS Altitude (MSL)" name="GGALT" units="m"/>
-        <variable longname="GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
-        <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
-        <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
-      </sample>
-
-<!-- RMC record -->
-      <sample id="2" rate="1">
-        <variable longname="GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="none"/>
-        <variable longname="GPS Ground Speed" name="GGSPD" units="m/s"/>
-        <variable longname="GPS Track Angle" name="GGTRK" units="degree_T"/>
-        <variable longname="GPS Ground Speed Vector, East Component" name="GGVEW" units="m/s"/>
-        <variable longname="GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
-        <variable longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)" name="GGRepLag" units="s"/>
-      </sample>
-      <message length="0" position="end" separator="\n"/> 
-    </serialSensor>
 <!-- 33 lines of cmigits, 3 comments
     <serialSensor ID="CMIGITS3" baud="38400" class="raf.CMIGITS3_Serial" databits="8" parity="odd" stopbits="1" timeout="5">
       <sample id="1" rate="10">
@@ -795,7 +769,7 @@
         <variable longname="SPP-200 Mid-Gain Baseline" name="PMGB" units="V"/>
         <variable longname="SPP-200 Low-Gain Baseline" name="PLGB" units="V"/>
         <variable longname="SPP-200 Flow" name="PFLW" units="cnts">
-          <poly coefs="7.51885 -8.46821e-03 2.30130e-06" units="std cm3/s"/>
+          <poly coefs="10.61203 -9.94929e-03 2.48008e-06" units="std cm3/s"/>
         </variable>
         <variable longname="SPP-200 Laser Reference Voltage" name="PREF" units="V"/>
         <variable longname="SPP-200 Sheath Flow" name="PFLWS" units="cnts">
@@ -853,10 +827,10 @@
     <serialSensor ID="UHSASG" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <parameter name="SerialNumber" type="string" value="UHSAS059"/>
       <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
-        <variable name="UACC" units="sec" longname="UHSAS Accumulation"/>
+        <variable name="UACC" units="sec" longname="UHSAS Accumulation Time"/>
         <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
         <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
-        <variable name="USMPFLW" units="sccm" longname="UHSAS Sample Flow at Laser"/>
+        <variable name="USMPFLW" units="vccm" longname="UHSAS Sample Flow at Laser"/>
         <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
         <variable name="ULSRTEMP" units="V" longname="UHSAS Laser Temperature"/>
         <variable name="USHFLW" units="sccm" longname="UHSAS Air Sheath Flow"/>
@@ -868,19 +842,19 @@
         <variable name="UFLW" units="sccm" longname="UHSAS Flow"/>
         <variable name="UPSH" units="hPa" longname="Pressure, sheath Alicat"/>
         <variable name="UTSH" units="deg_C" longname="Temperature, sheath Alicat"/>
-        <variable name="UVSHFL" units="lpm" longname="Volume flow, sheath Alicat"/>
+        <variable name="UVSHFL" units="vlpm" longname="Volume flow, sheath Alicat"/>
         <variable name="UMSHFL" units="slpm" longname="Mass flow, sheath Alicat"/>
-        <variable name="USHSP" units="lpm" longname="Setpoint, sheath Alicat"/>
+        <variable name="USHSP" units="vlpm" longname="Setpoint, sheath Alicat"/>
 <!--        <variable name="UDPP" units="hPa" longname="Pressure, dP Alicat"/> -->
         <variable name="UDPIN" units="inH2O" longname="Differential pressure, dP Alicat"/>
-        <variable name="UVFLIN" units="ccm" longname="Sample (inlet) volume flow calculated from dPinlet">
-            <linear intercept="0.0" slope="0.016667" units="ccs"/>
+        <variable name="UVFLIN" units="vccm" longname="Sample (inlet) volume flow calculated from dPinlet">
+            <linear intercept="0.0" slope="0.016667" units="vccs"/>
         </variable>
         <variable name="UPSAM" units="hPa" longname="Pressure, sample Alicat (original flow controller on exhaust)"/>
         <variable name="UTSAM" units="deg_C" longname="Temperature, sample Alicat (on exhaust)"/>
-        <variable name="UVSFL" units="ccm" longname="Volume flow, sample Alicat (on exhaust)"/>
+        <variable name="UVSFL" units="vccm" longname="Volume flow, sample Alicat (on exhaust)"/>
         <variable name="UMSFL" units="sccm" longname="Mass flow, sample Alicat (on exhaust)"/>
-        <variable name="USAMSP" units="ccm" longname="Setpoint, sample Alicat (on exhaust)"/>
+        <variable name="USAMSP" units="vccm" longname="Setpoint, sample Alicat (on exhaust)"/>
         <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
@@ -1090,7 +1064,7 @@
     <sensor ID="HVPS_HK" class="UDPSocketSensor" devicename="usock::30114" suffix="_HVPS">
       <parameter name="SerialNumber" type="string" value="HVPS315"/>
       <parameter name="RESOLUTION" type="int" value="150"/>
-      <sample id="1" rate="1" scanfFormat="SPECHVPS,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+      <sample id="1" rate="1" scanfFormat="SPECHVPS,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable name="TACT2V" longname="HVPS Total Particles" units="count"/>
         <variable name="CONCS" longname="HVPS Total Number Particles" units="#/cm3"/>
         <variable name="DBARS" longname="HVPS Mean Particle Diameter" units="um"/>
@@ -1606,6 +1580,37 @@
       </sample>
       <message separator="\x00" position="beg" length="1"/>
     </serialSensor>
+
+    <sensor ID="iPM_1phase" class="UDPSocketSensor" devicename="usock::30100" suffix="_iPM1">
+        <sample id="1" rate="1" scanfFormat="MEASURE,%f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f">
+            <variable longname="AC Power Frequency" name="FREQ" units="Hz"/>
+            <variable longname="AC Voltage, RMS Phase A" name="VRMSA" units="V"/>
+            <variable longname="AC Voltage, Peak Phase A" name="VPKA" units="V"/>
+            <variable longname="AC Voltage, DC Component Phase A" name="VDCA" units="V"/>
+            <variable longname="AC Phase Angle Phase A" name="PHA" units="deg_C"/>
+            <variable longname="AC Voltage THD Phase A" name="THDA" units="%"/>
+            <variable longname="Power OK" name="POWEROK" units=""/>
+        </sample>
+        <sample id="2" rate="1" scanfFormat="STATUS,%f,%*f,%f,%f,%*f">
+            <variable longname="Operational State" name="OPSTATE" units=""/>
+            <variable longname="Power Trip Flags, performance exceeds limits" name="TRIPFLAGS" units=""/>
+            <variable longname="Power Caution Flags, marginal performance" name="CAUTIONFLAGS" units=""/>
+        </sample>
+        <sample id="3" rate="1" scanfFormat="RECORD,%f,%*f,%*f,%f,%*f,%*f,%f,%f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%*f,%*f,%f,%f,%*f,%*f,%*f,%*f,%f,%f,%*f,%*f,%*f,%*f,%*f">
+            <variable longname="Event Type" name="EVTYPE" units=""/>
+            <variable longname="Elapsed Time since power-up" name="TIME" units="ms"/>
+            <variable longname="Minimum AC Voltage, RMS Phase A" name="VRMSMINA" units="V"/>
+            <variable longname="Maximum AC Voltage, RMS Phase A" name="VRMSMAXA" units="V"/>
+            <variable longname="Minimum AC Power Frequency" name="FREQMIN" units="Hz"/>
+            <variable longname="Maximum AC Power Frequency" name="FREQMAX" units="Hz"/>
+            <variable longname="Minimum AC Voltage, DC Component Phase A" name="VDCMINA" units="V"/>
+            <variable longname="Maximum AC Voltage, DC Component Phase A" name="VDCMAXA" units="V"/>
+            <variable longname="Minimum AC Voltage THD Phase A" name="THDMINA" units="%"/>
+            <variable longname="Maximum AC Voltage THD Phase A" name="THDMAXA" units="%"/>
+            <variable longname="Minimum AC Voltage, Peak Phase A" name="VPKMINA" units="V"/>
+            <variable longname="Maximum AC Voltage, Peak Phase A" name="VPKMAXA" units="V"/>
+        </sample>
+    </sensor>
 
   </sensorcatalog>
 

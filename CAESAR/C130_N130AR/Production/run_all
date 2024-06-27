@@ -1,0 +1,25 @@
+#!/bin/bash
+
+/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac -nolisten tcp :9 &
+xvpid=$!
+trap "kill $xvpid; exit 1" SIGINT SIGTERM
+sleep 2
+
+DISPLAY=:9.1
+
+source ./set_env
+
+mkdir -p ${DAT}
+
+./run_nimbus
+./reorder_all
+./run_proc2d
+
+#./AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
+
+if [ `whoami` == nimbus ]; then
+  #./run_kalmanFilter  # Changes working dir, so run last.
+fi
+
+kill $xvpid
+exit 0

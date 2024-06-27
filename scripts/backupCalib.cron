@@ -1,8 +1,8 @@
 #!/bin/tcsh 
 #
-# A script to backup the master calibrations postgres database
-# to a file that is checked into subversion.  This facilitates 
-# understanding how the database has changed since the last backup.
+# A script to backup the master calibrations postgres database to a file
+# that is committed to github.  This facilitates understanding how the
+# database has changed since the last backup.
 #
 # Script provides notifications via e-mail when the database has changed.
 # 
@@ -51,7 +51,7 @@ if ($res != 0) then
   echo " found on the postgres server on: $dbserver" >> $diffile
   echo "The changes have been backed up in the file:" >> $diffile
   echo " $sqlfile" >> $diffile
-  echo " Which should now be checked into subversion." >> $diffile
+  echo " Which should now be committed to github." >> $diffile
   echo "" >> $diffile
   echo " The changes (in SQL code) follow:" >> $diffile
   echo "" >> $diffile
@@ -114,7 +114,7 @@ else
   echo " found on the postgres server on: $dbserver" >> $diffile
   echo "The changes have been backed up in the file:" >> $diffile
   echo " $sqlfile" >> $diffile
-  echo " Which should now be committed into git." >> $diffile
+  echo " Which should now be committed to github." >> $diffile
   echo "" >> $diffile
   echo " The changes (in SQL code) follow in two parts -" >> $diffile
   echo " INSERT differences and then non-INSERT differences:" >> $diffile
@@ -125,7 +125,7 @@ else
   echo "*************** non-INSERT Diffs *********************" >> $diffile
   diff $noninsfile $tmpnoninsfile >> $diffile
   echo ""
-  echo "Putting new sql file into place - please check into SVN" >> $diffile
+  echo "Putting new sql file into place - please commit to github" >> $diffile
   
   cat $diffile | mailx -s "$subject" $emailaddr
   mv -f $tmpsqlfile $sqlfile

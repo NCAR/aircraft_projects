@@ -1,0 +1,32 @@
+#!/bin/csh
+
+/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac -nolisten tcp :4 &
+set xvpid=$!
+onintr int
+sleep 2
+
+setenv DISPLAY :4.1
+
+if ($uid == 20000) then
+  setenv DAT /scr/raf/local_productiondata/
+else
+  setenv DAT ${DATA_DIR}/ACES
+endif
+
+mkdir ${DAT}
+
+./run_nimbus
+./run_nimbus_srt
+./reorder_all
+
+#nice ./AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
+if ($uid == 20000) then
+  #nice ./run_kalmanFilter  # Changes working dir, so run last.
+fi
+
+kill $xvpid
+exit 0
+
+int:
+  kill $xvpid
+  exit 1

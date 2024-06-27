@@ -129,8 +129,8 @@ my ($projectNumber,$flightNumber,$time_interval,$headerText,$outputFileTimes);
 # -------------------------------------------------------------------
 # ----------------------------- Usage -------------------------------
 # -------------------------------------------------------------------
-#ffmpeg is only installed in tikal, so must run there
-if ($HOST !~/mercury/) {
+#ffmpeg is only installed in mercury or eol-saturn, so must run there
+if ( (split /\./, hostname() !~/mercury/) && (split /\./, hostname() !~/eol-saturn/) ) {
         print "Run on mercury for higher performance!\n\n";
         exit(0);
 }
@@ -138,7 +138,7 @@ if ($HOST !~/mercury/) {
 if ( (scalar(@ARGV) < 2) || (scalar(@ARGV) > 3)  || ($ARGV[0] eq "-h") ) {
 	print "\n Perl script to generate annotated movies from images\n";
 	print " USAGE: $0  parameterFileName <flight eg. rf01> [startnum]\n";
-	print " MUST BE RUN ON tikal!!!\n\n";
+	print " MUST BE RUN ON mercury or eol-saturn!!!\n\n";
 	print "\n";
 	print " The parameter file is an ascii file containing the following";
 	print " lines:\n";
@@ -543,7 +543,8 @@ my $mp4BitRate = $keywords->{mp4BitRate};;
 
 my $outputFilename = "$flightNumber.$outputFileTimes.mp4";
 
-my $command = "usr/bin/ffmpeg -pattern_type glob -i $annotatedImageDirectory/%05d.jpg  -c:v libx264 -r $outputFrameRate -pix_fmt yuv420p -y $outputFilename";
+#attempt by TMT to make movies playable in field catalog
+#my $command = "usr/bin/ffmpeg -pattern_type glob -i $annotatedImageDirectory/%05d.jpg  -c:v libx264 -r $outputFrameRate -pix_fmt yuv420p -y $outputFilename";
 
 # First ffmpeg pass
 my $command = "/usr/bin/ffmpeg -i $annotatedImageDirectory/%05d.jpg -r $outputFrameRate -pix_fmt yuv420p -b:v $mp4BitRate -y -passlogfile ./ffmpeg_$flightNumber -pass 1 ".$keywords->{movieDirectory}."/$outputFilename";

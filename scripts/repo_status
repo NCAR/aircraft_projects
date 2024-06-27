@@ -12,6 +12,7 @@ for repo in *; do
   if [ -d "${repo}/.git" ]; then
     echo "<<<<  $repo  >>>>"
     cd $repo
+    git --no-pager branch
     git status -s
     cd ..
   fi

@@ -17,7 +17,7 @@ echo "CREATE TABLE calibrations (
     var_name character varying(20),
     dsm_name character varying(16),
     cal_type character varying(16),
-    channel character(1),
+    channel character(2),
     gainbplr character(2),
     ads_file_name character varying(200),
     set_times timestamp without time zone[],
