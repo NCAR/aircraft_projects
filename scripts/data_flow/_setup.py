@@ -37,8 +37,7 @@ class Setup:
         self.setup(self.AIRCRAFT, self.PROJECT, self.RAW_DIR)
         self.create_status()
         # Zip files only if set to True       
-        if sendzipped:
-            self.setup_zip(self.FILE_EXT, self.DATA_DIR, self.filename, self.INST_DIR)  
+
     
     def create_status(self):
         self.STATUS = {"ADS": {"proc": "N/A", "ship": "No!", "stor": "No!"},
@@ -56,10 +55,9 @@ class Setup:
         logger = logging.getLogger('myLogger')
         logger.setLevel(logging.DEBUG)
         handler = logging.FileHandler('/tmp/push_data.log')
-        formatter = logging.Formatter('%(asctime)s : %(name)s  : %(funcName)s : %(levelname)s : %(message)s')
+        formatter = logging.Formatter('%(asctime)s - %(filename)s:%(lineno)d - %(funcName)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
-        if not logger.handlers:
-            logger.addHandler(handler)
+        logger.addHandler(handler)
             
     def report(self, status, project, flight, email, file_ext,final_message):
         final_message = final_message + '\nREPORT on shipping of files. \n\n'
@@ -201,23 +199,8 @@ class Setup:
 
 
     ##Maybe this will go in separate zip folder
-    def setup_zip(self, file_ext, data_dir, filename, inst_dir):
-        """
-        ZIP up the files as per expectations back home
-        this only affects non-ads files
-        """
-        for key in file_ext:
-            if key == "ADS":
-                myLogger.log_and_print("Raw .ads file found but not zipping, if zip_ads is set, will bzip .ads file next.")
-            elif key == "PMS2D":
-                myLogger.log_and_print("Raw .2d file found but not zipping.")
-            else:
-                data_dir, file_name = os.path.split(filename[key])
-                message = f"{key} filename = {file_name}"
-                myLogger.log_and_print(message)
-                message = f"data_dir = {data_dir}"
-                myLogger.log_and_print(message)
-                self.zip_file(file_name, inst_dir[key])
+
+
                 
     def createInstDir(self, raw_dir, data_dir, project, flight):
         '''

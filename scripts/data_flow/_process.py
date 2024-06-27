@@ -113,7 +113,7 @@ class Process:
         command = f"/usr/local/bin/nimbus{flags}{nimConfFile}"
         message = f"about to execute nimbus I hope: {command}"
         if not myLogger.run_and_log(command, message):
-            myLogger.log_and_print('\nNimbus call failed',log_level='error')
+            myLogger.log_and_print('Nimbus call failed',log_level='warning')
             return False
 
         return True

@@ -1,8 +1,8 @@
 from _setup import Setup #setup, myLogger
 import sys, os,glob
-import  _GDrive, _process,_NAS,_FTP
+import  _GDrive, _process,_NAS,_FTP,_zip
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
-from fieldProc_setup import NAS, FTP,  GDRIVE
+from fieldProc_setup import NAS, FTP,  GDRIVE,sendzipped
 
 
 def main():
@@ -17,7 +17,7 @@ def main():
                     status, setup.PROJECT,setup.AIRCRAFT, setup.INST_DIR,setup.RATE, setup.CONFIG_EXT,
                     setup.FILE_TYPE,setup.PROJ_DIR,setup.FILE_PREFIX)
     status = process.stat
-    
+    _zip.SetupZip(setup.FILE_EXT, setup.DATA_DIR,setup.FILENAME,  setup.INST_DIR)   
     
     # Call FTP function if the FTP flag is set to True
     if FTP:

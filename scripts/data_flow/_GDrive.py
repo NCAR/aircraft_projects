@@ -64,7 +64,8 @@ class GDrive:
         print(f"GDrive rclone staging dir for instrument is {rclone_staging_dir}{key}")
         staging_dest = os.path.join(rclone_staging_dir, key)
         if not os.path.exists(staging_dest):
-            myLogger.log_and_print(f'Instrument dir {staging_dest} does not exist','error')
+            myLogger.log_and_print(f'Instrument dir {staging_dest} does not exist. \n \
+                                Attempting to create staging directory.','warning')
             self._ensure_staging_directory(staging_dest,key)
             
         source_file = os.path.join(inst_dir[key], filename[key])
