@@ -60,8 +60,8 @@ class GDrive:
     def _transfer_instrument_files(self, key, filename, inst_dir, rclone_staging_dir):
         print(f'Instrument file is {filename[key]}')
         # Get instrument filename; used for error reporting
-        print(f'\nProcessing: {key}\n')
-        print(f"GDrive rclone staging dir for instrument is {rclone_staging_dir}{key}")
+        myLogger.log_and_print(f'\nTransferring: {key}\n')
+        myLogger.log_and_print(f"GDrive rclone staging dir for instrument is {rclone_staging_dir}/{key}")
         staging_dest = os.path.join(rclone_staging_dir, key)
         if not os.path.exists(staging_dest):
             myLogger.log_and_print(f'Instrument dir {staging_dest} does not exist. \n \
@@ -75,7 +75,7 @@ class GDrive:
         try:
             subprocess.run(['rsync', '-u', source_file, staging_dest], check=True)
             self.stat[key]["stor"] = 'Yes-GDrive-staging'
-            print(f'Finished rsyncing {key} file to staging location')
+            myLogger.log_and_print(f'Finished rsyncing {key} file to staging location')
         except subprocess.CalledProcessError as e:
             myLogger.log_and_print(f"rsync error for {source_file}: {e}")
 
@@ -83,7 +83,7 @@ class GDrive:
         try:
             subprocess.run(['rclone', 'copy', staging_dest, gdrive_dest, '--ignore-existing'], check=True)
             self.stat[key]["ship"] = 'Yes-GDrive'
-            print(f'Finished rclone to GDrive for {filename[key]}')
+            myLogger.log_and_print(f'Finished rclone to GDrive for {filename[key]}')
         except subprocess.CalledProcessError as e:
             myLogger.log_and_print(f"rclone error for {source_file}: {e}. File not copied to GDrive",'error')
 
