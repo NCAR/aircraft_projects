@@ -56,7 +56,7 @@ ftp_data_dir = 'pub/data/incoming/maire/EOL_data/RAF_data'
 ICARTT = False # Generate ICARTT
 IWG1 = False # Generate IWG1 packet
 
-HRT = False # Generate HRT .nc file
+HRT = True # Generate HRT .nc file
 SRT = False # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
 zip_ADS = False # Bzips the ads file independently of processed files
