@@ -109,7 +109,6 @@ class FindFiles:
         See if a LRT file exists already and query user about what to do.
         '''
             process = False
-            reprocess = False
             nclist = glob.glob(f'{data_dir}/*{flight}.{filetype}')
             if nclist.__len__() == 1:
                     self.ncfile = nclist[0]
@@ -123,11 +122,9 @@ class FindFiles:
                             reproc = input('Reprocess? (R) or Ship? (S):')
                     if reproc == 'R':
                         process = True
-                        reprocess = True
                     # Ship only
                     else:
                         process = False
-                        reprocess = False
             elif nclist.__len__() == 0:
                     message = f"No files found matching form: {data_dir}*{flight}.{filetype}"
                     self.myLogger.log_and_print(message)
@@ -136,9 +133,9 @@ class FindFiles:
                     self.ncfile = data_dir + file_prefix + ".nc"
             else:
                     self.myLogger.log_and_print(f"More than one {filetype} file found.")
-                    self.ncfile = self.step_through_files(nclist, filetype, reprocess)
+                    self.ncfile = self.step_through_files(nclist, filetype, process)
 
             if self.ncfile == '':
                 self.myLogger._log_and_abort("No NetCDF file identified! Aborting")
 
-            return(process, reprocess, self.ncfile)
+            return(process, self.ncfile)

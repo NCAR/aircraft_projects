@@ -29,7 +29,7 @@ class Process:
         self.nc2ascBatch = proj_dir + 'scripts/nc2asc.bat'
         findFiles = _findfiles.FindFiles()
         # LRT netCDF - Determine processing mode
-        process, reprocess, filename['LRT'] = findFiles.find_lrt_netcdf(
+        process, filename['LRT'] = findFiles.find_lrt_netcdf(
             file_ext['LRT'], flight, data_dir, file_prefix
         )
         
@@ -38,9 +38,9 @@ class Process:
         # Next get the ADS file so we can determine the flight date. This is needed
         # in order to identify the correct ICARTT file, since ICARTT files follow the
         # NASA naming convention and don't use our flight numbering system.
-        reprocess, filename['ADS'] = findFiles.find_file(
+        process, filename['ADS'] = findFiles.find_file(
             inst_dir['ADS'], flight, project, file_type['ADS'],
-            file_ext['ADS'], process, reprocess, file_prefix
+            file_ext['ADS'], process, process, file_prefix
         )
         # ADS - Extract flight date
         self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
@@ -49,16 +49,16 @@ class Process:
         # Other Instruments (using flight number)
         for key in file_ext:
             if key in ('HRT', 'SRT'): 
-                myLogger.log_and_print(f"Processing {key} data")
-                reprocess, filename[key] = findFiles.find_file(
+                process, filename[key] = findFiles.find_file(
                     inst_dir[key], flight, project, file_type[key],
-                    file_ext[key], process, reprocess, self.date[:8]
+                    file_ext[key], process, process, self.date[:8]
                 )   
 
         # Process and Generate Files
         if process: 
             for key in file_ext:
                 if key in ('LRT', 'HRT', 'SRT'):
+                    myLogger.log_and_print(f"Processing {key} data")
                     self._process_core_data(key,filename, proj_dir, flight, project, rate, config_ext)
                 if (key == "threeVCPI"):
                     self._process_threeVCPI(aircraft, project, flight, inst_dir["twods"], inst_dir["oap"])
@@ -72,23 +72,22 @@ class Process:
             if (key == "LRT") or (key == "ADS"):
                 next
             elif (key == "PMS2D"):
-                (reprocess, filename[key]) = \
+                (process, filename[key]) = \
                     findFiles.find_file(inst_dir[key] + "PMS2D/", flight,
                                 project, file_type[key],
-                                file_ext[key], process, reprocess,
+                                file_ext[key], process, process,
                                 self.date[0:8])
             else:
-                (reprocess, filename[key]) = \
-                    findFiles.find_file(inst_dir[key] + "PMS2D/", flight,
+                (process, filename[key]) = \
+                    findFiles.find_file(inst_dir[key], flight,
                                 project, file_type[key],
-                                file_ext[key], process, reprocess,
+                                file_ext[key], process, process,
                                 self.date[0:8])
         # QA Notebook Generation
-        if QA_notebook:
+        if process and QA_notebook:
             self._generate_qa_notebook(project, flight)
 
     
-
     def _process_netCDF(self, rawfile, ncfile, pr, config_ext, proj_dir, flight, project, flags):
         """"
         Run nimbus to create a .nc file (LRT, HRT, or SRT)
