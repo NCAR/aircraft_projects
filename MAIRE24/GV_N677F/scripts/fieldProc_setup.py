@@ -80,7 +80,7 @@ rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
 #rstudio_dir =    '/h/eol/ads/RStudio/'  # Data dir to run on barolo
 
 # Software - set locations of needed software
-translate2ds = '/opt/local/bin/translate2ds '
+translate2ds = '/opt/local/bin/translate2ds'
 
 #############################################################################
 # Temp file that exists if program is running.
@@ -95,4 +95,4 @@ translate2ds = '/opt/local/bin/translate2ds '
 datadump = False
 
 GDRIVE = True
-rclone_staging_dir = ''
+rclone_staging_dir = '/var/r1/rclone_staging'
