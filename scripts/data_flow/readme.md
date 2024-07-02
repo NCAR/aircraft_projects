@@ -1,11 +1,32 @@
 # PUSH_DATA Readme to understand data flow
 
-## Input variables:
+## push_data: main()
 
-- project --> name of project; should be environment variable $PROJECT
-- aircraft --> name of aircraft; should be environment variable $AIRCRAFT
+This is the main file of the push_data module that calls on all of the classes to process and push the data for a field project. It performs the following:
 
-Input Paths:
+    1. Creates an instance of the Setup class.
+    2. Sets up the message for email.
+    3. Assigns the initial status to the status variable to track the status of the data processing.
+    4. Creates an instance of the Process class.
+    5. Gets the status of the data processing after the Process class has been called.
+    6. Calls the zip function if the sendzipped flag is set to True.
+    7. Calls the FTP class if the FTP flag is set to True.
+    8. Calls the GDrive class if the GDRIVE flag is set to True.
+    9. Calls the NAS class if the NAS flag is set to True.
+    10. Calls the report function from the setup class to append to the final message and send the status email.
+
+## Environment variables
+
+A number of environment variables need to be set for the script to run properly:
+
+- $PROJECT --> name of project
+- $AIRCRAFT --> name of aircraft
+- $RAW_DATA_DIR --> the raw data directory variable set on the computer running push_data
+- $PROJ_DIR  --> the project directory set on the computer running push_data
+
+## Project Process Setup
+
+The project specific setup constants and filepaths are defined in fieldProcSetup.py in the filepath $PROJ_DIR/$PROJECT/$AIRCRAFT/scripts
 
 - raw_dir --> path of raw data directory; should be the combination of environment variables `$RAW_DATA_DIR + $PROJECT`
 - proj_dir --> path of raw data directory; should be the combination of environment variables `$PROJ_DIR + / + $PROJECT + / + $AIRCRAFT`
@@ -16,8 +37,6 @@ Input Paths:
 File Paths:
 
 - nc2ascBatch -->  path of n2asc file; should be environment variables `$PROJ_DIR +$PROJECT + / + $AIRCRAFT+/scripts/nc2asc.bat`
-
-## Push Data
 
 ## Classes
 
@@ -30,7 +49,7 @@ The Setup class is designed to initialize and prepare the push_data environment 
 The `__init__` method performs the following steps:
 
  1. Sets up a logger object for logging. `init__logger` and creates an instance of the MyLogger class for logging the setup
- 2. Reads and stores the environment variables: `read_env(variable)` 
+ 2. Reads and stores the environment variables: `read_env(variable)`
  3. Initializes the constants for file extensions, directories, and tracking progress throughout: `create_status`, `createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)`,`createRate()`,`createConfigExt()`,`createFilePrefix(PROJECT, FLIGHT)`,`createFileType()`
  4. Parses user input for flight number and user email to send results: `readEmail()`, `readFlight()`
  5. Initializes email message for sending results.
@@ -40,6 +59,23 @@ The `__init__` method performs the following steps:
 The `report` method is not accessed in the `__init__` method, but once the Setup class is initialized it can be called to send the report to the user's email address.
 
 ### Process
+
+The Process class is designed to automate and streamline the handling of various data files. The class provides a structured approach to executing a series of processing steps, such as converting raw data into netCDF format, reordering netCDF files, and processing 3vCPI data. Additionally, it includes methods for extracting dates from filenames and moving merged files to specified directories. The class is initialized with a comprehensive set of parameters. When initialized in push_data, the Process class is passed these parameters from the Setup class.
+
+`__init__`
+
+The `__init__` method performs the following steps:
+
+ 1. Tracks the processing status with the class variable `self.stat` which is passed the current version of the processing status.
+ 2. Determines the LRT netCDF processing modes using the FindFiles Class
+ 3. Find ADS files and extracts the date from the filename
+ 4. Processes other file types based on flight number
+ 5. Process and generate files: if the `process` flag from Step 2 is set to `True` it iterates over the keys in the file extension dictionary and performs the following
+    - `process_core_data` for each key to call nimbus and create the netcdf files
+    - If threeVCPI is set to TRUE in fieldProc_setup.py then `process_threeVCPI` will process 2d and OAP files.
+    - If PMS2D is set to True then `process_pms2d_files` will be called
+ 6. Once the processing is done, it loops through the file extensions again and finds additional files except for ADS and LRT.
+ 7. If QATools is set to True, a `generate_QAtools` is run and a QA ipynb is exported as an html.
 
 ### GDrive
 

@@ -6,32 +6,51 @@ from fieldProc_setup import NAS, FTP,  GDRIVE,sendzipped
 
 
 def main():
+    """
+    Main function that orchestrates the data processing and transfer operations.
 
-    # instantiate FieldData class
+    This function performs the following steps:
+    1. Creates an instance of the Setup class.
+    2. Sets up the message for email.
+    3. Assigns the initial status to the status variable to track the status of the data processing.
+    4. Creates an instance of the Process class.
+    5. Gets the status of the data processing after the Process class has been called.
+    6. Calls the zip function if the sendzipped flag is set to True.
+    7. Calls the FTP class if the FTP flag is set to True.
+    8. Calls the GDrive class if the GDRIVE flag is set to True.
+    9. Calls the NAS class if the NAS flag is set to True.
+    10. Calls the report function from the setup class to append to the final message and send the status email.
+    """
+
+    # Creates instance of Setup class
     setup = Setup()
+    
+    # Set up message for email
     final_message = setup.final_message
-    # set up the email functionality
+    
+    # Assign the initial status to the status variable to track the status of the data processing
     status = setup.STATUS
 
+    # Create an instance of the Process class
     process=_process.Process(setup.FILE_EXT, setup.DATA_DIR, setup.FLIGHT, setup.FILENAME, setup.RAW_DIR, 
                     status, setup.PROJECT,setup.AIRCRAFT, setup.INST_DIR,setup.RATE, setup.CONFIG_EXT,
                     setup.FILE_TYPE,setup.PROJ_DIR,setup.FILE_PREFIX)
-
+    # Get the status of the data processing after the Process class has been called
     status = process.stat
+    # Call the zip function if the sendzipped flag is set to True
     if sendzipped:
         _zip.SetupZip(setup.FILE_EXT, setup.DATA_DIR,setup.FILENAME,  setup.INST_DIR)   
     
-    # Call FTP function if the FTP flag is set to True
+    # Call the FTP class if the FTP flag is set to True
     if FTP:
         ftp= _FTP.TransferFTP(status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
-        status = ftp.stat
+        status = ftp.stat # Get the status of the data processing after the FTP class has been called
 
-    # Call GDrive function if the GDRIVE flag is set to True
-    GDRIVE = True
+    # Call GDrive class if the GDRIVE flag is set to True
     if GDRIVE:
         gdrive= _GDrive.GDrive(setup.DATA_DIR, status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
-        status = gdrive.stat
-    # Call NAS functions if the NAS flag is set to True
+        status = gdrive.stat # Get the status of the data processing after the GDrive class has been called 
+    # Call NAS class if the NAS flag is set to True
     if NAS:
         _NAS.DataShipping(setup.FILE_EXT, setup.FILENAME,status, setup.process, setup.reprocess, 
                         setup.INST_DIR, setup.FLIGHT, setup.PROJECT, final_message)
@@ -39,9 +58,8 @@ def main():
         final_message = _NAS.final_message
         
 
-    # Call the report function which appends the final message for emailing 
+    # Call the report function from the setup class to append to the final message and send the status email
     setup.report(status, setup.PROJECT, setup.FLIGHT, setup.EMAIL, setup.FILE_EXT,final_message)
-
 
 if __name__ == "__main__":
     main()
