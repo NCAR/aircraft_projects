@@ -52,7 +52,7 @@ def setup():
             patcher.fs.create_dir('/project_directory/project_name/C130_N130AR/Production')
             patcher.fs.create_file('/raw_data_directory/PROJECT_NAME/12042024_130000tf01.ads')
             patcher.fs.create_file('/raw_data_directory/PROJECT_NAME/tf01.nc')
-            #patcher.fs.create_dir('/home/local/aircraft_QAtools_notebook')
+            patcher.fs.create_dir('/home/local/aircraft_QAtools_notebook')
         #fs.create_file('data_directory/PROJECT_NAME/email.addr.txt')
             with patch('subprocess.run') as mock_run:
                 mock_run.return_value = MagicMock(returncode=0)
