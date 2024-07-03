@@ -21,13 +21,11 @@ from email.mime.text import MIMEText
 # Have to get PROJ_DIR, project and aircraft from env here even though will
 # get them again when import fieldProc_setup, because need them to find
 # location of fieldPro_setup.
-project = os.environ['PROJECT']
-aircraft = os.environ['AIRCRAFT']
-PROJ_DIR = os.environ['PROJ_DIR']
-full_proj_dir = PROJ_DIR + '/' + project + '/' + aircraft+'/'
+
+full_proj_dir = os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT']+'/'
 sys.path.insert(0, full_proj_dir + 'scripts/')
 sys.path.insert(0, full_proj_dir)
-from fieldProc_setup import project, PROJ_DIR, aircraft, dat_parent_dir,\
+from fieldProc_setup import project, dat_parent_dir,\
     ftp_parent_dir, rdat_parent_dir, FTP, PMS2D, HRT, SRT, IWG1, ICARTT, NAS,\
     ship_ADS, GDRIVE, RAW_DATA_DIR
 temp_dir = RAW_DATA_DIR + '/' + project + '/field_sync/'
@@ -48,6 +46,7 @@ def create_directory(dir_path):
     """
     Helper function to create a directory and handle errors.
     """
+    global rdat_dir #modifies the global rdat_dir variable if we need to reassign path
     if dir_path is tuple:
         if os.path.isdir(dir_path[0]):
             rdat_dir = dir_path[0]
@@ -65,8 +64,7 @@ def create_directory(dir_path):
 
 def dir_check():
     """
-    Function to ensure that directories exist
-    make them if not
+    Function to ensure that directories exist and makes them if not
     """
     # Check to make sure the rdat + project dir exists
     rdat_dir = rdat_parent_dir + project
@@ -87,10 +85,9 @@ def unzip():
     """
     logging.info('Unzipping files if they are present')
     for fname in os.listdir(eol_dir + 'RAF_data/'):
-
         if fname.endswith('.zip'):
             command = f'unzip -qq -o {eol_dir}RAF_data/{fname} -d {eol_dir}RAF_data'
-            message= f'Unzipping files: '
+            message= f'Unzipping files'
             _run_and_log(command, message)
 
             command = f"mv {eol_dir}RAF_data/{fname} {dat_dir}/field_data"
@@ -190,7 +187,6 @@ def ingest_to_local(filetype, local_dir, start_dir):
     message = 'Syncing dir into place'
     _run_and_log(command, message)
 
-
 def send_mail_and_die(body):
     """
     Email function
@@ -201,19 +197,15 @@ def send_mail_and_die(body):
     msg['Subject'] = 'Receive and Distribute message for:' + project
     msg['From'] = 'ads@groundstation'
     msg['To'] = email
-
     s = smtplib.SMTP('localhost')
     s.sendmail("ads@groundstation", email, msg.as_string())
     logging.info("Message:\n" + msg.as_string())
     s.quit()
-
-    exit(1)
-    
+    exit(1)  
 
 def sync_from_nas():
     """
     Syncs data from NAS.
-
     This function performs the following steps:
     1. Logs an info message indicating the start of the sync process.
     2. Calls the `dir_check` function to check the directory.
@@ -221,7 +213,7 @@ def sync_from_nas():
     4. Calls the `dist_prod` function to distribute production data.
     5. Calls the `distribute_data` function with the arguments ['field_data', 'MTP'].
     """
-    logging.info("Syncing from NAS...\n")
+    logging.info("Syncing from NAS...")
     dir_check()
     dist_raw()
     dist_prod()
@@ -235,9 +227,9 @@ def sync_from_gdrive():
     distribute_data(['field_data','QAtools'])
     
 def sync_from_ftp():
-    logging.info("Syncing from FTP...\n")
+    logging.info("Syncing from FTP...")
     dir_check()
-    logging.info(f'Syncing ADS and PMS2D data from {ftp_dir} to {rdat_dir}\n')
+    logging.info(f'Syncing ADS and PMS2D data from {ftp_dir} to {rdat_dir}')
     logging.info(f'Syncing other data from {ftp_dir} to {dat_dir}/field_data')
     for dtype in proc_dict:
         if proc_dict[dtype]:
@@ -246,8 +238,6 @@ def sync_from_ftp():
 
 def parse_args():
     """ Instantiate a command line argument parser """
-
-    # Define command line arguments which can be provided
     parser = argparse.ArgumentParser(
         description="Script to monitor ingest directories for newly written " +
         "files and sync them to the appropriate directory based on file type.")
@@ -258,6 +248,19 @@ def parse_args():
 
     return args
 
+def setup_logging():
+    # Set up logging
+    logger = logging.getLogger()
+    # If a logfile name is specified on the command line, set up log rotation
+    if args.logfile:
+        handler = logging.handlers.RotatingFileHandler(
+            args.logfile, maxBytes=1000000, backupCount=9)
+    else:
+        handler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
 
 def main():
     """
@@ -275,20 +278,9 @@ def main():
 
 
 if __name__ == '__main__':
-
+    ##parses the command line arguments and sees if user wants to log to a file
     args = parse_args()
-
-    # Set up logging
-    logger = logging.getLogger()
-    # If a logfile name is specified on the command line, set up log rotation
-    if args.logfile:
-        handler = logging.handlers.RotatingFileHandler(
-            args.logfile, maxBytes=1000000, backupCount=9)
-    else:
-        handler = logging.StreamHandler(sys.stdout)
-    formatter = logging.Formatter("%(asctime)s|%(levelname)s|%(message)s")
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.setLevel(logging.DEBUG)
-
+    ##sets up the logging
+    setup_logging()
+    ##runs the main function to sync the data
     main()
