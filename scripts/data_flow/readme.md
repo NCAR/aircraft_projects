@@ -79,13 +79,82 @@ The `__init__` method performs the following steps:
 
 ### GDrive
 
+The GDrive class is designed to ship files to Google Drive via an rclone staging location.
+
+`__init__`
+
+The `__init__` method performs the following steps:
+
+ 1. Initializes the instance with the provided `data_dir`, `status`, `file_ext`, `inst_dir`, and `filename` parameters.
+ 2. Logs a message indicating the start of the process to put files to the rclone staging location for shipment to Google Drive.
+ 3. Checks the global variable `ship_all_ADS`. If it is set to True, it calls the `_ship_all_ads` method to ship all ADS files to the specified `rclone_staging_dir`.
+ 4. If ship_all_ADS is not True, it iterates over each key in the file_ext dictionary:
+Prints the key (representing an instrument or file type).
+ 5. If the key is 'ADS' and the global variable `ship_ADS` is False, it skips the current iteration to not ship ADS files.
+ 6. Checks if the directory specified by the current key in `inst_dir` exists. If not, logs an error message and continues to the next iteration.
+ 7. If the directory exists and the filename for the current key is not an empty string, it calls the `_transfer_instrument_files` method to transfer the instrument files to the `rclone_staging_dir`.
+
 ### DataShipping
+
+The __init__ method of the DataShipping class (in _NAS.py) performs the following steps:
+
+ 1. Initializes the instance with the provided parameters: `file_ext`, `filename`, `status`, `process`, `reprocess`, `inst_dir`, `flight`, `project`, and `final_message`.
+ 2. Sets the instance variable stat to the provided status.
+ 3. Sets the instance variable zip_dir to /tmp/.
+ 4. Checks if `NAS_permanent_mount` is False. If so, it constructs a command to mount the NAS using NFS, logs this action, and executes the command using os.system.
+ 5. Sets the instance variable nas_sync_dir to the path where files will be synced for FTP transfer.
+ 6. Sets the instance variable nas_data_dir to the path where files will be stored for local use.
+ 7. Logs a message indicating the start of copying files to the NAS scratch area.
+ 8. Iterates over each key in the file_ext dictionary:
+ 9. Sets dir_key to the current key. If the key is 'PMS2D', it appends a slash to dir_key.
+ 10. Logs a message indicating the copying of the file specified by the current key to the NAS data directory.
+ 11. Calls the rsync_file method to copy the file to the NAS data directory and updates the status dictionary for the current key with the result.
+ 12. Calls the setup_NAS method with the provided parameters to complete the setup process.
 
 ### SetupZip
 
+The SetupZip class sets up the zipping functionality if the datafiles needs to be zipped before being transfered.
+The `__init__` method of the SetupZip class performs the following steps:
+
+ 1. Iterates over each key in the file_ext dictionary:
+    - If the key is "ADS", logs a message about finding a raw .ads file but not zipping it. Indicates that if zip_ads is set, it will bzip the .ads file next.
+    - If the key is "PMS2D", logs a message about finding a raw .2d file but not zipping it.
+    - For all other keys, it performs the following:
+ 2. Splits the filename into data_dir and file_name using os.path.split.
+ 3. Logs a message with the key and the file_name.
+ 4. Logs a message with the data_dir.
+ 5. Calls the `zip_file` method with file_name and the corresponding directory from inst_dir based on the key to
+
 ### TransferFTP
 
+The TransferFTP class is used if the project is using FTP to transfer files around.
+ TransferFTP `__init__` Method Overview
+
+The `__init__` method of the `TransferFTP` class performs the following steps to transfer files to an FTP server:
+
+1. It initializes the instance with the provided `status`, `file_ext`, `inst_dir`, and `filename` parameters. These parameters are essential for tracking file transfer status, managing file extensions, handling instrument directories, and dealing with filenames for each instrument, respectively.
+
+2. Attempts to Connect to the FTP Server:
+    - It tries to establish a connection to the FTP server using the `_connect_to_ftp` method.
+    - If the connection is successful, it proceeds with the file transfer process.
+    - In case of any errors during the connection (caught as `ftplib.all_errors`), it logs and prints the error message using `myLogger.log_and_print` and then exits the initialization process.
+
+3. File Transfer Decision:
+    - The method decides whether to transfer all ADS files or only selected files based on the `ship_all_ADS` flag.
+    - If `ship_all_ADS` is `True`, it calls `_transfer_all_ads` method to transfer all ADS files.
+    - If `ship_all_ADS` is `False`, it calls `_transfer_selected_files` method to transfer only the selected files based on file extensions, instrument directories, and filenames.
+
+4. Quit FTP Session: After completing the file transfers, it gracefully closes the FTP session using `self.ftp.quit()`.
+
+5. Revert Special Case for PMS2D Directory:
+    - After the FTP session is closed, it reverts a special case for the `PMS2D` instrument directory by removing the `PMS2D/` prefix from its path.
+    - This step ensures that the `inst_dir` dictionary reflects the correct directory paths after the FTP transfer process.
+
+This method effectively handles the initialization and setup for transferring files to an FTP server, including error handling, logging, and conditional file transfer based on specific criteria.
+
 ### FindFiles
+
+The FindFiles class is a collection of helper methods for the Process Class to find the datafiles based on the input parameters.
 
 `find_file`
 
@@ -112,4 +181,37 @@ The method initializes an empty string variable called `datafile`. If `reprocess
 
 After the loop or assignment, it logs and prints a message indicating the selected file, and then returns `datafile`.
 
+`find_lrt_netcdf`
+
+The `find_lrt_netcdf` method is designed to locate and manage LRT (Low-Rate Time) NetCDF files within a specified directory. It performs several key operations based on the existence and number of such files related to a specific flight and filetype.
+
+Inputs
+
+- `filetype` (str): The extension or type of the file to look for, typically indicating the format (e.g., 'nc' for NetCDF).
+- `flight` (str): The flight number or identifier used to match files.
+- `data_dir` (str): The directory path where the files are located.
+- `file_prefix` (str): The prefix used for naming the files, aiding in the creation of a new file if necessary.
+
+Returns
+
+- `tuple`: A tuple containing a boolean and a string.
+  - The boolean (`process`) indicates whether the file should be reprocessed (`True`) or shipped as is (`False`).
+  - The string (`self.ncfile`) specifies the path to the NetCDF file to be processed or shipped.
+
+Behaviors
+
+1. Single File Found: If exactly one file matching the criteria (`{data_dir}/*{flight}.{filetype}`) is found, it logs the file's path and prompts the user to decide between reprocessing the data (`R`) or shipping the data as is (`S`). The user's choice determines the `process` flag's value.
+
+2. No Files Found: If no files match the search criteria, it logs a message indicating no files were found and sets the `process` flag to `True`, indicating the necessity to process data. It also constructs a new file path using `data_dir` and `file_prefix` with a '.nc' extension for processing.
+
+3. Multiple Files Found: If more than one file is found, it logs a message indicating the situation and calls `self.step_through_files` with the list of found files, `filetype`, and the `process` flag. This method is presumably designed to let the user or the system decide which file to work with, but its behavior is not detailed in the provided excerpt.
+
+4. Error Handling: If, after attempting to identify the correct NetCDF file, `self.ncfile` is empty (`''`), it logs and aborts the operation, indicating that no suitable NetCDF file was identified.
+
+## Usage
+
+This method is useful in workflows where managing LRT NetCDF files is necessary, especially in scenarios involving conditional processing or shipping of data based on the files' existence and user input.
+
 ### MyLogger
+
+The MyLogger class sets up the logger to be used throughout the push_data program and defines common functions used throughout
