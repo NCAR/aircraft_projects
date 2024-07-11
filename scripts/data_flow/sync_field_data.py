@@ -27,8 +27,8 @@ sys.path.insert(0, full_proj_dir + 'scripts/')
 sys.path.insert(0, full_proj_dir)
 from fieldProc_setup import project, dat_parent_dir,\
     ftp_parent_dir, rdat_parent_dir, FTP, PMS2D, HRT, SRT, IWG1, ICARTT, NAS,\
-    ship_ADS, GDRIVE, RAW_DATA_DIR
-temp_dir = RAW_DATA_DIR + '/' + project + '/field_sync/'
+    ship_ADS, GDRIVE, RAW_DATA_DIR, QA_notebook
+temp_dir = RAW_DATA_DIR + '/' + project + '/field_sync'
 dat_dir = dat_parent_dir + project
 ftp_dir = ftp_parent_dir
 rdat_dir = rdat_parent_dir + project
@@ -154,8 +154,8 @@ def distribute_data(data_type: list):
         ''' data_type: (destination, ext, source_dir, log_message, recursive)'''
         
         'PI': (f'{ftp_dir}/EOL_data', '*', 'PI_data', 'Starting distribution of PI data\n', True),
-        'MTP': (f'{rdat_dir}/MTP/field','*','/RAF_data/MTP', 'Starting distribution of MTP data\n', True),
-        'QAtools': ('/net/www/raf/', '*','/RAF_data/QAtools','Starting distribution of QAtools.html', True),
+        'MTP': (f'{rdat_dir}/MTP/field','*',f'{dat_dir}/MTP', 'Starting distribution of MTP data\n', True),
+        'QAtools': ('/net/www/raf/', '*',f'{dat_dir}/QAtools','Starting distribution of QAtools.html', True),
         'field_data': (dat_dir, '*.nc',f'{dat_dir}/field_data', 'Continuing distribution of RAF prod data', False)
     }
     for dtype in data_type:
@@ -168,11 +168,11 @@ def distribute_data(data_type: list):
 
 def ingest_to_local(filetype, local_dir, start_dir):
     """
-    Function to distribute data from FTP to local dirs for QAQC and backup
+    Function to distribute data from FTP and raw data directory to local dirs for QAQC and backup
     to be used if no NAS in the field and data goes from Ground Station to
     FTP site directly.
     """
-    logging.info('Starting distribution of data from FTP to localdirs/')
+    logging.info('Starting distribution of data to localdirs/')
     if filetype == 'PMS2D':
         local_dir = rdat_dir
         command = 'rsync -qu ' + start_dir + '/EOL_data/RAF_data/' + filetype \
@@ -224,7 +224,8 @@ def sync_from_gdrive():
     for dtype in proc_dict:
         if proc_dict[dtype]:
             ingest_to_local(dtype, f'{dat_dir}/field_data', temp_dir)
-    distribute_data(['field_data','QAtools'])
+    if QA_notebook:
+        distribute_data(['field_data','QAtools'])
     
 def sync_from_ftp():
     logging.info("Syncing from FTP...")
