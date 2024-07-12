@@ -6,7 +6,7 @@ from fieldProc_setup import  NAS_permanent_mount, nas_url, nas_mnt_pt, sendzippe
 myLogger = _logging.MyLogger()
 
 class DataShipping:
-    def __init__(self,file_ext, filename,status, process, reprocess, inst_dir, flight, project,final_message):
+    def __init__(self, file_ext, filename,status, process, reprocess, inst_dir, flight, project, final_message):
         """
         Beginning of Shipping
         """
@@ -23,8 +23,10 @@ class DataShipping:
         # Put copies of files to local store
         # in dirs to sync to ftp site in Boulder...
         self.nas_sync_dir = f'{nas_mnt_pt}/FTP_sync/EOL_data/RAF_data/'
+
         # and in dirs for local use...
         self.nas_data_dir = f'{nas_mnt_pt}/EOL_data/RAF_data/'
+
         ##Refactor to only print once with a new line
         message = "\n*************** Copy files to NAS scratch area ***************"
         myLogger.log_and_print(message)
@@ -44,7 +46,7 @@ class DataShipping:
         self.setup_NAS(process, reprocess, file_ext, inst_dir, flight, project, final_message, filename)
 
     def _zip_ads(self, filename):
-        # Now only zip up the ADS file, if requested
+        ''' zip up the ADS file, if requested '''
         raw_dir, rawfilename = os.path.split(filename["ADS"])
         print(f"zipping {rawfilename}")
         result = self.zip_dir + rawfilename + '.bz2'
@@ -72,7 +74,7 @@ class DataShipping:
 
         
     def setup_NAS(self, process, reprocess, file_ext, inst_dir, flight, project, final_message, filename):
-        # Put file onto NAS for BTSyncing back home.
+        ''' Put file onto NAS for BTSyncing back home '''
         print("")
         print("***** Copy files to NAS sync area for transfer back home *****")
 

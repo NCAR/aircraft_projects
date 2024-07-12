@@ -32,6 +32,7 @@ class MyLogger:
         # Retrieve the already configured logger by name
         self.logger = logging.getLogger('myLogger')
 
+
     def log_and_print(self, message, log_level="info",stack=2):
         """Logs and prints a message with optional log level.
 
@@ -41,6 +42,7 @@ class MyLogger:
         """
         getattr(self.logger, log_level)(message, stacklevel=stack)
         print(message)
+
 
     def ensure_dir(self, f):
         '''
@@ -52,10 +54,10 @@ class MyLogger:
             self.log_and_print(f'Directory {d} created', stack =3)
             
 
-    
     def _log_and_abort(self, message):
-            self.log_and_print(message, stack=3)
-            sys.exit(0)
+        self.log_and_print(message, stack=3)
+        sys.exit(0)
+
             
     def run_and_log(self,command, message):
         """Executes a command, logs the message, and handles success/failure.

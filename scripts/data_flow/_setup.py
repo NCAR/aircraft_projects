@@ -256,9 +256,7 @@ class Setup:
             sys.exit(1)
 
     def setup_email(self, data_dir, email):
-        """
-            Set up email
-            """
+        ''' Set up email '''
         emailfilename = 'email.addr.txt'
         emailfile = data_dir+emailfilename
         command = 'rm '+emailfile
@@ -267,6 +265,9 @@ class Setup:
             fo.write(email+'\n')
     
     def report(self, status, project, flight, email, file_ext,final_message):
+        """
+        Generates a report of the shipping status for different file types and sends it to the user's email address.
+        """
         final_message = final_message + '\nREPORT on shipping of files. \n\n'
         final_message = final_message + 'File Type\tStor\tShip\n'
 

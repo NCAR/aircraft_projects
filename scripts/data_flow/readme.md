@@ -26,17 +26,23 @@ A number of environment variables need to be set for the script to run properly:
 
 ## Project Process Setup
 
-The project specific setup constants and filepaths are defined in fieldProcSetup.py in the filepath $PROJ_DIR/$PROJECT/$AIRCRAFT/scripts
+The project specific setup constants and filepaths are defined in fieldProcSetup.py in the filepath $PROJ_DIR/$PROJECT/$AIRCRAFT/scripts, including:
 
-- raw_dir --> path of raw data directory; should be the combination of environment variables `$RAW_DATA_DIR + $PROJECT`
-- proj_dir --> path of raw data directory; should be the combination of environment variables `$PROJ_DIR + / + $PROJECT + / + $AIRCRAFT`
+- ftp_site --> FTP server website;  `'ftp.eol.ucar.edu'`
+- ftp_data_dir --> FTP server directory; should be  `'/pub/data/incoming/ + project + 'EOL_data/RAF_data'` with project in lowercase
+
+In addition, the following locations are defined in the Setup class:
+
+- RAW_DIR --> path of raw data directory; should be the combination of environment variables `$RAW_DATA_DIR + $PROJECT`]
+- PROJ_DIR --> path of raw data directory; should be the combination of environment variables `$PROJ_DIR + / + $PROJECT + / + $AIRCRAFT`]
+
+the DataShipping class (in _NAS.py):
+
 - zip_dir --> path of the zip directory; should be `'/tmp/'`
-- qc_ftp_site --> FTP server website;  `'catalog.eol.ucar.edu'`
-- qc_ftp_dir --> FTP server directory; should be  `'/pub/incoming/catalog/ + project` with project in lowercase
 
-File Paths:
+and the Process class:
 
-- nc2ascBatch -->  path of n2asc file; should be environment variables `$PROJ_DIR +$PROJECT + / + $AIRCRAFT+/scripts/nc2asc.bat`
+- nc2ascBatch -->  path of n2asc file; should be environment variables `$PROJ_DIR +$PROJECT + / + $AIRCRAFT + /scripts/nc2asc.bat`
 
 ## Classes
 
@@ -49,7 +55,7 @@ The Setup class is designed to initialize and prepare the push_data environment 
 The `__init__` method performs the following steps:
 
  1. Sets up a logger object for logging. `init__logger` and creates an instance of the MyLogger class for logging the setup
- 2. Reads and stores the environment variables: `read_env(variable)`
+ 2. Reads and stores the environment variables: `read_env(variable)` and create the `RAW_DIR` [path of raw data directory; should be the combination of environment variables `$RAW_DATA_DIR + $PROJECT`] and `PROJ_DIR` [path of raw data directory; should be the combination of environment variables `$PROJ_DIR + / + $PROJECT + / + $AIRCRAFT`] variables.
  3. Initializes the constants for file extensions, directories, and tracking progress throughout: `create_status`, `createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)`,`createRate()`,`createConfigExt()`,`createFilePrefix(PROJECT, FLIGHT)`,`createFileType()`
  4. Parses user input for flight number and user email to send results: `readEmail()`, `readFlight()`
  5. Initializes email message for sending results.
@@ -67,15 +73,16 @@ The Process class is designed to automate and streamline the handling of various
 The `__init__` method performs the following steps:
 
  1. Tracks the processing status with the class variable `self.stat` which is passed the current version of the processing status.
- 2. Determines the LRT netCDF processing modes using the FindFiles Class
- 3. Find ADS files and extracts the date from the filename
- 4. Processes other file types based on flight number
- 5. Process and generate files: if the `process` flag from Step 2 is set to `True` it iterates over the keys in the file extension dictionary and performs the following
+ 2. Defines nc2ascBatch as the path of the n2asc config file; should be environment variables `$PROJ_DIR +$PROJECT + / + $AIRCRAFT + /scripts/nc2asc.bat`
+ 3. Determines the LRT netCDF processing modes using the FindFiles Class
+ 4. Find ADS files and extracts the date from the filename
+ 5. Processes other file types based on flight number
+ 6. Process and generate files: if the `process` flag from Step 2 is set to `True` it iterates over the keys in the file extension dictionary and performs the following
     - `process_core_data` for each key to call nimbus and create the netcdf files
     - If threeVCPI is set to TRUE in fieldProc_setup.py then `process_threeVCPI` will process 2d and OAP files.
     - If PMS2D is set to True then `process_pms2d_files` will be called
- 6. Once the processing is done, it loops through the file extensions again and finds additional files except for ADS and LRT.
- 7. If QATools is set to True, a `generate_QAtools` is run and a QA ipynb is exported as an html.
+ 7. Once the processing is done, it loops through the file extensions again and finds additional files except for ADS and LRT.
+ 8. If QATools is set to True, a `generate_QAtools` is run and a QA ipynb is exported as an html.
 
 ### GDrive
 
@@ -113,7 +120,7 @@ The __init__ method of the DataShipping class (in _NAS.py) performs the followin
 
 ### SetupZip
 
-The SetupZip class sets up the zipping functionality if the datafiles needs to be zipped before being transfered.
+The SetupZip class (in _zip.py) sets up the zipping functionality if the datafiles needs to be zipped before being transferred.
 The `__init__` method of the SetupZip class performs the following steps:
 
  1. Iterates over each key in the file_ext dictionary:
@@ -208,10 +215,10 @@ Behaviors
 
 4. Error Handling: If, after attempting to identify the correct NetCDF file, `self.ncfile` is empty (`''`), it logs and aborts the operation, indicating that no suitable NetCDF file was identified.
 
-## Usage
+#### Usage
 
 This method is useful in workflows where managing LRT NetCDF files is necessary, especially in scenarios involving conditional processing or shipping of data based on the files' existence and user input.
 
 ### MyLogger
 
-The MyLogger class sets up the logger to be used throughout the push_data program and defines common functions used throughout
+The MyLogger class (in _logger.py) sets up the logger to be used throughout the push_data program and defines common functions used throughout

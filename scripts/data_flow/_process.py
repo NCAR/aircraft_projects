@@ -72,9 +72,9 @@ class Process:
             inst_dir['ADS'], flight, project, file_type['ADS'],
             file_ext['ADS'], process, process, file_prefix
         )
+
         # ADS - Extract flight date
         self.extract_date_from_ads_filename(filename['ADS'], raw_dir)
-    
 
         # Other Instruments (using flight number)
         for key in file_ext:

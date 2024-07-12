@@ -34,6 +34,7 @@ class GDrive:
                     self._transfer_instrument_files(key, filename, inst_dir, rclone_staging_dir)
             
     def _ship_all_ads(self, inst_dir, rclone_staging_dir):
+        ''' Ship all ads files to the specificed rclone_staging_dir '''
         # ... (Implementation for shipping all ADS files) ...
         message = 'Starting rsync process for all available .ads files'
         myLogger.log_and_print(message)
@@ -58,6 +59,7 @@ class GDrive:
                     myLogger.log_and_print(e,'error')
 
     def _transfer_instrument_files(self, key, filename, inst_dir, rclone_staging_dir):
+        ''' Transfer instrument files to the rclone_staging_dir '''
         print(f'Instrument file is {filename[key]}')
         # Get instrument filename; used for error reporting
         myLogger.log_and_print(f'\nTransferring: {key}\n')
@@ -88,7 +90,8 @@ class GDrive:
             myLogger.log_and_print(f"rclone error for {source_file}: {e}. File not copied to GDrive",'error')
 
 
-    def _ensure_staging_directory(self, directory,key):
+    def _ensure_staging_directory(self, directory, key):
+        ''' Check if the staging directory exists. If not, attempt to create it. '''
         try:
             os.makedirs(directory, exist_ok=True)  # Create if doesn't exist
             myLogger.log_and_print('Created staging directory')

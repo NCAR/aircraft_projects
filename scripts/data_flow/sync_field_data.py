@@ -172,7 +172,7 @@ def ingest_to_local(filetype, local_dir, start_dir):
     to be used if no NAS in the field and data goes from Ground Station to
     FTP site directly.
     """
-    logging.info('Starting distribution of data to localdirs/')
+    logging.info('Starting distribution of data from FTP to localdirs/')
     if filetype == 'PMS2D':
         local_dir = rdat_dir
         command = 'rsync -qu ' + start_dir + '/EOL_data/RAF_data/' + filetype \

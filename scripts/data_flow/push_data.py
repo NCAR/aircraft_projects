@@ -35,8 +35,10 @@ def main():
     process=_process.Process(setup.FILE_EXT, setup.DATA_DIR, setup.FLIGHT, setup.FILENAME, setup.RAW_DIR, 
                     status, setup.PROJECT,setup.AIRCRAFT, setup.INST_DIR,setup.RATE, setup.CONFIG_EXT,
                     setup.FILE_TYPE,setup.PROJ_DIR,setup.FILE_PREFIX)
+
     # Get the status of the data processing after the Process class has been called
     status = process.stat
+
     # Call the zip function if the sendzipped flag is set to True
     if sendzipped:
         _zip.SetupZip(setup.FILE_EXT, setup.DATA_DIR,setup.FILENAME,  setup.INST_DIR)   
@@ -50,13 +52,13 @@ def main():
     if GDRIVE:
         gdrive= _GDrive.GDrive(setup.DATA_DIR, status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
         status = gdrive.stat # Get the status of the data processing after the GDrive class has been called 
+
     # Call NAS class if the NAS flag is set to True
     if NAS:
         _NAS.DataShipping(setup.FILE_EXT, setup.FILENAME,status, setup.process, setup.reprocess, 
                         setup.INST_DIR, setup.FLIGHT, setup.PROJECT, final_message)
         status  = _NAS.stat
         final_message = _NAS.final_message
-        
 
     # Call the report function from the setup class to append to the final message and send the status email
     setup.report(status, setup.PROJECT, setup.FLIGHT, setup.EMAIL, setup.FILE_EXT,final_message)

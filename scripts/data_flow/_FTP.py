@@ -33,12 +33,14 @@ class TransferFTP:
             self._transfer_selected_files(file_ext, inst_dir, filename)
 
         self.ftp.quit()
+
         # Revert PMS2D ftp special case
         inst_dir['PMS2D'] = re.sub('PMS2D/', '',inst_dir['PMS2D'])
         print("After FTP: " + inst_dir['PMS2D'])
 
 
     def _connect_to_ftp(self):
+        ''' Attempt to connect to FTP server '''
         message = f'Opening FTP connection to: {ftp_site}'
         myLogger.log_and_print(message)
         self.ftp = ftplib.FTP(ftp_site)
@@ -46,7 +48,7 @@ class TransferFTP:
 
 
     def _transfer_all_ads(self, inst_dir):
-        # ... Implementation for transferring all ADS files ...
+        ''' Implementation for transferring all ADS files ... '''
         message = 'Starting ftp process for all available .ads files'
         myLogger.log_and_print(message)
         for rawfilename in os.listdir(inst_dir['ADS']):
@@ -61,10 +63,13 @@ class TransferFTP:
                 except Exception as e:
                     message = f'{rawfilename} not sent'
                     myLogger.log_and_print(f'{message}/n{e}')
-                    
 
 
     def _transfer_selected_files(self, file_ext, inst_dir, filename):
+        """
+        Implementation to only transfer selected files based in file extensions,
+        instrument directories and filenames
+        """
         for key in file_ext:
             if key == 'ADS' and not ship_ADS:
                 continue
@@ -80,6 +85,7 @@ class TransferFTP:
 
 
     def _create_ftp_dir_if_needed(self, instrument):
+        ''' Create instrument dir on remote ftp site if needed '''
         remote_dir = f'/{ftp_data_dir}/{instrument}'
         try:
             self.ftp.cwd(remote_dir)  # Check if exists
@@ -92,6 +98,7 @@ class TransferFTP:
 
 
     def _transfer_file(self, instrument, local_dir, file_name, ):
+        ''' Transfer file to ftp site '''
         remote_path = f'/{ftp_data_dir}/{instrument}/{file_name}'
         if remote_path not in self.ftp.nlst():  # Check for existing file 
             try:
