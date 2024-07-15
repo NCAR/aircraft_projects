@@ -47,13 +47,13 @@ def test_sync_from_gdrive(mock_distribute_data, mock_ingest_to_local, mock_loggi
 
     # Assert
     mock_ingest_to_local.assert_has_calls([
-        call('LRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync/'),
-        call('KML', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync/'),
-        call('HRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync/'),
-        call('SRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync/'),
-        call('IWG1', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync/'),
-        call('PMS2D', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync/'),
-        call('ADS', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync/')
+        call('LRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        call('KML', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        call('HRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        call('SRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        call('IWG1', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        call('PMS2D', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        call('ADS', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync')
     ])
     mock_distribute_data.assert_has_calls([
         call(['field_data', 'QAtools'])
@@ -71,7 +71,7 @@ def test_distribute_data(mock_sync_data, mock_logging_info):
     dat_dir = DATA_DIR + '/' + project
 
     expected_calls = [
-        call('/RAF_data/QAtools',  '*', ['/net/www/raf/'], 'Syncing QAtools data into place', True),
+        call(f'{DATA_DIR}/{project}/QAtools',  '*', ['/net/www/raf/'], 'Syncing QAtools data into place', True),
         call(f'{DATA_DIR}/{project}/field_data','*.nc', [f'{DATA_DIR}/{project}'], 'Syncing field_data data into place', False)
     ]
     log1 = call('Starting distribution of QAtools.html')

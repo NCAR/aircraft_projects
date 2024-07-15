@@ -153,7 +153,7 @@ def distribute_data(data_type: list):
     destinations = {
         ''' data_type: (destination, ext, source_dir, log_message, recursive)'''
         
-        'PI': (f'{ftp_dir}/EOL_data', '*', 'PI_data', 'Starting distribution of PI data\n', True),
+        'PI': (f'{ftp_dir}/EOL_data', '*', f'{dat_dir}/PI_data', 'Starting distribution of PI data\n', True),
         'MTP': (f'{rdat_dir}/MTP/field','*',f'{dat_dir}/MTP', 'Starting distribution of MTP data\n', True),
         'QAtools': ('/net/www/raf/', '*',f'{dat_dir}/QAtools','Starting distribution of QAtools.html', True),
         'field_data': (dat_dir, '*.nc',f'{dat_dir}/field_data', 'Continuing distribution of RAF prod data', False)
