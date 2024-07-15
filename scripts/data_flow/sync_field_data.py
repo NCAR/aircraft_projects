@@ -97,11 +97,18 @@ def unzip():
 def _sync_data(src_dir, file_pattern, dest_dirs, base_message, recursive:bool=False):
     """
     Sync files matching pattern from src_dir to each destination in dest_dirs.
+
+    Parameters:
+    - src_dir (str): The source directory from which to sync the files.
+    - file_pattern (str): The pattern to match the files to be synced.
+    - dest_dirs (list): A list of destination directories to sync the files to.
+    - base_message (str): The base message to be logged during the sync process.
+    - recursive (bool, optional): Whether to sync files recursively. Defaults to False.
     """
     command_base = f'rsync -rqu {src_dir}/{file_pattern} ' if recursive else f'rsync -qu {src_dir}/{file_pattern} '
     for dest_dir in dest_dirs:
         command = command_base + dest_dir
-        _run_and_log(command, base_message)  
+        _run_and_log(command, base_message)
 
 def dist_raw():
     """
@@ -220,6 +227,13 @@ def sync_from_nas():
     distribute_data(['field_data','MTP'])
     
 def sync_from_gdrive():
+    """
+    Syncs data from GDRIVE to the local directory.
+    
+    This function iterates over the `proc_dict` dictionary and calls the `ingest_to_local` function
+    to sync each data type from GDRIVE to the local directory. If the `QA_notebook` flag is set to True,
+    it also calls the `distribute_data` function to distribute the synced data to the 'field_data' and 'QAtools' directories.
+    """
     logging.info("Syncing from GDRIVE...")
     for dtype in proc_dict:
         if proc_dict[dtype]:
@@ -228,6 +242,22 @@ def sync_from_gdrive():
         distribute_data(['field_data','QAtools'])
     
 def sync_from_ftp():
+    """
+    Syncs data from FTP server to local directories.
+
+    This function performs the following steps:
+    1. Logs a message indicating the start of the synchronization process.
+    2. Calls the `dir_check` function to ensure the required directories exist.
+    3. Logs a message indicating the source and destination directories for syncing ADS and PMS2D data.
+    4. Logs a message indicating the source and destination directories for syncing other data.
+    5. Iterates over the `proc_dict` dictionary to determine which data types need to be processed.
+       For each data type that needs to be processed, it calls the `ingest_to_local` function to sync the data
+       from the FTP server to the local `field_data` directory.
+    6. Calls the `distribute_data` function to distribute the synced data to other locations.
+
+    Note: This function assumes that the necessary variables (`ftp_dir`, `rdat_dir`, `dat_dir`, `proc_dict`) have been defined.
+
+    """
     logging.info("Syncing from FTP...")
     dir_check()
     logging.info(f'Syncing ADS and PMS2D data from {ftp_dir} to {rdat_dir}')
@@ -265,7 +295,10 @@ def setup_logging():
 
 def main():
     """
-    Define main function
+    This function is the entry point of the script and controls the synchronization process.
+    It checks the value of the global variables NAS, GDRIVE, and FTP to determine the source
+    from which to sync data. If none of the variables are set, it logs an error and exits with
+    a status code of 1.
     """
     if NAS:
         sync_from_nas()

@@ -1,5 +1,7 @@
 # PUSH_DATA Readme to understand data flow
 
+push_data.py is the main module to automate pushing and processing raw data from the groundstation. When edits are made, you can run tests to ensure everything is still functioning by running `./run_tests.sh`. See the readme inside the test subdirectory for more information
+
 ## push_data: main()
 
 This is the main file of the push_data module that calls on all of the classes to process and push the data for a field project. It performs the following:
@@ -223,26 +225,42 @@ This method is useful in workflows where managing LRT NetCDF files is necessary,
 
 The MyLogger class (in _logger.py) sets up the logger to be used throughout the push_data program and defines common functions used throughout
 
-## sync_field_data.py README
+## sync_field_data.py
 
-## Pytest README
+This script is used to synchronize field data between different systems after `push_data.py` has been run. It takes input from a source system and updates the target system with the latest field data. A process dictionary is setup at the start of the file which takes the boolean values from fieldProc_setup.py to establish which datatypes need to be processed based on the project.
 
-### Setting up the test environment
+This script can be run manually using the command `python sync_field_data.py`, or can be set as a cronjob to be run nightly and keep the data synced between active filesystems.
 
-To run the tests for push_data and sync_field_data, you must have a test environment running python 3.12 or greater. Below is an example test environment setup:
- `conda create -n test_env python=3.12`
- `conda activate test_env`
- `conda install pytest`
- `pip install pyfakefs`
-The environment variables for `$PROJECT`, `$PROJ_DIR`, and `$AIRCRAFT` must be configured to an existing project with a folder within the aircraft_projects repository for tests to run.
+### sync_field_data: main()
 
-### Running the tests
+The main function of the script checks the boolean values of NAS, GDRIVE and FTP as set in the fieldProc_setup.py project file to determine the source to sync data to. If none of these variables are set, it logs an error and exits with a status code of 1.
 
-Run all tests in the aircraft_projects/scripts/data_flow/test/ directory by running `./run_tests.sh` with the active test environment.
+### Setup functions
 
-### Test Modules
+`create_directory` creates a directory given the path and handle errors.
+`dir_check` ensures that a given directory exits.
+`unzip unzips` and zip files and moves them to a subfolder before processing.
+`parse_args` instantiates the command line parser incase the user wants to save the log output to a file with the --logfile flag.
+`setup_logger` sets up the logger to log the status of the data syncing process.
 
- 1. `test__setup.py` tests the instantiation of the setup class and make sure all of the constants passed to process are properly formatted.
- 2. `test_push_data.py` sets up a testing environment using fixtures and mocks to ensure that the push_data module functions correctly under various conditions. It is structured to test the main functionality of the data pushing process, including reading flight and email information, handling environment variables, interacting with the filesystem, and sending emails.
- 3. `test__zip.py` tests the SetupZip class and the zipping functiomality of the push_data script on a fake filesystem.
- 4. `test_sync_field_data.py` ets up a testing environment using fixtures and mocks to ensure the functionality of the sync_field_data.py script. It makes sure that based on different configurations the correct functions and commands are called to ensure the data is syncing to the correct directories.
+### Helper functions
+
+`_run_and_log(command)` is a helper function to run a system command and log the message alongside it
+
+The `_sync_data` function is a utility designed to synchronize files matching a specific pattern from a source directory to one or more destination directories. It leverages the rsync command for efficient file transfer, supporting both non-recursive and recursive syncing. It accepts parameters for the source directory, file pattern to match, destination directories, a base message for logging purposes, and an optional flag to enable recursive syncing. This makes _sync_data versatile for various data distribution needs, ensuring that files are systematically organized and transferred across different storage locations.
+
+`ingest_to_local` function is designed to facilitate the distribution of data from FTP sites and raw data directories to local directories. This function is particularly useful in scenarios where there is no Network Attached Storage (NAS) available in the field, and data is transferred directly from the Ground Station to an FTP site. It ensures that data is systematically organized and stored locally for easy access and further processing.
+
+`distribute_data` function is designed to automate the process of distributing various types of data to their respective destinations. It currently supports multiple data types, including PI data, MTP data, QAtools, and field data, each with its own predefined destination, file extension, source directory, log message, and recursion flag. This function streamlines the process of moving data from its source location to specific directories or FTP sites.
+
+The `dist_prod` function is responsible for distributing RAF production data from the ingestion point to various destinations, including FTP sites and other specified directories. It handles multiple data types such as LRT, HRT, SRT, KML, ICARTT, and IWG1, each identified by specific file patterns (e.g., *.nc for netCDF files). This function ensures that production data is systematically organized and transferred to the appropriate locations for further use and analysis.
+
+The `dist_raw` function focuses on distributing RAF raw data from the ingestion point to designated directories and FTP sites. It specifically looks for files in the /ADS and PMS2D subdirectories, handling both uncompressed (.ads) and compressed (.bz2) data files. This function ensures that raw data is promptly moved to processing locations.
+
+### Main Functions
+
+`sync_from_gdrive()` syncs data from GDRIVE to the local directory. This function iterates over the `proc_dict` dictionary and calls the `ingest_to_local` function to sync each data type from GDRIVE to the local directory. If the `QA_notebook` flag is set to True, it also calls the `distribute_data` function to distribute the synced data to the 'field_data' directory and 'QAtools' directory if QA_notebook is set to `True`.
+
+`sync_from_ftp()` syncs data from FTP server to local directories. This function calls the `dir_check` function to ensure the required directories exist and iterates over the `proc_dict` dictionary to determine which data types need to be processed. For each data type that needs to be processed, it calls the `ingest_to_local` function to sync the data from the FTP server to the local `field_data` directory. It also calls the `distribute_data` function to distribute the synced data to other locations.
+
+`sync_from_nas()` syncs data from NAS. This function calls the `dir_check` function to check the directory, calls the `dist_raw` function to distribute raw data, calls the `dist_prod` function to distribute production data, and finally calls the `distribute_data` function with the arguments ['field_data', 'MTP'].
