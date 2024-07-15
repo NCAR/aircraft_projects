@@ -1,8 +1,19 @@
 import pytest
 import sys
 import os
-sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
-from fieldProc_setup import *
+try:
+    sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
+    from fieldProc_setup import *
+except Exception as e:
+    # It's better to catch specific exceptions
+    print(e)
+    errorMsg = "Please set the environment variables PROJ_DIR, PROJECT, and AIRCRAFT to point to an existing project directory."
+    for var in ['PROJ_DIR', 'PROJECT', 'AIRCRAFT']:
+        if var in os.environ:
+            errorMsg += f"\n{var} is set to: {os.environ[var]}"
+        else:
+            errorMsg += f"\n{var} is not set."
+    sys.exit(errorMsg)
 from unittest.mock import patch
 from collections import OrderedDict
 from const_tests import env_vars

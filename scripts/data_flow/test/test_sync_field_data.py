@@ -1,6 +1,20 @@
 import pytest
 from unittest.mock import patch, call
+import sys
 import os
+try:
+    sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
+    from fieldProc_setup import *
+except Exception as e:
+    # It's better to catch specific exceptions
+    print(e)
+    errorMsg = "Please set the environment variables PROJ_DIR, PROJECT, and AIRCRAFT to point to an existing project directory."
+    for var in ['PROJ_DIR', 'PROJECT', 'AIRCRAFT']:
+        if var in os.environ:
+            errorMsg += f"\n{var} is set to: {os.environ[var]}"
+        else:
+            errorMsg += f"\n{var} is not set."
+    sys.exit(errorMsg)
 from sync_field_data import ingest_to_local
 
 # Mock os.environ.get to use our env_vars
@@ -34,7 +48,15 @@ def test_ingest_to_local(mock_os_system, mock_logging_info,filetype, local_dir, 
     mock_logging_info.assert_has_calls([call1,call2])
     
 
-from sync_field_data import sync_from_gdrive
+from sync_field_data import sync_from_gdrive,proc_dict ##imports process dictionary to see what data is being processed
+
+call_dict  ={'LRT':call('LRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        'KML':call('KML', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        'HRT':call('HRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        'SRT':call('SRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        'IWG1':call('IWG1', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        'PMS2D':call('PMS2D', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        'ADS':call('ADS', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync')}
 
 @patch('logging.info')
 @patch('sync_field_data.ingest_to_local')
@@ -46,15 +68,7 @@ def test_sync_from_gdrive(mock_distribute_data, mock_ingest_to_local, mock_loggi
     sync_from_gdrive()
 
     # Assert
-    mock_ingest_to_local.assert_has_calls([
-        call('LRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
-        call('KML', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
-        call('HRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
-        call('SRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
-        call('IWG1', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
-        call('PMS2D', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
-        call('ADS', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync')
-    ])
+    mock_ingest_to_local.assert_has_calls([call_dict[dtype] for dtype in proc_dict if proc_dict[dtype]])
     mock_distribute_data.assert_has_calls([
         call(['field_data', 'QAtools'])
     ])

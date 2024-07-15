@@ -2,31 +2,22 @@
 # Shell script to call Python units tests. Configure environment (if not
 # running on a server/groundstation/etc) and call tests.
 #
-# Written in Python 3
+# Written in Python 3.12
 #
-# COPYRIGHT:   University Corporation for Atmospheric Research, 2020
+# COPYRIGHT:   University Corporation for Atmospheric Research, 2024
 ###############################################################################
-# If running someplace the standard RPMs aren't installed, such as on a desktop
-# MAC, be sure that the standard environment vars are configured through your
-# .bashrc setup.
-#
-# In .bashrc:
-#   if [[ -f ~/.Jeffco_only.bashrc ]]; then
-#       . ~/.Jeffco_only.bashrc
-#   fi
-#   source $HOME/ads3_environment.sh
-#   source $HOME/.ftpconfig
-# and copy .Jeffco_only.bashrc, ads3_environemtn.sh and .ftpconfig from a
-# server where the standard RPMs are installed.
+# --- Environment Configuration ---
+# Set up environment variables, etc. as needed -- The PROJECT, PROJ_DIR, and AIRCRAFT 
+# environment variables must be set before running this script to a project with a fieldProcSetup.py file
+# The conda environment must be python 3.12 or later and the following packages are required:
+# conda create -n test_env python=3.12
+# conda activate test_env
+# conda install pytest
+# pip install pyfakefs
 
-# To run a single test use the -p option. To run all tests, omit -p
-#python3 -m unittest discover -s test -v -p test_createFileExt.py
-#python3 -m unittest discover -s test -v -p test_step_through_files.py #-p test_find_lrt_netcdf.py
-#python3 -m unittest discover -s test -v -p test_find_file.py
-# --- Unit Tests ---
-#python -m pytest -s test_push_data.py
-# Specify how to run your unit tests. Replace with your actual command:
-# Specify how to run your Pytest tests. Adjust or add command line options:
+# --- Test Execution ---
+# The following command will run all tests in the test/ directory
+# To run a specific test, replace test/ with the path to the test file
 python -m pytest -s test/
 
 # --- Exit Status Logic ---
