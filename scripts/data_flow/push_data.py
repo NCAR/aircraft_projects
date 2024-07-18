@@ -1,8 +1,9 @@
+from check_env import check
+check()
 from _setup import Setup #setup, myLogger
 import sys, os,glob
 import  _GDrive, _process,_NAS,_FTP,_zip
-from check_env import check
-check() ##Check that the environment variables are set correctly    
+ ##Check that the environment variables are set correctly    
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
 from fieldProc_setup import NAS, FTP,  GDRIVE,sendzipped
 
