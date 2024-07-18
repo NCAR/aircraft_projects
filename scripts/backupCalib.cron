@@ -40,6 +40,8 @@ touch $logfile
 echo "checking previous backup"
 cd $PROJ_DIR
 
+set echo
+
 set res = `git diff $sqlfile | wc -l`
 if ($res != 0) then
   echo "We're in the diff clause!"
@@ -107,7 +109,7 @@ else
 endif
 
 if ($insdiff == 0 && $noninsdiff == 0) then
-  echo "`date`: No Changes to Calibration DB on $dbserver" | mailx -s "$subject" $emailaddr
+  echo "No changes to Calibration DB on $dbserver" | mailx -s "$subject" $emailaddr
 else
   rm -f $diffile
   echo "`date`: There have been changes to the Master Calibrations Database" > $diffile
