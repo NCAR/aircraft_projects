@@ -7,7 +7,11 @@ def check_env_vars(*vars):
     missing_vars = [var for var in vars if not os.environ.get(var)]
     if missing_vars:
         message = f"Missing environment variables: {', '.join(missing_vars)}. Please set these variables and try again."
-        sys.exit(message)
+        try:
+            sys.exit(message)
+        except SystemExit as e:
+            print(e.code)
+            os._exit(1)
         
 #If the environment variables are set, check that they point to an existing directory
 def check():
