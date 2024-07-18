@@ -16,12 +16,12 @@ import os
 import sys
 import smtplib
 from email.mime.text import MIMEText
-
+from check_env import check
 # set up variables
 # Have to get PROJ_DIR, PROJECT and AIRCRAFT from env here even though will get
 # PROJ_DIR and other env vars when import fieldProc_setup, because need them to
 # find location of fieldPro_setup (circular).
-
+check()
 full_proj_dir = os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT']+'/'
 sys.path.insert(0, full_proj_dir + 'scripts/')
 sys.path.insert(0, full_proj_dir)
