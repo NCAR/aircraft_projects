@@ -42,12 +42,13 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = True
+FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
-ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
+##SET MANUALLY FOR MAIRE24 --using the same ftp as MAIRE
+ftp_parent_dir = '/net/ftp/pub/data/incoming/maire'#+project.lower()
+ftp_data_dir = 'pub/data/incoming/maire/EOL_data/RAF_data'
 
 #############################################################################
 ### Define which files should be generated
@@ -55,7 +56,7 @@ ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
 ICARTT = False # Generate ICARTT
 IWG1 = False # Generate IWG1 packet
 
-HRT = False # Generate HRT .nc file
+HRT = True # Generate HRT .nc file
 SRT = False # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
 zip_ADS = False # Bzips the ads file independently of processed files
@@ -67,10 +68,10 @@ ship_all_ADS = False
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
-PMS2D = True            #PMS2D from 2D-C
+PMS2D = False            #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
-QA_notebook = True # Generate HTML of the QA plots
+QA_notebook = False # Generate HTML of the QA plots
 catalog = False # Send QC plots to field catalog, leave as False
 
 #############################################################################
@@ -79,7 +80,7 @@ rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
 #rstudio_dir =    '/h/eol/ads/RStudio/'  # Data dir to run on barolo
 
 # Software - set locations of needed software
-translate2ds = '/opt/local/bin/translate2ds '
+translate2ds = '/opt/local/bin/translate2ds'
 
 #############################################################################
 # Temp file that exists if program is running.
@@ -93,5 +94,5 @@ translate2ds = '/opt/local/bin/translate2ds '
 #############################################################################
 datadump = False
 
-GDRIVE = False
-rclone_staging_dir = ''
+GDRIVE = True
+rclone_staging_dir = '/var/r1/rclone_staging'
