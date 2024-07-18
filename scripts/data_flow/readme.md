@@ -1,8 +1,13 @@
-# PUSH_DATA Readme to understand data flow
+# Readme to understand data flow of push_data and sync_field_data
 
-push_data.py is the main module to automate pushing and processing raw data from the groundstation. When edits are made, you can run tests to ensure everything is still functioning by running `./run_tests.sh`. See the readme inside the test subdirectory for more information
+## Info for Developers
+When edits are made, you can run tests to ensure everything is still functioning by running `./run_tests.sh`. See the readme inside the test subdirectory for more information
 
-## push_data: main()
+## push_data.py
+
+push_data.py is the main module to automate pushing and processing raw data from the groundstation.
+
+### push_data: main()
 
 This is the main file of the push_data module that calls on all of the classes to process and push the data for a field project. It performs the following:
 
@@ -17,7 +22,7 @@ This is the main file of the push_data module that calls on all of the classes t
     9. Calls the NAS class if the NAS flag is set to True.
     10. Calls the report function from the setup class to append to the final message and send the status email.
 
-## Environment variables
+### Environment variables
 
 A number of environment variables need to be set for the script to run properly:
 
@@ -26,7 +31,7 @@ A number of environment variables need to be set for the script to run properly:
 - $RAW_DATA_DIR --> the raw data directory variable set on the computer running push_data
 - $PROJ_DIR  --> the project directory set on the computer running push_data
 
-## Project Process Setup
+### Project Process Setup
 
 The project specific setup constants and filepaths are defined in fieldProcSetup.py in the filepath $PROJ_DIR/$PROJECT/$AIRCRAFT/scripts, including:
 
@@ -46,9 +51,9 @@ and the Process class:
 
 - nc2ascBatch -->  path of n2asc file; should be environment variables `$PROJ_DIR +$PROJECT + / + $AIRCRAFT + /scripts/nc2asc.bat`
 
-## Classes
+### Classes
 
-### Setup
+#### Setup
 
 The Setup class is designed to initialize and prepare the push_data environment for processing and handling within a project. When initialized, it calls upon all the methods to set up the initial variables needed to process and push data. For more details on the individual methods see the documentation in _setup.py
 
@@ -66,7 +71,7 @@ The `__init__` method performs the following steps:
 
 The `report` method is not accessed in the `__init__` method, but once the Setup class is initialized it can be called to send the report to the user's email address.
 
-### Process
+#### Process
 
 The Process class is designed to automate and streamline the handling of various data files. The class provides a structured approach to executing a series of processing steps, such as converting raw data into netCDF format, reordering netCDF files, and processing 3vCPI data. Additionally, it includes methods for extracting dates from filenames and moving merged files to specified directories. The class is initialized with a comprehensive set of parameters. When initialized in push_data, the Process class is passed these parameters from the Setup class.
 
@@ -86,7 +91,7 @@ The `__init__` method performs the following steps:
  7. Once the processing is done, it loops through the file extensions again and finds additional files except for ADS and LRT.
  8. If QATools is set to True, a `generate_QAtools` is run and a QA ipynb is exported as an html.
 
-### GDrive
+#### GDrive
 
 The GDrive class is designed to ship files to Google Drive via an rclone staging location.
 
@@ -103,7 +108,7 @@ Prints the key (representing an instrument or file type).
  6. Checks if the directory specified by the current key in `inst_dir` exists. If not, logs an error message and continues to the next iteration.
  7. If the directory exists and the filename for the current key is not an empty string, it calls the `_transfer_instrument_files` method to transfer the instrument files to the `rclone_staging_dir`.
 
-### DataShipping
+#### DataShipping
 
 The __init__ method of the DataShipping class (in _NAS.py) performs the following steps:
 
@@ -120,7 +125,7 @@ The __init__ method of the DataShipping class (in _NAS.py) performs the followin
  11. Calls the rsync_file method to copy the file to the NAS data directory and updates the status dictionary for the current key with the result.
  12. Calls the setup_NAS method with the provided parameters to complete the setup process.
 
-### SetupZip
+#### SetupZip
 
 The SetupZip class (in _zip.py) sets up the zipping functionality if the datafiles needs to be zipped before being transferred.
 The `__init__` method of the SetupZip class performs the following steps:
@@ -134,7 +139,7 @@ The `__init__` method of the SetupZip class performs the following steps:
  4. Logs a message with the data_dir.
  5. Calls the `zip_file` method with file_name and the corresponding directory from inst_dir based on the key to
 
-### TransferFTP
+#### TransferFTP
 
 The TransferFTP class is used if the project is using FTP to transfer files around.
  TransferFTP `__init__` Method Overview
@@ -161,7 +166,7 @@ The `__init__` method of the `TransferFTP` class performs the following steps to
 
 This method effectively handles the initialization and setup for transferring files to an FTP server, including error handling, logging, and conditional file transfer based on specific criteria.
 
-### FindFiles
+#### FindFiles
 
 The FindFiles class is a collection of helper methods for the Process Class to find the datafiles based on the input parameters.
 
@@ -217,11 +222,11 @@ Behaviors
 
 4. Error Handling: If, after attempting to identify the correct NetCDF file, `self.ncfile` is empty (`''`), it logs and aborts the operation, indicating that no suitable NetCDF file was identified.
 
-#### Usage
+##### Usage
 
 This method is useful in workflows where managing LRT NetCDF files is necessary, especially in scenarios involving conditional processing or shipping of data based on the files' existence and user input.
 
-### MyLogger
+#### MyLogger
 
 The MyLogger class (in _logger.py) sets up the logger to be used throughout the push_data program and defines common functions used throughout
 
