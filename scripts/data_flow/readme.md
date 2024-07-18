@@ -7,22 +7,23 @@
   - [Environment Variables](#environment-variables)
   - [Project Process Setup](#project-process-setup)
   - [Classes](#classes)
-    -[Setup](#setup)
-    -[Process](#process)
-    -[GDrive](#gdrive)
-    -[DataShipping](#datashipping)
-    -[SetupZip](#setupzip)
-    -[TransferFTP](#transferftp)
+    - [Setup](#setup)
+    - [Process](#process)
+    - [GDrive](#gdrive)
+    - [DataShipping](#datashipping)
+    - [SetupZip](#setupzip)
+    - [TransferFTP](#transferftp)
     - [FindFiles](#findfiles)
+    - [MyLogger](#mylogger)
 - [sync_field_data.py](#sync_field_datapy)
-    -[sync_field_data: main()](#sync_field_data-main)
-    -[Setup functions](#setup-functions)
-    -[Helper functions](#helper-functions)
-    -[Main functions](#main-functions)
+    - [sync_field_data: main()](#sync_field_data-main)
+    - [Setup functions](#setup-functions)
+    - [Helper functions](#helper-functions)
+    - [Main functions](#main-functions)
 - [Testing for Developers](#testing-for-developers)
-    -[Test environment](#test-environment)
-    -[Running tests](#running-tests)
-    -[Test Modules](#test-modules)
+    - [Test environment](#test-environment)
+    - [Running tests](#running-tests)
+    - [Test Modules](#test-modules)
 
 
 ## push_data.py
@@ -243,8 +244,6 @@ Behaviors
 3. Multiple Files Found: If more than one file is found, it logs a message indicating the situation and calls `self.step_through_files` with the list of found files, `filetype`, and the `process` flag. This method is presumably designed to let the user or the system decide which file to work with, but its behavior is not detailed in the provided excerpt.
 
 4. Error Handling: If, after attempting to identify the correct NetCDF file, `self.ncfile` is empty (`''`), it logs and aborts the operation, indicating that no suitable NetCDF file was identified.
-
-##### Usage
 
 This method is useful in workflows where managing LRT NetCDF files is necessary, especially in scenarios involving conditional processing or shipping of data based on the files' existence and user input.
 
