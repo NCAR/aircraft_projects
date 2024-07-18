@@ -18,9 +18,9 @@ import smtplib
 from email.mime.text import MIMEText
 
 # set up variables
-# Have to get PROJ_DIR, project and aircraft from env here even though will
-# get them again when import fieldProc_setup, because need them to find
-# location of fieldPro_setup.
+# Have to get PROJ_DIR, PROJECT and AIRCRAFT from env here even though will get
+# PROJ_DIR and other env vars when import fieldProc_setup, because need them to
+# find location of fieldPro_setup (circular).
 
 full_proj_dir = os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT']+'/'
 sys.path.insert(0, full_proj_dir + 'scripts/')
@@ -34,8 +34,9 @@ ftp_dir = ftp_parent_dir
 rdat_dir = rdat_parent_dir + project
 eol_dir = temp_dir+'/EOL_data/'
 
+##Dictionary to indicate which datatypes are used in the project
 proc_dict = {'LRT': True, 'KML': True, 'HRT': HRT, 'SRT': SRT, \
-            'IWG1':IWG1,'ICARTT': ICARTT,'PMS2D':PMS2D,'ADS':ship_ADS} ##Dictionary to indicate which datatypes are used in the project
+            'IWG1':IWG1,'ICARTT': ICARTT,'PMS2D':PMS2D,'ADS':ship_ADS}
 
 def _run_and_log(command, message):   
     '''Helper function to run a command and log the message alongside it.'''
@@ -280,7 +281,7 @@ def parse_args():
     return args
 
 def setup_logging():
-    # Set up logging
+    """ Set up logging """
     logger = logging.getLogger()
     # If a logfile name is specified on the command line, set up log rotation
     if args.logfile:
