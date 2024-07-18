@@ -1,7 +1,29 @@
 # Readme to understand data flow of push_data and sync_field_data
 
-## Info for Developers
-When edits are made, you can run tests to ensure everything is still functioning by running `./run_tests.sh`. See the readme inside the test subdirectory for more information
+## Table of Contents
+
+- [push_data.py](#push_datapy)
+  - [push_data: main()](#push_data-main)
+  - [Environment Variables](#environment-variables)
+  - [Project Process Setup](#project-process-setup)
+  - [Classes](#classes)
+    -[Setup](#setup)
+    -[Process](#process)
+    -[GDrive](#gdrive)
+    -[DataShipping](#datashipping)
+    -[SetupZip](#setupzip)
+    -[TransferFTP](#transferftp)
+    - [FindFiles](#findfiles)
+- [sync_field_data.py](#sync_field_datapy)
+    -[sync_field_data: main()](#sync_field_data-main)
+    -[Setup functions](#setup-functions)
+    -[Helper functions](#helper-functions)
+    -[Main functions](#main-functions)
+- [Testing for Developers](#testing-for-developers)
+    -[Test environment](#test-environment)
+    -[Running tests](#running-tests)
+    -[Test Modules](#test-modules)
+
 
 ## push_data.py
 
@@ -269,3 +291,35 @@ The `dist_raw` function focuses on distributing RAF raw data from the ingestion 
 `sync_from_ftp()` syncs data from FTP server to local directories. This function calls the `dir_check` function to ensure the required directories exist and iterates over the `proc_dict` dictionary to determine which data types need to be processed. For each data type that needs to be processed, it calls the `ingest_to_local` function to sync the data from the FTP server to the local `field_data` directory. It also calls the `distribute_data` function to distribute the synced data to other locations.
 
 `sync_from_nas()` syncs data from NAS. This function calls the `dir_check` function to check the directory, calls the `dist_raw` function to distribute raw data, calls the `dist_prod` function to distribute production data, and finally calls the `distribute_data` function with the arguments ['field_data', 'MTP'].
+
+## Testing for Developers
+
+How to run tests for push_data.py and sync_field_data.py. When edits are made, you can run tests to ensure everything is still functioning by running `./run_tests.sh`. 
+
+### Test environment
+
+To run the tests for push_data and sync_field_data, you must have a test environment running python 3.12 or greater. You can create one using the testenv.yml file by running the following commands from the dataflow subdirectory:
+
+`conda env create -f test/testenv.yml`
+
+You can install the packages in the yml file manually with pip, or set up your own conda environment. Below is an example of a conda environment setup:
+ `conda create -n test_env python=3.12`
+ `conda activate test_env`
+ `conda install pytest, pytest-mock`
+ `pip install pyfakefs`
+
+ Then make sure to activate your environment with `conda activate test_env` or `source activate test_env` before running the tests.
+
+The environment variables for `$PROJECT`, `$PROJ_DIR`, and `$AIRCRAFT` must be configured to an existing project with a folder within the aircraft_projects repository for tests to run.
+
+### Running tests
+
+Run all tests in the aircraft_projects/scripts/data_flow/test/ directory by running `./run_tests.sh` from the data_flow/ directory with the active test environment.
+
+### Test Modules
+
+ 1. `test__setup.py` tests the instantiation of the setup class and make sure all of the constants passed to process are properly formatted.
+ 2. `test_push_data.py` sets up a testing environment using fixtures and mocks to ensure that the push_data module functions correctly under various conditions. It is structured to test the main functionality of the data pushing process, including reading flight and email information, handling environment variables, interacting with the filesystem, and sending emails.
+ 3. `test__zip.py` tests the SetupZip class and the zipping functiomality of the push_data script on a fake filesystem.
+ 4. `test_sync_field_data.py` sets up a testing environment using fixtures and mocks to ensure the functionality of the sync_field_data.py script. It makes sure that based on different configurations the correct functions and commands are called to ensure the data is syncing to the correct directories.
+
