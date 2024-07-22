@@ -10,10 +10,7 @@ SECONDS=0  # Time this script
 # the script ads3_environment.sh currently in /home/ads 
 
 DATA_LOCATION="/var/r1/$PROJECT"
-cd /run/media/ads
-DRIVE=$(ls)
-echo $DRIVE
-TRANSFER_MEDIA="/run/media/ads/$DRIVE"
+cd /run/media/ads ## Change to the directory where the removable drive is mounted
 
 echo "Enter flight to copy from $PROJECT using lower case e.g. rf01 or ff03:"
 read FLIGHT
@@ -35,6 +32,25 @@ read DRIVE_CONNECTION
 if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    echo "****************************************************************"
    echo "You entered $DRIVE_CONNECTION, which means you have a drive connected.";
+   DRIVES=($(ls))  # Store the list of drives in an array
+   TRANSFER_MEDIA="/run/media/ads"
+   if [ ${#DRIVES[@]} -eq 1 ]; then
+      DRIVE=${DRIVES[0]}
+      TRANSFER_MEDIA="$TRANSFER_MEDIA/$DRIVE"
+   elif [ ${#DRIVES[@]} -gt 1 ]; then
+      echo "Multiple drives detected. Please select one by entering the corresponding number:"
+      for i in "${!DRIVES[@]}"; do
+         echo "$((i+1))) ${DRIVES[$i]}"
+      done
+      read -p "Enter number: " DRIVE_SELECTION
+      DRIVE=${DRIVES[$((DRIVE_SELECTION-1))]}
+      TRANSFER_MEDIA="$TRANSFER_MEDIA/$DRIVE"
+   else
+      echo "No drives detected. Exiting."
+      exit 1
+   fi
+
+   echo "Using drive: $DRIVE"
 
    mkdir -p $TRANSFER_MEDIA/$PROJECT
    EXIT_MKDIR="$?"
