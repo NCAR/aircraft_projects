@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 from collections import OrderedDict
 from const_tests import env_vars, mock_input
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/scripts/data_flow')
-from _setup import Setup
+from _setup import Setup, default_emails
 from _process import Process
 from pyfakefs.fake_filesystem_unittest import Patcher
 
@@ -26,7 +26,7 @@ def mock_getenv(var_name):
 def mock_input(prompt):
     if 'Input flight' in prompt:
         return "tf01"
-    elif 'Input email' in prompt:
+    elif 'email' in prompt:
         return "test@example.com"
     return input(prompt)
 
@@ -75,7 +75,7 @@ def test_setup_constants(setup):
     assert setup.DATA_DIR == "data_directory/PROJECT_NAME/"
     #assert isinstance(setup.filename, dict)
     assert setup.FLIGHT == "tf01"
-    assert setup.EMAIL == "test@example.com"
+    assert setup.EMAIL == default_emails+['test@example.com']
 
 
 @pytest.fixture

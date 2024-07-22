@@ -6,7 +6,7 @@ import sys, os
 import _logging
 import logging
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
-from fieldProc_setup import  ICARTT, IWG1, HRT, SRT, PMS2D, threeVCPI
+from fieldProc_setup import  ICARTT, IWG1, HRT, SRT, PMS2D, threeVCPI, default_emails
 
 myLogger = _logging.MyLogger()
 class Setup:
@@ -244,8 +244,15 @@ class Setup:
         self.FLIGHT = input('Input flight designation (e.g. tf01):')
 
     def readEmail(self):
-        '''Read user input to determine the email address'''
-        self.EMAIL = input('Input email address to send results:')
+        '''Read user input to determine the email addresses, separated by commas if multiple. If no input is given, use the default email list.'''
+        print(f'Current default email(s): {", ".join(default_emails)}')
+        input_emails = input('Input additional email address(es) to send results (separate multiple emails with a comma, press enter to use default):')
+        if input_emails.strip():  # Check if input is not empty
+            additional_emails = [email.strip() for email in input_emails.split(',')]
+            self.EMAIL = default_emails + additional_emails  # Combine lists
+        else:
+            self.EMAIL = default_emails
+        print(f'Emails to be notified: {", ".join(self.EMAIL)}')
 
     def read_env(self, env_var):
         '''Read environment variables and return error if not set'''
@@ -255,16 +262,16 @@ class Setup:
             myLogger.log_and_print(f'Please set the environment variable {env_var}')
             sys.exit(1)
 
-    def setup_email(self, data_dir, email):
+    def setup_email(self, data_dir, emails):
         ''' Set up email '''
         emailfilename = 'email.addr.txt'
         emailfile = data_dir+emailfilename
         command = 'rm '+emailfile
         os.system(command)
         with open(emailfile, 'w+') as fo:
-            fo.write(email+'\n')
+            fo.write(', '.join(emails)+'\n')
     
-    def report(self, status, project, flight, email, file_ext,final_message):
+    def report(self, status, project, flight, emails, file_ext,final_message):
         """
         Generates a report of the shipping status for different file types and sends it to the user's email address.
         """
@@ -280,10 +287,10 @@ class Setup:
         msg = MIMEText(final_message)
         msg['Subject'] = f'Process & Push message for:{project}  flight:{flight}'
         msg['From'] = 'ads@groundstation'
-        msg['To'] = email
+        msg['To'] = ', '.join(emails)
 
         s = smtplib.SMTP('localhost')
-        s.sendmail('ads@groundstation', email, msg.as_string())
+        s.sendmail('ads@groundstation', emails, msg.as_string())
         s.quit()
 
         print("\r\nSuccessful completion. Close window to exit.")

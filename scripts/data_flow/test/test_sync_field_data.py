@@ -4,7 +4,7 @@ import sys
 import os
 from check_env import check
 check() ##Check that the environment variables are set correctly   
-from sync_field_data import ingest_to_local
+from sync_field_data import ingest_to_local, QA_notebook
 
 # Mock os.environ.get to use our env_vars
 
@@ -58,9 +58,8 @@ def test_sync_from_gdrive(mock_distribute_data, mock_ingest_to_local, mock_loggi
 
     # Assert
     mock_ingest_to_local.assert_has_calls([call_dict[dtype] for dtype in proc_dict if proc_dict[dtype]])
-    mock_distribute_data.assert_has_calls([
-        call(['field_data', 'QAtools'])
-    ])
+    if QA_notebook:
+        mock_distribute_data.assert_has_calls([call(['field_data', 'QAtools'])])
     mock_logging_info.assert_called_once_with("Syncing from GDRIVE...")
     
 
