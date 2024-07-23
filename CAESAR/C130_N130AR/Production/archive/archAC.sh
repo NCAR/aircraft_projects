@@ -6,54 +6,78 @@
 ###############
 #   Project   #
 ###############
-setenv PROJECT "XXXPROJECTXXX"
-setenv YEAR 20XX
-setenv PLATFORM "XXXAIRCRAFTXXX"
+setenv PROJECT "CAESAR"
+setenv YEAR 2024
 setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
 setenv CS_LOCATION "/glade/campaign/eol/archive/"
-setenv EMAIL "name@ucar.edu"
-setenv projectlower "xxxprojectxxx"
-setenv platformlower "xxxaircraftxxx"
+setenv EMAIL "srunkel@ucar.edu"
+setenv projectlower "caesar"
+setenv platform_lower "c130_n130ar"
 ########################## Raw Data Files ##############################
 ### ADS 
-#$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR/ $EMAIL
 
 ### CAMERA
-#$ARCHIVE_SCRIPT CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg $CS_LOCATION$YEAR $EMAIL
+$ARCHIVE_SCRIPT CAM /scr/raf/Raw_Data/$PROJECT/camera_images/hourly_tar tar $CS_LOCATION$YEAR/ $EMAIL 
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-#$ARCHIVE_SCRIPT field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc /net/archive/data/$projectlower/aircraft/$platform_lower/field_phase/LRT $EMAIL
+#$ARCHIVE_SCRIPT LRT/v0.2 /scr/raf_data/$PROJECT/LRT nc /net/archive/data/ $EMAIL
+
+### Preliminary LRT
+#$ARCHIVE_SCRIPT FIELD/LRT /scr/raf/Raw_Data/$PROJECT/field_sync/EOL_data/RAF_data/LRT nc /net/archive/data/ $EMAIL
+
+### Preliminary SRT
+#$ARCHIVE_SCRIPT FIELD/SRT /scr/raf/Raw_Data/$PROJECT/field_sync/EOL_data/RAF_data/SRT nc $CS_LOCATION$YEAR/ $EMAIL
+
+### Preliminary HRT
+#$ARCHIVE_SCRIPT FIELD/HRT /scr/raf/Raw_Data/$PROJECT/HRT nc $CS_LOCATION$YEAR/ $EMAIL
 
 ### Preliminary LRT ICT
-#$ARCHIVE_SCRIPT field_phase/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT field_sync/ICARTT /scr/raf/Raw_Data/$PROJECT/field_sync/ICARTT ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary LRT IWG1
-#$ARCHIVE_SCRIPT field_phase/IWG1 /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/IWG1 iwg1 $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT FIELD/PMS2D /scr/raf/Raw_Data/$PROJECT/field_sync/EOL_data/RAF_data/PMS2D 2d $CS_LOCATION$YEAR/ $EMAIL
+
+### Preliminary LRT IWG1
+#$ARCHIVE_SCRIPT FIELD/IWG1 /scr/raf/Raw_Data/$PROJECT/field_sync/EOL_data/RAF_data/IWG1 iwg $CS_LOCATION$YEAR/ $EMAIL
+
+###Preliminary F2DS
+#$ARCHIVE_SCRIPT FIELD/F2DS -t /scr/raf/Raw_Data/$PROJECT/F2DS F2DS $CS_LOCATION$YEAR/ $EMAIL
+
+###Preliminary HVPS
+#$ARCHIVE_SCRIPT FIELD/HVPS -t /scr/raf/Raw_Data/$PROJECT/HVPS HVPS $CS_LOCATION$YEAR/ $EMAIL
+
+###Preliminary F2DS
+#$ARCHIVE_SCRIPT FIELD/ICARTT/F2DS /scr/raf/Raw_Data/$PROJECT/F2DS/ICARTT ict $CS_LOCATION$YEAR/ $EMAIL
+
+###Preliminary F2DS
+#$ARCHIVE_SCRIPT FIELD/ICARTT/HVPS /scr/raf/Raw_Data/$PROJECT/HVPS/ICARTT ict $CS_LOCATION$YEAR/ $EMAIL
+
 
 ### Preliminary KML
-#$ARCHIVE_SCRIPT field_phase/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT FIELD/KML /scr/raf/Raw_Data/$PROJECT/field_sync/EOL_data/RAF_data/KML kml $CS_LOCATION$YEAR/ $EMAIL
 
 ### Preliminary CO ICT
-#ARCHIVE_SCRIPT field_phase/CO /scr/raf/Raw_Data/$PROJECT/field_phase/CO ict $CS_LOCATION$YEAR $EMAIL
+#ARCHIVE_SCRIPT field_sync/CO /scr/raf/Raw_Data/$PROJECT/field_sync/CO ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary CO2CH4 ICT
-#$ARCHIVE_SCRIPT field_phase/CO2CH4 /scr/raf/Raw_Data/$PROJECT/field_phase/CO2CH4 ict $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT field_sync/CO2CH4 /scr/raf/Raw_Data/$PROJECT/field_sync/CO2CH4 ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary NONO2O3 ICT
-#$ARCHIVE_SCRIPT field_phase/NONOyO3 /scr/raf/Raw_Data/$PROJECT/field_phase/NO_NOy_O3 ict $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT field_sync/NONOyO3 /scr/raf/Raw_Data/$PROJECT/field_sync/NO_NOy_O3 ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary TOGA ICT
-#$ARCHIVE_SCRIPT field_phase/TOGA /scr/raf/Raw_Data/$PROJECT/field_phase/TOGA ict $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT field_sync/TOGA /scr/raf/Raw_Data/$PROJECT/field_sync/TOGA ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary TOF-AMS ICT
-#$ARCHIVE_SCRIPT field_phase/TOF-AMS /scr/raf/Raw_Data/$PROJECT/field_phase/CU-HRAMS ict $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT field_sync/TOF-AMS /scr/raf/Raw_Data/$PROJECT/field_sync/CU-HRAMS ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary HARP Actinic Flux ICT
-#$ARCHIVE_SCRIPT field_phase/HARP /scr/raf/Raw_Data/$PROJECT/field_phase/HARP_Jvalues ict $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT field_sync/HARP /scr/raf/Raw_Data/$PROJECT/field_sync/HARP_Jvalues ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary ARNOLD ICT
-#ARCHIVE_SCRIPT field_phase/ARNOLD /scr/raf/Raw_Data/$PROJECT/field_phase/ARNOLD ict $CS_LOCATION$YEAR $EMAIL
+#ARCHIVE_SCRIPT field_sync/ARNOLD /scr/raf/Raw_Data/$PROJECT/field_sync/ARNOLD ict $CS_LOCATION$YEAR $EMAIL
 
 ########################## Production Data Files ##########################
 ### LRT

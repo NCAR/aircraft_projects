@@ -1,5 +1,5 @@
 #!/bin/csh
 
-FLIGHT="rf01"
+FLIGHT="rf05"
 
-./net/jlocal/projects/scripts/camera/combineCameras.pl ../movieParamFile $FLIGHT
+/net/jlocal/projects/scripts/camera/combineCameras.pl ../movieParamFile $FLIGHT
