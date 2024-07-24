@@ -112,11 +112,10 @@ if ($insdiff == 0 && $noninsdiff == 0) then
   echo "No changes to Calibration DB on $dbserver" | mailx -s "$subject" $emailaddr
 else
   rm -f $diffile
-  echo "`date`: There have been changes to the Master Calibrations Database" > $diffile
-  echo " found on the postgres server on: $dbserver" >> $diffile
-  echo "The changes have been backed up in the file:" >> $diffile
+  echo "There have been changes to the Master Calibrations Database found on the postgres server on: $dbserver" > $diffile
+  echo "\nThe changes have been backed up in the file:" >> $diffile
   echo " $sqlfile" >> $diffile
-  echo " Which should now be committed to github." >> $diffile
+  echo "\nWhich should now be committed to github." >> $diffile
   echo "" >> $diffile
   echo " The changes (in SQL code) follow in two parts -" >> $diffile
   echo " INSERT differences and then non-INSERT differences:" >> $diffile
