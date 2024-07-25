@@ -18,11 +18,13 @@ setenv platform_lower "c130_n130ar"
 #$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR/ $EMAIL
 
 ### CAMERA
-$ARCHIVE_SCRIPT CAM /scr/raf/Raw_Data/$PROJECT/camera_images/hourly_tar tar $CS_LOCATION$YEAR/ $EMAIL 
+#$ARCHIVE_SCRIPT CAM /scr/raf/Raw_Data/$PROJECT/camera_images/hourly_tar tar $CS_LOCATION$YEAR/ $EMAIL 
+
+
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-#$ARCHIVE_SCRIPT LRT/v0.2 /scr/raf_data/$PROJECT/LRT nc /net/archive/data/ $EMAIL
+$ARCHIVE_SCRIPT LRT/v0.3 /scr/raf_data/$PROJECT/LRT nc /net/archive/data/ $EMAIL
 
 ### Preliminary LRT
 #$ARCHIVE_SCRIPT FIELD/LRT /scr/raf/Raw_Data/$PROJECT/field_sync/EOL_data/RAF_data/LRT nc /net/archive/data/ $EMAIL
