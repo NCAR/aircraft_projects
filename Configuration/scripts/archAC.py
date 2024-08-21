@@ -20,6 +20,7 @@ import subprocess
 import smtplib
 from email.mime.text import MIMEText
 from os.path import join
+import hashlib
 user = "dmg"
 rpwd = ""
 
@@ -34,11 +35,11 @@ if getuser != "eoldata":
 # project working dir (currently /jnet/local/projects).'''
 # File that contains map between project and Mass Store directories where
 # production data is archived.
-dirmapfile = "/scr/raf/Prod_Data/archives/msfiles/directory_map"
-hash_value_file = "/scr/raf/Prod_Data/"+os.environ["PROJECT"]+\
-                "/"+os.environ["PROJECT"]+"_archive_hash_file.txt"
-
+project = os.environ["PROJECT"]
 calendaryear = os.environ["YEAR"]
+dirmapfile = "/scr/raf/Prod_Data/archives/msfiles/directory_map"
+hash_value_file = "/scr/raf/Prod_Data/"+project+\
+                "/"+project+"_archive_hash_file.txt"
 print(calendaryear)
 scr_dir = '/scr/raf/eoldata'  ##Scratch directory to write and store tarballs before transferring them to the archive
 class archRAFdata:
@@ -364,6 +365,7 @@ class archRAFdata:
         print(f'#  {len(sfiles)} Job(s) submitted on {archraf.today()}')
         options = ''
         command = []
+        checksums = {}
         for spath in sfiles:
             path_components = spath.split('/')
             sfile = (
@@ -385,7 +387,13 @@ class archRAFdata:
                 sfile = archraf.renameKML(sdir,sfile)
 
             (msrcpMachine,wpwd)=archraf.setMSSenv()
-
+            # Compute sha256sum for the file
+            sha256_hash = hashlib.sha256()
+            with open(sdir+spath, "rb") as f:
+                for byte_block in iter(lambda: f.read(4096), b""):
+                    sha256_hash.update(byte_block)
+            checksum = sha256_hash.hexdigest()
+            checksums[sfile] = checksum
             # http://www.mgleicher.us/GEL/hsi/hsi_reference_manual_2/hsi_commands/put_command.html
             # -P : create intermediate HPSS subdirectories for the file(s) if they do not exist
             # -d : remove local files after success transfer to HPSS
@@ -434,6 +442,40 @@ class archRAFdata:
                     subj = f"rsync job for {type}/{sfile} -- Failed -- {archraf.today()}"
                     message = f"\nSTDOUT:\n{output.decode('utf-8')}\n\nSTDERR:\n{errors.decode('utf-8')}"
                     archraf.sendMail(subj,message, email)
+            # SSH into the remote server and run the sha256sum command
+            if 'LRT' in type:
+                ssh_command = f"sha256sum {csroot}{type}/* >> checksums.txt"
+            else:
+                ssh_command = f'ssh eoldata@data-access.ucar.edu "cd {csroot}{type} && sha256sum * >> checksums.txt"'
+            p = subprocess.Popen(ssh_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+            output, errors = p.communicate()
+            result = p.returncode
+            if result == 0:
+                print("#  sha256sum command executed successfully on remote server.")
+                
+                # Retrieve the remote checksums
+                ssh_command = f'ssh eoldata@data-access.ucar.edu "cat {csroot}{type}/checksums.txt"'
+                p = subprocess.Popen(ssh_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+                output, errors = p.communicate()
+                result = p.returncode
+                if result == 0:
+                    remote_checksums = output.decode('utf-8').strip().split('\n')
+                    for remote_checksum in remote_checksums:
+                        remote_hash, remote_file = remote_checksum.split()
+                        remote_file = remote_file.split('/')[-1]
+                        if remote_file in checksums:
+                            if checksums[remote_file] == remote_hash:
+                                print(f"#  Checksum match for {remote_file} -- OK")
+                            else:
+                                print(f"#  Checksum mismatch for {remote_file} -- FAILED")
+                        else:
+                            print(f"#  File {remote_file} not found in local checksums")
+                else:
+                    print("#  Failed to retrieve remote checksums.")
+                    print(errors.decode('utf-8'))
+            else:
+                print("#  sha256sum command failed on remote server.")
+                print(errors.decode('utf-8'))
         print(f"#   Successful completion on {archraf.today()}" + "\n")
 
 
