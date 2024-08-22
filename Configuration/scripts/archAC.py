@@ -393,7 +393,7 @@ class archRAFdata:
                 for byte_block in iter(lambda: f.read(4096), b""):
                     sha256_hash.update(byte_block)
             checksum = sha256_hash.hexdigest()
-            checksums[sfile] = checksum
+            checksums[sfile] = checksum #Store local checksums for comparison later
             # http://www.mgleicher.us/GEL/hsi/hsi_reference_manual_2/hsi_commands/put_command.html
             # -P : create intermediate HPSS subdirectories for the file(s) if they do not exist
             # -d : remove local files after success transfer to HPSS
@@ -442,20 +442,20 @@ class archRAFdata:
                     subj = f"rsync job for {type}/{sfile} -- Failed -- {archraf.today()}"
                     message = f"\nSTDOUT:\n{output.decode('utf-8')}\n\nSTDERR:\n{errors.decode('utf-8')}"
                     archraf.sendMail(subj,message, email)
-            # SSH into the remote server and run the sha256sum command
+            # SSH into the remote server or cd to local archive and run the sha256sum command
             if 'LRT' in type:
-                ssh_command = f"sha256sum {csroot}{type}/* >> checksums.txt"
+                ssh_command = f"cd {csroot}{type} && sha256sum * >> checksums.txt" #Command to create checksum
+                open_command = f'cat {csroot}{type}/checksums.txt' #Command to read checksums for comparison
             else:
                 ssh_command = f'ssh eoldata@data-access.ucar.edu "cd {csroot}{type} && sha256sum * >> checksums.txt"'
+                open_command = f'ssh eoldata@data-access.ucar.edu "cat {csroot}{type}/checksums.txt"'
             p = subprocess.Popen(ssh_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
             output, errors = p.communicate()
             result = p.returncode
             if result == 0:
-                print("#  sha256sum command executed successfully on remote server.")
-                
-                # Retrieve the remote checksums
-                ssh_command = f'ssh eoldata@data-access.ucar.edu "cat {csroot}{type}/checksums.txt"'
-                p = subprocess.Popen(ssh_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+                print("#  sha256sum command executed successfully on archive server.")
+                # Retrieve the remote checksums and compare them to the local checksums
+                p = subprocess.Popen(open_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
                 output, errors = p.communicate()
                 result = p.returncode
                 if result == 0:
@@ -471,10 +471,10 @@ class archRAFdata:
                         else:
                             print(f"#  File {remote_file} not found in local checksums")
                 else:
-                    print("#  Failed to retrieve remote checksums.")
+                    print("#  Failed to retrieve archive checksums.")
                     print(errors.decode('utf-8'))
             else:
-                print("#  sha256sum command failed on remote server.")
+                print("#  sha256sum command failed on archive server.")
                 print(errors.decode('utf-8'))
         print(f"#   Successful completion on {archraf.today()}" + "\n")
 
