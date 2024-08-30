@@ -1,0 +1,58 @@
+dataset_cfg: &dataset
+  filelength: 6 hours
+  platform_id: <platform_id>
+  host: campaign
+  frequency_id: 2
+  spatial_type: raster
+  gcmd_science_keyword_id: 505, 506
+  description: 'default'
+  iso_citation_role: 11
+  contact_id_codiac: <author_id>
+  datacite_contributor_type: ''
+  iso_citation_role_2: 10
+  contact_id_codiac_2: 1
+  datacite_contributor_type_2: ''
+  
+3vcpi_roi:
+  <<: *dataset
+  archive_ident: <3vcpi_roi>
+  title: NSF/NCAR GV (HIAPER) 3V-CPI Raw CPI ROI Imagery
+  summary: >
+    The Three-View Cloud Particle Imager (3V-CPI) is a combination of three imaging instruments. Two of them comprise a 2D-S instrument, in which two 2D probes image particles as they
+    pass through beams that are oriented orthogonally to each other and the airflow. If particles also lie in the intersection of the sensitive areas of the two beams, they are seen
+    by both 2D probes. In that case, the CPI is triggered to take a high-resolution picture, via a briefly illuminated high-resolution imaging array, to provide a third image at high
+    resolution. The probe is particularly suited to imaging ice crystals, but also provide good detection of other hydrometeors including large cloud droplets, drizzle and small rain
+    drops, and precipitation particles.  The 3V-CPI measures the size, shape and concentration of water drops and ice particles in clouds in the size range of 15-250 micrometers.
+    This dataset contains CPI ROI images collected by the 3V-CPI aboard the NCAR <AIRCRAFT> during the <PROJECT> project.  For all of the flights, the CPI makes as many *.roi files
+    as it needs; each file can be maximum 92Mb size and then a new file is opened.
+  title: NSF/NCAR GV (HIAPER) 3V-CPI Raw CPI ROI Imagery
+  ingest_location: /scr/raf/Raw_Data/<PROJECT>/3v_cpi/CPI
+  startdate_pattern: YYYY-MM-yy HH:mm:SS
+  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/c130_n130ar/3V-CPI/ROI/<PROJECT>_(\E\E\E\E)
+  filename_pattern: '[\Y\Y\Y\Y\M\M\y\y\H\H\m\m\S\S].roi'
+  format: 75 #roi format
+
+3vcpi_2ds: &2ds
+  <<: *dataset
+  xlink_id: 507, 508
+  archive_ident: <3vcpi_2ds>
+  title: NSF/NCAR GV (HIAPER) 3V-CPI Raw 2D-S Imagery
+  summary: >
+    'The Three-View Cloud Particle Imager (3V-CPI) is a combination of three imaging instruments. Two of them comprise a 2D-S instrument, in which two 2D probes image particles as they pass 
+    through beams that are oriented orthogonally to each other and the airflow. If particles also lie in the intersection of the sensitive areas of the two beams, they are seen by both 2D 
+    probes. In that case, the CPI is triggered to take a high-resolution picture, via a briefly illuminated high-resolution imaging array, to provide a third image at high resolution. 
+    The probe is particularly suited to imaging ice crystals, but also provide good detection of other hydrometeors including large cloud droplets, drizzle and small rain drops, and precipitation 
+    particles. The 3V-CPI measures the size, shape and concentration of water drops and ice particles in clouds in the size range of 15-250 micrometers. This dataset contains 2D-S imagery 
+    collected by the 3V-CPI aboard the NCAR <AIRCRAFT> during the <PROJECT> project. These data have been converted to a format compatible with xpms2d, available from the EOL xpms2d download page.'
+  ingest_location: /scr/raf/Raw_Data/<PROJECT>/3v_cpi
+  filename_pattern: base[\Y\Y\M\M\y\y\h\h\m\m\S\S].2DSCPI
+  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/c130_n130ar/3V-CPI/2DS/<PROJECT>_(\E\E\E\E)
+  filename_pattern: base[\Y\Y\M\M\y\y\H\H\m\m\S\S].2DSCPI
+  startdate_pattern: 20YY-MM-yy HH:mm:SS
+
+3vcpi_rafoap:
+  <<: *2ds
+  archive_ident: <3vcpi_rafoap>
+  title: NSF/NCAR GV (HIAPER) 3V-CPI Raw 2D-S Imagery (RAF OAP .2d format)
+  filename_pattern: 'base[\Y\Y\M\M\y\y\H\H\m\m\S\S].2d'
+  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/c130_n130ar/3V-CPI/2DS/(\E\E\E\E)-\d\d\d\d\d\d/

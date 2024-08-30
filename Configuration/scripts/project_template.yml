@@ -15,71 +15,74 @@ fields:
   minimum_longitude:
   maximum_longitude:
 
-##Archive Ids -- Will only create yaml files for ids that are filled in
+##Archive Ids -- Will only create yaml files for ids and versions that are filled in
 archive_ids:
   ads: 
     id: 
-    version: '1.0' #ADS are always final not shared 
+    version_number: '1.0' #ADS are always final not shared 
   lrt: 
     id: 
-    version: '0.1'
+    version_number: '0.1'
   hrt: 
     id: 
-    version: '0.1'
+    version_number: '0.1'
   kml: 
     id: 
-    version: '0.1'
+    version_number: '0.1'
 
   lrt-icartt: 
     id: 
-    version: '0.1'
+    version_number: '0.1'
   lrt-iwg: 
     id: 
-    version: '0.1'
+    version_number: '0.1'
   ##Other
   pms2d:
     id: 
-    version: '0.1'
+    version_number: '0.1'
   3vcpi_roi: 
     id: 
-    version: '0.1'
+    version_number: '0.1'
   3vcpi_2ds: 
     id: 
-    version: '0.1'
+    version_number: '0.1'
   3vcpi_rafoap: 
     id: 
-    version: '0.1'
+    version_number: '0.1'
   holodec: 
     id: 
-    version: '0.1'
+    version_number: '0.1'
   mtp:
     id: 
-    version: '0.1'
+    version_number: '0.1'
   2DS:  
     id: 
-    version: '0.1'
+    version_number: '0.1'
   2DS_rafoap:
     id: 
-    version: '0.1'
+    version_number: '0.1'
   pms2d:
     id: 
-    version: '0.1'
+    version_number: '0.1'
   ##CAMERA
   down: 
     id: 
-    version: '0.1'
+    version_number: '0.1'
   fwd: 
     id: 
-    version: '0.1'
+    version_number: '0.1'
   left: 
     id: 
-    version: '0.1'
+    version_number: '0.1'
   right: 
     id: 
-    version: '0.1'
-  movies: 
-    id: 
-    version: '0.1'
+    version_number: '0.1'
+  prelim-movies: 
+    id: &movies
+    version_number: '0.1'
+  final-movies:
+    id: *movies
+    version_number: '1.0'
 
 #DTS Specific Fields -- Update if data loader or checker changes
 dts:
@@ -117,7 +120,7 @@ standard:
   remote_url: null
   description: 'default'
 
-#Fields that will be added to yaml if dataset is preliminary
+#Fields that will be added to yaml if dataset is preliminary (version_number < 1.0)
 preliminary:
   visible: 0 #Load it as not visible until it is approved
   auth_reqd: 1
@@ -132,7 +135,7 @@ final:
   quality: 2
 
 #ingest fields that will be filled in by the replace_yaml script
-optional:
+paths:
   raw_ingest_base: '/scr/raf/Raw_Data/<PROJECT>'
   prod_ingest_base: '/scr/raf/Prod_Data/<PROJECT>'
   field_ingest_base: '/scr/raf/Raw_Data/<PROJECT>/field_sync/EOL_data/RAF_data/'

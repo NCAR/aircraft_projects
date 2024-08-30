@@ -1,0 +1,30 @@
+dataset_cfg: &dataset
+  archive_ident: <pms2d>
+  title: PMS-2D Two-dimensional Cloud Probe data
+  summary: This dataset contains raw (binary 'filmstrip' imagery) files of PMS-2D data collected by the NSF/NCAR <AIRCRAFT> during <PROJECT>. These data are in a format compatible with xpms2d, available from the EOL xpms2d download page.
+  filename_pattern: '[\Y\Y\Y\Y\M\M\y\y]_[\H\H\m\m\S\S]_(\E\E\E\E).2d'
+  startdate_pattern: YYYY-MM-yy HH:mm:SS
+  filelength: 6 hours
+  platform_id: <platform_id>
+  is_eol_data: 1
+  format: 75
+  host: campaign
+  frequency_id: 2
+  spatial_type: raster
+  gcmd_science_keyword_id: 505, 506
+  xlink_id: 507, 508
+  source_contact_id_dts: ''
+  instrument_id: '456' #Particle Measuring System
+  iso_citation_role: 11
+  contact_id_codiac: <author_id>
+  datacite_contributor_type: ''
+
+preliminary_PMS2D:
+  <<: *dataset
+  ingest_location: /scr/raf/Raw_Data/<PROJECT>/field_phase/PMS2D
+  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/c130_n130ar/PMS2D
+
+final_PMS2D: 
+  <<: *dataset
+  ingest_location: /scr/raf/Prod_Data/<PROJECT>/field_sync/EOL_data/RAF_data/PMS2D
+  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/PMS2D

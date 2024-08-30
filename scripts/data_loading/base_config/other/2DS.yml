@@ -1,0 +1,47 @@
+dataset_cfg: &dataset
+  
+  startdate_pattern: 20YY-MM-yy HH:mm:SS
+  filename_pattern: base[\Y\Y\M\M\y\y\H\H\m\m\S\S].2DS
+  filelength: 8 hours
+  platform_id: <platform_id>
+  format: 190
+  host: campaign
+  frequency_id: 2
+  spatial_type: raster
+  gcmd_science_keyword_id: 505, 506
+  xlink_id: 507, 508
+  source_contact_id_dts: ''
+  load_data_location: '*'
+  description: 'default'
+  iso_citation_role: 11 
+  contact_id_codiac: 54
+  datacite_contributor_type: ''
+  iso_citation_role_2: 10
+  contact_id_codiac_2: <author_id>
+
+F2DS:
+  <<: *dataset
+  title: Fast 2D-S -- ICARTT format
+  archive_ident: <2DS>
+  summary: >
+    A 2D-S instrument is a cloud particle probe that contains two orthogonal open path optical array probes,
+    which image cloud particles between about 10 microns - 2 mm in size as they pass through the instrument sample volume.  
+    This imagery is used to calculate the concentration and cross-sectional area size distributions, and to estimate the mass
+    size distribution of the observed cloud particles.  These variables are integrated across the size bins to obtain the total concentration,
+    extinction, and estimated total water content over the observed size range, and is provided at a frequency of 1 Hz.  
+    The particle imagery can be utilized to infer cloud particle phase.  This data does not cover the full size range of cloud particles, 
+    and should be analyzed in conjunction with complementary cloud probes, such as the CDP, HVPS, etc.  
+    This dataset contains Fast 2D-S imagery collected aboard the NCAR <AIRCRAFT> during the <PROJECT> project.
+  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/2DS/(\E\E\E\E)
+  ingest_location: /scr/raf/Raw_Data/<PROJECT>/2DS
+
+2ds_RAFOAP:
+  <<: *dataset
+  title: NSF/NCAR GV (HIAPER) Raw 2D-S Imagery (RAF OAP .2d format)
+  archive_ident: <2DS_rafoap>
+  summary: >
+    A 2D-S instrument contains two 2D probes which image particles as they pass through beams that are oriented orthogonally to each other and 
+    the airflow. If particles also lie in the intersection of the sensitive areas of the two beams, they are seen by both 2D probes. This dataset 
+    contains 2D-S imagery collected aboard the NCAR <AIRCRAFT> during the <PROJECT> project using the SPEC 2D-S (Stereo) probe. The 
+    original files have been processed so that they are compatible with xpms2d software.
+
