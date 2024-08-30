@@ -29,6 +29,9 @@ RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 dat_parent_dir =  DATA_DIR+'/'     # Where nc and kml files go
 rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 
+
+### Default email address(es) to send status messages to ###
+default_emails = ['srunkel@ucar.edu']
 #############################################################################
 ### Define settings for NAS in the field
 #############################################################################
