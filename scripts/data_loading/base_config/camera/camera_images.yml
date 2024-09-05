@@ -6,8 +6,9 @@ camera_cfg: &camera_cfg
   host: campaign
   frequency_id: 4
   spatial_type: raster
-  gcmd_science_keyword_id: 519, 541
-  xlink_id:
+  gcmd_science_keyword_id: 519, 541, 2832
+  xlink_id: #Must add project specific imagery x-link
+  instrument_id: 32 #Camera
   load_data_location: '*tar, *tar.dir'
   archive_location_2: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/CAMERA
   startdate_pattern_2: YYYY-MM-yy HH:mm:SS
@@ -16,11 +17,8 @@ camera_cfg: &camera_cfg
   host_2: campaign
   iso_citation_role: 11
   contact_id_codiac: <author_id> 
-  datacite_contributor_type: ''
   iso_citation_role_2: 10
   contact_id_codiac_2: 1
-  datacite_contributor_type_2: ''
-
 
 camera_down:
   <<: *camera_cfg

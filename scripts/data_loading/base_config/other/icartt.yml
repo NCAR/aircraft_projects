@@ -2,31 +2,25 @@ dataset_cfg: &dataset
   startdate_pattern: YYYY-MM-yy 00:00:00
   filelength: 6 hours
   platform_id: <platform_id> ##which aircraft 
-  is_eol_data: 1
   format: 152
-  ingest_location: /scr/raf/Prod_Data/<PROJECT>
   load_data_location: '*ict'
   host: campaign
   frequency_id: 4
   spatial_type: point
-  source_contact_id_dts: 203
-  instrument_id: ''
+  source_contact_id_dts: 243 #Teresa Campos
   iso_citation_role: 11
-  contact_id_codiac: <author_id> 
-  datacite_contributor_type: ''
+  contact_id_codiac: 238 #Teresa Campos
   iso_citation_role_2: 10
   contact_id_codiac_2: 1
-  datacite_contributor_type_2: ''
 
 CO: &CO
   <<: *dataset
   title: AeroLaser Vacuum Ultra Violet (VUV) Fluorescence In Situ Carbon monoxide (CO) mixing ratio
   summary: The AeroLaser AL-5002 Vacuum Ultra Violet (VUV) resonance fluorescence instrument measured carbon monoxide concentrations from the NSF/NCAR <AIRCRAFT> during <PROJECT>. This dataset contains data in NASA ICARTT format.
-  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/CO
+  dtype: CO
   filename_pattern: <project>-CO_<aircraft>_[\Y\Y\Y\Y\M\M\y\y].ict
   gcmd_science_keyword_id: 319
-
-
+  instrument_id: 44
 
 CON20: 
   <<: *dataset
@@ -35,8 +29,9 @@ CON20:
     This dataset contains high rate (< 1sps) carbon monoxide (CO) and nitrous oxide (N2O) in situ mixing ratio observations collected by 
     the aerodyne CS-108 miniQCL aboard the NSF/NCAR <AIRCRAFT> during the <PROJECT> project.
   filename_pattern: <PROJECT>-CON2O_ARI_<aircraft>_[\Y\Y\Y\Y\M\M\y\y]_R0.ict
-  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/CON2O
+  dtype: CON20
   gcmd_science_keyword_id: 319, 358
+  instrument_id: ''
 
 CO2COCH4:
   <<: *dataset
@@ -45,15 +40,16 @@ CO2COCH4:
     This dataset contains high rate (< 1sps) carbon dioxide (CO2), carbon monoxide (CO), water vapor, and methane (CH4) in situ mixing 
     ratio observations collected by the PICARRO G2401-m aboard the NSF/NCAR <AIRCRAFT> during the <PROJECT> project.
   filename_pattern: <PROJECT>-CO2COCH4H20_PIC_<aircraft>_[\Y\Y\Y\Y\M\M\y\y]_R.*.ict
-  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/CO2COCH4
+  dtype: CO2COCH4
   gcmd_science_keyword_id: 380, 450, 473, 505, 491, 451, 463, 476, 3077, 404, 516, 3034, 413, 391, 480, 3071, 3039, 483, 460, 470
-
+  instrument_id: 317
 O3:
   <<: *dataset
   title: FO3 (Fast Ozone) Low Rate Data
   summary: >
     This data set contains ozone by chemiluminescent reaction with excess NO collected aboard the NSF/NCAR <AIRCRAFT> during <PROJECT>.  This data set is in ICARTT format. 
     Please see the header portion of the data files for details on instruments, parameters, quality assurance, quality control, contact information, and data set comments. 
-  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/O3
   gcmd_science_keyword_id: 362
+  dtype: O3
   filename_pattern: <project>-O3_C130_[\Y\Y\Y\Y\M\M\y\y]_<VERSION>.ict
+  instrument_id: 585
