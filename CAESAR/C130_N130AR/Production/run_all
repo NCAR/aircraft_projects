@@ -10,6 +10,11 @@ DISPLAY=:9.1
 source ./set_env
 
 mkdir -p ${DAT}
+if [ `whoami` == nimbus ]; then
+    git clone https://github.com/NCAR/aircraft_projects.git /scr/raf/temp/aircraft_projects
+    export PROJ_DIR="/scr/raf/temp/aircraft_projects"
+    cd $PROJ_DIR/CAESAR/C130_N130AR/Production
+fi
 
 ./run_nimbus
 ./reorder_all
@@ -18,7 +23,10 @@ mkdir -p ${DAT}
 #./AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
 
 if [ `whoami` == nimbus ]; then
-; # ./run_kalmanFilter  # Changes working dir, so run last.
+    export PROJ_DIR="/net/jlocal/projects"
+    cd $PROJ_DIR
+    rm -rf /scr/raf/temp/aircraft_projects
+    # ./run_kalmanFilter  # Changes working dir, so run last.
 fi
 
 kill $xvpid
