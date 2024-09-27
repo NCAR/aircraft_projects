@@ -273,9 +273,9 @@ class Setup:
     
     def report(self, status, project, flight, emails, file_ext,final_message):
         """
-        Generates a report of the shipping status for different file types and sends it to the user's email address.
+        Generates a report of the staging status for different file types and sends it to the user's email address.
         """
-        final_message = final_message + '\nREPORT on shipping of files. \n\n'
+        final_message = final_message + '\nREPORT on staging of files. \n\n'
         final_message = final_message + 'File Type\tStor\tShip\n'
 
         for key in file_ext:

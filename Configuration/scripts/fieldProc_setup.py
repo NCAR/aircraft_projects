@@ -50,7 +50,7 @@ ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = 'pub/data/incoming/'+project.lower()+'/EOL_data/RAF_data'
+ftp_data_dir = '/EOL_data/RAF_data'
 
 #############################################################################
 ### Define which files should be generated
@@ -98,3 +98,7 @@ datadump = False
 
 GDRIVE = False
 rclone_staging_dir = ''
+#############################################################################
+SYNCTHING = True
+syncthing_staging_dir = f'/var/r1/{project}'
+

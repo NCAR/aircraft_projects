@@ -9,13 +9,12 @@ class GDrive:
     """Ships files to Google Drive via an rclone staging location.
 
         Args:
-            data_dir (str): Base data directory.
             status (dict): Dictionary to track file transfer status.
             file_ext (dict): Dictionary of file extensions and their processing status.
             inst_dir (dict): Dictionary of instrument directories.
             filename (dict): Dictionary containing filenames for each instrument.
     """
-    def __init__(self, data_dir, status, file_ext, inst_dir, filename):
+    def __init__(self, status, file_ext, inst_dir, filename):
         self.stat = status
         myLogger.log_and_print('\nPutting files to rclone staging location for shipment to Google Drive:\n')
         if ship_all_ADS:  
