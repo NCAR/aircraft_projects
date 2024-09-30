@@ -26,11 +26,11 @@ full_proj_dir = os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.
 sys.path.insert(0, full_proj_dir + 'scripts/')
 sys.path.insert(0, full_proj_dir)
 from fieldProc_setup import project, dat_parent_dir,\
-    ftp_parent_dir, rdat_parent_dir, FTP, PMS2D, HRT, SRT, IWG1, ICARTT, NAS,\
-    ship_ADS, GDRIVE, RAW_DATA_DIR, QA_notebook
+    ftp_parent_dir, ftp_data_dir, rdat_parent_dir, FTP, PMS2D, HRT, SRT, IWG1, ICARTT, NAS,\
+    ship_ADS, GDRIVE, RAW_DATA_DIR, SYNCTHING, QA_notebook
 temp_dir = RAW_DATA_DIR + '/' + project + '/field_sync'
 dat_dir = dat_parent_dir + project
-ftp_dir = ftp_parent_dir
+ftp_dir = ftp_parent_dir +ftp_data_dir
 rdat_dir = rdat_parent_dir + project
 eol_dir = temp_dir+'/EOL_data/'
 
@@ -243,6 +243,7 @@ def sync_from_gdrive():
         distribute_data(['field_data','QAtools'])
     
 def sync_from_ftp():
+    print("Starting sync_from_ftp")
     """
     Syncs data from FTP server to local directories.
 
@@ -259,14 +260,16 @@ def sync_from_ftp():
     Note: This function assumes that the necessary variables (`ftp_dir`, `rdat_dir`, `dat_dir`, `proc_dict`) have been defined.
 
     """
-    logging.info("Syncing from FTP...")
+    source = 'FTP' if FTP else 'syncthing'
     dir_check()
+    logging.info(f"Syncing from {source} transfer directory...")
     logging.info(f'Syncing ADS and PMS2D data from {ftp_dir} to {rdat_dir}')
     logging.info(f'Syncing other data from {ftp_dir} to {dat_dir}/field_data')
     for dtype in proc_dict:
         if proc_dict[dtype]:
             ingest_to_local(dtype, f'{dat_dir}/field_data', ftp_dir)
-    distribute_data(['field_data'])
+    if QA_notebook:
+        distribute_data(['field_data','QAtools'])
 
 def parse_args():
     """ Instantiate a command line argument parser """
@@ -301,12 +304,14 @@ def main():
     from which to sync data. If none of the variables are set, it logs an error and exits with
     a status code of 1.
     """
-    if NAS:
-        sync_from_nas()
+    if FTP or SYNCTHING:
+        ## sycnthing syncs to the same directory as FTP -- distribute data out from there
+        sync_from_ftp()
     elif GDRIVE:
         sync_from_gdrive()
-    elif FTP:
-        sync_from_ftp()
+    
+    elif NAS:
+        sync_from_nas()
     else:
         logging.error("No valid source specified for syncing.")
         exit(1)

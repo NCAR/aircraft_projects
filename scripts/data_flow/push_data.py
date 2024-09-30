@@ -2,10 +2,10 @@ from check_env import check
 check()
 from _setup import Setup #setup, myLogger
 import sys, os,glob
-import  _GDrive, _process,_NAS,_FTP,_zip
+import  _GDrive, _process,_NAS,_FTP,_zip,_syncThing
  ##Check that the environment variables are set correctly    
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
-from fieldProc_setup import NAS, FTP,  GDRIVE,sendzipped
+from fieldProc_setup import NAS, FTP,  GDRIVE, SYNCTHING,sendzipped
 
 
 def main():
@@ -46,6 +46,9 @@ def main():
     if sendzipped:
         _zip.SetupZip(setup.FILE_EXT, setup.DATA_DIR,setup.FILENAME,  setup.INST_DIR)   
     
+    if SYNCTHING:
+        syncth = _syncThing.StageSyncThing(status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
+        status = syncth.stat
     # Call the FTP class if the FTP flag is set to True
     if FTP:
         ftp= _FTP.TransferFTP(status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
@@ -53,7 +56,7 @@ def main():
 
     # Call GDrive class if the GDRIVE flag is set to True
     if GDRIVE:
-        gdrive= _GDrive.GDrive(setup.DATA_DIR, status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
+        gdrive= _GDrive.GDrive(status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
         status = gdrive.stat # Get the status of the data processing after the GDrive class has been called 
 
     # Call NAS class if the NAS flag is set to True
