@@ -1,32 +1,27 @@
 #!/bin/bash
 
-/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac -nolisten tcp :9 &
+/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac -nolisten tcp :6 &
 xvpid=$!
 trap "kill $xvpid; exit 1" SIGINT SIGTERM
 sleep 2
 
-DISPLAY=:9.1
+DISPLAY=:6.1
 
 source ./set_env
 
 mkdir -p ${DAT}
 if [ `whoami` == nimbus ]; then
-    export PROJ_DIR="/scr/raf/temp/projects"
+    export PROJ_DIR="/scr/tmp/nimbus/projects"
     git clone https://github.com/NCAR/aircraft_projects.git ${PROJ_DIR}
     cd ${PROJ_DIR}/${PROJ}/C130_N130AR/Production
 fi
 
-./run_nimbus
+./run_nimbus_hrt
 ./reorder_all
-#./run_proc2d
-
-#./AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
 
 if [ `whoami` == nimbus ]; then
-    # ./run_kalmanFilter  # Changes working dir, so run last.
-
     cd
-    rm -rf ${PROJ_DIR}
+    rm -rf $PROJ_DIR
     export PROJ_DIR="/net/jlocal/projects"
 fi
 
