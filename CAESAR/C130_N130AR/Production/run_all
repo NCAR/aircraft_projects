@@ -11,6 +11,7 @@ source ./set_env
 
 mkdir -p ${DAT}
 if [ `whoami` == nimbus ]; then
+    SAVE_PROJ_DIR=$PROJ_DIR
     export PROJ_DIR="/scr/tmp/nimbus/projects"
     git clone https://github.com/NCAR/aircraft_projects.git ${PROJ_DIR}
     cd ${PROJ_DIR}/${PROJ}/C130_N130AR/Production
@@ -25,9 +26,10 @@ fi
 if [ `whoami` == nimbus ]; then
     # ./run_kalmanFilter  # Changes working dir, so run last.
 
+    /bin/cp logfile* ${SAVE_PROJ_DIR}/${PROJ}/C130_N130AR/Production
     cd
     rm -rf ${PROJ_DIR}
-    export PROJ_DIR="/net/jlocal/projects"
+    export PROJ_DIR=$SAVE_PROJ_DIR
 fi
 
 kill $xvpid
