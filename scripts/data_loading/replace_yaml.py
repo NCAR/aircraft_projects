@@ -134,7 +134,7 @@ def process_yaml_file(yaml_path, replacements, aircraft_rep, template, versions,
                 continue
         if not valid_value_found:
             print(f'No archive id found for {val}')
-            break  # Exit the loop and continue with the next iteration of the outer loop
+            continue  # Exit the loop and continue with the next iteration of the outer loop
         stats = add_version_field(data[val], versions)
         if not stats:
             print(f'No version number found for {val}')
