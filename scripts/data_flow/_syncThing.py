@@ -17,7 +17,7 @@ class StageSyncThing:
     def __init__(self, status, file_ext, inst_dir, filename):
         self.stat = status
         myLogger.log_and_print('\nPutting files to rclone staging location for shipment to Google Drive:\n')
-        if ship_ADS:
+        if ship_all_ADS:
             self._ship_all_ads(inst_dir, syncthing_staging_dir)
         else:
             for key in file_ext:
