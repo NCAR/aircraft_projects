@@ -580,6 +580,14 @@
         <variable longname="NCAR Ozone Photometer Var 2" name="O3V2" units=""/>
       </sample>
     </sensor>
+    
+    <serialSensor ID="DSMTEMP_RS232" devicename="/dev/ttyS2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="#%f">
+        <variable longname="DSM Temperature" name="DSMTEMP" units="degC"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
+    </serialSensor>
+
   </sensorcatalog>
 
 
@@ -1131,5 +1139,16 @@
       </output>
     </dsm>
 -->
+       <!-- dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071"> -->
+    <dsm name="labdsm7" location="lab" id="107" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
+      <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_LAB7"/>
+      
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_303"/>
+
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
+    </dsm>
+
   </site>
 </project>
