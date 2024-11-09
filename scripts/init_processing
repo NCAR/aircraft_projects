@@ -43,26 +43,39 @@ cat > set_env << EOFSE
 PROJ=$proj
 
 if [ \`whoami\` == nimbus ]; then
-  DAT=/scr/raf/local_productiondata/
-  SCR_DIR=/scr/tmp/nimbus
-  cd $SCR_DIR
+  DAT=/scr/raf/local_productiondata/ 
+else
+  DAT=\${DATA_DIR}/\${PROJ}
+fi
+
+SCR_DIR=/scr/tmp/nimbus
+
+clone_production() {
+
+  cd \${SCR_DIR}
   
   git clone --recursive https://github.com/NCAR/nimbus
   cd nimbus
   scons
-  retval=$?
-  if [ $retval -ne 0 ]; then
-    exit $retval
+  retval=\$?
+  if [ \$retval -ne 0 ]; then
+    exit \$retval
   fi
-  export PATH=${SCR_DIR}/nimbus/src/filter:$PATH
+  export PATH=\${SCR_DIR}/nimbus/src/filter:\$PATH
 
   SAVE_PROJ_DIR=$PROJ_DIR
-  export PROJ_DIR=${SCR_DIR}/projects
-  git clone https://github.com/NCAR/aircraft_projects.git ${PROJ_DIR}
-  cd ${PROJ_DIR}/${PROJ}/${AIRCRAFT}/Production
-else
-  DAT=\${DATA_DIR}/\${PROJ}
-fi
+  export PROJ_DIR=\${SCR_DIR}/projects
+  git clone https://github.com/NCAR/aircraft_projects.git \${PROJ_DIR}
+  cd \${PROJ_DIR}/\${PROJ}/${AIRCRAFT}/Production
+}
+
+cleanup_production() {
+  /bin/cp logfile* \${SAVE_PROJ_DIR}/\${PROJ}/${AIRCRAFT}/Production
+  cd
+  rm -rf ${PROJ_DIR} \${SCR_DIR}/nimbus
+  export PROJ_DIR=\$SAVE_PROJ_DIR
+}
+
 
 EOFSE
 
@@ -81,6 +94,8 @@ sleep 2
 DISPLAY=:9.1
 
 source ./set_env
+if [ `whoami` == nimbus ]; then
+    clone_production
 
 mkdir -p ${DAT}
 
@@ -92,10 +107,7 @@ mkdir -p ${DAT}
 
 if [ `whoami` == nimbus ]; then
   #./run_kalmanFilter  # Changes working dir, so run last.
-  /bin/cp logfile* ${SAVE_PROJ_DIR}/${PROJ}/${AIRCRAFT}/Production
-  cd
-  rm -rf ${PROJ_DIR} ${SCR_DIR}/nimbus
-  export PROJ_DIR=$SAVE_PROJ_DIR
+  cleanup_production
 fi
 
 kill $xvpid
