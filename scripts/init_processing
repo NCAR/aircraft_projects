@@ -45,13 +45,10 @@ PROJ=$proj
 AIRCRAFT=\$(n_hdr_util \${RAW_DATA_DIR}/\${PROJ}/*.ads | grep 'system name:' | awk '{print \$3}')
 
 if [ \`whoami\` == nimbus ]; then
-  DAT=/scr/raf/local_productiondata/ 
+  DAT=/scr/raf/local_productiondata/
 else
   DAT=\${DATA_DIR}/\${PROJ}
 fi
-
-
-
 EOFSE
 
 
@@ -70,10 +67,7 @@ DISPLAY=:9.1
 
 source ./set_env
 source ${PROJ_DIR}/scripts/production_fns.sh
-if [ `whoami` == nimbus ]; then
-    clone_production
-
-mkdir -p ${DAT}
+initialize_processing
 
 ./run_nimbus
 ./reorder_all
@@ -82,9 +76,10 @@ mkdir -p ${DAT}
 #./AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
 
 if [ `whoami` == nimbus ]; then
-  #./run_kalmanFilter  # Changes working dir, so run last.
-  cleanup_production
+  #./run_kalmanFilter
 fi
+
+cleanup_processing
 
 kill $xvpid
 exit 0
@@ -243,19 +238,21 @@ end
 #
 cat > run_kalmanFilter << "EOFKF"
 #!/bin/csh
-"EOFKF"
 
-echo 'set project='${proj} >> run_kalmanFilter
+source ./set_env
 
-cat >> run_kalmanFilter << "EOFKF2"
+start_dir=`pwd`
 cd ~nimbus/RStudio/KalmanFilter
+
 # To apply the corrections to a high-rate file, supply the flight with an h
 # # e.g.  Rscript KalmanFilter.R WCR-TEST tf01h y y n 15
 foreach file ( ${DAT}/${project}[rtf]f??.nc )
   set flight=`echo $file | awk '{print substr($0,length($0)-6,4)}'`
   Rscript KalmanFilter.R $project $flight y y n 15
 end
-"EOFKF2"
+
+cd $start_dir
+"EOFKF"
 
 
 chmod +x set_env run_all run_nimbus reorder_all run_proc2d AddHtTerrain run_kalmanFilter
