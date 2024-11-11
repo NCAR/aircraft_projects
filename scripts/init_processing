@@ -70,13 +70,13 @@ source ${PROJ_DIR}/scripts/production_fns.sh
 initialize_processing
 
 ./run_nimbus
-./reorder_all
+reorder_all
 ./run_proc2d
 
 #./AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
 
 if [ `whoami` == nimbus ]; then
-  #./run_kalmanFilter
+#  run_kalmanFilter
 fi
 
 cleanup_processing
@@ -102,40 +102,6 @@ do
   nimbus -b $setup_file
 done
 "EOFRN"
-
-
-# ---------------------------------------------------------
-# Reorder netCDF files by removing the UNLIMITED dimension.
-#
-cat > reorder_all << "EOFREO"
-#!/bin/bash
-
-busyFile='reorderInProgress'
-trap "rm $busyFile" SIGINT SIGTERM
-
-source ./set_env
-
-cd ${DAT}
-
-if [ -f $busyFile ]; then
-  exit 1
-fi
-
-touch $busyFile
-
-for file in ${PROJ}?f??.nc
-do
-  echo $file
-  ncdump -h $file | head | grep --quiet UNLIMITED
-  if [ $? -eq 0 ]; then
-    nccopy -u $file reotemp.nc
-    mv -f reotemp.nc $file
-    chmod g+w $file
-  fi
-done
-
-/bin/rm $busyFile
-"EOFREO"
 
 
 # ---------------------------------------------------------
@@ -231,28 +197,6 @@ foreach file ( ${DAT}/${project}[rtf]f??.nc )
   Rscript ~nimbus/RStudio/HeightOfTerrain/HeightOfTerrain.R $project $flight $Directory $lt_s $lt_n $lg_w $lg_e $Tdb
 end
 "EOFZ2"
-
-
-# ---------------------------------------------------------
-# Kalman Filter script.
-#
-cat > run_kalmanFilter << "EOFKF"
-#!/bin/csh
-
-source ./set_env
-
-start_dir=`pwd`
-cd ~nimbus/RStudio/KalmanFilter
-
-# To apply the corrections to a high-rate file, supply the flight with an h
-# # e.g.  Rscript KalmanFilter.R WCR-TEST tf01h y y n 15
-foreach file ( ${DAT}/${project}[rtf]f??.nc )
-  set flight=`echo $file | awk '{print substr($0,length($0)-6,4)}'`
-  Rscript KalmanFilter.R $project $flight y y n 15
-end
-
-cd $start_dir
-"EOFKF"
 
 
 chmod +x set_env run_all run_nimbus reorder_all run_proc2d AddHtTerrain run_kalmanFilter
