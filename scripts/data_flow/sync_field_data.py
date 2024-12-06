@@ -38,7 +38,7 @@ eol_dir = temp_dir+'/EOL_data/'
 proc_dict = {'LRT': True, 'KML': True, 'HRT': HRT, 'SRT': SRT, \
             'IWG1':IWG1,'ICARTT': ICARTT,'PMS2D':PMS2D,'ADS':ship_ADS}
 
-def _run_and_log(command, message):   
+def _run_and_log(command, message):
     '''Helper function to run a command and log the message alongside it.'''
     os.system(command)
     logging.info(f'{message}: {command}')
@@ -48,7 +48,7 @@ def create_directory(dir_path):
     Helper function to create a directory and handle errors.
     """
     global rdat_dir #modifies the global rdat_dir variable if we need to reassign path
-    if dir_path is tuple:
+    if isinstance(dir_path, tuple):
         if os.path.isdir(dir_path[0]):
             rdat_dir = dir_path[0]
             return
@@ -309,7 +309,7 @@ def main():
         sync_from_ftp()
     elif GDRIVE:
         sync_from_gdrive()
-    
+
     elif NAS:
         sync_from_nas()
     else:

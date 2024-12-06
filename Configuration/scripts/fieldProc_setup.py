@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 #
 #   Be sure to ask the systems group to create a directory:
-#   /net/ftp/pub/data/incoming/<project> and then to create the tree below it:
-#       EOL_data/
-#           RAF_data/
-#              ADS/
-#              PMS2D/
+#   /net/ftp/pub/data/incoming/<project>.
+#   If using syncthing, set it up for unidirectional syncing from /var/r1/syncthing_staging on gs3
 #   If NAS_permanent_mount then NAS will copy files to that dir.
 #
 #   Note that the CWIG standard and the standard expected by the 
@@ -100,5 +97,5 @@ GDRIVE = False
 rclone_staging_dir = ''
 #############################################################################
 SYNCTHING = True
-syncthing_staging_dir = f'/var/r1/{project}'
+syncthing_staging_dir = f'/var/r1/{project}/EOL_data/RAF_data'
 
