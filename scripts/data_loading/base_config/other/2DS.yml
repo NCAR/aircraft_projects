@@ -1,7 +1,6 @@
 dataset_cfg: &dataset
   
   startdate_pattern: 20YY-MM-yy HH:mm:SS
-  
   filelength: 8 hours
   platform_id: <platform_id>
   host: campaign
@@ -72,8 +71,20 @@ F2DS_raw:
   dtype: 'F2DS'
   online_orderable: 0 #Internal Use Only
   quality: 2
+  format: 75
 
-
+oap_raw: ##used for ACE-1 2D-C and 2D-P data
+  <<: *dataset
+  title: 2DC and 2DP Raw Base Files and Housekeeping
+  summary: >
+    The 2D-C cloud probe had 32 elements each representing 25 um pixels in the image, for a sample aperture 0.8 mm wide; 
+    The 2D-P precipitation probe had 32 elements each representing 200 um pixels, for an aperture of 6.4 mm.
+  archive_ident: <oap>
+  filename_pattern: '(\E\E\E\E)_[\Y\Y\Y\Y\].2d'
+  dtype: 'oap'
+  online_orderable: 0 #Internal Use Only
+  quality: 2
+  format: 75
 
 2ds_RAFOAP:
   <<: *dataset
