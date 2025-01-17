@@ -87,24 +87,16 @@ because it provides the definitions of the sensors -->
     <dsm derivedData="sock::7071" id="3" location="ads_rack" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_303"/>
-        <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="400" suffix="_303"/>
+        <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="110" suffix="_303"/>
 
-      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI0" id="110">
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI0" id="120">
         <sample id="1">
           <variable longname="Interior Cabin Static Pressure" name="PCAB" units="hPa"/>
         </sample>
       </serialSensor>
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyCTI2" id="150" suffix="_232"/>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI3" id="200" suffix="_DPR"/>
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI3" id="130" suffix="_DPR"/>
 
-
-      <sensor ID="NAIiPM" class="raf.UDPiPMSensor" devicename="sock::30230" id="6200" timeout="5">
-          <parameter name="device" type="string" value="/dev/ttyS0"/>
-          <parameter name="measurerate" type="int" value="1"/>
-          <parameter name="recordperiod" type="int" value="1"/>
-          <parameter name="num_addr" type="int" value="1"/>
-          <parameter name="dev0" type="string" value="2,7,30223"/>  <!-- addr, procqueries, port -->
-      </sensor>
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="250" latency="0.25">
         <parameter name="SerialNumber" type="string" value="W543527"/>
@@ -140,6 +132,14 @@ because it provides the definitions of the sensors -->
         </sample>
       </sensor>
 
+      <sensor ID="NAIiPM" class="raf.UDPiPMSensor" devicename="sock::30230" id="6200" timeout="5">
+          <parameter name="device" type="string" value="/dev/ttyS0"/>
+          <parameter name="measurerate" type="int" value="1"/>
+          <parameter name="recordperiod" type="int" value="1"/>
+          <parameter name="num_addr" type="int" value="1"/>
+          <parameter name="dev0" type="string" value="2,7,30223"/>  <!-- addr, procqueries, port -->
+      </sensor>
+
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
@@ -148,15 +148,15 @@ because it provides the definitions of the sensors -->
     <dsm derivedData="sock::7071" id="4" location="cabin_mpdb" name="dsm304" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_304"/>
-      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="400" suffix="_304"/>
+      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="110" suffix="_304"/>
 
-      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI0" id="110">
+      <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI0" id="120">
         <sample id="1">
           <variable longname="Raw Static Pressure, Fuselage" name="PSF" units="hPa"/>
 	</sample>
       </serialSensor>
-      <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI1" id="120" suffix="_DPL"/>
-      <serialSensor IDREF="VCSEL" devicename="/dev/ttyCTI7" id="330" suffix="_VXL"/>
+      <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI1" id="130" suffix="_DPL"/>
+      <serialSensor IDREF="VCSEL" devicename="/dev/ttyCTI7" id="200" suffix="_VXL"/>
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="450" latency="0.25" suffix="_304">
         <parameter name="SerialNumber" type="string" name="W543511"/>
@@ -184,9 +184,9 @@ because it provides the definitions of the sensors -->
       <!-- <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_305"/>
       -->
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_305"/>
-      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="400" suffix="_305"/>
+      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="110" suffix="_305"/>
 
-      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyCTI0" id="110">
+      <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyCTI0" id="115">
         <sample id="1">
           <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="hPa"/>
         </sample>
