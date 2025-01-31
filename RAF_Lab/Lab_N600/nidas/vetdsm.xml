@@ -143,6 +143,12 @@
         <variable longname="Do Not Record" name="NOREC" units="bool"/>
       </sample>
     </sensor>
+    <serialSensor ID="DSMTEMP_RS232" devicename="/dev/ttyS2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="#%f">
+        <variable longname="DSM Temperature" name="DSMTEMP" units="degC"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
+    </serialSensor>
   </sensorcatalog>
 
   <site class="raf.Aircraft" name="Lab_N600">
@@ -277,6 +283,13 @@
     <dsm derivedData="sock::7071" id="100" location="bench" name="dsmspare" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_SPARE"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_SPARE"/>
+      <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
+         <sample id="5" rate="25">
+            <variable longname="Altitude above ground (radar altimeter)" name="HGM232_TEST" units="feet">
+            </variable>
+         </sample>
+      </sensor>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_303"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
