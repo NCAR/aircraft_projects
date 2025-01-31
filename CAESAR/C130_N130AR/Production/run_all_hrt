@@ -1,0 +1,29 @@
+#!/bin/bash
+
+/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac -nolisten tcp :6 &
+xvpid=$!
+trap "kill $xvpid; exit 1" SIGINT SIGTERM
+sleep 2
+
+DISPLAY=:6.1
+
+source ./set_env
+
+mkdir -p ${DAT}
+if [ `whoami` == nimbus ]; then
+    export PROJ_DIR="/scr/tmp/nimbus/projects"
+    git clone https://github.com/NCAR/aircraft_projects.git ${PROJ_DIR}
+    cd ${PROJ_DIR}/${PROJ}/C130_N130AR/Production
+fi
+
+./run_nimbus_hrt
+./reorder_all
+
+if [ `whoami` == nimbus ]; then
+    cd
+    rm -rf $PROJ_DIR
+    export PROJ_DIR="/net/jlocal/projects"
+fi
+
+kill $xvpid
+exit 0

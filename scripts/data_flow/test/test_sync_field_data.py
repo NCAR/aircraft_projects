@@ -4,7 +4,7 @@ import sys
 import os
 from check_env import check
 check() ##Check that the environment variables are set correctly   
-from sync_field_data import ingest_to_local, QA_notebook
+from sync_field_data import ingest_to_local, QA_notebook,ftp_dir,rdat_dir
 
 # Mock os.environ.get to use our env_vars
 
@@ -37,9 +37,9 @@ def test_ingest_to_local(mock_os_system, mock_logging_info,filetype, local_dir, 
     mock_logging_info.assert_has_calls([call1,call2])
     
 
-from sync_field_data import sync_from_gdrive,proc_dict ##imports process dictionary to see what data is being processed
+from sync_field_data import sync_from_gdrive,sync_from_ftp,proc_dict ##imports process dictionary to see what data is being processed
 
-call_dict  ={'LRT':call('LRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+call_dict_gdrive  ={'LRT':call('LRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
         'KML':call('KML', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
         'HRT':call('HRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
         'SRT':call('SRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
@@ -57,10 +57,44 @@ def test_sync_from_gdrive(mock_distribute_data, mock_ingest_to_local, mock_loggi
     sync_from_gdrive()
 
     # Assert
-    mock_ingest_to_local.assert_has_calls([call_dict[dtype] for dtype in proc_dict if proc_dict[dtype]])
+    mock_ingest_to_local.assert_has_calls([call_dict_gdrive[dtype] for dtype in proc_dict if proc_dict[dtype]])
     if QA_notebook:
         mock_distribute_data.assert_has_calls([call(['field_data', 'QAtools'])])
     mock_logging_info.assert_called_once_with("Syncing from GDRIVE...")
+
+
+
+call_dict  ={'LRT':call('LRT', f'{DATA_DIR}/{project}/field_data', ftp_dir),
+    'KML':call('KML', f'{DATA_DIR}/{project}/field_data', ftp_dir),
+    'HRT':call('HRT', f'{DATA_DIR}/{project}/field_data', ftp_dir),
+    'SRT':call('SRT', f'{DATA_DIR}/{project}/field_data', ftp_dir),
+    'IWG1':call('IWG1', f'{DATA_DIR}/{project}/field_data', ftp_dir),
+    'PMS2D':call('PMS2D', f'{DATA_DIR}/{project}/field_data', ftp_dir),
+    'ADS':call('ADS', f'{DATA_DIR}/{project}/field_data', ftp_dir)}
+
+
+@patch('sync_field_data.dir_check')
+@patch('sync_field_data.ingest_to_local')
+@patch('logging.info')
+@patch('sync_field_data.distribute_data')
+def test_sync_from_ftp(mock_distribute_data,mock_logging_info, mock_ingest_to_local, mock_dir_check):
+    # Arrange
+
+
+
+    # Act
+    sync_from_ftp()
+    #mock_logging_info.assert_called_once_with(call("Syncing from syncthing transfer directory...")),
+    mock_dir_check.assert_called_once()
+    # Assert
+    mock_logging_info.assert_has_calls([
+            call(f'Syncing from syncthing transfer directory...'),
+            call(f'Syncing ADS and PMS2D data from {ftp_dir} to {rdat_dir}'),
+            call(f'Syncing other data from {ftp_dir} to {DATA_DIR}/{project}/field_data')
+        ])
+    mock_ingest_to_local.assert_has_calls([call_dict[dtype] for dtype in proc_dict if proc_dict[dtype]])
+    if QA_notebook:
+        mock_distribute_data.assert_has_calls([call(['field_data','QAtools'])])
     
 
 from sync_field_data import distribute_data
@@ -132,6 +166,7 @@ def test_sync_data_non_recursive(mock_run_and_log, mock_logging_info):
     mock_logging_info.assert_not_called()
     
 import logging
+import unittest
 from unittest.mock import patch, call
 from sync_field_data import _run_and_log
 
@@ -148,3 +183,6 @@ def test_run_and_log(mock_logging_info, mock_os_system):
     # Assert
     mock_os_system.assert_called_once_with(command)
     mock_logging_info.assert_called_once_with(output)
+
+if __name__ == '__main__':
+    unittest.main()

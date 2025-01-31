@@ -1,0 +1,9 @@
+#!/bin/csh
+
+# Remove any pre-existing index files.
+/bin/rm PMS2D/*idx
+
+foreach file (*[rf]f??.ads)
+  echo $file
+  extract2d PMS2D/`basename $file .ads`.2d $file
+end

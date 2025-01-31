@@ -11,7 +11,7 @@ setenv YEAR 2022
 setenv PLATFORM "GV_N677F"
 setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
 setenv CS_LOCATION "/glade/campaign/eol/archive/"
-setenv EMAIL "taylort@ucar.edu"
+setenv EMAIL "srunkel@ucar.edu"
 setenv projectlower "maire"
 setenv platformlower "gv_n677f"
 ########################## Raw Data Files ##############################
@@ -26,7 +26,7 @@ setenv platformlower "gv_n677f"
 #$ARCHIVE_SCRIPT field_phase/LRT/version0_1 /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc /net/archive/data/ $EMAIL
 
 ### Preliminary HRT
-$ARCHIVE_SCRIPT field_phase/HRT/version0_1 /scr/raf/Raw_Data/$PROJECT/field_phase/HRT/version0_1 nc $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT field_phase/HRT/version0_1 /scr/raf/Raw_Data/$PROJECT/field_phase/HRT/version0_1 nc $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary LRT ICT
 #$ARCHIVE_SCRIPT field_phase/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict $CS_LOCATION$YEAR $EMAIL
@@ -81,7 +81,13 @@ $ARCHIVE_SCRIPT field_phase/HRT/version0_1 /scr/raf/Raw_Data/$PROJECT/field_phas
 #$ARCHIVE_SCRIPT CO /scr/raf/Prod_Data/$PROJECT/CO ict $CS_LOCATION$YEAR $EMAIL
 
 ### CO2CH4 ICT
-#$ARCHIVE_SCRIPT CO2CH4 /scr/raf/Prod_Data/$PROJECT/CO2CH4 ict $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT CO2COCH4 /scr/raf/Prod_Data/$PROJECT/CO2COCH4H2O ict $CS_LOCATION$YEAR $EMAIL
+
+###CON2O ICT
+#$ARCHIVE_SCRIPT CON2O /scr/raf/Prod_Data/$PROJECT/CON2O ict $CS_LOCATION$YEAR $EMAIL
+
+###GV Location Data ICT
+$ARCHIVE_SCRIPT GV_nav /scr/raf/Prod_Data/$PROJECT/GV_nav ict $CS_LOCATION$YEAR $EMAIL
 
 ### HARP ICT
 #$ARCHIVE_SCRIPT HARP /scr/raf/Prod_Data/$PROJECT/HARP ict $CS_LOCATION$YEAR $EMAIL

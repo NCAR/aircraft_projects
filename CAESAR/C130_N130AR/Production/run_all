@@ -8,18 +8,20 @@ sleep 2
 DISPLAY=:9.1
 
 source ./set_env
-
-mkdir -p ${DAT}
+source ${PROJ_DIR}/scripts/production_fns.sh
+initialize_processing
 
 ./run_nimbus
-./reorder_all
+reorder_all
 ./run_proc2d
 
 #./AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
 
 if [ `whoami` == nimbus ]; then
-; # ./run_kalmanFilter  # Changes working dir, so run last.
+#  run_kalmanFilter
 fi
+
+cleanup_processing
 
 kill $xvpid
 exit 0

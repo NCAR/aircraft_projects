@@ -24,7 +24,7 @@ setenv platform_lower "c130_n130ar"
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-$ARCHIVE_SCRIPT LRT/v0.3 /scr/raf_data/$PROJECT/LRT nc /net/archive/data/ $EMAIL
+#$ARCHIVE_SCRIPT LRT/v0.3 /scr/raf_data/$PROJECT/LRT nc /net/archive/data/ $EMAIL
 
 ### Preliminary LRT
 #$ARCHIVE_SCRIPT FIELD/LRT /scr/raf/Raw_Data/$PROJECT/field_sync/EOL_data/RAF_data/LRT nc /net/archive/data/ $EMAIL
@@ -83,7 +83,7 @@ $ARCHIVE_SCRIPT LRT/v0.3 /scr/raf_data/$PROJECT/LRT nc /net/archive/data/ $EMAIL
 
 ########################## Production Data Files ##########################
 ### LRT
-#$ARCHIVE_SCRIPT LRT /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/$projectlower/aircraft/$platformlower/LRT $EMAIL
+$ARCHIVE_SCRIPT LRT/v1.0 /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/ $EMAIL
 
 ### LRT ICT
 #$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict $CS_LOCATION$YEAR $EMAIL
