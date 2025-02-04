@@ -83,7 +83,7 @@ setenv platform_lower "c130_n130ar"
 
 ########################## Production Data Files ##########################
 ### LRT
-$ARCHIVE_SCRIPT LRT/v1.0 /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/ $EMAIL
+$ARCHIVE_SCRIPT LRT/v1.2 /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/ $EMAIL
 
 ### LRT ICT
 #$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict $CS_LOCATION$YEAR $EMAIL
