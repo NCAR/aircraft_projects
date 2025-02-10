@@ -27,24 +27,30 @@ RECFB		0.97
 
 #
 # VCSEL Dec 2012 DiGangi Calibrations, except for weak mode, laser power coeffs.
+# Flight specific abs coefficiencts apply calibration adjustments. 
+# CAESAR code adjustment allows for additional offset adjustment:
+# concv = mr_raw * p_coeff * t_coeff * li_coeff * abs_coeff + absCoeffs(3);
+#
+# These are for RF01.   They will end up being used for Test and Ferry flights.
+# See Defaults.rf0# for other flights.
 #
 VXL_T_STRONG[4] 1.01, 0.0, 0.0, 0.0
 VXL_P_STRONG[4] 0.989, 0.0, 0.0, 0.0
 VXL_LI_STRONG[4] 1.05, -157, -1.07, 0.0
 VXL_LILO_STRONG[4] 1.28, -6.29, -0.467, 0.0
-VXL_ABS_STRONG[4] 0.95, 0.0, 0.0, 0.0
+VXL_ABS_STRONG[4] 1.27797, -9.87418e-05, 1.0, 24.23102
 
 VXL_T_DIRECT[4] 0.9959, 0.0, 0.0, 0.0
 VXL_P_DIRECT[4] 0.952, 3.65, -0.803, 0.0
 VXL_LI_DIRECT[4] 1.11, -10.8, -0.619, 0
-VXL_LILO_DIRECT[4] 1.11, -10.8, -0.619, 0
-VXL_ABS_DIRECT[4] 0.85, 0.0, 0.0, 0.0
+VXL_LILO_DIRECT[4] 1.0, -10.8, -0.619, 0
+VXL_ABS_DIRECT[4] 1.27797, -9.87418e-05, 1.0, 24.23102
 
 VXL_T_WEAK[4] 0.998, 0.0, 0.0, 0.0
 VXL_P_WEAK[4] 1.05, -5.92, -0.755, 0.0
 VXL_LI_WEAK[4] 1.004, -810.6, -1.332, 0.0
-VXL_LILO_WEAK[4] 1.35, -20.0, -0.75404, 0.0
-VXL_ABS_WEAK[4] 0.75, 0.0, 0.0, 0.0
+VXL_LILO_WEAK[4] 1.19, -4.87, -0.436, 0.0
+VXL_ABS_WEAK[4] 1.27797, -9.87418e-05, 1.0, 24.23102
 
 #
 #
