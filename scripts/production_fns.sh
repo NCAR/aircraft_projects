@@ -73,7 +73,7 @@ clone_production() {
 
   cd ${SCR_DIR}
   
-  git clone --recursive git@github.com:NCAR/aircraft_projects.git
+  git clone --recursive git@github.com:NCAR/nimbus.git
   cd nimbus
   scons
   retval=$?
@@ -84,7 +84,7 @@ clone_production() {
 
   SAVE_PROJ_DIR=$PROJ_DIR
   export PROJ_DIR=${SCR_DIR}/projects
-  git clone https://github.com/NCAR/aircraft_projects.git ${PROJ_DIR}
+  git clone git@github.com:NCAR/aircraft_projects.git ${PROJ_DIR}
   cd ${PROJ_DIR}/${PROJ}/${AIRCRAFT}/Production
 }
 
