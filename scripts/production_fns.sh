@@ -73,7 +73,7 @@ clone_production() {
 
   cd ${SCR_DIR}
   
-  git clone --recursive https://github.com/NCAR/nimbus
+  git clone --recursive git@github.com:NCAR/aircraft_projects.git
   cd nimbus
   scons
   retval=$?
