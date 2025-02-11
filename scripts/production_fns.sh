@@ -80,7 +80,7 @@ clone_production() {
   if [ $retval -ne 0 ]; then
     exit $retval
   fi
-  export PATH=${SCR_DIR}/nimbus/src/filter:$PATH
+  export PATH=${SCR_DIR}/nimbus/src/nimbus:$PATH
 
   SAVE_PROJ_DIR=$PROJ_DIR
   export PROJ_DIR=${SCR_DIR}/projects
