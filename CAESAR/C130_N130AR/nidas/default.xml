@@ -10,15 +10,16 @@
 
   <sensorcatalog>
     <sensor ID="IRIG" class="raf.IRIGSensor">
+        <parameter name="Category" type="string" value="Housekeeping"/>
         <sample id="1">
             <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
             <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
         </sample>
     </sensor>
 
-    <serialSensor ID="CHRONY_TRACKING_LOG" class="ChronyLog"
-      devicename="/var/log/chrony/tracking.log">
+    <serialSensor ID="CHRONY_TRACKING_LOG" class="ChronyLog" devicename="/var/log/chrony/tracking.log">
       <!-- see https://chrony.tuxfamily.org/doc/2.3/manual.html#tracking-log -->
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" scanfFormat="%*d-%*d-%*d %*d:%*d:%*d %*s%f%*f%*f%f" rate="1">
         <variable name="Stratum" units="" longname="NTP stratum" plotrange="0 10"/>
         <variable name="Timeoffset" units="sec" longname="Clock offset, system-reference" plotrange="-100 100">
@@ -31,6 +32,7 @@
     <serialSensor ID="DSMTEMP_MBRTU" class="ModbusRTU" baud="9600" databits="8" parity="none" stopbits="1" timeout="10">
       <parameter name="slaveID" type="int" value="1"/>
       <parameter name="regaddr" type="int" value="0"/>
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1">
         <variable longname="DSM Temperature" name="DSMTEMP" units="counts">
           <linear units="degC" slope="0.1" intercept="0.0"/>
@@ -600,6 +602,7 @@
 -->
 
     <sensor ID="ALTASTATUS" class="UDPSocketSensor" devicename="usock::30220">
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
         <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
         <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
@@ -872,6 +875,7 @@
     </serialSensor>
 
     <serialSensor ID="StabilizedPlatform" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_SP">
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="10" scanfFormat="#%f,%d,%d,%f,%d,%f,%d,%d,%f,%d,%d">
         <variable longname="Platform Pitch Angle" name="PITCH" units="deg"/>
         <variable longname="Platform Pitch Motor PWM" name="PPWM" units="cnts"/>
