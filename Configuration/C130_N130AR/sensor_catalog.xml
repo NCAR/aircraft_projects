@@ -4,15 +4,16 @@ must be imported into default.xml -->
 
   <sensorcatalog>
     <sensor ID="IRIG" class="raf.IRIGSensor">
-        <sample id="1">
-            <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
-            <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
-        </sample>
+      <parameter name="Category" type="string" value="Housekeeping"/>
+      <sample id="1">
+        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
+        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+      </sample>
     </sensor>
 
-    <serialSensor ID="CHRONY_TRACKING_LOG" class="ChronyLog"
-      devicename="/var/log/chrony/tracking.log">
+    <serialSensor ID="CHRONY_TRACKING_LOG" class="ChronyLog" devicename="/var/log/chrony/tracking.log">
       <!-- see https://chrony.tuxfamily.org/doc/2.3/manual.html#tracking-log -->
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" scanfFormat="%*d-%*d-%*d %*d:%*d:%*d %*s%f%*f%*f%f" rate="1">
         <variable name="Stratum" units="" longname="NTP stratum" plotrange="0 10"/>
         <variable name="Timeoffset" units="sec" longname="Clock offset, system-reference" plotrange="-100 100">
@@ -23,6 +24,7 @@ must be imported into default.xml -->
     </serialSensor>
 
     <serialSensor ID="DSMTEMP_RS232" devicename="/dev/ttyS2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1" scanfFormat="#%f">
         <variable longname="DSM Temperature" name="DSMTEMP" units="degC"/>
       </sample>
@@ -559,6 +561,7 @@ must be imported into default.xml -->
 -->
 
     <sensor ID="ALTASTATUS" class="UDPSocketSensor" devicename="usock::30220">
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
         <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
         <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
@@ -783,6 +786,7 @@ must be imported into default.xml -->
         <prompt rate="10" string="\x1b\x02\x1d\x00"/>
         <message length="156"/>
     </serialSensor>
+
     <serialSensor ID="S200" baud="38400" class="raf.SPP200_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
         <parameter name="calfile" type="string" value="PMSspecs"/>
         <parameter name="NCHANNELS" type="int" value="30"/>
@@ -907,6 +911,7 @@ must be imported into default.xml -->
     </serialSensor>
 
     <sensor ID="TWODS_HK" class="raf.TwoDS" devicename="usock::30113" suffix="_2DS">
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <parameter name="SerialNumber" type="string" value="F2DS019"/>
       <parameter name="RESOLUTION" type="int" value="10"/>
       <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
@@ -954,6 +959,7 @@ must be imported into default.xml -->
     </sensor>
 
     <sensor ID="HVPS_HK" class="UDPSocketSensor" devicename="usock::30114" suffix="_HVPS">
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <parameter name="SerialNumber" type="string" value="HVPS315"/>
       <parameter name="RESOLUTION" type="int" value="150"/>
       <sample id="1" rate="1" scanfFormat="SPECHVPS,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
@@ -1030,6 +1036,7 @@ must be imported into default.xml -->
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
     </sensor>
+
     <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="usock::30107" suffix="_ACD">
         <sample id="1" rate="1" scanfFormat="NONO2O3,%f,%f,%f,%f">
             <variable longname="NO2 Mixing Ratio" name="NO2" units="pptv"/>
@@ -1037,6 +1044,7 @@ must be imported into default.xml -->
             <variable longname="NO Mixing Ratio" name="NO" units="pptv"/>
         </sample>
     </sensor>
+
     <sensor ID="HARP_ACTINIC_FLUX" class="UDPSocketSensor" devicename="usock::30108" suffix="_HARP">
         <sample id="1" rate="1" scanfFormat="HARPactfl,%*dT%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="UVN 340 nm Counts" name="UVN340" units="counts"/>
@@ -1053,6 +1061,7 @@ must be imported into default.xml -->
             <variable longname="UVZ Spectro Temperature" name="UVZTSPECTRO" units="deg_C"/>
         </sample>
     </sensor>
+
     <sensor ID="HARP_IRRADIANCE" class="UDPSocketSensor" devicename="usock::30108" suffix="_HARP">
         <sample id="1" rate="1" scanfFormat="HRP_VISN,%*dT%*d,%d,%d">
             <variable longname="VISN 550 nm Counts" name="VISN550" units="count"/>
@@ -1071,23 +1080,27 @@ must be imported into default.xml -->
             <variable longname="NIRZ 2000 nm Counts" name="NIRZ2000" units="count"/>
         </sample>
     </sensor>
+
     <sensor ID="SO2" class="UDPSocketSensor" devicename="usock::30121" suffix="_CU">
         <sample id="1" rate="1" scanfFormat="SO2,%f">
             <variable longname="Sulfur Dioxide" name="SO2" units="pptv"/>
         </sample>
     </sensor>
+
     <sensor ID="HOX1" class="UDPSocketSensor" devicename="usock::30122" suffix="_CU">
         <sample id="1" rate="1" scanfFormat="HOX1,%f,%f">
             <variable longname="Hydroxyl radical" name="OH" units="molecules/cc"/>
             <variable longname="Sulfuric Acid" name="H2SO4" units="molecules/cc"/>
         </sample>
     </sensor>
+
     <sensor ID="HOX2" class="UDPSocketSensor" devicename="usock::30123" suffix="_CU">
         <sample id="1" rate="1" scanfFormat="HOX2,%f,%f">
             <variable longname="Sum of HO2 and RO2" name="HO2RO2" units="pptv"/>
             <variable longname="Hydroperoxy radical" name="HO2" units="pptv"/>
         </sample>
     </sensor>
+
     <sensor ID="Fast2DC_v2" class="raf.TwoD64_USB_v3">
       <parameter name="SerialNumber" type="string" value="F2DC002"/>
       <parameter name="RESOLUTION" type="int" value="10"/>
@@ -1236,6 +1249,7 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
 <!-- Specialized UDP Packets indicating that Mission Controller is asking for instruments to behave in
      specific ways -->
     <sensor ID="CTRLRESRCH" class="UDPSocketSensor" devicename="usock::41005">
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1" scanfFormat="NOCAL,%*dT%*d,%d">
         <variable longname="Do Not Calibrate" name="NOCAL" units="bool"/>
       </sample>
@@ -1245,6 +1259,7 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
     </sensor>
 
     <serialSensor ID="ITR" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="10" scanfFormat="%f %f %f %f %f %f %f">
         <variable longname="ITR Detector Voltage 1" name="DETV1" units="A/D count"/>
         <variable longname="ITR Detector Voltage 2" name="DETV2" units="A/D count"/>
@@ -1270,6 +1285,7 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
     </serialSensor>
 
     <sensor ID="HOLODEC" class="UDPSocketSensor" devicename="usock::30120">
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1" scanfFormat="HOLO,%*f,%f,%f,%f,%f,%f">
         <variable name="HTEMP1" longname="Holodec temperature, zone 1, Camera" units="deg_C"/>
         <variable name="HTEMP2" longname="Holodec temperature, zone 2, Laser Head" units="deg_C"/>
@@ -1278,4 +1294,5 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable name="HTEMP5" longname="Holodec temperature, zone 5, Laser Controller" units="deg_C"/>
       </sample>
     </sensor>
+
   </sensorcatalog>
