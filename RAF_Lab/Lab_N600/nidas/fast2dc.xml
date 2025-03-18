@@ -61,6 +61,13 @@
       </sample>
     </sensor>
 
+    <serialSensor ID="DSMTEMP_RS232" devicename="/dev/ttyS2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="#%f">
+        <variable longname="DSM Temperature" name="DSMTEMP" units="degC"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
+     </serialSensor>
+
 </sensorcatalog>
 
 
@@ -69,17 +76,6 @@
 
     <server statusAddr="sock:127.0.0.1:30001">
         <service class="XMLConfigService">
-            <output>
-                <socket type="mcaccept"/>
-<!--                
-                <socket type="mcaccept"/>
--->                
-            </output>
-            <output>
-                <socket type="mcaccept"/>
-            </output>
-        </service>
-        <service class="XMLConfigAllService">
             <output>
                 <socket type="mcaccept"/>
             </output>
@@ -115,6 +111,8 @@
             </fileset>
         </output>
         -->
+        <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_SPARE"/>
+
         <output class="RawSampleOutputStream">
             <socket type="mcrequest" address="localhost"/>
         </output>
