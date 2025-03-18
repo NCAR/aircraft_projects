@@ -26,7 +26,7 @@
       </sample>
 
 <!-- BESTPOS record -->
-      <sample id="4" rate="5">
+      <sample id="4" rate="100">
           <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
           <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
           <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
@@ -588,6 +588,7 @@
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
 
+
   </sensorcatalog>
 
 
@@ -630,7 +631,7 @@
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
       </output>
-      <sensor IDREF="Novatel_GPS" devicename="usock::52126" id="100" suffix="_UDP"/>
+      <sensor IDREF="Novatel_GPS" devicename="usock::30116" id="150" suffix="_UDP"/>
 
     </dsm>
 
@@ -1136,8 +1137,8 @@
 -->
        <!-- dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071"> -->
     <dsm name="labdsm7" location="lab" id="107" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
-      <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_LAB7"/>
-      
+	    <!-- <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_LAB7"/>
+	    -->
       <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_303"/>
 
       <output class="RawSampleOutputStream">
