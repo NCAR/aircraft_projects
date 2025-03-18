@@ -457,9 +457,17 @@
 
     <serialSensor ID="Novatel_GPS" baud="115200" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
 <!-- GGA record -->
-      <sample id="1" rate="1">
+      <sample id="1" rate="50">
+        <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="sec"/>
+        <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
+        <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
         <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=FRTK" name="GGQUAL" units="none"/>
+        <variable longname="Reference GPS number of satellites used in solution" name="GGNSAT" units="number"/>
         <variable longname="Reference GPS Horizontal dilution of position" name="GGHDOP" units="none"/>
+        <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
+        <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
+        <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
+        <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
       </sample>
 
 <!-- RMC record -->
@@ -469,24 +477,17 @@
       </sample>
 
 <!-- BESTPOS record -->
-      <sample id="4" rate="20">
-        <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
-        <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
-        <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
-        <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
+      <sample id="4" rate="1">
         <variable longname="Standard Deviation of Reference GPS Latitude" name="GGLATSD" units="m"/>
         <variable longname="Standard Deviation of Reference GPS Longitude" name="GGLONSD" units="m"/>
         <variable longname="Standard Deviation of Reference GPS Altitude (MSL)" name="GGALTSD" units="m"/>
-        <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
-        <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
         <variable longname="Reference GPS number of satellites tracked" name="GGNSATTRK" units="number"/>
-        <variable longname="Reference GPS number of satellites used in solution" name="GGNSAT" units="number"/>
         <variable longname="Reference GPS number of satellites with L1/E1/B1 signals used in solution" name="GGNSATL1" units="number"/>
         <variable longname="Reference GPS number of satellites with multi-frequency signals used in solution" name="GGNSATMULTI" units="number"/>
       </sample>
 
 <!-- BESTVEL record -->
-      <sample id="5" rate="20">
+      <sample id="5" rate="50">
         <variable longname="Reference GPS Ground Speed" name="GGSPD" units="m/s"/>
         <variable longname="Reference GPS Track Angle" name="GGTRK" units="degree_T"/>
         <variable longname="Reference GPS Ground Speed Vector, East Component" name="GGVEW" units="m/s"/>
