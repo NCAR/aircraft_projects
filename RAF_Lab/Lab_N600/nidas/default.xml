@@ -171,64 +171,47 @@
         <message separator="\xaa\x44\x12" position="beg" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="Novatel_GPS" class="GPS_NMEA_Serial"
-        baud="38400" parity="none" databits="8" stopbits="1">
+    <serialSensor ID="Novatel_GPS" baud="115200" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
+<!-- GGA record -->
+      <sample id="1" rate="50">
+        <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="sec"/>
+        <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
+        <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
+        <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=FRTK" name="GGQUAL" units="none"/>
+        <variable longname="Reference GPS number of satellites used in solution" name="GGNSAT" units="number"/>
+        <variable longname="Reference GPS Horizontal dilution of position" name="GGHDOP" units="none"/>
+        <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
+        <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
+        <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
+        <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
+      </sample>
 
-        <!-- GGA record -->
-        <sample id="1" rate="5">
-            <variable name="GGSECSDAY" units="sec" longname="Reference GPS seconds of day"/>
-            <variable name="GGLAT" units="degree_N" longname="Reference GPS Latitude"/>
-            <variable name="GGLON" units="degree_E" longname="Reference GPS Longitude"/>
-            <variable name="GGQUAL" units="none" longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS"/>
-            <variable name="GGNSAT" units="number" longname="Reference GPS number of satellites used"/>
-            <variable name="GGHORDIL" units="none" longname="Reference GPS Horizontal dilution of position"/>
-            <variable name="GGALT" units="m" longname="Reference GPS Altitude (MSL)"/>
-            <variable name="GGEOIDHT" units="m" longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid"/>
-            <variable name="GGDAGE" units="s" longname="Time in seconds since last DGPS update"/>
-            <variable name="GGREFID" units="none" longname="DGPS station ID number"/>
-        </sample>
-        <!-- RMC record -->
-        <sample id="2" rate="5">
-            <variable name="GGSTATUS" units="none" longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)"/>
-            <variable name="GGSPD" units="m/s" longname="Reference GPS Ground Speed"/>
-            <variable name="GGTRK" units="degree_T" longname="Reference GPS Track Angle"/>
-            <variable name="GGVEW" units="m/s" longname="Reference GPS Ground Speed Vector, East Component"/>
-            <variable name="GGVNS" units="m/s" longname="Reference GPS Ground Speed Vector, North Component"/>
-            <variable name="GGDAY" units="day" longname="Reference GPS Day of month (1-31)"/>
-            <variable name="GGMONTH" units="month" longname="Reference GPS Month of year (1-12)"/>
-            <variable name="GGYEAR" units="year" longname="Reference GPS 2 digit year"/>
-        </sample>
-        <message separator="\n" position="end" length="0"/>
-    </serialSensor>
+<!-- RMC record -->
+      <sample id="2" rate="1">
+        <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="none"/>
+        <variable longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)" name="GGRepLag" units="s"/>
+      </sample>
 
-    <serialSensor ID="Garmin_GPS" class="GPS_NMEA_Serial"
-        baud="4800" parity="none" databits="8" stopbits="1">
+<!-- BESTPOS record -->
+      <sample id="4" rate="1">
+        <variable longname="Standard Deviation of Reference GPS Latitude" name="GGLATSD" units="m"/>
+        <variable longname="Standard Deviation of Reference GPS Longitude" name="GGLONSD" units="m"/>
+        <variable longname="Standard Deviation of Reference GPS Altitude (MSL)" name="GGALTSD" units="m"/>
+        <variable longname="Reference GPS number of satellites tracked" name="GGNSATTRK" units="number"/>
+        <variable longname="Reference GPS number of satellites with L1/E1/B1 signals used in solution" name="GGNSATL1" units="number"/>
+        <variable longname="Reference GPS number of satellites with multi-frequency signals used in solution" name="GGNSATMULTI" units="number"/>
+      </sample>
 
-        <!-- GGA record -->
-        <sample id="1" rate="1">
-            <variable name="GGSECSDAY" units="sec" longname="Reference GPS seconds of day"/>
-            <variable name="GGLAT" units="degree_N" longname="Reference GPS Latitude"/>
-            <variable name="GGLON" units="degree_E" longname="Reference GPS Longitude"/>
-            <variable name="GGQUAL" units="none" longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS"/>
-            <variable name="GGNSAT" units="count" longname="Reference GPS number of satellites used"/>
-            <variable name="GGHORDIL" units="none" longname="Reference GPS Horizontal dilution of position"/>
-            <variable name="GGALT" units="m" longname="Reference GPS Altitude (MSL)"/>
-            <variable name="GGEOIDHT" units="m" longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid"/>
-            <variable name="GGDAGE" units="s" longname="Time in seconds since last DGPS update"/>
-            <variable name="GGREFID" units="none" longname="DGPS station ID number"/>
-        </sample>
-        <!-- RMC record -->
-        <sample id="2" rate="1">
-            <variable name="GGSTATUS" units="none" longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)"/>
-            <variable name="GGSPD" units="m/s" longname="Reference GPS Ground Speed"/>
-            <variable name="GGTRK" units="degree_T" longname="Reference GPS Track Angle"/>
-            <variable name="GGVEW" units="m/s" longname="Reference GPS Ground Speed Vector, East Component"/>
-            <variable name="GGVNS" units="m/s" longname="Reference GPS Ground Speed Vector, North Component"/>
-            <variable name="GGDAY" units="day" longname="Reference GPS Day of month (1-31)"/>
-            <variable name="GGMONTH" units="month" longname="Reference GPS Month of year (1-12)"/>
-            <variable name="GGYEAR" units="year" longname="Reference GPS 2 digit year"/>
-        </sample>
-        <message separator="\n" position="end" length="0"/> 
+<!-- BESTVEL record -->
+      <sample id="5" rate="50">
+        <variable longname="Reference GPS Ground Speed" name="GGSPD" units="m/s"/>
+        <variable longname="Reference GPS Track Angle" name="GGTRK" units="degree_T"/>
+        <variable longname="Reference GPS Ground Speed Vector, East Component" name="GGVEW" units="m/s"/>
+        <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
+        <variable longname="Reference GPS Vertical Speed" name="GGVSPD" units="m/s"/>
+      </sample>
+
+      <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
     <serialSensor ID="DewPointer" class="DSMSerialSensor"
@@ -439,33 +422,40 @@
         <message length="156"/>
     </serialSensor>
 
-    <serialSensor ID="UHSAS" class="raf.UHSAS_Serial" baud="115200" parity="none" databits="8" stopbits="1" timeout="10">
-        <parameter name="HSKP_SCALE" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000" type="int"/>
-
-        <sample id="1" rate="10">
-            <variable name="AUHSAS" length="99" units="count" longname="UHSAS Raw Count Histogram"/>
-            <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
-            <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
-            <variable name="USMPFLW" units="V" longname="UHSAS Sample Flow">
-                <linear slope="0.3543" intercept="-0.155" units="sccs"/>
-            </variable>
-            <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
-            <variable name="UTEMP" units="V" longname="UHSAS Temperature in Canister, signal"/>
-            <variable name="USHFLW" units="V" longname="UHSAS Air Sheath Flow">
-                <linear slope="4.1667" intercept="0.0" units="sccs"/>
-            </variable>
-            <variable name="UDIFF" units="V" longname="UHSAS Absolute Pressure in Canister, signal"/>
-            <variable name="UBTMP" units="V" longname="UHSAS Temperature in Canister">
-                <linear slope="173.722" intercept="0.0" units="K"/>
-            </variable>
-            <!--variable name="UPFLW" units="V" longname="UHSAS Purge Flow"/-->
-            <variable name="UPRESS" units="V" longname="UHSAS Absolute Pressure in Canister">
-                <linear slope="22.222" intercept="10.556" units="kPa"/>
-            </variable>
-            <!--variable name="UAUX" units="V" longname="UHSAS Auxilary"/-->
-            <!--variable name="UFLOW" units="sccm" longname="UHSAS Flow"/-->
-        </sample>
-        <message separator="\xff\xff\x00" position="beg" length="234"/>
+    <serialSensor ID="UHSASG" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <parameter name="SerialNumber" type="string" value="UHSAS059"/>
+      <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
+        <variable name="UACC" units="sec" longname="UHSAS Accumulation Time"/>
+        <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
+        <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
+        <variable name="USMPFLW" units="vccm" longname="UHSAS Sample Flow at Laser"/>
+        <variable name="UREF" units="V" longname="UHSAS Reference Intensity"/>
+        <variable name="ULSRTEMP" units="V" longname="UHSAS Laser Temperature"/>
+        <variable name="USHFLW" units="sccm" longname="UHSAS Air Sheath Flow"/>
+        <variable name="UDIFF" units="V" longname="UHSAS Unused Channel"/>
+        <variable name="UBTMP" units="K" longname="UHSAS Temperature in Canister"/>
+        <variable name="UPRGFLW" units="sccm" longname="UHSAS Purge Flow"/>
+        <variable name="UPRESS" units="kPa" longname="UHSAS Absolute Sample Pressure"/>
+        <variable name="UAUX" units="V" longname="UHSAS Auxilliary"/>
+        <variable name="UFLW" units="sccm" longname="UHSAS Flow"/>
+        <variable name="UPSH" units="hPa" longname="Pressure, sheath Alicat"/>
+        <variable name="UTSH" units="deg_C" longname="Temperature, sheath Alicat"/>
+        <variable name="UVSHFL" units="vlpm" longname="Volume flow, sheath Alicat"/>
+        <variable name="UMSHFL" units="slpm" longname="Mass flow, sheath Alicat"/>
+        <variable name="USHSP" units="vlpm" longname="Setpoint, sheath Alicat"/>
+<!--        <variable name="UDPP" units="hPa" longname="Pressure, dP Alicat"/> -->
+        <variable name="UDPIN" units="inH2O" longname="Differential pressure, dP Alicat"/>
+        <variable name="UVFLIN" units="vccm" longname="Sample (inlet) volume flow calculated from dPinlet">
+            <linear intercept="0.0" slope="0.016667" units="vccs"/>
+        </variable>
+        <variable name="UPSAM" units="hPa" longname="Pressure, sample Alicat (original flow controller on exhaust)"/>
+        <variable name="UTSAM" units="deg_C" longname="Temperature, sample Alicat (on exhaust)"/>
+        <variable name="UVSFL" units="vccm" longname="Volume flow, sample Alicat (on exhaust)"/>
+        <variable name="UMSFL" units="sccm" longname="Mass flow, sample Alicat (on exhaust)"/>
+        <variable name="USAMSP" units="vccm" longname="Setpoint, sample Alicat (on exhaust)"/>
+        <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
+      </sample>
+      <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
     <serialSensor ID="VCSEL" class="raf.VCSEL_Serial"
@@ -491,68 +481,6 @@
         <message separator="\r\n" position="end" length="0"/>
     </serialSensor>
 
-    <serialSensor ID="COMR" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="%f">
-            <variable name="COMR" units="V" longname="Carbon Monoxide Mixing Ratio"/>
-<!-- Tom - Teresa says no slope for this
-                <linear slope="400" intercept="-3.2" units="ppbv"/>
-            </variable>
--->
-        </sample>
-        <prompt string="CONC?\r" rate="5"/>
-        <message separator="\r" position="end" length="0"/>
-    </serialSensor>
-
-    <serialSensor ID="CORAW" class="DSMSerialSensor" baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" scanfFormat="%f">
-            <variable name="CORAW" units="V" longname="Carbon Monoxide Mixing Ratio">
-                <linear slope="400" intercept="-3.2" units="ppbv"/>
-            </variable>
-        </sample>
-        <prompt string="CONC?\r" rate="5"/>
-        <message separator="\r" position="end" length="0"/>
-    </serialSensor>
-
-
-    <serialSensor ID="NOAA_CSD_O3" class="DSMSerialSensor"
-        baud="9600" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="NOAA-OZONE%*d,%f,%f">
-            <variable name="PS" units="hPa" longname="NOAA O3 Ambiant Pressure"/>
-            <variable name="O3MR" units="ppbv" longname="NOAA O3 Ozone Mixing Ratio"/>
-        </sample>
-        <message separator="#\r\n" position="end" length="0"/>
-    </serialSensor>
-
-    <serialSensor ID="CFDC" class="DSMSerialSensor"
-        baud="38400" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f">
-            <variable name="CT1" units="%" longname="CFDC Saturation Water"/>
-            <variable name="CT2" units="deg_C" longname="CFDC Aerosol Location Temperature"/>
-            <variable name="CT3" units="#/cm3" longname="CFDC Concentration"/>
-            <variable name="CT4" units="bool" longname="CFDC CVI (ON=1)"/>
-            <variable name="CT5" units="seconds" longname="CFDC MCA Live Time"/>
-            <variable name="CT6" units="hPa" longname="CFDC Pressure"/>
-            <variable name="CT7" units="none" longname="CFDC Filter"/>
-        </sample>
-        <message separator="\r\n" position="end" length="0"/>
-    </serialSensor>
-
-    <serialSensor ID="CCN" class="DSMSerialSensor"
-        baud="57600" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%f, %f, %f, %f, %f, %f, %f, %f, %f">
-            <variable name="AT" units="deg_C" longname="CCN Sample Temperature"/>
-            <variable name="T1COLA" units="deg_C" longname="CCN Column A top of Column Temp"/>
-            <variable name="T3COLA" units="deg_C" longname="CCN Column A bottom of Column Temp"/>
-            <variable name="T1COLB" units="deg_C" longname="CCN Column B top of Column Temp"/>
-            <variable name="T3COLB" units="deg_C" longname="CCN Column B bottom of Column Temp"/>
-            <variable name="CCNA" units="#/cm3" longname="CCN Concentration Column A"/>
-            <variable name="CCNB" units="#/cm3" longname="CCN Concentration Column B"/>
-            <variable name="FLOWA" units="cm3/min" longname="CCN Sample Flow Column B"/>
-            <variable name="FLOWB" units="cm3/min" longname="CCN Sample Flow Column B"/>
-        </sample>
-        <message separator="\r\n" position="end" length="0"/>
-    </serialSensor>
-   
      <sensor ID="Fast2DC" class="raf.TwoD64_USB">
         <parameter name="SerialNumber" value="F2DC001" type="string"/>
         <parameter name="RESOLUTION" value="25" type="int"/>
@@ -571,53 +499,6 @@
             <variable name="DT2DC" units="msec" longname="Fast 2DC Probe Dead Time"/>
         </sample>
 -->
-    </sensor>
-
-    <sensor ID="NOAAUCATS" class="UDPSocketSensor" devicename="inet::38807">
-        <sample id="1" rate="1" scanfFormat="UWV:%f">
-            <variable name="H2OMR" units="ppmv" longname="NOAA UCATS Water Vapor Mixing Ratio"/> 
-        </sample>
-        <sample id="2" rate="1" scanfFormat="UOZ:%f">
-            <variable name="O3MR" units="ppbv" longname="NOAA UCATS Ozone Mixing Ratio"/>
-        </sample>
-        <sample id="3" rate="1" scanfFormat="UMR:%f,%f">
-            <variable name="N2O" units="ppbv" longname="NOAA UCATS Nitrous Oxide"/>
-            <variable name="CH4" units="ppbv" longname="NOAA UCATS Methane"/>
-        </sample>
-    </sensor>
-
-    <sensor ID="NOAAPANTHER"  class="UDPSocketSensor" devicename="inet::38808">
-        <sample id="1" rate="1" scanfFormat="PAN:%f,%f">
-            <variable name="PresLN2" units="psi" longname="NOAA PANTHER Press N2 Low"/>
-            <variable name="PresLHe" units="psi" longname="NOAA PANTHER Press He Low"/>
-        </sample>
-        <sample id="2" rate="1" scanfFormat="PMR:%f,%f,%f,%f">
-            <variable name="F11" units="pptv" longname="NOAA PANTHER CFC-11"/>
-            <variable name="N2O" units="ppbv" longname="NOAA PANTHER Nitrous Oxide"/>
-            <variable name="SF6" units="pptv" longname="NOAA PANTHER Sulfur Hexaflouride"/>
-            <variable name="CH4" units="ppbv" longname="NOAA PANTHER Methane"/>
-        </sample>
-    </sensor>
-
-    <serialSensor ID="SP2" class="DSMSerialSensor"
-        baud="57600" parity="none" databits="8" stopbits="1">
-        <sample id="1" rate="1" scanfFormat="%f %f %f">
-            <variable name="CIP" units="#/cm3" longname="SP2 Concentration Incand Particles"/>
-            <variable name="YAGP" units="V" longname="SP2 YAG Power"/>
-            <variable name="FLOW" units="cc/min" longname="SP2 Sample Flow Rate"/>
-        </sample>
-        <message separator="\r\n" position="end" length="0"/>
-    </serialSensor>
-
-    <sensor ID="NOAASP2"  class="UDPSocketSensor" devicename="inet::32011">
-        <sample id="1" rate="1" scanfFormat="NOAA_SP2,%*dT%*d,%f,%f,%f,%f,%f">
-<!--            <variable name="Time_s"   units="seconds" longname="NOAA SP2 Time"/-->  <!-- Tom might do %*d and skip the time - only know floating point -->
-            <variable name="BCPC" units="#/cm3" longname="NOAA SP2 Back Carbon Particle Concentration"/>
-            <variable name="SampleP"   units="torr" longname="NOAA SP2 Sample P"/>
-            <variable name="SampleFlow" units="cc/min" longname="NOAA SP2 Sample Flow"/>  <!-- Tom - unit given was vccs - used this from serial SP2 defn -->
-            <variable name="YAGP" units="V" longname="SP2 YAG Power"/>
-            <variable name="PCAB" units="torr" longname="SP2 Cabin Pressure"/>
-        </sample>
     </sensor>
 
     <serialSensor ID="CMIGITS3" baud="38400" class="raf.CMIGITS3_Serial" databits="8" parity="odd" stopbits="1" timeout="5">
@@ -666,6 +547,24 @@
       <message length="0" position="beg" separator="\xff\x81"/>
     </serialSensor>
 
+<!-- Specialized UDP Packets for RAF purposes - Parcel Tracking and instructing instrument behavior -->
+    <sensor ID="PARCELS" class="UDPSocketSensor" devicename="inet::30100">
+
+<!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
+        <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
+          <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
+        </sample>
+      -->
+    </sensor>
+    <sensor ID="CTRLRESRCH" class="UDPSocketSensor" devicename="inet::41005" id="1000">
+      <sample id="1" rate="1" scanfFormat="NOCAL,%*dT%*d,%d">
+        <variable longname="Do Not Calibrate" name="NOCAL" units="bool"/>
+      </sample>
+      <sample id="2" rate="1" scanfFormat="NOREC,%*dT%*d,%d">
+        <variable longname="Do Not Record" name="NOREC" units="bool"/>
+      </sample>
+    </sensor>
+
 </sensorcatalog>
 
 
@@ -673,38 +572,32 @@
     <parameter name="tailNumber" value="N600" type="string"/>
 
     <server statusAddr="sock:127.0.0.1:30001">
-        <service class="XMLConfigService">
-            <output>
-                <socket type="mcaccept"/>
-            </output>
-        </service>
-        <service class="XMLConfigAllService">
-            <output>
-                <socket type="mcaccept"/>
-            </output>
-        </service>
-        <service class="RawSampleService">
-            <!-- input from every DSM on this aircraft that has
-                 a socket output of type RawSampleOutputStream -->
-            <input class="RawSampleInputStream">
-                <socket type="mcaccept"/>
-            </input>
-            <processor class="SampleArchiver">
-                <output class="SampleOutputStream">
-                    <fileset dir="/tmp/disk/${PROJECT}"
-                        file="%Y%m%d_%H%M%S_${FLIGHT}.ads"
-                        length="0"/>
-                </output>
-                <output class="SampleOutputStream">
-                    <socket type="server" port="30000"/>
-                </output>
-            </processor>
-            <processor class="raf.SyncRecordGenerator">
-                <output class="SampleOutputStream">
-                    <socket type="server" port="30001"/>
-                </output>
-            </processor>
-        </service>
+      <service class="XMLConfigService">
+        <output>
+          <socket type="mcaccept"/>
+          </output>
+      </service>
+
+      <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.0">
+
+      <!-- input from every DSM on this aircraft that has a socket output of type RawSampleOutputStream -->
+        <input class="RawSampleInputStream">
+          <socket type="mcaccept"/>
+        </input>
+        <processor class="SampleArchiver">
+          <output class="SampleOutputStream">
+            <fileset dir="/tmp/disk/${PROJECT}" file="%Y%m%d_%H%M%S_${FLIGHT}.ads" length="0"/>
+          </output>
+          <output class="SampleOutputStream">
+            <socket type="server" port="30000"/>
+          </output>
+        </processor>
+        <processor class="raf.SyncRecordGenerator">
+          <output class="SampleOutputStream">
+            <socket type="server" port="30001"/>
+          </output>
+        </processor>
+      </service>
     </server>
 
     <dsm id="99" location="acserver" name="acserver" derivedData="sock::31000" statusAddr="sock:192.168.84.2:30001">
