@@ -16,7 +16,14 @@ because it provides the definitions of the sensors -->
   <site applyCals="true" class="raf.Aircraft" name="C130_N130AR">
     <parameter name="tailNumber" type="string" value="N130AR"/>
     <server statusAddr="sock:127.0.0.1:30001">
+        <!-- This returns partial XML, used by dsms (give me just my portion). -->
         <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <!-- This returns the whole XML, used by aeros for example. -->
+        <service class="XMLConfigAllService">
             <output>
                 <socket type="mcaccept"/>
             </output>
