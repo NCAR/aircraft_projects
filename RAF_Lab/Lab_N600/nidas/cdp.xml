@@ -11,7 +11,34 @@
     version="$LastChangedRevision: 428 $"
     >
 
-<sensorcatalog>
+  <sensorcatalog>
+
+    <sensor ID="IRIG" class="raf.IRIGSensor">
+      <sample id="1">
+        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
+        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+      </sample>
+    </sensor>
+
+    <serialSensor ID="CHRONY_TRACKING_LOG" class="ChronyLog" devicename="/var/log/chrony/tracking.log">
+      <!-- see https://chrony.tuxfamily.org/doc/2.3/manual.html#tracking-log -->
+      <parameter name="Category" type="string" value="Housekeeping"/>
+      <sample id="1" scanfFormat="%*d-%*d-%*d %*d:%*d:%*d %*s%f%*f%*f%f" rate="1">
+        <variable name="Stratum" units="" longname="NTP stratum" plotrange="0 10"/>
+        <variable name="Timeoffset" units="sec" longname="Clock offset, system-reference" plotrange="-100 100">
+          <linear units="usec" slope="1.e6" intercept="0.0"/>
+        </variable>
+      </sample>
+      <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="DSMTEMP_RS232" devicename="/dev/ttyS2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="#%f">
+        <variable longname="DSM Temperature" name="DSMTEMP" units="degC"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
+    </serialSensor>
+
 
 <!-- 
     CDP notes:  
@@ -88,10 +115,10 @@
       <prompt rate="2" string="\x1b\x03\x1d\x00"/>
     </serialSensor>
 
-</sensorcatalog>
+  </sensorcatalog>
 
 
-<site name="Lab_N600" class="raf.Aircraft">
+  <site name="Lab_N600" class="raf.Aircraft">
     <parameter name="tailNumber" value="N600" type="string"/>
 
     <server statusAddr="sock:127.0.0.1:30001">
@@ -113,7 +140,7 @@
             </input>
             <processor class="SampleArchiver">
                 <output class="RawSampleOutputStream">
-                    <fileset dir="/home/data"
+			<fileset dir="/var/r1/${PROJECT}"
                         file="cdp_%Y%m%d_%H%M%S.ads"
                         length="0">
                     </fileset>
@@ -133,13 +160,16 @@
     <!-- dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071"> -->
     <dsm name="labdsm7" location="lab" id="107" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
 
-        <serialSensor IDREF="CDP" devicename="/dev/ttyCTI5" id="730" suffix="_sn016">
-            <parameter name="SerialNumber" value="CDP016" type="string"/>
-        </serialSensor>
+      <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_LAB7"/>
+      <sensor IDREF="DSMTEMP_RS232" id="110" suffix="_LAB7"/>
 
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
+      <serialSensor IDREF="CDPpbp" devicename="/dev/ttyCTI5" id="730" suffix="_sn016">
+        <parameter name="SerialNumber" value="CDP016" type="string"/>
+      </serialSensor>
+
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
-</site>
+  </site>
 </project>
