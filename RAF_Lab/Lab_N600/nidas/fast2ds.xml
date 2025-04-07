@@ -13,13 +13,6 @@
 
   <sensorcatalog>
 
-    <sensor ID="IRIG" class="raf.IRIGSensor">
-      <sample id="1">
-        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
-        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
-      </sample>
-    </sensor>
-
     <serialSensor ID="CHRONY_TRACKING_LOG" class="ChronyLog" devicename="/var/log/chrony/tracking.log">
       <!-- see https://chrony.tuxfamily.org/doc/2.3/manual.html#tracking-log -->
       <parameter name="Category" type="string" value="Housekeeping"/>
@@ -135,28 +128,31 @@
             <socket type="mcaccept"/>
           </output>
         </service>
-        <service class="RawSampleService">
-            <!-- input from every DSM on this aircraft that has
-                 a socket output of type RawSampleOutputStream -->
-            <input class="RawSampleInputStream">
-                <socket type="mcaccept"/>
-            </input>
-            <processor class="SampleArchiver">
-                <output class="SampleOutputStream">
-                    <socket type="server" port="30000"/>
-                </output>
-            </processor>
-            <processor class="raf.SyncRecordGenerator">
-                <output class="SampleOutputStream">
-                    <socket type="server" port="30001"/>
-                </output>
-            </processor>
+        <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.0">
+
+<!-- input from every DSM on this aircraft that has
+             a socket output of type RawSampleOutputStream -->
+          <input class="RawSampleInputStream">
+            <socket maxIdle="60" type="mcaccept"/>
+          </input>
+          <processor class="SampleArchiver">
+            <output class="RawSampleOutputStream">
+              <fileset dir="/var/r1/${PROJECT}" file="%Y%m%d_%H%M%S_${FLIGHT}.ads" length="0"/>
+            </output>
+            <output class="RawSampleOutputStream">
+              <socket port="30000" type="server"/>
+            </output>
+          </processor>
+          <processor class="raf.SyncRecordGenerator">
+            <output class="SampleOutputStream">
+              <socket port="30001" type="server"/>
+            </output>
+          </processor>
         </service>
     </server>
 
 
-    <!-- dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071"> -->
-    <dsm name="localhost" location="dsm322" id="22" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
+    <dsm name="localhost" location="acserver" id="99" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
       <!--
       <output class="RawSampleOutputStream">
           <fileset dir="/home/data"
@@ -165,8 +161,6 @@
           </fileset>
       </output>
       -->
-      <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_304"/>
-      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="110" suffix="_304"/>
 
       <sensor IDREF="TWODS_HK" devicename="usock::30113" id="1000">
         <parameter name="SerialNumber" type="string" value="F2DS020"/>
