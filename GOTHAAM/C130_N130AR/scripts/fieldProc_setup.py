@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 #
-#   Be sure to ask the systems group to create a directory <project> under the
-#   standard incoming data dir and then to create the tree below it:
-#       EOL_data/
-#           RAF_data/
+#   Be sure to ask the systems group to create a directory:
+#   /net/ftp/pub/data/incoming/<project>.
+#   If using syncthing, set it up for unidirectional syncing from /var/r1/syncthing_staging on gs3
 #   If NAS_permanent_mount then NAS will copy files to that dir.
 #
 #   Note that the CWIG standard and the standard expected by the 
@@ -27,6 +26,9 @@ RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 dat_parent_dir =  DATA_DIR+'/'     # Where nc and kml files go
 rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 
+
+### Default email address(es) to send status messages to ###
+default_emails = ['srunkel@ucar.edu']
 #############################################################################
 ### Define settings for NAS in the field
 #############################################################################
@@ -42,10 +44,10 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 FTP = True
 ftp_site = 'ftp.eol.ucar.edu'
-user = os.environ['FTPUSER']
-password = os.environ['FTPPWD']
-ftp_parent_dir = '.'
-ftp_data_dir = os.environ['FTPDATADIR']
+user = 'anonymous'
+password = ''
+ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
+ftp_data_dir = '/EOL_data/RAF_data'
 
 #############################################################################
 ### Define which files should be generated
@@ -68,7 +70,7 @@ ship_all_ADS = False
 PMS2D = True            #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
-Rstudio = True # Generate a PDF of the QC plots
+QA_notebook = True # Generate HTML of the QA plots
 catalog = False # Send QC plots to field catalog, leave as False
 
 #############################################################################
@@ -90,4 +92,10 @@ translate2ds = '/opt/local/bin/translate2ds '
 # section of push_data and set command as you want.
 #############################################################################
 datadump = False
+
+GDRIVE = False
+rclone_staging_dir = ''
+#############################################################################
+SYNCTHING = True
+syncthing_staging_dir = f'/var/r1/{project}/EOL_data/RAF_data'
 
