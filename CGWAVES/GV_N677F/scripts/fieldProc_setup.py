@@ -42,7 +42,7 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = True
+FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'cgwaves'
 password = 'm0ns00n!'
@@ -67,7 +67,7 @@ ship_all_ADS = False
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
-PMS2D = True            #PMS2D from 2D-C
+PMS2D = False           #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
 QA_notebook = True # Generate HTML of the QA plots
@@ -97,4 +97,4 @@ GDRIVE = False
 rclone_staging_dir = ''
 #############################################################################
 SYNCTHING = True
-syncthing_staging_dir = f'/var/r1/{project}/EOL_data/RAF_data'
+syncthing_staging_dir = f'/var/r1/field_sync/EOL_Data/RAF_Data'
