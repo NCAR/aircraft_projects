@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 #
-#   Copyright 2015 University Corporation for Atmospheric Research
-#
-#   Be sure to ask the systems group to create a directory <project> under the
-#   standard incoming data dir and then to create the tree below it:
-#       EOL_data/
-#           RAF_data/
+#   Be sure to ask the systems group to create a directory:
+#   /net/ftp/pub/data/incoming/<project>.
+#   If using syncthing, set it up for unidirectional syncing from /var/r1/syncthing_staging on gs3
 #   If NAS_permanent_mount then NAS will copy files to that dir.
 #
 #   Note that the CWIG standard and the standard expected by the 
@@ -21,10 +18,6 @@
 # Taylor Thomas - Updates including pulling ADS config to this file from 
 # push_data.py, updating this file with the config portion for 
 # dist_field_data.py paths for new sync_field_data.py script. 01/16/2019
-#
-# Taylor Thomas - Update to allow configuration for using rclone and 
-# Google Drive
-#
 
 import os
 project = os.environ['PROJECT']
@@ -33,14 +26,9 @@ RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 dat_parent_dir =  DATA_DIR+'/'     # Where nc and kml files go
 rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 
-#############################################################################
-### Define settings for rclone to Google Drive
-#############################################################################
-# Set GDRIVE to true if you plan to send data to the rclone_staging location
-# and then rclone to Google Drive
-GDRIVE = True
-rclone_staging_dir = '/home/data/rclone_staging/' + project.lower() + '/EOL_data/RAF_data/'
 
+### Default email address(es) to send status messages to ###
+default_emails = ['srunkel@ucar.edu']
 #############################################################################
 ### Define settings for NAS in the field
 #############################################################################
@@ -54,12 +42,12 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = False
+FTP = True
 ftp_site = 'ftp.eol.ucar.edu'
-user = os.environ['FTPUSER']
-password = os.environ['FTPPWD']
-ftp_parent_dir = '.'
-ftp_data_dir = os.environ['FTPDATADIR']
+user = 'cgwaves'
+password = 'm0ns00n!'
+ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
+ftp_data_dir = '/EOL_data/RAF_data'
 
 #############################################################################
 ### Define which files should be generated
@@ -74,15 +62,15 @@ zip_ADS = False # Bzips the ads file independently of processed files
 # you can have both sendzipped and zip_ads set to True if you want
 
 # Do you want to transfer ADS file back to Boulder (is the connection good enough?)
-ship_ADS = False
+ship_ADS = True
 ship_all_ADS = False
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
-PMS2D = False            #PMS2D from 2D-C
+PMS2D = True            #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
-Rstudio = False # Generate a PDF of the QC plots
+QA_notebook = True # Generate HTML of the QA plots
 catalog = False # Send QC plots to field catalog, leave as False
 
 #############################################################################
@@ -105,3 +93,8 @@ translate2ds = '/opt/local/bin/translate2ds '
 #############################################################################
 datadump = False
 
+GDRIVE = False
+rclone_staging_dir = ''
+#############################################################################
+SYNCTHING = True
+syncthing_staging_dir = f'/var/r1/{project}/EOL_data/RAF_data'
