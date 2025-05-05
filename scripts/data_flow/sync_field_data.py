@@ -162,7 +162,7 @@ def distribute_data(data_type: list):
         'PI': (f'{ftp_parent_dir}/EOL_data', '*', f'{dat_dir}/PI_data', 'Starting distribution of PI data\n', True),
         'MTP': (f'{rdat_dir}/MTP/field','*',f'{dat_dir}/MTP', 'Starting distribution of MTP data\n', True),
         'QAtools': ('/net/www/raf/', '*',f'{dat_dir}/QAtools','Starting distribution of QAtools.html', True),
-        'field_data': (dat_dir, '*.nc',f'{dat_dir}/field_data', 'Continuing distribution of RAF prod data', False)
+        'field_data': (dat_dir, '*.nc',f'{dat_dir}/field_sync', 'Continuing distribution of RAF prod data', False)
     }
     for dtype in data_type:
         if dtype not in destinations:
@@ -262,10 +262,10 @@ def sync_from_ftp():
     dir_check()
     logging.info(f"Syncing from {source} transfer directory...")
     logging.info(f'Syncing ADS and PMS2D data from {ftp_dir} to {rdat_dir}')
-    logging.info(f'Syncing other data from {ftp_dir} to {dat_dir}/field_data')
+    logging.info(f'Syncing other data from {ftp_dir} to {dat_dir}/field_sync')
     for dtype in proc_dict:
         if proc_dict[dtype]:
-            ingest_to_local(dtype, f'{dat_dir}/field_data', ftp_dir)
+            ingest_to_local(dtype, f'{dat_dir}/field_sync', f'{ftp_dir}field_sync')
     if QA_notebook:
         distribute_data(['field_data','QAtools'])
 
