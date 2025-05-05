@@ -89,7 +89,7 @@ def unzip():
             message= f'Unzipping files'
             _run_and_log(command, message)
 
-            command = f"mv {eol_dir}RAF_data/{fname} {dat_dir}/field_data"
+            command = f"mv {eol_dir}RAF_data/{fname} {dat_dir}/field_sync"
             message= 'Moving files to dat_dir, so we dont keep unzipping'
             _run_and_log(command, message)
 
@@ -104,7 +104,7 @@ def _sync_data(src_dir, file_pattern, dest_dirs, base_message, recursive:bool=Fa
     - base_message (str): The base message to be logged during the sync process.
     - recursive (bool, optional): Whether to sync files recursively. Defaults to False.
     """
-    command_base = f'rsync -rqu {src_dir}/{file_pattern} ' if recursive else f'rsync -qu {src_dir}/{file_pattern} '
+    command_base = f'rsync -rqu --exclude="*.shtml" {src_dir}/{file_pattern} ' if recursive else f'rsync -qu --exclude="*.shtml" {src_dir}/{file_pattern} '
     for dest_dir in dest_dirs:
         command = command_base + dest_dir
         _run_and_log(command, base_message)
@@ -181,14 +181,14 @@ def ingest_to_local(filetype, local_dir, start_dir):
     logging.info('Starting distribution of data from FTP to localdirs/')
     if filetype == 'PMS2D':
         local_dir = rdat_dir
-        command = 'rsync -qu ' + start_dir + filetype \
+        command = 'rsync -qu --exclude="*.shtml" ' + start_dir + filetype \
             + '/* ' + local_dir + '/' + filetype + '/.'
     elif filetype == 'ADS':
         local_dir = rdat_dir
-        command = 'rsync -qu ' + start_dir + filetype \
+        command = 'rsync -qu --exclude="*.shtml" ' + start_dir + filetype \
             + '/* ' + local_dir + '/.'
     else:
-        command = 'rsync -qu ' + start_dir + filetype \
+        command = 'rsync -qu --exclude="*.shtml" ' + start_dir + filetype \
             + '/* ' + local_dir
     message = 'Syncing dir into place'
     _run_and_log(command, message)
