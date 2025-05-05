@@ -30,7 +30,7 @@ from fieldProc_setup import project, dat_parent_dir,\
     ship_ADS, GDRIVE, RAW_DATA_DIR, SYNCTHING, QA_notebook
 temp_dir = RAW_DATA_DIR + '/' + project + '/field_sync'
 dat_dir = dat_parent_dir + project
-ftp_dir = ftp_parent_dir +ftp_data_dir
+ftp_dir = ftp_parent_dir+ftp_data_dir
 rdat_dir = rdat_parent_dir + project
 eol_dir = temp_dir+'/EOL_data/'
 
@@ -142,7 +142,7 @@ def dist_prod():
     for data_type, file_pattern in data_types:
         src_dir = f'{eol_dir}RAF_data/{data_type}'
         dest_dirs = [
-            f'{dat_dir}/field_data',
+            f'{dat_dir}/field_sync',
             f'{ftp_dir}/{data_type}'
         ]
         _sync_data(src_dir, file_pattern, dest_dirs, 'Syncing production data')
@@ -265,7 +265,7 @@ def sync_from_ftp():
     logging.info(f'Syncing other data from {ftp_dir} to {dat_dir}/field_sync')
     for dtype in proc_dict:
         if proc_dict[dtype]:
-            ingest_to_local(dtype, f'{dat_dir}/field_sync', f'{ftp_dir}field_sync')
+            ingest_to_local(dtype, f'{dat_dir}/field_sync', f'{ftp_dir}')
     if QA_notebook:
         distribute_data(['field_data','QAtools'])
 
