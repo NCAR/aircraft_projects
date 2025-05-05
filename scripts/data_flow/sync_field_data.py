@@ -68,8 +68,6 @@ def dir_check():
     Function to ensure that directories exist and makes them if not
     """
     # Check to make sure the rdat + project dir exists
-    rdat_dir = rdat_parent_dir + project
-    ftp_dir = ftp_parent_dir
     directories = [
         rdat_dir,
         ftp_dir,
@@ -126,7 +124,7 @@ def dist_raw():
         _sync_data(eol_dir + 'RAF_data/ADS', '*.bz2', [rdat_dir], 'Syncing zipped ADS files to rdat')
 
     # Check the PMS2D subdir for files
-    _sync_data(eol_dir + 'RAF_data/PMS2D', '*', [rdat_dir,f'{ftp_dir}/EOL_data/RAF_data'], 'Syncing PMS2D files', recursive=True)
+    _sync_data(eol_dir + 'RAF_data/PMS2D', '*', [rdat_dir], 'Syncing PMS2D files', recursive=True)
 
 def dist_prod():
     """
@@ -145,7 +143,7 @@ def dist_prod():
         src_dir = f'{eol_dir}RAF_data/{data_type}'
         dest_dirs = [
             f'{dat_dir}/field_data',
-            f'{ftp_dir}/EOL_data/RAF_data/{data_type}'
+            f'{ftp_dir}/{data_type}'
         ]
         _sync_data(src_dir, file_pattern, dest_dirs, 'Syncing production data')
 
@@ -161,7 +159,7 @@ def distribute_data(data_type: list):
     destinations = {
         ''' data_type: (destination, ext, source_dir, log_message, recursive)'''
         
-        'PI': (f'{ftp_dir}/EOL_data', '*', f'{dat_dir}/PI_data', 'Starting distribution of PI data\n', True),
+        'PI': (f'{ftp_parent_dir}/EOL_data', '*', f'{dat_dir}/PI_data', 'Starting distribution of PI data\n', True),
         'MTP': (f'{rdat_dir}/MTP/field','*',f'{dat_dir}/MTP', 'Starting distribution of MTP data\n', True),
         'QAtools': ('/net/www/raf/', '*',f'{dat_dir}/QAtools','Starting distribution of QAtools.html', True),
         'field_data': (dat_dir, '*.nc',f'{dat_dir}/field_data', 'Continuing distribution of RAF prod data', False)
@@ -183,14 +181,14 @@ def ingest_to_local(filetype, local_dir, start_dir):
     logging.info('Starting distribution of data from FTP to localdirs/')
     if filetype == 'PMS2D':
         local_dir = rdat_dir
-        command = 'rsync -qu ' + start_dir + '/EOL_data/RAF_data/' + filetype \
+        command = 'rsync -qu ' + start_dir + filetype \
             + '/* ' + local_dir + '/' + filetype + '/.'
     elif filetype == 'ADS':
         local_dir = rdat_dir
-        command = 'rsync -qu ' + start_dir + '/EOL_data/RAF_data/' + filetype \
+        command = 'rsync -qu ' + start_dir + filetype \
             + '/* ' + local_dir + '/.'
     else:
-        command = 'rsync -qu ' + start_dir + '/EOL_data/RAF_data/' + filetype \
+        command = 'rsync -qu ' + start_dir + filetype \
             + '/* ' + local_dir
     message = 'Syncing dir into place'
     _run_and_log(command, message)
