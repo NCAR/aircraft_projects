@@ -835,6 +835,24 @@ must be imported into default.xml -->
       <prompt rate="1" string="A\r"/>
     </serialSensor>
 
+    <serialSensor ID="StabilizedPlatform" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_SP">
+      <parameter name="Category" type="string" value="Housekeeping"/>
+      <sample id="1" rate="10" scanfFormat="#%f,%d,%d,%f,%d,%f,%d,%d,%f,%d,%d">
+        <variable longname="Platform Pitch Angle" name="PITCH" units="deg"/>
+        <variable longname="Platform Pitch Motor PWM" name="PPWM" units="cnts"/>
+        <variable longname="Platform Pitch Encoder" name="PENC" units="cnts"/>
+        <variable longname="Platform Pitch Loop FB" name="PLFB" units="deg"/>
+        <variable longname="Platform Pitch Motor Current Monitor" name="POVCR" units="cnts"/>
+        <variable longname="Platform Roll Angle" name="ROLL" units="deg"/>
+        <variable longname="Platform Roll Motor PWM" name="RPWM" units="cnts"/>
+        <variable longname="Platform Roll Encoder" name="RENC" units="cnts"/>
+        <variable longname="Platform Roll Loop FB" name="RLFB" units="deg"/>
+        <variable longname="Platform Roll Motor Current Monitor" name="ROVCR" units="cnts"/>
+        <variable longname="Platform Attitude Limited (=0:Norm,!=0:Limit)" name="LIMIT" units="bits"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
+    </serialSensor>
+
 <!-- 
     CDP notes:  
       - The CDP can be either a 38400 or 57600 baud instrument.  This is controlled via a jumper
@@ -1244,6 +1262,36 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="TDL Temperature" name="TTDLR" units="deg_C"/>
       </sample>
     </sensor>
+
+    <serialSensor ID="VCSEL" id="600" devicename="/dev/ttyCTI2" baud="38400" class="raf.VCSEL_Serial" databits="8" parity="none" stopbits="1" suffix="_VXL">
+
+<!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
+       <sample id="1" rate="1" scanfFormat="SWS %f %f %f %f %f %c %f %*f %*f %f %f %f">
+         <variable longname="VCSEL Status Code" name="STATUS" units="none"/>
+         <variable longname="VCSEL Ambient Temperature" name="AT" units="deg_K"/>
+         <variable longname="VCSEL Ambient Pressure" name="PS" units="torr">
+             <linear intercept="0.0" slope="1.333223" units="hPa"/>
+         </variable>
+         <variable longname="VCSEL Laser Temperature" name="LSRTMP" units="ohm"/>
+         <variable longname="VCSEL Set Temperature" name="SETTMP" units="ohm"/>
+         <variable longname="VCSEL Mode" name="MODE" units="none"/>
+         <variable longname="VCSEL Center Current" name="CNTRCUR" units="count"/>
+         <variable longname="VCSEL Peak Position" name="PKPOS" units="count"/>
+         <variable longname="VCSEL Pre Gain" name="PREGAIN" units="count"/>
+         <variable longname="VCSEL AC Gain" name="ACGAIN" units="count"/>
+       </sample>
+       <sample id="2" rate="25" scanfFormat="%f %f %*f %*f">
+         <variable longname="VCSEL Moisture Number Density" name="RAWCONC" units="#/cm3"/>
+         <variable longname="VCSEL Sample Laser Intensity" name="SMPLSRINT" units="mV"/>
+<!--        <variable longname="VCSEL Frost Dew Point" name="DPV" units="deg_C"/>  third %f above -->
+        </sample>
+
+<!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
+        <sample id="3" rate="1" scanfFormat="SPEC %98f">
+          <variable length="98" longname="VCSEL Absorbption Spectrum" name="ABSPEC" units="count"/>
+        </sample>
+        <message length="0" position="end" separator="\r\n"/>
+    </serialSensor>
 
     <serialSensor ID="HoneywellPPT" baud="19200" class="raf.PPT_Serial" databits="8" parity="none" stopbits="1">
         <sample id="1" scanfFormat="?%*2dCP=%f" ttadjust="1">
