@@ -208,10 +208,12 @@ because it provides the definitions of the sensors -->
     </dsm>
 
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
+      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="110" suffix="_305">
+	<parameter name="SerialNumber" type="string" value="2932"/>
+      </serialSensor>
 	    <!--
-      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="110" suffix="_305"/>
-	    -->
       <sensor IDREF="DSMTEMP_485" devicename="/dev/ttyS2" id="110" suffix="_305"/>
+	    -->
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_305"/>
 
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyCTI0" id="115">
