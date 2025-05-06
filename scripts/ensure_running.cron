@@ -71,6 +71,9 @@ fi
 
 # Start the Remote Instrument Control aircraft switch
 # It will read its configuration from ~/.config/NCAR/Switch.ini
+#
+# Commented out for projects that aren't using ric.
+
 ps ax | grep ric_switch | grep -qv grep
 if [ $? -eq 1 ]; then
   /home/local/ric/src/switch/ric_switch > /tmp/ric_switch.log &

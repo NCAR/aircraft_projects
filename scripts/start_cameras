@@ -15,15 +15,15 @@ pkill exiftool
 
 #restart ethernet camera before getting to firewire drivers
 cam_path=`get_ac_config.py cameras.path`
-mkdir -p  $cam_path/down
-cd $cam_path/down
-rm /tmp/VimbaCam.log
-if ! ps h -C Vimba | grep -v "[Vimba]" > /dev/null
-then
-    /opt/local/Vimba_5_1/VimbaC/Examples/SynchronousGrab/Build/Make/binary/x86_64bit/SynchronousGrab >/tmp/VimbaCam.log &
-else
-    echo "Vimba already running, not restarting"
-fi
+#mkdir -p  $cam_path/down
+#cd $cam_path/down
+#rm /tmp/VimbaCam.log
+#if ! ps h -C Vimba | grep -v "[Vimba]" > /dev/null
+#then
+#    /opt/local/Vimba_5_1/VimbaC/Examples/SynchronousGrab/Build/Make/binary/x86_64bit/SynchronousGrab >/tmp/VimbaCam.log &
+#else
+#    echo "Vimba already running, not restarting"
+#fi
 
 # [Re]load firewire drivers.
 sudo modprobe -r firewire_ohci
@@ -39,6 +39,4 @@ ln -s `dirname ${cam_path}`
 sleep 2
 
 /etc/init.d/capture.sh start
-
-sleep 800000
 

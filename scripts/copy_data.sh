@@ -99,6 +99,15 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
       echo "Cound not locate dir $TRANSFER_MEDIA/$PROJECT"
    fi
 
+#   echo "********************* CAESAR-specific **************************"
+#   echo "Sync GVR data to acserver"
+#   rsync -a "gvr:/usr/local/prosensing/data/GVR_L?_2024-0[234]*" $DATA_LOCATION/GVR
+#   if [ ! -d $TRANSFER_MEDIA/$PROJECT/GVR ]; then
+#       mkdir -p $TRANSFER_MEDIA/$PROJECT/GVR
+#   fi
+#   rsync -cavP --no-perms $DATA_LOCATION/GVR/GVR*dat $TRANSFER_MEDIA/$PROJECT/GVR
+#   echo "****************************************************************"
+
 else
    echo "You don't have a drive connected. Stopping script. Connect a removable drive and restart script."
 
