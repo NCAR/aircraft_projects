@@ -1,0 +1,61 @@
+camera_cfg: &camera_cfg
+  startdate_pattern: YYYY-MM-yy HH:mm:SS
+  enddate_pattern: YYYY-MM-yy HH:mm:SS
+  platform_id: <platform_id>
+  format: 53
+  host: campaign
+  frequency_id: 4
+  spatial_type: raster
+  gcmd_science_keyword_id: 519, 541, 2832
+  xlink_id: #Must add project specific imagery x-link
+  instrument_id: 32 #Camera
+  load_data_location: '*tar, *tar.dir'
+  archive_location_2: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/CAMERA
+  startdate_pattern_2: YYYY-MM-yy HH:mm:SS
+  enddate_pattern_2: YYYY-MM-yy HH:mm:SS
+  format_2: 147
+  host_2: campaign
+  iso_citation_role: 11
+  contact_id_codiac: <author_id> 
+  iso_citation_role_2: 10
+  contact_id_codiac_2: 1
+
+camera_down:
+  <<: *camera_cfg
+  archive_ident: <down>
+  ingest_location: /scr/raf/Raw_Data/<PROJECT>/camera_images/flight_number_(\E\E\E\E)/down
+  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/CAMERA/down
+  filename_pattern: (\E\E\E\E).DOWN.(\Y\Y\Y\Y\M\M\y\y).[\H\H\m\m\S\S]_{\H\H\m\m\S\S}.jpg.tar
+  filename_pattern_2: (\E\E\E\E).DOWN.(\Y\Y\Y\Y\M\M\y\y).[\H\H\m\m\S\S]_{\H\H\m\m\S\S}.jpg.tar.dir
+  title: Downward-Looking Digital Camera Imagery
+  summary: During <PROJECT>, the NSF/NCAR <AIRCRAFT> (Tail Number <tailnumber>) flew a downward looking digital camera for in-flight video capture. Individual photo jpeg images were captured once per second during flights. Images taken after dark have been stripped from this archive. The remaining images have been combined into hour long tarfiles running from zero minutes zero seconds (or the start time of the first file) to 23 minutes 59 seconds (or the end time of the last file) after each hour. Note that the first and last tarfile for each flight will contain less than a full hour of imagery. Directory files returned with each order give the contents of each corresponding tar file.
+
+camera_fwd:
+  <<: *camera_cfg
+  archive_ident: <fwd>
+  ingest_location: /scr/raf/Raw_Data/<PROJECT>/camera_images/flight_number_(\E\E\E\E)/fwd
+  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/CAMERA/fwd
+  filename_pattern: (\E\E\E\E).FWD.(\Y\Y\Y\Y\M\M\y\y).[\H\H\m\m\S\S]_{\H\H\m\m\S\S}.jpg.tar
+  filename_pattern_2: (\E\E\E\E).FWD.(\Y\Y\Y\Y\M\M\y\y).[\H\H\m\m\S\S]_{\H\H\m\m\S\S}.jpg.tar.dir
+  title: Forward-Looking Digital Camera Imagery
+  summary: During <PROJECT>, the NSF/NCAR <AIRCRAFT> (Tail Number <tailnumber>) flew a forward looking digital camera for in-flight video capture. Individual photo jpeg images were captured once per second during flights. Images taken after dark have been stripped from this archive. The remaining images have been combined into hour long tarfiles running from zero minutes zero seconds (or the start time of the first file) to 23 minutes 59 seconds (or the end time of the last file) after each hour. Note that the first and last tarfile for each flight will contain less than a full hour of imagery. Directory files returned with each order give the contents of each corresponding tar file.
+
+camera_left:
+  <<: *camera_cfg
+  archive_ident: <left>
+  ingest_location: /scr/raf/Raw_Data/<PROJECT>/camera_images/flight_number_(\E\E\E\E)/left
+  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/CAMERA/left
+  filename_pattern: (\E\E\E\E).LEFT.(\Y\Y\Y\Y\M\M\y\y).[\H\H\m\m\S\S]_{\H\H\m\m\S\S}.jpg.tar
+  filename_pattern_2: (\E\E\E\E).LEFT.(\Y\Y\Y\Y\M\M\y\y).[\H\H\m\m\S\S]_{\H\H\m\m\S\S}.jpg.tar.dir
+  title: Left-Looking Digital Camera Imagery
+  summary: During <PROJECT>, the NSF/NCAR <AIRCRAFT> (Tail Number <tailnumber>) flew a left looking digital camera for in-flight video capture. Individual photo jpeg images were captured once per second during flights. Images taken after dark have been stripped from this archive. The remaining images have been combined into hour long tarfiles running from zero minutes zero seconds (or the start time of the first file) to 23 minutes 59 seconds (or the end time of the last file) after each hour. Note that the first and last tarfile for each flight will contain less than a full hour of imagery. Directory files returned with each order give the contents of each corresponding tar file.
+
+camera_right:
+  <<: *camera_cfg
+  archive_ident: <right>
+  ingest_location: /scr/raf/Raw_Data/<PROJECT>/camera_images/flight_number_(\E\E\E\E)/right
+  archive_location: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/CAMERA/right
+  filename_pattern: (\E\E\E\E).RIGHT.(\Y\Y\Y\Y\M\M\y\y).[\H\H\m\m\S\S]_{\H\H\m\m\S\S}.jpg.tar
+  filename_pattern_2: (\E\E\E\E).RIGHT.(\Y\Y\Y\Y\M\M\y\y).[\H\H\m\m\S\S]_{\H\H\m\m\S\S}.jpg.tar.dir
+  title: Right-Looking Digital Camera Imagery
+  summary: During <PROJECT>, the NSF/NCAR <AIRCRAFT> (Tail Number <tailnumber>) flew a right looking digital camera for in-flight video capture. Individual photo jpeg images were captured once per second during flights. Images taken after dark have been stripped from this archive. The remaining images have been combined into hour long tarfiles running from zero minutes zero seconds (or the start time of the first file) to 23 minutes 59 seconds (or the end time of the last file) after each hour. Note that the first and last tarfile for each flight will contain less than a full hour of imagery. Directory files returned with each order give the contents of each corresponding tar file.

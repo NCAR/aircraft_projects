@@ -10,15 +10,16 @@
 
   <sensorcatalog>
     <sensor ID="IRIG" class="raf.IRIGSensor">
+        <parameter name="Category" type="string" value="Housekeeping"/>
         <sample id="1">
             <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
             <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
         </sample>
     </sensor>
 
-    <serialSensor ID="CHRONY_TRACKING_LOG" class="ChronyLog"
-      devicename="/var/log/chrony/tracking.log">
+    <serialSensor ID="CHRONY_TRACKING_LOG" class="ChronyLog" devicename="/var/log/chrony/tracking.log">
       <!-- see https://chrony.tuxfamily.org/doc/2.3/manual.html#tracking-log -->
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" scanfFormat="%*d-%*d-%*d %*d:%*d:%*d %*s%f%*f%*f%f" rate="1">
         <variable name="Stratum" units="" longname="NTP stratum" plotrange="0 10"/>
         <variable name="Timeoffset" units="sec" longname="Clock offset, system-reference" plotrange="-100 100">
@@ -31,6 +32,7 @@
     <serialSensor ID="DSMTEMP_MBRTU" class="ModbusRTU" baud="9600" databits="8" parity="none" stopbits="1" timeout="10">
       <parameter name="slaveID" type="int" value="1"/>
       <parameter name="regaddr" type="int" value="0"/>
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1">
         <variable longname="DSM Temperature" name="DSMTEMP" units="counts">
           <linear units="degC" slope="0.1" intercept="0.0"/>
@@ -600,6 +602,7 @@
 -->
 
     <sensor ID="ALTASTATUS" class="UDPSocketSensor" devicename="usock::30220">
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
         <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
         <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
@@ -837,7 +840,7 @@
             <variable longname="SPP-200 Mid-Gain Baseline" name="PMGB" units="V"/>
             <variable longname="SPP-200 Low-Gain Baseline" name="PLGB" units="V"/>
             <variable longname="SPP-200 Flow" name="PFLW" units="cnts">
-                <poly coefs="6.99382 -7.16360e-03 1.94545e-06" units="std cm3/s"/>
+                <poly coefs="10.61203 -9.94929e-03 2.48008e-06" units="std cm3/s"/>
             </variable>
             <variable longname="SPP-200 Laser Reference Voltage" name="PREF" units="V"/>
             <variable longname="SPP-200 Sheath Flow" name="PFLWS" units="cnts">
@@ -872,6 +875,7 @@
     </serialSensor>
 
     <serialSensor ID="StabilizedPlatform" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1" suffix="_SP">
+      <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="10" scanfFormat="#%f,%d,%d,%f,%d,%f,%d,%d,%f,%d,%d">
         <variable longname="Platform Pitch Angle" name="PITCH" units="deg"/>
         <variable longname="Platform Pitch Motor PWM" name="PPWM" units="cnts"/>
@@ -965,9 +969,9 @@
         <variable longname="UHSAS Laser Temperature" name="ULSRTEMP" units="V"/>
         <variable longname="UHSAS Air Sheath Flow" name="USHFLW" units="sccm"/>
 <!--        <variable longname="UHSAS Absolute Pressure in Canister, signal" name="UDIFF" units="V"/> -->
-        <variable longname="UHSAS Temperature as Sample enters the Instrument" name="UTMP" units="K"/>
+        <variable longname="UHSAS Absolute Temperature" name="UTMP" units="K"/>
         <variable longname="UHSAS Purge Flow" name="UPRGFLW" units="sccm"/>
-        <variable longname="UHSAS Absolute Ambient Pressure" name="UPRESS" units="kPa"/>
+        <variable longname="UHSAS Absolute Pressure" name="UPRESS" units="kPa"/>
 <!--        <variable longname="UHSAS Auxilliary" name="UAUX" units="V"/> -->
 <!--        <variable longname="UHSAS Flow" name="UFLW" units="sccm"/> -->
 
@@ -1097,12 +1101,12 @@
 <!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
       the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
 -->
-    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="usock::30107" suffix="_ACD">
+    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="usock::30107" suffix="_ACOM">
       <sample id="1" rate="10" scanfFormat="O3,%f">
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
     </sensor>
-    <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="usock::30107" suffix="_ACD">
+    <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="usock::30107" suffix="_ACOM">
         <sample id="1" rate="1" scanfFormat="NONO2O3,%f,%f,%f,%f">
             <variable longname="NO2 Mixing Ratio" name="NO2" units="pptv"/>
             <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
@@ -1197,7 +1201,7 @@
       <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f">
         <variable name="TACT2H" longname="2DS Total Particles Horizontal" units="count"/>
         <variable name="TACT2V" longname="2DS Total Particles Vertical" units="count"/>
-        <variable name="CONCS" longname="2DS Total Number Particles" units="#/cm3"/>
+        <variable name="CONCS" longname="2DS Total Number Particles" units="#/L"/>
         <variable name="DBARS" longname="2DS Mean Particle Diameter" units="um"/>
         <variable name="MAXS" longname="2DS Max Particle Diameter" units="um"/>
         <variable length="13" name="A2DSH" longname="2DS Horizontal Accumulation" units="count"/>
@@ -1269,7 +1273,7 @@
       <parameter name="RESOLUTION" type="int" value="150"/>
       <sample id="1" rate="1" scanfFormat="SPECHVPS,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable name="TACT2V" longname="HVPS Total Particles" units="count"/>
-        <variable name="CONCS" longname="HVPS Total Number Particles" units="#/cm3"/>
+        <variable name="CONCH" longname="HVPS Total Number Particles" units="#/L"/>
         <variable name="DBARS" longname="HVPS Mean Particle Diameter" units="um"/>
         <variable name="MAXS" longname="HVPS Max Particle Diameter" units="um"/>
         <variable length="13" name="AHVPS" longname="HVPS Accumulation" units="count"/>
@@ -1634,6 +1638,7 @@
             <parameter name="channel" type="int" value="8"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="InstrumentSerialNumber" type="string" value="4332"/>
             <poly units="deg_C">
               <calfile file="RSTB.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
@@ -1642,6 +1647,7 @@
             <parameter name="channel" type="int" value="9"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="InstrumentSerialNumber" type="string" value="4336"/>
             <poly units="deg_C">
               <calfile file="RSTB1.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
@@ -1977,7 +1983,7 @@
               <calfile file="IRBHT.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="Pyrgeometer Raw Visible Irradiance, Top" name="VIST" units="V">
+          <variable longname="Pyrgeometer Raw Visible Irradiance, Top" name="VISTV" units="V">
             <parameter name="channel" type="int" value="4"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
@@ -1993,7 +1999,7 @@
               <calfile file="VISTHT.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="Pyrgeometer Raw Visible Irradiance, Bottom" name="VISB" units="V">
+          <variable longname="Pyrgeometer Raw Visible Irradiance, Bottom" name="VISBV" units="V">
             <parameter name="channel" type="int" value="6"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
@@ -2026,6 +2032,7 @@
           <variable longname="Recovery Air Temperature, Heated Left" name="RTH1" units="V">
             <parameter name="ifsr" type="float" value="0"/>
             <parameter name="ipol" type="int" value="0"/>
+            <parameter name="InstrumentSerialNumber" type="string" value="Harco812453A"/>
             <poly units="deg_C">
             <calfile file="RTH1.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
@@ -2033,6 +2040,7 @@
           <variable longname="Recovery Air Temperature, Heated Left" name="RTH2" units="V">
             <parameter name="ifsr" type="float" value="0"/>
             <parameter name="ipol" type="int" value="0"/>
+            <parameter name="InstrumentSerialNumber" type="string" value="Harco812453B"/>
             <poly units="deg_C">
             <calfile file="RTH2.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
@@ -2066,12 +2074,14 @@
       <serialSensor IDREF="DSMTEMP_MBRTU" devicename="/dev/ttyS2" id="400" suffix="_323"/>
 
       <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
+        <parameter name="lag" type="float" value="3.0"/>
         <sample id="1" rate="100">
           <variable name="CNTS" units="count" longname="TSI CN Counter Output" count="true"/>
         </sample>
       </sensor>
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200" latency="0.25">
+        <parameter name="lag" type="float" value="3.0"/>
         <parameter name="rate" type="int" value="1000"/>
         <parameter name="SerialNumber" type="string" value="W543522"/>
         <calfile file="A2DW543522.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT"/>
@@ -2177,6 +2187,7 @@
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="InstrumentSerialNumber" type="string" value="4334"/>
             <poly units="deg_C">
               <calfile file="RSTT.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>

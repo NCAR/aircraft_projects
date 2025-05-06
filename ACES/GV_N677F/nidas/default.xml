@@ -20,11 +20,6 @@ because it provides the definitions of the sensors -->
           <socket type="mcaccept"/>
         </output>
       </service>
-      <service class="XMLConfigService">
-        <output>
-          <socket type="mcaccept"/>
-        </output>
-      </service>
       <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.0">
 
 <!-- input from every DSM on this aircraft that has
@@ -98,13 +93,13 @@ because it provides the definitions of the sensors -->
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI3" id="200" suffix="_DPR"/>
 
 
-      <sensor ID="NAIiPM" class="raf.UDPiPMSensor" devicename="sock::30230" id="6200" timeout="5">
+      <!--sensor ID="NAIiPM" class="raf.UDPiPMSensor" devicename="sock::30230" id="6200" timeout="5">
           <parameter name="device" type="string" value="/dev/ttyS0"/>
           <parameter name="measurerate" type="int" value="1"/>
           <parameter name="recordperiod" type="int" value="1"/>
           <parameter name="num_addr" type="int" value="1"/>
-          <parameter name="dev0" type="string" value="2,7,30223"/>  <!-- addr, procqueries, port -->
-      </sensor>
+          <parameter name="dev0" type="string" value="2,7,30223"/-->  <!-- addr, procqueries, port -->
+      <!--/sensor-->
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="250" latency="0.25">
         <parameter name="SerialNumber" type="string" value="W543527"/>

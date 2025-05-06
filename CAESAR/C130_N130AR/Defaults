@@ -4,6 +4,13 @@
 #
 C130_RADOME_SSN   2
 
+# From WECAN...if we want to test.
+# AKRD_COEFF[3] 5.323584, 13.119672, 3.160612
+
+# From ChrisK
+AKRD_COEFF[3]   5.4144, 13.3328, 3.6114
+SSRD_COEFF[2]   1.6087, 13.2255
+
 # Temperature blending time constants.
 #
 AT_TAU  300.0
@@ -19,26 +26,33 @@ RECFRH[2]	0.98, 0.98
 RECFB		0.97
 
 #
-# VCSEL Calibrations.  2020 and forward.
+# VCSEL Dec 2012 DiGangi Calibrations, except for weak mode, laser power coeffs.
+# Flight specific abs coefficiencts apply calibration adjustments. 
+# CAESAR code adjustment allows for additional offset adjustment:
+# concv = mr_raw * p_coeff * t_coeff * li_coeff * abs_coeff + absCoeffs(3);
 #
-VXL_T_STRONG[4] 1.0059, 0.0, 0.0, 0.0
+# These are for RF01.   They will end up being used for Test and Ferry flights.
+# See Defaults.rf0# for other flights.
+#
+VXL_T_STRONG[4] 1.01, 0.0, 0.0, 0.0
 VXL_P_STRONG[4] 0.989, 0.0, 0.0, 0.0
-VXL_LI_STRONG[4] 1.039, -52.3752, -0.863, 0.0
-VXL_LILO_STRONG[4] 1.043, -8.457, -0.564, 0.0
-VXL_ABS_STRONG[4] 0.5256, 0.1642, 0.1452, 0.0
+VXL_LI_STRONG[4] 1.05, -157, -1.07, 0.0
+VXL_LILO_STRONG[4] 1.28, -6.29, -0.467, 0.0
+VXL_ABS_STRONG[4] 1.27797, -9.87418e-05, 1.0, 24.23102
 
-VXL_T_DIRECT[4] 1.0, 0.0, 0.0, 0.0
-VXL_P_DIRECT[4] 0.0, 1.1358, -0.03161, 0.0
-VXL_LI_DIRECT[4] 1.0, 0.0, 0.0, 0
-VXL_LILO_DIRECT[4] 1.062, -35.564, -0.837, 0
-VXL_ABS_DIRECT[4] 1.0, -4.956e-5, 1.0, 0.0
+VXL_T_DIRECT[4] 0.9959, 0.0, 0.0, 0.0
+VXL_P_DIRECT[4] 0.952, 3.65, -0.803, 0.0
+VXL_LI_DIRECT[4] 1.11, -10.8, -0.619, 0
+VXL_LILO_DIRECT[4] 1.0, -10.8, -0.619, 0
+VXL_ABS_DIRECT[4] 1.27797, -9.87418e-05, 1.0, 24.23102
 
-VXL_T_WEAK[4] 1.0, 0.0, 0.0, 0.0
-VXL_P_WEAK[4] 1.0392, -4.8546, -0.75404, 0.0
-VXL_LI_WEAK[4] 1.0, 0.0, 0.0, 0.0
-VXL_LILO_WEAK[4] 1.0, 0.0, 0.0, 0.0
-VXL_ABS_WEAK[4] 1.0, -3.5616e-6, 1.0, 0.0
+VXL_T_WEAK[4] 0.998, 0.0, 0.0, 0.0
+VXL_P_WEAK[4] 1.05, -5.92, -0.755, 0.0
+VXL_LI_WEAK[4] 1.004, -810.6, -1.332, 0.0
+VXL_LILO_WEAK[4] 1.19, -4.87, -0.436, 0.0
+VXL_ABS_WEAK[4] 1.27797, -9.87418e-05, 1.0, 24.23102
 
+#
 #
 # Altitude cut-off (Meters).
 #
@@ -49,9 +63,19 @@ PSURF_ALT_MAX   7000
 # S/N 090087:      a0 = 84.021,     a1 = 336.74
 IRTC_CAL[2]	84.388, 349.7
 IRTHT_CAL[2]	26.505, -61.487
+IRTC_PITCH_THRESHOLD[2] -0.6, 11.4
+IRTC_ROLL_THRESHOLD 11.0
 # S/N 090088:      a0 = 88.211,     a1 = 355.92
 IRBC_CAL[2]	89.943, 382.68
 IRBHT_CAL[2]	26.505, -61.487
+IRBC_PITCH_THRESHOLD[2] -3.1, 8.9
+IRBC_ROLL_THRESHOLD 11.0
+#
+# Radiometer Pitch/Roll Thresholds 
+#
+SP_TOP_PITCH_THRESHOLD[2] -0.6, 11.4
+SP_BOTTOM_PITCH_THRESHOLD[2] -3.1, 8.9
+SP_ROLL_THRESHOLD 11.0
 
 #
 # UV Hygrometer (2013 and later).

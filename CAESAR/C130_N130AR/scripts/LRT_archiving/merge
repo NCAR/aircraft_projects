@@ -1,0 +1,38 @@
+#!/bin/bash
+## This script will convert ICARTT files, merge the CAESAR data files and create a single netCDF file for each flight
+version=R2
+release_v=v1_3
+asc2cdf -i icartt/CAESAR-CON2OH2O_QCL_O3_CL_C130_20240228_${version}.ict chem_CAESARrf01.nc
+asc2cdf -i icartt/CAESAR-CON2OH2O_QCL_O3_CL_C130_20240229_${version}.ict chem_CAESARrf02.nc
+asc2cdf -i icartt/CAESAR-CON2OH2O_QCL_O3_CL_C130_20240302_${version}.ict chem_CAESARrf03.nc
+asc2cdf -i icartt/CAESAR-CON2OH2O_QCL_O3_CL_C130_20240305_${version}.ict chem_CAESARrf04.nc
+asc2cdf -i icartt/CAESAR-CON2OH2O_QCL_O3_CL_C130_20240311_${version}.ict chem_CAESARrf05.nc
+asc2cdf -i icartt/CAESAR-CON2OH2O_QCL_O3_CL_C130_20240312_${version}.ict chem_CAESARrf06.nc
+asc2cdf -i icartt/CAESAR-CON2OH2O_QCL_O3_CL_C130_20240316_${version}.ict chem_CAESARrf07.nc
+asc2cdf -i icartt/CAESAR-CON2OH2O_QCL_O3_CL_C130_20240325_${version}.ict chem_CAESARrf08.nc
+asc2cdf -i icartt/CAESAR-CON2OH2O_QCL_O3_CL_C130_20240402_${version}.ict chem_CAESARrf09.nc
+asc2cdf -i icartt/CAESAR-CON2OH2O_QCL_O3_CL_C130_20240403_${version}.ict chem_CAESARrf10.nc
+
+for file in CAESARrf??.nc
+do
+  echo merging $file
+  ncmerge $file chem_${file}
+  #python merge_WVISO $file ${file}_WVISO.nc
+done
+echo merging WVISO
+
+python merge_WVISO CAESARrf01.nc WVISO/CAESAR_CVI-WVISO_20240228_v1.0.nc
+python merge_WVISO CAESARrf02.nc WVISO/CAESAR_CVI-WVISO_20240229_v1.0.nc
+python merge_WVISO CAESARrf04.nc WVISO/CAESAR_CVI-WVISO_20240305_v1.0.nc
+python merge_WVISO CAESARrf05.nc WVISO/CAESAR_CVI-WVISO_20240311_v1.0.nc
+python merge_WVISO CAESARrf06.nc WVISO/CAESAR_CVI-WVISO_20240312_v1.0.nc
+python merge_WVISO CAESARrf07.nc WVISO/CAESAR_CVI-WVISO_20240316_v1.0.nc
+python merge_WVISO CAESARrf09.nc WVISO/CAESAR_CVI-WVISO_20240402_v1.0.nc
+python merge_WVISO CAESARrf10.nc WVISO/CAESAR_CVI-WVISO_20240403_v1.0.nc
+
+./update_metadata.sh
+for file in CAESARrf??.nc
+do
+	echo removing preliminary variables
+	ncks -x -v H2OR_CVI,TTDLR_CVI,PTDLR_CVI,LWC_CVI,VFLOW_CVI,dilution_CVI ${file} LRT/${release_v}/${file}
+done

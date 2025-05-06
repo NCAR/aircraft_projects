@@ -675,89 +675,321 @@
     </serialSensor>
 
     <sensor ID="iPM_1phase" class="UDPSocketSensor" devicename="usock::30100" suffix="_iPM1">
-        <sample id="1" rate="1" scanfFormat="MEASURE,%f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f">
-            <variable longname="AC Power Frequency" name="FREQ" units="Hz"/>
-            <variable longname="AC Voltage, RMS Phase A" name="VRMSA" units="V"/>
-            <variable longname="AC Voltage, Peak Phase A" name="VPKA" units="V"/>
-            <variable longname="AC Voltage, DC Component Phase A" name="VDCA" units="V"/>
-            <variable longname="AC Phase Angle Phase A" name="PHA" units="deg_C"/>
-            <variable longname="AC Voltage THD Phase A" name="THDA" units="%"/>
+        <sample id="1" rate="1" scanfFormat="MEASURE,%x,%*x,%x,%*x,%*x,%x,%*x,%*x,%x,%*x,%*x,%x,%*x,%*x,%x,%*x,%*x,%x">
+            <variable longname="AC Power Frequency" name="FREQ" units="Hz">
+		<poly units="Hz">
+		    <calfile file="FREQ_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage, RMS Phase A" name="VRMSA" units="V">
+		<poly units="V">
+		    <calfile file="VRMS_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage, Peak Phase A" name="VPKA" units="V">
+		<poly units="V">
+		    <calfile file="VPK_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage, DC Component Phase A" name="VDCA" units="V">
+		<poly units="V">
+		    <calfile file="VDC_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Phase Angle Phase A" name="PHA" units="degree">
+		<poly units="degree">
+		    <calfile file="PH_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage THD Phase A" name="THDA" units="%">
+		<poly units="%">
+		    <calfile file="THD_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
             <variable longname="Power OK" name="POWEROK" units=""/>
         </sample>
-        <sample id="2" rate="1" scanfFormat="STATUS,%f,%*f,%f,%f,%*f">
+        <sample id="2" rate="1" scanfFormat="STATUS,%x,%*x,%x,%x,%*x">
             <variable longname="Operational State" name="OPSTATE" units=""/>
             <variable longname="Power Trip Flags, performance exceeds limits" name="TRIPFLAGS" units=""/>
             <variable longname="Power Caution Flags, marginal performance" name="CAUTIONFLAGS" units=""/>
         </sample>
-        <sample id="3" rate="1" scanfFormat="RECORD,%f,%*f,%*f,%f,%*f,%*f,%f,%f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%*f,%*f,%f,%f,%*f,%*f,%*f,%*f,%f,%f,%*f,%*f,%*f,%*f,%*f">
+        <sample id="3" rate="1" scanfFormat="RECORD,%x,%*x,%*x,%x,%*x,%*x,%x,%x,%*x,%*x,%*x,%*x,%x,%x,%x,%x,%*x,%*x,%*x,%*x,%x,%x,%*x,%*x,%*x,%*x,%x,%x,%*x,%*x,%*x,%*x,%*x">
             <variable longname="Event Type" name="EVTYPE" units=""/>
             <variable longname="Elapsed Time since power-up" name="TIME" units="ms"/>
-            <variable longname="Minimum AC Voltage, RMS Phase A" name="VRMSMINA" units="V"/>
-            <variable longname="Maximum AC Voltage, RMS Phase A" name="VRMSMAXA" units="V"/>
-            <variable longname="Minimum AC Power Frequency" name="FREQMIN" units="Hz"/>
-            <variable longname="Maximum AC Power Frequency" name="FREQMAX" units="Hz"/>
-            <variable longname="Minimum AC Voltage, DC Component Phase A" name="VDCMINA" units="V"/>
-            <variable longname="Maximum AC Voltage, DC Component Phase A" name="VDCMAXA" units="V"/>
-            <variable longname="Minimum AC Voltage THD Phase A" name="THDMINA" units="%"/>
-            <variable longname="Maximum AC Voltage THD Phase A" name="THDMAXA" units="%"/>
-            <variable longname="Minimum AC Voltage, Peak Phase A" name="VPKMINA" units="V"/>
-            <variable longname="Maximum AC Voltage, Peak Phase A" name="VPKMAXA" units="V"/>
+            <variable longname="Minimum AC Voltage, RMS Phase A" name="VRMSMINA" units="V">
+		<poly units="V">
+		    <calfile file="VRMS_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage, RMS Phase A" name="VRMSMAXA" units="V">
+		<poly units="V">
+		    <calfile file="VRMS_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Power Frequency" name="FREQMIN" units="Hz">
+		<poly units="Hz">
+		    <calfile file="FREQ_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Power Frequency" name="FREQMAX" units="Hz">
+		<poly units="Hz">
+		    <calfile file="FREQ_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage, DC Component Phase A" name="VDCMINA" units="V">
+		<poly units="V">
+		    <calfile file="VDC_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage, DC Component Phase A" name="VDCMAXA" units="V">
+		<poly units="V">
+		    <calfile file="VDC_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage THD Phase A" name="THDMINA" units="%">
+		<poly units="%">
+		    <calfile file="THD_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage THD Phase A" name="THDMAXA" units="%">
+		<poly units="%">
+		    <calfile file="THD_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage, Peak Phase A" name="VPKMINA" units="V">
+		<poly units="V">
+		    <calfile file="VPK_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage, Peak Phase A" name="VPKMAXA" units="V">
+		<poly units="V">
+		    <calfile file="VPK_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
         </sample>
     </sensor>
     <sensor ID="iPM_3phase" class="UDPSocketSensor" devicename="usock::30101" suffix="_iPM3">
-        <sample id="1" rate="1" scanfFormat="MEASURE,%f,%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-            <variable longname="AC Power Frequency" name="FREQ" units="Hz"/>
-            <variable longname="AC Voltage, RMS Phase A" name="VRMSA" units="V"/>
-            <variable longname="AC Voltage, RMS Phase B" name="VRMSB" units="V"/>
-            <variable longname="AC Voltage, RMS Phase C" name="VRMSC" units="V"/>
-            <variable longname="AC Voltage, Peak Phase A" name="VPKA" units="V"/>
-            <variable longname="AC Voltage, Peak Phase B" name="VPKB" units="V"/>
-            <variable longname="AC Voltage, Peak Phase C" name="VPKC" units="V"/>
-            <variable longname="AC Voltage, DC Component Phase A" name="VDCA" units="V"/>
-            <variable longname="AC Voltage, DC Component Phase B" name="VDCB" units="V"/>
-            <variable longname="AC Voltage, DC Component Phase C" name="VDCC" units="V"/>
-            <variable longname="AC Phase Angle Phase A" name="PHA" units="deg_C"/>
-            <variable longname="AC Phase Angle Phase B" name="PHB" units="deg_C"/>
-            <variable longname="AC Phase Angle Phase C" name="PHC" units="deg_C"/>
-            <variable longname="AC Voltage THD Phase A" name="THDA" units="%"/>
-            <variable longname="AC Voltage THD Phase B" name="THDB" units="%"/>
-            <variable longname="AC Voltage THD Phase C" name="THDC" units="%"/>
+        <sample id="1" rate="1" scanfFormat="MEASURE,%x,%*x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x">
+            <variable longname="AC Power Frequency" name="FREQ" units="Hz">
+		<poly units="Hz">
+		    <calfile file="FREQ_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage, RMS Phase A" name="VRMSA" units="V">
+		<poly units="V">
+		    <calfile file="VRMS_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage, RMS Phase B" name="VRMSB" units="V">
+		<poly units="V">
+		    <calfile file="VRMS_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage, RMS Phase C" name="VRMSC" units="V">
+		<poly units="V">
+		    <calfile file="VRMS_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage, Peak Phase A" name="VPKA" units="V">
+		<poly units="V">
+		    <calfile file="VPK_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage, Peak Phase B" name="VPKB" units="V">
+		<poly units="V">
+		    <calfile file="VPK_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage, Peak Phase C" name="VPKC" units="V">
+		<poly units="V">
+		    <calfile file="VPK_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage, DC Component Phase A" name="VDCA" units="V">
+		<poly units="V">
+		    <calfile file="VDC_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage, DC Component Phase B" name="VDCB" units="V">
+		<poly units="V">
+		    <calfile file="VDC_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage, DC Component Phase C" name="VDCC" units="V">
+		<poly units="V">
+		    <calfile file="VDC_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Phase Angle Phase A" name="PHA" units="degree">
+		<poly units="degree">
+		    <calfile file="PH_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Phase Angle Phase B" name="PHB" units="degree">
+		<poly units="degree">
+		    <calfile file="PH_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Phase Angle Phase C" name="PHC" units="degree">
+		<poly units="degree">
+		    <calfile file="PH_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage THD Phase A" name="THDA" units="%">
+		<poly units="%">
+		    <calfile file="THD_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage THD Phase B" name="THDB" units="%">
+		<poly units="%">
+		    <calfile file="THD_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="AC Voltage THD Phase C" name="THDC" units="%">
+		<poly units="%">
+		    <calfile file="THD_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
             <variable longname="Power OK" name="POWEROK" units=""/>
         </sample>
-        <sample id="2" rate="1" scanfFormat="STATUS,%f,%*f,%f,%f,%*f">
+        <sample id="2" rate="1" scanfFormat="STATUS,%x,%*x,%x,%x,%*x">
             <variable longname="Operational State" name="OPSTATE" units=""/>
             <variable longname="Power Trip Flags, performance exceeds limits" name="TRIPFLAGS" units=""/>
             <variable longname="Power Caution Flags, marginal performance" name="CAUTIONFLAGS" units=""/>
         </sample>
-        <sample id="3" rate="1" scanfFormat="RECORD,%f,%*f,%*f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f">
+        <sample id="3" rate="1" scanfFormat="RECORD,%x,%*x,%*x,%x,%*x,%*x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%*x">
             <variable longname="Event Type" name="EVTYPE" units=""/>
             <variable longname="Elapsed Time since power-up" name="TIME" units="ms"/>
-            <variable longname="Minimum AC Voltage, RMS Phase A" name="VRMSMINA" units="V"/>
-            <variable longname="Maximum AC Voltage, RMS Phase A" name="VRMSMAXA" units="V"/>
-            <variable longname="Minimum AC Voltage, RMS Phase B" name="VRMSMINB" units="V"/>
-            <variable longname="Maximum AC Voltage, RMS Phase B" name="VRMSMAXB" units="V"/>
-            <variable longname="Minimum AC Voltage, RMS Phase C" name="VRMSMINC" units="V"/>
-            <variable longname="Maximum AC Voltage, RMS Phase C" name="VRMSMAXC" units="V"/>
-            <variable longname="Maximum AC Power Frequency" name="FREQMAX" units="Hz"/>
-            <variable longname="Minimum AC Power Frequency" name="FREQMIN" units="Hz"/>
-            <variable longname="Minimum AC Voltage, Peak Phase A" name="VPKMINA" units="V"/>
-            <variable longname="Maximum AC Voltage, Peak Phase A" name="VPKMAXA" units="V"/>
-            <variable longname="Minimum AC Voltage, Peak Phase B" name="VPKMINB" units="V"/>
-            <variable longname="Maximum AC Voltage, Peak Phase B" name="VPKMAXB" units="V"/>
-            <variable longname="Minimum AC Voltage, Peak Phase C" name="VPKMINC" units="V"/>
-            <variable longname="Maximum AC Voltage, Peak Phase C" name="VPKMAXC" units="V"/>
-            <variable longname="Minimum AC Voltage, DC Component Phase A" name="VDCMINA" units="V"/>
-            <variable longname="Maximum AC Voltage, DC Component Phase A" name="VDCMAXA" units="V"/>
-            <variable longname="Maximum AC Voltage, DC Component Phase B" name="VDCMAXB" units="V"/>
-            <variable longname="Minimum AC Voltage, DC Component Phase B" name="VDCMINB" units="V"/>
-            <variable longname="Minimum AC Voltage, DC Component Phase C" name="VDCMINC" units="V"/>
-            <variable longname="Maximum AC Voltage, DC Component Phase C" name="VDCMAXC" units="V"/>
-            <variable longname="Minimum AC Voltage THD Phase A" name="THDMINA" units="%"/>
-            <variable longname="Maximum AC Voltage THD Phase A" name="THDMAXA" units="%"/>
-            <variable longname="Maximum AC Voltage THD Phase B" name="THDMAXB" units="%"/>
-            <variable longname="Minimum AC Voltage THD Phase B" name="THDMINB" units="%"/>
-            <variable longname="Minimum AC Voltage THD Phase C" name="THDMINC" units="%"/>
-            <variable longname="Maximum AC Voltage THD Phase C" name="THDMAXC" units="%"/>
+            <variable longname="Minimum AC Voltage, RMS Phase A" name="VRMSMINA" units="V">
+		<poly units="V">
+		    <calfile file="VRMS_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage, RMS Phase A" name="VRMSMAXA" units="V">
+		<poly units="V">
+		    <calfile file="VRMS_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage, RMS Phase B" name="VRMSMINB" units="V">
+		<poly units="V">
+		    <calfile file="VRMS_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage, RMS Phase B" name="VRMSMAXB" units="V">
+		<poly units="V">
+		    <calfile file="VRMS_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage, RMS Phase C" name="VRMSMINC" units="V">
+		<poly units="V">
+		    <calfile file="VRMS_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage, RMS Phase C" name="VRMSMAXC" units="V">
+		<poly units="V">
+		    <calfile file="VRMS_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Power Frequency" name="FREQMIN" units="Hz">
+		<poly units="Hz">
+		    <calfile file="FREQ_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Power Frequency" name="FREQMAX" units="Hz">
+		<poly units="Hz">
+		    <calfile file="FREQ_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage, DC Component Phase A" name="VDCMINA" units="V">
+		<poly units="V">
+		    <calfile file="VDC_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage, DC Component Phase A" name="VDCMAXA" units="V">
+		<poly units="V">
+		    <calfile file="VDC_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage, DC Component Phase B" name="VDCMINB" units="V">
+		<poly units="V">
+		    <calfile file="VDC_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage, DC Component Phase B" name="VDCMAXB" units="V">
+		<poly units="V">
+		    <calfile file="VDC_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage, DC Component Phase C" name="VDCMINC" units="V">
+		<poly units="V">
+		    <calfile file="VDC_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage, DC Component Phase C" name="VDCMAXC" units="V">
+		<poly units="V">
+		    <calfile file="VDC_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage THD Phase A" name="THDMINA" units="%">
+		<poly units="%">
+		    <calfile file="THD_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage THD Phase A" name="THDMAXA" units="%">
+		<poly units="%">
+		    <calfile file="THD_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage THD Phase B" name="THDMINB" units="%">
+		<poly units="%">
+		    <calfile file="THD_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage THD Phase B" name="THDMAXB" units="%">
+		<poly units="%">
+		    <calfile file="THD_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage THD Phase C" name="THDMINC" units="%">
+		<poly units="%">
+		    <calfile file="THD_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage THD Phase C" name="THDMAXC" units="%">
+		<poly units="%">
+		    <calfile file="THD_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage, Peak Phase A" name="VPKMINA" units="V">
+		<poly units="V">
+		    <calfile file="VPK_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage, Peak Phase A" name="VPKMAXA" units="V">
+		<poly units="V">
+		    <calfile file="VPK_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage, Peak Phase B" name="VPKMINB" units="V">
+		<poly units="V">
+		    <calfile file="VPK_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage, Peak Phase B" name="VPKMAXB" units="V">
+		<poly units="V">
+		    <calfile file="VPK_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Minimum AC Voltage, Peak Phase C" name="VPKMINC" units="V">
+		<poly units="V">
+		    <calfile file="VPK_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
+            <variable longname="Maximum AC Voltage, Peak Phase C" name="VPKMAXC" units="V">
+		<poly units="V">
+		    <calfile file="VPK_IPM.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/IPM:${PROJ_DIR}/Configuration/cal_files/Instruments/IPM"/>
+	        </poly>
+            </variable>
         </sample>
     </sensor>
 
@@ -774,9 +1006,9 @@
             </output>
         </service>
         <service class="XMLConfigAllService">
-            <output>
-                <socket type="mcaccept"/>
-            </output>
+          <output>
+            <socket type="mcaccept"/>
+          </output>
         </service>
         <service class="RawSampleService">
             <!-- input from every DSM on this aircraft that has

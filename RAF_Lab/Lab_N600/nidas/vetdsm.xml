@@ -4,7 +4,7 @@
 <project xmlns="http://www.eol.ucar.edu/nidas" name="RAF_Lab" system="Lab_N600" version="$LastChangedRevision: 2514 $" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd">
   <sensorcatalog>
   
-      <sensor ID="IRIG" class="raf.IRIGSensor">
+    <sensor ID="IRIG" class="raf.IRIGSensor">
       <sample id="1">
         <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
         <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
@@ -143,6 +143,13 @@
         <variable longname="Do Not Record" name="NOREC" units="bool"/>
       </sample>
     </sensor>
+
+    <serialSensor ID="DSMTEMP_RS232" devicename="/dev/ttyS2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="#%f">
+        <variable longname="DSM Temperature" name="DSMTEMP" units="degC"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
+    </serialSensor>
   </sensorcatalog>
 
   <site class="raf.Aircraft" name="Lab_N600">
@@ -188,16 +195,19 @@
     <dsm derivedData="sock::7071" id="3" location="bench" name="dsm303" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_303"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_303"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_303"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
     <dsm derivedData="sock::7071" id="4" location="bench" name="dsm304" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_304"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_304"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_304"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
     <dsm derivedData="sock::7071" id="5" location="bench" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_305"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
@@ -222,48 +232,61 @@
     <dsm derivedData="sock::7071" id="18" location="bench" name="dsm318" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_318"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_318"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_318"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
     <dsm derivedData="sock::7071" id="19" location="bench" name="dsm319" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_319"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_319"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_319"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
     <dsm derivedData="sock::7071" id="20" location="bench" name="dsm320" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_320"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_320"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_320"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
     <dsm derivedData="sock::7071" id="21" location="bench" name="dsm321" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_321"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_321"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_321"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
     <dsm derivedData="sock::7071" id="22" location="bench" name="dsm322" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_322"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_322"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_322"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
     <dsm derivedData="sock::7071" id="23" location="bench" name="dsm323" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_323"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_323"/>
+      <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
+        <sample id="1" rate="100">
+            <variable count="true" longname="TSI CN Counter Output" name="CNTS" units="count"/>
+        </sample>
+      </sensor>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_323"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
-    </dsm>    
+    </dsm>
 
     <dsm derivedData="sock::7071" id="24" location="bench" name="dsm324" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_324"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_324"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_324"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
     <dsm derivedData="sock::7071" id="25" location="bench" name="dsm325" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_325"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_325"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_325"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
@@ -272,18 +295,21 @@
     <dsm derivedData="sock::7071" id="100" location="bench" name="dsmspare" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_SPARE"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_SPARE"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_SPARE"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
     <dsm derivedData="sock::7071" id="10" location="bench" name="dsm310" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_310"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_310"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_310"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
     <dsm derivedData="sock::7071" id="16" location="bench" name="dsm316" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_316"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_316"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_316"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 
@@ -294,6 +320,7 @@
     <dsm derivedData="sock::7071" id="48" location="bench" name="labDSM10" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_labDSM10"/>
       <sensor IDREF="DiamondAnalog_1T" devicename="/dev/dmmat_a2d0" id="300" suffix="_labDSM10"/>
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_LAB10"/>
       <output class="RawSampleOutputStream"><socket type="mcrequest"/></output>
     </dsm>    
 

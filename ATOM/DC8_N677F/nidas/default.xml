@@ -38,10 +38,7 @@
           <variable longname="Standard Deviation of Reference GPS Altitude (MSL)" name="GGALTSD" units="m"/>
           <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
           <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
-          <variable longname="Reference GPS number of satellites tracked" name="GGNSATTRK" units="number"/>
           <variable longname="Reference GPS number of satellites used in solution" name="GGNSAT" units="number"/>
-          <variable longname="Reference GPS number of satellites with L1/E1/B1 signals used in solution" name="GGNSATL1" units="number"/>
-          <variable longname="Reference GPS number of satellites with multi-frequency signals used in solution" name="GGNSATMULTI" units="number"/>
       </sample>
 
 <!-- BESTVEL record -->
@@ -152,7 +149,7 @@
     <serialSensor ID="UHSAS" baud="115200" class="raf.UHSAS_Serial" databits="8" parity="none" stopbits="1" timeout="10">
       <parameter name="HSKP_SCALE" type="int" value="16000 16000 13104 16000 16000 13104 16000 16000 13104 13104 16000 8000"/>
       <sample id="1" rate="10">
-        <variable length="99" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
+        <variable length="100" longname="UHSAS Raw Count Histogram" name="AUHSAS" units="count"/>
         <variable longname="UHSAS Background Scatter" name="USCAT" units="V"/>
         <variable longname="UHSAS Laser Current" name="UCURR" units="V"/>
         <variable longname="UHSAS Sample Flow" name="USMPFLW" units="V">
@@ -598,6 +595,38 @@
         </sample>
     </sensor>
 
+    <sensor ID="G2401" class="UDPSocketSensor" devicename="usock::51020" suffix="_PIC">
+        <sample id="1" rate="1" scanfFormat="%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f"> 
+<!-- <variable longname="Seconds UTC" name="jogt" units="seconds"/> -->
+<variable longname="AmbientPressure" name="ambp" units="torr"/>
+<variable longname="CavityPressure" name="cavp" units="torr"/>
+<variable longname="CavityTemp" name="cavt" units="C"/>
+<variable longname="DasTemp" name="dast" units="C"/>
+<variable longname="EtalonTemp" name="etalont" units="C"/>
+<variable longname="WarmBoxTemp" name="wbtemp" units="C"/>
+<variable longname="Species" name="species" units="#"/>
+<variable longname="MPVPosition" name="mpvpos" units="#"/>
+<variable longname="InletValve" name="inletvlv" units="bits"/>
+<variable longname="OutletValve" name="outletvlv" units="bits"/>
+<variable longname="Flow1" name="flow" units="sccm"/>
+<variable longname="CO" name="co" units="ppm"/>
+<variable longname="CO2" name="co2" units="ppm"/>
+<variable longname="CO2_dry" name="co2dry" units="ppm"/>
+<variable longname="CH4" name="ch4" units="ppm"/>
+<variable longname="CH4_dry" name="ch4dry" units="ppm"/>
+<variable longname="H2O" name="h2o" units="%"/>
+<variable longname="GPS_ABS_LAT" name="lat" units="degrees"/>
+<variable longname="GPS_ABS_LONG" name="lon" units="degrees"/>
+<variable longname="GPS_TIME" name="gpstime" units="seconds"/>
+<variable longname="NUM_SAT" name="numsat" units="count"/>
+<variable longname="ALTITUDE" name="alt" units="m"/>
+<!-- 
+output from Picarro as specified in CommandInterface_CFKADS.ini using Setup Tool:
+AmbientPressure,CavityPressure,CavityTemp,DasTemp,EtalonTemp,species,WarmBoxTemp,MPVPosition,InletValve,OutletValve,Flow1,CO,CO2,CO2_dry,CH4,CH4_dry,H2O,GPS_ABS_LAT,GPS_ABS_LONG,GPS_TIME,NUM_SAT,ALTITUDE
+-->
+        </sample>
+    </sensor>
+
 <!-- Jielun's Picarro G1301 -->
     <serialSensor class="DSMSerialSensor"
 	baud="9600" parity="none" databits="8" stopbits="1"
@@ -608,10 +637,11 @@
 		<variable name="SV" units="" plotrange="-1 1"/> 
 		<variable name="MPV" units="" plotrange="0 600"/> 
 		<variable name="Tbox" units="degC" plotrange="$T_RANGE"/> 
-	       	<variable name="co2" units="ppmV" plotrange="$CO2_PPM_RANGE"/> 
-	       	<variable name="co2cor" units="ppmV" plotrange="$CO2_PPM_RANGE"/> 
-	       	<variable name="ch4" units="ppmV" plotrange="$CH4_RANGE"/> 
-	       	<variable name="h2o" units="%" plotrange="$RH_RANGE"/> 
+	       	<variable name="co2" units="ppm" plotrange="$CO2_PPM_RANGE"/> 
+	       	<variable name="co2cor" units="ppm" plotrange="$CO2_PPM_RANGE"/> 
+	       	<variable name="ch4" units="ppm" plotrange="$CH4_RANGE"/> 
+	       	<variable name="ch4cor" units="ppm" plotrange="$CH4_RANGE"/> 
+<!-- 	       	<variable name="h2o" units="%" plotrange="$RH_RANGE"/> -->
 	       	<variable name="Pcell" units="" plotrange="120 150"/>  <!-- I can't find any documentation on these units! -->
        	</sample>
        	<message separator="\r" position="end" length="0"/>
@@ -724,6 +754,7 @@
     <sensor IDREF="AO2" devicename="usock::40003" id="2000"/>
     <sensor IDREF="MEDUSA" devicename="usock::5105" id="3000"/> 
     <sensor IDREF="G1301" devicename="/dev/ttyUSB0" id="4000"/> 
+    <sensor IDREF="G2401" devicename="usock::51020" id="5000"/>
 <!--
       <sensor IDREF="TOGA" devicename="usock::30120" id="400">
       <sensor IDREF="HARP_ACTINIC_FLUX" devicename="usock::30108" id="500">

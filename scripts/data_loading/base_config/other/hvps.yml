@@ -1,0 +1,49 @@
+dataset_cfg: &dataset
+  summary: >
+    The HVPS-3 instrument, or High Volume Precipitation Spectrometer, is an open path optical array probe.  Unlike the 2D-S, the HVPS has a single channel, which images 
+    cloud particles between about 150 microns - 19 mm in size, with 150 micron resolution, as they pass through the instrument sample volume.  This imagery is used to 
+    calculate the concentration and cross-sectional area size distributions, and to estimate the mass size distribution of the observed cloud and precipitation particles. 
+    These variables are integrated across the size bins to obtain the total concentration, extinction, and estimated total water content over the observed size range, and 
+    is provided at a frequency of 1 Hz.  The particle imagery can be utilized to infer cloud particle phase.  This data does not cover the full size range of cloud particles, 
+    and should be analyzed in conjunction with complementary cloud probes, such as the CDP, 2D-S or 2DC, etc.  This dataset contains HVPS-3 imagery collected aboard the NCAR <AIRCRAFT> during the <PROJECT> project.
+  startdate_pattern: YYYY-MM-yy HH:mm:SS
+  filelength: 6 hours
+  platform_id: <platform_id>
+  host: campaign
+  frequency_id: 4
+  spatial_type: raster
+  gcmd_science_keyword_id: 491, 516, 614, 505
+  source_contact_id_dts: 367 #Sarah Woods
+  load_data_location: '*'
+  description: 'default'
+  iso_citation_role: 11 
+  contact_id_codiac: 3123 #Sarah Woods
+  iso_citation_role_2: 10
+  contact_id_codiac_2: 1
+
+hvps_raw: 
+  <<: *dataset
+  title: HVPS-3 Raw Base Files and Housekeeping
+  quality: 2
+  dtype: 'HVPS'
+  filename_pattern: '(\E\E\E\E)_[\Y\Y\Y\Y].tar'
+  online_orderable: 0 #For internal use only
+  archive_ident: <HVPS-raw>
+
+hvps_icartt: 
+  <<: *dataset
+  title: HVPS-3 Imagery -- ICARTT format
+  format: 152
+  startdate_pattern: YYYY-MM-yy 00:00:00
+  enddate_pattern: YYYY-MM-yy 23:59:59
+  filename_pattern: '.*_[\Y\Y\Y\Y\M\M\y\y]_(\E\E\E\E).ict'
+  dtype: 'ICARTT/HVPS'
+  archive_ident: <HVPS-icartt>
+
+hvps_png: 
+  <<: *dataset
+  title: HVPS-3 Imagery -- png format
+  filename_pattern: '[\Y\Y\Y\Y\M\M\y\y]_[\H\H\m\m\S\S]_(\E\E\E\E).tar'
+  format: 82
+  dtype: 'OAP_Imagery/HVPS'
+  archive_ident: <HVPS-png>

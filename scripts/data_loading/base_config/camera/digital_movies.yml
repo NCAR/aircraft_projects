@@ -1,0 +1,47 @@
+dataset_cfg: &dataset
+  title: Digital Camera Movies 
+  ingest_location: /scr/raf/Raw_Data/<PROJECT>/Movies/
+  filename_pattern: (\E\E\E\E).(\Y\Y\Y\Y\M\M\y\y).[\H\H\m\m\S\S]_{\H\H\m\m\S\S}.mp4
+  startdate_pattern: YYYY-MM-yy HH:mm:SS
+  enddate_pattern: YYYY-MM-yy HH:mm:SS
+  platform_id: <platform_id>
+  format: 127
+  host: localhost
+  frequency_id: 4
+  spatial_type: point
+  gcmd_science_keyword_id: 519, 541
+  xlink_id: #Must add project specific imagery x-link
+  load_data_location: '*mp4'
+  iso_citation_role: 11
+  contact_id_codiac: 3172
+  instrument_id: 32 #Camera
+
+final_movies: 
+  <<: *dataset
+  archive_ident: <final-movies>
+  summary: |
+    During <PROJECT>, the NSF/NCAR <aircraft> (Tail Number <tailnumber>) flew digital cameras for in-flight video capture. Individual photo jpeg images were captured once per second during flights. Images taken after dark have been stripped from this archive. Remaining forward and downward images for each second were combined into a single image and processed to include production data along the right side of the image and converted to Quicktime movie files. The movies are h.264 codec playable with Quicktime (Mac and Windows), xine, (linux) and mplayer (many platforms). The original images are 1024x768 pixels and were recorded at 1 frame/second. The movies are set to play back at 512x384 pixels and 15 fps.
+    Animated plots are visible on the right side of the frame with the following variables:
+    Plot 1: GGALT timeseries  
+    Plot 2: PSX timeseries   
+    Plot 3: ATX timeseries 
+    Plot 4: DPXC timeseries
+    Plot 5: WIC timeseries
+    Plot 6: PLWCC timeseries  
+    Plot 7: CONCS_2DS timeseries  
+    Plot 8: CONCD_LWI timeseries
+    Plot 9: FO3C_ACD timeseries
+    Plot 10: (ATX, DPXC), GGALT 1:1  
+    Plot 11: GGLAT, GGLON 1:1
+  archive_location: /net/archive/data/<project>/aircraft/<platform>/movies/animations
+
+preliminary_movies:
+  <<: *dataset
+  archive_ident: <prelim-movies>
+  summary: |
+    During <PROJECT>, the NSF/NCAR <aircraft> (Tail Number <tailnumber>) flew digital cameras for in-flight video capture. Individual photo jpeg images were captured once per second during flights. Images taken after dark have been stripped from this archive. Remaining forward and downward images for each second were combined into a single image and processed to include production data along the right side of the image and converted to Quicktime movie files. 
+    The movies are h.264 codec playable with Quicktime (Mac and Windows), xine, (linux) and mplayer (many platforms). The original images are 1024x768 pixels and were recorded at 1 frame/second. The movies are set to play back at 512x384 pixels and 15 fps.
+  filename_pattern: (\E\E\E\E).(\Y\Y\M\M\y\y).[\H\H\m\m\S\S]_{\H\H\m\m\S\S}.mp4
+  startdate_pattern: 20YY-MM-yy HH:mm:SS
+  enddate_pattern: 20YY-MM-yy HH:mm:SS
+  archive_location: /net/archive/data/<project>/aircraft/<platform>/movies/prelim

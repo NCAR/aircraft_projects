@@ -11,14 +11,43 @@
     version="$LastChangedRevision: 428 $"
     >
 
-<sensorcatalog>
+  <sensorcatalog>
+
+    <sensor ID="IRIG" class="raf.IRIGSensor">
+      <sample id="1">
+        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
+        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+      </sample>
+    </sensor>
+
+    <serialSensor ID="CHRONY_TRACKING_LOG" class="ChronyLog" devicename="/var/log/chrony/tracking.log">
+      <!-- see https://chrony.tuxfamily.org/doc/2.3/manual.html#tracking-log -->
+      <parameter name="Category" type="string" value="Housekeeping"/>
+      <sample id="1" scanfFormat="%*d-%*d-%*d %*d:%*d:%*d %*s%f%*f%*f%f" rate="1">
+        <variable name="Stratum" units="" longname="NTP stratum" plotrange="0 10"/>
+        <variable name="Timeoffset" units="sec" longname="Clock offset, system-reference" plotrange="-100 100">
+          <linear units="usec" slope="1.e6" intercept="0.0"/>
+        </variable>
+      </sample>
+      <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="DSMTEMP_RS232" devicename="/dev/ttyS2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="#%f">
+        <variable longname="DSM Temperature" name="DSMTEMP" units="degC"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
+    </serialSensor>
+
 
 <!-- 
     CDP notes:  
-      - The CDP can be either a 38400 or 57600 baud instrument.  This is controlled via a jumper that is on the back side
-        of the small card in side the controller box.  Note from DMT says for reliable 10hz, baud rate should be 57600.
-      - The CDP can be either an RS-232 (ttyS5-9)  or an RS-422 (ttyS10-12) interfaced instrument.  This is controlled
-        via TWO jumpers in the control box, one of the backside of the small card, and one on the front of the larger card.
+      - The CDP can be either a 38400 or 57600 baud instrument.  This is controlled via a jumper that is on the
+	back side of the small card in side the controller box.  Note from DMT says for reliable 10hz, baud
+	rate should be 57600.
+      - The CDP can be either an RS-232 (ttyS5-9)  or an RS-422 (ttyS10-12) interfaced instrument.  This is
+	controlled via TWO jumpers in the control box, one of the backside of the small card, and one on the
+	front of the larger card.
 -->
     <serialSensor ID="CDP" baud="57600" class="raf.CDP_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
       <parameter name="calfile" type="string" value="PMSspecs"/>
@@ -53,10 +82,43 @@
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
     </serialSensor>
 
-</sensorcatalog>
+
+    <serialSensor ID="CDPpbp" baud="57600" class="raf.CDPpbp_Serial" databits="8" parity="none" stopbits="1" timeout="3.0">
+      <parameter name="calfile" type="string" value="PMSspecs"/>
+      <parameter name="NCHANNELS" type="int" value="30"/>
+      <parameter name="RANGE" type="int" value="0"/>
+      <parameter name="THRESHOLD" type="int" value="60"/>
+      <parameter name="DOF_REJ" type="int" value="1"/>
+
+      <parameter name="CHAN_THRESH" type="int" value="91 111 159 190 215 243 254 272 301 355 382 488 636 751 846 959 1070 1297 1452 1665 1851 2016 2230 2513 2771 3003 3220 3424 3660 4095"/>
+      <sample id="1">
+        <variable longname="CDP Laser Current" name="CDPLSRC" units="mAmp"/>
+        <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
+        <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="deg_C"/>
+        <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="deg_C"/>
+        <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="Vdc"/>
+        <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="Vdc"/>
+        <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="Vdc"/>
+        <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="deg_C"/>
+        <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
+        <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
+        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="unk"/>
+        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
+        <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
+        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
+        <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
+        <variable length="30" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
+        <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
+        <variable length="256" longname="CDP particle by particle timing" name="PBPT" units="usec"/>
+        <variable length="256" longname="CDP particle by particle size" name="PBPSZ" units="um"/>
+      </sample>
+      <prompt rate="2" string="\x1b\x03\x1e\x00"/>
+    </serialSensor>
+
+  </sensorcatalog>
 
 
-<site name="Lab_N600" class="raf.Aircraft">
+  <site name="Lab_N600" class="raf.Aircraft">
     <parameter name="tailNumber" value="N600" type="string"/>
 
     <server statusAddr="sock:127.0.0.1:30001">
@@ -65,10 +127,10 @@
                 <socket type="mcaccept"/>
             </output>
         </service>
-        <service class="XMLConfigService">
-            <output>
-                <socket type="mcaccept"/>
-            </output>
+        <service class="XMLConfigAllService">
+          <output>
+            <socket type="mcaccept"/>
+          </output>
         </service>
         <service class="RawSampleService">
             <!-- input from every DSM on this aircraft that has
@@ -78,7 +140,7 @@
             </input>
             <processor class="SampleArchiver">
                 <output class="RawSampleOutputStream">
-                    <fileset dir="/home/data"
+			<fileset dir="/var/r1/${PROJECT}"
                         file="cdp_%Y%m%d_%H%M%S.ads"
                         length="0">
                     </fileset>
@@ -95,16 +157,19 @@
         </service>
     </server>
 
-    <!-- dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071"> -->
-    <dsm name="labdsm9" location="lab" id="109" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
 
-        <serialSensor IDREF="CDP" devicename="/dev/ttyS5" id="730" suffix="_sn016">
-            <parameter name="SerialNumber" value="CDP016" type="string"/>
-        </serialSensor>
+    <dsm name="labdsm7" location="lab" id="107" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
 
-        <output class="RawSampleOutputStream">
-            <socket type="mcrequest"/>
-        </output>
+      <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_LAB7"/>
+      <sensor IDREF="DSMTEMP_RS232" id="110" suffix="_LAB7"/>
+
+      <serialSensor IDREF="CDPpbp" devicename="/dev/ttyCTI5" id="730" suffix="_sn016">
+        <parameter name="SerialNumber" value="CDP016" type="string"/>
+      </serialSensor>
+
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest"/>
+      </output>
     </dsm>
-</site>
+  </site>
 </project>

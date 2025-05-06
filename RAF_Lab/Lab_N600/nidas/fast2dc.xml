@@ -61,6 +61,13 @@
       </sample>
     </sensor>
 
+    <serialSensor ID="DSMTEMP_RS232" devicename="/dev/ttyS2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="#%f">
+        <variable longname="DSM Temperature" name="DSMTEMP" units="degC"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
+     </serialSensor>
+
 </sensorcatalog>
 
 
@@ -71,24 +78,18 @@
         <service class="XMLConfigService">
             <output>
                 <socket type="mcaccept"/>
-<!--                
-                <socket type="dgaccept"/>
--->                
-            </output>
-            <output>
-                <socket type="mcaccept"/>
             </output>
         </service>
         <service class="XMLConfigAllService">
-            <output>
-                <socket type="mcaccept"/>
-            </output>
+          <output>
+            <socket type="mcaccept"/>
+          </output>
         </service>
         <service class="RawSampleService">
             <!-- input from every DSM on this aircraft that has
                  a socket output of type RawSampleOutputStream -->
             <input class="RawSampleInputStream">
-                <socket type="dgaccept"/>
+                <socket type="mcaccept"/>
             </input>
             <processor class="SampleArchiver">
                 <output class="SampleOutputStream">
@@ -104,17 +105,21 @@
     </server>
 
     <!-- dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071"> -->
-    <dsm name="localhost" location="dsmRWO" id="99" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
+    <dsm name="localhost" location="dsm322" id="22" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
         <sensor IDREF="Fast2DC_v2" devicename="/dev/usbtwod_64_0" id="790" suffix="_007"/>
 
+        <!--
         <output class="RawSampleOutputStream">
             <fileset dir="/home/data"
                 file="usb_%Y%m%d_%H%M%S.dat"
                 length="1800">
             </fileset>
         </output>
+        -->
+        <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_SPARE"/>
+
         <output class="RawSampleOutputStream">
-            <socket type="dgrequest" address="localhost"/>
+            <socket type="mcrequest" address="localhost"/>
         </output>
     </dsm>
 </site>

@@ -2,9 +2,10 @@
 
 PROJ=CAESAR
 
+AIRCRAFT=$(n_hdr_util ${RAW_DATA_DIR}/${PROJ}/*.ads | grep 'system name:' | awk '{print $3}')
+
 if [ `whoami` == nimbus ]; then
   DAT=/scr/raf/local_productiondata/
 else
   DAT=${DATA_DIR}/${PROJ}
 fi
-

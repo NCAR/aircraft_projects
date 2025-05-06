@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+import xarray as xr
+import argparse, os
+import numpy as np
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+
+def merge_datasets(file1, file2):
+    # Open the datasets
+    ds = xr.open_dataset(file1,decode_times=False)  # Open the data file
+    ds2 = xr.open_dataset(file2,decode_times=False)  # Open the WVISO data file
+    ## Record metadata and variable encoding for dimension and bound vars for writing to the new file
+    encoding = {}
+    attrs_dict={}
+    for var in ds.variables:
+        if 'bnds' in var:
+            attrs_dict[var]=ds[var].attrs
+            encoding[var]= ds[var].encoding
+            encoding[var]['_FillValue']=-32767
+        elif var in ds.dims:
+            attrs_dict[var]=ds[var].attrs
+            encoding[var]= ds[var].encoding
+            encoding[var]['_FillValue']=-32767
+        elif var in ['F2DS020_P2D','F2DC003_P2D','HVPS315_P2D']:
+            attrs_dict[var]=ds[var].attrs
+            encoding[var]= ds[var].encoding
+            encoding[var]['_FillValue']=-32767
+    ds2 = ds2.sel(Time =slice(ds.Time[0], ds.Time[-1]))
+    
+    #Replace the WVISO variables in the original dataset with the ones from the WVISO dataset
+    for v in ds2.data_vars:
+        ##Check if the variable is already in the dataset
+        if v in ds.data_vars:
+            print(f"Variable {v} already exists in the dataset. Replacing values.")
+        else:
+            print(f"Variable {v} does not exist in the dataset. Adding it.")
+        
+        ds[v] = ds2[v] ##Add the variable to the dataset
+        #if 'actual_range' in ds[v].attrs:
+        if 'quality' not in v:
+            minim = ds[v].min().values
+            maxim = ds[v].max().values
+            ds[v].attrs['actual_range'] =np.array([minim,maxim],dtype='float32') ##Update the actual range attribute
+     # Convert Time to integer type
+    t_attr = ds['Time'].attrs
+    for dim in attrs_dict:
+        ds[dim].attrs=attrs_dict[dim]
+        if 'bnds' in dim:
+            ds[dim].attrs['units']='um'
+    temp_file = file1 + '.tmp'
+    ds.to_netcdf(temp_file, encoding=encoding)
+    os.replace(temp_file, file1)
+    print(f"Merged dataset saved to {file1}")
+
+def main():
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description='Merge WVISO data into the main dataset.')
+    parser.add_argument('file1', type=str, help='Path to the main data file (will be overwritten)')
+    parser.add_argument('file2', type=str, help='Path to the WVISO data file')
+    args = parser.parse_args()
+    
+    # Merge the datasets
+    merge_datasets(args.file1, args.file2)
+
+if __name__ == '__main__':
+    main()

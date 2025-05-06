@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 
 <!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
-<project 
-	xmlns="http://www.eol.ucar.edu/nidas" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:xi="http://www.w3.org/2001/XInclude"
-	name="GOTHAAM" 
-	system="C130_N130AR" 
-	>
+<project
+        xmlns="http://www.eol.ucar.edu/nidas"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:xi="http://www.w3.org/2001/XInclude"
+        name="Lab_Project"
+        system="C130_N130AR"
+        >
 
 <!-- sensor_catalog.xml must be in same directory, and is necessary to import
 because it provides the definitions of the sensors -->
-  <xi:include href="sensor_catalog.xml" parse="xml"/>
+<xi:include href="sensor_catalog.xml" parse="xml"/>
 
   <site applyCals="true" class="raf.Aircraft" name="C130_N130AR">
     <parameter name="tailNumber" type="string" value="N130AR"/>
     <server statusAddr="sock:127.0.0.1:30001">
+        <!-- This returns partial XML, used by dsms (give me just my portion). -->
         <service class="XMLConfigService">
             <output>
                 <socket type="mcaccept"/>
             </output>
         </service>
+        <!-- This returns the whole XML, used by aeros for example. -->
         <service class="XMLConfigAllService">
             <output>
                 <socket type="mcaccept"/>
@@ -102,7 +104,9 @@ because it provides the definitions of the sensors -->
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_318"/>
 
       <!-- /dev/ttys[0-3] connect to serial ports that are native to the CPU card -->
-      <serialSensor IDREF="DSMTEMP_MBRTU" devicename="/dev/ttyS2" id="400" suffix="_318"/>
+      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="400" suffix="_318">
+        <parameter name="SerialNumber" type="string" value="2009040273"/>
+      </serialSensor>
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200" latency="0.25">
         <parameter name="rate" type="int" value="1000"/>
@@ -123,6 +127,7 @@ because it provides the definitions of the sensors -->
             <parameter name="channel" type="int" value="8"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="InstrumentSerialNumber" type="string" value="4332"/>
             <poly units="deg_C">
               <calfile file="RSTB.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
@@ -131,6 +136,7 @@ because it provides the definitions of the sensors -->
             <parameter name="channel" type="int" value="9"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="InstrumentSerialNumber" type="string" value="4336"/>
             <poly units="deg_C">
               <calfile file="RSTB1.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
@@ -148,12 +154,16 @@ because it provides the definitions of the sensors -->
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_319"/>
 
       <!-- /dev/ttys[0-3] connect to serial ports that are native to the CPU card -->
-      <serialSensor IDREF="DSMTEMP_MBRTU" devicename="/dev/ttyS2" id="400" suffix="_319"/>
+      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="400" suffix="_319">
+        <parameter name="SerialNumber" type="string" value="2009040279"/>
+      </serialSensor>
 
       <!-- The /dev/ttyCTI# ports connect to the Xtreme Serial I/O Card on the DSM stack. -->
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyCTI0" id="110">
         <sample id="1">
-          <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="hPa"/>
+          <variable longname="Raw Dynamic Pressure, Fuselage" name="QCF" units="hPa">
+            <parameter name="InstrumentSerialNumber" type="string" value="78344"/>
+          </variable>
         </sample>
         <sample id="2">
           <variable longname="Temperature of QCF Probe" name="QCFTEMP" units="deg_C"/>
@@ -161,7 +171,9 @@ because it provides the definitions of the sensors -->
       </serialSensor>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyCTI1" id="120">
         <sample id="1">
-          <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="hPa"/>
+          <variable longname="Vertical Differential Pressure, Radome" name="ADIFR" units="hPa">
+            <parameter name="InstrumentSerialNumber" type="string" value="38785"/>
+          </variable>
         </sample>
         <sample id="2">
           <variable longname="Temperature of ADIFR Probe" name="ADIFRTEMP" units="deg_C"/>
@@ -169,7 +181,9 @@ because it provides the definitions of the sensors -->
       </serialSensor>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyCTI2" id="130">
         <sample id="1">
-          <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="hPa"/>
+          <variable longname="Horizontal Differential Pressure, Radome" name="BDIFR" units="hPa">
+            <parameter name="InstrumentSerialNumber" type="string" value="78353"/>
+          </variable>
         </sample>
         <sample id="2">
           <variable longname="Temperature of BDIFR Probe" name="BDIFRTEMP" units="deg_C"/>
@@ -177,21 +191,25 @@ because it provides the definitions of the sensors -->
       </serialSensor>
       <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI3" id="140">
         <sample id="1">
-          <variable longname="Raw Static Pressure, Fuselage" name="PSFRD" units="hPa"/>
+          <variable longname="Raw Static Pressure, Fuselage" name="PSFRD" units="hPa">
+            <parameter name="InstrumentSerialNumber" type="string" value="152811"/>
+          </variable>
         </sample>
       </serialSensor>
 
       <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyCTI4" id="160">
-        <calfile file="A2DS052.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT/"/>
+        <calfile file="A2DS052.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
         <parameter name="boardID" type="int" value="52"/>
-        <parameter name="FILT" type="int" value="6"/>
+        <parameter name="FILT" type="int" value="10"/>
         <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
           <variable longname="Time; Seconds Since Midnight" name="UTSEC_GPDACQ_319" units="seconds"/>
           <variable longname="A2DTemperature" name="A2DTEMP_GPDACQ_319" units="cnts"/>
           <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_GPDACQ_319" units="counter"/>
         </sample>
-        <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
+        <sample id="2" rate="100" scanfFormat="#%*x,%x,%*x,%*x,%*x,%*x\n">
           <variable longname="Recovery Air Temperature, ADS Rack" name="RTF1" units="V">
+            <parameter name="InstrumentSerialNumber" type="string" value="2932"/>
+            <parameter name="channel" type="int" value="0"/>
             <parameter name="ifsr" type="float" value="0"/>
             <parameter name="ipol" type="int" value="0"/>
             <poly units="deg_C">
@@ -202,6 +220,7 @@ because it provides the definitions of the sensors -->
       </serialSensor>
 
       <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
+        <parameter name="SerialNumber" type="string" value="NCAR4"/>
         <sample id="5" rate="25">
           <variable longname="Altitude above ground (radar altimeter)" name="HGM232" units="feet"/>
         </sample>
@@ -218,20 +237,9 @@ because it provides the definitions of the sensors -->
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="InstrumentSerialNumber" type="string" value="415720"/>
             <poly units="hPa">
               <calfile file="CAVP_DPB.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-        </sample>
-        <sample id="2" rate="100">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="10"/>
-          <variable longname="Raw Dynamic Pressure, Fuselage" name="CAVP_DPT" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="hPa">
-              <calfile file="CAVP_DPT.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
         </sample>
@@ -246,13 +254,17 @@ because it provides the definitions of the sensors -->
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_320"/>
 
       <!-- /dev/ttys[0-3] connect to serial ports that are native to the CPU card -->
-      <serialSensor IDREF="DSMTEMP_MBRTU" devicename="/dev/ttyS2" id="400" suffix="_320"/>
+      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="400" suffix="_320">
+        <parameter name="SerialNumber" type="string" value="2009040289"/>
+      </serialSensor>
 
       <!-- The /dev/ttyCTI# ports connect to the Xtreme Serial I/O Card on the DSM stack. -->
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI0" id="110" suffix="_DPT"/>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyCTI1" id="120">
         <sample id="1">
-          <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="hPa"/>
+          <variable longname="Raw Dynamic Pressure, Radome" name="QCR" units="hPa">
+            <parameter name="InstrumentSerialNumber" type="string" value="78347"/>
+          </variable>
         </sample>
         <sample id="2">
           <variable longname="Temperature of QCR Probe" name="QCRTEMP" units="deg_C"/>
@@ -260,31 +272,50 @@ because it provides the definitions of the sensors -->
       </serialSensor>
       <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI2" id="130">
         <sample id="1">
-          <variable longname="Raw Static Pressure, Fuselage" name="PSFD" units="hPa"/>
+          <variable longname="Raw Static Pressure, Fuselage" name="PSFD" units="hPa">
+            <parameter name="InstrumentSerialNumber" type="string" value="152808"/>
+          </variable>
         </sample>
       </serialSensor>
       <serialSensor IDREF="Paro_DigiQuartz_1000" devicename="/dev/ttyCTI3" id="140">
         <sample id="1">
-          <variable longname="Interior Cabin Static Pressure" name="PCAB" units="hPa"/>
+          <variable longname="Interior Cabin Static Pressure" name="PCAB" units="hPa">
+            <parameter name="InstrumentSerialNumber" type="string" value="98706"/>
+          </variable>
         </sample>
       </serialSensor>
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyCTI4" id="170">
         <sample id="1">
-          <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="hPa"/>
+          <variable longname="Raw Dynamic Pressure, Fuselage Right" name="QCFR" units="hPa">
+            <parameter name="InstrumentSerialNumber" type="string" value="78346"/>
+          </variable>
         </sample>
         <sample id="2">
           <variable longname="Temperature of QCFR Probe" name="QCFRTEMP" units="deg_C"/>
         </sample>
       </serialSensor>
 
-      <!--sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200" latency="0.25">
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200" latency="0.25">
         <parameter name="rate" type="int" value="1000"/>
         <parameter name="SerialNumber" type="string" value="W543474"/>
         <calfile file="A2DW543474.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT"/>
-      </sensor-->
+        <sample id="1" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="10"/>
+          <variable longname="Raw Dynamic Pressure, Fuselage" name="CAVP_DPT" units="V">
+            <parameter name="channel" type="int" value="0"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="InstrumentSerialNumber" type="string" value="415721"/>
+            <poly units="hPa">
+              <calfile file="CAVP_DPT.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
+    </sensor>
 
       <output class="RawSampleOutputStream">
-        <socket block="false" type="mcrequest"/>
+        <socket type="mcrequest"/>
       </output>
     </dsm>
 
@@ -292,22 +323,24 @@ because it provides the definitions of the sensors -->
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_321"/>
 
       <!-- /dev/ttys[0-3] connect to serial ports that are native to the CPU card -->
-      <serialSensor IDREF="DSMTEMP_MBRTU" devicename="/dev/ttyS2" id="400" suffix="_321"/>
+      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="400" suffix="_321">
+        <parameter name="SerialNumber" type="string" value="2009040281"/>
+      </serialSensor>
 
-      <!-- The /dev/ttyCTI# ports connect to the Xtreme Serial I/O Card on the DSM stack. -->
       <serialSensor IDREF="SerialAnalog" devicename="/dev/ttyCTI0" id="160">
         <calfile file="A2DS008.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/"/>
         <parameter name="boardID" type="int" value="8"/>
         <parameter name="FILT" type="int" value="10"/>
         <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
-          <variable longname="Time; Seconds Since Midnight" name="UTSEC_TDACQ_318" units="seconds"/>
-          <variable longname="A2DTemperature" name="A2DTEMP_TDACQ_318" units="cnts"/>
-          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TDACQ_318" units="counter"/>
+          <variable longname="Time; Seconds Since Midnight" name="UTSEC_TDACQ_321" units="seconds"/>
+          <variable longname="A2DTemperature" name="A2DTEMP_TDACQ_321" units="cnts"/>
+          <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TDACQ_321" units="counter"/>
         </sample>
         <sample id="2" rate="100" scanfFormat="#%*x,%x,%x,%x,%x,%*x\n">
           <variable longname="Recovery Air Temperature, Heated Left" name="RTH1" units="V">
             <parameter name="ifsr" type="float" value="0"/>
             <parameter name="ipol" type="int" value="0"/>
+            <parameter name="InstrumentSerialNumber" type="string" value="Harco812453A"/>
             <poly units="deg_C">
             <calfile file="RTH1.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
@@ -315,6 +348,7 @@ because it provides the definitions of the sensors -->
           <variable longname="Recovery Air Temperature, Heated Left" name="RTH2" units="V">
             <parameter name="ifsr" type="float" value="0"/>
             <parameter name="ipol" type="int" value="0"/>
+            <parameter name="InstrumentSerialNumber" type="string" value="Harco812453B"/>
             <poly units="deg_C">
             <calfile file="RTH2.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
@@ -323,46 +357,55 @@ because it provides the definitions of the sensors -->
       </serialSensor>
 
       <serialSensor IDREF="DewPointer" devicename="/dev/ttyCTI1" id="130" suffix="_DPB"/>
+      <serialSensor IDREF="VCSEL" devicename="/dev/ttyCTI2" id="140" suffix="_VXL"/>
+
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200" latency="0.25">
         <parameter name="rate" type="int" value="1000"/>
-        <parameter name="SerialNumber" type="string" value="W543480"/>
         <calfile file="A2DW543480.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT"/>
         <sample id="1" rate="100">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="10"/>
-          <variable longname="Pyrgeometer Raw Infrared Irradiance, Top" name="IRTV" units="V">
-            <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-                <calfile file="IRTV.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Pyrgeometer (IR) Housing Temperature, Top" name="IRTHT" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-                <calfile file="IRTHT.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Pyrgeometer Raw Visible Irradiance, Top" name="VIST" units="V">
-            <parameter name="channel" type="int" value="4"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="W/m2">
-                <calfile file="VIST.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-          <variable longname="Pyrgeometer (Visible) Housing Temperature, Top" name="VISTHT" units="V">
-            <parameter name="channel" type="int" value="5"/>
-            <parameter name="gain" type="float" value="2"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            <poly units="V">
-                <calfile file="VISTHT.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
+            <parameter name="filter" type="string" value="boxcar"/>
+            <parameter name="numpoints" type="int" value="10"/>
+            <variable longname="Containment Vessel 0.5% SO2 Channel 0" name="PCV2HP" units="V">
+              <parameter name="channel" type="int" value="0"/>
+              <parameter name="gain" type="float" value="1"/>
+              <parameter name="bipolar" type="bool" value="true"/>
+            </variable>
+            <variable longname="Containment Vessel 0.5% SO2 Channel 1" name="PCV2LP" units="V">
+              <parameter name="channel" type="int" value="0"/>
+              <parameter name="gain" type="float" value="1"/>
+              <parameter name="bipolar" type="bool" value="true"/>
+            </variable>
+            <variable longname="Containment Vessel 4% SO2 Channel 2" name="PCV3HP" units="V">
+              <parameter name="channel" type="int" value="0"/>
+              <parameter name="gain" type="float" value="1"/>
+              <parameter name="bipolar" type="bool" value="true"/>
+            </variable>
+            <variable longname="Containment Vessel 4% SO2 Channel 3" name="PCV3LP" units="V">
+              <parameter name="channel" type="int" value="0"/>
+              <parameter name="gain" type="float" value="1"/>
+              <parameter name="bipolar" type="bool" value="true"/>
+            </variable>
+            <variable longname="Containment Vessel 1.5% NO Channel 4" name="PCV4HP" units="V">
+              <parameter name="channel" type="int" value="0"/>
+              <parameter name="gain" type="float" value="1"/>
+              <parameter name="bipolar" type="bool" value="true"/>
+            </variable>
+            <variable longname="Containment Vessel 1.5% NO Channel 5" name="PCV4LP" units="V">
+              <parameter name="channel" type="int" value="0"/>
+              <parameter name="gain" type="float" value="1"/>
+              <parameter name="bipolar" type="bool" value="true"/>
+            </variable>
+            <variable longname="Containment Vessel Propane Channel 6" name="PCV1HP" units="V">
+              <parameter name="channel" type="int" value="0"/>
+              <parameter name="gain" type="float" value="1"/>
+              <parameter name="bipolar" type="bool" value="true"/>
+            </variable>
+            <variable longname="Containment Vessel Propane Channel 7" name="PCV1LP" units="V">
+              <parameter name="channel" type="int" value="0"/>
+              <parameter name="gain" type="float" value="1"/>
+              <parameter name="bipolar" type="bool" value="true"/>
+            </variable>
         </sample>
       </sensor>
 
@@ -371,37 +414,21 @@ because it provides the definitions of the sensors -->
       </output>
     </dsm>
 
-    <dsm derivedData="sock::7071" id="22" location="Left Wing Pod DSM" name="dsm322" rserialPort="30002" statusAddr="sock::30001">
+    <dsm derivedData="sock::7071" id="22" location="Left Wing Pod" name="dsm322" rserialPort="30002" statusAddr="sock::30001">
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_322"/>
 
       <!-- /dev/ttys[0-3] connect to serial ports that are native to the CPU card -->
-      <serialSensor IDREF="DSMTEMP_MBRTU" devicename="/dev/ttyS2" id="400" suffix="_322"/>
-      <sensor IDREF="Fast2DC" devicename="/dev/usbtwod_64_0" id="900" suffix="_LPI">
-        <parameter name="SerialNumber" type="string" value="F2DC001"/>
-      </sensor>
-
-      <!-- The /dev/ttyCTI# ports connect to the Xtreme Serial I/O Card on the DSM stack. -->
-      <serialSensor IDREF="CDP" devicename="/dev/ttyCTI5" id="120" suffix="_LPO">
-        <parameter name="SerialNumber" type="string" value="CDP058"/>
+      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="400" suffix="_322">
+        <parameter name="SerialNumber" type="string" value="2009040287"/>
       </serialSensor>
 
-      <!--sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200" latency="0.25">
-        <parameter name="rate" type="int" value="1000"/>
-        <parameter name="SerialNumber" type="string" value="W543482"/>
-        <calfile file="A2DW543482.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT"/>
-        <sample id="1" rate="100">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="10"/>
-          <variable longname="CHANGEME3" name="CHANGEME3" units="V">
-            <parameter name="channel" type="int" value="1"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-            0poly units="hPa">
-              <calfile file="CHANGEME.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
-            </poly>
-          </variable>
-        </sample>
-      </sensor-->
+      <sensor IDREF="Fast2DC_v2" devicename="/dev/ttyUSB0" id="730" suffix="_LPI">
+          <parameter name="SerialNumber" value="F2DC003" type="string"/>
+      </sensor>
+
+      <serialSensor IDREF="CDP" devicename="/dev/ttyCTI5" id="300" suffix="_LPO">
+        <parameter name="SerialNumber" type="string" value="CDP016"/>
+      </serialSensor>
 
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
@@ -413,59 +440,63 @@ because it provides the definitions of the sensors -->
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_323"/>
 
       <!-- /dev/ttys[0-3] connect to serial ports that are native to the CPU card -->
-      <serialSensor IDREF="DSMTEMP_MBRTU" devicename="/dev/ttyS2" id="400" suffix="_323"/>
-
-      <!-- The /dev/ttyCTI# ports connect to the Xtreme Serial I/O Card on the DSM stack. -->
-      <serialSensor IDREF="CON2O" devicename="/dev/ttyCTI0" id="120"/>
-      <serialSensor IDREF="PIC2401_CO2" devicename="/dev/CTI1" id="130" suffix="_PIC2401"/>
+      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="400" suffix="_323">
+        <parameter name="SerialNumber" type="string" value="190195315"/>
+      </serialSensor>
 
       <sensor class="raf.DSMMesaSensor" devicename="/dev/mesa0" id="150">
+        <parameter name="SerialNumber" type="string" value="MS5776276"/>
+        <parameter name="lag" type="float" value="3.0"/>
         <sample id="1" rate="100">
-          <variable count="true" longname="TSI CN Counter Output" name="CNTS" units="count"/>
+          <variable name="CNTS" units="count" longname="TSI CN Counter Output" count="true"/>
         </sample>
       </sensor>
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200" latency="0.25">
+        <parameter name="lag" type="float" value="3.0"/>
         <parameter name="rate" type="int" value="1000"/>
-        <parameter name="SerialNumber" type="string" value="W543522"/>
         <calfile file="A2DW543522.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT"/>
         <sample id="1" rate="100">
           <parameter name="filter" type="string" value="boxcar"/>
           <parameter name="numpoints" type="int" value="10"/>
-          <variable longname="CN Counter Inlet Pressure" name="PCN" units="V">
+          <variable longname="BCN Counter Inlet Pressure" name="PCN" units="V">
             <parameter name="channel" type="int" value="0"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="hPa">
-              <calfile file="PCN.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="PCN.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/BCNCounter:${PROJ_DIR}/Configuration/cal_files/Instruments/BCNCounter"/>
             </poly>
           </variable>
-          <variable longname="Raw CN Counter Sample Flow Rate" name="FCN" units="V">
+          <variable longname="Raw BCN Counter Sample Flow Rate" name="FCN" units="V">
             <parameter name="channel" type="int" value="1"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="vlpm">
-              <calfile file="FCN.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="FCN.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/BCNCounter:${PROJ_DIR}/Configuration/cal_files/Instruments/BCNCounter"/>
             </poly>
           </variable>
-          <variable longname="CN Counter Inlet Temperature" name="CNTEMP" units="V">
+          <variable longname="BCN Counter Inlet Temperature" name="CNTEMP" units="V">
             <parameter name="channel" type="int" value="2"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="deg_C">
-              <calfile file="CNTEMP.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="CNTEMP.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/BCNCounter:${PROJ_DIR}/Configuration/cal_files/Instruments/BCNCounter"/>
             </poly>
           </variable>
-          <variable longname="CN Isokinetic Side Flow Rate" name="XICN" units="V">
+          <variable longname="BCN Isokinetic Side Flow Rate" name="XICN" units="V">
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
             <poly units="vlpm">
-              <calfile file="XICN.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
+              <calfile file="XICN.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/BCNCounter:${PROJ_DIR}/Configuration/cal_files/Instruments/BCNCounter"/>
             </poly>
           </variable>
         </sample>
       </sensor>
+
+      <serialSensor IDREF="PIC2401_CO2" devicename="/dev/ttyCTI0" id="1100" suffix="_PIC"/> <!-- PICARRO -->
+
+      <serialSensor IDREF="CON2O" devicename="/dev/ttyCTI1" id="1200" suffix="_ARI"/> <!-- Aerodyne -->
 
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
@@ -476,12 +507,15 @@ because it provides the definitions of the sensors -->
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_324"/>
 
       <!-- /dev/ttys[0-3] connect to serial ports that are native to the CPU card -->
-      <serialSensor IDREF="DSMTEMP_MBRTU" devicename="/dev/ttyS2" id="400" suffix="_324"/>
+      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="400" suffix="_324">
+        <parameter name="SerialNumber" type="string" value="6070‐00655‐005‐106‐39‐03126"/>
+      </serialSensor>
 
       <!-- The /dev/ttyCTI# ports connect to the Xtreme Serial I/O Card on the DSM stack. -->
       <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyCTI0" id="150" suffix="_232"/>
-      <serialSensor IDREF="SDIflow" devicename="/dev/ttyCTI1" id="110"/>
-      <serialSensor IDREF="StabilizedPlatform" devicename="/dev/ttyCTI2" id="120"/>
+      <serialSensor IDREF="UHSASG" devicename="/dev/ttyCTI1" id="170" suffix="_RO"/>
+      <serialSensor IDREF="SDIflow" devicename="/dev/ttyCTI2" id="190" suffix="_SDI"/>
+      <serialSensor IDREF="StabilizedPlatform" devicename="/dev/ttyCTI3" id="250" suffix="_SPT"/>
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200" latency="0.25">
         <parameter name="rate" type="int" value="1000"/>
@@ -518,6 +552,7 @@ because it provides the definitions of the sensors -->
             <parameter name="channel" type="int" value="3"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="InstrumentSerialNumber" type="string" value="4334"/>
             <poly units="deg_C">
               <calfile file="RSTT.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
@@ -530,18 +565,43 @@ because it provides the definitions of the sensors -->
               <calfile file="UFT4.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
             </poly>
           </variable>
-          <variable longname="HIMIL Cigar Temperature" name="THIML2" units="V">
-            <parameter name="channel" type="int" value="8"/>
+          <variable longname="Top Pyrgeometer Stabilized Platform Pitch Angle" name="PITCHA_SPT" units="V">
+            <parameter name="channel" type="int" value="5"/>
             <parameter name="gain" type="float" value="1"/>
             <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="degree">
+              <calfile file="SPTPITCH.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+          <variable longname="Top Pyrgeometer Stabilized Platform Roll Angle" name="ROLLA_SPT" units="V">
+            <parameter name="channel" type="int" value="6"/>
+            <parameter name="gain" type="float" value="1"/>
+            <parameter name="bipolar" type="bool" value="true"/>
+            <poly units="degree">
+              <calfile file="SPTROLL.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR:${PROJ_DIR}/Configuration/cal_files/Engineering/C130_N130AR"/>
+            </poly>
+          </variable>
+        </sample>
+      </sensor>
+      <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d1" id="300" latency="0.25">
+        <parameter name="rate" type="int" value="1000"/>
+        <parameter name="SerialNumber" type="string" value="W543510"/>
+        <calfile file="A2DW543510.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT"/>
+        <sample id="1" rate="100">
+          <parameter name="filter" type="string" value="boxcar"/>
+          <parameter name="numpoints" type="int" value="10"/>
+          <variable longname="HIMIL Cigar Temperature" name="THIML2" units="V">
+            <parameter name="channel" type="int" value="8"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
               <calfile file="THIML2.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/HIMIL:${PROJ_DIR}/Configuration/cal_files/Instruments/HIMIL"/>
             </poly>
           </variable>
           <variable longname="HIMIL Strut Temperature" name="THIML1" units="V">
             <parameter name="channel" type="int" value="9"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
+            <parameter name="gain" type="float" value="2"/>
+            <parameter name="bipolar" type="bool" value="false"/>
             <poly units="deg_C">
               <calfile file="THIML1.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/HIMIL:${PROJ_DIR}/Configuration/cal_files/Instruments/HIMIL"/>
             </poly>
@@ -558,27 +618,14 @@ because it provides the definitions of the sensors -->
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_325"/>
 
       <!-- /dev/ttys[0-3] connect to serial ports that are native to the CPU card -->
-      <serialSensor IDREF="DSMTEMP_MBRTU" devicename="/dev/ttyS2" id="400" suffix="_325"/>
-
-      <!-- The /dev/ttyCTI# ports connect to the Xtreme Serial I/O Card on the DSM stack. -->
-      <serialSensor IDREF="S200" devicename="/dev/ttyCTI0" id="120" suffix="_RPI">
-        <parameter name="SerialNumber" type="string" value="PCAS108"/>
+      <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="400" suffix="_325">
+        <parameter name="SerialNumber" type="string" value="2009040285"/>
       </serialSensor>
 
-      <!--sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="200" latency="0.25">
-        <parameter name="rate" type="int" value="1000"/>
-        <calfile file="A2DW477510.dat" path="${PROJ_DIR}/Configuration/cal_files/A2D/DMMAT"/>
-        <parameter name="SerialNumber" type="string" value="W477510"/>
-        <sample id="1" rate="100">
-          <parameter name="filter" type="string" value="boxcar"/>
-          <parameter name="numpoints" type="int" value="10"/>
-          <variable longname="Dummy Variable for Testing" name="CHANGEME3" units="V">
-            <parameter name="channel" type="int" value="0"/>
-            <parameter name="gain" type="float" value="1"/>
-            <parameter name="bipolar" type="bool" value="true"/>
-          </variable>
-        </sample>
-      </sensor-->
+      <!-- The /dev/ttyCTI# ports connect to the Xtreme Serial I/O Card on the DSM stack. -->
+      <serialSensor IDREF="S200" devicename="/dev/ttyCTI5" id="300" suffix="_RPI">
+        <parameter name="SerialNumber" type="string" value="PCAS108"/>
+      </serialSensor>
 
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
