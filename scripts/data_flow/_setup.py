@@ -282,6 +282,9 @@ class Setup:
             final_message = final_message + key + '\t\t' + str(status[key]["stor"]) + '\t' + str(status[key]["ship"]) + '\n'
 
         final_message = final_message + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+        final_message = final_message + "Files should sync to EOL servers and HTTPS site within the hour\n"
+        final_message = final_message + "Find the files at: https://field.eol.ucar.edu/field_projects/" +self.PROJECT.lower()+ "\n"
+        final_message = final_message + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
 
         print(final_message)
         msg = MIMEText(final_message)
