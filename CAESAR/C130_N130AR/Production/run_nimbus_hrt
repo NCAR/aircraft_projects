@@ -2,7 +2,15 @@
 
 source ./set_env
 
-for setup_file in setup_rf??h
+filelist=setup_?f??h
+
+# For CAESAR, RF08 was aborted.  Ferry flights 1,2,5,and 6 enter Canada
+# which we do not have permission to distribute the data.
+if [ `whoami` == nimbus ]; then
+  filelist='setup_rf0[1-7,9]h setup_rf10 setup_tf??h setup_ff0[34]h'
+fi
+
+for setup_file in $filelist
 do
   nimbus -b $setup_file
 done

@@ -8,22 +8,12 @@ sleep 2
 DISPLAY=:6.1
 
 source ./set_env
-
-mkdir -p ${DAT}
-if [ `whoami` == nimbus ]; then
-    export PROJ_DIR="/scr/tmp/nimbus/projects"
-    git clone https://github.com/NCAR/aircraft_projects.git ${PROJ_DIR}
-    cd ${PROJ_DIR}/${PROJ}/C130_N130AR/Production
-fi
-
+source ${PROJ_DIR}/scripts/production_fns.sh
+initialize_processing
 ./run_nimbus_hrt
 ./reorder_all
 
-if [ `whoami` == nimbus ]; then
-    cd
-    rm -rf $PROJ_DIR
-    export PROJ_DIR="/net/jlocal/projects"
-fi
+cleanup_processing
 
 kill $xvpid
 exit 0
