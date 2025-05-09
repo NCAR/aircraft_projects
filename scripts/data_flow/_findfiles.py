@@ -43,10 +43,23 @@ class FindFiles:
         else:  # Multiple files found
             message = f"More than one {fileext} file found."
             self.myLogger.log_and_print(message)
+            # Special handling for ADS files - select first file alphabetically
+            if fileext == 'ads':
+                for idx, file_path in enumerate(datalist, 1):
+                    file_name = os.path.basename(file_path)
+                    file_size = os.path.getsize(file_path) / (1024 * 1024)  # Size in MB
+                    self.myLogger.log_and_print(f"  {idx}. {file_name} ({file_size:.2f} MB)")
+                sorted_files = sorted(datalist)
+                datafile = sorted_files[0]
+                self.myLogger.log_and_print(f"Nimbus will run {os.path.basename(datafile)} and merge all files with the same flight number.")
+                # Add confirmation prompt
+                confirmation = input("Proceed with this selection? (Y/N): ").lower()
+                if confirmation != 'y':
+                    self.myLogger._log_and_abort("Aborting... Please look at the conflicting ads files before reprocessing.")
+                return flag, datafile
             datafile = self.step_through_files(datalist, fileext,
                                                     reprocess)
             return flag, datafile
-        
 
     def _handle_no_files_found(self, pattern, fileext, flag):
         """Handles the case where no files are found. Logs, prints messages, and potentially aborts."""

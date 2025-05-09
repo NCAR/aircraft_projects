@@ -53,7 +53,7 @@ ftp_data_dir = '/EOL_Data/RAF_Data/'
 ### Define which files should be generated
 #############################################################################
 ICARTT = False # Generate ICARTT
-IWG1 = False # Generate IWG1 packet
+IWG1 = True # Generate IWG1 packet
 
 HRT = False # Generate HRT .nc file
 SRT = False # Generate SRT .nc file
