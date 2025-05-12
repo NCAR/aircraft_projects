@@ -47,13 +47,13 @@ def create_directory(dir_path):
     """
     Helper function to create a directory and handle errors.
     """
-    global rdat_dir #modifies the global rdat_dir variable if we need to reassign path
+    global dat_dir #modifies the global rdat_dir variable if we need to reassign path. Checks if the directory is lower or upper case
     if isinstance(dir_path, tuple):
         if os.path.isdir(dir_path[0]):
-            rdat_dir = dir_path[0]
+            dat_dir = dir_path[0]
             return
         elif os.path.isdir(dir_path[1]):
-            rdat_dir = dir_path[1]
+            dat_dir = dir_path[1]
             return
     try:
         if not os.path.isdir(dir_path):
@@ -184,7 +184,10 @@ def ingest_to_local(filetype, local_dir, start_dir):
         command = 'rsync -qu --exclude="*.shtml" ' + start_dir + filetype \
             + '/* ' + local_dir + '/' + filetype + '/.'
     elif filetype == 'ADS':
+        print('Syncing ADS')
         local_dir = rdat_dir
+        print('Raw Data dir' +rdat_dir)
+        print('Set local dir to: '+local_dir)
         command = 'rsync -qu --exclude="*.shtml" ' + start_dir + filetype \
             + '/* ' + local_dir + '/.'
     else:
