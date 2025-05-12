@@ -36,7 +36,7 @@ eol_dir = temp_dir+'/EOL_data/'
 
 ##Dictionary to indicate which datatypes are used in the project
 proc_dict = {'LRT': True, 'KML': True, 'HRT': HRT, 'SRT': SRT, \
-            'IWG1':IWG1,'ICARTT': ICARTT,'PMS2D':PMS2D,'ADS':ship_ADS}
+            'IWG1':IWG1,'ICARTT': ICARTT,'PMS2D':PMS2D,'ADS':ship_ADS, 'QA_Tools':QA_notebook}
 
 def _run_and_log(command, message):
     '''Helper function to run a command and log the message alongside it.'''
@@ -238,7 +238,7 @@ def sync_from_gdrive():
         if proc_dict[dtype]:
             ingest_to_local(dtype, f'{dat_dir}/field_data', temp_dir)
     if QA_notebook:
-        distribute_data(['field_data','QAtools'])
+        distribute_data(['QAtools'])
     
 def sync_from_ftp():
     print("Starting sync_from_ftp")
@@ -266,8 +266,6 @@ def sync_from_ftp():
     for dtype in proc_dict:
         if proc_dict[dtype]:
             ingest_to_local(dtype, f'{dat_dir}/field_sync', f'{ftp_dir}')
-    if QA_notebook:
-        distribute_data(['field_data','QAtools'])
 
 def parse_args():
     """ Instantiate a command line argument parser """

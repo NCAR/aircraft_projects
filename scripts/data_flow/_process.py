@@ -5,7 +5,7 @@ import re
 import _findfiles
 import subprocess
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
-from fieldProc_setup import  translate2ds, QA_notebook
+from fieldProc_setup import  translate2ds, QA_notebook, SYNCTHING, syncthing_staging_dir
 
 
 myLogger = _logging.MyLogger()
@@ -344,4 +344,7 @@ class Process:
         myLogger.run_and_log(command, f"about to execute : {command}")
         command = f"cp -p {project}{flight}.html /home/ads/Desktop"
         myLogger.run_and_log(command, "copying QAQC html to desktop")
+        if SYNCTHING:
+            command = f"cp -p {project}{flight}.html {syncthing_staging_dir}/QA_Tools"
+            myLogger.run_and_log(command, "copying QAQC html to syncthing staging dir")
         
