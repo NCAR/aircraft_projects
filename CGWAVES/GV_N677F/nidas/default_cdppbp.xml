@@ -208,12 +208,12 @@ because it provides the definitions of the sensors -->
     </dsm>
 
     <dsm id="5" location="radome" name="dsm305" rserialPort="30002" statusAddr="sock::30001">
+	    <!--
       <serialSensor IDREF="DSMTEMP_RS232" devicename="/dev/ttyS2" id="110" suffix="_305">
 	<parameter name="SerialNumber" type="string" value="2932"/>
       </serialSensor>
-	    <!--
-      <sensor IDREF="DSMTEMP_485" devicename="/dev/ttyS2" id="110" suffix="_305"/>
 	    -->
+      <sensor IDREF="DSMTEMP_485" devicename="/dev/ttyS2" id="110" suffix="_305"/>
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_305"/>
 
       <serialSensor IDREF="HoneywellPPT" devicename="/dev/ttyCTI0" id="115">
@@ -283,7 +283,7 @@ because it provides the definitions of the sensors -->
             <parameter name="ifsr" type="int" value="0"/>
             <parameter name="ipol" type="int" value="0"/>
             <poly units="deg_C">
-              <calfile file="RTF1EX.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
+              <calfile file="RTF1.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
             </poly>
           </variable>
           <variable longname="Radome Environmental Box Temperature" name="NOSETMP" units="deg_C">
