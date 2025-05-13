@@ -44,8 +44,6 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
-user = 'cgwaves'
-password = 'm0ns00n!'
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
 ftp_data_dir = '/EOL_Data/RAF_Data/'
 
@@ -67,7 +65,7 @@ ship_all_ADS = False
 
 ### Instrument specific processing ###
 # True or False depending on if instrument is on project.
-PMS2D = False           #PMS2D from 2D-C
+PMS2D = True           #PMS2D from 2D-C
 threeVCPI = False       #CPI, 2DS
 
 QA_notebook = True # Generate HTML of the QA plots
