@@ -73,7 +73,7 @@ initialize_processing
 reorder_all
 ./run_proc2d
 
-#./AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
+# AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
 
 if [ `whoami` == nimbus ]; then
 #  run_kalmanFilter
@@ -156,49 +156,6 @@ fi
 
 "EOF2D"
 
-# ---------------------------------------------------------
-# Terrain Height variable creation script.
-#
-cat > AddHtTerrain << "EOFZ"
-#!/bin/csh
-"EOFZ"
 
-echo 'set project='${proj} >> AddHtTerrain
-
-cat >> AddHtTerrain << "EOFZ2"
-set Directory=${DAT}
-# Use flt_area in aircraft_nc_utils to find minimum area for which the Terrain
-# database will be downloaded. Setting to minimum area speeds up processing and
-# saves disk space. The final thing printed by flt_area is:
-# Maximum Latitude: 44.298283
-# Minimum Latitude: -32767.0
-# Minimum Longitude: -32767.0
-# Maximum Longitude: 179.99911
-# Save these last 4 lines to area and then extract the numbers
-set area=`flt_area ${DAT}/${project}rf01.nc | tail -4`
-set lt_s=(`printf '%f.0' $area[6]`)
-set lt_n=(`printf '%f.0' $area[3]`)
-set lg_w=(`printf '%f.0' $area[9]`)
-set lg_e=(`printf '%f.0' $area[12]`)
-# Set Tdb to yes the first time this is run to download the Terrain database.
-# Set to no after first run to save time.
-set Tdb="yes"
-
-# Expand everything out a degree to ensure we don't loose any edge data.
-set lt_s = (`expr $lt_s - 1`)
-set lt_n = (`expr $lt_n + 1`)
-set lg_w = (`expr $lg_w - 1`)
-set lg_e = (`expr $lg_e + 1`)
-
-echo 'Adding Terrain Ht vars to netCDF files in '${DAT}' for project '$project
-echo 'Using lat/long range '${lt_s}' - '${lt_n}', '${lg_w}' - '${lg_e}
-
-foreach file ( ${DAT}/${project}[rtf]f??.nc )
-  set flight=`echo $file | awk '{print substr($0,length($0)-6,4)}'`
-  Rscript ~nimbus/RStudio/HeightOfTerrain/HeightOfTerrain.R $project $flight $Directory $lt_s $lt_n $lg_w $lg_e $Tdb
-end
-"EOFZ2"
-
-
-chmod +x set_env run_all run_nimbus run_proc2d AddHtTerrain
-chmod g+w set_env run_all run_nimbus run_proc2d setup_* AddHtTerrain
+chmod +x set_env run_all run_nimbus run_proc2d
+chmod g+w set_env run_all run_nimbus run_proc2d setup_*
