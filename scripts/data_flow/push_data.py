@@ -47,7 +47,7 @@ def main():
         _zip.SetupZip(setup.FILE_EXT, setup.DATA_DIR,setup.FILENAME,  setup.INST_DIR)   
     
     if SYNCTHING:
-        syncth = _syncThing.StageSyncThing(status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME)
+        syncth = _syncThing.StageSyncThing(status, setup.FILE_EXT, setup.INST_DIR, setup.FILENAME,setup.FLIGHT)
         status = syncth.stat
     # Call the FTP class if the FTP flag is set to True
     if FTP:

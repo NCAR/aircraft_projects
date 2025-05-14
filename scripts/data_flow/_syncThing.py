@@ -14,8 +14,9 @@ class StageSyncThing:
             inst_dir (dict): Dictionary of instrument directories.
             filename (dict): Dictionary containing filenames for each instrument.
     """
-    def __init__(self, status, file_ext, inst_dir, filename):
+    def __init__(self, status, file_ext, inst_dir, filename,flight):
         self.stat = status
+        self.flight = flight
         myLogger.log_and_print('\nPutting files to rclone staging location for shipment to Google Drive:\n')
         if ship_all_ADS:
             self._ship_all_ads(inst_dir, syncthing_staging_dir)
@@ -59,14 +60,29 @@ class StageSyncThing:
             myLogger.log_and_print(f'Instrument dir {staging_dest} does not exist. \n \
                                 Attempting to create staging directory.','warning')
             self._ensure_staging_directory(staging_dest,key)
-        source_file = os.path.join(inst_dir[key], filename[key])
+        if key == 'ADS':
+            myLogger.log_and_print(f'Looking for all ADS files matching pattern: *{self.flight}.ads')
+            import glob
+            matching_files = glob.glob(f'{inst_dir[key]}/*{self.flight}.ads')
+            # Transfer each matching file
+            for ads_file in matching_files:
+                source_file = os.path.join(inst_dir[key], ads_file)
+                self._rsync_file(source_file, staging_dest, key)
+
     # Use subprocess for rsync
+        else:
+            source_file = os.path.join(inst_dir[key], filename[key])
+            self._rsync_file(source_file, staging_dest, key)
+    def _rsync_file(self, source_file, destination, key):
+        ''' Rsync a file to a destination '''
         try:
-            subprocess.run(['rsync', '-u', source_file, staging_dest], check=True)
+            # Perform the rsync operation
+            subprocess.run(['rsync', '-u', source_file, destination], check=True)
             self.stat[key]["stor"] = 'Yes-syncthing-staging'
-            myLogger.log_and_print(f'Finished rsyncing {key} file to staging location')
+            file_name = os.path.basename(source_file)
+            myLogger.log_and_print(f'Successfully synced {file_name} to staging location')
         except subprocess.CalledProcessError as e:
-            myLogger.log_and_print(f"rsync error for {source_file}: {e}")
+            myLogger.log_and_print(f"rsync error for {source_file}: {e}", 'error')
 
     def _ensure_staging_directory(self, directory, key):
         ''' Check if the staging directory exists. If not, attempt to create it. '''
