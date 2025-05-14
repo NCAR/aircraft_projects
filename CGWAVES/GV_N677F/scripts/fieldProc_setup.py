@@ -43,6 +43,8 @@ nas_mnt_pt =     '/mnt/Data'
 ### FTP configuration - not used if using NAS
 #############################################################################
 FTP = False
+user='cgwaves'
+password=''
 ftp_site = 'ftp.eol.ucar.edu'
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
 ftp_data_dir = '/EOL_Data/RAF_Data/'
