@@ -343,8 +343,9 @@ class Process:
         command = f"./auto_export.py --project {project} --flight {flight}"
         myLogger.run_and_log(command, f"about to execute : {command}")
         command = f"cp -p {project}{flight}.html /home/ads/Desktop"
+        command = f"cp -p {project}{flight}.pdf /home/ads/Desktop"
         myLogger.run_and_log(command, "copying QAQC html to desktop")
         if SYNCTHING:
-            command = f"cp -p {project}{flight}.html {syncthing_staging_dir}/QA_Tools"
-            myLogger.run_and_log(command, "copying QAQC html to syncthing staging dir")
+            command = f"cp -p {project}{flight}.html {project}{flight}.pdf {syncthing_staging_dir}/QA_Tools"
+            myLogger.run_and_log(command, "copying QAQC html and pdf to syncthing staging dir")
         
