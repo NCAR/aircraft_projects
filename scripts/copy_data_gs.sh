@@ -1,6 +1,6 @@
 #!/bin/bash
 # Default destination directory
-DEST_DIR="${1:-/var/r1/$PROJECT}"
+DEST_DIR="/var/r1/$PROJECT"
 echo "Files will be copied to: $DEST_DIR"
 
 # Create destination directory if it doesn't exist
@@ -18,18 +18,22 @@ process_files() {
 
         # Process files one by one
         echo -e "\nProcessing files from $source_dir:"
+        read -p "Input flight designation or return to step through all files: " flight
         while IFS= read -r file; do
-            if [[ -f "$source_dir/$file" ]]; then
-                size=$(du -h "$source_dir/$file" | cut -f1)
-                echo "File: $file ($size)"
-                # Corrected read command:
-                read -p "Copy this file? (y/n): " copy_file < /dev/tty
-                if [[ "$copy_file" == "y" || "$copy_file" == "Y" ]]; then
-                    echo "Copying: $file"
-                    cp -v "$source_dir/$file" "$copy_dir/"
-                    echo "Copied successfully."
-                else
-                    echo "Skipping file."
+            # Match flight number entered; if entered "", then match everything
+            if echo "$file" | grep -iq "$flight"; then # Check if file name contains flight (case-insensitive)
+                if [[ -f "$source_dir/$file" ]]; then # File exists
+                    size=$(du -h "$source_dir/$file" | cut -f1)
+                    echo "File: $file ($size)"
+                    # Corrected read command:
+                    read -p "Copy this file? (y/n): " copy_file < /dev/tty
+                    if [[ "$copy_file" == "y" || "$copy_file" == "Y" ]]; then
+                        echo "Copying: $file"
+                        cp -v "$source_dir/$file" "$copy_dir/"
+                        echo "Copied successfully."
+                    else
+                        echo "Skipping file."
+                    fi
                 fi
             fi
         done < <(ls -1 "$source_dir") # Input redirection for the while loop
