@@ -12,8 +12,11 @@ SECONDS=0  # Time this script
 DATA_LOCATION="/var/r1/$PROJECT"
 cd /run/media/ads ## Change to the directory where the removable drive is mounted
 
-echo "Enter flight to copy from $PROJECT using lower case e.g. rf01 or ff03:"
+echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
 read FLIGHT
+# Convert flight to lowercase
+FLIGHT=$(echo "$FLIGHT" | tr '[:upper:]' '[:lower:]')
+
 if [[ $FLIGHT = *"rf"* ]]; then
    echo "Research flight from $PROJECT selected for copying."
 elif [[ "$FLIGHT" = *"tf"* ]]; then
