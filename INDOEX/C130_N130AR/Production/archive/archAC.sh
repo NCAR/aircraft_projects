@@ -6,12 +6,12 @@
 ###############
 #   Project   #
 ###############
-setenv PROJECT "CAESAR"
-setenv YEAR 2024
+setenv PROJECT "INDOEX"
+setenv YEAR 1999
 setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
 setenv CS_LOCATION "/glade/campaign/eol/archive/"
 setenv EMAIL "srunkel@ucar.edu"
-setenv projectlower "caesar"
+setenv projectlower "indoex"
 setenv platform_lower "c130_n130ar"
 setenv PROJ_DIR "/net/jlocal/projects/"
 ########################## Raw Data Files ##############################
@@ -84,7 +84,7 @@ setenv PROJ_DIR "/net/jlocal/projects/"
 
 ########################## Production Data Files ##########################
 ### LRT
-#$ARCHIVE_SCRIPT LRT/v1.2 /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/ $EMAIL
+$ARCHIVE_SCRIPT LRT/v1.1 /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/ $EMAIL
 
 ### LRT ICT
 #$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict $CS_LOCATION$YEAR $EMAIL
@@ -93,10 +93,10 @@ setenv PROJ_DIR "/net/jlocal/projects/"
 #$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR $EMAIL
 
 ### KML
-#$ARCHIVE_SCRIPT KML /scr/raf/Prod_Data/$PROJECT/kml kml $CS_LOCATION$YEAR/ $EMAIL
+#$ARCHIVE_SCRIPT KML /scr/raf/Prod_Data/$PROJECT/KML kml $CS_LOCATION$YEAR $EMAIL
 
 ### HRT
-$ARCHIVE_SCRIPT HRT /scr/raf/Prod_Data/$PROJECT/HRT nc $CS_LOCATION$YEAR/ $EMAIL
+#$ARCHIVE_SCRIPT HRT /scr/raf/Prod_Data/$PROJECT/HRT nc $CS_LOCATION$YEAR $EMAIL
 
 ### HRT KML
 #$ARCHIVE_SCRIPT KMLh /scr/raf/Prod_Data/$PROJECT/HRT kml $CS_LOCATION$YEAR $EMAIL
@@ -105,7 +105,7 @@ $ARCHIVE_SCRIPT HRT /scr/raf/Prod_Data/$PROJECT/HRT nc $CS_LOCATION$YEAR/ $EMAIL
 #$ARCHIVE_SCRIPT CO /scr/raf/Prod_Data/$PROJECT/CO ict $CS_LOCATION$YEAR $EMAIL
 
 ### CO2CH4 ICT
-#$ARCHIVE_SCRIPT CON2OH2O/R2 /scr/raf/Prod_Data/$PROJECT/icartt/R2 ict $CS_LOCATION$YEAR/ $EMAIL
+#$ARCHIVE_SCRIPT CON2OH2O/R2 /scr/raf/Prod_Data/$PROJECT/icartt/R2 ict $CS_LOCATION$YEAR $EMAIL
 
 ### HARP ICT
 #$ARCHIVE_SCRIPT HARP /scr/raf/Prod_Data/$PROJECT/HARP ict $CS_LOCATION$YEAR $EMAIL
