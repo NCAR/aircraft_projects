@@ -1085,13 +1085,13 @@ must be imported into default.xml -->
 <!--  ACDFO3 and NONOYO3 are Cari group instruments that are interrrelated.  When they both fly, 
       the FO3 data is sent to the NONOYO3 instrument which sends the UDP packet.
 -->
-    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="usock::30107" suffix="_ACD">
+    <sensor ID="ACDFO3" class="UDPSocketSensor" devicename="usock::30107">
       <sample id="1" rate="10" scanfFormat="O3,%f">
         <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
       </sample>
     </sensor>
 
-    <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="usock::30107" suffix="_ACD">
+    <sensor ID="NONOYO3" class="UDPSocketSensor" devicename="usock::30107">
         <sample id="1" rate="1" scanfFormat="NONO2O3,%f,%f,%f,%f">
             <variable longname="NO2 Mixing Ratio" name="NO2" units="pptv"/>
             <variable longname="Fast Response Ozone Mixing Ratio" name="FO3" units="ppbv"/>
@@ -1368,15 +1368,102 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
 
-    <sensor ID="HOLODEC" class="UDPSocketSensor" devicename="usock::30120">
-      <parameter name="Category" type="string" value="Housekeeping"/>
-      <sample id="1" rate="1" scanfFormat="HOLO,%*f,%f,%f,%f,%f,%f">
-        <variable name="HTEMP1" longname="Holodec temperature, zone 1, Camera" units="deg_C"/>
-        <variable name="HTEMP2" longname="Holodec temperature, zone 2, Laser Head" units="deg_C"/>
-        <variable name="HTEMP3" longname="Holodec temperature, zone 3, Laser Arm" units="deg_C"/>
-        <variable name="HTEMP4" longname="Holodec temperature, zone 4, Camera Arm" units="deg_C"/>
-        <variable name="HTEMP5" longname="Holodec temperature, zone 5, Laser Controller" units="deg_C"/>
-      </sample>
+    <sensor ID="ISAF" class="UDPSocketSensor" devicename="usock::30124" suffix="_ISAF">
+
+<!--
+Index  Name      Description                           Units
+1      ISAF      Insitu Airborne Formaldehyde
+2      Date Time Date and Time                         YYYY-MM-DD hh:mm:ss
+3      Status    Instrument Status                     1-Ready, 2-Operating, 4-Calibrating
+4      Concentration 
+                 Detector Concentration            Parts Per Trillion
+5      Counter 1 Gated Detector Counter                Photon counts
+6      Normalized Counter 2
+                 Gated Reference Counter / Detector Laser Power
+                                                       Photon counts (normalized)
+7      Counter 3 Gated Detector Counter (Fine)         Photon counts
+8      Laser Power 1
+                 Detector Laser Power                  Volts
+9      Laser Power 2
+                 Reference Laser Power                 Volts
+10     Laser Set Voltage
+                 Modulation Laser Voltage              Volts
+11     Laser Scan Mode
+                 Flag indicating when laser is scanning (for calibration)
+                                                       0-not scanning, 1-scanning
+12     Mon. Pwr. Input
+                 Laser Monitor Power Input             Volts
+13     Mon. Pwr. Output
+                 Laser Monitor Power Output            Volts
+14     SampleP   Sample Pressure                       Volts
+15     SampleF   Sample Flow Rate                      Volts
+16     3rd Pump Input
+                 Laser 3rd Pump Diode Input Current    Amperes
+-->
+        <sample id="1" rate="1" scanfFormat="ISAF,%*f-%*f-%*f %*f:%*f:%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+
+<!--        <variable longname="ISAF Year" name="YR" units=""/>
+            <variable longname="ISAF Month" name="MO" units=""/>
+            <variable longname="ISAF Day of Month" name="DM" units=""/>
+            <variable longname="ISAF Hour" name="HR" units=""/>
+            <variable longname="ISAF Minute" name="MN" units=""/>
+            <variable longname="ISAF Second" name="SC" units=""/>
+-->
+            <variable longname="Instrument Status (1-Ready, 2-Operating, 4-Calibrating)" name="STATUS" units=""/>
+            <variable longname="Detector Concentration" name="CONC" units="pptv"/>
+            <variable longname="Gated Detector Photon Counter" name="GCNTR1" units="counts"/>
+            <variable longname="Detector Photon Counter, Normalized" name="NCNTR2" units="counts"/>
+              <variable longname="Gated Detector Counter (Fine)" name="GCNTR3" units="counts"/>
+              <variable longname="Detector Laser Power" name="LPWR1" units="V"/>
+              <variable longname="Reference Laser Power" name="LPWR2" units="V"/>
+              <variable longname="Modulation Laser Voltage" name="LSETV" units="V"/>
+              <variable longname="Bypass Gas Flow" name="GASFLOW" units="V"/>
+              <variable longname="Laser Monitor Power Input" name="MONPWRIN" units="V"/>
+              <variable longname="Laser Monitor Power Output" name="MONPWROUT" units="V"/>
+              <variable longname="Sample Pressure" name="SAMPLEP" units="V"/>
+              <variable longname="Sample Flow Rate" name="SAMPLEF" units="V"/>
+              <variable longname="Laser 3rd Pump Diode Input Current" name="PUMPIN3" units="Amperes"/>
+        </sample>
     </sensor>
+
+    <sensor ID="AMS" class="UDPSocketSensor" devicename="usock::30115" suffix="_AMS">
+        <sample id="1" rate="1" scanfFormat="AMS %*d %*d %f %*d %*d %f %f %f %f %f %f %f %f %f %f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
+            <variable longname="AMS Time (Seconds since midnight)" name="UTSEC" units="sec"/>
+            <variable longname="AMS Air Beam Reference" name="AIRBM" units="Hz"/>
+            <variable longname="AMS Particle Time of Flight" name="PTAB" units=""/>
+            <variable longname="AMS Sampling Flow Rate" name="FLOW" units="sccs"/>
+            <variable longname="AMS Sulfate PM1 mass as measured by HRAMS" name="SO4" units="ug/m3"/>
+            <variable longname="AMS Nitrate PM1 mass as measured by HRAMS" name="NO3" units="ug/m3"/>
+            <variable longname="AMS Organic Aerosol mass as measured by HRAMS" name="OA" units="ug/m3"/>
+            <variable longname="AMS Chloride PM1 mass as measured by HRAMS" name="CL" units="ug/m3"/>
+            <variable longname="AMS Organics; Intensity of m/z 43" name="ORG43" units="Hz"/>
+            <variable longname="AMS Organics; Intensity of m/z 44" name="ORG44" units="Hz"/>
+            <variable longname="AMS Organics; Intensity of m/z 57" name="ORG57" units="Hz"/>
+
+            <variable longname="AMS Blankflag (0=ambient, 5=filter)" name="VALID" units="V"/>
+            <variable longname="AMS Vaporizer Temperature " name="TVAP" units="V">
+                <linear intercept="0.0" slope="131.0" units="deg_C"/>
+            </variable>
+            <variable longname="AMS Inlet Pressure " name="INLETP" units="V">
+                <linear intercept="0.0" slope="100.0" units="Torr"/>
+            </variable>
+            <variable longname="AMS Lens Pressure" name="LENSP" units="Torr"/>
+            <variable longname="AMS Sample Flag #4 (0Vdc=OFR, 5Vdc=Ambient" name="SAMPFLG" units="V"/>
+            <variable longname="AMS PCI Flow Meter" name="PCIF" units="V">
+                <linear intercept="0.0" slope="100.0" units="sccm"/>
+            </variable>
+            <variable longname="AMS OFR UV Light Meter" name="OFRUV" units="V"/>
+            <variable longname="AMS OFR Ozone Monitor" name="O3" units="V">
+                <linear intercept="0.0" slope="2000.0" units="ppmv"/>
+            </variable>
+            <variable longname="AMS Filament Emission Current" name="FILEM" units="mA"/>
+            <variable longname="AMS Ammonium PM1 mass as measured by HRAMS" name="NH4" units="ug/m3"/>
+            <variable longname="AMS Fraction of OA from m/z 43" name="F43" units=""/>
+            <variable longname="AMS Fraction of OA from m/z 44" name="F44" units=""/>
+            <variable longname="AMS Fraction of OA from m/z 57" name="F57" units=""/>
+            <variable longname="AMS Fraction of OA from m/z 60" name="F60" units=""/>
+        </sample>
+    </sensor>
+
 
   </sensorcatalog>
