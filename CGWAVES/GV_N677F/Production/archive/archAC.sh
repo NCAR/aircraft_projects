@@ -16,7 +16,7 @@ setenv projectlower "cgwaves"
 setenv platformlower "gv_n677f"
 ########################## Raw Data Files ##############################
 ### ADS 
-#$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR/ $EMAIL
 
 ### CAMERA
 #$ARCHIVE_SCRIPT CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg $CS_LOCATION$YEAR $EMAIL
@@ -38,7 +38,7 @@ $ARCHIVE_SCRIPT FIELD/F2DS -t /scr/raf/Raw_Data/$PROJECT/F2DS F2DS $CS_LOCATION$
 #$ARCHIVE_SCRIPT LRT /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/ $EMAIL
 
 ### PMS2D
-#$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR $EMAIL
+$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR $EMAIL
 
 ### KML
 #$ARCHIVE_SCRIPT KML /scr/raf/Prod_Data/$PROJECT kml $CS_LOCATION$YEAR $EMAIL

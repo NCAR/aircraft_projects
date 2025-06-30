@@ -58,7 +58,8 @@ F2DS_raw:
   <<: *dataset
   title: Fast 2D-S Raw Base Files and Housekeeping
   archive_ident: <F2DS-raw>
-  filename_pattern: '(\E\E\E\E)_[\Y\Y\Y\Y\].2d'
+  filename_pattern: '(\E\E\E\E)_[\Y\Y\M\M\y\y\H\H\m\m\S\S].tar'
+  filename_pattern_2: '(\E\E\E\E)_[\Y\Y\M\M\y\y\H\H\m\m\S\S].tar.dir'
   summary: >
     A 2D-S instrument is a cloud particle probe that contains two orthogonal open path optical array probes,
     which image cloud particles between about 10 microns - 2 mm in size as they pass through the instrument sample volume.  
@@ -71,7 +72,8 @@ F2DS_raw:
   dtype: 'F2DS'
   online_orderable: 0 #Internal Use Only
   quality: 2
-  format: 75
+  format: 75 #Binary format for the base files
+  format_2: 43 #Text format for the directory files
 
 oap_raw: ##used for ACE-1 2D-C and 2D-P data
   <<: *dataset
