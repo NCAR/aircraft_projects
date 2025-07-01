@@ -24,13 +24,13 @@ setenv platformlower "gv_n677f"
 ########################## Preliminary Data Files #############################
 
 ### Preliminary LRT
-$ARCHIVE_SCRIPT FIELD/LRT /scr/raf/Raw_Data/$PROJECT/field_sync/EOL_data/RAF_data/LRT nc /net/archive/data/ $EMAIL
+#$ARCHIVE_SCRIPT FIELD/LRT /scr/raf/Raw_Data/$PROJECT/field_sync/EOL_data/RAF_data/LRT nc /net/archive/data/ $EMAIL
 
 ### Preliminary KML
-$ARCHIVE_SCRIPT FIELD/KML /scr/raf/Raw_Data/$PROJECT/field_sync/EOL_data/RAF_data/KML kml $CS_LOCATION$YEAR/ $EMAIL
+#$ARCHIVE_SCRIPT FIELD/KML /scr/raf/Raw_Data/$PROJECT/field_sync/EOL_data/RAF_data/KML kml $CS_LOCATION$YEAR/ $EMAIL
 
 ###Preliminary F2DS
-$ARCHIVE_SCRIPT FIELD/F2DS -t /scr/raf/Raw_Data/$PROJECT/F2DS F2DS $CS_LOCATION$YEAR/ $EMAIL
+#$ARCHIVE_SCRIPT FIELD/F2DS /scr/raf/Raw_Data/$PROJECT/F2DS F2DS $CS_LOCATION$YEAR/ $EMAIL
 
 ########################## Production Data Files ##########################
 
@@ -38,7 +38,7 @@ $ARCHIVE_SCRIPT FIELD/F2DS -t /scr/raf/Raw_Data/$PROJECT/F2DS F2DS $CS_LOCATION$
 #$ARCHIVE_SCRIPT LRT /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/ $EMAIL
 
 ### PMS2D
-$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR $EMAIL
+$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR/ $EMAIL
 
 ### KML
 #$ARCHIVE_SCRIPT KML /scr/raf/Prod_Data/$PROJECT kml $CS_LOCATION$YEAR $EMAIL
