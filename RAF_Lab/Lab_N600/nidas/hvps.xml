@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- Copyright 2005 UCAR, NCAR, All Rights Reserved -->
+
+<project
+    xmlns="http://www.eol.ucar.edu/nidas"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eol.ucar.edu/nidas nidas.xsd"
+    name="RAF_Lab"
+    system="Lab_N600"
+    version="$LastChangedRevision: 428 $"
+    >
+
+  <sensorcatalog>
+
+    <serialSensor ID="CHRONY_TRACKING_LOG" class="ChronyLog" devicename="/var/log/chrony/tracking.log">
+      <!-- see https://chrony.tuxfamily.org/doc/2.3/manual.html#tracking-log -->
+      <parameter name="Category" type="string" value="Housekeeping"/>
+      <sample id="1" scanfFormat="%*d-%*d-%*d %*d:%*d:%*d %*s%f%*f%*f%f" rate="1">
+        <variable name="Stratum" units="" longname="NTP stratum" plotrange="0 10"/>
+        <variable name="Timeoffset" units="sec" longname="Clock offset, system-reference" plotrange="-100 100">
+          <linear units="usec" slope="1.e6" intercept="0.0"/>
+        </variable>
+      </sample>
+      <message separator="\n" position="end" length="0"/>
+    </serialSensor>
+
+    <serialSensor ID="DSMTEMP_RS232" devicename="/dev/ttyS2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="#%f">
+        <variable longname="DSM Temperature" name="DSMTEMP" units="degC"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
+    </serialSensor>
+
+
+    <sensor ID="HVPS_HK" class="UDPSocketSensor" devicename="usock::30230" suffix="_HVPS">
+      <parameter name="Category" type="string" value="Housekeeping"/>
+      <parameter name="SerialNumber" type="string" value="HVPS315"/>
+      <parameter name="RESOLUTION" type="int" value="150"/>
+      <sample id="1" rate="1" scanfFormat="SPECHVPS,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
+        <variable name="TACT2V" longname="HVPS Total Particles" units="count"/>
+        <variable name="CONCS" longname="HVPS Total Number Particles" units="#/cm3"/>
+        <variable name="DBARS" longname="HVPS Mean Particle Diameter" units="um"/>
+        <variable name="MAXS" longname="HVPS Max Particle Diameter" units="um"/>
+        <variable length="13" name="AHVPS" longname="HVPS Accumulation" units="count"/>
+        <variable name="DIOVV01" longname="HVPS Diode Voltage, Diode 1" units="Vdc"/>
+        <variable name="DIOVV64" longname="HVPS Diode Voltage, Diode 64" units="Vdc"/>
+        <variable name="DIOVV128" longname="HVPS Diode Voltage, Diode 128" units="Vdc"/>
+        <variable name="P7V" longname="HVPS Positive seven volts DC" units="Vdc"/>
+        <variable name="N7V" longname="HVPS Negative seven volts DC" units="Vdc"/>
+        <variable name="VMASK" longname="HVPS Mask" units="none"/>
+        <variable name="WINTXT" longname="HVPS Window Temperature" units="degC"/>
+        <variable name="WINRXT" longname="HVPS Window Temperature" units="degC"/>
+        <variable name="ARMTXT" longname="HVPS Arm Temperature" units="degC"/>
+        <variable name="ARMRXT" longname="HVPS Arm Temperature" units="degC"/>
+        <variable name="NETEMP" longname="HVPS Nose Edge Temperature" units="degC"/>
+        <variable name="NSTEMP" longname="HVPS Nose Surface Temperature" units="degC"/>
+        <variable name="DSPT" longname="HVPS DSP Board Temperature" units="degC"/>
+        <variable name="VLT" longname="HVPS Laser Temperature" units="degC"/>
+        <variable name="PT" longname="HVPS Power Supply Temperature" units="degC"/>
+        <variable name="HKR" longname="HVPS Housekeeping Packets Received" units="counts"/>
+        <variable name="CANP" longname="HVPS Internal Pressure" units="psi"/>
+      </sample>
+    </sensor>
+
+  </sensorcatalog>
+
+
+  <site name="Lab_N600" class="raf.Aircraft">
+    <parameter name="tailNumber" value="N600" type="string"/>
+
+    <server statusAddr="sock:127.0.0.1:30001">
+        <service class="XMLConfigService">
+            <output>
+                <socket type="mcaccept"/>
+            </output>
+        </service>
+        <service class="XMLConfigAllService">
+          <output>
+            <socket type="mcaccept"/>
+          </output>
+        </service>
+        <service class="RawSampleService" priority="RT_FIFO:50" procHeapMax="500M" procSorterLength="1.0" rawHeapMax="100M" rawSorterLength="0.0">
+
+<!-- input from every DSM on this aircraft that has
+             a socket output of type RawSampleOutputStream -->
+          <input class="RawSampleInputStream">
+            <socket maxIdle="60" type="mcaccept"/>
+          </input>
+          <processor class="SampleArchiver">
+            <output class="RawSampleOutputStream">
+              <fileset dir="/var/r1/${PROJECT}" file="%Y%m%d_%H%M%S_${FLIGHT}.ads" length="0"/>
+            </output>
+            <output class="RawSampleOutputStream">
+              <socket port="30000" type="server"/>
+            </output>
+          </processor>
+          <processor class="raf.SyncRecordGenerator">
+            <output class="SampleOutputStream">
+              <socket port="30001" type="server"/>
+            </output>
+          </processor>
+        </service>
+    </server>
+
+
+    <dsm name="localhost" location="acserver" id="99" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
+      <!--
+      <output class="RawSampleOutputStream">
+          <fileset dir="/home/data"
+              file="usb_%Y%m%d_%H%M%S.dat"
+              length="1800">
+          </fileset>
+      </output>
+      -->
+
+      <sensor IDREF="HVPS_HK" devicename="usock::30230" id="1000">
+        <parameter name="SerialNumber" type="string" value="HVPS315"/>
+      </sensor>
+
+      <sensor ID="HVPS" class="UDPSocketSensor" devicename="usock::30231" id="1200">
+        <parameter name="SerialNumber" type="string" value="HVPS315"/>
+        <parameter name="RESOLUTION" type="int" value="150"/>
+      </sensor>
+
+      <output class="RawSampleOutputStream">
+        <socket type="mcrequest" address="localhost"/>
+      </output>
+    </dsm>
+  </site>
+</project>
