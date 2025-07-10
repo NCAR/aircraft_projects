@@ -84,6 +84,18 @@ because it provides the definitions of the sensors -->
       <sensor IDREF="TOGA" devicename="usock::30120" id="450" suffix="_TOGA"/>
       <sensor IDREF="ISAF" devicename="usock::30124" id="500" suffix="_ISAF"/>
 
+<!-- Specialized UDP Packets indicating that Mission Controller is asking for instruments to behave in
+     specific ways -->
+    <sensor ID="CTRLRESRCH" class="UDPSocketSensor" devicename="usock::41005">
+      <sample id="1" rate="1" scanfFormat="NOCAL,%*dT%*d,%d">
+        <variable longname="Do Not Calibrate" name="NOCAL" units="bool"/>
+      </sample>
+      <sample id="2" rate="1" scanfFormat="NOREC,%*dT%*d,%d">
+        <variable longname="Do Not Record" name="NOREC" units="bool"/>
+      </sample>
+    </sensor>
+
+
       <sensor IDREF="ALTASTATUS" devicename="usock::30220" id="6000" suffix="_AENT1"/>
       <sensor ID="ARINCENET1" class="raf.UDPArincSensor" devicename="usock::56769" id="6100" timeout="10">
         <parameter name="ip" type="string" value="192.168.84.16"/>
