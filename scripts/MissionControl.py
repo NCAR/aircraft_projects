@@ -46,7 +46,7 @@ class MissionControl(QWidget):
         self.updatingRemainingTime = False
 
         # connect to the aircraft's real-time database
-        conn_string = "host='acserver' dbname='real-time' user='ads'"
+        conn_string = "host='192.168.84.2' dbname='real-time' user='ads'"
 #       print "Connecting to database\n -> %s" % (conn_string)
         try:
             # get a connection, if a connect cannot be made an exception will be raised here
@@ -157,11 +157,12 @@ class MissionControl(QWidget):
         NOREC = "NOREC,%s,1" % datetime
 
         if self.DoNotCalibrate.isChecked():
-            self.udpSocket.writeDatagram(bytes(NOCAL, 'utf-8'), QHostAddress("192.168.84.2"), PORT)
-            #print("Sending: ",str(NOCAL)," to port:",str(PORT))
+            rc = self.udpSocket.writeDatagram(bytes(NOCAL, 'utf-8'), QHostAddress("192.168.84.2"), PORT)
+            print("Sending: ",str(NOCAL)," to port:",str(PORT), ", rc=", rc)
 
         if self.DoNotRecord.isChecked():
             self.udpSocket.writeDatagram(bytes(NOREC, 'utf-8'), QHostAddress("192.168.84.2"), PORT)
+            print("Sending: ",str(NOREC)," to port:",str(PORT))
 
     # prevent operator from leaving while actively enforcing
     def closeEvent(self, event):
@@ -224,7 +225,7 @@ class MissionControl(QWidget):
         try:
             self.cursor.execute("SELECT value from mission_control WHERE key='%s'" % key)
             val = self.cursor.fetchone()
-            return unicode(val[0])
+            return str(val[0])
         except:
             try:
                 self.cursor.execute("INSERT INTO mission_control VALUES ('%s', '%s')" % (key, value))
@@ -232,6 +233,7 @@ class MissionControl(QWidget):
                 self.failExit()
 
             return value
+        
 
     def horizontalRadioGroup(self, title, key, default, values):
 
@@ -360,7 +362,7 @@ class MissionControl(QWidget):
 
         # setup DoNotRecord
         self.DoNotRecord = QPushButton('Do Not Record', self)
-        self.DoNotRecord.setEnabled(False)
+        #self.DoNotRecord.setEnabled(False)
         self.DoNotRecord.setCheckable(True)
         self.DoNotRecord.setChecked(False)
         self.DoNotRecord.clicked[bool].connect(self.setDoNotRecord)
