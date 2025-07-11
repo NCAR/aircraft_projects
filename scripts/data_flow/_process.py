@@ -295,12 +295,21 @@ class Process:
 
 
     def generate_derived_files(self, data_dir, filename, project, flight, key,file_ext):
-            # Generate IWG1 file from LRT, if requested
-        command_dict = {'IWG1':"nc2iwg1 " + filename["LRT"] + " -o " + data_dir + project + flight + '.' + file_ext["IWG1"],
-                        'ICARTT':"nc2asc -i " + filename["LRT"] + " -o " + data_dir + "tempfile.ict -b " + self.nc2ascBatch}
-        message = f"about to execute : {command_dict[key]}"
-        if myLogger.run_and_log(command_dict[key],message):
-            self.stat[key]["proc"] = 'Yes'
+        if key == "IWG1":
+            # Generate IWG1 file from LRT
+            output_file = data_dir + project + flight + '.' + file_ext["IWG1"]
+            command = f"nc2iwg1 {filename['LRT']} -o {output_file}"
+            message = f"Generating IWG1 file: {command}"
+            if myLogger.run_and_log(command, message):
+                self.stat[key]["proc"] = 'Yes'
+        elif key == "ICARTT":
+            # Generate ICARTT file from LRT
+            command = f"nc2asc -i {filename['LRT']} -o {data_dir}tempfile.ict -b {self.nc2ascBatch}"
+            message = f"Generating ICARTT file: {command}"
+            if myLogger.run_and_log(command, message):
+                self.stat[key]["proc"] = 'Yes'
+        else:
+            myLogger.log_and_print(f"Unknown derived file type: {key}", log_level='warning')
 
     def process_pms2d_files(self, inst_dir, raw_dir, filename):
         """

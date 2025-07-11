@@ -97,5 +97,5 @@ GDRIVE = False
 rclone_staging_dir = ''
 #############################################################################
 SYNCTHING = True
-syncthing_staging_dir = f'/var/r1/field_sync/EOL_data/RAF_data'
+syncthing_staging_dir = f'/var/r1/field_sync/EOL_Data/RAF_Data'
 
