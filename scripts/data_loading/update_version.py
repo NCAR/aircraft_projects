@@ -52,25 +52,23 @@ def update_yaml_file(yaml_path, version=None, ingest_location=None, filename_pat
     changes_made = False
     # Update version_number if provided
     if version:
-        for item in data['dataset']:
-            if 'version_number' in item:
-                old_version = item['version_number']
-                item['version_number'] = version
-                print(f"Updated version_number: {old_version} -> {version}")
-                changes_made = True
-                break
         #check if version number is greater than 1.0
         if version and float(version) < 1.0:
             quality= 1 #set quality as preliminary
         else:
             quality = 2 #set quality as final
         for item in data['dataset']:
+            if 'version_number' in item:
+                old_version = item['version_number']
+                item['version_number'] = version
+                print(f"Updated version_number: {old_version} -> {version}")
+                changes_made = True
             if 'quality' in item:
                 old_quality = item['quality']
                 item['quality'] = quality
                 print(f"Updated quality: {old_quality} -> {quality}")
                 changes_made = True
-                break
+
     # Update ingest_location if provided
     if ingest_location:
         for item in data['dataset']:
