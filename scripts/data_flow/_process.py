@@ -56,7 +56,7 @@ class Process:
         """
         ## Assign the dictionary values to the class variable to track the status of the processing
         self.stat = status 
-        self.nc2ascBatch = proj_dir + 'scripts/nc2asc.bat'
+        #self.nc2ascBatch = proj_dir + 'scripts/nc2asc.bat'
         findFiles = _findfiles.FindFiles()
         # LRT netCDF - Determine processing mode
         process, filename['LRT'] = findFiles.find_lrt_netcdf(
@@ -304,7 +304,7 @@ class Process:
                 self.stat[key]["proc"] = 'Yes'
         elif key == "ICARTT":
             # Generate ICARTT file from LRT
-            command = f"nc2asc -i {filename['LRT']} -o {data_dir}tempfile.ict -b {self.nc2ascBatch}"
+            command = f"nc2asc -i {filename['LRT']} -o {data_dir}tempfile.ict" # -b {self.nc2ascBatch}
             message = f"Generating ICARTT file: {command}"
             if myLogger.run_and_log(command, message):
                 self.stat[key]["proc"] = 'Yes'
