@@ -47,7 +47,7 @@ ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = '/EOL_data/RAF_data'
+ftp_data_dir = '/field_sync/EOL_Data/RAF_Data'
 
 #############################################################################
 ### Define which files should be generated
