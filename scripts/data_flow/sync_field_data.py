@@ -182,18 +182,18 @@ def ingest_to_local(filetype, local_dir, start_dir):
     if filetype == 'PMS2D':
         #sync PMS2D data to the raw data directory
         local_dir = rdat_dir
-        command = f'rsync -qu --exclude="*.shtml" {start_dir}{filetype}/* {local_dir}/{filetype}/.'
+        command = f'rsync -qu --exclude="*.shtml" {start_dir}/{filetype}/* {local_dir}/{filetype}/.'
     if filetype in ('PMS2D', 'QA_Tools'):
         #sync PMS2D and QA_Tools data to the data directory
-        command = f'rsync -qu --exclude="*.shtml" {start_dir}{filetype}/* {local_dir}/{filetype}/.'
+        command = f'rsync -qu --exclude="*.shtml" {start_dir}/{filetype}/* {local_dir}/{filetype}/.'
     elif filetype == 'ADS':
         print('Syncing ADS')
         local_dir = rdat_dir
         print('Raw Data dir' +rdat_dir)
         print('Set local dir to: '+local_dir)
-        command = f'rsync -qu --exclude="*.shtml" {start_dir}{filetype}/* {local_dir}'
+        command = f'rsync -qu --exclude="*.shtml" {start_dir}/{filetype}/* {local_dir}'
     else:
-        command = f'rsync -qu --exclude="*.shtml" {start_dir}{filetype}/* {local_dir}'
+        command = f'rsync -qu --exclude="*.shtml" {start_dir}/{filetype}/* {local_dir}'
     message = 'Syncing dir into place'
     _run_and_log(command, message)
 
