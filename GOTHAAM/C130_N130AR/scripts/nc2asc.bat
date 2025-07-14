@@ -1,0 +1,66 @@
+hd=ICARTT
+Vars=Time
+
+REM Pos/vel
+Vars=LATC
+Vars=LONC
+Vars=GGALT
+Vars=PALT
+Vars=THDG
+Vars=PITCH
+Vars=ROLL
+
+REM State Params
+Vars=PSXC
+Vars=PCAB
+Vars=ATX
+Vars=EWX
+Vars=DPXC
+Vars=TASX
+Vars=WSC
+Vars=WDC
+Vars=WIX
+
+REM Water
+Vars=PLWCC
+Vars=RICE
+Vars=CONCD
+Vars=PLWCD
+Vars=CONC2DC
+Vars=PLWC2DC
+
+REM Radiation
+Vars=RSTB
+Vars=RSTT
+Vars=VISTC
+Vars=IRTC
+
+REM Aerosol
+Vars=CONCN
+Vars=CONCP_RPI
+Vars=CONCU_RO
+Vars=DBARP_RPI
+Vars=DBARU_RO
+Vars=PVOLP_RPI
+Vars=PVOLU_RO
+Vars=MFLOW_SDI
+
+REM Chem
+Vars=NO_ACOM
+Vars=NOY_ACOM
+Vars=NO2_ACOM
+Vars=O3_ACOM
+Vars=O3_RAF
+Vars=N2O_QCL
+Vars=CO_QCL
+Vars=N2OA_QCL
+Vars=COA_QCL
+Vars=H2O_QCL
+Vars=H2O_PICCU
+Vars=O18_PICCU
+Vars=MR2H_PICCU
+Vars=SO2_CU
+Vars=OH_CU
+Vars=H2SO4_CU
+Vars=HO2RO2_CU
+Vars=HO2_CU
