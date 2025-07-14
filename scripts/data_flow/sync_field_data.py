@@ -180,19 +180,20 @@ def ingest_to_local(filetype, local_dir, start_dir):
     """
     logging.info('Starting distribution of data from FTP to localdirs/')
     if filetype == 'PMS2D':
+        #sync PMS2D data to the raw data directory
         local_dir = rdat_dir
-        command = 'rsync -qu --exclude="*.shtml" ' + start_dir + filetype \
-            + '/* ' + local_dir + '/' + filetype + '/.'
+        command = f'rsync -qu --exclude="*.shtml" {start_dir}{filetype}/* {local_dir}/{filetype}/.'
+    if filetype in ('PMS2D', 'QA_Tools'):
+        #sync PMS2D and QA_Tools data to the data directory
+        command = f'rsync -qu --exclude="*.shtml" {start_dir}{filetype}/* {local_dir}/{filetype}/.'
     elif filetype == 'ADS':
         print('Syncing ADS')
         local_dir = rdat_dir
         print('Raw Data dir' +rdat_dir)
         print('Set local dir to: '+local_dir)
-        command = 'rsync -qu --exclude="*.shtml" ' + start_dir + filetype \
-            + '/* ' + local_dir + '/.'
+        command = f'rsync -qu --exclude="*.shtml" {start_dir}{filetype}/* {local_dir}'
     else:
-        command = 'rsync -qu --exclude="*.shtml" ' + start_dir + filetype \
-            + '/* ' + local_dir
+        command = f'rsync -qu --exclude="*.shtml" {start_dir}{filetype}/* {local_dir}'
     message = 'Syncing dir into place'
     _run_and_log(command, message)
 
@@ -265,10 +266,10 @@ def sync_from_ftp():
     dir_check()
     logging.info(f"Syncing from {source} transfer directory...")
     logging.info(f'Syncing ADS and PMS2D data from {ftp_dir} to {rdat_dir}')
-    logging.info(f'Syncing other data from {ftp_dir} to {dat_dir}/field_sync')
+    logging.info(f'Syncing other data from {ftp_dir} to {dat_dir}/field_data')
     for dtype in proc_dict:
         if proc_dict[dtype]:
-            ingest_to_local(dtype, f'{dat_dir}/field_sync', f'{ftp_dir}')
+            ingest_to_local(dtype, f'{dat_dir}/field_data', f'{ftp_dir}')
 
 def parse_args():
     """ Instantiate a command line argument parser """
