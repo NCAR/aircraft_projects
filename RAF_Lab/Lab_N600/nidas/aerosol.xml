@@ -118,6 +118,13 @@
       <prompt rate="1" string="A\r"/>
     </serialSensor>
 
+    <serialSensor ID="DSMTEMP_RS232" devicename="/dev/ttyS2" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
+      <sample id="1" rate="1" scanfFormat="#%f">
+        <variable longname="DSM Temperature" name="DSMTEMP" units="degC"/>
+      </sample>
+      <message length="0" position="end" separator="\n"/>
+    </serialSensor>
+
 </sensorcatalog>
 
 
@@ -162,7 +169,7 @@
     <!-- dsm name="ux-cjwlap" location="lab" id="77" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071"> -->
     <dsm name="labdsm7" location="lab" id="107" rserialPort="30002" statusAddr="sock::30001" derivedData="sock::7071">
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_LAB7"/>
-
+      <sensor IDREF="DSMTEMP_RS232" id="400" suffix="_LAB7"/>
 
       <serialSensor IDREF="S200" devicename="/dev/ttyCTI2" id="200" suffix="_LAB7">
         <parameter name="SerialNumber" type="string" value="PCAS108"/>
@@ -172,6 +179,14 @@
         <parameter name="SerialNumber" type="string" value="UHSAS059"/>
       </serialSensor>
 
+      <serialSensor IDREF="SDIflow" devicename="/dev/ttyCTI4" id="600" suffix="_LAB7">
+        <parameter name="nTAS_AVERAGE" type="int" value="5"/>
+        <parameter name="QMIN" type="int" value="100"/>
+        <parameter name="QMAX" type="int" value="500"/>
+        <parameter name="TIP_DIAM" type="float" value="0.64"/>
+        <!-- Q_VOL_OFFSET is project dependant based on what instruments are using the exhaust line, defaults to 0.0 -->
+        <parameter name="Q_VOL_OFFSET" type="float" value="0.0"/>
+      </serialSensor>
 
       <output class="RawSampleOutputStream">
         <socket type="mcrequest"/>
