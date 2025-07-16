@@ -31,21 +31,20 @@
 
 
     <serialSensor ID="Novatel_GPS" baud="57600" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
-
 <!-- GGA record -->
-      <sample id="1" rate="5">
+      <sample id="1" rate="1">
         <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=OMNISTAR" name="GGQUAL" units="none"/>
-        <variable longname="Reference GPS Horizontal dilution of position" name="GGHORDIL" units="none"/>
+        <variable longname="Reference GPS Horizontal dilution of position" name="GGHDOP" units="none"/>
       </sample>
 
 <!-- RMC record -->
-      <sample id="2" rate="5">
+      <sample id="2" rate="1">
         <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="none"/>
         <variable longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)" name="GGRepLag" units="s"/>
       </sample>
 
 <!-- BESTPOS record -->
-      <sample id="4" rate="100">
+      <sample id="4" rate="5">
           <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
           <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
           <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
@@ -71,6 +70,7 @@
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
+
     <serialSensor ID="CMIGITS3" baud="38400" class="raf.CMIGITS3_Serial" databits="8" parity="odd" stopbits="1">
       <sample id="1" rate="10">
 
@@ -653,10 +653,12 @@
 
     <dsm derivedData="sock::7071" id="107" location="Bench" name="labdsm7" rserialPort="30002" statusAddr="sock::30001">
 <!--
-      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LAB8"/>
+      <sensor IDREF="IRIG" devicename="/dev/irig0" id="100" suffix="_LAB7"/>
 -->
       <sensor IDREF="CHRONY_TRACKING_LOG" id="105" suffix="_LAB7"/>
       <sensor IDREF="DSMTEMP_RS232" id="110" suffix="_LAB7"/>
+
+      <serialSensor IDREF="Novatel_GPS" devicename="/dev/ttyCTI0" id="150" suffix="_232"/>
 
       <sensor class="DSC_A2DSensor" devicename="/dev/dmmat_a2d0" id="220">
         <parameter name="SerialNumber" type="string" value="W477534"/>
