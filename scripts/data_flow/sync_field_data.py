@@ -179,10 +179,6 @@ def ingest_to_local(filetype, local_dir, start_dir):
     FTP site directly.
     """
     logging.info('Starting distribution of data from FTP to localdirs/')
-    if filetype == 'PMS2D':
-        #sync PMS2D data to the raw data directory
-        local_dir = rdat_dir
-        command = f'rsync -qu --exclude="*.shtml" {start_dir}/{filetype}/* {local_dir}/{filetype}/.'
     if filetype in ('PMS2D', 'QA_Tools'):
         #sync PMS2D and QA_Tools data to the data directory
         command = f'rsync -qu --exclude="*.shtml" {start_dir}/{filetype}/* {local_dir}/{filetype}/.'
