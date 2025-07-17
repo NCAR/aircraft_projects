@@ -1,0 +1,25 @@
+#!/bin/bash
+
+logger "start_cameras shell script called"
+
+# Reset symlink script so it gets new flight number.
+# Let ensure_running start it back up.
+
+/etc/init.d/capture.sh stop
+
+# [Re]load firewire drivers.
+sudo modprobe -r firewire_ohci
+sudo modprobe firewire_ohci
+logger "start_cameras reloading drivers"
+
+sleep 3
+
+FLIGHTNUM=$(psql -h acserver -c "SELECT value FROM global_attributes WHERE key='FlightNumber';" -t | tr -d ' ')
+
+FILEPATH="/var/r1/$PROJECT/camera_images/flight_number_$FLIGHTNUM"
+
+# /etc/init.d/capture.sh start
+
+/usr/bin/capture -c /etc/capture.conf -f $FILEPATH -h acserver -w &
+
+
