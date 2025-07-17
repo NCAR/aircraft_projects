@@ -188,6 +188,10 @@ def ingest_to_local(filetype, local_dir, start_dir):
         print('Raw Data dir' +rdat_dir)
         print('Set local dir to: '+local_dir)
         command = f'rsync -qu --exclude="*.shtml" {start_dir}/{filetype}/* {local_dir}'
+        #Sync satcom if it exists
+        if os.path.exists(f'{start_dir}/{filetype}/satcom'):
+            sat_command = f'rsync -u {start_dir}/{filetype}/satcom/* {local_dir}/satcom/'
+            _run_and_log(sat_command, 'Syncing satcom data')
     else:
         command = f'rsync -qu --exclude="*.shtml" {start_dir}/{filetype}/* {local_dir}'
     message = 'Syncing dir into place'
