@@ -20,8 +20,17 @@ process_files() {
         echo -e "\nProcessing files from $source_dir:"
         read -p "Input flight designation or return to step through all files: " flight
         while IFS= read -r file; do
+            if echo "$file" | grep -iq hpa; then
+                read -p "Copy satcom log file? (y/n): " copy_file < /dev/tty
+                if [[ "$copy_file" == "y" || "$copy_file" == "Y" ]]; then
+                    echo "Copying: $file"
+                    cp -v "$source_dir/$file" "$copy_dir/satcom/"
+                    echo "Copied successfully."
+                else
+                    echo "Skipping file."
+                fi
             # Match flight number entered; if entered "", then match everything
-            if echo "$file" | grep -iq "$flight"; then # Check if file name contains flight (case-insensitive)
+            elif echo "$file" | grep -iq "$flight"; then # Check if file name contains flight (case-insensitive)
                 if [[ -f "$source_dir/$file" ]]; then # File exists
                     size=$(du -h "$source_dir/$file" | cut -f1)
                     echo "File: $file ($size)"
@@ -36,6 +45,7 @@ process_files() {
                     fi
                 fi
             fi
+            
         done < <(ls -1 "$source_dir") # Input redirection for the while loop
         return 0
     else
