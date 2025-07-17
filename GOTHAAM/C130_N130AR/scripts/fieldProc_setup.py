@@ -28,7 +28,7 @@ rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 
 
 ### Default email address(es) to send status messages to ###
-default_emails = ['srunkel@ucar.edu']
+default_emails = ['srunkel@ucar.edu','cdewerd@ucar.edu']
 #############################################################################
 ### Define settings for NAS in the field
 #############################################################################
