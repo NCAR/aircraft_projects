@@ -32,7 +32,7 @@ class StageSyncThing:
                 print(f"Data dir is {inst_dir[key]}")
                 if filename[key] != '':
                     self._transfer_instrument_files(key, filename, inst_dir, syncthing_staging_dir)
-            self._sync_satcom(syncthing_staging_dir, inst_dir)
+            self._sync_raw(syncthing_staging_dir, inst_dir)
 
     def _ship_all_ads(self, inst_dir, syncthing_staging_dir):
         ''' Ship all ads files to the specificed syncthing_staging_dir '''
@@ -74,13 +74,19 @@ class StageSyncThing:
         else:
             source_file = os.path.join(inst_dir[key], filename[key])
             self._rsync_file(source_file, staging_dest, key)
-    def _sync_satcom(destination, inst_dir):
+    def _sync_raw(destination, inst_dir):
         ''' Sync SATCOM data to the specified destination '''
         try:
             subprocess.run(['rsync', '-ur', f'{inst_dir['ads']}/satcom/', f'{syncthing_staging_dir}/satcom/'], check=True)
             myLogger.log_and_print(f'Successfully synced SATCOM data to {syncthing_staging_dir}/satcom/')
         except subprocess.CalledProcessError as e:
             myLogger.log_and_print(f"did not sync SATCOM data: {e}", 'warning')
+        #Sync CAMERA images if it exists
+        try:
+            subprocess.run(['rsync', '-ur', f'{inst_dir['ads']}/CAMERA/', f'{syncthing_staging_dir}/CAMERA/'], check=True)
+            myLogger.log_and_print(f'Successfully synced camera imagery to {syncthing_staging_dir}/CAMERA/')
+        except subprocess.CalledProcessError as e:
+            myLogger.log_and_print(f"did not sync camera imagery: {e}", 'warning')
 
     def _rsync_file(self, source_file, destination, key):
         ''' Rsync a file to a destination '''

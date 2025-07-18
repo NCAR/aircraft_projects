@@ -32,16 +32,27 @@ process_files() {
             # Match flight number entered; if entered "", then match everything
             elif echo "$file" | grep -iq "$flight"; then # Check if file name contains flight (case-insensitive)
                 if [[ -f "$source_dir/$file" ]]; then # File exists
-                    size=$(du -h "$source_dir/$file" | cut -f1)
-                    echo "File: $file ($size)"
-                    # Corrected read command:
-                    read -p "Copy this file? (y/n): " copy_file < /dev/tty
-                    if [[ "$copy_file" == "y" || "$copy_file" == "Y" ]]; then
-                        echo "Copying: $file"
-                        cp -v "$source_dir/$file" "$copy_dir/"
-                        echo "Copied successfully."
+                    if echo "$file" | grep -iq .tar; then
+                        read -p "Copy camera images tar file? (y/n): " copy_file < /dev/tty
+                        if [[ "$copy_file" == "y" || "$copy_file" == "Y" ]]; then
+                            echo "Copying: $file"
+                            cp -v "$source_dir/$file" "$copy_dir/CAMERA/"
+                            echo "Copied successfully."
+                        else
+                            echo "Skipping file."
+                        fi
                     else
-                        echo "Skipping file."
+                        size=$(du -h "$source_dir/$file" | cut -f1)
+                        echo "File: $file ($size)"
+                        # Corrected read command:
+                        read -p "Copy this file? (y/n): " copy_file < /dev/tty
+                        if [[ "$copy_file" == "y" || "$copy_file" == "Y" ]]; then
+                            echo "Copying: $file"
+                            cp -v "$source_dir/$file" "$copy_dir/"
+                            echo "Copied successfully."
+                        else
+                            echo "Skipping file."
+                        fi
                     fi
                 fi
             fi
