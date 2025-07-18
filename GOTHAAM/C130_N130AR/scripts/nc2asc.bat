@@ -1,4 +1,6 @@
 hd=ICARTT
+dt=NoDate
+tm=SecOfDay
 Vars=Time
 
 REM Pos/vel

@@ -77,7 +77,7 @@ class StageSyncThing:
     def _sync_satcom(destination, inst_dir):
         ''' Sync SATCOM data to the specified destination '''
         try:
-            subprocess.run(['rsync', '-u', f'{inst_dir['ads']}/satcom/*', f'{syncthing_staging_dir}/satcom/'], check=True)
+            subprocess.run(['rsync', '-ur', f'{inst_dir['ads']}/satcom/', f'{syncthing_staging_dir}/satcom/'], check=True)
             myLogger.log_and_print(f'Successfully synced SATCOM data to {syncthing_staging_dir}/satcom/')
         except subprocess.CalledProcessError as e:
             myLogger.log_and_print(f"did not sync SATCOM data: {e}", 'warning')
