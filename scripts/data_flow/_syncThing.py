@@ -74,16 +74,16 @@ class StageSyncThing:
         else:
             source_file = os.path.join(inst_dir[key], filename[key])
             self._rsync_file(source_file, staging_dest, key)
-    def _sync_raw(destination, inst_dir):
+    def _sync_raw(self, destination, inst_dir):
         ''' Sync SATCOM data to the specified destination '''
         try:
-            subprocess.run(['rsync', '-ur', f'{inst_dir['ads']}/satcom/', f'{syncthing_staging_dir}/satcom/'], check=True)
+            subprocess.run(['rsync', '-ur', f'{inst_dir["ADS"]}/satcom/', f'{syncthing_staging_dir}/satcom/'], check=True)
             myLogger.log_and_print(f'Successfully synced SATCOM data to {syncthing_staging_dir}/satcom/')
         except subprocess.CalledProcessError as e:
             myLogger.log_and_print(f"did not sync SATCOM data: {e}", 'warning')
         #Sync CAMERA images if it exists
         try:
-            subprocess.run(['rsync', '-ur', f'{inst_dir['ads']}/CAMERA/', f'{syncthing_staging_dir}/CAMERA/'], check=True)
+            subprocess.run(['rsync', '-ur', f'{inst_dir["ADS"]}/CAMERA/', f'{syncthing_staging_dir}/CAMERA/'], check=True)
             myLogger.log_and_print(f'Successfully synced camera imagery to {syncthing_staging_dir}/CAMERA/')
         except subprocess.CalledProcessError as e:
             myLogger.log_and_print(f"did not sync camera imagery: {e}", 'warning')
