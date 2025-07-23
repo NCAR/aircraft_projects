@@ -57,10 +57,10 @@ class FindFiles:
                 confirmation = input("Proceed with this selection? (Y/N): ").lower()
                 if confirmation != 'y':
                     self.myLogger._log_and_abort("Aborting... Please look at the conflicting ads files before reprocessing.")
-                return flag, datafile
+                return flag, datafile, pms2d_ads
             datafile = self.step_through_files(datalist, fileext,
                                                     reprocess)
-            return flag, datafile, pms2d_ads
+            return flag, datafile
 
     def _handle_no_files_found(self, pattern, fileext, flag):
         """Handles the case where no files are found. Logs, prints messages, and potentially aborts."""
