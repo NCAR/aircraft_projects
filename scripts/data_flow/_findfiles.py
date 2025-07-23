@@ -51,6 +51,7 @@ class FindFiles:
                     self.myLogger.log_and_print(f"  {idx}. {file_name} ({file_size:.2f} MB)")
                 sorted_files = sorted(datalist)
                 datafile = sorted_files[0]
+                pms2d_ads = sorted_files[-1]
                 self.myLogger.log_and_print(f"Nimbus will run {os.path.basename(datafile)} and merge all files with the same flight number.")
                 # Add confirmation prompt
                 confirmation = input("Proceed with this selection? (Y/N): ").lower()
@@ -59,7 +60,7 @@ class FindFiles:
                 return flag, datafile
             datafile = self.step_through_files(datalist, fileext,
                                                     reprocess)
-            return flag, datafile
+            return flag, datafile, pms2d_ads
 
     def _handle_no_files_found(self, pattern, fileext, flag):
         """Handles the case where no files are found. Logs, prints messages, and potentially aborts."""

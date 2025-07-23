@@ -69,7 +69,7 @@ class Process:
         # Next get the ADS file so we can determine the flight date. This is needed
         # in order to identify the correct ICARTT file, since ICARTT files follow the
         # NASA naming convention and don't use our flight numbering system.
-        process, filename['ADS'] = findFiles.find_file(
+        process, filename['ADS'],self.PMS2D_ADS = findFiles.find_file(
             inst_dir['ADS'], flight, project, file_type['ADS'],
             file_ext['ADS'], process, process, file_prefix
         )
@@ -321,7 +321,7 @@ class Process:
             filename (dict): Dictionary containing the filenames for different data files.
         """
         myLogger.ensure_dir(inst_dir["PMS2D"] + 'PMS2D')
-        file_name = filename["ADS"].split(raw_dir)[1]
+        file_name = self.PMS2D_ADS.split(raw_dir)[1]
         fileelts = file_name.split('.')
         filename["PMS2D"] = inst_dir["PMS2D"] + 'PMS2D/' + fileelts[0] + '.2d'
 
