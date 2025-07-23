@@ -328,7 +328,7 @@ class Process:
         if not os.path.exists(filename["PMS2D"]):
             # General form of extract2d from RAW_DATA_DIR is:
             # Extract2d PMS2D/output.2d input.ads
-            command = 'extract2d ' + filename["PMS2D"] + ' ' + filename["ADS"]
+            command = 'extract2d ' + filename["PMS2D"] + ' ' + self.PMS2D_ADS
             message = '\nExtracting 2D from ads:' + command + '\n'
             myLogger.run_and_log(command,message)
         
