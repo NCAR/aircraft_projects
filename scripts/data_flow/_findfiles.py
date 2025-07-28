@@ -38,6 +38,9 @@ class FindFiles:
 
         elif len(datalist) == 1:
             datafile = datalist[0]
+            if fileext == 'ads':
+                pms2d_ads = datafile
+                return flag, datafile, pms2d_ads
             return flag, datafile
 
         else:  # Multiple files found
