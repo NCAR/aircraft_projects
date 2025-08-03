@@ -38,6 +38,8 @@ class FindFiles:
 
         elif len(datalist) == 1:
             datafile = datalist[0]
+            #If the file is an ADS file, we need to add that we want to use it for pms2d
+            #TODO: Handle the case when PMS2D is not used
             if fileext == 'ads':
                 pms2d_ads = datafile
                 return flag, datafile, pms2d_ads

@@ -11,6 +11,7 @@ Vars=PALT
 Vars=THDG
 Vars=PITCH
 Vars=ROLL
+Vars=WOW_A
 
 REM State Params
 Vars=PSXC
