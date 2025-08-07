@@ -72,8 +72,6 @@ use Image::Magick;		# Non-standard ImageMagick extensions.
 use Sys::Hostname;		# standard module for determining hostname.
 use Time::Local;
 use POSIX qw(strftime);
-use Env;
-
 # -------------------------------------------------------------------
 # ------------------------ Hardcoded values -------------------------
 # -----------(These may need to be changed in the future.)-----------

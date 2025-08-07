@@ -59,7 +59,7 @@ else
 
          if [ $TAR_FILE -gt 0 ]; then
             echo "No .tar file for flight_number_$FLIGHT found, creating tar file."
-            tar -cvf $DATA_LOCATION/flight_number_$FLIGHT.tar $DATA_LOCATION/flight_number_$FLIGHT
+            tar -cvf $DATA_LOCATION/flight_number_$FLIGHT.tar -C $DATA_LOCATION --exclude='*/sent' flight_number_$FLIGHT/
          fi
 
          echo "***Starting file transfer. Please wait for transfer and integrity checking to complete.***"
