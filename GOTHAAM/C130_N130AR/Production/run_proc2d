@@ -1,0 +1,34 @@
+#!/bin/bash
+
+source ./set_env
+
+if [ -d ${RAW_DATA_DIR}/${PROJ}/PMS2D ]; then
+
+  for file in ${RAW_DATA_DIR}/${PROJ}/PMS2D/*2d
+  do
+    bfname=`basename $file`
+    flight=`echo $bfname | cut -b 17-20`
+    process2d ${RAW_DATA_DIR}/${PROJ}/PMS2D/${bfname} -o ${DAT}/${PROJ}${flight}.nc
+  done
+fi
+
+if [ -d ${RAW_DATA_DIR}/${PROJ}/F2DS/oap ]; then
+
+  for file in ${RAW_DATA_DIR}/${PROJ}/F2DS/oap/*2d
+  do
+    bfname=`basename $file`
+    flight=`echo $bfname | cut -b 17-20`
+    process2d ${RAW_DATA_DIR}/${PROJ}/F2DS/oap/${bfname} -o ${DAT}/${PROJ}${flight}.nc
+  done
+fi
+
+if [ -d ${RAW_DATA_DIR}/${PROJ}/HVPS/oap ]; then
+
+  for file in ${RAW_DATA_DIR}/${PROJ}/HVPS/oap/*2d
+  do
+    bfname=`basename $file`
+    flight=`echo $bfname | cut -b 17-20`
+    process2d ${RAW_DATA_DIR}/${PROJ}/HVPS/oap/${bfname} -o ${DAT}/${PROJ}${flight}.nc
+  done
+fi
+
