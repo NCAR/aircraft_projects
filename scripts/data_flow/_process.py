@@ -1,5 +1,4 @@
 import _logging
-import logging
 import os, glob, sys
 import re
 import _findfiles
@@ -100,7 +99,7 @@ class Process:
                     self.process_pms2d_files(inst_dir, raw_dir, filename)
         
         for key in file_ext:
-            if (key == "LRT") or (key == "ADS"):
+            if (key == "LRT") or (key == "ADS") or (key=="ICARTT"):
                 next
             elif (key == "PMS2D"):
                 (process, filename[key]) = \
@@ -306,8 +305,28 @@ class Process:
             # Generate ICARTT file from LRT
             command = f"nc2asc -i {filename['LRT']} -o {data_dir}tempfile.ict -b {self.nc2ascBatch}"
             message = f"Generating ICARTT file: {command}"
-            if myLogger.run_and_log(command, message):
+        # Capture the output to extract the actual filename
+        try:
+            result = subprocess.run(command, shell=True, capture_output=True, text=True)
+            output = result.stdout + result.stderr  # Combine stdout and stderr
+            # Extract filename from the output
+            filename_match = re.search(r'Overwriting Output Filename, since ICARTT file has strict format: (.+\.ict)', output)
+            if filename_match:
+                icartt_filename = filename_match.group(1)
+                myLogger.log_and_print(f"ICARTT file generated: {icartt_filename}")
+                # Store the actual filename for later use
+                filename['ICARTT'] = data_dir + icartt_filename
+            else:
+                myLogger.log_and_print("Could not extract ICARTT filename from output", log_level='warning')            
+            if result.returncode == 0:
                 self.stat[key]["proc"] = 'Yes'
+                myLogger.log_and_print(f"ICARTT processing successful: {command}")
+            else:
+                self.stat[key]["proc"] = False
+                myLogger.log_and_print(f"ICARTT processing failed: {command}", log_level='error')
+        except Exception as e:
+            myLogger.log_and_print(f"Error running ICARTT command: {e}", log_level='error')
+            self.stat[key]["proc"] = False
         else:
             myLogger.log_and_print(f"Unknown derived file type: {key}", log_level='warning')
 
