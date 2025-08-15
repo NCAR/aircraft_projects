@@ -75,14 +75,14 @@ class Process:
         )
 
         # Extract flight date. Uses flight time if available, otherwise uses ADS
-        self.extract_takeoff_lrt(filename['LRT'], raw_dir)
+        self.extract_takeoff_lrt(filename, raw_dir)
 
         # Other Instruments (using flight number)
         for key in file_ext:
             if key in ('HRT', 'SRT'): 
                 process, filename[key] = findFiles.find_file(
                     inst_dir[key], flight, project, file_type[key],
-                    file_ext[key], process, process, self.date[:8]
+                    file_ext[key], process, process, self.date
                 )   
 
         # Process and Generate Files
@@ -299,7 +299,7 @@ class Process:
         Used for the ICARTT file when takeoff time differs from ads creation time.
         '''
         try:
-            command = f"flt_time {filename}"
+            command = f"flt_time {filename['LRT']}"
             result = subprocess.run(command, shell=True, capture_output=True, text=True)
             if result.returncode == 0:
                 output = result.stdout

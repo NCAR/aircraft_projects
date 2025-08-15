@@ -59,14 +59,34 @@ def push_data():
     # access the fake_filesystem object via patcher.fs
             patcher.fs.create_dir('raw_data_directory/PROJECT_NAME')
             patcher.fs.create_dir('data_directory/PROJECT_NAME')
-            patcher.fs.create_dir('/project_directory/project_name/C130_N130AR/Production')
+            patcher.fs.create_dir('project_directory/project_name/C130_N130AR/Production')
             patcher.fs.create_file('raw_data_directory/PROJECT_NAME/12042024_130000tf01.ads')
-            patcher.fs.create_file('raw_data_directory/PROJECT_NAME/tf01.nc')
-            patcher.fs.create_dir('/data_directory/PROJECT_NAME/data_directory/PROJECT_NAME')
+            patcher.fs.create_file('data_directory/PROJECT_NAME/PROJECT_NAMEtf01.nc')
             patcher.fs.create_dir('/home/local/aircraft_QAtools_notebook')
         #fs.create_file('data_directory/PROJECT_NAME/email.addr.txt')
             with patch('subprocess.run') as mock_run:
-                mock_run.return_value = MagicMock(returncode=0)
+                def mock_subprocess_run(command, **kwargs):
+                    if 'flt_time' in command:
+                        # Return a proper mock result for flt_time command
+                        mock_result = MagicMock()
+                        mock_result.returncode = 0
+                        mock_result.stdout = (
+                            "data_directory/PROJECT_NAME/project_nametf01.nc:project_name:tf01:\n"
+                            "Using variable GSPD\n"
+                            "Takeoff: Wed Dec 4 01:09:51 2024\n"
+                            "Landing: Wed Dec 4 06:51:06 2024\n"
+                        )
+                        mock_result.stderr = ""
+                        return mock_result
+                    else:
+                        # Return a generic successful result for other commands
+                        mock_result = MagicMock()
+                        mock_result.returncode = 0
+                        mock_result.stdout = ""
+                        mock_result.stderr = ""
+                        return mock_result
+                mock_run.side_effect = mock_subprocess_run
+                #mock_run.return_value = MagicMock(returncode=0)
                 
                 yield main()
 
