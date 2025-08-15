@@ -76,6 +76,7 @@ def test_setup_constants(setup):
     #assert isinstance(setup.filename, dict)
     assert setup.FLIGHT == "tf01"
     assert setup.EMAIL == default_emails+['test@example.com']
+    assert setup.FILENAME == {}
 
 
 @pytest.fixture
@@ -88,4 +89,4 @@ def setup_process_env(setup):
 def test_process(setup_process_env):
     result = setup_process_env._reorder_nc(setup_process_env.ncfile)
     assert result == 'Yes'
-    assert setup_process_env.date == '12042024130000'
+    assert setup_process_env.date == '12042024'

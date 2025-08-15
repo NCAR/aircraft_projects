@@ -1,6 +1,5 @@
 import glob,os,_logging
-
-
+import subprocess, re, datetime
 class FindFiles:
     def __init__(self):
         self.myLogger = _logging.MyLogger()
@@ -26,6 +25,7 @@ class FindFiles:
         """
 
         if fileext == 'ict':
+            #Date handled in process
             pattern = os.path.join(data_dir, f'{project}*{date}*{fileext}')
         else:
             pattern = os.path.join(data_dir, f"*{flight}{filetype}.{fileext}")

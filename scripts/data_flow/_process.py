@@ -1,6 +1,7 @@
 import _logging
 import os, glob, sys
 import re
+from datetime import datetime
 import _findfiles
 import subprocess
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
@@ -73,8 +74,8 @@ class Process:
             file_ext['ADS'], process, process, file_prefix
         )
 
-        # ADS - Extract flight date
-        self.extract_date_from_ads_filename(filename['ADS'], raw_dir)
+        # Extract flight date. Uses flight time if available, otherwise uses ADS
+        self.extract_takeoff_lrt(filename['LRT'], raw_dir)
 
         # Other Instruments (using flight number)
         for key in file_ext:
@@ -99,7 +100,7 @@ class Process:
                     self.process_pms2d_files(inst_dir, raw_dir, filename)
         
         for key in file_ext:
-            if (key == "LRT") or (key == "ADS") or (key=="ICARTT"):
+            if (key == "LRT") or (key == "ADS"):
                 next
             elif (key == "PMS2D"):
                 (process, filename[key]) = \
@@ -281,7 +282,7 @@ class Process:
             self.proc_3vcpi_files = 'Yes'
 
 
-    def extract_date_from_ads_filename(self, fname, raw_dir):
+    def _extract_date_from_ads_filename(self, fname, raw_dir):
         """
         Returns the date from the ADS filename based on the filname structure
         raw_dir/YYYYMMDD_HHMMSS*.ads
@@ -292,6 +293,39 @@ class Process:
         file_name = fname.split(raw_dir)[1]
         self.date = file_name.split('_')[0]
 
+    def extract_takeoff_lrt(self,filename, raw_dir):
+        '''
+        Extract takeoff date from LRT file using flt_time command.
+        Used for the ICARTT file when takeoff time differs from ads creation time.
+        '''
+        try:
+            command = f"flt_time {filename}"
+            result = subprocess.run(command, shell=True, capture_output=True, text=True)
+            if result.returncode == 0:
+                output = result.stdout
+                # Look for takeoff date line: "e.g Takeoff: Tue Aug 12 00:57:48 2025"
+                takeoff_match = re.search(r'Takeoff:\s+\w+\s+(\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)', output)
+                if takeoff_match:
+                    date_string = takeoff_match.group(1)  # "Aug 12 00:57:48 2025"
+                    # Parse the date using datetime
+                    try:
+                        parsed_date = datetime.strptime(date_string, "%b %d %H:%M:%S %Y")
+                        date_str = parsed_date.strftime("%Y%m%d")
+                        myLogger.log_and_print(f"Extracted date from LRT file: {date_str}")
+                        self.date = date_str
+                    except Exception as e:
+                        myLogger.log_and_print(f"Could not parse date string '{date_string}'. Using ads file date: {e}", log_level='warning')
+                        self.date = self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
+                else:
+                    myLogger.log_and_print("Could not parse date from flt_time output. Using ads file date.", log_level='warning')
+                    self.date = self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
+            else:
+                myLogger.log_and_print(f"flt_time command failed: {result.stderr}. Using ads file date.", log_level='error')
+                self.date = self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
+
+        except Exception as e:
+            myLogger.log_and_print(f"Error extracting date from LRT file: {e}", log_level='error')
+            self.date = self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
 
     def generate_derived_files(self, data_dir, filename, project, flight, key,file_ext):
         if key == "IWG1":

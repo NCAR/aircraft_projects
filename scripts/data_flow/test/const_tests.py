@@ -19,7 +19,6 @@ FILE_EXT = {
     "PMS2D": "2d",
     "threeVCPI": "2ds"
 }
-
 # Mock environment variables
 env_vars = {
     'PROJECT': PROJECT,
@@ -32,7 +31,7 @@ user_inputs = [
     FLIGHT,  # for readFlight
     EMAIL    # for readEmail
 ]
-
+filename = {'ADS':'', 'LRT':''}
 
 # Mock os.listdir return value
 listdir_return_value = [AIRCRAFT]

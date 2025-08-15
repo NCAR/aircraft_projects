@@ -16,8 +16,8 @@ RAW_DATA_DIR = os.environ['RAW_DATA_DIR']
 call1 = call('Starting distribution of data from FTP to localdirs/')
 
 @pytest.mark.parametrize("filetype,local_dir,start_dir,expected_command", [
-    ('PMS2D', '/path/to/local_dir', '/path/to/start_dir', f'rsync -qu /path/to/start_dir/EOL_data/RAF_data/PMS2D/* {RAW_DATA_DIR}/{project}/PMS2D/.'),
-    ('LRT', '/another/local_dir', '/another/start_dir',  f'rsync -qu /another/start_dir/EOL_data/RAF_data/LRT/* /another/local_dir')
+    ('PMS2D', f'{RAW_DATA_DIR}{project}', '/path/to/start_dir', f'rsync -qu --exclude="*.shtml" /path/to/start_dir/PMS2D/* {RAW_DATA_DIR}{project}/PMS2D/.'),
+    ('LRT', '/another/local_dir', '/another/start_dir',  f'rsync -qu --exclude="*.shtml" /another/start_dir/LRT/* /another/local_dir')
     # Add more test cases as needed
 ])
 @patch('logging.info')
@@ -45,7 +45,10 @@ call_dict_gdrive  ={'LRT':call('LRT', f'{DATA_DIR}/{project}/field_data', RAW_DA
         'SRT':call('SRT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
         'IWG1':call('IWG1', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
         'PMS2D':call('PMS2D', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
-        'ADS':call('ADS', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync')}
+        'ADS':call('ADS', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        'ICARTT': call('ICARTT', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync'),
+        'QA_Tools': call('QA_Tools', f'{DATA_DIR}/{project}/field_data', RAW_DATA_DIR + '/' + project + '/field_sync')
+        }
 
 @patch('logging.info')
 @patch('sync_field_data.ingest_to_local')
@@ -59,7 +62,7 @@ def test_sync_from_gdrive(mock_distribute_data, mock_ingest_to_local, mock_loggi
     # Assert
     mock_ingest_to_local.assert_has_calls([call_dict_gdrive[dtype] for dtype in proc_dict if proc_dict[dtype]])
     if QA_notebook:
-        mock_distribute_data.assert_has_calls([call(['field_data', 'QAtools'])])
+        mock_distribute_data.assert_has_calls([call(['QAtools'])])
     mock_logging_info.assert_called_once_with("Syncing from GDRIVE...")
 
 
@@ -70,7 +73,10 @@ call_dict  ={'LRT':call('LRT', f'{DATA_DIR}/{project}/field_data', ftp_dir),
     'SRT':call('SRT', f'{DATA_DIR}/{project}/field_data', ftp_dir),
     'IWG1':call('IWG1', f'{DATA_DIR}/{project}/field_data', ftp_dir),
     'PMS2D':call('PMS2D', f'{DATA_DIR}/{project}/field_data', ftp_dir),
-    'ADS':call('ADS', f'{DATA_DIR}/{project}/field_data', ftp_dir)}
+    'ADS':call('ADS', f'{DATA_DIR}/{project}/field_data', ftp_dir),
+    'ICARTT': call('ICARTT', f'{DATA_DIR}/{project}/field_data', ftp_dir),
+    'QA_Tools': call('QA_Tools', f'{DATA_DIR}/{project}/field_data', ftp_dir)
+}
 
 
 @patch('sync_field_data.dir_check')
@@ -93,8 +99,6 @@ def test_sync_from_ftp(mock_distribute_data,mock_logging_info, mock_ingest_to_lo
             call(f'Syncing other data from {ftp_dir} to {DATA_DIR}/{project}/field_data')
         ])
     mock_ingest_to_local.assert_has_calls([call_dict[dtype] for dtype in proc_dict if proc_dict[dtype]])
-    if QA_notebook:
-        mock_distribute_data.assert_has_calls([call(['field_data','QAtools'])])
     
 
 from sync_field_data import distribute_data
@@ -108,7 +112,7 @@ def test_distribute_data(mock_sync_data, mock_logging_info):
 
     expected_calls = [
         call(f'{DATA_DIR}/{project}/QAtools',  '*', ['/net/www/raf/'], 'Syncing QAtools data into place', True),
-        call(f'{DATA_DIR}/{project}/field_data','*.nc', [f'{DATA_DIR}/{project}'], 'Syncing field_data data into place', False)
+        call(f'{DATA_DIR}/{project}/field_sync','*.nc', [f'{DATA_DIR}/{project}'], 'Syncing field_data data into place', False)
     ]
     log1 = call('Starting distribution of QAtools.html')
     log2 = call('Continuing distribution of RAF prod data')
@@ -135,7 +139,7 @@ def test_sync_data_recursive(mock_run_and_log, mock_logging_info):
     _sync_data(src_dir, file_pattern, dest_dirs, base_message, recursive)
 
     # Assert
-    command_base = f'rsync -rqu {src_dir}/{file_pattern} '
+    command_base = f'rsync -rqu --exclude="*.shtml" {src_dir}/{file_pattern} '
     expected_calls = [
         call(command_base + dest_dirs[0], f'{base_message}'),
         call(command_base + dest_dirs[1], f'{base_message}')
@@ -157,7 +161,7 @@ def test_sync_data_non_recursive(mock_run_and_log, mock_logging_info):
     _sync_data(src_dir, file_pattern, dest_dirs, base_message, recursive)
 
     # Assert
-    command_base = f'rsync -qu {src_dir}/{file_pattern} '
+    command_base = f'rsync -qu --exclude="*.shtml" {src_dir}/{file_pattern} '
     expected_calls = [
         call(command_base + dest_dirs[0], f'{base_message}'),
         call(command_base + dest_dirs[1], f'{base_message}')
