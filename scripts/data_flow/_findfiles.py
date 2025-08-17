@@ -123,7 +123,7 @@ class FindFiles:
             self.myLogger.log_and_print(f'Ship is set to True so no need to choose {fileext} to process.')
             return datalist[0]
 
-        return self._select_file_from_list(self, datalist, fileext)
+        return self._select_file_from_list(datalist, fileext)
                 
                 
     def find_lrt_netcdf(self, filetype, flight, data_dir, file_prefix):

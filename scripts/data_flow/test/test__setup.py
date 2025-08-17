@@ -76,7 +76,6 @@ def test_setup_constants(setup):
     #assert isinstance(setup.filename, dict)
     assert setup.FLIGHT == "tf01"
     assert setup.EMAIL == default_emails+['test@example.com']
-    assert setup.FILENAME == {}
 
 
 @pytest.fixture

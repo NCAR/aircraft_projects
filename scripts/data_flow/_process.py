@@ -66,23 +66,18 @@ class Process:
         
         self.ncfile =filename['LRT'] ## Set the default ncfile to the LRT file
         
-        # Next get the ADS file so we can determine the flight date. This is needed
-        # in order to identify the correct ICARTT file, since ICARTT files follow the
-        # NASA naming convention and don't use our flight numbering system.
+        # Next get the ADS file so we can determine the flight date.
         process, filename['ADS'],self.PMS2D_ADS = findFiles.find_file(
             inst_dir['ADS'], flight, project, file_type['ADS'],
             file_ext['ADS'], process, process, file_prefix
         )
-
-        # Extract flight date. Uses flight time if available, otherwise uses ADS
-        self.extract_takeoff_lrt(filename, raw_dir)
 
         # Other Instruments (using flight number)
         for key in file_ext:
             if key in ('HRT', 'SRT'): 
                 process, filename[key] = findFiles.find_file(
                     inst_dir[key], flight, project, file_type[key],
-                    file_ext[key], process, process, self.date
+                    file_ext[key], process, process
                 )   
 
         # Process and Generate Files
@@ -98,7 +93,9 @@ class Process:
             # Process PMS2D Files
                 if key == "PMS2D":
                     self.process_pms2d_files(inst_dir, raw_dir, filename)
-        
+
+        # Extract takeoff LRT after finding generating ICARTT files or deciding to ship
+        self.extract_takeoff_lrt(filename, raw_dir)
         for key in file_ext:
             if (key == "LRT") or (key == "ADS"):
                 next
@@ -335,34 +332,16 @@ class Process:
             message = f"Generating IWG1 file: {command}"
             if myLogger.run_and_log(command, message):
                 self.stat[key]["proc"] = 'Yes'
+            else:
+                myLogger.log_and_print(f"Unknown derived file type: {key}", log_level='warning')
         elif key == "ICARTT":
             # Generate ICARTT file from LRT
             command = f"nc2asc -i {filename['LRT']} -o {data_dir}tempfile.ict -b {self.nc2ascBatch}"
             message = f"Generating ICARTT file: {command}"
-        # Capture the output to extract the actual filename
-        try:
-            result = subprocess.run(command, shell=True, capture_output=True, text=True)
-            output = result.stdout + result.stderr  # Combine stdout and stderr
-            # Extract filename from the output
-            filename_match = re.search(r'Overwriting Output Filename, since ICARTT file has strict format: (.+\.ict)', output)
-            if filename_match:
-                icartt_filename = filename_match.group(1)
-                myLogger.log_and_print(f"ICARTT file generated: {icartt_filename}")
-                # Store the actual filename for later use
-                filename['ICARTT'] = data_dir + icartt_filename
-            else:
-                myLogger.log_and_print("Could not extract ICARTT filename from output", log_level='warning')            
-            if result.returncode == 0:
+            if myLogger.run_and_log(command, message):
                 self.stat[key]["proc"] = 'Yes'
-                myLogger.log_and_print(f"ICARTT processing successful: {command}")
             else:
-                self.stat[key]["proc"] = False
-                myLogger.log_and_print(f"ICARTT processing failed: {command}", log_level='error')
-        except Exception as e:
-            myLogger.log_and_print(f"Error running ICARTT command: {e}", log_level='error')
-            self.stat[key]["proc"] = False
-        else:
-            myLogger.log_and_print(f"Unknown derived file type: {key}", log_level='warning')
+                myLogger.log_and_print(f"Unknown derived file type: {key}", log_level='warning')
 
     def process_pms2d_files(self, inst_dir, raw_dir, filename):
         """
