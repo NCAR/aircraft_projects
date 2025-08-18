@@ -289,6 +289,10 @@ class Process:
         """
         file_name = fname.split(raw_dir)[1]
         self.date = file_name.split('_')[0]
+        # Ensure date is in YYYYMMDD format
+        if len(self.date) != 8:
+            myLogger.log_and_print(f"Date extracted from ADS filename is not in YYYYMMDD format: {self.date}. Truncating first 8 characters", log_level='warning')
+            self.date = self.date[:8]
 
     def extract_takeoff_lrt(self,filename, raw_dir):
         '''
@@ -309,7 +313,11 @@ class Process:
                         parsed_date = datetime.strptime(date_string, "%b %d %H:%M:%S %Y")
                         date_str = parsed_date.strftime("%Y%m%d")
                         myLogger.log_and_print(f"Extracted date from LRT file: {date_str}")
-                        self.date = date_str
+                        if date_str == '19700101':
+                            myLogger.log_and_print("Extracted date is 1970-01-01, using ADS file date instead.", log_level='warning')
+                            self.date = self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
+                        else:
+                            self.date = date_str
                     except Exception as e:
                         myLogger.log_and_print(f"Could not parse date string '{date_string}'. Using ads file date: {e}", log_level='warning')
                         self.date = self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
