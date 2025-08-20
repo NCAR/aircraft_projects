@@ -100,7 +100,7 @@ nfiles=`ls -l | wc -l`
 [[ -d ../sent ]] || mkdir ../sent
 
 # get the penultimate new file
-file=`ls -t | head -n 3 | head -n 1`
+file=`ls -t | head -n 2 | tail -n 1`
 
 # exit if this file is older than 3 minutes
 let dtime=`date +%s`-`stat -c %X $file`
