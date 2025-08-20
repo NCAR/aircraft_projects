@@ -1,10 +1,9 @@
 #!/bin/csh
 
 if ($#argv != 2) then
-  echo "This script is intended to set project specific variables"	
-  echo "on a per computer basis, so full init_project doesn't have"	
-  echo "to be run on groundstation + acserver + networked servers."	
-  echo "Simplifies workflow a bit."
+  echo "This script is intended to set project specific variables on a per"
+  echo "computer basis by updating ~/ads/ads_environment.sh.  Intended to"
+  echo "be run as ads on groundstation, acserver, or networked servers."	
 
   echo "Usage:"
   echo "init_project ProjectName {Platform}"
