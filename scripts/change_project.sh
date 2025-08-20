@@ -50,7 +50,7 @@ else
   set platform=$argv[2]
 endif
 
-if ("$proj" != "RAF_Lab") then
+if ("$platform" != "RAF_Lab") then
   set proj=$argv[1]
 endif
 
