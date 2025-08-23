@@ -5,8 +5,11 @@ if ($#argv != 2) then
   echo "computer basis by updating ~/ads/ads_environment.sh.  Intended to"
   echo "be run as ads on groundstation, acserver, or networked servers."	
 
-  echo "Usage:"
-  echo "init_project ProjectName {Platform}"
+  if ($#argv == 0) then
+    printf "\nUsage:\n $0 ProjectName {Platform}\n"
+    exit(0)
+  endif
+
   echo
   echo "The optional Platform argument puts the script into non-interactive"
   echo "mode"
@@ -16,11 +19,6 @@ if ($#argv != 2) then
 
   if ($proceed != "y") then
     exit(1)
-  endif
-
-  if ($#argv == 0) then
-    echo "Usage:\n init_project ProjectName {Platform}\n"
-    exit(0)
   endif
 
   echo "\nChoose platform:"
