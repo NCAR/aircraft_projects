@@ -136,6 +136,19 @@ echo "\nSetting group write permissions."
 set split = ($platform:as/_/ /)
 sed -i "s/$split[1] Project/$proj/" $proj/$platform/nidas/default.xml
 
+# Macos needs an explicitly specified backup file for sed to work
+# This if replaces the Lab_Project line in the default.xml with the actual name
+echo "\nChecking if Darwin or Linux proj = '$proj'"
+if ( ( `uname` == "Darwin" ) && ( "$platform" != "Lab_N600" ) ) then
+    echo "\nDarwin detected:"
+    sed -i '.bak' 's|name=\"Lab_Project\"|name=\"'$proj'\"|' $proj/$platform/nidas/default.xml
+    rm $proj/$platform/nidas/default.xml.bak
+else if ( ( `uname` == "Linux" ) && ( "$platform" != "Lab_N600" ) ) then
+    echo "\nLinux detected:"
+    sed -i 's|name=\"Lab_Project\"|name=\"'$proj'\"|' $proj/$platform/nidas/default.xml
+endif
+echo "\nChanging project name in default.xml"
+
 # I don't want vardb.xml committed at this time.  Breaks clean status. cjw 7/20
 #echo "\nGive us a legitimate vardb.xml and xsd ."
 #cd $proj/$platform
