@@ -16,4 +16,4 @@ fi
 /usr/bin/nagircbot -e -C -s $CHATSRV -c \\$CHATROOM -n nagiosBOT -p CHAT_PASSWORD -f /var/log/nagios/status.dat -I 0
 
 # Perform some basic housekeeping / clean up.
-rm -f /tmp/nimbus.pid /tmp/run/nidas/*.pid /home/ldm/ldmd.pid
+rm -f /tmp/nimbus.pid /tmp/run/nidas/*.pid
