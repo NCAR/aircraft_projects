@@ -6,33 +6,39 @@
 ###############
 #   Project   #
 ###############
-setenv PROJECT "XXXPROJECTXXX"
-setenv YEAR 20XX
-setenv PLATFORM "XXXAIRCRAFTXXX"
+setenv PROJECT "GOTHAAM"
+setenv YEAR 2025
+setenv PLATFORM "C130"
 setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
 setenv CS_LOCATION "/glade/campaign/eol/archive/"
-setenv EMAIL "name@ucar.edu"
-setenv projectlower "xxxprojectxxx"
-setenv platformlower "xxxaircraftxxx"
+setenv EMAIL "srunkel@ucar.edu"
+setenv projectlower "gothaam"
+setenv platformlower "c130_n130ar"
 ########################## Raw Data Files ##############################
 ### ADS 
-#$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR $EMAIL
+$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR $EMAIL
 
 ### CAMERA
-#$ARCHIVE_SCRIPT CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg $CS_LOCATION$YEAR $EMAIL
+$ARCHIVE_SCRIPT CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg $CS_LOCATION$YEAR $EMAIL
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-#$ARCHIVE_SCRIPT field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc /net/archive/data/$projectlower/aircraft/$platform_lower/field_phase/LRT $EMAIL
+$ARCHIVE_SCRIPT FIELD/LRT /scr/raf_data/$PROJECT/field_data nc /net/archive/data/ $EMAIL
 
 ### Preliminary LRT ICT
-#$ARCHIVE_SCRIPT field_phase/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict $CS_LOCATION$YEAR $EMAIL
-
-### Preliminary LRT IWG1
-#$ARCHIVE_SCRIPT field_phase/IWG1 /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/IWG1 iwg1 $CS_LOCATION$YEAR $EMAIL
+$ARCHIVE_SCRIPT FIELD/ICARTT /scr/raf_data/$PROJECT/field_data ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary KML
-#$ARCHIVE_SCRIPT field_phase/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml $CS_LOCATION$YEAR $EMAIL
+$ARCHIVE_SCRIPT FIELD/KML /scr/raf_data/$PROJECT/field_data kml $CS_LOCATION$YEAR $EMAIL
+
+### Preliminary PMS2D
+$ARCHIVE_SCRIPT FIELD/PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR $EMAIL
+
+### Preliminary HRT
+$ARCHIVE_SCRIPT FIELD/HRT /scr/raf_data/$PROJECT/field_data/HRT nc $CS_LOCATION$YEAR $EMAIL
+
+### Preliminary SRT
+$ARCHIVE_SCRIPT FIELD/SRT /scr/raf_data/$PROJECT/field_data/SRT nc $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary CO ICT
 #ARCHIVE_SCRIPT field_phase/CO /scr/raf/Raw_Data/$PROJECT/field_phase/CO ict $CS_LOCATION$YEAR $EMAIL
