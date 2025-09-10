@@ -42,12 +42,12 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = True
+FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = '/EOL_Data/RAF_Data'
+ftp_data_dir = '/field_sync/EOL_Data/RAF_Data'
 
 #############################################################################
 ### Define which files should be generated
@@ -55,7 +55,7 @@ ftp_data_dir = '/EOL_Data/RAF_Data'
 ICARTT = False # Generate ICARTT
 IWG1 = False # Generate IWG1 packet
 
-HRT = False # Generate HRT .nc file
+HRT = True # Generate HRT .nc file
 SRT = False # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
 zip_ADS = False # Bzips the ads file independently of processed files
@@ -97,5 +97,5 @@ GDRIVE = False
 rclone_staging_dir = ''
 #############################################################################
 SYNCTHING = True
-syncthing_staging_dir = f'/var/r1/{project}/EOL_Data/RAF_Data'
+syncthing_staging_dir = f'/var/r1/field_sync/EOL_Data/RAF_Data'
 
