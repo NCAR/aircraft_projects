@@ -46,7 +46,7 @@ FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
-ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
+ftp_parent_dir = '/net/ftp/pub/data/incoming/maire'# no year identifier in ftp
 ftp_data_dir = '/field_sync/EOL_Data/RAF_Data'
 
 #############################################################################
