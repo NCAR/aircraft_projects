@@ -6,7 +6,6 @@ import glob
 import yaml # type: ignore
 from collections import OrderedDict
 from _database_fields import FieldsCheck
-project_folder = os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts'
 base = os.environ['PROJ_DIR'] + '/scripts/data_loading'
 global_fields = ['fields', 'dts', 'codiac', 'paths', 'standard'] 
 
@@ -193,7 +192,14 @@ if __name__ == "__main__":
         print("Usage: python replace_yaml.py <PROJECT_NAME>")
         sys.exit(1)
     project_name = sys.argv[1].upper()
-    
+    proj_path = os.environ['PROJ_DIR'] + '/' + project_name + '/'
+    # Find the only subdirectory in proj_path
+    subdirs = [d for d in os.listdir(proj_path) if os.path.isdir(os.path.join(proj_path, d))]
+    if len(subdirs) != 1:
+        print(f"Error: Expected one subdirectory in {proj_path}, found {len(subdirs)}: {subdirs}")
+        sys.exit(1)
+    aircraft_dir = subdirs[0]
+    project_folder = os.path.join(proj_path, aircraft_dir, 'scripts')
     input_file = f'{project_folder}/project_template.yml'
     config_dir = f'{base}/base_config' #directory with yaml configuration files
     output_dir = f'/net/work/cfg-files/{project_name}*' #output directory to save files
