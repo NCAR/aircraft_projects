@@ -64,9 +64,6 @@ archive_ids:
   2DS_rafoap:
     id: 
     version_number: '0.1'
-  pms2d:
-    id: 
-    version_number: '0.1'
   ##CAMERA
   down: 
     id: 
@@ -119,8 +116,8 @@ standard:
   event_subset: 1
   file_subset: 0
   order_allow_compress: 1
-  readme_url: null
-  remote_url: null
+  readme_url: 'default'
+  remote_url: 'default'
   description: 'default'
 
 #Fields that will be added to yaml if dataset is preliminary (version_number < 1.0)
@@ -138,9 +135,18 @@ final:
   quality: 2
 
 #ingest fields that will be filled in by the replace_yaml script
-paths:
+#ingest fields that will be filled in by the replace_yaml script
+paths: &paths
   raw_ingest_base: '/scr/raf/Raw_Data/<PROJECT>'
   prod_ingest_base: '/scr/raf/Prod_Data/<PROJECT>'
-  field_ingest_base: '/scr/raf/Raw_Data/<PROJECT>/field_sync/EOL_data/RAF_data/'
+  field_ingest_base: '/scr/raf_data/<PROJECT>/field_data'
+  
+glade_paths:
+  <<: *paths
   prod_archive_base: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>
   field_archive_base: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/FIELD
+
+localhost_paths:
+  <<: *paths
+  prod_archive_base: /net/archive/data/<project>/aircraft/<platform>
+  field_archive_base: /net/archive/data/<project>/aircraft/<platform>/FIELD

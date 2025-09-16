@@ -7,7 +7,7 @@ import yaml # type: ignore
 from collections import OrderedDict
 from _database_fields import FieldsCheck
 base = os.environ['PROJ_DIR'] + '/scripts/data_loading'
-global_fields = ['fields', 'dts', 'codiac', 'paths', 'standard'] 
+global_fields = ['fields', 'dts', 'codiac', 'standard'] 
 
 def check_template(t_path,search, check):
     with open(t_path) as f:
@@ -72,15 +72,22 @@ def version_check(version):
     else:
         return 'final'
         
-def add_path_fields(status,template, data):
+def add_path_fields(status,archive_location,template, data):
     if 'ingest_location' in data and 'archive_location' in data:
         return
-    if status == 'final':
-        ingest_path = template['paths']['prod_ingest_base']
-        archive_path =template['paths']['prod_archive_base']
+    if archive_location =='localhost':
+        path = template['localhost_paths']
+    elif archive_location == 'campaign':
+        path = template['glade_paths']
     else:
-        ingest_path = template['paths']['field_ingest_base']
-        archive_path = template['paths']['field_archive_base']
+        print(f'Archive location {archive_location} not recognized. Please use localhost or glade')
+        exit(1) 
+    if status == 'final':
+        ingest_path = path['prod_ingest_base']
+        archive_path = path['prod_archive_base']
+    else:
+        ingest_path = path['field_ingest_base']
+        archive_path = path['field_archive_base']
     data['ingest_location'] = f'{ingest_path}/{data["dtype"]}'
     data['archive_location'] = f'{archive_path}/{data["dtype"]}'
         
@@ -125,6 +132,9 @@ def process_yaml_file(yaml_path, replacements, aircraft_rep, template, versions,
     for val in data:
         if 'cfg' in val: ##Skips the configuration section of the yaml file
             continue
+        if 'paths' in val: ##Skips the path section of the yaml file
+            print(f'Found paths: {val}')
+            continue
         print(f'Processing {val}')
         valid_value_found = False
         for value in id_values.keys():
@@ -139,7 +149,8 @@ def process_yaml_file(yaml_path, replacements, aircraft_rep, template, versions,
             print(f'No version number found for {val}')
             break
         v_status = version_check(data[val]['version_number'])
-        add_path_fields(v_status, template, data[val])
+        host = data[val].get('host', None)
+        add_path_fields(v_status, host, template, data[val])
         replace_fields = global_fields + [v_status]
         for group in replace_fields:
             for field in template.get(group, []):

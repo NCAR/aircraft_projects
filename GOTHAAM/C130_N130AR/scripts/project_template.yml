@@ -111,9 +111,17 @@ final:
   quality: 2
 
 #ingest fields that will be filled in by the replace_yaml script
-paths:
+paths: &paths
   raw_ingest_base: '/scr/raf/Raw_Data/<PROJECT>'
   prod_ingest_base: '/scr/raf/Prod_Data/<PROJECT>'
   field_ingest_base: '/scr/raf_data/<PROJECT>/field_data'
+  
+glade_paths:
+  <<: *paths
   prod_archive_base: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>
   field_archive_base: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/FIELD
+
+localhost_paths:
+  <<: *paths
+  prod_archive_base: /net/archive/data/<project>/aircraft/<platform>
+  field_archive_base: /net/archive/data/<project>/aircraft/<platform>/FIELD
