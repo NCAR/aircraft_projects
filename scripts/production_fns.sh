@@ -19,38 +19,6 @@ if [ `whoami` == nimbus ]; then
 fi
 }
 
-
-# Reorder netCDF files in the $DAT directory.
-#
-reorder_all() {
-
-busyFile='reorderInProgress'
-trap "rm $busyFile" SIGINT SIGTERM
-
-cd ${DAT}
-
-if [ -f $busyFile ]; then
-  exit 1
-fi
-
-touch $busyFile
-
-for file in ${PROJ}?f??.nc
-do
-  echo $file
-  ncdump -h $file | head | grep --quiet UNLIMITED
-  if [ $? -eq 0 ]; then
-    nccopy -u $file reotemp.nc
-    mv -f reotemp.nc $file
-    chmod g+w $file
-  fi
-done
-
-/bin/rm $busyFile
-cd $SAVE_DIR
-}
-
-
 # Kalman Filter script.
 #
 run_kalmanFilter() {
