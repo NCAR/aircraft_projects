@@ -46,11 +46,26 @@ set echo
 
 #  Check for existence of sql file before performing diff.
 if (-e $sqlfile) then
-  set res = `git diff $sqlfile | wc -l`
+  # Ignore lines with \restrict or \unrestrict
+  set res = `git diff -Irestrict $sqlfile | wc -l`
+  # If the only diff is restrict lines, checkout a clean sql file
+  if (res == 0) then
+      echo "Checking out clean sql file" >> $logfile
+      git checkout master-calibrations.sql
+  endif
 else
   # If sqlfile doesn't exist, then there is no difference to be had.
   set res = 0
 endif
+
+# Dump the current database to a temp file.
+# Perform and log the backup
+echo -n "START " >> $logfile
+date             >> $logfile
+echo "Backup of eol-rosetta's calibrations database to a directory that is regularly backed up by CIT." >> $logfile
+pg_dump --insert --clean --create -h eol-rosetta.eol.ucar.edu -U ads calibrations -f $tmpsqlfile >> $logfile
+echo -n "END   " >> $logfile
+date             >> $logfile
 
 if ($res != 0) then
   echo "We're in the diff clause!" >> $logfile
@@ -72,7 +87,6 @@ if ($res != 0) then
       echo " ** This backup will overwrite existing file $tmpsqlfile **" >> $diffile
       echo "" >> $diffile
   endif
-  pg_dump --insert --clean --create -h eol-rosetta.eol.ucar.edu -U ads calibrations -f $tmpsqlfile >> $logfile
   echo "Additional changes have been backed up in the file: " >> $diffile
   echo " $tmpsqlfile" >> $diffile
   echo " which should be copied to $sqlfile and committed to github." >> $diffile
@@ -89,13 +103,6 @@ if ($res != 0) then
 endif
 
 echo "All changes to sql file have been committed. Perform backup." >> $logfile
-# Perform and log the backup
-echo -n "START " >> $logfile
-date             >> $logfile
-echo "Backup of eol-rosetta's calibrations database to a directory that is regularly backed up by CIT." >> $logfile
-pg_dump --insert --clean --create -h eol-rosetta.eol.ucar.edu -U ads calibrations -f $tmpsqlfile >> $logfile
-echo -n "END   " >> $logfile
-date             >> $logfile
 
 echo "Gather inserts" >> $logfile
 # Gather the INSERT portion of the original and new files and sort them so 
@@ -116,10 +123,9 @@ endif
 echo "Gather non-inserts" >> $logfile
 # Gather the non-INSERT portion of the original and new files and sort them
 # so that variation of the pg_dump sequencing does not affect comparison
-rm -f $tmpnoninsfile
-rm -f $noninsfile
-grep -v INSERT $tmpsqlfile | sort > $tmpnoninsfile
-grep -v INSERT $sqlfile | sort > $noninsfile
+# Ignore \retrict and \unrestrict lines
+grep -v INSERT $tmpsqlfile | grep -v restrict | sort > $tmpnoninsfile
+grep -v INSERT $sqlfile | grep -v restrict | sort > $noninsfile
 
 # Check for non-INSERT differences
 set res = `diff $tmpnoninsfile $noninsfile | wc -l`
@@ -130,6 +136,7 @@ else
   set noninsdiff = 1
   echo "non-INS file diff" >> $logfile
 endif
+
 
 # Notify of status
 if ($insdiff == 0 && $noninsdiff == 0) then
