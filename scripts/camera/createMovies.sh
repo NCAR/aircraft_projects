@@ -12,10 +12,20 @@ shift  # Remove the project argument so that $@ now contains only flights
 
 AIRCRAFT=$(n_hdr_util ${RAW_DATA_DIR}/${PROJECT}/*.ads | grep 'system name:' | awk '{print $3}')
 
-# Create template if it doesn't exist (one-time setup)
-if [ ! -f ../movieParamFile.template ]; then
-    cp ../movieParamFile ../movieParamFile.template
-fi
+
+# Define array of image directions
+DIRECTIONS=("forward" "left" "right" "down") 
+CAMERA_DIRS=()
+
+for DIR in "${DIRECTIONS[@]}"; do
+    IMG_DIR="/scr/raf/Raw_Data/$PROJECT/CAMERA/flight_number_$FLIGHT/$DIR/"
+    if [ ! -d "$IMG_DIR" ]; then
+        echo "No camera images found for ${DIR} direction. Skipping."
+        continue
+    fi
+    CAMERA_DIRS+=("$DIR")
+done
+
 cam_path=${PROJ_DIR}/scripts/camera
 proj_path=${PROJ_DIR}/${PROJECT}/${AIRCRAFT}/scripts
 
