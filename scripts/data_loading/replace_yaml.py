@@ -160,6 +160,19 @@ def process_yaml_file(yaml_path, replacements, aircraft_rep, template, versions,
                         data[val][field] += f', {template[group][field]}'
                     except (KeyError, TypeError):
                         data[val][field] = template[group][field]
+                    #check that the xlink field doesn't contain None. If None is the only value, delete the field
+                    if data[val][field] is None:
+                        print(f'Removing xlink_id field from {val} since it only contains None. Rerun if you want to add xlink ids.')
+                        del data[val][field]
+                        continue
+                    if 'None' in data[val][field]:
+                        if len(data[val][field])==1:
+                            print(f'Removing xlink_id field from {val} since it only contains None. Rerun if you want to add xlink ids.')
+                            del data[val][field]
+                        else:
+                            #Remove None from the list of xlink ids
+                            cleaned_xlinks = ', '.join([x.strip() for x in data[val][field].split(',') if x.strip() not in ('None', 'none', '', None)])
+                            data[val][field] = cleaned_xlinks
                     continue
                 if field in data[val] and template[group][field] != data[val][field]:
                     response = input(f"The field '{field}' already exists. Do you wish to overwrite: {data[val][field]} \n with\n {template[group][field]}? \n(y to accept, anything else to reject): ").strip().lower()
