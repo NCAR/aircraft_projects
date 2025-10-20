@@ -10,7 +10,7 @@ endif
 
 touch $busyFile
 
-foreach file ( SPICULE?f??.nc )
+foreach file ( SPICULE?f*.nc )
   echo $file
   ncdump -h $file | head | grep --quiet UNLIMITED
   if ($status > 2) then
