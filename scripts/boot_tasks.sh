@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Set netowrk MTU to max 9000 bytes.  We haven't figured out how to make this permanent yet.
+ifc=`ip -o -4 route show to default | awk '{print $5}'`
+ip link set $ifc mtu 9000
+
+
 # Chat server
 # moved into systemctl 
 #/home/ads/unrealircd/unrealircd start > /dev/null 2>&1
