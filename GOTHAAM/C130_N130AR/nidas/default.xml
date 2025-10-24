@@ -115,8 +115,17 @@ because it provides the definitions of the sensors -->
       <arincSensor IDREF="GPSHW" devicename="Alta:8100:7" id="9100" suffix="_A2"/>
 
     <sensor ID="HOX1" class="UDPSocketSensor" devicename="usock::30122" id="10000" suffix="_HOX1">
+           <sample id="1" rate="1" scanfFormat="HOX1,%f,%f">
+           <variable longname="Hydroxyl radical" name="OH" units="molecules_per_cc"/>
+           <variable longname="Sulfuric Acid" name="H2SO4" units="molecules_per_cc"/>
+        </sample>
     </sensor>
+
     <sensor ID="HOX2" class="UDPSocketSensor" devicename="usock::30123" id="10010" suffix="_HOX2">
+        <sample id="1" rate="1" scanfFormat="HOX2,%f,%f">
+            <variable longname="Sum of HO2 and RO2" name="HO2RO2" units="pptv"/>
+            <variable longname="Hydroperoxy radical" name="HO2" units="pptv"/>
+        </sample>
     </sensor>
 
       <output class="RawSampleOutputStream">

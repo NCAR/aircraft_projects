@@ -10,6 +10,8 @@ SECONDS=0  # Time this script
 # the script ads3_environment.sh currently in /home/ads 
 
 DATA_LOCATION="/var/r1/$PROJECT"
+DAY=$(date +%4Y%m%d)
+SATLOG=hpa_$DAY.log
 cd /run/media/ads ## Change to the directory where the removable drive is mounted
 
 echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
@@ -70,6 +72,7 @@ if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
 
       echo "***Starting file transfer. Please wait for transfer and integrity checking to complete.***"
       rsync -cavP --no-perms  $DATA_LOCATION/*$FLIGHT* $TRANSFER_MEDIA/$PROJECT
+      rsync -cavP --no-perms  /var/log/satcom/$SATLOG  $TRANSFER_MEDIA/$PROJECT
       EXIT_RSYNC="$?"
       echo "***Sync cached data to permanent memory - can take 2-5 minutes.***"
       echo "sync started at $(date)"
