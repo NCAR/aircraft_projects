@@ -16,30 +16,15 @@ fi
 source /opt/local/anaconda3/etc/profile.d/conda.sh
 conda activate qatools_env
 
-# Calculating lat/long box for terrain data
-# Uses flt_area util to determine the bounding box for each flight.
-area=$(flt_area ${DAT}/${PROJ}[rt]f??.nc | tail -4)
-lt_s=$(printf '%.0f' $(echo $area | awk '{print $6}'))
-lt_n=$(printf '%.0f' $(echo $area | awk '{print $3}'))
-lg_w=$(printf '%.0f' $(echo $area | awk '{print $9}'))
-lg_e=$(printf '%.0f' $(echo $area | awk '{print $12}'))
-
 # Set Tdb to yes the first time this is run to download the Terrain database.
 # It will check and skip downloading if it already exists.
 Tdb="yes"
 
-# Expand everything out a degree to ensure we don't lose any edge data.
-lt_s=$((lt_s - 1))
-lt_n=$((lt_n + 1))
-lg_w=$((lg_w - 1))
-lg_e=$((lg_e + 1))
-
 echo "Adding Terrain Ht vars to netCDF files in ${DAT} for project ${PROJ}"
-echo "Using lat/long range ${lt_s} - ${lt_n}, ${lg_w} - ${lg_e}"
 
 for file in ${DAT}/${PROJ}[rtf]f??.nc; do
     flight=$(basename ${file} | grep -oP '[rtf]f\d{2}')
-    echo "HeightOfTerrain ${PROJ} ${flight} ${DAT} ${lt_s} ${lt_n} ${lg_w} ${lg_e} ${Tdb}"
+    echo "HeightOfTerrain ${PROJ} ${flight} ${DAT}"
     # Uncomment the following line to actually run the script
-    HeightOfTerrain ${PROJ} ${flight} ${DAT} ${lt_s} ${lt_n} ${lg_w} ${lg_e} ${Tdb}
+    HeightOfTerrain ${PROJ} ${flight} ${DAT}
 done
