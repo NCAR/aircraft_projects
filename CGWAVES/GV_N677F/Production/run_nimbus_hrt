@@ -1,0 +1,11 @@
+#!/bin/bash
+
+source ./set_env
+
+# Remove existing files.  Helps to avoid residual data if nimbus fails.
+/bin/rm ${DAT}/${PROJ}?f??h.nc
+
+for setup_file in setup_?f??h
+do
+  nimbus -b $setup_file
+done
