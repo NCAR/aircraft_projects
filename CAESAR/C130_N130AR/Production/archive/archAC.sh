@@ -84,7 +84,7 @@ setenv PROJ_DIR "/net/jlocal/projects/"
 
 ########################## Production Data Files ##########################
 ### LRT
-#$ARCHIVE_SCRIPT LRT/v1.2 /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/ $EMAIL
+$ARCHIVE_SCRIPT LRT/v1.4 /scr/raf/Prod_Data/$PROJECT/LRT/v1.4 nc /net/archive/data/ $EMAIL
 
 ### LRT ICT
 #$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict $CS_LOCATION$YEAR $EMAIL

@@ -1,0 +1,127 @@
+#These variables are used to fill blanks in the dataset yaml files
+##All fields must be strings
+variables:
+  PROJECT: &project 'GOTHAAM'
+  project: 'gothaam'
+  aircraft:   c130 #must be c130 or gv
+  year: '2025' #project year
+
+#Project specific fields to be added to dataset yaml files - project name will automatically be filled in
+fields:
+  name: *project
+  begin_date: '2025-06-01 00:00:00'
+  end_date: '2025-08-31 23:59:59'
+  minimum_latitude: '35'
+  maximum_latitude: '45'
+  minimum_longitude: '-80'
+  maximum_longitude: '-70'
+
+##Archive Ids -- Will only create yaml files for ids and versions that are filled in
+archive_ids:
+  ads: 
+    id: '630.001'
+    version_number: '1.0' #ADS are always final not shared 
+  lrt: 
+    id: '630.002'
+    version_number: '0.1'
+  hrt: 
+    id: '630.003'
+    version_number: '0.1'
+  srt: 
+    id: '630.004'
+    version_number: '0.1'
+  kml: 
+    id: '630.005'
+    version_number: '0.1'
+  lrt-icartt: 
+    id: '630.006'
+    version_number: '0.1'
+  ##Other
+  pms2d:
+    id: '630.007'
+    version_number: '0.1'
+  ##CAMERA
+  down: 
+    id: '630.008'
+    version_number: '0.1'
+  fwd: 
+    id: '630.009'
+    version_number: '0.1'
+  left: 
+    id: 
+    version_number: '0.1'
+  right: 
+    id: 
+    version_number: '0.1'
+  prelim-movies: 
+    id: &movies '630.010'
+    version_number: '0.1'
+  final-movies:
+    id: *movies
+    version_number: '1.0'
+
+#DTS Specific Fields -- Update if data loader or checker changes
+dts:
+  internal_contact_id_dts: '366' #Sara Runkel
+  ingest_contact_id_dts: '366'
+  ingest_status_id_dts: '2'
+  load_contact_id_dts: '366'
+  load_status_id_dts: '6'
+  approve_contact_id_dts: '203' #Janine Aquino
+  approve_status_id_dts: '6'
+  author_id_dts: '366'
+  note_type_id: '4'
+  note_text: Loaded with new load_data_proj script
+
+#CODIAC Specific Fields -- Update xlinks for every project. Update point of contact and internal contact if needed.
+codiac:
+  description: 'default'
+  point_of_contact_id_codiac: 1
+  internal_contact_id_codiac: 3624 #Sara Runkel
+  xlink_id: #Add projectwide xlinks to homepage, missions, data policy
+
+#Standard fields that will be added to all dataset yaml files -- can be overridden within the yaml files
+standard:
+  is_eol_data: 1 ##Any data loaded by this script should be eol data --can be overridden by specific yaml files
+  category_id: 2 ## 2 = Aircraft
+  online_orderable: 1
+  offline_orderable: 0
+  browseable: 0
+  dodsable: 0
+  t_subset: 0
+  event_subset: 1
+  file_subset: 0
+  order_allow_compress: 1
+  readme_url: 'default'
+  remote_url: 'default'
+  description: 'default'
+
+#Fields that will be added to yaml if dataset is preliminary (version_number < 1.0)
+preliminary:
+  visible: 0 #Load it as not visible until it is approved
+  auth_reqd: 1
+  eula_reqd: 1
+  quality: 1
+
+#Fields that will be added to yaml if dataset is final
+final:
+  visible: 0
+  auth_reqd: 0
+  eula_reqd: 0
+  quality: 2
+
+#ingest fields that will be filled in by the replace_yaml script
+paths: &paths
+  raw_ingest_base: '/scr/raf/Raw_Data/<PROJECT>'
+  prod_ingest_base: '/scr/raf/Prod_Data/<PROJECT>'
+  field_ingest_base: '/scr/raf_data/<PROJECT>/field_data'
+  
+glade_paths:
+  <<: *paths
+  prod_archive_base: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>
+  field_archive_base: /glade/campaign/eol/archive/<year>/<project>/aircraft/<platform>/FIELD
+
+localhost_paths:
+  <<: *paths
+  prod_archive_base: /net/archive/data/<project>/aircraft/<platform>
+  field_archive_base: /net/archive/data/<project>/aircraft/<platform>/FIELD

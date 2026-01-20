@@ -1,10 +1,20 @@
 #!/bin/bash
 
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <PROJECT>"
+  exit 1
+fi
+
+PROJ=$(echo "$1" | tr '[:lower:]' '[:upper:]')
+
 busyFile='reorderInProgress'
 trap "rm $busyFile" SIGINT SIGTERM
 
-source ./set_env
-
+if [ `whoami` == nimbus ]; then
+  DAT=/scr/raf/local_productiondata/
+else
+  DAT=${DATA_DIR}/${PROJ}
+fi
 cd ${DAT}
 
 if [ -f $busyFile ]; then

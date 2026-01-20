@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/usr/bin/gedit $PROJ_DIR/$PROJECT/$AIRCRAFT/TechProjNotes
+/usr/bin/gedit --new-window $PROJ_DIR/$PROJECT/$AIRCRAFT/TechProjNotes

@@ -6,9 +6,8 @@ import glob
 import yaml # type: ignore
 from collections import OrderedDict
 from _database_fields import FieldsCheck
-project_folder = os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts'
 base = os.environ['PROJ_DIR'] + '/scripts/data_loading'
-global_fields = ['fields', 'dts', 'codiac', 'paths', 'standard'] 
+global_fields = ['fields', 'dts', 'codiac', 'standard'] 
 
 def check_template(t_path,search, check):
     with open(t_path) as f:
@@ -73,15 +72,22 @@ def version_check(version):
     else:
         return 'final'
         
-def add_path_fields(status,template, data):
+def add_path_fields(status,archive_location,template, data):
     if 'ingest_location' in data and 'archive_location' in data:
         return
-    if status == 'final':
-        ingest_path = template['paths']['prod_ingest_base']
-        archive_path =template['paths']['prod_archive_base']
+    if archive_location =='localhost':
+        path = template['localhost_paths']
+    elif archive_location == 'campaign':
+        path = template['glade_paths']
     else:
-        ingest_path = template['paths']['field_ingest_base']
-        archive_path = template['paths']['field_archive_base']
+        print(f'Archive location {archive_location} not recognized. Please use localhost or glade')
+        exit(1) 
+    if status == 'final':
+        ingest_path = path['prod_ingest_base']
+        archive_path = path['prod_archive_base']
+    else:
+        ingest_path = path['field_ingest_base']
+        archive_path = path['field_archive_base']
     data['ingest_location'] = f'{ingest_path}/{data["dtype"]}'
     data['archive_location'] = f'{archive_path}/{data["dtype"]}'
         
@@ -126,6 +132,9 @@ def process_yaml_file(yaml_path, replacements, aircraft_rep, template, versions,
     for val in data:
         if 'cfg' in val: ##Skips the configuration section of the yaml file
             continue
+        if 'paths' in val: ##Skips the path section of the yaml file
+            print(f'Found paths: {val}')
+            continue
         print(f'Processing {val}')
         valid_value_found = False
         for value in id_values.keys():
@@ -140,7 +149,8 @@ def process_yaml_file(yaml_path, replacements, aircraft_rep, template, versions,
             print(f'No version number found for {val}')
             break
         v_status = version_check(data[val]['version_number'])
-        add_path_fields(v_status, template, data[val])
+        host = data[val].get('host', None)
+        add_path_fields(v_status, host, template, data[val])
         replace_fields = global_fields + [v_status]
         for group in replace_fields:
             for field in template.get(group, []):
@@ -150,6 +160,19 @@ def process_yaml_file(yaml_path, replacements, aircraft_rep, template, versions,
                         data[val][field] += f', {template[group][field]}'
                     except (KeyError, TypeError):
                         data[val][field] = template[group][field]
+                    #check that the xlink field doesn't contain None. If None is the only value, delete the field
+                    if data[val][field] is None:
+                        print(f'Removing xlink_id field from {val} since it only contains None. Rerun if you want to add xlink ids.')
+                        del data[val][field]
+                        continue
+                    if 'None' in data[val][field]:
+                        if len(data[val][field])==1:
+                            print(f'Removing xlink_id field from {val} since it only contains None. Rerun if you want to add xlink ids.')
+                            del data[val][field]
+                        else:
+                            #Remove None from the list of xlink ids
+                            cleaned_xlinks = ', '.join([x.strip() for x in data[val][field].split(',') if x.strip() not in ('None', 'none', '', None)])
+                            data[val][field] = cleaned_xlinks
                     continue
                 if field in data[val] and template[group][field] != data[val][field]:
                     response = input(f"The field '{field}' already exists. Do you wish to overwrite: {data[val][field]} \n with\n {template[group][field]}? \n(y to accept, anything else to reject): ").strip().lower()
@@ -193,7 +216,14 @@ if __name__ == "__main__":
         print("Usage: python replace_yaml.py <PROJECT_NAME>")
         sys.exit(1)
     project_name = sys.argv[1].upper()
-    
+    proj_path = os.environ['PROJ_DIR'] + '/' + project_name + '/'
+    # Find the only subdirectory in proj_path
+    subdirs = [d for d in os.listdir(proj_path) if os.path.isdir(os.path.join(proj_path, d))]
+    if len(subdirs) != 1:
+        print(f"Error: Expected one subdirectory in {proj_path}, found {len(subdirs)}: {subdirs}")
+        sys.exit(1)
+    aircraft_dir = subdirs[0]
+    project_folder = os.path.join(proj_path, aircraft_dir, 'scripts')
     input_file = f'{project_folder}/project_template.yml'
     config_dir = f'{base}/base_config' #directory with yaml configuration files
     output_dir = f'/net/work/cfg-files/{project_name}*' #output directory to save files

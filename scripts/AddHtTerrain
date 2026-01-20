@@ -1,33 +1,30 @@
 #!/bin/bash
 
-source ./set_env
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <PROJECT>"
+  exit 1
+fi
 
-project=${PROJ}
-Directory=${DAT}
+PROJ=$(echo "$1" | tr '[:lower:]' '[:upper:]')
 
-# Use flt_area in aircraft_nc_utils to find minimum area for which the Terrain
-# database will be downloaded. Setting to minimum area speeds up processing and
-# saves disk space. The final thing printed by flt_area is:
-# Maximum Latitude: 44.298283
-# Minimum Latitude: -32767.0
-# Minimum Longitude: -32767.0
-# Maximum Longitude: 179.99911
-# Save these last 4 lines to area and then extract the numbers
-area=$(flt_area -R ${DAT}/${project}rf01.nc | tail -4)
-lt_s=`echo $area | awk '{print $6}'`
-lt_n=`echo $area | awk '{print $3}'`
-lg_w=`echo $area | awk '{print $9}'`
-lg_e=`echo $area | awk '{print $12}'`
+if [ `whoami` == nimbus ]; then
+  DAT=/scr/raf/local_productiondata/
+else
+  DAT=${DATA_DIR}/${PROJ}
+fi
+##Activate the conda environment needed for HeightOfTerrain. This is installed on all EOL servers (merc/saturnt)
+source /opt/local/anaconda3/etc/profile.d/conda.sh
+conda activate qatools_env
 
 # Set Tdb to yes the first time this is run to download the Terrain database.
-# Set to no after first run to save time.
+# It will check and skip downloading if it already exists.
 Tdb="yes"
 
-echo 'Adding Terrain Ht vars to netCDF files in '${DAT}' for project '$project
-echo 'Using lat/long range '${lt_s}' - '${lt_n}', '${lg_w}' - '${lg_e}
+echo "Adding Terrain Ht vars to netCDF files in ${DAT} for project ${PROJ}"
 
-for file in ${DAT}/${project}[rtf]f??.nc
-do
-  flight=`echo $file | awk '{print substr($0,length($0)-6,4)}'`
-  Rscript ~nimbus/RStudio/HeightOfTerrain/HeightOfTerrain.R $project $flight $Directory $lt_s $lt_n $lg_w $lg_e $Tdb
+for file in ${DAT}/${PROJ}[rtf]f??.nc; do
+    flight=$(basename ${file} | grep -oP '[rtf]f\d{2}')
+    echo "HeightOfTerrain ${PROJ} ${flight} ${DAT}"
+    # Uncomment the following line to actually run the script
+    HeightOfTerrain ${PROJ} ${flight} ${DAT}
 done
