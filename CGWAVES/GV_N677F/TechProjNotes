@@ -1,0 +1,186 @@
+27Mar25
+AGunlock
+Engine Run / Pilot Pro
+
+~1530 system start
+Hexchat inoperable, server is down
+DSM 305 not reporting temp to aeros, no variable for it on search
+Novatel is not reporting data to aeros, lights are on on the unit and blinking
+
+No flight due to flight control issues, still doing an engine run and taxi
+
+1720 taxi
+1722 Novatel starts reporting, hangar doors were open, maybe interference?
+
+
+May 7, 2025
+
+TF01
+
+Tech: Ivana; MC: Julie; Scientists: Chris, Sarah, Biff; Pilot: Brent; Co-Pilot: Bo
+
+-Per Sarah's request, used "CDP PBP (only used if swoods asked)" xml instead of Default xml
+-N2 Window Purge turned on at 1845
+-Approximately 1hr after power start, noticed Right side Primary Inverter (B1) Fault light. Used meter to check that 115V 60Hz power was still being delivered to power outlets. Carrying on with flight without power restart.
+-Scattered light from Biff's laser was affecting pilots' night vision, so used felt piece to cover inboard side of L-1 rack.
+-Chris pointed out that AKRD (angle of attack) didn't look right - AKRD is derived by ADIFR and other coefficients. Could be due to formula change with this xml, or due to moisture in lines. On maintenance day, check with SE's about xml and visually inspect radome lines for moisture.
+-2DS: Per Sarah's suggestion, keep H Tx/Rx Arms and V Tx/Rx Arms OFF. Heaters coming on and off not good for laser alignment, and conditions for CGWaveS project should not require them to be turned on at all. On maintenance day, update 2DS Checklist.
+
+TF03
+May 15, 2025
+Tech: Gunlock
+
+0020 started power up
+right side inverter 1 fault on start up, cycled mission power and aircraft power and could not clear it, voltage and frequency checked good with a DMM on a rightside outlet
+0035 2DS flick test
+0200 take off
+0208 ADS monitor flickered and now has a yellowish tint
+its just the night light feature of the screen automatically coming on
+SEs reported that the novatel lost satellites on takeoff
+periodic checks of the zenith window confirms no frosting
+landed 0450
+
+
+RF01
+5/21/25
+
+-02:26 UTC / 21:26 Local: Teresa noticed CO Instrument stopped reporting to ground. Turned off main power (green LED) to protect the control circuitry. NOxyO3 instrument still working. Teresa will troubleshoot CO Instrument tomorrow during maintenance.
+-0533 and 0547 UTC / 0033 and 0047 Local: Aeros crashed (automatically closed) twice on L-5 Windows laptop
+
+
+RF03
+5/24/25
+Tech: Ivana
+
+Pre-flight
+-Removed right dewpoint head, purged with air (visible moisture cleared out), tightened screws and fittings (1 out of 3 hex screws were loose; fitting from pressure transducer to head was tighted 1/4 turn)
+-Removed left dewpoint flag, purged with air, confirmed dewpoint head screws were tight
+-Checked radome lines for moisture
+
+Flight
+-CAVP_DPL and CAVP_DPR within 10-15 hPa (issue from RF02 resolved)
+-Data system operating properly and saving to correct disk (issue from RF02 resolved)
+-0712: ACD_FO3 seems to have stopped recording recently, and the value is red on the Controls/Status page; Teresa walked Steven through steps to get it running again
+
+Post-flight
+-2DS Humidity: 10.6%
+
+
+
+RF05
+5/27/25
+Tech: Ivana
+
+Pre-flight
+-VSCEL seeing NaN value after 2 reboots. Raining during pre-flight, so will turn on after takeoff
+
+Flight
+-0152 VSCEL ON and operating properly
+-DPL dewpoint value and 2DC diode voltages look nominal
+-Left OH Imager lost ~500 images, likely due to errant VNC clicking. Catherine will look into making VNC on some laptops view-only.
+-2DC's diode 64 drifting to 0.8V below other diodes, but still well above 1.0V
+-Re-filled dry ice at 0825z
+
+
+3June25
+RF07
+Flight Tech: Kyle
+
+Takeoff: 01:58
+Landing: 06:58
+
+Purge Nitrogen 1000psi preflight.
+
+
+4Jun25
+RF08
+Tech: Gunlock
+
+Power up: 0005
+N2: opened 0130 ~850 psi
+Right DP in "rebalance" state with the service mirror light blinking, switched knob to balance
+Got a little nervy, power cycled the DP and it came back up still unbalanced
+Engine start: 0159
+Taxi: 0208
+Take off: 0215
+Post take off, DPR still unbalanced and flashing service mirror
+Cycled DPR one last time and it balanced itself, normal operations as of 0236
+0845: landed
+
+
+6June25
+Flight Tech: Kyle
+Takeoff: 01:39
+Landing: 09:04
+
+05:34 Refilled R5 Dry ice.
+05:48-06:24 Lots of nan's on the ADS rack GPDAQ during turbulance. I think we have a PPS issue. This is extremely important due to we need PLWC as clean as possible when passing through storms with high liquid water content. 
+06:43 Moved ADS rack GPDAQ PPS down a port directly next to DSM304 PPS.
+06:43 Started seeing IRIG Status ussues on DSM304 and GPDAQ issues continued.
+07:21 Found what is in the attached picture. Not sure if that is by design or not.
+07:27 Moved both of the GPDAQ PPS and DSM304 PPS to the top ports. I believe that hole is the issue. There is a connector that has fallen back and is shorting out the bottom row of the PPS distribution box.  ADS rack GPDAQ, DSM303, and DSM304 PPS's are all on the top row now.  There is a flight day tomorrow. We will pull the PPS distribution box on the maintenance day after and inspect. After I did this, the last two hours of flight had no issues with this.
+
+
+RF10
+7Jun25
+Tech: Gunlock
+
+N2 bottle: ~425 psi at start
+Engine start: 0130
+Takeoff: 0145
+
+both DPR and VXSEL were unbalanced on start up. Took around 10 minutes after take off to clear
+0502: added 2 scoops of dry ice to the FO3 rack
+
+RF11
+8-9Jun25
+Flight Tech: Kyle
+Takeoff: 01:25
+Landing: 09:27
+
+Two laptops in the L5 had network issues prior to flight.  Reseated network cables at the switch and this fixed the issue. I have a feeling the switch cables got bumped.
+05:34 Dry ice filled in the R5 rack.
+07:16 ADS-Laptop 8 went dark and the software for the left camera stopped. We rebooted. The laptop is typically stored almost shut under another laptop tray.  I think some turbulance bounced the lid closer to being shut which put it asleep. Lost about 6 minutes of data.   
+
+
+Landed: 0745
+
+
+RF12
+10June25
+Tech: Gunlock
+
+Power up: 0015
+Nitrogen: 1375 psi
+Engine start: 0158
+Taxi: 0207
+Takeoff: 0215
+
+0219: VCSEL dropped out for 4 min right after takeoff before recovering itself, no action taken
+
+0630: added dry ice to the FO3 rack
+
+Landed: 0950
+
+RF13
+Flight Tech: Kyle
+Takeoff: 01:43
+Landing: 09:31
+
+02:20ish QCR compromised. 2DC concentrations peaked at that time as well.
+05:55 Refilled dry ice in R5 rack.
+08:56 IRIG Status on 304 glitched to 3 momentarily. Light turbulance at that time.
+
+
+FF02
+14Jun25
+Tech: Gunlock
+Power up: 1830
+no hexchat groundbot, satcom is good
+Engine Start: 1843
+Taxi: 1848
+Takeoff: 1857
+regained groundbot: 1923
+Landed: 
+
+
