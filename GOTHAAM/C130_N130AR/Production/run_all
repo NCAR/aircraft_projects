@@ -1,11 +1,17 @@
 #!/bin/bash
 
-/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac -nolisten tcp :9 &
+DISPLAY_NUM=9
+if [ `whoami` == nimbus ]; then
+  DISPLAY_NUM=8 #Set to 8 if running production to avoid overwriting.
+fi
+
+/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac -nolisten tcp :$DISPLAY_NUM &
 xvpid=$!
 trap "kill $xvpid; exit 1" SIGINT SIGTERM
+
 sleep 2
 
-DISPLAY=:9.1
+DISPLAY=:${DISPLAY_NUM}.1
 
 source ./set_env
 source ${PROJ_DIR}/scripts/production_fns.sh
@@ -15,7 +21,8 @@ initialize_processing
 reorder_all $PROJ
 ./run_proc2d
 
-# AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
+AddHtTerrain  # Set lat/lon box in AddHtTerrain, then uncomment here
+
 
 if [ `whoami` == nimbus ]; then
 #  run_kalmanFilter
