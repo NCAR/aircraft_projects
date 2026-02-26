@@ -2,7 +2,12 @@
 
 source ./set_env
 
-for setup_file in setup_?f??h
-do
-  nimbus -b $setup_file
-done
+if command -v parallel > /dev/null 2>&1; then
+  parallel -j 3 "nimbus -b {}" ::: setup_?f??h
+else
+  for setup_file in setup_?f??h
+  do
+    nimbus -b $setup_file
+  done
+fi
+
