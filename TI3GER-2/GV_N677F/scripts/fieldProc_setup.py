@@ -42,10 +42,12 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = True
+FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
+##ftp paths are also used when syncthing is True. 
+# sync_field_data.py will use this path to distribute data
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
 ftp_data_dir = '/field_sync/EOL_data/RAF_data'
 

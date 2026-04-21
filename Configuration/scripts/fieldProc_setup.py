@@ -42,19 +42,32 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = True
+FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
+##DO NOT REMOVE: ftp paths are also used when syncthing is True. 
+# sync_field_data.py will use this path to distribute data on EOL servers
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
 ftp_data_dir = '/EOL_Data/RAF_Data'
+
+##############################################################################
+### Syncthing configuration - not used if syncing via FTP
+#############################################################################
+SYNCTHING = True
+syncthing_staging_dir = f'/var/r1/field_sync/EOL_Data/RAF_Data'
+
+##############################################################################
+### GDRIVE configuration
+##############################################################################
+GDRIVE = False
+rclone_staging_dir = ''
 
 #############################################################################
 ### Define which files should be generated
 #############################################################################
 ICARTT = False # Generate ICARTT
 IWG1 = False # Generate IWG1 packet
-
 HRT = False # Generate HRT .nc file
 SRT = False # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
@@ -92,10 +105,3 @@ translate2ds = '/opt/local/bin/translate2ds '
 # section of push_data and set command as you want.
 #############################################################################
 datadump = False
-
-GDRIVE = False
-rclone_staging_dir = ''
-#############################################################################
-SYNCTHING = True
-syncthing_staging_dir = f'/var/r1/field_sync/EOL_Data/RAF_Data'
-
