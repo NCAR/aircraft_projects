@@ -28,7 +28,7 @@ rdat_parent_dir = RAW_DATA_DIR+'/' # Where raw ads files go
 
 
 ### Default email address(es) to send status messages to ###
-default_emails = ['srunkel@ucar.edu']
+default_emails = ['srunkel@ucar.edu','janine@ucar.edu']
 #############################################################################
 ### Define settings for NAS in the field
 #############################################################################
@@ -42,21 +42,23 @@ nas_mnt_pt =     '/mnt/Data'
 #############################################################################
 ### FTP configuration - not used if using NAS
 #############################################################################
-FTP = True
+FTP = False
 ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
+##ftp paths are also used when syncthing is True. 
+# sync_field_data.py will use this path to distribute data
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = '/EOL_data/RAF_data'
+ftp_data_dir = '/field_sync/EOL_data/RAF_data'
 
 #############################################################################
 ### Define which files should be generated
 #############################################################################
-ICARTT = False # Generate ICARTT
-IWG1 = False # Generate IWG1 packet
+ICARTT = True # Generate ICARTT
+IWG1 = True # Generate IWG1 packet
 
-HRT = False # Generate HRT .nc file
-SRT = False # Generate SRT .nc file
+HRT = True # Generate HRT .nc file
+SRT = True # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
 zip_ADS = False # Bzips the ads file independently of processed files
 # you can have both sendzipped and zip_ads set to True if you want
@@ -97,5 +99,5 @@ GDRIVE = False
 rclone_staging_dir = ''
 #############################################################################
 SYNCTHING = True
-syncthing_staging_dir = f'/var/r1/{project}/EOL_data/RAF_data'
+syncthing_staging_dir = f'/var/r1/field_sync/EOL_data/RAF_data'
 

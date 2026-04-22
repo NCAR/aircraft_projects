@@ -4,7 +4,7 @@ import sys
 import ftplib
 import _logging 
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
-from fieldProc_setup import user, password,  ftp_site, password, ftp_data_dir, ship_ADS, ship_all_ADS
+from fieldProc_setup import user, password, ftp_site, ftp_data_dir, ship_ADS, ship_all_ADS
 
 myLogger = _logging.MyLogger()
 class TransferFTP:

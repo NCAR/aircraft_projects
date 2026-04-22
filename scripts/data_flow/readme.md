@@ -2,6 +2,12 @@
 
 ## Table of Contents
 
+- [Overview](#overview)
+- [Deployment](#deployment)
+  - [Prerequisites](#prerequisites)
+  - [Configuration](#configuration)
+  - [Running push_data.py](#running-push_datapy)
+  - [Running sync_field_data.py](#running-sync_field_datapy)
 - [push_data.py](#push_datapy)
   - [push_data: main()](#push_data-main)
   - [Environment Variables](#environment-variables)
@@ -11,20 +17,80 @@
     - [Process](#process)
     - [GDrive](#gdrive)
     - [DataShipping](#datashipping)
+    - [StageSyncThing](#stagesyncthing)
     - [SetupZip](#setupzip)
     - [TransferFTP](#transferftp)
     - [FindFiles](#findfiles)
     - [MyLogger](#mylogger)
 - [sync_field_data.py](#sync_field_datapy)
-    - [sync_field_data: main()](#sync_field_data-main)
-    - [Setup functions](#setup-functions)
-    - [Helper functions](#helper-functions)
-    - [Main functions](#main-functions)
+  - [sync_field_data: main()](#sync_field_data-main)
+  - [Setup functions](#setup-functions)
+  - [Helper functions](#helper-functions)
+  - [Main functions](#main-functions)
 - [Testing for Developers](#testing-for-developers)
-    - [Test environment](#test-environment)
-    - [Running tests](#running-tests)
-    - [Test Modules](#test-modules)
+  - [Test environment](#test-environment)
+  - [Running tests](#running-tests)
+  - [Test Modules](#test-modules)
 
+## Overview
+`push_data.py` automates the generation from the .ads file of multiple formats of data:LRT,HRT,SRT,KML,ICARTT,IWG1 depending on how it is configured. COnfiguration is defined in `fieldProc_setup.py` which has booleans for file generation, data storage, and paths for data directories.
+
+- `push_data.py` is located at `$PROJ_DIR/scripts/push_data.py`
+- `fieldProc_setup.py` is located within `$PROJ_DIR/<PROJECT>/<AIRCRAFT>/scripts`
+
+## Deployment
+
+### Prerequisites
+
+- Python 3.12+ environment with required packages (see [Testing for Developers](#testing-for-developers) for conda setup instructions). This should be run on the groundstation at RAF.
+- A configured project directory in the aircraft_projects repository at `$PROJ_DIR/$PROJECT/$AIRCRAFT/`.
+- The following environment variables should be set in the bash profile on the ground station:
+
+```bash
+export PROJECT=<project_name>       # e.g. IMPACTS
+export AIRCRAFT=<aircraft_name>     # GV_N677F or C130_N130AR
+export RAW_DATA_DIR=<path>          # base path to raw data on the ground station. Usually /var/r1
+export PROJ_DIR=<path>              # base path to aircraft_projects repo on GS: /home/local/projects
+export DATA_DIR=<path>              # base path for processed output data: /home/data
+```
+
+### Configuration
+
+Before running, confirm that `fieldProc_setup.py` exists at `$PROJ_DIR/$PROJECT/$AIRCRAFT/scripts/fieldProc_setup.py` and is correctly configured for the project. Key settings to verify:
+
+- `FTP`, `NAS`, `GDRIVE`, `SYNCTHING` — boolean flags enabling each transfer method.
+- `ftp_site` and `ftp_data_dir` — FTP server address and target directory (if FTP or syncthing is enabled).
+- `threeVCPI`, `PMS2D`, `QATools` — boolean flags for data types included in the project.
+
+If `NAS` is set to true, files are sent to the NAS directories where they are subsequently sync'd to FTP space. If `FTP` is set to true, the files are ftp'd directly to the project FTP space.
+
+### Running push_data.py
+
+Run from the `data_flow/` directory after a flight to process and ship data. The raw .ads file should be [plugged in | copied to ...]. There will be a shortcut on the desktop of the groundstation (`eol-groundstation#`) to run directly:
+
+```bash
+python push_data.py
+```
+
+The script will prompt for:
+
+1. **Flight number** — used to locate raw ADS and other data files.
+2. **Email address** — a status report is sent here when the run completes.
+
+If the LRT netCDF file already exists, you will be prompted to choose between reprocessing (`R`) or shipping the existing files as-is (`S`).
+
+### Running sync_field_data.py
+
+Set up a cronjob on `eol-rosetta` for the duration of the project. Based on the setup of the project, this script will ensure that all datafiles get distributed internally across the EOL filesystems. **Turn off syncing at the end of a project.**
+
+Example cronjob to sync every 5-minutes:
+```bash
+*/5 * * * * . /h/eol/ads/.bashrc && $PROJ_DIR/scripts/data_flow/sync_field_data.py > /tmp/sync.log 2>&1
+```
+
+The script reads `SYNCTHING`, `GDRIVE`,'NAS', and `FTP` flags from `fieldProc_setup.py` to determine which source to sync from.
+
+---
 
 ## push_data.py
 
@@ -34,34 +100,39 @@ push_data.py is the main module to automate pushing and processing raw data from
 
 This is the main file of the push_data module that calls on all of the classes to process and push the data for a field project. It performs the following:
 
-    1. Creates an instance of the Setup class.
-    2. Sets up the message for email.
-    3. Assigns the initial status to the status variable to track the status of the data processing.
-    4. Creates an instance of the Process class.
-    5. Gets the status of the data processing after the Process class has been called.
-    6. Calls the zip function if the sendzipped flag is set to True.
-    7. Calls the FTP class if the FTP flag is set to True.
-    8. Calls the GDrive class if the GDRIVE flag is set to True.
-    9. Calls the NAS class if the NAS flag is set to True.
-    10. Calls the report function from the setup class to append to the final message and send the status email.
+    1. Validates required environment variables via `check_env.py` before any imports.
+    2. Creates an instance of the Setup class.
+    3. Sets up the message for email.
+    4. Assigns the initial status to the status variable to track the status of the data processing.
+    5. Creates an instance of the Process class.
+    6. Gets the status of the data processing after the Process class has been called.
+    7. Calls the zip function if the sendzipped flag is set to True.
+    8. Calls the StageSyncThing class if the SYNCTHING flag is set to True.
+    9. Calls the FTP class if the FTP flag is set to True.
+    10. Calls the GDrive class if the GDRIVE flag is set to True.
+    11. Calls the NAS class if the NAS flag is set to True.
+    12. Calls the report function from the setup class to append to the final message and send the status email.
 
 ### Environment variables
 
-A number of environment variables need to be set for the script to run properly:
+A number of environment variables need to be set on the computer running push_data (usually the groundstation) for the script to run properly:
 
 - $PROJECT --> name of project
 - $AIRCRAFT --> name of aircraft
-- $RAW_DATA_DIR --> the raw data directory variable set on the computer running push_data
-- $PROJ_DIR  --> the project directory set on the computer running push_data
+- $RAW_DATA_DIR --> the raw data directory variable
+- $PROJ_DIR  --> the project directory
+- $DATA_DIR --> the processed data directory
+The `_DIR` variables are combined with $PROJECT to form the output path.
 
 ### Project Process Setup
 
-The project specific setup constants and filepaths are defined in fieldProcSetup.py in the filepath $PROJ_DIR/$PROJECT/$AIRCRAFT/scripts, including:
+The project specific setup constants and filepaths are defined in `fieldProc_setup.py` in the filepath `$PROJ_DIR/$PROJECT/$AIRCRAFT/scripts`, including:
 
 - ftp_site --> FTP server website;  `'ftp.eol.ucar.edu'`
 - ftp_data_dir --> FTP server directory; should be  `'/pub/data/incoming/ + project + 'EOL_data/RAF_data'` with project in lowercase
+- NAS, FTP, GDRIVE, SYNCTHING --> boolean flags controlling which transfer methods are active
 
-In addition, the following locations are defined in the Setup class:
+In addition, the following locations are defined, and should not normally need to be modified, in the Setup class:
 
 - RAW_DIR --> path of raw data directory; should be the combination of environment variables `$RAW_DATA_DIR + $PROJECT`]
 - PROJ_DIR --> path of raw data directory; should be the combination of environment variables `$PROJ_DIR + / + $PROJECT + / + $AIRCRAFT`]
@@ -86,7 +157,7 @@ The `__init__` method performs the following steps:
 
  1. Sets up a logger object for logging. `init__logger` and creates an instance of the MyLogger class for logging the setup
  2. Reads and stores the environment variables: `read_env(variable)` and create the `RAW_DIR` [path of raw data directory; should be the combination of environment variables `$RAW_DATA_DIR + $PROJECT`] and `PROJ_DIR` [path of raw data directory; should be the combination of environment variables `$PROJ_DIR + / + $PROJECT + / + $AIRCRAFT`] variables.
- 3. Initializes the constants for file extensions, directories, and tracking progress throughout: `create_status`, `createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)`,`createRate()`,`createConfigExt()`,`createFilePrefix(PROJECT, FLIGHT)`,`createFileType()`
+ 3. Initializes the constants for file extensions, directories, and tracking progress throughout: `create_status`, `createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)`, `createRate()`, `createConfigExt()`, `createFilePrefix(PROJECT, FLIGHT)`, `createFileType()`
  4. Parses user input for flight number and user email to send results: `readEmail()`, `readFlight()`
  5. Initializes email message for sending results.
 
@@ -147,6 +218,19 @@ The __init__ method of the DataShipping class (in _NAS.py) performs the followin
  10. Logs a message indicating the copying of the file specified by the current key to the NAS data directory.
  11. Calls the rsync_file method to copy the file to the NAS data directory and updates the status dictionary for the current key with the result.
  12. Calls the setup_NAS method with the provided parameters to complete the setup process.
+
+#### StageSyncThing
+
+The StageSyncThing class (in `_syncThing.py`) transfers files to a local SyncThing staging directory for peer-to-peer sync back to Boulder. It is called when the `SYNCTHING` flag is set to True in `fieldProc_setup.py`.
+
+`__init__`
+
+The `__init__` method performs the following steps:
+
+ 1. Initializes the instance with `status`, `file_ext`, `inst_dir`, `filename`, and `flight` parameters.
+ 2. If `ship_all_ADS` is True, calls `_ship_all_ads` to rsync all `.ads` files to the staging directory.
+ 3. Otherwise, iterates over each key in `file_ext` and calls `_transfer_instrument_files` to rsync each file to `syncthing_staging_dir/<key>`, creating the staging subdirectory if needed.
+ 4. Calls `_sync_raw` to sync SATCOM and CAMERA subdirectories from the ADS directory to the staging location.
 
 #### SetupZip
 
@@ -249,7 +333,7 @@ This method is useful in workflows where managing LRT NetCDF files is necessary,
 
 #### MyLogger
 
-The MyLogger class (in _logger.py) sets up the logger to be used throughout the push_data program and defines common functions used throughout
+The MyLogger class (in `_logging.py`) sets up the logger to be used throughout the push_data program and defines common functions used throughout
 
 ## sync_field_data.py
 
@@ -293,7 +377,7 @@ The `dist_raw` function focuses on distributing RAF raw data from the ingestion 
 
 ## Testing for Developers
 
-How to run tests for push_data.py and sync_field_data.py. When edits are made, you can run tests to ensure everything is still functioning by running `./run_tests.sh`. 
+When edits are made, you can run tests to ensure everything is still functioning by running `./run_tests.sh`.
 
 ### Test environment
 
