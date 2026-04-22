@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- [Overview](#overview)
 - [Deployment](#deployment)
   - [Prerequisites](#prerequisites)
   - [Configuration](#configuration)
@@ -31,11 +32,17 @@
   - [Running tests](#running-tests)
   - [Test Modules](#test-modules)
 
+## Overview
+`push_data.py` automates the generation from the .ads file of multiple formats of data:LRT,HRT,SRT,KML,ICARTT,IWG1 depending on how it is configured. COnfiguration is defined in `fieldProc_setup.py` which has booleans for file generation, data storage, and paths for data directories.
+
+- `push_data.py` is located at `$PROJ_DIR/scripts/push_data.py`
+- `fieldProc_setup.py` is located within `$PROJ_DIR/<PROJECT>/<AIRCRAFT>/scripts`
+
 ## Deployment
 
 ### Prerequisites
 
-- Python 3.12+ environment with required packages (see [Testing for Developers](#testing-for-developers) for conda setup instructions). This should be run on the Ground Station at RAF.
+- Python 3.12+ environment with required packages (see [Testing for Developers](#testing-for-developers) for conda setup instructions). This should be run on the groundstation at RAF.
 - A configured project directory in the aircraft_projects repository at `$PROJ_DIR/$PROJECT/$AIRCRAFT/`.
 - The following environment variables should be set in the bash profile on the ground station:
 
@@ -55,9 +62,11 @@ Before running, confirm that `fieldProc_setup.py` exists at `$PROJ_DIR/$PROJECT/
 - `ftp_site` and `ftp_data_dir` — FTP server address and target directory (if FTP or syncthing is enabled).
 - `threeVCPI`, `PMS2D`, `QATools` — boolean flags for data types included in the project.
 
+If `NAS` is set to true, files are sent to the NAS directories where they are subsequently sync'd to FTP space. If `FTP` is set to true, the files are ftp'd directly to the project FTP space.
+
 ### Running push_data.py
 
-Run from the `data_flow/` directory after a flight to process and ship data. There will be a shortcut on the desktop of the GS to run directly:
+Run from the `data_flow/` directory after a flight to process and ship data. The raw .ads file should be [plugged in | copied to ...]. There will be a shortcut on the desktop of the groundstation (`eol-groundstation#`) to run directly:
 
 ```bash
 python push_data.py
@@ -68,11 +77,11 @@ The script will prompt for:
 1. **Flight number** — used to locate raw ADS and other data files.
 2. **Email address** — a status report is sent here when the run completes.
 
-If the LRT netCDF file already exists, you will be prompted to choose between reprocessing (`R`) or shipping the existing file as-is (`S`).
+If the LRT netCDF file already exists, you will be prompted to choose between reprocessing (`R`) or shipping the existing files as-is (`S`).
 
 ### Running sync_field_data.py
 
-Set up a cronjob on eol-rosetta for the duration of the project. Based on the setup of the project, this script will ensure that all datafiles get distributed internally across the EOL filesystems. **Turn off syncing at the end of a project.**
+Set up a cronjob on `eol-rosetta` for the duration of the project. Based on the setup of the project, this script will ensure that all datafiles get distributed internally across the EOL filesystems. **Turn off syncing at the end of a project.**
 
 Example cronjob to sync every 5-minutes:
 ```bash
@@ -106,13 +115,14 @@ This is the main file of the push_data module that calls on all of the classes t
 
 ### Environment variables
 
-A number of environment variables need to be set for the script to run properly:
+A number of environment variables need to be set on the computer running push_data (usually the groundstation) for the script to run properly:
 
 - $PROJECT --> name of project
 - $AIRCRAFT --> name of aircraft
-- $RAW_DATA_DIR --> the raw data directory variable set on the computer running push_data
-- $PROJ_DIR  --> the project directory set on the computer running push_data
-- $DATA_DIR --> the processed data directory; combined with $PROJECT to form the output path
+- $RAW_DATA_DIR --> the raw data directory variable
+- $PROJ_DIR  --> the project directory
+- $DATA_DIR --> the processed data directory
+The `_DIR` variables are combined with $PROJECT to form the output path.
 
 ### Project Process Setup
 
@@ -122,7 +132,7 @@ The project specific setup constants and filepaths are defined in `fieldProc_set
 - ftp_data_dir --> FTP server directory; should be  `'/pub/data/incoming/ + project + 'EOL_data/RAF_data'` with project in lowercase
 - NAS, FTP, GDRIVE, SYNCTHING --> boolean flags controlling which transfer methods are active
 
-In addition, the following locations are defined in the Setup class:
+In addition, the following locations are defined, and should not normally need to be modified, in the Setup class:
 
 - RAW_DIR --> path of raw data directory; should be the combination of environment variables `$RAW_DATA_DIR + $PROJECT`]
 - PROJ_DIR --> path of raw data directory; should be the combination of environment variables `$PROJ_DIR + / + $PROJECT + / + $AIRCRAFT`]
@@ -147,7 +157,7 @@ The `__init__` method performs the following steps:
 
  1. Sets up a logger object for logging. `init__logger` and creates an instance of the MyLogger class for logging the setup
  2. Reads and stores the environment variables: `read_env(variable)` and create the `RAW_DIR` [path of raw data directory; should be the combination of environment variables `$RAW_DATA_DIR + $PROJECT`] and `PROJ_DIR` [path of raw data directory; should be the combination of environment variables `$PROJ_DIR + / + $PROJECT + / + $AIRCRAFT`] variables.
- 3. Initializes the constants for file extensions, directories, and tracking progress throughout: `create_status`, `createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)`,`createRate()`,`createConfigExt()`,`createFilePrefix(PROJECT, FLIGHT)`,`createFileType()`
+ 3. Initializes the constants for file extensions, directories, and tracking progress throughout: `create_status`, `createFileExt(HRT, SRT, ICARTT, IWG1, PMS2D, threeVCPI)`, `createRate()`, `createConfigExt()`, `createFilePrefix(PROJECT, FLIGHT)`, `createFileType()`
  4. Parses user input for flight number and user email to send results: `readEmail()`, `readFlight()`
  5. Initializes email message for sending results.
 
