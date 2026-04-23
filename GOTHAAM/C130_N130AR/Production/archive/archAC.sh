@@ -19,7 +19,7 @@ setenv platformlower "c130_n130ar"
 #$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR/ $EMAIL
 
 ### CAMERA
-$ARCHIVE_SCRIPT CAMERA -r /scr/raf/Raw_Data/$PROJECT/CAMERA jpg $CS_LOCATION$YEAR/ $EMAIL
+#$ARCHIVE_SCRIPT CAMERA -r /scr/raf/Raw_Data/$PROJECT/CAMERA jpg $CS_LOCATION$YEAR/ $EMAIL
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
@@ -63,7 +63,7 @@ $ARCHIVE_SCRIPT CAMERA -r /scr/raf/Raw_Data/$PROJECT/CAMERA jpg $CS_LOCATION$YEA
 
 ########################## Production Data Files ##########################
 ### LRT
-#$ARCHIVE_SCRIPT LRT /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/$projectlower/aircraft/$platformlower/LRT $EMAIL
+#$ARCHIVE_SCRIPT LRT/v1 /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/ $EMAIL
 
 ### LRT ICT
 #$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict $CS_LOCATION$YEAR $EMAIL
@@ -72,10 +72,10 @@ $ARCHIVE_SCRIPT CAMERA -r /scr/raf/Raw_Data/$PROJECT/CAMERA jpg $CS_LOCATION$YEA
 #$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR $EMAIL
 
 ### KML
-#$ARCHIVE_SCRIPT KML /scr/raf/Prod_Data/$PROJECT kml $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT KML /scr/raf/Prod_Data/$PROJECT/KML kml $CS_LOCATION$YEAR/ $EMAIL
 
 ### HRT
-#$ARCHIVE_SCRIPT HRT /scr/raf/Prod_Data/$PROJECT/HRT nc $CS_LOCATION$YEAR $EMAIL
+$ARCHIVE_SCRIPT HRT /scr/raf/Prod_Data/$PROJECT/HRT nc $CS_LOCATION$YEAR/ $EMAIL
 
 ### HRT KML
 #$ARCHIVE_SCRIPT KMLh /scr/raf/Prod_Data/$PROJECT/HRT kml $CS_LOCATION$YEAR $EMAIL
