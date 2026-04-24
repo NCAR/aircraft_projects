@@ -27,11 +27,6 @@ class mysqlConnect:
         column_query = ("SELECT COLUMN_NAME FROM information_schema.columns "
                         "WHERE table_schema = 'zith9' AND table_name = %s")
         cursor.execute(column_query, (table,))
-         # Fetch and print column names
-        """ columns = cursor.fetchall()
-        print("Columns in table '{}':".format(table))
-        for col in columns:
-            print(col[0]) """
         # Variables used for special WHERE cases.
         where_pn = "WHERE active_editor=1 and person_name!='NULL'"
         # where_pna = "WHERE person_name!='NULL'"

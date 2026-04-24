@@ -6,10 +6,17 @@ import glob
 import yaml # type: ignore
 from collections import OrderedDict
 from _database_fields import FieldsCheck
-base = os.environ['PROJ_DIR'] + '/scripts/data_loading'
-global_fields = ['fields', 'dts', 'codiac', 'standard'] 
 
-def check_template(t_path,search, check):
+_proj_dir = os.environ.get('PROJ_DIR')
+if not _proj_dir:
+    print("Error: PROJ_DIR environment variable is not set.")
+    sys.exit(1)
+CFG_FILES_DIR = os.environ.get('CFG_FILES_DIR', '/net/work/cfg-files')
+base = _proj_dir + '/scripts/data_loading'
+global_fields = ['fields', 'dts', 'codiac', 'standard']
+
+def check_template(t_path, search, check):
+    """Print the database-resolved values for each field in the project template."""
     with open(t_path) as f:
         template = yaml.safe_load(f)
     for group in ['dts','codiac']:
@@ -31,6 +38,7 @@ def check_template(t_path,search, check):
             print(f'The template is set to replace the {field} field with {database_val}')
         
 def find_key_by_value(search_dict, field):
+    """Return the key in search_dict whose value list contains field, or field itself if not found."""
     for key, values in search_dict.items():
         if field in values:
             return key
@@ -72,7 +80,8 @@ def version_check(version):
     else:
         return 'final'
         
-def add_path_fields(status,archive_location,template, data):
+def add_path_fields(status, archive_location, template, data):
+    """Set ingest_location and archive_location in data from template paths. No-op if both already present."""
     if 'ingest_location' in data and 'archive_location' in data:
         return
     if archive_location =='localhost':
@@ -94,10 +103,18 @@ def add_path_fields(status,archive_location,template, data):
 
 def load_yaml_file(file_path):
     print(f'Loading {file_path}')
-    with open(file_path, 'r') as file:
-        return yaml.safe_load(file)
+    try:
+        with open(file_path, 'r') as file:
+            return yaml.safe_load(file)
+    except FileNotFoundError:
+        print(f"Error: File not found: {file_path}")
+        sys.exit(1)
+    except yaml.YAMLError as e:
+        print(f"Error parsing {file_path}: {e}")
+        sys.exit(1)
 
 def save_yaml_file(data, file_path):
+    """Write data to file_path as YAML, creating parent directories as needed."""
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, 'w') as file:
         yaml.safe_dump(data, file, width=1000)
@@ -127,7 +144,11 @@ def find_output_dir(output_base):
         print('No matching directories found.')
         exit(1)
 
-def process_yaml_file(yaml_path, replacements, aircraft_rep, template, versions,id_values, output_dir):
+def process_yaml_file(yaml_path, replacements, aircraft_rep, template, versions, id_values, output_dir):
+    """
+    Process one base_config YAML: merge template fields, resolve version/paths,
+    substitute variables, and save each dataset entry to output_dir.
+    """
     data = load_yaml_file(yaml_path)
     for val in data:
         if 'cfg' in val: ##Skips the configuration section of the yaml file
@@ -160,18 +181,18 @@ def process_yaml_file(yaml_path, replacements, aircraft_rep, template, versions,
                         data[val][field] += f', {template[group][field]}'
                     except (KeyError, TypeError):
                         data[val][field] = template[group][field]
-                    #check that the xlink field doesn't contain None. If None is the only value, delete the field
+                    #check that the xlink field doesn't contain 'none'. If 'none' is the only value, delete the field
                     if data[val][field] is None:
-                        print(f'Removing xlink_id field from {val} since it only contains None. Rerun if you want to add xlink ids.')
+                        print(f'Removing xlink_id field from {val} since it only contains none. Rerun if you want to add xlink ids.')
                         del data[val][field]
                         continue
-                    if 'None' in data[val][field]:
+                    if 'none' in data[val][field].lower():
                         if len(data[val][field])==1:
-                            print(f'Removing xlink_id field from {val} since it only contains None. Rerun if you want to add xlink ids.')
+                            print(f'Removing xlink_id field from {val} since it only contains none. Rerun if you want to add xlink ids.')
                             del data[val][field]
                         else:
-                            #Remove None from the list of xlink ids
-                            cleaned_xlinks = ', '.join([x.strip() for x in data[val][field].split(',') if x.strip() not in ('None', 'none', '', None)])
+                            #Remove 'none' from the list of xlink ids
+                            cleaned_xlinks = ', '.join([x.strip() for x in data[val][field].split(',') if x.strip().lower() not in ('none', '')])
                             data[val][field] = cleaned_xlinks
                     continue
                 if field in data[val] and template[group][field] != data[val][field]:
@@ -194,15 +215,22 @@ def process_yaml_file(yaml_path, replacements, aircraft_rep, template, versions,
         save_yaml_file({'dataset': result}, output_path)
 
 def replace_yaml_fields(input_file, main_dir, output_dir):
+    """Load the project template and drive processing of all base_config YAML files."""
     template = load_yaml_file(input_file)
+    for key in ('variables', 'archive_ids'):
+        if key not in template:
+            print(f"Error: project_template.yml is missing required section '{key}'")
+            sys.exit(1)
     replacements = template['variables']
-    
-    if 'archive_ids' in template:
-        archive_ids = template.get('archive_ids', {})
-        id_values = {key: value['id'] for key, value in archive_ids.items()}
-        versions = {key: value['version_number'] for key, value in archive_ids.items()}
+
+    archive_ids = template['archive_ids']
+    id_values = {key: value['id'] for key, value in archive_ids.items()}
+    versions = {key: value['version_number'] for key, value in archive_ids.items()}
     replacements.update(id_values)
     aircraft_path = f"templates/{replacements['aircraft']}.yml"
+    if not os.path.exists(aircraft_path):
+        print(f"Error: Aircraft template not found: {aircraft_path}")
+        sys.exit(1)
     aircraft_rep = load_yaml_file(aircraft_path)
 
     for root, _, files in os.walk(main_dir):
@@ -216,7 +244,7 @@ if __name__ == "__main__":
         print("Usage: python replace_yaml.py <PROJECT_NAME>")
         sys.exit(1)
     project_name = sys.argv[1].upper()
-    proj_path = os.environ['PROJ_DIR'] + '/' + project_name + '/'
+    proj_path = _proj_dir + '/' + project_name + '/'
     # Find the only subdirectory in proj_path
     subdirs = [d for d in os.listdir(proj_path) if os.path.isdir(os.path.join(proj_path, d))]
     if len(subdirs) != 1:
@@ -226,7 +254,7 @@ if __name__ == "__main__":
     project_folder = os.path.join(proj_path, aircraft_dir, 'scripts')
     input_file = f'{project_folder}/project_template.yml'
     config_dir = f'{base}/base_config' #directory with yaml configuration files
-    output_dir = f'/net/work/cfg-files/{project_name}*' #output directory to save files
+    output_dir = f'{CFG_FILES_DIR}/{project_name}*'
     check = FieldsCheck() #Initialize the FieldsCheck class to check inputs against database values
     check_template(input_file,check.search_dict, check.tables)
     replace_yaml_fields(input_file, config_dir, output_dir)

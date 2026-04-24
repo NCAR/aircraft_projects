@@ -116,7 +116,8 @@ def main():
     project_name = args.project.upper()
     
     # Construct the output directory pattern
-    output_dir = f'/net/work/cfg-files/{project_name}*'
+    cfg_files_dir = os.environ.get('CFG_FILES_DIR', '/net/work/cfg-files')
+    output_dir = f'{cfg_files_dir}/{project_name}*'
     
     # Find the YAML file
     yaml_path = find_yaml_file(output_dir, args.dataset)

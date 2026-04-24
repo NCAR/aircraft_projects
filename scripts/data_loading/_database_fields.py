@@ -45,12 +45,4 @@ class FieldsCheck:
                                     "codiac_contact_id_all", zith9dict)
 
         
-        ##Switch keys and values to check the user's input
-        """ for group in zith9dict:
-            switched_dict ={}
-            for key, value in zith9dict[group].items():
-                switched_dict[value] = key
-            zith9dict[group] =switched_dict """
-        # Add the switched key-value pair to the new dictionary
-        #   
         return zith9dict
