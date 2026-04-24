@@ -49,7 +49,7 @@ password = ''
 ##ftp paths are also used when syncthing is True. 
 # sync_field_data.py will use this path to distribute data
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
-ftp_data_dir = '/field_sync/EOL_data/RAF_data'
+ftp_data_dir = '/field_sync/EOL_Data/RAF_Data'
 
 #############################################################################
 ### Define which files should be generated
@@ -99,5 +99,5 @@ GDRIVE = False
 rclone_staging_dir = ''
 #############################################################################
 SYNCTHING = True
-syncthing_staging_dir = f'/var/r1/field_sync/EOL_data/RAF_data'
+syncthing_staging_dir = f'/var/r1/field_sync/EOL_Data/RAF_Data'
 
