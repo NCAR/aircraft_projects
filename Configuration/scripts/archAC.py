@@ -1,4 +1,4 @@
-#!/opt/local/anaconda3/bin/python
+#!/usr/bin/env python
 #
 ################################################################################
 # Script to archive raw RAF datasets to the CISL Mass Storage System under the 
