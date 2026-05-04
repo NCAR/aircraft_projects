@@ -16,8 +16,13 @@ cd /run/media/ads ## Change to the directory where the removable drive is mounte
 
 echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
 read FLIGHT
+# We would eventually like to force flight number to be lower case. However
+# at the moment, when tech's start data acquisition onboard they can name the
+# flight anything they want, so we need to be able to match anything. Forcing
+# conversion here means that an upper-case flight designation in an ads file
+# will not be matched. So comment this out for now.
 # Convert flight to lowercase
-FLIGHT=$(echo "$FLIGHT" | tr '[:upper:]' '[:lower:]')
+#FLIGHT=$(echo "$FLIGHT" | tr '[:upper:]' '[:lower:]')
 
 if [[ $FLIGHT = *"rf"* ]]; then
    echo "Research flight from $PROJECT selected for copying."
