@@ -2,8 +2,8 @@
 
 import os
 
-flight = raw_input('Input flight designation (e.g. tf01):')
-print flight
+flight = input('Input flight designation (e.g. tf01):')
+print(flight)
 
 command = "combineCameras.pl movieParamFile " + flight
 
