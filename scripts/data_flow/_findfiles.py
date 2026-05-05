@@ -25,8 +25,9 @@ class FindFiles:
         """
 
         if fileext == 'ict':
-            #Date handled in process
-            pattern = os.path.join(data_dir, f'{project}*{date}*{fileext}')
+            # ICARTT filenames use hyphenated project names (e.g. TI3GER-2) which differ
+            # from the env PROJECT var (e.g. TI3GER2), so match on date only.
+            pattern = os.path.join(data_dir, f'*{date}*{fileext}')
         else:
             pattern = os.path.join(data_dir, f"*{flight}{filetype}.{fileext}")
 
@@ -77,8 +78,7 @@ class FindFiles:
         elif flag:
             self.myLogger.log_and_print("We are scheduled to process all is good.")
         else:
-            message = f"We have an nc file but no {fileext} file.... aborting..."
-            self.myLogger._log_and_abort(message)
+            self.myLogger.log_and_print(f"No {fileext} file found, skipping.", log_level='warning')
 
 
     def _select_file_from_list(self, datalist, fileext):
