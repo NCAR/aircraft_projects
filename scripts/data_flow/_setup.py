@@ -6,7 +6,7 @@ import sys, os
 import _logging
 import logging
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
-from fieldProc_setup import  ICARTT, IWG1, HRT, SRT, PMS2D, threeVCPI, default_emails
+from fieldProc_setup import  ICARTT, IWG1, HRT, SRT, PMS2D, threeVCPI, default_emails, SYNCTHING
 
 myLogger = _logging.MyLogger()
 class Setup:
@@ -276,10 +276,14 @@ class Setup:
         Generates a report of the staging status for different file types and sends it to the user's email address.
         """
         final_message = final_message + '\nREPORT on staging of files. \n\n'
-        final_message = final_message + 'File Type\tStor\tShip\n'
-
-        for key in file_ext:
-            final_message = final_message + key + '\t\t' + str(status[key]["stor"]) + '\t' + str(status[key]["ship"]) + '\n'
+        if SYNCTHING:
+            final_message = final_message + 'File Type\tStor\n'
+            for key in file_ext:
+                final_message = final_message + key + '\t\t' + str(status[key]["stor"]) + '\n'
+        else:
+            final_message = final_message + 'File Type\tStor\tShip\n'
+            for key in file_ext:
+                final_message = final_message + key + '\t\t' + str(status[key]["stor"]) + '\t' + str(status[key]["ship"]) + '\n'
 
         final_message = final_message + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
         final_message = final_message + "Files should sync to EOL servers and HTTPS site within the hour\n"
