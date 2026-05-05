@@ -55,6 +55,9 @@ def create_directory(dir_path):
         elif os.path.isdir(dir_path[1]):
             dat_dir = dir_path[1]
             return
+        else:
+            dat_dir = dir_path[0]  # Neither exists; create first option
+            dir_path = dat_dir
     try:
         if not os.path.isdir(dir_path):
             logging.info(f'Directory {dir_path} does not exist. Creating...')
@@ -126,6 +129,12 @@ def dist_raw():
     # Check the PMS2D subdir for files
     _sync_data(eol_dir + 'RAF_data/PMS2D', '*', [rdat_dir], 'Syncing PMS2D files', recursive=True)
 
+    # Check for camera image tarballs
+    camera_src = eol_dir + 'RAF_data/CAMERA'
+    if os.path.exists(camera_src):
+        create_directory(rdat_dir + '/camera_images')
+        _sync_data(camera_src, '*.tar', [rdat_dir + '/camera_images'], 'Syncing camera tarballs to rdat', recursive=True)
+
 def dist_prod():
     """
     Function to distribute RAF prod data from ingest point to FTP plus others.
@@ -179,8 +188,13 @@ def ingest_to_local(filetype, local_dir, start_dir):
     FTP site directly.
     """
     logging.info('Starting distribution of data from FTP to localdirs/')
+    src = os.path.join(start_dir, filetype)
+    if filetype != 'CAMERA' and not os.path.exists(src):
+        logging.info(f'Source directory {src} does not exist, skipping {filetype}')
+        return
     if filetype in ('PMS2D', 'QA_Tools'):
         #sync PMS2D and QA_Tools data to the data directory
+        create_directory(os.path.join(local_dir, filetype))
         command = f'rsync -qu --exclude="*.shtml" {start_dir}/{filetype}/* {local_dir}/{filetype}/.'
     elif filetype == 'ADS':
         print('Syncing ADS')
@@ -192,6 +206,10 @@ def ingest_to_local(filetype, local_dir, start_dir):
         if os.path.exists(f'{start_dir}/{filetype}/satcom'):
             sat_command = f'rsync -u {start_dir}/{filetype}/satcom/* {local_dir}/satcom/'
             _run_and_log(sat_command, 'Syncing satcom data')
+    elif filetype == 'CAMERA':
+        local_dir = os.path.join(rdat_dir, 'camera_images')
+        create_directory(local_dir)
+        command = f'rsync -rqu {start_dir}/CAMERA/ {local_dir}/'
     else:
         command = f'rsync -qu --exclude="*.shtml" {start_dir}/{filetype}/* {local_dir}'
     message = 'Syncing dir into place'
@@ -270,6 +288,8 @@ def sync_from_ftp():
     for dtype in proc_dict:
         if proc_dict[dtype]:
             ingest_to_local(dtype, f'{dat_dir}/field_data', f'{ftp_dir}')
+    if os.path.exists(f'{ftp_dir}/CAMERA'):
+        ingest_to_local('CAMERA', f'{dat_dir}/field_data', f'{ftp_dir}')
 
 def parse_args():
     """ Instantiate a command line argument parser """
