@@ -101,6 +101,7 @@ For each of these datasets, perform the following steps to add the data to the a
 4. Edit `archAC.sh`
    - Comment out all existing uncommented lines.
    - Create a new line for the data you want to load.
+   - Log in as user `eoldata`
    - Run `./archAC.sh`
 
 5. Go to the dataset in the FDA and hide all the files in the existing version.
@@ -111,12 +112,13 @@ For each of these datasets, perform the following steps to add the data to the a
 
 7. If you are moving from a preliminary to final version of the data, update the description in the FDA to match your new `.yml` file. The version number change handled by `update_version.py` in the next step will automatically set the quality from preliminary to final.
 
-8. Update the dataset YAML config and add new files to the FDA using `insert_multiple_files`. (Refer to the RAF-specific instructions here for more details: <https://internal.eol.ucar.edu/content/load-dataset-loaddataproj>)
+8. Update the dataset YAML config manually or with `update_version.py` and add new files to the FDA using `insert_multiple_files`. (Refer to the RAF-specific instructions here for more details: <https://internal.eol.ucar.edu/content/load-dataset-loaddataproj>)
    - `cd /net/work/cfg-files/<PROJECT>`
    - Update the version (and optionally ingest location or filename pattern) in the existing `.yml` file by running `update_version.py` from the `scripts/data_loading/` directory:
      `python update_version.py <PROJECT> <DATASET> --version 1.0 [--ingest /new/path] [--pattern new_pattern]`
    - If there is no existing `.yml` file, generate one by running `python replace_yaml.py <PROJECT>` from `scripts/data_loading/` as described in step 7 above.
-   - Run `./insert_multiple_files XXX.yml` (from `/net/work/bin/scripts/insert/`)
+   - Log in as user `eoldata`
+   - Run `./insert_multiple_files -u <YOUR_USERNAME> XXX.yml` (from `/net/work/bin/scripts/insert/`)
    - Run `/net/work/bin/emdac/lsdsfiles -lv ###.###` to check dataset if data files are archived locally to `/net/archive` (does not work with campaign storage)
    - Test order dataset
 

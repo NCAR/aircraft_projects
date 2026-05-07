@@ -185,7 +185,7 @@ def ingest_to_local(filetype, local_dir, start_dir):
     """
     Function to distribute data from FTP and raw data directory to local dirs for QAQC and backup
     to be used if no NAS in the field and data goes from Ground Station to
-    FTP site directly.
+    FTP site directly (via SyncThing or (S)FTP).
     """
     logging.info('Starting distribution of data from FTP to localdirs/')
     src = os.path.join(start_dir, filetype)

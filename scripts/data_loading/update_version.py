@@ -36,7 +36,7 @@ def find_yaml_file(output_dir, dataset_name):
     
     return yaml_path
 
-def update_yaml_file(yaml_path, version=None, ingest_location=None, filename_pattern=None):
+def update_yaml_file(yaml_path, version=None, ingest_location=None, filename_pattern=None, archive_location=None):
     """Update specified fields in the YAML file."""
     try:
         with open(yaml_path, 'r') as file:
@@ -88,6 +88,16 @@ def update_yaml_file(yaml_path, version=None, ingest_location=None, filename_pat
                 print(f"Updated filename_pattern: {old_pattern} -> {filename_pattern}")
                 changes_made = True
                 break
+
+    # Update archive_location if provided
+    if archive_location:
+        for item in data['dataset']:
+            if 'archive_location' in item:
+                old_location = item['archive_location']
+                item['archive_location'] = archive_location
+                print(f"Updated archive_location: {old_location} -> {archive_location}")
+                changes_made = True
+                break
     
     if not changes_made:
         print("No changes were made to the file.")
@@ -109,6 +119,7 @@ def main():
     parser.add_argument('--version', '-v', help='New version number (e.g., 1.0)')
     parser.add_argument('--ingest', '-i', help='New ingest location')
     parser.add_argument('--pattern', '-p', help='New filename pattern')
+    parser.add_argument('--archive', '-a', help='New archive location path')
     
     args = parser.parse_args()
     
@@ -127,7 +138,8 @@ def main():
         yaml_path,
         version=args.version,
         ingest_location=args.ingest,
-        filename_pattern=args.pattern
+        filename_pattern=args.pattern,
+        archive_location=args.archive
     )
 
 if __name__ == "__main__":
