@@ -34,6 +34,8 @@ The first, time-critical step is to make sure you obtain a copy of all the neces
 
 For each field project which RAF is involved in, the following data is generally created during the field phase: ADS files, camera images, preliminary LRT data, preliminary KML data, PMS2D data. Optionally, HRT and SRT data are also created. Any data that is archived as preliminary should have a final version created, so ensure that data will be quality controlled before archiving.
 
+For more information on the load data scripts located in `/net/work/bin/scripts/insert`refer to the loaddata documentation and repository (previously in SVN) for more details: [User Documentation](https://docs.google.com/document/d/1aVVNo_54ndl3DpHomTE-fZMALAKPYwPzgEWlYkvJC-s/edit?tab=t.0#heading=h.alm7n6amq6xt) and [Github Repository](https://github.com/NCAR/eol-svn-repository/tree/main/tools/database/insert_scripts/trunk)
+
 **Dataset-specific notes:**
 
 - For the ADS data, archive the RF, FF, TF, and CF files. Hangar flights, other than the CF files, do NOT need to be archived unless requested.
@@ -112,7 +114,7 @@ For each of these datasets, perform the following steps to add the data to the a
 
 7. If you are moving from a preliminary to final version of the data, update the description in the FDA to match your new `.yml` file. The version number change handled by `update_version.py` in the next step will automatically set the quality from preliminary to final.
 
-8. Update the dataset YAML config manually or with `update_version.py` and add new files to the FDA using `insert_multiple_files`. (Refer to the RAF-specific instructions here for more details: <https://internal.eol.ucar.edu/content/load-dataset-loaddataproj>)
+8. Update the dataset YAML config manually or with `update_version.py` and add new files to the FDA using `insert_multiple_files`.
    - `cd /net/work/cfg-files/<PROJECT>`
    - Update the version (and optionally ingest location or filename pattern) in the existing `.yml` file by running `update_version.py` from the `scripts/data_loading/` directory:
      `python update_version.py <PROJECT> <DATASET> --version 1.0 [--ingest /new/path] [--pattern new_pattern]`
