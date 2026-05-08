@@ -12,8 +12,6 @@ SECONDS=0  # Time this script
 DATA_LOCATION="/var/r1/$PROJECT"
 DAY=$(date +%4Y%m%d)
 SATLOG=hpa_$DAY.log
-cd /run/media/ads ## Change to the directory where the removable drive is mounted
-
 echo "Enter flight to copy from $PROJECT e.g. rf01 or ff03:"
 read FLIGHT
 # We would eventually like to force flight number to be lower case. However
@@ -42,6 +40,16 @@ read DRIVE_CONNECTION
 if [ $DRIVE_CONNECTION == "Y" ] || [ $DRIVE_CONNECTION == "y" ]; then
    echo "****************************************************************"
    echo "You entered $DRIVE_CONNECTION, which means you have a drive connected.";
+   cd /run/media/ads 2>/dev/null || {
+      echo "Could not find /run/media/ads. Waiting 5 seconds and retrying..."
+      sleep 5
+      cd /run/media/ads 2>/dev/null || {
+         echo "ERROR: Still cannot find /run/media/ads — likely a mounting issue."
+         echo "Please quit and try running the script again."
+         read -p "Press enter key to exit script and close terminal"
+         exit 1
+      }
+   }
    DRIVES=($(ls))  # Store the list of drives in an array
    TRANSFER_MEDIA="/run/media/ads"
    if [ ${#DRIVES[@]} -eq 1 ]; then
