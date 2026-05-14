@@ -34,7 +34,9 @@ The first, time-critical step is to make sure you obtain a copy of all the neces
 
 ## 3. Archive a dataset
 
-For each field project which RAF is involved in, the following data is generally created during the field phase: ADS files, camera images, preliminary LRT data, preliminary KML data, PMS2D data. Optionally, HRT and SRT data are also created. Any data that is archived as preliminary should have a final version created, so ensure that data will be quality controlled before archiving.
+For each field project in which RAF is involved, the following data is generally created during the field phase: ADS files, camera images, preliminary LRT data, preliminary KML data, PMS2D data. Optionally, HRT and SRT data are also created. Any data that is archived as preliminary should have a final version created, so ensure that data will be quality controlled before archiving.
+
+> A note on authorship: Individuals can be authors where appropriate, such as Julie for the MTP. When a group of individuals are involved, then a team can be a dataset author, such as the Digital Camera Imagery team. The publisher should always be EOL and the primary point of contact should always be EOL Data Support.
 
 For more information on the load data scripts located in `/net/work/bin/scripts/insert`refer to the loaddata documentation and repository (previously in SVN) for more details: [User Documentation](https://docs.google.com/document/d/1aVVNo_54ndl3DpHomTE-fZMALAKPYwPzgEWlYkvJC-s/edit?tab=t.0#heading=h.alm7n6amq6xt) and [Github Repository](https://github.com/NCAR/eol-svn-repository/tree/main/tools/database/insert_scripts/trunk)
 
