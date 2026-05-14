@@ -18,6 +18,7 @@ The first, time-critical step is to make sure you obtain a copy of all the neces
   */5 * * * * . /h/eol/ads/.bashrc && $PROJ_DIR/scripts/data_flow/sync_field_data.py > /tmp/sync.log 2>&1
 
   ```
+- If using rclone, be sure to turn off syncing from the ground station as well
 
 - Before the field data storage is taken down, be sure that all field-phase data have been copied back to EOL servers and that you know where they are. This applies not only to RAF datasets, but to PI preliminary field-phase data.
   - For PI data, send DMS an email enumerating the data that needs to be loaded and ask them to take care of it.
