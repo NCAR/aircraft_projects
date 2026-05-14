@@ -146,4 +146,4 @@ For each of these datasets, perform the following steps to add the data to the a
 
 ## Updating load_data_proj and other insert scripts
 
-Occasionally you will need to update the template yaml files, or even less frequently the scripts, in `/net/work/bin/scripts/insert`. Do not make changes to that dir. Follow the instructions in the README file to check out your own copy of the repository, make changes, and deploy to the production.
+Occasionally you will need to update the template yaml files, or even less frequently the scripts, in `/net/work/bin/scripts/insert`. **Do not make changes to that dir.** Follow the instructions in the README file to check out your own copy of the repository, make changes, and deploy to the production.
