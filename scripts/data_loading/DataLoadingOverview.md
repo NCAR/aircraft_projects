@@ -27,10 +27,9 @@ The first, time-critical step is to make sure you obtain a copy of all the neces
 ## 2. Set up the dataset archive environment
 
 1. Confirm that the EOL project page exists (`https://www.eol.ucar.edu/field_projects/<project>`). If not, create it. The RAF Project Managers (PMs) generally create this page before the project, so if you have questions, determine who is the PM for this project and ask them.
-2. Also create the aircraft Documentation Summary page for this project. *(I believe this is no longer correct. Documentation either is linked under the "\<project\> data documentation" block or is directly added to the dataset - JAA 4/2/2024)*
-3. Check if the project exists in the FDA. Go to <https://data.eol.ucar.edu/> and search for the project. If it does not exist, then you likely need to create the project page, as well as the DTS dataset page.
-4. Add the EOL Project homepage as an xlink to the project page in the FDA.
-5. Add a link from the EOL project page to the FDA project page to the Data Access right navigation block.
+2. Check if the project exists in the FDA. Go to <https://data.eol.ucar.edu/> and search for the project. If it does not exist, then you likely need to create the project page, as well as the DTS dataset page.
+3. Add the EOL Project homepage as an xlink to the project page in the FDA.
+4. Add a link from the EOL project page to the FDA project page to the Data Access right navigation block.
 
 ## 3. Archive a dataset
 
