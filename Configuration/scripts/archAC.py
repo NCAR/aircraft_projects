@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 ################################################################################
 # Script to archive raw RAF datasets to the CISL Mass Storage System under the 
