@@ -2,15 +2,15 @@
 # Shell script to call Python units tests. Configure environment (if not
 # running on a server/groundstation/etc) and call tests.
 #
-# Written in Python 3.12
+# Written in Python 3.9
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2024
 ###############################################################################
 # --- Environment Configuration ---
 # Set up environment variables, etc. as needed -- The PROJECT, PROJ_DIR, and AIRCRAFT 
 # environment variables must be set before running this script to a project with a fieldProcSetup.py file
-# The conda environment must be python 3.12 or later and the following packages are required:
-# conda create -n test_env python=3.12
+# The conda environment must be python 3.9 or later and the following packages are required:
+# conda create -n test_env python=3.9
 # conda activate test_env
 # conda install pytest
 # pip install pyfakefs

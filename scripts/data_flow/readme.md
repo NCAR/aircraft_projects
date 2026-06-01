@@ -44,7 +44,7 @@ Everything below is generally run as user `ads` on an EOL groundstation computer
 
 ### Prerequisites
 
-- To run the tests, a Python 3.12+ environment with required packages (see [Testing for Developers](#testing-for-developers) for conda setup instructions). This should be run on the groundstation at RAF.
+- To run the tests, a Python 3.9+ environment with required packages (see [Testing for Developers](#testing-for-developers) for conda setup instructions). This should be run on the groundstation at RAF.
 - A configured project directory in the aircraft_projects repository at `$PROJ_DIR/$PROJECT/$AIRCRAFT/`. This directory is created by running `$PROJ_DIR/scripts/init_project`. Check in with the SEs/PMs before running it.
 - The following environment variables should be set in the bash profile on the ground station:
 
@@ -391,12 +391,12 @@ When edits are made, you can run tests to ensure everything is still functioning
 
 ### Test environment
 
-To run the tests for push_data and sync_field_data, you must have a test environment running python 3.12 or greater. You can create one using the testenv.yml file by running the following commands from the dataflow subdirectory:
+To run the tests for push_data and sync_field_data, you must have a test environment running python 3.9 or greater. You can create one using the testenv.yml file by running the following commands from the dataflow subdirectory:
 
 `conda env create -f test/testenv.yml`
 
 You can install the packages in the yml file manually with pip, or set up your own conda environment. Below is an example of a conda environment setup:
- `conda create -n test_env python=3.12`
+ `conda create -n test_env python=3.9`
  `conda activate test_env`
  `conda install pytest, pytest-mock`
  `pip install pyfakefs`
