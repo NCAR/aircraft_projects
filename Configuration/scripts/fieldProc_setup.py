@@ -86,11 +86,6 @@ threeVCPI = False       #CPI, 2DS
 QA_notebook = True # Generate HTML of the QA plots
 catalog = False # Send QC plots to field catalog, leave as False
 
-#############################################################################
-# Plots - set path to RStudio dir
-rstudio_dir =    '/home/ads/RStudio/'  # Data dir to run on gstation
-#rstudio_dir =    '/h/eol/ads/RStudio/'  # Data dir to run on barolo
-
 # Software - set locations of needed software
 translate2ds = '/opt/local/bin/translate2ds '
 
