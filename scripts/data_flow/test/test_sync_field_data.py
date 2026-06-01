@@ -20,9 +20,12 @@ call1 = call('Starting distribution of data from FTP to localdirs/')
     ('LRT', '/another/local_dir', '/another/start_dir',  f'rsync -qu --exclude="*.shtml" /another/start_dir/LRT/* /another/local_dir')
     # Add more test cases as needed
 ])
+# Decorator order is bottom up so start with os.system in call
 @patch('logging.info')
+@patch('sync_field_data.create_directory')
+@patch('os.path.exists', return_value=True)
 @patch('os.system')
-def test_ingest_to_local(mock_os_system, mock_logging_info,filetype, local_dir, start_dir, expected_command):
+def test_ingest_to_local(mock_os_system, mock_path_exists, mock_create_directory, mock_logging_info, filetype, local_dir, start_dir, expected_command):
     
     # Arrange
 
