@@ -61,12 +61,15 @@ export DATA_DIR=<path>              # base path for processed output data: /home
 Before running, confirm that `fieldProc_setup.py` exists at `$PROJ_DIR/$PROJECT/$AIRCRAFT/scripts/fieldProc_setup.py` and is correctly configured for the project. Key settings to verify:
 
 - `FTP`, `NAS`, `GDRIVE`, `SYNCTHING` — boolean flags enabling each transfer method.
+  - As of 2026, we are using `SYNCTHING` so it should be true and everything else should be false
 - `ftp_site` and `ftp_data_dir` — FTP server address and target directory (if FTP or syncthing is enabled).
+- `ICARTT`, `IWG1`, `HRT`, `SRT` - boolean flags for data formats to generate.
+  - Survey the PI team to determine what they want generated.
 - `threeVCPI`, `PMS2D`, `QATools` — boolean flags for data types included in the project.
 
 If `NAS` is set to true, files are sent to the NAS directories where they are subsequently sync'd to FTP space. If `FTP` is set to true, the files are ftp'd directly to the project FTP space.
 
-Also ensure that $DATA_DIR/$PROJECT and $RAW_DATA_DIR/$PROJECT exist. If not, create them.
+Also ensure that `$DATA_DIR/$PROJECT` and `$RAW_DATA_DIR/$PROJECT` exist. If not, create them.
 
 ### Running push_data.py
 
