@@ -39,7 +39,7 @@ def push_data():
     with (patch.dict('os.environ', env_vars), 
           patch('builtins.input', side_effect=mock_input),
           patch('smtplib.SMTP') as mock_smtp,
-          patch('_process.Process.extract_takeoff_lrt') as mock_extract_takeoff,
+          patch('_process.Process.extract_takeoff_lrt', autospec=True) as mock_extract_takeoff,
           patch('subprocess.run') as mock_run):  # Keep this mock for other calls
         
         # Define the side effect for the mocked method
