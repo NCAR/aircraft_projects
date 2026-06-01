@@ -103,6 +103,9 @@ class DataShipping:
 
         for key in file_ext:
             os.chdir(inst_dir[key])
+            # NOTE: unlike _FTP/_GDrive/_syncThing, this path does not honor
+            # ship_all_ADS -- it only ships the current flight's ADS, gated on
+            # ship_ADS. Add a ship_all_ADS branch here if NAS needs that behavior.
             if key == "ADS" and ship_ADS is True:
                 if zip_ADS is True:
                     print(f'Copying {zip_raw_file} file to {self.nas_sync_dir}/ADS')

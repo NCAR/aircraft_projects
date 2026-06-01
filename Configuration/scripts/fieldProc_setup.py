@@ -43,11 +43,11 @@ nas_mnt_pt =     '/mnt/Data'
 ### FTP configuration - not used if using NAS
 #############################################################################
 FTP = False
-ftp_site = 'ftp.eol.ucar.edu'
 user = 'anonymous'
 password = ''
 ##DO NOT REMOVE: ftp paths are also used when syncthing is True. 
 # sync_field_data.py will use this path to distribute data on EOL servers
+ftp_site = 'ftp.eol.ucar.edu'
 ftp_parent_dir = '/net/ftp/pub/data/incoming/'+project.lower()
 ftp_data_dir = '/EOL_Data/RAF_Data'
 
@@ -74,7 +74,16 @@ sendzipped = False # Zips all files before btsync to Boulder
 zip_ADS = False # Bzips the ads file independently of processed files
 # you can have both sendzipped and zip_ads set to True if you want
 
-# Do you want to transfer ADS file back to Boulder (is the connection good enough?)
+# ADS shipping. The raw .ads file is large, so these control whether and how much
+# of it is sent back to Boulder.
+#   ship_ADS:     ship THIS flight's single .ads file. Turn off if the connection
+#                 isn't good enough. Honored by FTP, GDrive, SyncThing, NAS, and
+#                 sync_field_data.
+#   ship_all_ADS: ship ALL .ads files in the ADS directory (every flight present),
+#                 not just the current one. When True it OVERRIDES ship_ADS.
+#                 NOTE: only FTP, GDrive, and SyncThing honor this -- the NAS
+#                 transfer path ignores ship_all_ADS and ships only the current
+#                 flight's ADS (and only when ship_ADS is True).
 ship_ADS = True
 ship_all_ADS = False
 
