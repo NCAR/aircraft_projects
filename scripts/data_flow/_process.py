@@ -293,6 +293,7 @@ class Process:
         if len(self.date) != 8:
             myLogger.log_and_print(f"Date extracted from ADS filename is not in YYYYMMDD format: {self.date}. Truncating first 8 characters", log_level='warning')
             self.date = self.date[:8]
+        return self.date
 
     def extract_takeoff_lrt(self,filename, raw_dir):
         '''
