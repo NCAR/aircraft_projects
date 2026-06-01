@@ -33,17 +33,19 @@
   - [Test Modules](#test-modules)
 
 ## Overview
-`push_data.py` automates the generation from the .ads file of multiple formats of data:LRT,HRT,SRT,KML,ICARTT,IWG1 depending on how it is configured. COnfiguration is defined in `fieldProc_setup.py` which has booleans for file generation, data storage, and paths for data directories.
+`push_data.py` automates the generation from the .ads file of multiple formats of data:LRT, HRT, SRT, KML, ICARTT, IWG1, depending on how it is configured. Configuration is defined in `fieldProc_setup.py` which has booleans for file generation, data storage, and paths for data directories.
 
 - `push_data.py` is located at `$PROJ_DIR/scripts/push_data.py`
 - `fieldProc_setup.py` is located within `$PROJ_DIR/<PROJECT>/<AIRCRAFT>/scripts`
+
+Everything below is generally run as user `ads` on an EOL groundstation computer.
 
 ## Deployment
 
 ### Prerequisites
 
-- Python 3.12+ environment with required packages (see [Testing for Developers](#testing-for-developers) for conda setup instructions). This should be run on the groundstation at RAF.
-- A configured project directory in the aircraft_projects repository at `$PROJ_DIR/$PROJECT/$AIRCRAFT/`.
+- To run the tests, a Python 3.12+ environment with required packages (see [Testing for Developers](#testing-for-developers) for conda setup instructions). This should be run on the groundstation at RAF.
+- A configured project directory in the aircraft_projects repository at `$PROJ_DIR/$PROJECT/$AIRCRAFT/`. This directory is created by running `$PROJ_DIR/scripts/init_project`. Check in with the SEs/PMs before running it.
 - The following environment variables should be set in the bash profile on the ground station:
 
 ```bash
@@ -63,6 +65,8 @@ Before running, confirm that `fieldProc_setup.py` exists at `$PROJ_DIR/$PROJECT/
 - `threeVCPI`, `PMS2D`, `QATools` — boolean flags for data types included in the project.
 
 If `NAS` is set to true, files are sent to the NAS directories where they are subsequently sync'd to FTP space. If `FTP` is set to true, the files are ftp'd directly to the project FTP space.
+
+Also ensure that $DATA_DIR/$PROJECT and $RAW_DATA_DIR/$PROJECT exist. If not, create them.
 
 ### Running push_data.py
 
@@ -89,6 +93,12 @@ Example cronjob to sync every 5-minutes:
 ```
 
 The script reads `SYNCTHING`, `GDRIVE`,'NAS', and `FTP` flags from `fieldProc_setup.py` to determine which source to sync from.
+
+### Post-project cleanup
+
+Turn off syncing at the end of the project by commenting out the above cronjob.
+
+Ensure all data are on the servers and archived, then clean all the data out of $RAW_DATA_DIR/field_sync/EOL_Data/RAF_Data.
 
 ---
 
