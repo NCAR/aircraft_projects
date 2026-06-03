@@ -25,6 +25,12 @@ if [ $? -eq 1 ]; then
   nohup /opt/local/bin/acTrack2kml -o -v > /tmp/acTrack2kml.log 2>&1
 fi
 
+# for INSPYRE project (2026)
+ps ax | grep "acTrack2kml -p N806NA -o" | grep -qv grep
+if [ $? -eq 1 ]; then
+  nohup /opt/local/bin/acTrack2kml -p N806NA -o > /tmp/acTrack2kml-N806NA.log &
+fi
+
 # from DC3 project
 #ps ax | grep "acTrack2kml -p DC8 -o" | grep -qv grep
 #if [ $? -eq 1 ]; then
