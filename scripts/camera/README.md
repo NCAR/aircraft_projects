@@ -107,7 +107,7 @@ Over time RAF has operated multiple different camera types. The best way to dete
      ```
    - Once the script starts, go into the movie dir and then into the Annotated_images_## dir and look at an image using:
      ```
-     xdg-open 00001.jpg
+     > xdg-open 00001.jpg
      ```
    - Make sure that the layout, resolution, data overlays, etc are correct. If they are not, kill the createMovies script, modify params file, and try again.
 
@@ -120,13 +120,13 @@ Over time RAF has operated multiple different camera types. The best way to dete
      > /usr/bin/ffmpeg -passlogfile ./ffmpeg_rf## -r 15 -b 1500000 -y -pass 2 -i /scr/raf/<data_dir>/<PROJECT>/Movies/AnnotatedImages_rf##/%05d.jpg /scr/raf/<data_dir>/<PROJECT>/Movies/rf##.YYYYMMyy.HHmmSS_HHmmSS.mp4
      ```
 
-     **If you wish to combine the .mp4 file with a set of animated plots, please follow the instructions in the [aircraft_movie_animations](https://github.com/NCAR/aircraft_movies_animations) GitHub repository. A python program takes a set of parameters defined in a configuration file to generate a set of animated plots that are then combined with the original .mp4 using ffmpeg. This must be done on eol-saturn.**
+1. **If you wish to combine the .mp4 file with a set of animated plots, please follow the instructions in the [aircraft_movie_animations](https://github.com/NCAR/aircraft_movies_animations) GitHub repository. A python program takes a set of parameters defined in a configuration file to generate a set of animated plots that are then combined with the original .mp4 using ffmpeg. This must be done on eol-saturn.**
 
 
 1. Load the data into the FDA as a dataset. Enable previews for videos & copy/load them to/from  `/net/archive/data/<project>/aircraft/<platform>/movies/`
 
 
-1. Create a documentation file for the camera images and movies to be added to the project documentation online. There are examples in /net/jlocal/projects/scripts/camera/docs. For each project, reach out to an RAF SE to confirm which cameras flew (for example, in the future there will be left and right cameras for the C-130, sometimes we don't fly all cameras on the G-V, and cameras are occasionally upgraded to new versions with new specs) and modify a copy of the example files as needed.
+1. Create a documentation file for the camera images and movies to be added to the project documentation online. There are examples in `/net/jlocal/projects/scripts/camera/docs`. For each project, reach out to an RAF SE to confirm which cameras flew (for example, in the future there will be left and right cameras for the C-130, sometimes we don't fly all cameras on the G-V, and cameras are occasionally upgraded to new versions with new specs) and modify a copy of the example files as needed.
 
    **NOTE:** For help writing up the Digital Camera Imagery Notes, reach out to the RAF SEs and/or Josh Carnes.
 
