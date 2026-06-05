@@ -72,6 +72,7 @@ use Image::Magick;		# Non-standard ImageMagick extensions.
 use Sys::Hostname;		# standard module for determining hostname.
 use Time::Local;
 use POSIX qw(strftime);
+use File::Path qw(make_path remove_tree);	# standard module; make_path == mkdir -p
 # -------------------------------------------------------------------
 # ------------------------ Hardcoded values -------------------------
 # -----------(These may need to be changed in the future.)-----------
@@ -295,10 +296,10 @@ if ($keywords->{includeData} ne "yes") {
 $annotatedImageDirectory = 
     $keywords->{movieDirectory}."/AnnotatedImages_$flightNumber";
 # Delete old annotated images directory and create a new (empty) one.
-# Little error checking here right now, and could use FILE::PATH functions.
 if ($startNum == -1) {
-    -d $annotatedImageDirectory and system "rm -r $annotatedImageDirectory";
-    mkdir "$annotatedImageDirectory" or die "Couldn't create $annotatedImageDirectory directory!";
+    -d $annotatedImageDirectory and remove_tree($annotatedImageDirectory);
+    make_path($annotatedImageDirectory);
+    -d $annotatedImageDirectory or die "Couldn't create $annotatedImageDirectory directory!";
 }
 print "Annotated images will be stored in $annotatedImageDirectory\n";
 
