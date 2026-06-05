@@ -422,7 +422,7 @@ foreach my $fileName (@jpegFiles) {
 	# Determine the output image filename.
 	my $outputImageName=
 	    sprintf('%s/%05d.jpg',$annotatedImageDirectory,$fileNum);
-            system("rm /tmp/magick-*");
+            system("rm -f /tmp/magick-*");
 	###############
 	# flight data #
 	###############
