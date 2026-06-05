@@ -128,8 +128,11 @@ my ($projectNumber,$flightNumber,$time_interval,$headerText,$outputFileTimes);
 # -------------------------------------------------------------------
 # ----------------------------- Usage -------------------------------
 # -------------------------------------------------------------------
-#ffmpeg is only installed in mercury or eol-saturn, so must run there
-if ( (split /\./, hostname() !~/mercury/) && (split /\./, hostname() !~/eol-saturn/) ) {
+#ffmpeg is only installed on mercury, eol-saturn, and acserver so must run there
+if ( (split /\./, hostname() !~/mercury/) &&
+     (split /\./, hostname() !~/eol-saturn/) &&
+     (split /\./, hostname() !~/acserver/)
+   ) {
         print "Run on mercury for higher performance!\n\n";
         exit(0);
 }
