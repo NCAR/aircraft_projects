@@ -58,8 +58,19 @@ For each of these datasets, perform the following steps to add the data to the a
 5. Run `./archAC.sh`. The script calls `archAC.py` which automatically computes sha256 checksums for each file before transfer, rsyncs the files to the archive, then verifies the checksums on the archive server and reports a match or mismatch per file. Results are written to `checksums.txt` in the archive location. If a mismatch is reported, re-copy the affected files and re-run.
 
 6. Generate the dataset YAML config files and load to the FDA and the DTS
-   - From the `scripts/data_loading/` directory, run `python replace_yaml.py <PROJECT>`. This script reads the `project_template.yml` for the project and all base config templates, automatically substitutes all variables (e.g. `<PROJECT>`, `<year>`, archive IDs), and saves the generated YAML files to `$CFG_FILES_DIR/<PROJECT>*/` (default: `/net/work/cfg-files/<PROJECT>*/`). See [readme.md](readme.md) for setup requirements.
-   - Before running, confirm the `project_template.yml` is complete. It lives at `$PROJ_DIR/<PROJECT>/<aircraft>/scripts/project_template.yml`. A reference example is at `$PROJ_DIR/Configuration/scripts/project_template.yml`.
+   - See [readme.md](readme.md) for setup requirements. In particular, ensure $PROJ_DIR and .my.cnf are configured.
+   - Copy `project_template.yml` from `$PROJ_DIR/Configuration/scripts/project_template.yml` to `$PROJ_DIR/<PROJECT>/<aircraft>/scripts/project_template.yml`.
+   - Edit `project_template.yml`. There are blocks separated by comment lines.
+     - In the variables block:
+       - Replace 'PROJECT' with the project name in upper case, and 'project' with it in lower case.
+       - Add the aircraft and year. The year must be in single quotes, eg '2026'.
+     - In the fields block:
+       - Update the project dates and add the lat/lon in single quotes
+     - In the archive_ids block:
+       - Add the dataset id and version number for each dataset for which you want to create a YAML file
+     - Update the internal_contact_id_dts, load_contact_id_dts, and author_id_dts to be your DTS id. You can find your contactID by logging in to the DTS and looking at the URL for your entry on the Add/Edit Users page
+     - Update the internal_contact_id_codiac to be your CODIAC id. To find your internal contact ID, login to data.eol.ucar.edu, switch to editor mode, go to Contact List, search for your name and find your id in the URL of your entry.
+   - From the `scripts/data_loading/` directory, run `python replace_yaml.py <PROJECT>`. This script reads the `project_template.yml` for the project and all base config templates, automatically substitutes all variables (e.g. `<PROJECT>`, `<year>`, archive IDs), and saves the generated YAML files to `$CFG_FILES_DIR/<PROJECT>*/` (default: `/net/work/cfg-files/<PROJECT>*/`).
    - Now `cd /net/work/bin/scripts/insert/loaddata` and run `./load_a_dataset.pl`, giving the full path to each yml file generated above. This script will create an FDA dataset, create a DTS entry, and add all the data files to the new dataset. Hit return when prompted. When the script completes, it will prompt you to perform additional tasks by hand. (These would all be great areas to automate in the future.)
 
 7. Run `/net/work/bin/emdac/lsdsfiles -lv <archive_ident>` on datasets with files archived locally to `/net/archive` (`lsdsfiles` does not work with files on campaign storage)
