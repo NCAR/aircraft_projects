@@ -13,7 +13,7 @@ Over time RAF has operated multiple different camera types. The best way to dete
 1. Determine the desired list of variables for annotation or for animated plots. Work with the project PIs to generate a list. Request help from the RAF Project Manager if you are not sure who on the PI team to reach out to.
 
 1. Delete nighttime images; Delete images taken prior to takeoff, after landing, in hanger, etc.
-   - You can browse the images with `ristretto` to check for dark/ground images:
+   - You can browse the images with `display` (comes with ImageMagick) or `ristretto` to check for dark/ground images:
      ```
      > ssh -Y <server you are working on>
      > ristretto
@@ -105,9 +105,10 @@ Over time RAF has operated multiple different camera types. The best way to dete
      ```
      > ./createMovies.sh
      ```
-   - Once the script starts, go into the movie dir and then into the Annotated_images_## dir and look at an image using:
+   - Once the script starts, go into the movie dir and then into the Annotated_images_## dir and look at an image using `xdg-open` or `display`:
      ```
      > xdg-open 00001.jpg
+     > display 00001.jpg
      ```
    - Make sure that the layout, resolution, data overlays, etc are correct. If they are not, kill the createMovies script, modify params file, and try again.
 
