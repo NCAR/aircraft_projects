@@ -4,7 +4,6 @@
 As root:
 ```
 dnf install \
-    ristretto \
     ImageMagick-perl \
     epel-release \
 dnf install --nogpgcheck \
@@ -12,3 +11,7 @@ dnf install --nogpgcheck \
 dnf install ffmpeg ffmpeg-devel --allowerasing
 ```
 May also need to install `screen`
+if "display" isn't working for you, you can try
+```
+dnf install ristretto
+```
