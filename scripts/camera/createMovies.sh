@@ -54,13 +54,36 @@ for FLIGHT in "$@"; do
         CAMERA_DIRS+=("$DIR")
     done
 
-    # Create movieParamFile from template, replacing <flight> with current flight
-    sed "s/<flight>/$FLIGHT/g" ${cam_path}/movieParamFile.template > ${proj_path}/movieParamFile
-    # Replace <PROJ> with the actual project name
-    sed -i.bak "s/<PROJ>/$PROJECT/g" ${proj_path}/movieParamFile
+    # Per-flight parameter file so the setup can differ per flight movie.
+    param_file="${proj_path}/movieParamFile_$FLIGHT"
+
+    # Create the param file from template, unless one already exists (don't
+    # overwrite a file the user may have customized).
+    if [ -f "$param_file" ]; then
+        echo "Using existing $param_file (not overwriting)."
+    else
+        # Replace <flight> with current flight
+        sed "s/<flight>/$FLIGHT/g" ${cam_path}/movieParamFile.template > "$param_file"
+        # Replace <PROJ> with the actual project name
+        sed -i.bak "s/<PROJ>/$PROJECT/g" "$param_file"
+    fi
+
+    # Ask the user whether to run combineCameras.pl or exit.
+    read -r -p "Run combineCameras.pl for flight $FLIGHT? [y/N] (or 'q' to quit) " answer
+    case "$answer" in
+        [Yy]*) ;;
+        [Qq]*) echo "Exiting."; exit 0 ;;
+        *) echo "Skipping flight: $FLIGHT"; continue ;;
+    esac
+
+    # Make sure the param file name ends with this flight designation.
+    if [[ "$param_file" != *"$FLIGHT" ]]; then
+        echo "Error: param file $param_file does not match flight $FLIGHT. Skipping."
+        continue
+    fi
 
     # Run the movie creation
-    ${cam_path}/combineCameras.pl ${proj_path}/movieParamFile $FLIGHT
+    ${cam_path}/combineCameras.pl "$param_file" $FLIGHT
 
     echo "Completed flight: $FLIGHT"
 done

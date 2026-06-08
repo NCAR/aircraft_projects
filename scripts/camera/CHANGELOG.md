@@ -10,6 +10,11 @@ Changelog for the camera scripts in `aircraft_projects/scripts/camera/`
   - Accept CAMERA or camera as dir name - we have developed some inconsistencies here
 - `createMovies.sh`: Fix bug in how directions were cycled through. Add checks for existence of needed env vars
 
+### Updated
+- Changed movieParamFile to be per-flight so can make per-flight updates. During TI3GER-2, two cameras were not
+  working for a flight, so this will allow that flight to only display those two cameras. 
+- Add ability to run script to generate per-flight file, then exit, edit and finally run with edited file.
+
 ### Added
 - `combineCameras.pl`:
   - Untar image dir if not already done.

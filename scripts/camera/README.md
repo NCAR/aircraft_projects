@@ -4,7 +4,7 @@
 Over time RAF has operated multiple different camera types. The best way to determine the type for a project is to ask the software engineers. For older projects, you can also check the camera and movie writeup in the aircraft project documentation off the [project pages](https://www.eol.ucar.edu/all-field-programs) or check the Digital Camera Imagery Notes associated with the camera and movie datasets in the [Field Data Archive](https://data.eol.ucar.edu).
 
 ## To create movies from the camera still images:
-**Work on a physical server rather than a VM as these scripts take quite a bit of cpu. As of May, 2024, eol-saturn running Alma9 and mercury running RHEL8 are both good options**
+**Work on a physical server rather than a VM as these scripts take quite a bit of cpu. As of June, 2026, eol-groundstation3 running and eol-saturn running Alma9, and mercury running RHEL8 are both good options**
 
 **When running scripts, work in /net/jlocal/projects on the servers - referred to as `proj` below - under the <project>/<platform> dir for the project you are working on.**
 
@@ -25,32 +25,32 @@ Over time RAF has operated multiple different camera types. The best way to dete
      - Run `filter_images.sh`
 
 1. Generate preliminary movies if final netCDF data is not available yet and movies have been requested. Otherwise, generate final production movies:
-   - Edit `proj/<project>/<platform>/movieParamFile` to point to the correct netcdf and camera subdirs and list the params desired for the movies. Here is a sample file format:
+   - Run `proj/<project>/<platform>/scripts/createMovies.sh` for one flight. This will auto-generate a project-specific movieParamFile and ask if you want to run the movies. Exit and update the movieParamFile` to adjust number of cameras if needed and make any changes to the params desired for the movies (including turning on includeData). Here is a sample file format:
      ```
      #includeData is required
      includeData = no          ----------> can be yes (to include data to the right) or no (to omit).
-     netcdfFile = /scr/raf_data/NOMADSS####.nc  ----------> Not needed if includeData = no; may also exist in /scr/raf/Prod_Data/
-     gravityD = East ----------> Optional
+     netcdfFile = <DATA_DIR>/TI3GER-2/TI3GER-2####.nc  ----------> Not needed if includeData = no; may also exist in /scr/raf/Prod_Data/
+     gravityD = East ----------> Optional, defaults to East
      # Times will be determined from the images in imageDir1
      # All other image dirs will try to match these times.
-     imageDir1 = /scr/raf/Raw_Data/<project>/camera_images/flight_number_####/forward
-     #gravity1 = West
+     imageDir1 = <RAW_DATA_DIR>/<project>/camera/flight_number_####/forward
+     #gravity1 = NorthWest
      gravity1 = North ---------------> North = Front facing; South = down.
      #movieDirectory is required  --------------> set dir to Raw_Data for preliminary videos; Prod_Data for final videos
-     movieDirectory = /scr/raf/Raw_Data/<project>/Movies
+     movieDirectory = <RAW_DATA_DIR>/<project>/Movies
      #2 overlays are required --------> You must set to 'no' if not desired
      overlayImageTime = yes
      overlayImagePointing = yes
      #numCameras is required
      numCameras = 2
      # If numCameras > 1, add additional optional dirs and cameras here:
-     #imageDir2 = /scr/raf/Raw_Data/MPEX/camera_images/flight_number_####/left
+     #imageDir2 = <RAW_DATA_DIR>/TI3GER-2/camera/flight_number_####/left
      #gravity2 = SouthWest
      #gravity2 = West
-     #imageDir3 = /scr/raf/Raw_Data/MPEX/camera_images/flight_number_####/right
+     #imageDir3 = <RAW_DATA_DIR>/TI3GER-2/camera/flight_number_####/right
      #gravity3 = SouthEast
      #gravity3 = East
-     imageDir2 = /scr/raf/Raw_Data/NOMADSS/camera_images/flight_number_####/down
+     imageDir2 = <RAW_DATA_DIR>/TI3GER-2/camera/flight_number_####/down
      #gravity4 = NorthEast
      gravity2 = South
      
@@ -64,9 +64,8 @@ Over time RAF has operated multiple different camera types. The best way to dete
      # For three images, double the ht and width (plus padding).
      #outputResolution=1536x768
      scale = 512x384!     #(w X h)  -------------> set scale & resolution to 1024x768 for hi-res movies
-     outputResolution=512x768
-     outputResolutionD=712x768
-     #scale = 341x256!
+     outputResolution=1024x768
+     outputResolutionD=1024x768
      outputFrameRate = 15
      mp4BitRate = 1500000
      endParameters
@@ -94,21 +93,15 @@ Over time RAF has operated multiple different camera types. The best way to dete
      ```
      > screen
      ```
-   - Edit createMovies.sh and set the flight number
-     - If you would like to run more than one flight at a time, be sure to use the nice command so as not to overload the CPU
+   - Run createMovies.sh again from the scripts dir:
+     - If you would like to run more than one flight, you can add multiple flights to the command line. You can also specify a project other than the one designated in $PROJECT, which is used as the default.
        ```
-       > nice +19 /net/jlocal/projects/scripts/camera/combineCameras.pl ../movieParamFile RF01
+       > createMovies.sh [-p PROJECT] rf01 rf02
        ```
-     - Otherwise, comment out all but one line and run 1 instance at a time
-
-   - Run createMovies.sh from the scripts dir:
+   - Once the script starts, go into the movie dir `$RAW_DATA_DIR/<project>/Movies and then into the Annotated_images_## dir and look at an image using `xdg-open` or `display`:
      ```
-     > ./createMovies.sh
-     ```
-   - Once the script starts, go into the movie dir and then into the Annotated_images_## dir and look at an image using `xdg-open` or `display`:
-     ```
-     > xdg-open 00001.jpg
      > display 00001.jpg
+     > xdg-open 00001.jpg
      ```
    - Make sure that the layout, resolution, data overlays, etc are correct. If they are not, kill the createMovies script, modify params file, and try again.
 
