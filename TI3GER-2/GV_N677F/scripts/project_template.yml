@@ -1,24 +1,24 @@
-#These variables are used to fill blanks in the dataset yaml files
+# These variables are used to fill blanks in the dataset yaml files. Update them for each project.
 variables:
-  PROJECT: &project 'PROJECT'
-  project: 'project'
-  aircraft:   #must be c130 or gv
-  year: #project year
+  PROJECT: &project 'TI3GER-2'
+  project: 'ti3ger-2'
+  aircraft: gv  #must be c130 or gv
+  year: '2026'  #project year
 
-#Project specific fields to be added to dataset yaml files - project name will automatically be filled in
+# Project specific fields to be added to dataset yaml files - project name will automatically be filled in using value above, so leave it as *project. Update the rest for each project.
 fields:
   name: *project
-  begin_date: 'YYYY-MM-yy HH:mm:SS'
-  end_date: 'YYYY-MM-yy HH:mm:SS'
-  minimum_latitude: 
-  maximum_latitude:
-  minimum_longitude:
-  maximum_longitude:
+  begin_date: '2026-04-21 00:00:00'
+  end_date: '2026-05-22 23:59:59'
+  minimum_latitude: '39.627'
+  maximum_latitude: '39.92'
+  minimum_longitude: '-123.787'
+  maximum_longitude: '-105.087'
 
-##Archive Ids -- Will only create yaml files for ids and versions that are filled in
+## Archive Ids -- Will only create yaml files for ids and versions that are filled in
 archive_ids:
   ads: 
-    id: 
+    id: '649.001'
     version_number: '1.0' #ADS are always final not shared 
   lrt: 
     id: 
@@ -64,7 +64,7 @@ archive_ids:
   2DS_rafoap:
     id: 
     version_number: '0.1'
-  ##CAMERA
+  ## CAMERA
   down: 
     id: 
     version_number: '0.1'
@@ -84,29 +84,34 @@ archive_ids:
     id: *movies
     version_number: '1.0'
 
-#DTS Specific Fields -- Update if data loader or checker changes
+# DTS Specific Fields -- Update if data loader or checker changes
+# If you are loading the data, put your dts contactID here. You can find it by
+# logging in to the DTS and looking at the URL for your entry on the Add/Edit Users page
 dts:
-  internal_contact_id_dts: '366' #Sara Runkel
-  ingest_contact_id_dts: '366'
+  internal_contact_id_dts: '368' #Jennifer Frame
+  ingest_contact_id_dts: '368'
   ingest_status_id_dts: '2'
-  load_contact_id_dts: '366'
+  load_contact_id_dts: '368'
   load_status_id_dts: '6'
   approve_contact_id_dts: '203' #Janine Aquino
   approve_status_id_dts: '6'
-  author_id_dts: '366'
+  author_id_dts: '368'
   note_type_id: '4'
   note_text: Loaded with new load_data_proj script
 
-#CODIAC Specific Fields -- Update xlinks for every project. Update point of contact and internal contact if needed.
+# CODIAC Specific Fields -- Update xlinks for every project. Update point of
+# contact and internal contact if needed. To find your internal contact ID,
+# login to data.eol.ucar.edu, switch to editor mode, go to Contact List, search
+# for your name and find your id in the URL of your entry.
 codiac:
   description: 'default'
-  point_of_contact_id_codiac: 1
-  internal_contact_id_codiac: 3624 #Sara Runkel
-  xlink_id: #Add projectwide xlinks to homepage, missions, data policy
+  point_of_contact_id_codiac: 1  # NSF NCAR EOL - do not change
+  internal_contact_id_codiac: 4649 #Jennifer Frame
+  xlink_id: # Add projectwide xlinks to homepage, missions, data policy
 
-#Standard fields that will be added to all dataset yaml files -- can be overridden within the yaml files
+# Standard fields that will be added to all dataset yaml files -- can be overridden within the yaml files
 standard:
-  is_eol_data: 1 ##Any data loaded by this script should be eol data --can be overridden by specific yaml files
+  is_eol_data: 1 ## Any data loaded by this script should be eol data --can be overridden by specific yaml files
   category_id: 2 ## 2 = Aircraft
   online_orderable: 1
   offline_orderable: 0
@@ -120,22 +125,22 @@ standard:
   remote_url: 'default'
   description: 'default'
 
-#Fields that will be added to yaml if dataset is preliminary (version_number < 1.0)
+# Fields that will be added to yaml if dataset is preliminary (version_number < 1.0)
 preliminary:
-  visible: 0 #Load it as not visible until it is approved
+  visible: 0 # Load it as not visible until it is approved
   auth_reqd: 1
   eula_reqd: 1
   quality: 1
 
-#Fields that will be added to yaml if dataset is final
+# Fields that will be added to yaml if dataset is final
 final:
   visible: 0
   auth_reqd: 0
   eula_reqd: 0
   quality: 2
 
-#ingest fields that will be filled in by the replace_yaml script
-#ingest fields that will be filled in by the replace_yaml script
+# ...Nothing to edit below here...
+# Ingest fields that will be filled in by the replace_yaml script
 paths: &paths
   raw_ingest_base: '/scr/raf/Raw_Data/<PROJECT>'
   prod_ingest_base: '/scr/raf/Prod_Data/<PROJECT>'
