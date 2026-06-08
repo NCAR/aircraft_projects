@@ -274,7 +274,10 @@ if ($keywords->{includeData} eq "yes") {
 # -------------------------------------------------------------------
 
 # Open the directory and read the list of JPEG files into @jpegFiles array.
-opendir(IMAGE_DIRECTORY, "$keywords->{imageDir1}") 
+# Resolve camera/CAMERA first, then untar the flight level if it's packed.
+$keywords->{imageDir1} = &resolve_camera_dir($keywords->{imageDir1});
+$keywords->{imageDir1} = &untar_camera_level($keywords->{imageDir1});
+opendir(IMAGE_DIRECTORY, "$keywords->{imageDir1}")
 	|| die "Image directory $keywords->{imageDir1} not found";
 my @tempList = grep{/.jpg/} readdir IMAGE_DIRECTORY;
 closedir IMAGE_DIRECTORY;
@@ -395,6 +398,8 @@ foreach my $fileName (@jpegFiles) {
 	# Now process the cameras.
 	my $addtl_cameras = 1;
 	while ($addtl_cameras <= $keywords->{numCameras}) {
+            $keywords->{"imageDir$addtl_cameras"} =
+                &resolve_camera_dir($keywords->{"imageDir$addtl_cameras"});
             my $Directory = $keywords->{"imageDir$addtl_cameras"};
 	    $Image = &get_camera_image($Directory, $fileName);
             &adjust_camera_image($keywords->{crop},$keywords->{scale},
@@ -570,6 +575,45 @@ print "Normal program Completion.\n";
 # ------------------------------------------------------------------------------
 
 # -------------------------------------------------------------------
+# ----------- Resolve camera directory (camera vs CAMERA) -----------
+# -------------------------------------------------------------------
+# Resolve the "camera" path component (some projects use "CAMERA").
+# The decision is based on whether the camera directory itself exists,
+# not the full path -- deeper levels may still be packed in a tarfile.
+# Returns the resolved path, or the original if no fallback applies.
+sub resolve_camera_dir() {
+    my $dir = shift;
+    return $dir unless $dir =~ m#^(.*/)camera(/.*|$)#;
+    my ($pre, $post) = ($1, $2);
+    return "${pre}CAMERA$post" if ! -d "${pre}camera" && -d "${pre}CAMERA";
+    return $dir;
+}
+
+# -------------------------------------------------------------------
+# ----------- Untar the flight directory if needed ------------------
+# -------------------------------------------------------------------
+# The path contains a flight level (flight_number_????) that is either
+# an unpacked directory or a flight_number_????.tar tarfile. If the
+# directory is missing but the tarfile exists, extract it in place.
+# Side-effect only; returns the (unchanged) path passed in.
+sub untar_camera_level() {
+    my $dir = shift;
+
+    return $dir unless $dir =~ m#^(.*/flight_number_[^/]+)#;
+    my $flightDir = $1;
+    return $dir if -d $flightDir;	# Already unpacked.
+
+    my $tarball = "$flightDir.tar";
+    if (-e $tarball) {
+        (my $parent = $flightDir) =~ s#/[^/]+$##;	# Dir holding the tarfile.
+        print "Extracting $tarball ...\n";
+        system("tar", "-xf", $tarball, "-C", $parent) == 0
+            or die "Couldn't extract tarfile $tarball\n";
+    }
+    return $dir;
+}
+
+# -------------------------------------------------------------------
 # ---------------- Get Camera Image from jpg file -------------------
 # -------------------------------------------------------------------
 sub get_camera_image() {
@@ -670,7 +714,13 @@ sub get_keywords() {
 	$key_hash->{$keyword}=$value;
 
 	# Convert #### to flight number
-	$key_hash->{$keyword} =~ s/####/$flightNum/; 
+	$key_hash->{$keyword} =~ s/####/$flightNum/;
+
+	# Substitute environment variables of the form <VAR>, e.g.
+	# <RAW_DATA_DIR> becomes the value of $ENV{RAW_DATA_DIR}.
+	# Leave the text unchanged if the variable isn't set.
+	$key_hash->{$keyword} =~
+	    s/<(\w+)>/exists $ENV{$1} ? $ENV{$1} : "<$1>"/ge;
 
     print "$keyword = $key_hash->{$keyword}\n";
 	if (!defined $possible_keywords->{$keyword}) {
