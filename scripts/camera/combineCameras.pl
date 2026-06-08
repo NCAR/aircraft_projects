@@ -7,53 +7,7 @@ use strict;
 # netcdf file. Reads a parameter file specified on the command line to
 # get the netcdf file, image directory, variables, etc.
 
-# 2006 Aug 23 - SB
-# Added $cameraName and image adjustment keywords.
-# Added default scale, outputResolution, and bit rate for axis camera.
-
-# 2010 Jan 26 - JAG
-# Added more comments. Streamlined code and moved some code to subroutines.
-# Generalized to support many different camera configuration/number of
-# cameras.
-
-# 2010 Jun 17 - JAG
-# Added ability to increment enddate extracted from .nc global vals if flight
-# rolls over midnight.
-
-# 2010 Jun 21 - JAG
-# Move outputWidth to keywords (was hardcoded) so that if data is too wide
-# and overwrites labels, it can be fixed in config file.
-# Change data image height to pull from outputResolution, not scale, so
-# data can be taller than image if necessary to accomodate PI var request
-# list.
-# Bug in enddate extraction added Jun 17. Both end month and end minute were 
-# emn - fixed.
-
-# 2010 Sept 23 - JAG
-# Movie Date and Time range was only being calculated from netCDF file if netCDF 
-# data was included. Add ability to calc date/time from image filenames.
-
-# 2010 Oct 1 - JAG
-# Code sometimes dies mid processing. If startNum given on command line
-# recover by starting there.
-
-# 2012 Jan 18 - JAA (= JAG)
-# If data is missing, continue on without including data.
-
-# 2012 Feb 10 - JAA
-# Add new param movieDirectory to specify where to output movies.
-
-# 2012 Feb 22 - JAA
-# Handle case where images don't start until after midnight.
-# 
-# 2012 Apr 26 - JAA
-# Upgrade to handle 4 images for TORERO
-#
-# 2012 May 1 - JAA CBS 
-# Added option to overlay imagePointing on each camera image.
-#
-# 2018 March 13 - TMT
-# Added argument to two pass MPEG encoding to enable previewing in ZINC. 
+# Change history has been moved to CHANGELOG.md in this directory.
 # ------------------------------------------------------------------------------
 # Files used:
 #	parameters file specified on command line.
