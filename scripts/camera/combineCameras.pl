@@ -72,6 +72,7 @@ use Image::Magick;		# Non-standard ImageMagick extensions.
 use Sys::Hostname;		# standard module for determining hostname.
 use Time::Local;
 use POSIX qw(strftime);
+use File::Path qw(make_path remove_tree);	# standard module; make_path == mkdir -p
 # -------------------------------------------------------------------
 # ------------------------ Hardcoded values -------------------------
 # -----------(These may need to be changed in the future.)-----------
@@ -127,8 +128,11 @@ my ($projectNumber,$flightNumber,$time_interval,$headerText,$outputFileTimes);
 # -------------------------------------------------------------------
 # ----------------------------- Usage -------------------------------
 # -------------------------------------------------------------------
-#ffmpeg is only installed in mercury or eol-saturn, so must run there
-if ( (split /\./, hostname() !~/mercury/) && (split /\./, hostname() !~/eol-saturn/) ) {
+#ffmpeg is only installed on mercury, eol-saturn, and acserver so must run there
+if ( (split /\./, hostname() !~/mercury/) &&
+     (split /\./, hostname() !~/eol-saturn/) &&
+     (split /\./, hostname() !~/acserver/)
+   ) {
         print "Run on mercury for higher performance!\n\n";
         exit(0);
 }
@@ -295,10 +299,10 @@ if ($keywords->{includeData} ne "yes") {
 $annotatedImageDirectory = 
     $keywords->{movieDirectory}."/AnnotatedImages_$flightNumber";
 # Delete old annotated images directory and create a new (empty) one.
-# Little error checking here right now, and could use FILE::PATH functions.
 if ($startNum == -1) {
-    -d $annotatedImageDirectory and system "rm -r $annotatedImageDirectory";
-    mkdir "$annotatedImageDirectory" or die "Couldn't create $annotatedImageDirectory directory!";
+    -d $annotatedImageDirectory and remove_tree($annotatedImageDirectory);
+    make_path($annotatedImageDirectory);
+    -d $annotatedImageDirectory or die "Couldn't create $annotatedImageDirectory directory!";
 }
 print "Annotated images will be stored in $annotatedImageDirectory\n";
 
@@ -421,7 +425,7 @@ foreach my $fileName (@jpegFiles) {
 	# Determine the output image filename.
 	my $outputImageName=
 	    sprintf('%s/%05d.jpg',$annotatedImageDirectory,$fileNum);
-            system("rm /tmp/magick-*");
+            system("rm -f /tmp/magick-*");
 	###############
 	# flight data #
 	###############
