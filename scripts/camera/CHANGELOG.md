@@ -13,3 +13,4 @@ Changelog for the camera scripts in `aircraft_projects/scripts/camera/`
 ### Added
 - `combineCameras.pl`:
   - Untar image dir if not already done.
+- `createMovies.sh`: Add ability to override $PROJECT on the command line

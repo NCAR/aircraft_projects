@@ -1,8 +1,23 @@
 #!/bin/bash
 
-# PROJECT, AIRCRAFT, and RAW_DATA_DIR are read from the environment
+# PROJECT, AIRCRAFT, and RAW_DATA_DIR are read from the environment.
+# PROJECT may be overridden on the command line with -p.
+usage() {
+    echo "Usage: $0 [-p PROJECT] <flight> (e.g rf06 rf07 rf08) ..."
+}
+
+while getopts ":p:h" opt; do
+    case $opt in
+        p) PROJECT="$OPTARG" ;;
+        h) usage; exit 0 ;;
+        \?) echo "Error: invalid option -$OPTARG"; usage; exit 1 ;;
+        :)  echo "Error: option -$OPTARG requires an argument"; usage; exit 1 ;;
+    esac
+done
+shift $((OPTIND - 1)) # Drop the parsed options so $@ still just holds the flight list
+
 if [ -z "$PROJECT" ] || [ -z "$AIRCRAFT" ]; then
-    echo "Error: PROJECT and AIRCRAFT must be set in the environment."
+    echo "Error: PROJECT and AIRCRAFT must be set in the environment (or PROJECT via -p)."
     exit 1
 fi
 
@@ -13,7 +28,7 @@ fi
 
 # Make sure at least one flight is provided
 if [ $# -lt 1 ]; then
-    echo "Usage: $0 <flight> (e.g rf06 rf07 rf08) ..."
+    usage
     exit 1
 fi
 
