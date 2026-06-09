@@ -6,19 +6,34 @@ _!!! The data loading workflow still relies on scripts that are located in subve
 
 ### Python Dependencies
 
-All required dependencies are installed in the python3 anaconda installation maintained by EOL. To use that setup, you need to edit your path to point to the anaconda installation
+All required dependencies are installed in the python3 anaconda installation maintained by EOL. To use that setup, you need to deploy the correct RAF environment variable
 ```shell
-edit your ~/.bashrc and add the line "export PATH="/opt/local/anaconda3/bin:$PATH"
-exit and restart your terminal window, or `source ~/.bashrc`
-Test with `which python3`
-/opt/local/anaconda3/bin/python3
-``` 
+> echo $0
+```
+will tell you if your shell is bash or tcsh
 
-If you are running with the default EOL user bash setup, you will need to install pymysql and pyyaml in your home directory:
+* Edit your `~/.my_defaults` file and add the following:
+  * if you are running tcsh
+  ```tcsh
+  source /net/adm/etc/Jeffco_only.cshrc
+  ```
+  * If you are running bash
+  ```bash
+  if [[ -f /h/eol/etc/Jeffco_only.bashrc ]]; then
+      . /h/eol/etc/Jeffco_only.bashrc
+  fi
+  ```
+* Exit and restart your terminal window, or `source ~/.my_defaults`
+* Test with `which python3`. It should return
+    */opt/local/anaconda3/bin/python3*
+
+Alternatively, if you want to run with the default EOL user shell setup, you will need to install pymysql and pyyaml in your home directory:
 
 ```shell
 pip install pymysql pyyaml
 ```
+
+and set the required environment variables below:
 
 ### Environment Variables
 
