@@ -43,7 +43,7 @@ For more information on the load data scripts located in `/net/work/bin/scripts/
 
 - For the ADS data, archive the RF, FF, TF, and CF files. Hangar flights, other than the CF files, do NOT need to be archived unless requested.
 
-For each of these datasets, perform the following steps to add the data to the archive:
+For each of these datasets, perform the following steps to add the data to the archive. Unless otherwise noted, run them as yourself:
 
 1. If not there already, copy the data files to `/scr/raf/Raw_Data/<project>`. The files in `/scr/raf_data` and individual PMs ftp areas are subject to being overwritten. By copying the files here, it is possible to cleanly keep track of file versions.
 
