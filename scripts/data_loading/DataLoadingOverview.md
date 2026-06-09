@@ -58,7 +58,7 @@ For each of these datasets, perform the following steps to add the data to the a
 5. Run `./archAC.sh`. The script calls `archAC.py` which automatically computes sha256 checksums for each file before transfer, rsyncs the files to the archive, then verifies the checksums on the archive server and reports a match or mismatch per file. Results are written to `checksums.txt` in the archive location. If a mismatch is reported, re-copy the affected files and re-run.
 
 6. Generate the dataset YAML config files and load to the FDA and the DTS
-   - See [readme.md](readme.md) for setup requirements. In particular, ensure $PROJ_DIR and .my.cnf are configured.
+   - See [readme.md](readme.md) for setup requirements. **Don't skip this step! The code will fail if your environment is not configured correctly**
    - Copy `project_template.yml` from `$PROJ_DIR/Configuration/scripts/project_template.yml` to `$PROJ_DIR/<PROJECT>/<aircraft>/scripts/project_template.yml`.
    - Edit `project_template.yml`. There are blocks separated by comment lines.
      - In the variables block:

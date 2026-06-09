@@ -6,6 +6,16 @@ _!!! The data loading workflow still relies on scripts that are located in subve
 
 ### Python Dependencies
 
+All required dependencies are installed in the python3 anaconda installation maintained by EOL. To use that setup, you need to edit your path to point to the anaconda installation
+```shell
+edit your ~/.bashrc and add the line "export PATH="/opt/local/anaconda3/bin:$PATH"
+exit and restart your terminal window, or `source ~/.bashrc`
+Test with `which python3`
+/opt/local/anaconda3/bin/python3
+``` 
+
+If you are running with the default EOL user bash setup, you will need to install pymysql and pyyaml in your home directory:
+
 ```shell
 pip install pymysql pyyaml
 ```
@@ -17,6 +27,8 @@ pip install pymysql pyyaml
 | `PROJ_DIR`        | Yes      | —                     | Root directory containing project folders   |
 | `CFG_FILES_DIR`   | No       | `/net/work/cfg-files` | Output directory for generated YAML configs |
 | `DMG_MYCNF_PATH`  | No       | `~/.my.cnf`           | Path to MySQL option file                   |
+
+To confirm if a variable is set use the echo command, eg `echo $PROJ_DIR`
 
 ### Database Configuration (.my.cnf)
 
