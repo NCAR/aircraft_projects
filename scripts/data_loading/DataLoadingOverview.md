@@ -70,7 +70,7 @@ For each of these datasets, perform the following steps to add the data to the a
        - Add the dataset id and version number for each dataset for which you want to create a YAML file
      - Update the internal_contact_id_dts, load_contact_id_dts, and author_id_dts to be your DTS id. You can find your contactID by logging in to the DTS and looking at the URL for your entry on the Add/Edit Users page
      - Update the internal_contact_id_codiac to be your CODIAC id. To find your internal contact ID, login to data.eol.ucar.edu, switch to editor mode, go to Contact List, search for your name and find your id in the URL of your entry.
-   - From the `scripts/data_loading/` directory, run `python replace_yaml.py <PROJECT>`. This script reads the `project_template.yml` for the project and all base config templates, automatically substitutes all variables (e.g. `<PROJECT>`, `<year>`, archive IDs), and saves the generated YAML files to `$CFG_FILES_DIR/<PROJECT>*/` (default: `/net/work/cfg-files/<PROJECT>*/`).
+   - From the `scripts/data_loading/` directory, run `python3 replace_yaml.py <PROJECT>`. This script reads the `project_template.yml` for the project and all base config templates, automatically substitutes all variables (e.g. `<PROJECT>`, `<year>`, archive IDs), and saves the generated YAML files to `$CFG_FILES_DIR/<PROJECT>*/` (default: `/net/work/cfg-files/<PROJECT>*/`).
    - Now `cd /net/work/bin/scripts/insert/loaddata` and run `./load_a_dataset.pl`, giving the full path to each yml file generated above. This script will create an FDA dataset, create a DTS entry, and add all the data files to the new dataset. Hit return when prompted. When the script completes, it will prompt you to perform additional tasks by hand. (These would all be great areas to automate in the future.)
 
 7. Run `/net/work/bin/emdac/lsdsfiles -lv <archive_ident>` on datasets with files archived locally to `/net/archive` (`lsdsfiles` does not work with files on campaign storage)
@@ -131,8 +131,8 @@ For each of these datasets, perform the following steps to add the data to the a
 8. Update the dataset YAML config manually or with `update_version.py` and add new files to the FDA using `insert_multiple_files`.
    - `cd /net/work/cfg-files/<PROJECT>`
    - Update the version (and optionally ingest location or filename pattern) in the existing `.yml` file by running `update_version.py` from the `scripts/data_loading/` directory:
-     `python update_version.py <PROJECT> <DATASET> --version 1.0 [--ingest /new/path] [--pattern new_pattern]`
-   - If there is no existing `.yml` file, generate one by running `python replace_yaml.py <PROJECT>` from `scripts/data_loading/` as described in step 7 above.
+     `python3 update_version.py <PROJECT> <DATASET> --version 1.0 [--ingest /new/path] [--pattern new_pattern]`
+   - If there is no existing `.yml` file, generate one by running `python3 replace_yaml.py <PROJECT>` from `scripts/data_loading/` as described in step 7 above.
    - Log in as user `eoldata`
    - Run `./insert_multiple_files -u <YOUR_USERNAME> XXX.yml` (from `/net/work/bin/scripts/insert/`)
    - Run `/net/work/bin/emdac/lsdsfiles -lv ###.###` to check dataset if data files are archived locally to `/net/archive` (does not work with campaign storage)
