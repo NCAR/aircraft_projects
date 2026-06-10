@@ -402,24 +402,26 @@ class archRAFdata:
                     sha256_hash.update(byte_block)
             checksum = sha256_hash.hexdigest()
             checksums[sfile] = checksum #Store local checksums for comparison later
-            # http://www.mgleicher.us/GEL/hsi/hsi_reference_manual_2/hsi_commands/put_command.html
-            # -P : create intermediate HPSS subdirectories for the file(s) if they do not exist
-            # -d : remove local files after success transfer to HPSS
-            # Only remove camera tarfiles, since they are an intermediate product on local disk and are HUGE.
-            match = re.search('CAMERA',type)
-            match= re.search(sdir, spath)
+
+            # For CAMERA, group archived files by pointing (e.g. CAMERA/DOWN/RF01...).
+            # Pointing is the 2nd dot-field of the tarball name: FLIGHT.POINTING.DATE...
+            dest_dir = type
+            if re.search('CAMERA', type):
+                dest_dir = f'{type}/{sfile.split(".")[1]}'
+
+            match= re.search(sdir, spath)  # See if spath already contains sdir
             if match:
                 command.append(
-                        f'rsync {spath} eoldata@data-access.ucar.edu:{csroot}{type}/{sfile}'
+                        f'rsync {spath} eoldata@data-access.ucar.edu:{csroot}{dest_dir}/{sfile}'
                 )
             else:
-                if 'LRT' in type:
+                if 'LRT' in type:  # LRT files are archived locally
                     command.append(
-                        f'rsync {sdir}{spath} {csroot}{type}/{sfile}')
-                else:
+                        f'rsync {sdir}{spath} {csroot}{dest_dir}/{sfile}')
+                else:  # Everything else is archived to campaign storage
                     command.append(
                         f'rsync {sdir}{spath} eoldata@data-access.ucar.edu:{csroot}'
-                        + type
+                        + dest_dir
                         + '/'
                         + sfile
                     )
@@ -429,10 +431,6 @@ class archRAFdata:
 
         process = input("Run the commands as listed? " + \
                                 "yes == enter, no == anything else: ")
-
-        match= re.search('CAMERA', type)
-        if match:
-            process = ""
 
         if process == "":
             for line in command:
@@ -450,12 +448,21 @@ class archRAFdata:
                     subj = f"rsync job for {type}/{sfile} -- Failed -- {archraf.today()}"
                     message = f"\nSTDOUT:\n{output.decode('utf-8')}\n\nSTDERR:\n{errors.decode('utf-8')}"
                     archraf.sendMail(subj,message, email)
+
             # SSH into the remote server or cd to local archive and run the sha256sum command
-            if 'LRT' in type:
-                ssh_command = f"cd {csroot}{type} && sha256sum * >> checksums.txt" #Command to create checksum
-                open_command = f'cat {csroot}{type}/checksums.txt' #Command to read checksums for comparison
+            # CAMERA stores files one level down in pointing subdirs, so recurse;
+            # other types are flat. Regenerate (>) so reruns don't pile up dupes.
+            if re.search('CAMERA', type):
+                sum_cmd = "find . -type f ! -name checksums.txt -exec sha256sum {} +"
             else:
-                ssh_command = f'ssh eoldata@data-access.ucar.edu "cd {csroot}{type} && sha256sum * >> checksums.txt"'
+                sum_cmd = "sha256sum *"
+            if 'LRT' in type:
+                # create checksum
+                ssh_command = f"cd {csroot}{type} && {sum_cmd} > checksums.txt"
+                # read checksums for comparison
+                open_command = f'cat {csroot}{type}/checksums.txt'
+            else:
+                ssh_command = f'ssh eoldata@data-access.ucar.edu "cd {csroot}{type} && {sum_cmd} > checksums.txt"'
                 open_command = f'ssh eoldata@data-access.ucar.edu "cat {csroot}{type}/checksums.txt"'
             p = subprocess.Popen(ssh_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
             output, errors = p.communicate()
