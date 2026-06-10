@@ -48,7 +48,6 @@ class archRAFdata:
 
     Methods:
         sendMail(subject, body, email): Sends an email with the specified subject and body to the given email address.
-        setMSSenv(): Sets constants for MSS environment.
         today(): Returns the current date and time in a formatted string.
         checkuser(): Checks login to ensure only "dmg" login is allowed to run the script.
         checkpath(): Checks the current directory to ensure the script is being run from the correct location.
@@ -85,12 +84,6 @@ class archRAFdata:
         s = smtplib.SMTP("ndir.ucar.edu")
         s.send_message(msg)  # Use send_message for MIME objects
         s.quit()
-
-    def setMSSenv(self):
-        # Set some constants here so can easily find and change them
-        msrcpMachine = "bora"	# the machine to run the msrcp command from
-        wpwd = "RAFDMG" 	# the MSS Write PWD
-        return [msrcpMachine,wpwd]
 
     def today(self):
         """
@@ -386,7 +379,6 @@ class archRAFdata:
             if match:
                 sfile = archraf.renameKML(sdir,sfile)
 
-            (msrcpMachine,wpwd)=archraf.setMSSenv()
             # Compute sha256sum for the file
             sha256_hash = hashlib.sha256()
             with open(sdir+spath, "rb") as f:
