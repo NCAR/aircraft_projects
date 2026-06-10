@@ -572,7 +572,25 @@ if __name__ == "__main__":
                     continue
                 match = re.search(hoursearchstr,name)
                 if not match:
-                    print("Found file "+name)
+                    # Untar tar files if not already done, then skip. Since this
+                    # code is run as user eoldata, untarring requires the
+                    # eoldata user to be part of the `proj` group so it can write
+                    # to the RAF dir
+                    if name.endswith(".tar"):
+                        print("Found file "+name+" in " + root)
+                        dirname  = name[:-4]
+                        print("\tLooking for "+os.path.join(root,dirname))
+                        if os.path.isdir(os.path.join(root,dirname)):
+                            print("\tFound dir "+dirname+ " - no need to untar")
+                        else:
+                            print("\tUntarring: tar -xvf " + \
+                                    os.path.join(root,name))
+                            result = subprocess.run(["tar", "-xvf", \
+                                    os.path.join(root,name)],
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE,
+                                    text=True)
+                        continue
                     match = re.search(searchstr,name)
                     if match:
                         (byr,bmo,bdy,bhr,bmn,bsc,hoursearchstr)=archraf.parse_date(name)
