@@ -345,7 +345,7 @@ class archRAFdata:
         '''
         Usage statement for this code. This is also the only documentation.
         '''
-        if len(sys.argv) < 3 or len(sys.argv) > 7:
+        if len(sys.argv) < 3 or len(sys.argv) > 12:
             print('''Usage: archAC.py TYPE <flag> SDIR SFILES <ARCHIVEDIR> [EMAIL]
             where:\ttype is data type being archive (SID-2H, ADS, CAMERA)
             (will be used a subdir name on mss)
@@ -353,6 +353,8 @@ class archRAFdata:
                 use -r to search for source files recursively
                 use -t to create tarballs of subdirs in the SDIR
                 use -p <pointing> to indicate camera
+                use -f <flight> to limit processing to a single
+                    flight (e.g. rf01). Matches against the dir path.
                 use -a to recover and archive tarfiles in current
                     dir 
                 use -m to archive movie files to the CAMERA dir on
@@ -511,18 +513,22 @@ if __name__ == "__main__":
     # Get the rest of the command line arguments off the command line
     index = 2
     pointing = "unknown"
-    arg = sys.argv[index]
-    if re.search("^-",arg):
-        # Assume there is only one flag on the line, else
-        # bad things will happen
-        flag = arg
+    flight = ""
+    flag = ""
+    # Parse any leading flags. -p and -f are modifiers that take an
+    # argument; the others (-r, -t, -a, -m) are mode flags.
+    while index < len(sys.argv) and re.search("^-",sys.argv[index]):
+        arg = sys.argv[index]
         index = index+1
-        if flag == "-p":
-            arg = sys.argv[index]
-            pointing = arg
+        if arg == "-p":
+            pointing = sys.argv[index]
             index = index+1
-    else:
-        flag = ""
+        elif arg == "-f":
+            # Limit processing to a single flight (e.g. rf01)
+            flight = sys.argv[index]
+            index = index+1
+        else:
+            flag = arg
     sdir = sys.argv[index]
     searchstr = sys.argv[index+1]
     cs_location = sys.argv[index+2]
@@ -554,6 +560,9 @@ if __name__ == "__main__":
     
         # List all the files/dirs in the working dir (sdir)
         for root, dirs, files in os.walk(sdir):
+            # If -f was given, only process directories for that flight
+            if flight and flight.lower() not in root.lower():
+                continue
             files.sort()
             tarfiles = []
             hoursearchstr = "999999"
