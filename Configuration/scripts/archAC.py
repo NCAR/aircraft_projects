@@ -135,8 +135,8 @@ class archRAFdata:
                         '/<proj>/<platform>/Production/archive. Quitting.\n')
             raise SystemExit
 
-	# Check the second to last part of the path. It should be a dir called
-	# Production. If not, warn user and exit.
+        # Check the second to last part of the path. It should be a dir called
+        # Production. If not, warn user and exit.
         if path_components[len(path_components)-2] != "Production":
             print(f"You are running from {current_dir}\n")
             print('This script must be run from the '+os.environ['PROJ_DIR'] +'/Production/archive subdir. Quitting.\n')
@@ -180,11 +180,11 @@ class archRAFdata:
                 fullname = os.path.join(root,name)
                 match= re.search("removed",fullname)
                 if match:
-                    continue;
+                    continue
                 match = re.search(f"{searchstr}$", name)
-            if match:
-                name = os.path.join(root,name)
-                filesfound.append(name)
+                if match:
+                    name = os.path.join(root,name)
+                    filesfound.append(name)
         return filesfound
 
     def tardir(self,sdir,filedir,tarfilename,tarfiles):
@@ -193,6 +193,7 @@ class archRAFdata:
         dirpath that match pattern. Also create a listing of the contents
         of the tarfile called subdir.tar.dir. Return the location on disk
         of both the tarfile and the listing file.'''
+
         # Tar up files. If the path was to a file, or there were
         # no files found in the path, then there is nothing to 
         # tar so don't return anything.
@@ -263,7 +264,7 @@ class archRAFdata:
         dfile = ""
 
         # Get flight number
-        # from the filename if we can otherwise from the NetCDF header	
+        # from the filename if we can otherwise from the NetCDF header
         p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
         p2 = subprocess.Popen(["grep","FlightNumber"], stdin=p1.stdout, stdout=subprocess.PIPE)
         flightnum = (p2.communicate()[0].decode('utf-8').split('"')[1]).upper()
@@ -332,7 +333,7 @@ class archRAFdata:
         '''
         if len(sys.argv) < 3 or len(sys.argv) > 7:
             print('''Usage: archAC.py TYPE <flag> SDIR SFILES <ARCHIVEDIR> [EMAIL]
-            where:	type is data type being archive (SID-2H, ADS, CAMERA)
+            where:\ttype is data type being archive (SID-2H, ADS, CAMERA)
             (will be used a subdir name on mss)
             flag is an optional argument that can be -r or -t
                 use -r to search for source files recursively
@@ -562,24 +563,24 @@ if __name__ == "__main__":
                         # Skip removed dirs (don't archive them)
                         match = re.search("removed",fullname)
                         if match:
-                            continue;
-    		        # Get camera location (fwd, etc) from path
-    		        # or make user enter on command line.
-                    if re.search('left',fullname):
-                        pointing = 'LEFT'
-                    if re.search('right',fullname):
-                        pointing = 'RIGHT'
-                    if re.search('down',fullname):
-                        pointing = 'DOWN'
-                    if re.search('forward',fullname):
-                        pointing = 'FWD'
-                    if re.search('FWD',fullname):
-                        pointing == 'FWD'
-                    if pointing == "unknown":
-                        print("ERROR: pointing not given in path "+ \
-    		            "or filename. Enter using -p on command "+ \
-    		            "line.")
-                        raise SystemExit
+                            continue
+                        # Get camera location (fwd, etc) from path
+                        # or make user enter on command line.
+                        if re.search('left',fullname):
+                            pointing = 'LEFT'
+                        if re.search('right',fullname):
+                            pointing = 'RIGHT'
+                        if re.search('down',fullname):
+                            pointing = 'DOWN'
+                        if re.search('forward',fullname):
+                            pointing = 'FWD'
+                        if re.search('FWD',fullname):
+                            pointing == 'FWD'
+                        if pointing == "unknown":
+                            print("ERROR: pointing not given in path "+ \
+                                  "or filename. Enter using -p on command "+ \
+                                  "line.")
+                            raise SystemExit
     
                         # Return an array containing the complete path to
                         # all the files matching searchstr in the path
