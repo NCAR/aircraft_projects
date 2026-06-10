@@ -205,9 +205,23 @@ class archRAFdata:
             tfilename = event.upper() + "_" + calendaryear
         else:
             tfilename = event.upper()
+        # Don't rebuild a tarball that already exists (e.g. on a rerun after
+        # a failure later in the run). Still return the names so it gets archived.
+        if os.path.exists(f"{scr_dir}/{tfilename}.tar"):
+            print(f"Tarball already exists, skipping: {scr_dir}/{tfilename}.tar")
+            return [f'{tfilename}.tar', f'{tfilename}.tar.dir']
+
         print(f"Creating tarfile for {sdir}/{filedir}")
         print(f"Writing tarball to {scr_dir}/{tfilename}")
-        os.system(f"tar -cvf {scr_dir}/{tfilename}.tar --directory={sdir} {' '.join(tarfiles)}")
+
+        tarfiles.sort()
+        tar = tarfile.open(f"{scr_dir}/{tfilename}.tar", "w")
+        for files in tarfiles:
+            arcname = os.path.relpath(files, sdir)   # store path relative to sdir
+            tar.add(files, arcname)
+        tar.list()          # echo each file's info to the screen
+        tar.close()
+
         os.system(f"tar -tvf {scr_dir}/{tfilename}.tar > {scr_dir}/{tfilename}.tar.dir")
         return [f'{tfilename}.tar', f'{tfilename}.tar.dir']
 
@@ -422,7 +436,7 @@ class archRAFdata:
         if process == "":
             for line in command:
                 p = subprocess.Popen(line,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
-                output, errors = p.communicate();
+                output, errors = p.communicate()
                 result = p.returncode
                 #result = os.system(line)
                 path_components = line.split('/')
