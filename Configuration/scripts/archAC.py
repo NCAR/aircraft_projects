@@ -433,6 +433,10 @@ class archRAFdata:
                                 "yes == enter, no == anything else: ")
 
         if process == "":
+            print(f'#  Archiving {len(sfiles)} file(s) via rsync on {archraf.today()}')
+            # Prep email components
+            subj = f"rsync job for {type} status email"
+            message = f""
             for line in command:
                 p = subprocess.Popen(line,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
                 output, errors = p.communicate()
@@ -445,9 +449,10 @@ class archRAFdata:
                 else:
                     print(f"#  rsync job for {type}/{sfile} -- Failed -- {archraf.today()}")
                     print(f"#                {type}/{sfile}: error code {str(result)}")
-                    subj = f"rsync job for {type}/{sfile} -- Failed -- {archraf.today()}"
-                    message = f"\nSTDOUT:\n{output.decode('utf-8')}\n\nSTDERR:\n{errors.decode('utf-8')}"
-                    archraf.sendMail(subj,message, email)
+                    message += f"\nSTDOUT:\n{output.decode('utf-8')}\n\nSTDERR:\n{errors.decode('utf-8')}"
+            # Send email for everything at once
+            if message != f"":
+                archraf.sendMail(subj,message, email)
 
             # SSH into the remote server or cd to local archive and run the sha256sum command
             # CAMERA stores files one level down in pointing subdirs, so recurse;
@@ -491,6 +496,7 @@ class archRAFdata:
             else:
                 print("#  sha256sum command failed on archive server.")
                 print(errors.decode('utf-8'))
+
         print(f"#   Successful completion on {archraf.today()}" + "\n")
 
 
