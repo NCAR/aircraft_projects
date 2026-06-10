@@ -628,35 +628,35 @@ if __name__ == "__main__":
 
                         # Return an array containing the complete path to
                         # all the files matching searchstr in the path
-                    hoursearchstr = hoursearchstr+searchstr
-                    print( "Finding files in "+root+" that match "+hoursearchstr)
-                    tarfiles = archraf.findfiles(root,hoursearchstr)
+                        hoursearchstr = hoursearchstr+searchstr
+                        print( "Finding files in "+root+" that match "+hoursearchstr)
+                        tarfiles = archraf.findfiles(root,hoursearchstr)
 
-                    tarfiles.sort()
-                    Efile = tarfiles[len(tarfiles)-1]
-                    (eyr,emo,edy,ehr,emn,esc,hoursearchstr)=archraf.parse_date(Efile)
-                    # output tarfile name is like
-                    # RF##.FWD.Sdate.Stime_etime.jpg.tar and tar.dir
-                    match = re.search("[RrTtFf][Ff][0-9][0-9]",fullname)
-                    if not match:
-                        print("Flight number not found in image path. Please")
-                        print(" rename camera dirs to contain flight numbers")
-                        print(" e.g. RF01\n")
-                        raise SystemExit
+                        tarfiles.sort()
+                        Efile = tarfiles[len(tarfiles)-1]
+                        (eyr,emo,edy,ehr,emn,esc,hoursearchstr)=archraf.parse_date(Efile)
+                        # output tarfile name is like
+                        # RF##.FWD.Sdate.Stime_etime.jpg.tar and tar.dir
+                        match = re.search("[RrTtFf][Ff][0-9][0-9]",fullname)
+                        if not match:
+                            print("Flight number not found in image path. Please")
+                            print(" rename camera dirs to contain flight numbers")
+                            print(" e.g. RF01\n")
+                            raise SystemExit
 
-                    flightnum = (match.group()).upper()
-                    tarfilename=flightnum+"."+pointing+"."+\
-                        byr+bmo+bdy+"."+bhr+bmn+bsc+"_"+\
-                        ehr+emn+esc+"."+searchstr
+                        flightnum = (match.group()).upper()
+                        tarfilename=flightnum+"."+pointing+"."+\
+                                    byr+bmo+bdy+"."+bhr+bmn+bsc+"_"+\
+                                    ehr+emn+esc+"."+searchstr
 
-                    # Create the tarball
-                    [tfile,tfilelist]=archraf.tardir(root,"",tarfilename,tarfiles)
+                        # Create the tarball
+                        [tfile,tfilelist]=archraf.tardir(root,"",tarfilename,tarfiles)
 
-                    if tfile != "":
-                    # Add the tar file to the array of files to archive
-                        sfiles.append(tfile)
-                        # Add the tar file list to the array of files to archive
-                        sfiles.append(tfilelist)
+                        if tfile != "":
+                            # Add the tar file to the array of files to archive
+                            sfiles.append(tfile)
+                            # Add the tar file list to the array of files to archive
+                            sfiles.append(tfilelist)
             sdir = os.getcwd() + '/'
     elif flag == "-r":
         sfiles = archraf.findfiles(sdir,searchstr)
