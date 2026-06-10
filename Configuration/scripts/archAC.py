@@ -671,7 +671,8 @@ if __name__ == "__main__":
                             sfiles.append(tfile)
                             # Add the tar file list to the array of files to archive
                             sfiles.append(tfilelist)
-            sdir = os.getcwd() + '/'
+            # tardir() wrote the tarballs to scr_dir, so archive from there
+            sdir = scr_dir + '/'
     elif flag == "-r":
         sfiles = archraf.findfiles(sdir,searchstr)
         sdir = sdir + '/'
