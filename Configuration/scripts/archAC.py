@@ -370,17 +370,18 @@ class archRAFdata:
 
     def archive_files_cs(self,sdir,sfiles,flag,type,csroot,email = ""):
         '''Now archive the data!'''
-        print(f'#  {len(sfiles)} Job(s) submitted on {archraf.today()}')
+        print(f'#  Generating rsync commands. Please wait...')
         options = ''
         command = []
         checksums = {}
         for spath in sfiles:
             path_components = spath.split('/')
-            sfile = (
-                f'{path_components[len(path_components) - 2]}/{path_components[len(path_components) - 1]}'
-                if flag == "-r"
-                else path_components[len(path_components) - 1]
-            )
+            # Only use the parent/filename form for -r when spath actually has
+            # a parent component; a bare filename would otherwise double (name/name).
+            if flag == "-r" and len(path_components) >= 2:
+                sfile = f'{path_components[-2]}/{path_components[-1]}'
+            else:
+                sfile = path_components[-1]
             match = re.search("(LRT|lrt)", type)
             if match:
                 sfile = archraf.rename(sdir,sfile)
