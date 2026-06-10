@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 #
 ################################################################################
-# Script to archive raw RAF datasets to the CISL Mass Storage System under the 
-# /RAF or /ATD/DATA path.
+# Script to archive raw RAF datasets to the CISL HPSS under the
+# /glade/campaign/eol path.
 #
 #  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-#  *  Copyright 2008                                                         *
+#  *  Copyright 2026                                                         *
 #  *  University Corporation for Atmospheric Research, All Rights Reserved.  *
 #  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 # Import modules used by this code. Some are part of the python library. Others
@@ -31,10 +31,8 @@ if getuser != "eoldata":
     print(f"You are running script as: {getuser}. Change to eoldata and start over.")
     sys.exit()
 
-# For bora logins, $PROJ_DIR is an environment variable set to the 
-# project working dir (currently /jnet/local/projects).'''
-# File that contains map between project and Mass Store directories where
-# production data is archived.
+# For server logins, $PROJ_DIR is an environment variable set to the
+# project working dir (currently /net/jlocal/projects).
 project = os.environ["PROJECT"]
 calendaryear = os.environ["YEAR"]
 dirmapfile = "/scr/raf/Prod_Data/archives/msfiles/directory_map"
@@ -117,16 +115,16 @@ class archRAFdata:
             raise SystemExit
 
     def checkpath(self):
-        '''Check current directory to make sure script is being run from the 
-        archive subdir and grab the project name from the path as well. This 
-        assumes the path is of the form 
+        '''Check current directory to make sure script is being run from the
+        archive subdir and grab the project name from the path as well. This
+        assumes the path is of the form
         $PROJ_DIR/<PROJ_NAME>/<PLATFORM>/Production/archive'''
 
         # Get current working directory
         current_dir = os.getcwd()
         # split the path of the current dir into it's subdir components
         path_components = current_dir.split('/')
-        # Check the last section of the path. It should be a dir called "archive". 
+        # Check the last section of the path. It should be a dir called "archive".
         # If not,  warn user and exit.
         if path_components[-1] != "archive":
             print(f"You are running from {current_dir}" + "\n")
@@ -195,7 +193,7 @@ class archRAFdata:
         of both the tarfile and the listing file.'''
 
         # Tar up files. If the path was to a file, or there were
-        # no files found in the path, then there is nothing to 
+        # no files found in the path, then there is nothing to
         # tar so don't return anything.
         if len(tarfiles) == 0:
             return ["",""]
@@ -244,7 +242,7 @@ class archRAFdata:
         #Some older KML files were renamed locally before this update
         #We dont want to add the timeinterval twice so watch for these files
         match= re.search('\d{8}.\d{6}.\d{6}', sfile)
-        if match:    
+        if match:
             return sfile
 
         #Use grep to select the dates from the KML file
@@ -356,7 +354,7 @@ class archRAFdata:
                 use -f <flight> to limit processing to a single
                     flight (e.g. rf01). Matches against the dir path.
                 use -a to recover and archive tarfiles in current
-                    dir 
+                    dir
                 use -m to archive movie files to the CAMERA dir on
                     mss.
                 pointing for CAMERA files if
@@ -498,15 +496,15 @@ archraf = archRAFdata()
 # Stuff below this line will only be run if the code is run directly.
 # If it is used as a module for import into another script, it won't be run.
 if __name__ == "__main__":
-    
-    # Usage: 
+
+    # Usage:
     archraf.usage()
 
     # Read the data type from the command line. It must always
     # be the second item on the line, after calling the script
     type = sys.argv[1]
     print("Processing type " + type)
-    
+
     # sys.argv[0] is the path and filename of this script
     # Don't currently need it for anything, so ignore it.
 
@@ -540,24 +538,24 @@ if __name__ == "__main__":
     else:
         print("You must supply an email address as the last argument. If the script fails, you will receive an email.")
 
-    # Make sure this script is being run from 
+    # Make sure this script is being run from
     # $PROJ_DIR/<proj>/<platform>/Production/archive.
     (platform,proj_name,projdir,current_dir) = archraf.checkpath()
-    
-    # Confirm we are running on bora, merlot, or shiraz since these are the big data
-    # processing machines and we don't want to step on anyone elses toes.
+
+    # Confirm we are running on one of our big data processing servers.
+    # We don't want to step on anyone elses toes.
     # Not Implemented Yet
-    
+
     # Get the list of files to archive and store to array sfiles
-    # In Ron's original scripts, the file names were rearranged before writing to the 
-    # Mass Store and the new destination filenames were stored in dfiles.
-    # Going forward, keep the same filenames, except for LRT and HRT netCDF files,
-    # which are renamed using the rename subroutine.
+    # In the original scripts, file names were rearranged before writing to the
+    # Mass Store (now HPSS) and the new destination filenames were stored in dfiles.
+    # Going forward, keep the same filenames, except for LRT and HRT netCDF
+    # files, which are renamed using the rename subroutine.
     sfiles = []
     if (type == "CAMERA") & (flag != "-a") & (flag != "-m"):
         aircraft = platform
         print("This project took place aboard the "+aircraft+" aircraft\n")
-    
+
         # List all the files/dirs in the working dir (sdir)
         for root, dirs, files in os.walk(sdir):
             # If -f was given, only process directories for that flight
@@ -571,11 +569,11 @@ if __name__ == "__main__":
                 if not match:
                     print("Found file "+name)
                     match = re.search(searchstr,name)
-                    if match: 
+                    if match:
                         (byr,bmo,bdy,bhr,bmn,bsc,hoursearchstr)=archraf.parse_date(name)
                         fullname = os.path.join(root,name)
                         print(fullname)
-                        # Skip sent dirs (don't archive them) 
+                        # Skip sent dirs (don't archive them)
                         match = re.search("sent",fullname)
                         if match:
                             continue
@@ -604,7 +602,7 @@ if __name__ == "__main__":
                                   "or filename. Enter using -p on command "+ \
                                   "line.")
                             raise SystemExit
-    
+
                         # Return an array containing the complete path to
                         # all the files matching searchstr in the path
                     hoursearchstr = hoursearchstr+searchstr
@@ -614,7 +612,7 @@ if __name__ == "__main__":
                     tarfiles.sort()
                     Efile = tarfiles[len(tarfiles)-1]
                     (eyr,emo,edy,ehr,emn,esc,hoursearchstr)=archraf.parse_date(Efile)
-                    # output tarfile name is like 
+                    # output tarfile name is like
                     # RF##.FWD.Sdate.Stime_etime.jpg.tar and tar.dir
                     match = re.search("[RrTtFf][Ff][0-9][0-9]",fullname)
                     if not match:
@@ -646,24 +644,24 @@ if __name__ == "__main__":
         dirfilelist.sort()
         pattern = re.compile(r'.*\/[FRT]F[0-1][0-9]$')
         for file in dirfilelist:
-            # Walk through the dirpath (this will ignore paths that 
+            # Walk through the dirpath (this will ignore paths that
             # point to a file and
             # only walk through paths that point to a dir.
             path = join(sdir,file)
-    
-            # Return an array containing the complete path to all 
+
+            # Return an array containing the complete path to all
             # the files matching searchstr in the path
             print("Finding files in "+path+" that match "+searchstr)
             #tarfiles = archraf.findfiles(path,searchstr)
-            # For clarity, the tarfile name should contain the 
-            # date (yyyymmdd) and flight number. Start with the 
+            # For clarity, the tarfile name should contain the
+            # date (yyyymmdd) and flight number. Start with the
             # directory name.
             tarfilename = file
             if pattern.match(path):
                 tarfiles = path
             else:
                 continue
-            # If the directory name does not contain a year, 
+            # If the directory name does not contain a year,
             # add it to the tarfile name.
             [tfile,tfilelist]=archraf.tardir(sdir,file,tarfilename,tarfiles)
             if tfile != "":
@@ -682,7 +680,7 @@ if __name__ == "__main__":
                 print(line)
                 sfiles.append(line)
         sdir = sdir + '/'
-    
+
     # Sort the files to be processed so they are processed in alphabetical order
     sfiles.sort()
     csroot = cs_location+proj_name.lower()+'/aircraft/'+platform.lower()+'/'
