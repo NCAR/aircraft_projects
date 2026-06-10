@@ -651,7 +651,7 @@ if __name__ == "__main__":
                         (eyr,emo,edy,ehr,emn,esc,hoursearchstr)=archraf.parse_date(Efile)
                         # output tarfile name is like
                         # RF##.FWD.Sdate.Stime_etime.jpg.tar and tar.dir
-                        match = re.search("[RrTtFf][Ff][0-9][0-9]",fullname)
+                        match = re.search("[RrTtFfPp][FfPp][0-9][0-9]",fullname)
                         if not match:
                             print("Flight number not found in image path. Please")
                             print(" rename camera dirs to contain flight numbers")
@@ -679,7 +679,7 @@ if __name__ == "__main__":
         # List all the files/dirs in the working dir (sdir)
         dirfilelist = os.listdir(sdir)
         dirfilelist.sort()
-        pattern = re.compile(r'.*\/[FRT]F[0-1][0-9]$')
+        pattern = re.compile(r'.*\/[FRTP][FP][0-2][0-9]$')
         for file in dirfilelist:
             # Walk through the dirpath (this will ignore paths that
             # point to a file and
