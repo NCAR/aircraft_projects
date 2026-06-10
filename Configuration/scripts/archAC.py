@@ -565,6 +565,11 @@ if __name__ == "__main__":
             tarfiles = []
             hoursearchstr = "999999"
             for name in files:
+                # Now that we are using syncthing, it leaves files with names
+                # like ".syncthing.flight_number_####.tar.tmp" that are being
+                # matched. Skip file names that start with a dot
+                if name.startswith("."):
+                    continue
                 match = re.search(hoursearchstr,name)
                 if not match:
                     print("Found file "+name)
