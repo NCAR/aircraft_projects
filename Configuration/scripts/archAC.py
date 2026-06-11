@@ -372,7 +372,7 @@ class archRAFdata:
         '''Now archive the data!'''
         print(f'#  Generating rsync commands. Please wait...')
         options = ''
-        command = []
+        jobs = []  # each entry contains (command, sfile, src)
         checksums = {}
         for spath in sfiles:
             path_components = spath.split('/')
@@ -395,57 +395,54 @@ class archRAFdata:
             if match:
                 sfile = archraf.renameKML(sdir,sfile)
 
-            # Compute sha256sum for the file
-            sha256_hash = hashlib.sha256()
-            with open(sdir+spath, "rb") as f:
-                for byte_block in iter(lambda: f.read(4096), b""):
-                    sha256_hash.update(byte_block)
-            checksum = sha256_hash.hexdigest()
-            checksums[sfile] = checksum #Store local checksums for comparison later
-
             # For CAMERA, group archived files by pointing (e.g. CAMERA/DOWN/RF01...).
             # Pointing is the 2nd dot-field of the tarball name: FLIGHT.POINTING.DATE...
             dest_dir = type
             if re.search('CAMERA', type):
                 dest_dir = f'{type}/{sfile.split(".")[1]}'
 
-            match= re.search(sdir, spath)  # See if spath already contains sdir
-            if match:
-                command.append(
-                        f'rsync {spath} eoldata@data-access.ucar.edu:{csroot}{dest_dir}/{sfile}'
-                )
-            else:
-                if 'LRT' in type:  # LRT files are archived locally
-                    command.append(
-                        f'rsync {sdir}{spath} {csroot}{dest_dir}/{sfile}')
-                else:  # Everything else is archived to campaign storage
-                    command.append(
-                        f'rsync {sdir}{spath} eoldata@data-access.ucar.edu:{csroot}'
-                        + dest_dir
-                        + '/'
-                        + sfile
-                    )
+            # Resolve the local source path and rsync destination. Checksums are
+            # computed later, only for files that transfer OK (see the run loop).
+            if spath.startswith(sdir):  # spath already contains sdir
+                src = spath
+                dest = f'eoldata@data-access.ucar.edu:{csroot}{dest_dir}/{sfile}'
+            elif spath.startswith('/'):  # absolute, but not under the expected sdir
+                print(f"ERROR: source path is not under {sdir}: {spath}")
+                raise SystemExit
+            elif 'LRT' in type:  # LRT files are archived locally
+                src = sdir + spath
+                dest = f'{csroot}{dest_dir}/{sfile}'
+            else:  # Everything else is archived to campaign storage
+                src = sdir + spath
+                dest = f'eoldata@data-access.ucar.edu:{csroot}{dest_dir}/{sfile}'
+            jobs.append((f'rsync {src} {dest}', sfile, src))
 
-        for line in command:
-            print(line)
+        for cmd, sfile, src in jobs:
+            print(cmd)
 
         process = input("Run the commands as listed? " + \
                                 "yes == enter, no == anything else: ")
 
         if process == "":
-            print(f'#  Archiving {len(sfiles)} file(s) via rsync on {archraf.today()}')
+            print(f'#  Archiving {len(jobs)} file(s) via rsync on {archraf.today()}')
             # Prep email components
             subj = f"rsync job for {type} status email"
             message = f""
-            for line in command:
-                p = subprocess.Popen(line,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+            for cmd, sfile, src in jobs:
+                p = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
                 output, errors = p.communicate()
                 result = p.returncode
-                #result = os.system(line)
-                path_components = line.split('/')
-                sfile = path_components[len(path_components)-1]
                 if result == 0:
                     print(f"#  rsync job for {type}/{sfile} -- OK -- {archraf.today()}")
+                    # Compute sha256sum for the file
+                    # Checksum only files that transferred OK. Read in 1MB blocks --
+                    # 4KB chunks made this needlessly slow on big (GB) tarballs.
+                    sha256_hash = hashlib.sha256()
+                    with open(src, "rb") as f:
+                        for byte_block in iter(lambda: f.read(1024 * 1024), b""):
+                            sha256_hash.update(byte_block)
+                    # Store local checksums for comparison later
+                    checksums[sfile] = sha256_hash.hexdigest()
                 else:
                     print(f"#  rsync job for {type}/{sfile} -- Failed -- {archraf.today()}")
                     print(f"#                {type}/{sfile}: error code {str(result)}")
