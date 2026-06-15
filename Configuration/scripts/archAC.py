@@ -335,7 +335,9 @@ class archRAFdata:
         if match:
             print("match found for date format. Parsing date.")
             (datepart,sep,timepart) = match.groups()
-            year = f"20{datepart[0:2]}"
+            # Take the century from the project year (env YEAR) rather than
+            # hardcoding 20, so this isn't pinned to the 2000s.
+            year = f"{calendaryear[:2]}{datepart[0:2]}"
             month = datepart[2:4]
             day = datepart[4:6]
             hour = timepart[0:2]
