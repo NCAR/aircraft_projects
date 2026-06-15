@@ -50,7 +50,7 @@ class archRAFdata:
         checkuser(): Checks login to ensure only "dmg" login is allowed to run the script.
         checkpath(): Checks the current directory to ensure the script is being run from the correct location.
         projnum(dirmapfile): Retrieves the project number from a directory map file.
-        findfiles(path, searchstr): Walks through a directory tree and returns a list of files matching a search string.
+        findfiles(path, searchstr, permissive): Walks through a directory tree and returns a list of files matching a search string.
         tardir(sdir, filedir, tarfilename, tarfiles): Creates a tarfile containing files matching a pattern.
         renameKML(sdir, sfile): Renames a KML file by adding a time interval to the filename.
         rename(sdir, sfile): Renames a file based on flight number, date, and time interval.
@@ -164,14 +164,14 @@ class archRAFdata:
                 break
         return proj
 
-    def findfiles(self,path,searchstr):
+    def findfiles(self,path,searchstr,permissive=False):
         '''
-            Walk through a dir tree and return a list of all files matching
-            searchstring'''
-            # root - path to the directory
-            # dirs - list of the names of the subdirs in dirpath (excluding . and ..)
-            # files - list of the names of the non-directory files in dirpath
-            # To get a full path to a file or dir in dirpath, os.path.join(dirpath,name)
+        Walk through a dir tree and return a list of all files ending in
+        searchstring. Use permissive to match searchstring anyplace.'''
+        # root - path to the directory
+        # dirs - list of the names of the subdirs in dirpath (excluding . and ..)
+        # files - list of the names of the non-directory files in dirpath
+        # To get a full path to a file or dir in dirpath, os.path.join(dirpath,name)
         filesfound = []
         for root, dirs, files in os.walk(path):
             for name in files:
@@ -179,7 +179,10 @@ class archRAFdata:
                 match= re.search("removed",fullname)
                 if match:
                     continue
-                match = re.search(f"{searchstr}$", name)
+                if permissive:
+                    match = re.search(f"{searchstr}", name)
+                else:
+                    match = re.search(f"{searchstr}$", name)
                 if match:
                     name = os.path.join(root,name)
                     filesfound.append(name)
@@ -187,9 +190,9 @@ class archRAFdata:
 
     def tardir(self,sdir,filedir,tarfilename,tarfiles):
         '''
-        Create a tarfile called subdir.tar containing all the files in the
-        dirpath that match pattern. Also create a listing of the contents
-        of the tarfile called subdir.tar.dir. Return the location on disk
+        Create a tarfile called sdir.tar containing all the files in
+        tarfiles that match pattern. Also create a listing of the contents
+        of the tarfile called sdir.tar.dir. Return the location on disk
         of both the tarfile and the listing file.'''
 
         # Tar up files. If the path was to a file, or there were
@@ -198,11 +201,16 @@ class archRAFdata:
         if len(tarfiles) == 0:
             return ["",""]
         event = os.path.basename(tarfilename)
+
+        # One more check: If calendaryear is not in the actual tarfilename,
+        # add it. Doesn't count if the year is in the path - we want it in the
+        # filename.
         match = re.search(calendaryear,event)
         if not match:
             tfilename = event.upper() + "_" + calendaryear
         else:
             tfilename = event.upper()
+
         # Don't rebuild a tarball that already exists (e.g. on a rerun after
         # a failure later in the run). Still return the names so it gets archived.
         if os.path.exists(f"{scr_dir}/{tfilename}.tar"):
@@ -211,6 +219,7 @@ class archRAFdata:
 
         print(f"Creating tarfile for {sdir}/{filedir}")
         print(f"Writing tarball to {scr_dir}/{tfilename}")
+
 
         tarfiles.sort()
         tar = tarfile.open(f"{scr_dir}/{tfilename}.tar", "w")
@@ -308,33 +317,35 @@ class archRAFdata:
 
     def parse_date(self,name):
         """
-        Parses the date components from a filename in a specific format.
+        Parses the date components from a filename. Currently handles:
+        - yymmdd?hhmmss where ? is any char, usually -
+        - yymmddhhmmss
 
         Args:
             name (str): The filename to extract the date components from.
 
         Returns:
-            list: A list containing the year, month, day, hour, minute, second, and search string.
+            list: A list containing the year, month, day, hour, minute,
+                  second, and search string.
         """
         (root, name) = os.path.split(name)
-        match= re.search(
-            "[0-9][0-9][0-9][0-9][0-9][0-9].[0-9][0-9][0-9][0-9][0-9][0-9]", name
-        )
+        # match yymmdd then hhmmss, with an optional single-char separator
+        # between them (e.g. 260511.182330 or base260511182330).
+        match= re.search("([0-9]{6})(.?)([0-9]{6})", name)
         if match:
             print("match found for date format. Parsing date.")
-            name = match.group()
-            index = 0
-            year = f"20{name[index:index + 2]}"
-            month = name[index+2:index+4]
-            day = name[index+4:index+6]
-            hour = name[index+7:index+9]
-            minute = name[index+9:index+11]
-            sec = name[index+11:index+13]
+            (datepart,sep,timepart) = match.groups()
+            year = f"20{datepart[0:2]}"
+            month = datepart[2:4]
+            day = datepart[4:6]
+            hour = timepart[0:2]
+            minute = timepart[2:4]
+            sec = timepart[4:6]
             #print year+"/"+month+"/"+day+" "+hour+":"+min+":"+sec
-            hoursearchstr = name[:index+9] + '\d\d\d\d.'
+            hoursearchstr = datepart + sep + hour + '\d\d\d\d.'
             print(f"Searching for files matching {hoursearchstr}")
         else:
-            print("filename doesn't match \d\d\d\d\d\d.\d\d\d\d\d\d")
+            print("filename doesn't match \d{6}(.?)\d{6}")
             print("code can't parse date and will die")
 
         return [year,month,day,hour,minute,sec,hoursearchstr]
@@ -677,7 +688,7 @@ if __name__ == "__main__":
         # List all the files/dirs in the working dir (sdir)
         dirfilelist = os.listdir(sdir)
         dirfilelist.sort()
-        pattern = re.compile(r'.*\/[FRTP][FP][0-2][0-9]$')
+        pattern = re.compile(r'.*\/[FRTP][FP][0-2][0-9]$', re.IGNORECASE)
         for file in dirfilelist:
             # Walk through the dirpath (this will ignore paths that
             # point to a file and
@@ -687,17 +698,19 @@ if __name__ == "__main__":
             # Return an array containing the complete path to all
             # the files matching searchstr in the path
             print("Finding files in "+path+" that match "+searchstr)
-            #tarfiles = archraf.findfiles(path,searchstr)
-            # For clarity, the tarfile name should contain the
-            # date (yyyymmdd) and flight number. Start with the
-            # directory name.
-            tarfilename = file
             if pattern.match(path):
-                tarfiles = path
+                tarfiles = archraf.findfiles(path,searchstr,True)
+                print(tarfiles)
             else:
                 continue
-            # If the directory name does not contain a year,
-            # add it to the tarfile name.
+
+            # For clarity, the tarfile name should contain the
+            # date (yyyymmdd) and flight number. The flight number is
+            # the directory name; the date is parsed from the earliest filename.
+            tarfiles.sort()
+            (yr,mo,dy,hr,mn,sc,hoursearchstr)=archraf.parse_date(tarfiles[0])
+            tarfilename = file + "." + yr + mo + dy
+
             [tfile,tfilelist]=archraf.tardir(sdir,file,tarfilename,tarfiles)
             if tfile != "":
                 # Add the tar file to the array of files to archive
