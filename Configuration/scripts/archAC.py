@@ -289,7 +289,8 @@ class archRAFdata:
         p1 = subprocess.Popen(["/usr/bin/ncdump","-h",path], stdout=subprocess.PIPE)
         p2 = subprocess.Popen(["grep","FlightNumber"], stdin=p1.stdout, stdout=subprocess.PIPE)
         flightnum = (p2.communicate()[0].decode('utf-8').split('"')[1]).upper()
-        match= re.search('(\w(F|f)\d\d\w\w?\w?\d?\d?)', sfile)
+        match= re.search('(\w[FfPp]\d\d\w\w?\w?\d?\d?)', sfile)
+
         if match:
             flightnum2 = match[0].upper()
             if len(flightnum) >= 4:
