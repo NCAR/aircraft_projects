@@ -44,9 +44,23 @@ proj_path=${PROJ_DIR}/${PROJECT}/${AIRCRAFT}/scripts
 for FLIGHT in "$@"; do
     echo "Processing flight: $FLIGHT"
 
+    # Resolve the camera directory name, which varies by project
+    # (camera, CAMERA, or camera_images).
+    CAMERA_DIR=""
+    for name in camera CAMERA camera_images; do
+        if [ -d "${RAW_DATA_DIR}/$PROJECT/${name}" ]; then
+            CAMERA_DIR="$name"
+            break
+        fi
+    done
+    if [ -z "$CAMERA_DIR" ]; then
+        echo "No camera directory (camera/CAMERA/camera_images) found under ${RAW_DATA_DIR}/$PROJECT. Skipping flight $FLIGHT."
+        continue
+    fi
+
     CAMERA_DIRS=()
     for DIR in "${DIRECTIONS[@]}"; do
-        IMG_DIR="${RAW_DATA_DIR}/$PROJECT/CAMERA/flight_number_$FLIGHT/$DIR/"
+        IMG_DIR="${RAW_DATA_DIR}/$PROJECT/${CAMERA_DIR}/flight_number_$FLIGHT/$DIR/"
         if [ ! -d "$IMG_DIR" ]; then
             echo "No camera images found for ${DIR} direction. Skipping."
             continue
