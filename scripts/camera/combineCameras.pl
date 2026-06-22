@@ -529,17 +529,20 @@ print "Normal program Completion.\n";
 # ------------------------------------------------------------------------------
 
 # -------------------------------------------------------------------
-# ----------- Resolve camera directory (camera vs CAMERA) -----------
+# ----------- Resolve camera directory name variants ----------------
 # -------------------------------------------------------------------
-# Resolve the "camera" path component (some projects use "CAMERA").
-# The decision is based on whether the camera directory itself exists,
-# not the full path -- deeper levels may still be packed in a tarfile.
-# Returns the resolved path, or the original if no fallback applies.
+# Resolve the "camera" path component, which different projects name
+# "camera", "CAMERA", or "camera_images". The decision is based on
+# whether the camera directory itself exists, not the full path --
+# deeper levels may still be packed in a tarfile.
+# Returns the resolved path, or the original if no candidate exists.
 sub resolve_camera_dir() {
     my $dir = shift;
     return $dir unless $dir =~ m#^(.*/)camera(/.*|$)#;
     my ($pre, $post) = ($1, $2);
-    return "${pre}CAMERA$post" if ! -d "${pre}camera" && -d "${pre}CAMERA";
+    foreach my $name ("camera", "CAMERA", "camera_images") {
+        return "${pre}${name}${post}" if -d "${pre}${name}";
+    }
     return $dir;
 }
 
