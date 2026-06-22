@@ -13,7 +13,7 @@ fi
 
 # Make sure at least one flight is provided
 if [ $# -lt 1 ]; then
-    echo "Usage: $0 <flight> (e.g rf06 rf07 rf08) ..."
+    echo "Usage: $0 [-p PROJECT] <flight> (e.g rf06 rf07 rf08) ..."
     exit 1
 fi
 
