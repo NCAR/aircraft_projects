@@ -1,0 +1,44 @@
+includeData = no
+netcdfFile = <DATA_DIR>/TI3GER-2/TI3GER-2rf01.nc
+
+# Times will be determined from the images in the imageDirectory
+# All other image dirs will try to match these times.
+imageDir1 = <RAW_DATA_DIR>/TI3GER-2/camera/flight_number_rf01/down
+gravity1 = South
+numCameras = 2
+
+# If numCameras > 1, add additional dirs and cameras here:
+imageDir2 = <RAW_DATA_DIR>/TI3GER-2/camera/flight_number_rf01/left
+gravity2 = North
+
+# For the moment, assume all cameras are the same type.
+cameraName = Flea
+movieDirectory = <RAW_DATA_DIR>/TI3GER-2/Movies
+overlayImageTime = yes
+overlayImagePointing = yes
+
+# The outputResolution should be proportional to the scale (width x ht):
+# For one image per frame, leave the ht and add 200 to the width if you are
+# including data, else leave the width
+# For two images, double the ht. Add 200 to the width for data
+# For three images, double the ht and width (plus padding).
+scale = 512x384!
+outputResolution=512x768
+outputResolutionD=512x768
+outputFrameRate = 15
+mp4BitRate = 1500000
+endParameters
+
+GGALT
+GGLAT
+GGLON
+ATX
+PSXC
+RHUM
+TASX
+THDG
+PITCH
+WSC
+WDC
+WIC
+endVariablesLT
