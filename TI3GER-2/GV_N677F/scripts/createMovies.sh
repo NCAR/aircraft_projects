@@ -1,8 +1,23 @@
 #!/bin/bash
 
-# PROJECT, AIRCRAFT, and RAW_DATA_DIR are read from the environment
+# PROJECT, AIRCRAFT, and RAW_DATA_DIR are read from the environment.
+# PROJECT may be overridden on the command line with -p.
+usage() {
+    echo "Usage: $0 [-p PROJECT] <flight> (e.g rf06 rf07 rf08) ..."
+}
+
+while getopts ":p:h" opt; do
+    case $opt in
+        p) PROJECT="$OPTARG" ;;
+        h) usage; exit 0 ;;
+        \?) echo "Error: invalid option -$OPTARG"; usage; exit 1 ;;
+        :)  echo "Error: option -$OPTARG requires an argument"; usage; exit 1 ;;
+    esac
+done
+shift $((OPTIND - 1)) # Drop the parsed options so $@ still just holds the flight list
+
 if [ -z "$PROJECT" ] || [ -z "$AIRCRAFT" ]; then
-    echo "Error: PROJECT and AIRCRAFT must be set in the environment."
+    echo "Error: PROJECT and AIRCRAFT must be set in the environment (or PROJECT via -p)."
     exit 1
 fi
 
@@ -13,7 +28,7 @@ fi
 
 # Make sure at least one flight is provided
 if [ $# -lt 1 ]; then
-    echo "Usage: $0 [-p PROJECT] <flight> (e.g rf06 rf07 rf08) ..."
+    usage
     exit 1
 fi
 
@@ -29,9 +44,23 @@ proj_path=${PROJ_DIR}/${PROJECT}/${AIRCRAFT}/scripts
 for FLIGHT in "$@"; do
     echo "Processing flight: $FLIGHT"
 
+    # Resolve the camera directory name, which varies by project
+    # (camera, CAMERA, or camera_images).
+    CAMERA_DIR=""
+    for name in camera CAMERA camera_images; do
+        if [ -d "${RAW_DATA_DIR}/$PROJECT/${name}" ]; then
+            CAMERA_DIR="$name"
+            break
+        fi
+    done
+    if [ -z "$CAMERA_DIR" ]; then
+        echo "No camera directory (camera/CAMERA/camera_images) found under ${RAW_DATA_DIR}/$PROJECT. Skipping flight $FLIGHT."
+        continue
+    fi
+
     CAMERA_DIRS=()
     for DIR in "${DIRECTIONS[@]}"; do
-        IMG_DIR="${RAW_DATA_DIR}/$PROJECT/CAMERA/flight_number_$FLIGHT/$DIR/"
+        IMG_DIR="${RAW_DATA_DIR}/$PROJECT/${CAMERA_DIR}/flight_number_$FLIGHT/$DIR/"
         if [ ! -d "$IMG_DIR" ]; then
             echo "No camera images found for ${DIR} direction. Skipping."
             continue
@@ -39,13 +68,36 @@ for FLIGHT in "$@"; do
         CAMERA_DIRS+=("$DIR")
     done
 
-    # Create movieParamFile from template, replacing <flight> with current flight
-    sed "s/<flight>/$FLIGHT/g" ${cam_path}/movieParamFile.template > ${proj_path}/movieParamFile
-    # Replace <PROJ> with the actual project name
-    sed -i.bak "s/<PROJ>/$PROJECT/g" ${proj_path}/movieParamFile
+    # Per-flight parameter file so the setup can differ per flight movie.
+    param_file="${proj_path}/movieParamFile_$FLIGHT"
+
+    # Create the param file from template, unless one already exists (don't
+    # overwrite a file the user may have customized).
+    if [ -f "$param_file" ]; then
+        echo "Using existing $param_file (not overwriting)."
+    else
+        # Replace <flight> with current flight
+        sed "s/<flight>/$FLIGHT/g" ${cam_path}/movieParamFile.template > "$param_file"
+        # Replace <PROJ> with the actual project name
+        sed -i.bak "s/<PROJ>/$PROJECT/g" "$param_file"
+    fi
+
+    # Ask the user whether to run combineCameras.pl or exit.
+    read -r -p "Run combineCameras.pl for flight $FLIGHT? [y/N] (or 'q' to quit) " answer
+    case "$answer" in
+        [Yy]*) ;;
+        [Qq]*) echo "Exiting."; exit 0 ;;
+        *) echo "Skipping flight: $FLIGHT"; continue ;;
+    esac
+
+    # Make sure the param file name ends with this flight designation.
+    if [[ "$param_file" != *"$FLIGHT" ]]; then
+        echo "Error: param file $param_file does not match flight $FLIGHT. Skipping."
+        continue
+    fi
 
     # Run the movie creation
-    ${cam_path}/combineCameras.pl ${proj_path}/movieParamFile $FLIGHT
+    ${cam_path}/combineCameras.pl "$param_file" $FLIGHT
 
     echo "Completed flight: $FLIGHT"
 done
