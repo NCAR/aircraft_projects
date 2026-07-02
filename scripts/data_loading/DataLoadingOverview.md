@@ -50,6 +50,7 @@ For each of these datasets, perform the following steps to add the data to the a
 **A note on versioning:**
 Versioning should be handled as follows:
 | Data phase | Version number |
+| --- | --- |
 | 0.1, 0.2, ... | Field phase data |
 | 0.9 | Last in-house version (contains all variables) from /scr/raf_data dir. Files will be owned by an individual employee |
 | 1.0, 1.1, etc | Final data run as user nimbus from /scr/raf/local_productiondata |
