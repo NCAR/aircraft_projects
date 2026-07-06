@@ -1590,6 +1590,13 @@
       </sample>
     </sensor>
 
+    <sensor ID="CAM_TEMPS" class="UDPSocketSensor" devicename="usock::41006">
+      <parameter name="Category" type="string" value="Housekeeping"/>
+      <sample id="1" rate="1" scanfFormat="cameras,%*%d,%d,%d,%d">
+        <variable longname="Camera temperatures fwd,left,right,down" name="camera_temps" units="bool"/>
+      </sample>
+    </sensor>
+
     <sensor ID="iPM_1phase" class="UDPSocketSensor" devicename="usock::30100" suffix="_iPM1">
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1" scanfFormat="MEASURE,%f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f,%*f,%*f,%f">

@@ -33,7 +33,7 @@ The first, time-critical step is to make sure you obtain a copy of all the neces
 
 ## 3. Archive a dataset
 
-For each field project in which RAF is involved, the following data is generally created during the field phase: ADS files, camera images, preliminary LRT data, preliminary KML data, PMS2D data. Optionally, HRT and SRT data are also created. Any data that is archived as preliminary should have a final version created, so ensure that data will be quality controlled before archiving.
+For each field project in which RAF is involved, the following data is generally created during the field phase: ADS files, camera images, preliminary LRT data, preliminary KML data, PMS2D data. Optionally, HRT and SRT data are also created. Any data that is archived as preliminary should have a final version created, so ensure that data will be quality controlled before archiving. If a preliminary dataset is archived and later a final version is not created, that dataset can be hidden after the project data becomes public.
 
 > A note on authorship: Individuals can be authors where appropriate, such as Julie for the MTP. When a group of individuals are involved, then a team can be a dataset author, such as the Digital Camera Imagery team. The publisher should always be EOL and the primary point of contact should always be EOL Data Support.
 
@@ -45,7 +45,15 @@ For more information on the load data scripts located in `/net/work/bin/scripts/
 
 For each of these datasets, perform the following steps to add the data to the archive. Unless otherwise noted, run them as yourself:
 
-1. If not there already, copy the data files to `/scr/raf/Raw_Data/<project>`. The files in `/scr/raf_data` and individual PMs ftp areas are subject to being overwritten. By copying the files here, it is possible to cleanly keep track of file versions.
+1. If not there already, copy the ads, camera, PMS2D and other raw data files to `/scr/raf/Raw_Data/<project>`. Copy all data that receives processing (LRT, HRT, SRT, KML, etc) to `/scr/raf/Prod_data/<project>`. The files in `/scr/raf_data`, `/scr/raf/local_productiondata` and individual PMs ftp areas are subject to being overwritten. By copying the files here, it is possible to cleanly keep track of file versions. Files should be put into subdirectories by version number.
+
+**A note on versioning:**
+Versioning should be handled as follows:
+| Data phase | Version number |
+| --- | --- |
+| 0.1, 0.2, ... | Field phase data |
+| 0.9 | Last in-house version (contains all variables) from /scr/raf_data dir. Files will be owned by an individual employee |
+| 1.0, 1.1, etc | Final data run as user nimbus from /scr/raf/local_productiondata |
 
 2. Copy the data to Campaign Storage or local archive location, depending on data type.
    - All data that is not netCDF data needs to be loaded to Campaign Storage as user `eoldata` / group `eoldmg`.
@@ -124,7 +132,7 @@ For each of these datasets, perform the following steps to add the data to the a
    - If you are loading final data, uncheck "Eula Reqd" on the main "Edit Dataset" page for the dataset.
    - Click on Version on the left, then do a bulk update to hide the files. Also hide the EULA, if it exists, so that it will stay with the preliminary data.
 
-6. Create a new version with the version number you want. Be careful not to add the just-hidden files to the new version. Keep this window open so you can refer to it in step 4.
+6. Create a new version with the version number you want. **See the note on versioning above.** Be careful not to add the just-hidden files to the new version. Keep this window open so you can refer to it in step 4.
 
 7. If you are moving from a preliminary to final version of the data, update the description in the FDA to match your new `.yml` file. The version number change handled by `update_version.py` in the next step will automatically set the quality from preliminary to final.
 
