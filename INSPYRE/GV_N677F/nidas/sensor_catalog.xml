@@ -40,7 +40,7 @@
     <serialSensor ID="SerialAnalog" class="raf.A2D_Serial" baud="115200" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
         <variable longname="Time; Seconds Since Midnight" name="UTSEC" units="seconds"/>
-        <variable longname="A2DTemperature" name="A2DTEMP" units="cnts"/>
+        <variable longname="A2DTemperature" name="A2DTEMP" units="count"/>
         <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS" units="counter"/>
       </sample>
       <message length="0" position="end" separator="\n"/>
@@ -127,7 +127,7 @@
         <variable longname="IRS Aircraft Magnetic Track Angle" name="TKAM" units="deg"/>
       </sample>
       <sample id="0320" rate="25">
-        <variable longname="IRS Aircraft Magnetic Heading Angle" name="MHDG" units="deg"/>
+        <variable longname="IRS Aircraft Magnetic Heading Angle" name="MHDG" units="degree"/>
       </sample>
       <sample id="0321" rate="25">
         <variable longname="IRS Drift Angle" name="DRFTA" units="degree"/>
@@ -149,13 +149,13 @@
         <variable longname="IRS Aircraft Roll Angle" name="ROLL" units="degree"/>
       </sample>
       <sample id="0326" process="true" rate="50">
-        <variable longname="IRS Body Pitch Rate" name="BPITCHR" units="deg/s"/>
+        <variable longname="IRS Body Pitch Rate" name="BPITCHR" units="degree/s"/>
       </sample>
       <sample id="0327" process="true" rate="50">
-        <variable longname="IRS Body Roll Rate" name="BROLLR" units="deg/s"/>
+        <variable longname="IRS Body Roll Rate" name="BROLLR" units="degree/s"/>
       </sample>
       <sample id="0330" process="true" rate="50">
-        <variable longname="IRS Body Yaw Rate" name="BYAWR" units="deg/s"/>
+        <variable longname="IRS Body Yaw Rate" name="BYAWR" units="degree/s"/>
       </sample>
       <sample id="0331" rate="50">
         <variable longname="IRS Body Longitudal Acceleration" name="BLONGA" units="m/s2"/>
@@ -167,16 +167,16 @@
         <variable longname="IRS Body Normal Acceleration" name="BNORMA" units="m/s2"/>
       </sample>
       <sample id="0334" process="false" rate="25">
-        <variable longname="IRS Platform Heading" name="PHDG" units="deg"/>
+        <variable longname="IRS Platform Heading" name="PHDG" units="degree"/>
       </sample>
       <sample id="0335" process="false" rate="50">
-        <variable longname="IRS Track Angle Rate" name="TKAR" units="deg/s"/>
+        <variable longname="IRS Track Angle Rate" name="TKAR" units="degree/s"/>
       </sample>
       <sample id="0336" process="false" rate="50">
-        <variable longname="pitch_att_rate" name="pitch_att_rate" units="deg/s"/>
+        <variable longname="pitch_att_rate" name="pitch_att_rate" units="degree/s"/>
       </sample>
       <sample id="0337" process="false" rate="50">
-        <variable longname="roll_att_rate" name="roll_att_rate" units="deg/s"/>
+        <variable longname="roll_att_rate" name="roll_att_rate" units="degree/s"/>
       </sample>
       <sample id="0350" process="false" rate="3.125">
         <variable longname="irs_maint_discretes" name="irs_maint_disc" units=""/>
@@ -785,11 +785,11 @@
         <variable longname="SPP-200 High-Gain Baseline" name="PHGB" units="V"/>
         <variable longname="SPP-200 Mid-Gain Baseline" name="PMGB" units="V"/>
         <variable longname="SPP-200 Low-Gain Baseline" name="PLGB" units="V"/>
-        <variable longname="SPP-200 Flow" name="PFLW" units="cnts">
+        <variable longname="SPP-200 Flow" name="PFLW" units="count">
           <poly coefs="10.61203 -9.94929e-03 2.48008e-06" units="std cm3/s"/>
         </variable>
         <variable longname="SPP-200 Laser Reference Voltage" name="PREF" units="V"/>
-        <variable longname="SPP-200 Sheath Flow" name="PFLWS" units="cnts">
+        <variable longname="SPP-200 Sheath Flow" name="PFLWS" units="count">
 
 <!-- <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>-->
         </variable>
@@ -826,9 +826,9 @@
         <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
         <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="degC"/>
         <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="degC"/>
-        <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="Vdc"/>
-        <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="Vdc"/>
-        <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="Vdc"/>
+        <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="V"/>
+        <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="V"/>
+        <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="V"/>
         <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="degC"/>
         <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
         <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
@@ -856,9 +856,9 @@
         <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
         <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="degC"/>
         <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="degC"/>
-        <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="Vdc"/>
-        <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="Vdc"/>
-        <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="Vdc"/>
+        <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="V"/>
+        <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="V"/>
+        <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="V"/>
         <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="degC"/>
         <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
         <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
@@ -917,12 +917,12 @@
        CVI has 69 total variables in current (may 2021) udp string, last one used is 48
        -->
       <sample id="1" rate="1" scanfFormat="CVI,%*f-%*f-%*fT%*f:%*f:%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
-        <variable longname="CVI Pressure ONB" name="PONB" units="hpa"/>
-        <variable longname="CVI User Pressure" name="PUSER" units="hpa"/>
-        <variable longname="CVI Bypass Pressure" name="PBYP" units="hpa"/>
+        <variable longname="CVI Pressure ONB" name="PONB" units="hPa"/>
+        <variable longname="CVI User Pressure" name="PUSER" units="hPa"/>
+        <variable longname="CVI Bypass Pressure" name="PBYP" units="hPa"/>
         <variable longname="CVI External Temperature" name="TEXT" units="degC"/>
         <variable longname="CVI Fan Temperature" name="TFAN" units="degC"/>
-        <variable longname="CVI Sample Pressure" name="PSAMP" units="hpa"/>
+        <variable longname="CVI Sample Pressure" name="PSAMP" units="hPa"/>
         <variable longname="CVI User Flow" name="USRFLW" units="slpm"/>
         <variable longname="CVI Bypass Flow" name="BYPFLW" units="slpm"/>
         <variable longname="CVI Flow Dry" name="DRYFLW" units="slpm"/>
@@ -1016,14 +1016,14 @@
         <variable longname="Fast 2DC Shadow OR Count" name="SHDOR" units="count"/>
         <variable longname="Fast 2DC DOF Reject Count" name="DOFOR" units="count"/>
         <variable longname="Fast 2DC Board Temperature" name="BTMP" units="degC"/>
-        <variable longname="Fast 2DC Diode Voltage, Diode 1" name="DIOV01" units="Vdc">
-          <linear intercept="0.0" slope="2" units="Vdc"/>
+        <variable longname="Fast 2DC Diode Voltage, Diode 1" name="DIOV01" units="V">
+          <linear intercept="0.0" slope="2" units="V"/>
         </variable>
-        <variable longname="Fast 2DC Diode Voltage, Diode 32" name="DIOV32" units="Vdc">
-          <linear intercept="0.0" slope="2" units="Vdc"/>
+        <variable longname="Fast 2DC Diode Voltage, Diode 32" name="DIOV32" units="V">
+          <linear intercept="0.0" slope="2" units="V"/>
         </variable>
-        <variable longname="Fast 2DC Diode Voltage, Diode 64" name="DIOV64" units="Vdc">
-          <linear intercept="0.0" slope="2" units="Vdc"/>
+        <variable longname="Fast 2DC Diode Voltage, Diode 64" name="DIOV64" units="V">
+          <linear intercept="0.0" slope="2" units="V"/>
         </variable>
         <variable longname="Fast 2DC Diode TAS" name="TAS" units="m/s"/>
       </sample>
@@ -1047,15 +1047,15 @@
         <variable name="MAXS" longname="2DS Max Particle Diameter" units="um"/>
         <variable length="13" name="A2DSH" longname="2DS Horizontal Accumulation" units="count"/>
         <variable length="13" name="A2DSV" longname="2DS Vertical Accumulation" units="count"/>
-        <variable name="DIOVH01" longname="2DS Diode Voltage, Horizontal Diode 1" units="Vdc"/>
-        <variable name="DIOVH64" longname="2DS Diode Voltage, Horizontal Diode 64" units="Vdc"/>
-        <variable name="DIOVH128" longname="2DS Diode Voltage, Horizontal Diode 128" units="Vdc"/>
-        <variable name="DIOVV01" longname="2DS Diode Voltage, Vertical Diode 1" units="Vdc"/>
-        <variable name="DIOVV64" longname="2DS Diode Voltage, Vertical Diode 64" units="Vdc"/>
-        <variable name="DIOVV128" longname="2DS Diode Voltage, Vertical Diode 128" units="Vdc"/>
-        <variable name="P7V" longname="2DS Positive seven volts DC" units="Vdc"/>
-        <variable name="P5V" longname="2DS Postitive five volts DC" units="Vdc"/>
-        <variable name="N5V" longname="2DS Negative five volts DC" units="Vdc"/>
+        <variable name="DIOVH01" longname="2DS Diode Voltage, Horizontal Diode 1" units="V"/>
+        <variable name="DIOVH64" longname="2DS Diode Voltage, Horizontal Diode 64" units="V"/>
+        <variable name="DIOVH128" longname="2DS Diode Voltage, Horizontal Diode 128" units="V"/>
+        <variable name="DIOVV01" longname="2DS Diode Voltage, Vertical Diode 1" units="V"/>
+        <variable name="DIOVV64" longname="2DS Diode Voltage, Vertical Diode 64" units="V"/>
+        <variable name="DIOVV128" longname="2DS Diode Voltage, Vertical Diode 128" units="V"/>
+        <variable name="P7V" longname="2DS Positive seven volts DC" units="V"/>
+        <variable name="P5V" longname="2DS Postitive five volts DC" units="V"/>
+        <variable name="N5V" longname="2DS Negative five volts DC" units="V"/>
         <variable name="HMASK" longname="2DS Horizontal Mask" units="none"/>
         <variable name="VMASK" longname="2DS Vertical Mask" units="none"/>
         <variable name="HTXAT" longname="2DS Horizontal Tx Arm Temperature" units="degC"/>
@@ -1087,11 +1087,11 @@
         <variable name="DBARS" longname="HVPS Mean Particle Diameter" units="um"/>
         <variable name="MAXS" longname="HVPS Max Particle Diameter" units="um"/>
         <variable length="13" name="AHVPS" longname="HVPS Accumulation" units="count"/>
-        <variable name="DIOVV01" longname="HVPS Diode Voltage, Diode 1" units="Vdc"/>
-        <variable name="DIOVV64" longname="HVPS Diode Voltage, Diode 64" units="Vdc"/>
-        <variable name="DIOVV128" longname="HVPS Diode Voltage, Diode 128" units="Vdc"/>
-        <variable name="P7V" longname="HVPS Positive seven volts DC" units="Vdc"/>
-        <variable name="N7V" longname="HVPS Negative seven volts DC" units="Vdc"/>
+        <variable name="DIOVV01" longname="HVPS Diode Voltage, Diode 1" units="V"/>
+        <variable name="DIOVV64" longname="HVPS Diode Voltage, Diode 64" units="V"/>
+        <variable name="DIOVV128" longname="HVPS Diode Voltage, Diode 128" units="V"/>
+        <variable name="P7V" longname="HVPS Positive seven volts DC" units="V"/>
+        <variable name="N7V" longname="HVPS Negative seven volts DC" units="V"/>
         <variable name="VMASK" longname="HVPS Mask" units="none"/>
         <variable name="WINTXT" longname="HVPS Window Temperature" units="degC"/>
         <variable name="WINRXT" longname="HVPS Window Temperature" units="degC"/>
