@@ -223,10 +223,10 @@ def send_mail_and_die(body):
     logging.info("About to send e-mail to: " + email)
     msg = MIMEText(body)
     msg['Subject'] = 'Receive and Distribute message for:' + project
-    msg['From'] = 'ads@groundstation'
+    msg['From'] = 'ads@eol-rosetta'
     msg['To'] = email
     s = smtplib.SMTP('localhost')
-    s.sendmail("ads@groundstation", email, msg.as_string())
+    s.sendmail("ads@eol-rosetta", email, msg.as_string())
     logging.info("Message:\n" + msg.as_string())
     s.quit()
     exit(1)  
