@@ -832,7 +832,7 @@ must be imported into default.xml -->
 
 <!-- Sample Frame "A +0830.1 +024.25 +000.00 +000.00 +000.00    Air" -->
       <sample id="1" scanfFormat="A %f %f %f %f %f %*s">
-        <variable longname="SDI Flowmeter Absolute Pressure" name="P" units="mb"/>
+        <variable longname="SDI Flowmeter Absolute Pressure" name="P" units="hPa"/>
         <variable longname="SDI Flowmeter Air Temperature" name="T" units="degC"/>
         <variable longname="SDI Volumetric Flow" name="FLOW" units="vlpm"/>
         <variable longname="SDI Mass Flow" name="MFLOW" units="slpm"/>
@@ -885,9 +885,9 @@ must be imported into default.xml -->
         <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
         <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="degC"/>
         <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="degC"/>
-        <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="Vdc"/>
-        <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="Vdc"/>
-        <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="Vdc"/>
+        <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="V"/>
+        <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="V"/>
+        <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="V"/>
         <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="degC"/>
         <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
         <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
@@ -915,9 +915,9 @@ must be imported into default.xml -->
         <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
         <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="degC"/>
         <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="degC"/>
-        <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="Vdc"/>
-        <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="Vdc"/>
-        <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="Vdc"/>
+        <variable longname="CDP Sizer Baseline" name="CDPSBLINE" units="V"/>
+        <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="V"/>
+        <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="V"/>
         <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="degC"/>
         <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
         <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
@@ -957,7 +957,7 @@ must be imported into default.xml -->
         <variable name="UMSHFL" units="slpm" longname="Mass flow, sheath Alicat"/>
         <variable name="USHSP" units="vlpm" longname="Setpoint, sheath Alicat"/>
 <!--        <variable name="UDPP" units="hPa" longname="Pressure, dP Alicat"/> -->
-        <variable name="UDPIN" units="inH2O" longname="Differential pressure, dP Alicat"/>
+        <variable name="UDPIN" units="in H2O" longname="Differential pressure, dP Alicat"/>
         <variable name="UVFLIN" units="vccm" longname="Sample (inlet) volume flow calculated from dPinlet">
             <linear intercept="0.0" slope="0.016667" units="vccs"/>
         </variable>
@@ -983,18 +983,18 @@ must be imported into default.xml -->
         <variable name="MAXS" longname="2DS Max Particle Diameter" units="um"/>
         <variable length="13" name="A2DSH" longname="2DS Horizontal Accumulation" units="count"/>
         <variable length="13" name="A2DSV" longname="2DS Vertical Accumulation" units="count"/>
-        <variable name="DIOVH01" longname="2DS Diode Voltage, Horizontal Diode 1" units="Vdc"/>
-        <variable name="DIOVH64" longname="2DS Diode Voltage, Horizontal Diode 64" units="Vdc"/>
-        <variable name="DIOVH128" longname="2DS Diode Voltage, Horizontal Diode 128" units="Vdc"/>
-        <variable name="DIOVV01" longname="2DS Diode Voltage, Vertical Diode 1" units="Vdc"/>
-        <variable name="DIOVV64" longname="2DS Diode Voltage, Vertical Diode 64" units="Vdc"/>
-        <variable name="DIOVV128" longname="2DS Diode Voltage, Vertical Diode 128" units="Vdc"/>
-        <variable name="P7V" longname="2DS Positive seven volts DC" units="Vdc">
-          <linear units="Vdc">
+        <variable name="DIOVH01" longname="2DS Diode Voltage, Horizontal Diode 1" units="V"/>
+        <variable name="DIOVH64" longname="2DS Diode Voltage, Horizontal Diode 64" units="V"/>
+        <variable name="DIOVH128" longname="2DS Diode Voltage, Horizontal Diode 128" units="V"/>
+        <variable name="DIOVV01" longname="2DS Diode Voltage, Vertical Diode 1" units="V"/>
+        <variable name="DIOVV64" longname="2DS Diode Voltage, Vertical Diode 64" units="V"/>
+        <variable name="DIOVV128" longname="2DS Diode Voltage, Vertical Diode 128" units="V"/>
+        <variable name="P7V" longname="2DS Positive seven volts DC" units="V">
+          <linear units="V">
             <calfile file="P7V.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Instruments/F2DS:${PROJ_DIR}/Configuration/cal_files/Instruments/F2DS"/>
           </linear>
         </variable>
-        <variable name="N7V" longname="2DS Negative seven volts DC" units="Vdc"/>
+        <variable name="N7V" longname="2DS Negative seven volts DC" units="V"/>
         <variable name="HMASK" longname="2DS Horizontal Mask" units="none"/>
         <variable name="VMASK" longname="2DS Vertical Mask" units="none"/>
         <variable name="HOPT" longname="2DS Horizontal Optics Temperature" units="degC"/>
@@ -1029,11 +1029,11 @@ must be imported into default.xml -->
         <variable name="DBARS" longname="HVPS Mean Particle Diameter" units="um"/>
         <variable name="MAXS" longname="HVPS Max Particle Diameter" units="um"/>
         <variable length="13" name="AHVPS" longname="HVPS Accumulation" units="count"/>
-        <variable name="DIOVV01" longname="HVPS Diode Voltage, Diode 1" units="Vdc"/>
-        <variable name="DIOVV64" longname="HVPS Diode Voltage, Diode 64" units="Vdc"/>
-        <variable name="DIOVV128" longname="HVPS Diode Voltage, Diode 128" units="Vdc"/>
-        <variable name="P7V" longname="HVPS Positive seven volts DC" units="Vdc"/>
-        <variable name="N7V" longname="HVPS Negative seven volts DC" units="Vdc"/>
+        <variable name="DIOVV01" longname="HVPS Diode Voltage, Diode 1" units="V"/>
+        <variable name="DIOVV64" longname="HVPS Diode Voltage, Diode 64" units="V"/>
+        <variable name="DIOVV128" longname="HVPS Diode Voltage, Diode 128" units="V"/>
+        <variable name="P7V" longname="HVPS Positive seven volts DC" units="V"/>
+        <variable name="N7V" longname="HVPS Negative seven volts DC" units="V"/>
         <variable name="VMASK" longname="HVPS Mask" units="none"/>
         <variable name="WINTXT" longname="HVPS Window Temperature" units="degC"/>
         <variable name="WINRXT" longname="HVPS Window Temperature" units="degC"/>
@@ -1152,8 +1152,8 @@ must be imported into default.xml -->
 
     <sensor ID="HOX1" class="UDPSocketSensor" devicename="usock::30122" suffix="_HOX1">
         <sample id="1" rate="1" scanfFormat="HOX1,%f,%f">
-            <variable longname="Hydroxyl radical" name="OH" units="molecules_per_cc"/>
-            <variable longname="Sulfuric Acid" name="H2SO4" units="molecules_per_cc"/>
+            <variable longname="Hydroxyl radical" name="OH" units="molecule/cm3"/>
+            <variable longname="Sulfuric Acid" name="H2SO4" units="molecule/cm3"/>
         </sample>
     </sensor>
 
@@ -1175,14 +1175,14 @@ must be imported into default.xml -->
         <variable longname="Fast 2DC Shadow OR Count" name="SHDOR" units="count"/>
         <variable longname="Fast 2DC DOF Reject Count" name="DOFOR" units="count"/>
         <variable longname="Fast 2DC Board Temperature" name="BTMP" units="degC"/>
-        <variable longname="Fast 2DC Diode Voltage, Diode 1" name="DIOV01" units="Vdc">
-                <linear intercept="0.0" slope="2" units="Vdc"/>
+        <variable longname="Fast 2DC Diode Voltage, Diode 1" name="DIOV01" units="V">
+                <linear intercept="0.0" slope="2" units="V"/>
         </variable>
-        <variable longname="Fast 2DC Diode Voltage, Diode 32" name="DIOV32" units="Vdc">
-                <linear intercept="0.0" slope="2" units="Vdc"/>
+        <variable longname="Fast 2DC Diode Voltage, Diode 32" name="DIOV32" units="V">
+                <linear intercept="0.0" slope="2" units="V"/>
         </variable>
-        <variable longname="Fast 2DC Diode Voltage, Diode 64" name="DIOV64" units="Vdc">
-                <linear intercept="0.0" slope="2" units="Vdc"/>
+        <variable longname="Fast 2DC Diode Voltage, Diode 64" name="DIOV64" units="V">
+                <linear intercept="0.0" slope="2" units="V"/>
         </variable>
         <variable longname="Fast 2DC Diode TAS" name="TAS" units="m/s"/>
       </sample>
@@ -1251,12 +1251,12 @@ must be imported into default.xml -->
        -->
       <sample id="1" rate="1" scanfFormat="CVI,%*f-%*f-%*fT%*f:%*f:%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,
 f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
-        <variable longname="CVI Pressure ONB" name="PONB" units="hpa"/>
-        <variable longname="CVI User Pressure" name="PUSER" units="hpa"/>
-        <variable longname="CVI Bypass Pressure" name="PBYP" units="hpa"/>
+        <variable longname="CVI Pressure ONB" name="PONB" units="hPa"/>
+        <variable longname="CVI User Pressure" name="PUSER" units="hPa"/>
+        <variable longname="CVI Bypass Pressure" name="PBYP" units="hPa"/>
         <variable longname="CVI External Temperature" name="TEXT" units="degC"/>
         <variable longname="CVI Fan Temperature" name="TFAN" units="degC"/>
-        <variable longname="CVI Sample Pressure" name="PSAMP" units="hpa"/>
+        <variable longname="CVI Sample Pressure" name="PSAMP" units="hPa"/>
         <variable longname="CVI User Flow" name="USRFLW" units="slpm"/>
         <variable longname="CVI Bypass Flow" name="BYPFLW" units="slpm"/>
         <variable longname="CVI Flow Dry" name="DRYFLW" units="slpm"/>
@@ -1267,7 +1267,7 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable longname="CVI D Cut 50 um" name="DCUT50" units="units"/>
         <variable longname="CVI Liquid Water Content" name="LWC" units="g/m^3"/>
         <variable longname="TDL Water Concentration" name="H2OR" units="g/m^3"/>
-        <variable longname="TDL Pressure" name="PTDLR" units="mb"/>
+        <variable longname="TDL Pressure" name="PTDLR" units="hPa"/>
         <variable longname="TDL Temperature" name="TTDLR" units="degC"/>
       </sample>
     </sensor>
@@ -1395,10 +1395,10 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
             <variable longname="UV Monitor 1" name="UVMON1" units="V"/>
             <variable longname="UV Monitor 2" name="UVMON2" units="V"/>
             <variable longname="Laser Set Voltage" name="LASERSETV" units="V"/>
-            <variable longname="Sample Pressure" name="SAMPLEPRES" units="mbar"/>
+            <variable longname="Sample Pressure" name="SAMPLEPRES" units="hPa"/>
             <variable longname="Sample Flow" name="SAMPLEFLOW" units="lpm"/>
             <variable longname="Inlet Flow" name="INLETFLOW" units="lpm"/>
-            <variable longname="Ambient Pressure" name="AMBIENTPRES" units="mbar"/>
+            <variable longname="Ambient Pressure" name="AMBIENTPRES" units="hPa"/>
             <variable longname="Ambient Temperature" name="AMBIENTT" units="degC"/>
             <variable longname="Sample Temperature" name="SAMPLET" units="degC"/>
             <variable longname="Pump Temperature" name="PUMPT" units="degC"/>
