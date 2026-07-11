@@ -6,7 +6,7 @@
     <sensor ID="IRIG" class="raf.IRIGSensor">
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1">
-        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
+        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="s"/>
         <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
       </sample>
     </sensor>
@@ -16,8 +16,8 @@
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" scanfFormat="%*d-%*d-%*d %*d:%*d:%*d %*s%f%*f%*f%f" rate="1">
         <variable name="Stratum" units="" longname="NTP stratum" plotrange="0 10"/>
-        <variable name="Timeoffset" units="sec" longname="Clock offset, system-reference" plotrange="-100 100">
-          <linear units="usec" slope="1.e6" intercept="0.0"/>
+        <variable name="Timeoffset" units="s" longname="Clock offset, system-reference" plotrange="-100 100">
+          <linear units="us" slope="1.e6" intercept="0.0"/>
         </variable>
       </sample>
       <message separator="\n" position="end" length="0"/>
@@ -39,8 +39,8 @@
 
     <serialSensor ID="SerialAnalog" class="raf.A2D_Serial" baud="115200" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
-        <variable longname="Time; Seconds Since Midnight" name="UTSEC" units="seconds"/>
-        <variable longname="A2DTemperature" name="A2DTEMP" units="count"/>
+        <variable longname="Time; Seconds Since Midnight" name="UTSEC" units="s"/>
+        <variable longname="A2DTemperature" name="A2DTEMP" units="cnts"/>
         <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS" units="counter"/>
       </sample>
       <message length="0" position="end" separator="\n"/>
@@ -149,13 +149,13 @@
         <variable longname="IRS Aircraft Roll Angle" name="ROLL" units="degree"/>
       </sample>
       <sample id="0326" process="true" rate="50">
-        <variable longname="IRS Body Pitch Rate" name="BPITCHR" units="degree/s"/>
+        <variable longname="IRS Body Pitch Rate" name="BPITCHR" units="deg/s"/>
       </sample>
       <sample id="0327" process="true" rate="50">
-        <variable longname="IRS Body Roll Rate" name="BROLLR" units="degree/s"/>
+        <variable longname="IRS Body Roll Rate" name="BROLLR" units="deg/s"/>
       </sample>
       <sample id="0330" process="true" rate="50">
-        <variable longname="IRS Body Yaw Rate" name="BYAWR" units="degree/s"/>
+        <variable longname="IRS Body Yaw Rate" name="BYAWR" units="deg/s"/>
       </sample>
       <sample id="0331" rate="50">
         <variable longname="IRS Body Longitudal Acceleration" name="BLONGA" units="m/s2"/>
@@ -167,16 +167,16 @@
         <variable longname="IRS Body Normal Acceleration" name="BNORMA" units="m/s2"/>
       </sample>
       <sample id="0334" process="false" rate="25">
-        <variable longname="IRS Platform Heading" name="PHDG" units="degree"/>
+        <variable longname="IRS Platform Heading" name="PHDG" units="deg"/>
       </sample>
       <sample id="0335" process="false" rate="50">
-        <variable longname="IRS Track Angle Rate" name="TKAR" units="degree/s"/>
+        <variable longname="IRS Track Angle Rate" name="TKAR" units="deg/s"/>
       </sample>
       <sample id="0336" process="false" rate="50">
-        <variable longname="pitch_att_rate" name="pitch_att_rate" units="degree/s"/>
+        <variable longname="pitch_att_rate" name="pitch_att_rate" units="deg/s"/>
       </sample>
       <sample id="0337" process="false" rate="50">
-        <variable longname="roll_att_rate" name="roll_att_rate" units="degree/s"/>
+        <variable longname="roll_att_rate" name="roll_att_rate" units="deg/s"/>
       </sample>
       <sample id="0350" process="false" rate="3.125">
         <variable longname="irs_maint_discretes" name="irs_maint_disc" units=""/>
@@ -441,7 +441,7 @@
         <variable longname="Maintenance 3" name="Maintenance_3" units=""/>
       </sample>
       <sample id="0354" process="false" rate="1">
-        <variable longname="Counter" name="Counter" units="sec"/>
+        <variable longname="Counter" name="Counter" units="s"/>
       </sample>
       <sample id="0355" process="false" rate="1">
         <variable longname="Maintenance 4" name="Maintenance_4" units=""/>
@@ -458,7 +458,7 @@
     <serialSensor ID="Novatel_GPS" baud="115200" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
 <!-- GGA record -->
       <sample id="1" rate="50">
-        <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="sec"/>
+        <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="s"/>
         <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
         <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
         <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=FRTK" name="GGQUAL" units="none"/>
@@ -535,7 +535,7 @@
       <sample id="3" rate="100">
 -->
       <!--    Skipping CMIGITS Seconds of the day, need to work on 64 bit double decoding.
-        <variable name="CSECSDAY" units="sec" longname="CMIGITS3 seconds of day"/>
+        <variable name="CSECSDAY" units="s" longname="CMIGITS3 seconds of day"/>
       -->
 <!--
         <variable longname="Delta Theta in X direction" name="DTHETAX" units="radians"/>
@@ -785,11 +785,11 @@
         <variable longname="SPP-200 High-Gain Baseline" name="PHGB" units="V"/>
         <variable longname="SPP-200 Mid-Gain Baseline" name="PMGB" units="V"/>
         <variable longname="SPP-200 Low-Gain Baseline" name="PLGB" units="V"/>
-        <variable longname="SPP-200 Flow" name="PFLW" units="count">
+        <variable longname="SPP-200 Flow" name="PFLW" units="cnts">
           <poly coefs="10.61203 -9.94929e-03 2.48008e-06" units="std cm3/s"/>
         </variable>
         <variable longname="SPP-200 Laser Reference Voltage" name="PREF" units="V"/>
-        <variable longname="SPP-200 Sheath Flow" name="PFLWS" units="count">
+        <variable longname="SPP-200 Sheath Flow" name="PFLWS" units="cnts">
 
 <!-- <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>-->
         </variable>
@@ -833,7 +833,7 @@
         <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
         <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
         <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="unk"/>
-        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
+        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="us"/>
         <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
         <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
         <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
@@ -863,13 +863,13 @@
         <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
         <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
         <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="unk"/>
-        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
+        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="us"/>
         <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
         <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
         <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
         <variable length="30" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
         <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
-        <variable length="256" longname="CDP particle by particle timing" name="PBPT" units="usec"/>
+        <variable length="256" longname="CDP particle by particle timing" name="PBPT" units="us"/>
         <variable length="256" longname="CDP particle by particle size" name="PBPSZ" units="um"/>
       </sample>
       <prompt rate="2" string="\x1b\x03\x1e\x00"/>
@@ -879,7 +879,7 @@
     <serialSensor ID="UHSASG" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <parameter name="SerialNumber" type="string" value="UHSAS059"/>
       <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
-        <variable name="UACC" units="sec" longname="UHSAS Accumulation Time"/>
+        <variable name="UACC" units="s" longname="UHSAS Accumulation Time"/>
         <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
         <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
         <variable name="USMPFLW" units="vccm" longname="UHSAS Sample Flow at Laser"/>
@@ -1255,10 +1255,10 @@
         <variable longname="AWAS Pneumatic Pressure" name="PNEUP" units="psia"/>
         <variable longname="AWAS Bottle Pressure" name="BOTTLEP" units="psia"/>
         <variable longname="AWAS Flow" name="FLOW" units="slpm"/>
-        <variable longname="AWAS Seconds Open" name="SECOPN" units="sec"/>
-        <variable longname="AWAS Wait For Next" name="WAITNXT" units="sec"/>
-        <variable longname="AWAS Maximum Sample Time" name="MAXT" units="sec"/>
-        <variable longname="AWAS Sample Interval" name="INTRVL" units="sec"/>
+        <variable longname="AWAS Seconds Open" name="SECOPN" units="s"/>
+        <variable longname="AWAS Wait For Next" name="WAITNXT" units="s"/>
+        <variable longname="AWAS Maximum Sample Time" name="MAXT" units="s"/>
+        <variable longname="AWAS Sample Interval" name="INTRVL" units="s"/>
         <variable longname="AWAS Maximum Sample Pressure" name="MAXP" units="psia"/>
         <variable longname="AWAS Slope" name="SLOPE" units=""/>
         <variable longname="AWAS Offset" name="OFFSET" units=""/>
@@ -1273,9 +1273,9 @@
     <sensor ID="GTCIMS" class="UDPSocketSensor" devicename="usock::30110" suffix="_GTCIMS">
         <sample id="1" rate="1" scanfFormat="GTCIMS, %*f,%f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%*f,%*f">
 
-<!--        <variable longname="GTCIMS time at start of mass sequence" name="UST0" units="sec since 1/1/1970"/>
+<!--        <variable longname="GTCIMS time at start of mass sequence" name="UST0" units="s since 1/1/1970"/>
 -->
-            <variable longname="GTCIMS duration of mass sequence" name="DT" units="sec"/>
+            <variable longname="GTCIMS duration of mass sequence" name="DT" units="s"/>
 
 <!--        <variable longname="GTCIMS Year" name="YR" units=""/>
             <variable longname="GTCIMS Month" name="MO" units=""/>
@@ -1573,7 +1573,7 @@
 
 <!--  Don't uncomment until CharacterSensor can handle strings or we change PARCEL infor to numeric
         <sample id="1" rate="1" scanfFormat="PARCEL,%*sT%*s,%s">
-          <variable longname="UHSAS Accumulation" name="UACC" units="sec"/>
+          <variable longname="UHSAS Accumulation" name="UACC" units="s"/>
         </sample>
       -->
     </sensor>
@@ -1587,15 +1587,6 @@
       </sample>
       <sample id="2" rate="1" scanfFormat="NOREC,%*dT%*d,%d">
         <variable longname="Do Not Record" name="NOREC" units="1"/>
-      </sample>
-    </sensor>
-
-    <sensor ID="CAM_TEMPS" class="UDPSocketSensor" devicename="usock::41006">
-      <parameter name="Category" type="string" value="Housekeeping"/>
-      <sample id="1" rate="1" scanfFormat="cameras,%*%d,%d,%d,%d">
-        <variable longname="Camera temperatures fwd" name="fwd_temp" units="C"/>
-        <variable longname="Camera temperatures left" name="left_temp" units="C"/>
-        <variable longname="Camera temperatures right" name="right_temp" units="C"/>
       </sample>
     </sensor>
 

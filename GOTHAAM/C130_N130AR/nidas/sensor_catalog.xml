@@ -6,7 +6,7 @@ must be imported into default.xml -->
     <sensor ID="IRIG" class="raf.IRIGSensor">
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1">
-        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
+        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="s"/>
         <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
       </sample>
     </sensor>
@@ -16,8 +16,8 @@ must be imported into default.xml -->
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" scanfFormat="%*d-%*d-%*d %*d:%*d:%*d %*s%f%*f%*f%f" rate="1">
         <variable name="Stratum" units="" longname="NTP stratum" plotrange="0 10"/>
-        <variable name="Timeoffset" units="sec" longname="Clock offset, system-reference" plotrange="-100 100">
-          <linear units="usec" slope="1.e6" intercept="0.0"/>
+        <variable name="Timeoffset" units="s" longname="Clock offset, system-reference" plotrange="-100 100">
+          <linear units="us" slope="1.e6" intercept="0.0"/>
         </variable>
       </sample>
       <message separator="\n" position="end" length="0"/>
@@ -33,7 +33,7 @@ must be imported into default.xml -->
 
     <serialSensor ID="SerialAnalog" class="raf.A2D_Serial" baud="115200" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
-        <variable longname="Time; Seconds Since Midnight" name="UTSEC_TEMPLATE" units="seconds"/>
+        <variable longname="Time; Seconds Since Midnight" name="UTSEC_TEMPLATE" units="s"/>
         <variable longname="A2DTemperature" name="A2DTEMP_TEMPLATE" units="cnts"/>
         <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TEMPLATE" units="counter"/>
       </sample>
@@ -51,10 +51,10 @@ must be imported into default.xml -->
         <variable longname="Hybrid Ground Speed - 175" name="GSPDHYB" units="knot"/>
       </sample>
       <sample id="0254" process="false" rate="12.5">
-        <variable longname="Hybrid Lat - 254" name="LATHYB" units="degree_N"/>
+        <variable longname="Hybrid Lat - 254" name="LATHYB" units="degrees_north"/>
       </sample>
       <sample id="0255" process="false" rate="12.5">
-        <variable longname="Hybrid Lon - 255" name="LONHYB" units="degree_E"/>
+        <variable longname="Hybrid Lon - 255" name="LONHYB" units="degrees_east"/>
       </sample>
       <sample id="0261" process="false" rate="25">
         <variable longname="Hybrid Altitude - 261" name="ALTHYB" units="feet"/>
@@ -128,10 +128,10 @@ must be imported into default.xml -->
         <variable longname="delta theta v z" name="dtheta_v_z" units="ft/s"/>
       </sample>
       <sample id="0310" rate="12.5">
-        <variable longname="IRS Latitude" name="LAT" units="degree_N"/>
+        <variable longname="IRS Latitude" name="LAT" units="degrees_north"/>
       </sample>
       <sample id="0311" rate="12.5">
-        <variable longname="IRS Longitude" name="LON" units="degree_E"/>
+        <variable longname="IRS Longitude" name="LON" units="degrees_east"/>
       </sample>
       <sample id="0312" rate="25">
         <variable longname="IRS Aircraft Ground Speed" name="GSPD" units="m/s"/>
@@ -373,19 +373,19 @@ must be imported into default.xml -->
         <variable longname="Avionics GPS Track Angle" name="TKAT" units="degree_T"/>
       </sample>
       <sample id="0110" rate="10">
-        <variable longname="Avionics GPS Latitude" name="LAT" units="degree_N"/>
+        <variable longname="Avionics GPS Latitude" name="LAT" units="degrees_north"/>
       </sample>
       <sample id="0111" rate="10">
-        <variable longname="Avionics GPS Longitude" name="LON" units="degree_E"/>
+        <variable longname="Avionics GPS Longitude" name="LON" units="degrees_east"/>
       </sample>
       <sample id="0112" rate="10">
         <variable longname="Avionics GPS Ground Speed" name="GSPD" units="m/s"/>
       </sample>
       <sample id="0120" rate="10">
-        <variable longname="Avionics GPS Latitude Fine" name="LATF" units="degree_N"/>
+        <variable longname="Avionics GPS Latitude Fine" name="LATF" units="degrees_north"/>
       </sample>
       <sample id="0121" rate="10">
-        <variable longname="Avionics GPS Longitude Fine" name="LONF" units="degree_E"/>
+        <variable longname="Avionics GPS Longitude Fine" name="LONF" units="degrees_east"/>
       </sample>
       <sample id="0125" process="false" rate="10">
         <variable longname="Universal Time Code" name="UTCHM" units="hr:mn"/>
@@ -451,7 +451,7 @@ must be imported into default.xml -->
         <variable longname="Maintenance 3" name="MAINT3" units=""/>
       </sample>
       <sample id="0354" process="false" rate="1">
-        <variable longname="Counter" name="Counter" units="sec"/>
+        <variable longname="Counter" name="Counter" units="s"/>
       </sample>
       <sample id="0355" process="false" rate="1">
         <variable longname="Maintenance 4" name="MAINT4" units=""/>
@@ -468,21 +468,21 @@ must be imported into default.xml -->
     <serialSensor ID="Novatel_GPS" baud="115200" class="GPS_Novatel_Serial" databits="8" parity="none" stopbits="1">
 <!-- GGA record -->
       <sample id="1" rate="20">
-        <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="sec"/>
-        <variable longname="Reference GPS Latitude" name="GGLAT" units="degree_N"/>
-        <variable longname="Reference GPS Longitude" name="GGLON" units="degree_E"/>
-        <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=FRTK" name="GGQUAL" units="none"/>
-        <variable longname="Reference GPS number of satellites used in solution" name="GGNSAT" units="number"/>
-        <variable longname="Reference GPS Horizontal dilution of position" name="GGHDOP" units="none"/>
+        <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="s"/>
+        <variable longname="Reference GPS Latitude" name="GGLAT" units="degrees_north"/>
+        <variable longname="Reference GPS Longitude" name="GGLON" units="degrees_east"/>
+        <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=FRTK" name="GGQUAL" units=""/>
+        <variable longname="Reference GPS number of satellites used in solution" name="GGNSAT" units="1"/>
+        <variable longname="Reference GPS Horizontal dilution of position" name="GGHDOP" units="1"/>
         <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
         <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
         <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
-        <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
+        <variable longname="DGPS station ID number" name="GGREFID" units="1"/>
       </sample>
 
 <!-- RMC record -->
       <sample id="2" rate="1">
-        <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="none"/>
+        <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units=""/>
         <variable longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)" name="GGRepLag" units="s"/>
       </sample>
 
@@ -491,9 +491,9 @@ must be imported into default.xml -->
         <variable longname="Standard Deviation of Reference GPS Latitude" name="GGLATSD" units="m"/>
         <variable longname="Standard Deviation of Reference GPS Longitude" name="GGLONSD" units="m"/>
         <variable longname="Standard Deviation of Reference GPS Altitude (MSL)" name="GGALTSD" units="m"/>
-        <variable longname="Reference GPS number of satellites tracked" name="GGNSATTRK" units="number"/>
-        <variable longname="Reference GPS number of satellites with L1/E1/B1 signals used in solution" name="GGNSATL1" units="number"/>
-        <variable longname="Reference GPS number of satellites with multi-frequency signals used in solution" name="GGNSATMULTI" units="number"/>
+        <variable longname="Reference GPS number of satellites tracked" name="GGNSATTRK" units="1"/>
+        <variable longname="Reference GPS number of satellites with L1/E1/B1 signals used in solution" name="GGNSATL1" units="1"/>
+        <variable longname="Reference GPS number of satellites with multi-frequency signals used in solution" name="GGNSATMULTI" units="1"/>
       </sample>
 
 <!-- BESTVEL record -->
@@ -672,7 +672,7 @@ must be imported into default.xml -->
 
 <!--        <variable longname="GTCIMS time at start of mass sequence" name="UST0" units="sec since 1/1/1970"/>
 -->
-            <variable longname="GTCIMS duration of mass sequence" name="DT" units="sec"/>
+            <variable longname="GTCIMS duration of mass sequence" name="DT" units="s"/>
 
 <!--        <variable longname="GTCIMS Year" name="YR" units=""/>
             <variable longname="GTCIMS Month" name="MO" units=""/>
@@ -892,7 +892,7 @@ must be imported into default.xml -->
         <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
         <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
         <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="unk"/>
-        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
+        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="us"/>
         <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
         <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
         <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
@@ -922,13 +922,13 @@ must be imported into default.xml -->
         <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
         <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
         <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="unk"/>
-        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
+        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="us"/>
         <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
         <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
         <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
         <variable length="30" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
         <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
-        <variable length="256" longname="CDP particle by particle timing" name="PBPT" units="usec"/>
+        <variable length="256" longname="CDP particle by particle timing" name="PBPT" units="us"/>
         <variable length="256" longname="CDP particle by particle size" name="PBPSZ" units="um"/>
       </sample>
       <prompt rate="2" string="\x1b\x03\x1e\x00"/>
@@ -938,7 +938,7 @@ must be imported into default.xml -->
     <serialSensor ID="UHSASG" baud="115200" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <parameter name="SerialNumber" type="string" value="UHSAS059"/>
       <sample id="1" rate="1" scanfFormat="%*s %*s %*s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
-        <variable name="UACC" units="sec" longname="UHSAS Accumulation Time"/>
+        <variable name="UACC" units="s" longname="UHSAS Accumulation Time"/>
         <variable name="USCAT" units="V" longname="UHSAS Background Scatter"/>
         <variable name="UCURR" units="V" longname="UHSAS Laser Current"/>
         <variable name="USMPFLW" units="vccm" longname="UHSAS Sample Flow at Laser"/>
@@ -1408,7 +1408,7 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
 
     <sensor ID="AMS" class="UDPSocketSensor" devicename="usock::30115" suffix="_AMS">
         <sample id="1" rate="1" scanfFormat="AMS %*d %*d %f %*d %*d %f %f %f %f %f %f %f %f %f %f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %*d %*f %f %f %f %f %f %f %f %f %f %f %f %f %f %f">
-            <variable longname="AMS Time (Seconds since midnight)" name="UTSEC" units="sec"/>
+            <variable longname="AMS Time (Seconds since midnight)" name="UTSEC" units="s"/>
             <variable longname="AMS Air Beam Reference" name="AIRBM" units="Hz"/>
             <variable longname="AMS Particle Time of Flight" name="PTAB" units=""/>
             <variable longname="AMS Sampling Flow Rate" name="FLOW" units="sccs"/>
