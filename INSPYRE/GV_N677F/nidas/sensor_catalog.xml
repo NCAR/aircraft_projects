@@ -37,6 +37,15 @@
       </sample>
     </arincSensor>
 
+    <sensor ID="CAM_TEMPS" class="UDPSocketSensor" devicename="usock::41006">
+      <parameter name="Category" type="string" value="Housekeeping"/>
+      <sample id="1" rate="1" scanfFormat="cameras,%*%d,%d,%d,%d">
+        <variable longname="Camera temperatures fwd" name="fwd_temp" units="C"/>
+        <variable longname="Camera temperatures left" name="left_temp" units="C"/>
+        <variable longname="Camera temperatures right" name="right_temp" units="C"/>
+      </sample>
+    </sensor>
+
     <serialSensor ID="SerialAnalog" class="raf.A2D_Serial" baud="115200" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
         <variable longname="Time; Seconds Since Midnight" name="UTSEC" units="s"/>
