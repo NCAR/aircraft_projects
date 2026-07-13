@@ -1,4 +1,4 @@
-# Table of miscellaneous meta data to add to to netCDF or SQL files.
+# Table of miscellaneous metadata to add to to netCDF or SQL files.
 #
 # VarName  AttributeName	AttributeValue
 #
@@ -9,19 +9,31 @@ GGLON	coordinate_system	WGS84
 LATC	coordinate_system	WGS84
 LONC	coordinate_system	WGS84
 #
-IRIG_Status valid_range		0,5
-IRIG_Status flag_masks		0,1,2,3,4,5
-IRIG_Status flag_meanings	SYNC NOCODE NOPPS NOMAJT NOYEAR NOSYNC
+IRIG_Status valid_range		0,63
+IRIG_Status flag_masks		2,4,8,16,32
+IRIG_Status flag_meanings	nocode nopps nomajt noyear nosync
+
+IRIG_Status_AENT1 flag_values	0,8
+IRIG_Status_AENT1 flag_meanings	nodetect detect
+IRIG_Status_AENT2 flag_values	0,8
+IRIG_Status_AENT2 flag_meanings	nodetect detect
+PBRDSTAT	flag_values	0,1
+PBRDSTAT	flag_meanings	success,failure
+
+# Novatel GPS
 GGQUAL	valid_range		0,9
 GGQUAL	flag_values		0,1,2,5,9
-GGQUAL	flag_meanings		Invalid GPS DGPS PPP WAAS
-GGSTATUS flag_values		A,V
-GGSTATUS flag_meanings		data_valid data_invalid
+GGQUAL	flag_meanings		invalid gps dgps ppp waas
+GGSTATUS valid_range		0,1
+GGSTATUS flag_values		0,1
+GGSTATUS flag_meanings		data_invalid data_valid
 #
 # ATTACKFLG and CBLFLG Added for GOTHAAM, may get used again.
 #
+ATTACKFLG valid_range		0,1
 ATTACKFLG flag_values		0,1
-ATTACKFLG flag_meanings		normal flaps_50%
+ATTACKFLG flag_meanings		normal flaps_50pct
 #   Cloud Boundary Layer
+CBLFLG	valid_range		0,1
 CBLFLG	flag_values		0,1
 CBLFLG	flag_meanings		out in
