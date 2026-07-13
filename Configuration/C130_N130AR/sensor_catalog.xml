@@ -7,7 +7,7 @@ must be imported into default.xml -->
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1">
         <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="s"/>
-        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units=""/>
       </sample>
     </sensor>
 
@@ -34,8 +34,8 @@ must be imported into default.xml -->
     <serialSensor ID="SerialAnalog" class="raf.A2D_Serial" baud="115200" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
         <variable longname="Time; Seconds Since Midnight" name="UTSEC_TEMPLATE" units="s"/>
-        <variable longname="A2DTemperature" name="A2DTEMP_TEMPLATE" units="count"/>
-        <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TEMPLATE" units="counter"/>
+        <variable longname="ADC Board Temperature" name="A2DTEMP" units="degC"/>
+        <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="ADCSTATUS" units=""/>
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
@@ -439,7 +439,7 @@ must be imported into default.xml -->
         <variable longname="UTC Date" name="UTCdate" units="dy:mn:yr"/>
       </sample>
       <sample id="0273" rate="10">
-        <variable longname="Avionics GPS Sensor Status" name="GSTAT" units="none"/>
+        <variable longname="Avionics GPS Sensor Status" name="GSTAT" units=""/>
       </sample>
       <sample id="0343" process="false" rate="1">
         <variable longname="Dest Wpt HIL" name="Dest_Wpt_HIL" units="nm"/>
@@ -471,18 +471,18 @@ must be imported into default.xml -->
         <variable longname="Reference GPS seconds of day" name="GGSECSDAY" units="s"/>
         <variable longname="Reference GPS Latitude" name="GGLAT" units="degrees_north"/>
         <variable longname="Reference GPS Longitude" name="GGLON" units="degrees_east"/>
-        <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=FRTK" name="GGQUAL" units="1"/>
+        <variable longname="Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=FRTK" name="GGQUAL" units=""/>
         <variable longname="Reference GPS number of satellites used in solution" name="GGNSAT" units="1"/>
         <variable longname="Reference GPS Horizontal dilution of position" name="GGHDOP" units="1"/>
         <variable longname="Reference GPS Altitude (MSL)" name="GGALT" units="m"/>
         <variable longname="Reference GPS Height of geoid (MSL) above WGS84 ellipsoid" name="GGEOIDHT" units="m"/>
         <variable longname="Time in seconds since last DGPS update" name="GGDAGE" units="s"/>
-        <variable longname="DGPS station ID number" name="GGREFID" units="none"/>
+        <variable longname="DGPS station ID number" name="GGREFID" units="1"/>
       </sample>
 
 <!-- RMC record -->
       <sample id="2" rate="1">
-        <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units="1"/>
+        <variable longname="Reference GPS rcvr status: 1=OK(A), 0=warning(V)" name="GGSTATUS" units=""/>
         <variable longname="GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)" name="GGRepLag" units="s"/>
       </sample>
 
@@ -564,31 +564,31 @@ must be imported into default.xml -->
     <sensor ID="ALTASTATUS" class="UDPSocketSensor" devicename="usock::30220">
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
-        <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
-        <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
-        <variable longname="ENET IRIG Detect status: 0=NODETECT, 8=DETECT" name="IRIG_Status" units="bits"/>
-        <variable longname="ENET Number of Transactions" name="TCPTRANS" units="#"/>
-        <variable longname="ENET Number of Retries" name="TCPRTRY" units="#"/>
-        <variable longname="ENET Number of Failures" name="TCPFAILS" units="#"/>
-        <variable longname="ENET ROOT PE Control-Status Register" name="PECTRL" units="bits"/>
-        <variable longname="ENET ROOT PE Status Register" name="PESTS" units="bits"/>
-        <variable longname="ENET PE BIT Register" name="PEBIT" units="bits"/>
+        <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units=""/>
+        <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units=""/>
+        <variable longname="ENET IRIG Detect status: 0=NODETECT, 8=DETECT" name="IRIG_Status" units=""/>
+        <variable longname="ENET Number of Transactions" name="TCPTRANS" units="1"/>
+        <variable longname="ENET Number of Retries" name="TCPRTRY" units="1"/>
+        <variable longname="ENET Number of Failures" name="TCPFAILS" units="1"/>
+        <variable longname="ENET ROOT PE Control-Status Register" name="PECTRL" units=""/>
+        <variable longname="ENET ROOT PE Status Register" name="PESTS" units=""/>
+        <variable longname="ENET PE BIT Register" name="PEBIT" units=""/>
       </sample>
     </sensor>
 
     <serialSensor ID="DewPointer_old" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
         <sample id="1" rate="1" scanfFormat="%f,%f,%*f,%*f,%f">
-            <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+            <variable longname="Dew/Frost Point Balance" name="BALNC" units="1"/>
             <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="degC"/>
-            <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
+            <variable longname="Dew/Frost Point TEC" name="TEC" units="1"/>
         </sample>
         <message length="0" position="end" separator="\n"/>
     </serialSensor>
     <serialSensor ID="DewPointer" baud="9600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="%*f,%f,%f,%*f,%*f,%f">
-        <variable longname="Dew/Frost Point Balance" name="BALNC" units="unk"/>
+        <variable longname="Dew/Frost Point Balance" name="BALNC" units="1"/>
         <variable longname="Raw Dew/Frost Point Temperature" name="MIRRTMP" units="degC"/>
-        <variable longname="Dew/Frost Point TEC" name="TEC" units="unk"/>
+        <variable longname="Dew/Frost Point TEC" name="TEC" units="1"/>
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
@@ -778,11 +778,11 @@ must be imported into default.xml -->
             <variable longname="SPP-100 Laser Reference Voltage" name="FREF" units="V"/>
             <variable longname="SPP-100 Housekeeping Data" name="FTMP" units="degC"/>
             <variable longname="SPP-100 Size Range Category" name="FRNG" units=""/>
-            <variable longname="SPP-100 Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
-            <variable longname="SPP-100 Rejected Particle Count (Transit-Time)" name="REJAT" units="count"/>
-            <variable longname="SPP-100 AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
+            <variable longname="SPP-100 Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="1"/>
+            <variable longname="SPP-100 Rejected Particle Count (Transit-Time)" name="REJAT" units="1"/>
+            <variable longname="SPP-100 AtoD Converter Overflow/Overrange" name="OVFLW" units="1"/>
             <variable length="30" longname="SPP-100 Raw Accumulation (per cell) - DMT" name="AS100" units="count"/>
-            <variable longname="SPP-100 Time between last sample and this sample" name="DELTAT" units="msec"/>
+            <variable longname="SPP-100 Time between last sample and this sample" name="DELTAT" units="ms"/>
         </sample>
         <prompt rate="10" string="\x1b\x02\x1d\x00"/>
         <message length="156"/>
@@ -800,16 +800,16 @@ must be imported into default.xml -->
             <variable longname="SPP-200 High-Gain Baseline" name="PHGB" units="V"/>
             <variable longname="SPP-200 Mid-Gain Baseline" name="PMGB" units="V"/>
             <variable longname="SPP-200 Low-Gain Baseline" name="PLGB" units="V"/>
-            <variable longname="SPP-200 Flow" name="PFLW" units="count">
+            <variable longname="SPP-200 Flow" name="PFLW" units="1">
                 <poly coefs="10.61203 -9.94929e-03 2.48008e-06" units="std cm3/s"/>
             </variable>
             <variable longname="SPP-200 Laser Reference Voltage" name="PREF" units="V"/>
-            <variable longname="SPP-200 Sheath Flow" name="PFLWS" units="count">
+            <variable longname="SPP-200 Sheath Flow" name="PFLWS" units="1">
                 <poly coefs="-729.57 0.87564 -3.5197e-4 4.750368e-8" units="std cm3/s"/>
             </variable>
             <variable longname="SPP-200 Detector Temperature" name="PTMP" units="degC"/>
             <variable length="30" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT" name="AS200" units="count"/>
-            <variable longname="SPP-200 Time between last sample and this sample" name="DELTAT" units="msec"/>
+            <variable longname="SPP-200 Time between last sample and this sample" name="DELTAT" units="ms"/>
         </sample>
         <prompt rate="10" string="\x1b\x02\x1d\x00"/>
         <message length="154"/>
@@ -856,7 +856,7 @@ must be imported into default.xml -->
 -->
       <parameter name="CHAN_THRESH" type="int" value="91 111 159 190 215 243 254 272 301 355 382 488 636 751 846 959 1070 1297 1452 1665 1851 2016 2230 2513 2771 3003 3220 3424 3660 4095"/>
       <sample id="1">
-        <variable longname="CDP Laser Current" name="CDPLSRC" units="mAmp"/>
+        <variable longname="CDP Laser Current" name="CDPLSRC" units="mA"/>
         <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
         <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="degC"/>
         <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="degC"/>
@@ -864,15 +864,15 @@ must be imported into default.xml -->
         <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="V"/>
         <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="V"/>
         <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="degC"/>
-        <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
-        <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
-        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="unk"/>
+        <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="1"/>
+        <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="1"/>
+        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="1"/>
         <variable longname="CDP Average Transit Time" name="AVGTRNS" units="us"/>
-        <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
-        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
-        <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
+        <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="1"/>
+        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="1"/>
+        <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="1"/>
         <variable length="30" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
-        <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
+        <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="ms"/>
       </sample>
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
     </serialSensor>
@@ -886,7 +886,7 @@ must be imported into default.xml -->
 
       <parameter name="CHAN_THRESH" type="int" value="91 111 159 190 215 243 254 272 301 355 382 488 636 751 846 959 1070 1297 1452 1665 1851 2016 2230 2513 2771 3003 3220 3424 3660 4095"/>
       <sample id="1">
-        <variable longname="CDP Laser Current" name="CDPLSRC" units="mAmp"/>
+        <variable longname="CDP Laser Current" name="CDPLSRC" units="mA"/>
         <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
         <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="degC"/>
         <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="degC"/>
@@ -894,16 +894,16 @@ must be imported into default.xml -->
         <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="V"/>
         <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="V"/>
         <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="degC"/>
-        <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
-        <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
-        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="unk"/>
+        <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="1"/>
+        <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="1"/>
+        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="1"/>
         <variable longname="CDP Average Transit Time" name="AVGTRNS" units="us"/>
-        <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
-        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
-        <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
+        <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="1"/>
+        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="1"/>
+        <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="1"/>
         <variable length="30" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
-        <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
-        <variable length="256" longname="CDP particle by particle timing" name="PBPT" units="usec"/>
+        <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="ms"/>
+        <variable length="256" longname="CDP particle by particle timing" name="PBPT" units="us"/>
         <variable length="256" longname="CDP particle by particle size" name="PBPSZ" units="um"/>
       </sample>
       <prompt rate="2" string="\x1b\x03\x1e\x00"/>
@@ -951,9 +951,9 @@ must be imported into default.xml -->
       <parameter name="SerialNumber" type="string" value="F2DS019"/>
       <parameter name="RESOLUTION" type="int" value="10"/>
       <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-        <variable name="TACT2H" longname="2DS Total Particles Horizontal" units="count"/>
-        <variable name="TACT2V" longname="2DS Total Particles Vertical" units="count"/>
-        <variable name="CONCS" longname="2DS Total Number Particles" units="#/cm3"/>
+        <variable name="TACT2H" longname="2DS Total Particles Horizontal" units="1"/>
+        <variable name="TACT2V" longname="2DS Total Particles Vertical" units="1"/>
+        <variable name="CONCS" longname="2DS Total Number Particles" units="1/cm3"/>
         <variable name="DBARS" longname="2DS Mean Particle Diameter" units="um"/>
         <variable name="MAXS" longname="2DS Max Particle Diameter" units="um"/>
         <variable length="13" name="A2DSH" longname="2DS Horizontal Accumulation" units="count"/>
@@ -977,7 +977,7 @@ must be imported into default.xml -->
         <variable name="HLT" longname="2DS Horizontal Laser Temperature" units="degC"/>
         <variable name="VLT" longname="2DS Vertical Laser Temperature" units="degC"/>
         <variable name="PT" longname="2DS Power Supply Temperature" units="degC"/>
-        <variable name="HKR" longname="2DS Housekeeping Packets Received" units="counts"/>
+        <variable name="HKR" longname="2DS Housekeeping Packets Received" units="1"/>
         <variable name="CANP" longname="2DS Internal Pressure" units="psi"/>
 
         <variable name="AST" longname="2DS Array Shield Temperature" units="degC"/>
@@ -993,8 +993,8 @@ must be imported into default.xml -->
       <parameter name="SerialNumber" type="string" value="HVPS315"/>
       <parameter name="RESOLUTION" type="int" value="150"/>
       <sample id="1" rate="1" scanfFormat="SPECHVPS,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
-        <variable name="TACT2V" longname="HVPS Total Particles" units="count"/>
-        <variable name="CONCS" longname="HVPS Total Number Particles" units="#/cm3"/>
+        <variable name="TACT2V" longname="HVPS Total Particles" units="1"/>
+        <variable name="CONCS" longname="HVPS Total Number Particles" units="1/cm3"/>
         <variable name="DBARS" longname="HVPS Mean Particle Diameter" units="um"/>
         <variable name="MAXS" longname="HVPS Max Particle Diameter" units="um"/>
         <variable length="13" name="AHVPS" longname="HVPS Accumulation" units="count"/>
@@ -1013,7 +1013,7 @@ must be imported into default.xml -->
         <variable name="DSPT" longname="HVPS DSP Board Temperature" units="degC"/>
         <variable name="VLT" longname="HVPS Laser Temperature" units="degC"/>
         <variable name="PT" longname="HVPS Power Supply Temperature" units="degC"/>
-        <variable name="HKR" longname="HVPS Housekeeping Packets Received" units="counts"/>
+        <variable name="HKR" longname="HVPS Housekeeping Packets Received" units="1"/>
         <variable name="CANP" longname="HVPS Internal Pressure" units="psi"/>
       </sample>
     </sensor>
@@ -1024,9 +1024,9 @@ must be imported into default.xml -->
       <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
       <sample id="1" rate="1">
         <variable length="128" longname="Fast 2DS Raw Accumulation, entire-in (per cell)" name="A1DS" units="count"/>
-        <variable longname="Fast 2DS Probe Dead Time" name="DT1DS" units="msec"/>
-        <variable longname="Fast 2DS Records per Second" name="RPS" units="count"/>
-        <variable longname="Fast 2DS Total Area of Shadowed Pixels" name="AREA" units="mm2"/>
+        <variable longname="Fast 2DS Probe Dead Time" name="DT1DS" units="ms"/>
+        <variable longname="Fast 2DS Records per Second" name="RPS" units="1"/>
+        <variable longname="Fast 2DS Total Area of Shadowed Pixels" name="AREA" units="mm^2"/>
       </sample>
     </sensor>
 
@@ -1036,9 +1036,9 @@ must be imported into default.xml -->
       <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
       <sample id="1" rate="1">
         <variable length="128" longname="Fast 2DS Raw Accumulation, entire-in (per cell)" name="A1DH" units="count"/>
-        <variable longname="Fast 2DS Probe Dead Time" name="DT1DH" units="msec"/>
-        <variable longname="Fast 2DS Records per Second" name="RPS" units="count"/>
-        <variable longname="Fast 2DS Total Area of Shadowed Pixels" name="AREA" units="mm2"/>
+        <variable longname="Fast 2DS Probe Dead Time" name="DT1DH" units="ms"/>
+        <variable longname="Fast 2DS Records per Second" name="RPS" units="1"/>
+        <variable longname="Fast 2DS Total Area of Shadowed Pixels" name="AREA" units="mm^2"/>
       </sample>
     </sensor>
 
@@ -1052,7 +1052,7 @@ must be imported into default.xml -->
         <variable longname="Picarro Carbon Dioxide Mixing Ratio (Corrected)" name="CO2C" units="ppmv"/>
         <variable longname="Picarro Methane Mixing Ratio (Raw)" name="CH4" units="ppm"/>
         <variable longname="Picarro Methane Mixing Ratio (Corrected)" name="CH4C" units="ppmv"/>
-        <variable longname="Picarro H2O Mixing Ratio" name="H2O" units="%"/>
+        <variable longname="Picarro H2O Mixing Ratio" name="H2O" units="percent"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
@@ -1162,9 +1162,9 @@ must be imported into default.xml -->
       <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
       <sample id="1" rate="1">
         <variable longname="Fast 2DC Board Serial Number" name="BSN" units="#"/>
-        <variable longname="Fast 2DC Date / Time Stamp" name="DATE" units="count"/>
-        <variable longname="Fast 2DC Shadow OR Count" name="SHDOR" units="count"/>
-        <variable longname="Fast 2DC DOF Reject Count" name="DOFOR" units="count"/>
+        <variable longname="Fast 2DC Date / Time Stamp" name="DATE" units="1"/>
+        <variable longname="Fast 2DC Shadow OR Count" name="SHDOR" units="1"/>
+        <variable longname="Fast 2DC DOF Reject Count" name="DOFOR" units="1"/>
         <variable longname="Fast 2DC Board Temperature" name="BTMP" units="degC"/>
         <variable longname="Fast 2DC Diode Voltage, Diode 1" name="DIOV01" units="V">
                 <linear intercept="0.0" slope="2" units="V"/>
@@ -1179,22 +1179,22 @@ must be imported into default.xml -->
       </sample>
       <sample id="2" rate="1">
         <variable length="64" longname="Fast 2DC Raw Accumulation, entire-in (per cell)" name="A1DC" units="count"/>
-        <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="msec"/>
-        <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
-        <variable longname="Fast 2DC Total Area of Shadowed Pixels" name="AREA" units="mm2"/>
+        <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="ms"/>
+        <variable longname="Fast 2DC Records per Second" name="RPS" units="1"/>
+        <variable longname="Fast 2DC Total Area of Shadowed Pixels" name="AREA" units="mm^2"/>
       </sample>
     </sensor>
 
     <sensor ID="CFDC" class="UDPSocketSensor" devicename="usock::30105" suffix="_CFDC">
         <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
-            <variable longname="CFDC IN Count" name="INC" units="counts/sec"/>
-            <variable longname="CFDC Total Count" name="CNTS" units="counts/sec"/>
+            <variable longname="CFDC IN Count" name="INC" units="1/s"/>
+            <variable longname="CFDC Total Count" name="CNTS" units="1/s"/>
             <variable longname="CFDC Saturation Water" name="SAT" units="%"/>
             <variable longname="CFDC Aerosol Location Temperature" name="CT2" units="degC"/>
             <variable longname="CFDC Pressure" name="P" units="hPa"/>
             <variable longname="CFDC Total Flow" name="TFLOW" units="L/min"/>
             <variable longname="CFDC Sheath Flow" name="SFLOW" units="L/min"/>
-            <variable longname="CFDC Filter (ON=1)" name="FILTER" units="1"/>
+            <variable longname="CFDC Filter (ON=1)" name="FILTER" units=""/>
         </sample>
     </sensor>
     <serialSensor ID="CCN" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
@@ -1204,8 +1204,8 @@ must be imported into default.xml -->
             <variable longname="CCN Column A bottom of Column Temp" name="T3COLA" units="degC"/>
             <variable longname="CCN Column B top of Column Temp" name="T1COLB" units="degC"/>
             <variable longname="CCN Column B bottom of Column Temp" name="T3COLB" units="degC"/>
-            <variable longname="CCN Concentration Column A" name="CCNA" units="#/cm3"/>
-            <variable longname="CCN Concentration Column B" name="CCNB" units="#/cm3"/>
+            <variable longname="CCN Concentration Column A" name="CCNA" units="1/cm3"/>
+            <variable longname="CCN Concentration Column B" name="CCNB" units="1/cm3"/>
             <variable longname="CCN Sample Flow Column B" name="FLOWA" units="cm3/min"/>
             <variable longname="CCN Sample Flow Column B" name="FLOWB" units="cm3/min"/>
         </sample>
@@ -1217,8 +1217,8 @@ must be imported into default.xml -->
             <variable longname="SP2 Sample Flow LFE" name="QS" units="vccm"/>
             <variable longname="SP2 Alicat FC Read" name="QD" units="vol"/>
             <variable longname="SP2 YAG Power" name="YAGP" units="V"/>
-            <variable longname="SP2 Scatter. Conc." name="SCAT" units="#/cc"/>
-            <variable longname="SP2 Incand. Conc." name="INC" units="#/cc"/>
+            <variable longname="SP2 Scatter. Conc." name="SCAT" units="1/cc"/>
+            <variable longname="SP2 Incand. Conc." name="INC" units="1/cc"/>
         </sample>
     </sensor>
 
@@ -1267,28 +1267,28 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
 
 <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
        <sample id="1" rate="1" scanfFormat="SWS %f %f %f %f %f %c %f %*f %*f %f %f %f">
-         <variable longname="VCSEL Status Code" name="STATUS" units="none"/>
+         <variable longname="VCSEL Status Code" name="STATUS" units=""/>
          <variable longname="VCSEL Ambient Temperature" name="AT" units="K"/>
          <variable longname="VCSEL Ambient Pressure" name="PS" units="torr">
              <linear intercept="0.0" slope="1.333223" units="hPa"/>
          </variable>
          <variable longname="VCSEL Laser Temperature" name="LSRTMP" units="ohm"/>
          <variable longname="VCSEL Set Temperature" name="SETTMP" units="ohm"/>
-         <variable longname="VCSEL Mode" name="MODE" units="none"/>
-         <variable longname="VCSEL Center Current" name="CNTRCUR" units="count"/>
-         <variable longname="VCSEL Peak Position" name="PKPOS" units="count"/>
-         <variable longname="VCSEL Pre Gain" name="PREGAIN" units="count"/>
-         <variable longname="VCSEL AC Gain" name="ACGAIN" units="count"/>
+         <variable longname="VCSEL Mode" name="MODE" units="1"/>
+         <variable longname="VCSEL Center Current" name="CNTRCUR" units="1"/>
+         <variable longname="VCSEL Peak Position" name="PKPOS" units="1"/>
+         <variable longname="VCSEL Pre Gain" name="PREGAIN" units="1"/>
+         <variable longname="VCSEL AC Gain" name="ACGAIN" units="1"/>
        </sample>
        <sample id="2" rate="25" scanfFormat="%f %f %*f %*f">
-         <variable longname="VCSEL Moisture Number Density" name="RAWCONC" units="#/cm3"/>
+         <variable longname="VCSEL Moisture Number Density" name="RAWCONC" units="1/cm3"/>
          <variable longname="VCSEL Sample Laser Intensity" name="SMPLSRINT" units="mV"/>
 <!--        <variable longname="VCSEL Frost Dew Point" name="DPV" units="degC"/>  third %f above -->
         </sample>
 
 <!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
         <sample id="3" rate="1" scanfFormat="SPEC %98f">
-          <variable length="98" longname="VCSEL Absorbption Spectrum" name="ABSPEC" units="count"/>
+          <variable length="98" longname="VCSEL Absorbption Spectrum" name="ABSPEC" units="1"/>
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
@@ -1309,12 +1309,12 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
         <sample id="1" rate="1" scanfFormat="%f,%f,%f,%f,%f,%f,%f,%f,%f">
            <variable longname="Cryogenic Hygrometer Mixing Ratio" name="MR" units="ppmv"/>
            <variable longname="Cryogenic Hygrometer Mirror Temperature" name="MIRRTMP" units="degC"/>
-           <variable longname="Cryogenic Hygrometer Status Flag (1 is good)" name="STATUS" units="none"/>
+           <variable longname="Cryogenic Hygrometer Status Flag (1 is good)" name="STATUS" units=""/>
            <variable longname="Cryogenic Hygrometer Pressure" name="CAVP" units="hPa"/>
            <variable longname="Cryogenic Hygrometer Coldfinger Temperature" name="CFT" units="degC"/>
            <variable longname="Cryogenic Hygrometer Balance" name="BAL" units="none"/>
            <variable longname="Cryogenic Hygrometer PWM" name="PWM" units="none"/>
-           <variable longname="Cryogenic Hygrometer Mirror Needs Cleaning Flag" name="CLEAN" units="1"/>
+           <variable longname="Cryogenic Hygrometer Mirror Needs Cleaning Flag" name="CLEAN" units=""/>
            <variable longname="Cryogenic Hygrometer Board Temperature" name="BRDT" units="degC"/>
         </sample>
         <message length="0" position="end" separator="\r\n"/>

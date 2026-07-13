@@ -6,8 +6,8 @@
     <sensor ID="IRIG" class="raf.IRIGSensor">
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1">
-        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
-        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="s"/>
+        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units=""/>
       </sample>
     </sensor>
 
@@ -552,15 +552,15 @@
     <sensor ID="ALTASTATUS" class="UDPSocketSensor" devicename="usock::30220">
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
-        <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
-        <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
-        <variable longname="ENET IRIG Detect status: 0=NODETECT, 8=DETECT" name="IRIG_Status" units="bits"/>
-        <variable longname="ENET Number of Transactions" name="TCPTRANS" units="#"/>
-        <variable longname="ENET Number of Retries" name="TCPRTRY" units="#"/>
-        <variable longname="ENET Number of Failures" name="TCPFAILS" units="#"/>
-        <variable longname="ENET ROOT PE Control-Status Register" name="PECTRL" units="bits"/>
-        <variable longname="ENET ROOT PE Status Register" name="PESTS" units="bits"/>
-        <variable longname="ENET PE BIT Register" name="PEBIT" units="bits"/>
+        <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units=""/>
+        <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units=""/>
+        <variable longname="ENET IRIG Detect status: 0=NODETECT, 8=DETECT" name="IRIG_Status" units=""/>
+        <variable longname="ENET Number of Transactions" name="TCPTRANS" units="1"/>
+        <variable longname="ENET Number of Retries" name="TCPRTRY" units="1"/>
+        <variable longname="ENET Number of Failures" name="TCPFAILS" units="1"/>
+        <variable longname="ENET ROOT PE Control-Status Register" name="PECTRL" units=""/>
+        <variable longname="ENET ROOT PE Status Register" name="PESTS" units=""/>
+        <variable longname="ENET PE BIT Register" name="PEBIT" units=""/>
       </sample>
     </sensor>
 
@@ -766,7 +766,7 @@
             <variable longname="SPP-100 Rejected Particle Count (Transit-Time)" name="REJAT" units="count"/>
             <variable longname="SPP-100 AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
             <variable length="30" longname="SPP-100 Raw Accumulation (per cell) - DMT" name="AS100" units="count"/>
-            <variable longname="SPP-100 Time between last sample and this sample" name="DELTAT" units="msec"/>
+            <variable longname="SPP-100 Time between last sample and this sample" name="DELTAT" units="ms"/>
         </sample>
         <prompt rate="10" string="\x1b\x02\x1d\x00"/>
         <message length="156"/>
@@ -794,7 +794,7 @@
         </variable>
         <variable longname="SPP-200 Detector Temperature" name="PTMP" units="degC"/>
         <variable length="30" longname="SPP-200 (PCASP) Raw Accumulation (per cell) - DMT" name="AS200" units="count"/>
-        <variable longname="SPP-200 Time between last sample and this sample" name="DELTAT" units="msec"/>
+        <variable longname="SPP-200 Time between last sample and this sample" name="DELTAT" units="ms"/>
       </sample>
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
       <message length="154"/>
@@ -821,7 +821,7 @@
 -->
       <parameter name="CHAN_THRESH" type="int" value="91 111 159 190 215 243 254 272 301 355 382 488 636 751 846 959 1070 1297 1452 1665 1851 2016 2230 2513 2771 3003 3220 3424 3660 4095"/>
       <sample id="1">
-        <variable longname="CDP Laser Current" name="CDPLSRC" units="mAmp"/>
+        <variable longname="CDP Laser Current" name="CDPLSRC" units="mA"/>
         <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
         <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="degC"/>
         <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="degC"/>
@@ -829,15 +829,15 @@
         <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="V"/>
         <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="V"/>
         <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="degC"/>
-        <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
+        <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="1"/>
         <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
-        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="unk"/>
-        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
+        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="1"/>
+        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="us"/>
         <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
-        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
-        <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
+        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="1"/>
+        <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="1"/>
         <variable length="30" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
-        <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
+        <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="ms"/>
       </sample>
       <prompt rate="10" string="\x1b\x02\x1d\x00"/>
     </serialSensor>
@@ -851,7 +851,7 @@
 
       <parameter name="CHAN_THRESH" type="int" value="91 111 159 190 215 243 254 272 301 355 382 488 636 751 846 959 1070 1297 1452 1665 1851 2016 2230 2513 2771 3003 3220 3424 3660 4095"/>
       <sample id="1">
-        <variable longname="CDP Laser Current" name="CDPLSRC" units="mAmp"/>
+        <variable longname="CDP Laser Current" name="CDPLSRC" units="mA"/>
         <variable longname="CDP Laser Power Monitor" name="CDPLSRP" units="V"/>
         <variable longname="CDP Wing Board Temperature" name="CDPWBTMP" units="degC"/>
         <variable longname="CDP Laser Block Temperature" name="CDPLBTMP" units="degC"/>
@@ -859,16 +859,16 @@
         <variable longname="CDP Qualifier Baseline" name="CDPQBLINE" units="V"/>
         <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="V"/>
         <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="degC"/>
-        <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
-        <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
-        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="unk"/>
-        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
-        <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
-        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
-        <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
+        <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="1"/>
+        <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="1"/>
+        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="1"/>
+        <variable longname="CDP Average Transit Time" name="AVGTRNS" units="us"/>
+        <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="1"/>
+        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="1"/>
+        <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="1"/>
         <variable length="30" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
-        <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
-        <variable length="256" longname="CDP particle by particle timing" name="PBPT" units="usec"/>
+        <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="ms"/>
+        <variable length="256" longname="CDP particle by particle timing" name="PBPT" units="us"/>
 LSRINT_VXL
         <variable length="256" longname="CDP particle by particle size" name="PBPSZ" units="um"/>
       </sample>
@@ -942,7 +942,7 @@ LSRINT_VXL
 
 <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
       <sample id="1" rate="1" scanfFormat="SWS %f %f %f %f %f %c %f %*f %*f %f %f %f">
-        <variable longname="VCSEL Status Code" name="STATUS" units="none"/>
+        <variable longname="VCSEL Status Code" name="STATUS" units=""/>
         <variable longname="VCSEL Ambient Temperature" name="AT" units="K"/>
         <variable longname="VCSEL Ambient Pressure" name="PS" units="torr">
           <linear intercept="0.0" slope="1.333223" units="hPa"/>
@@ -950,15 +950,15 @@ LSRINT_VXL
         <variable longname="VCSEL Laser Temperature" name="LSRTMP" units="ohm"/>
         <variable longname="VCSEL Set Temperature" name="SETTMP" units="ohm"/>
         <!--variable longname="VCSEL Thermoelectric Cooler Current" name="TCC" units="count"/-->
-        <variable longname="VCSEL Mode" name="MODE" units="none"/>
-        <variable longname="VCSEL Center Current" name="CNTRCUR" units="count"/>
-        <variable longname="VCSEL Peak Position" name="PKPOS" units="count"/>
-        <variable longname="VCSEL Pre Gain" name="PREGAIN" units="count"/>
-        <variable longname="VCSEL AC Gain" name="ACGAIN" units="count"/>
+        <variable longname="VCSEL Mode" name="MODE" units=""/>
+        <variable longname="VCSEL Center Current" name="CNTRCUR" units="1"/>
+        <variable longname="VCSEL Peak Position" name="PKPOS" units="1"/>
+        <variable longname="VCSEL Pre Gain" name="PREGAIN" units="1"/>
+        <variable longname="VCSEL AC Gain" name="ACGAIN" units="1"/>
         <!--variable longname="VCSEL Averaged Laser Intensity" name="LSRINT" units="count"/-->
       </sample>
       <sample id="2" rate="25" scanfFormat="%f %f %*f %*f">
-        <variable longname="VCSEL Moisture Number Density" name="RAWCONC" units="#/cm3"/>
+        <variable longname="VCSEL Moisture Number Density" name="RAWCONC" units="1/cm3"/>
         <variable longname="VCSEL Sample Laser Intensity" name="SMPLSRINT" units="mV"/>
 
 <!--        <variable longname="VCSEL Frost Dew Point" name="DPV" units="degC"/>  third %f above -->
@@ -966,7 +966,7 @@ LSRINT_VXL
 
 <!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
       <sample id="3" rate="1" scanfFormat="SPEC %98f">
-        <variable length="98" longname="VCSEL Absorbption Spectrum" name="ABSPEC" units="count"/>
+        <variable length="98" longname="VCSEL Absorption Spectrum" name="ABSPEC" units="count"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
@@ -983,12 +983,12 @@ LSRINT_VXL
       <sample id="1" rate="1" scanfFormat="%*f %f %f %f %f %f %f %f">
         <variable longname="CFDC IN Count" name="INC" units="counts/sec"/>
         <variable longname="CFDC Total Count" name="CNTS" units="counts/sec"/>
-        <variable longname="CFDC Saturation Water" name="SAT" units="%"/>
+        <variable longname="CFDC Saturation Water" name="SAT" units="percent"/>
         <variable longname="CFDC Aerosol Location Temperature" name="CT2" units="degC"/>
         <variable longname="CFDC Pressure" name="P" units="hPa"/>
         <variable longname="CFDC Total Flow" name="TFLOW" units="L/min"/>
         <variable longname="CFDC Sheath Flow" name="SFLOW" units="L/min"/>
-        <variable longname="CFDC Filter (ON=1)" name="FILTER" units="bool"/>
+        <variable longname="CFDC Filter (ON=1)" name="FILTER" units=""/>
       </sample>
     </sensor>
 
@@ -999,8 +999,8 @@ LSRINT_VXL
         <variable longname="CCN Column A bottom of Column Temp" name="T3COLA" units="degC"/>
         <variable longname="CCN Column B top of Column Temp" name="T1COLB" units="degC"/>
         <variable longname="CCN Column B bottom of Column Temp" name="T3COLB" units="degC"/>
-        <variable longname="CCN Concentration Column A" name="CCNA" units="#/cm3"/>
-        <variable longname="CCN Concentration Column B" name="CCNB" units="#/cm3"/>
+        <variable longname="CCN Concentration Column A" name="CCNA" units="1/cm3"/>
+        <variable longname="CCN Concentration Column B" name="CCNB" units="1/cm3"/>
         <variable longname="CCN Sample Flow Column B" name="FLOWA" units="cm3/min"/>
         <variable longname="CCN Sample Flow Column B" name="FLOWB" units="cm3/min"/>
       </sample>
@@ -1031,9 +1031,9 @@ LSRINT_VXL
       </sample>
       <sample id="2" rate="1">
         <variable length="64" longname="Fast 2DC Raw Accumulation, entire-in (per cell)" name="A1DC" units="count"/>
-        <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="msec"/>
-        <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
-        <variable longname="Fast 2DC Total Area of Shadowed Pixels" name="AREA" units="mm2"/>
+        <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="ms"/>
+        <variable longname="Fast 2DC Records per Second" name="RPS" units="1"/>
+        <variable longname="Fast 2DC Total Area of Shadowed Pixels" name="AREA" units="mm^2"/>
       </sample>
     </sensor>
 
@@ -1044,7 +1044,7 @@ LSRINT_VXL
       <sample id="1" rate="1" scanfFormat="SPEC2D,%*d-%*d-%*dT%*d:%*d:%*d.%*d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f">
         <variable name="TACT2H" longname="2DS Total Particles Horizontal" units="count"/>
         <variable name="TACT2V" longname="2DS Total Particles Vertical" units="count"/>
-        <variable name="CONCS" longname="2DS Total Number Particles" units="#/cm3"/>
+        <variable name="CONCS" longname="2DS Total Number Particles" units="1/cm3"/>
         <variable name="DBARS" longname="2DS Mean Particle Diameter" units="um"/>
         <variable name="MAXS" longname="2DS Max Particle Diameter" units="um"/>
         <variable length="13" name="A2DSH" longname="2DS Horizontal Accumulation" units="count"/>
@@ -1075,7 +1075,7 @@ LSRINT_VXL
         <variable name="FWDT" longname="2DS Forward Vessel Temperature " units="degC"/>
         <variable name="PLATET" longname="2DS Front Plate Temperature" units="degC"/>
 
-        <variable name="RH" longname="2DS Relative Humidity" units="%"/>
+        <variable name="RH" longname="2DS Relative Humidity" units="percent"/>
       </sample>
     </sensor>
 
@@ -1085,9 +1085,9 @@ LSRINT_VXL
       <parameter name="AREA_RATIO_REJECT" type="float" value="0.1"/>
       <sample id="1" rate="1">
         <variable length="128" longname="Fast 2DS Raw Accumulation, entire-in (per cell)" name="A1DSV" units="count"/>
-        <variable longname="Fast 2DS Probe Dead Time" name="DT1DSV" units="msec"/>
-        <variable longname="Fast 2DS Records per Second" name="RPS" units="count"/>
-        <variable longname="Fast 2DS Total Area of Shadowed Pixels" name="AREA" units="mm2"/>
+        <variable longname="Fast 2DS Probe Dead Time" name="DT1DSV" units="ms"/>
+        <variable longname="Fast 2DS Records per Second" name="RPS" units="1"/>
+        <variable longname="Fast 2DS Total Area of Shadowed Pixels" name="AREA" units="mm^2"/>
       </sample>
     </sensor>
 
@@ -1334,7 +1334,7 @@ LSRINT_VXL
 
     <sensor ID="NOAASP2" class="UDPSocketSensor" devicename="usock::30105">
       <sample id="1" rate="1" scanfFormat="NOAA_SP2,%*dT%*d,%f,%f,%f,%f,%f">
-        <variable longname="NOAA SP2 Back Carbon Particle Concentration" name="BCPC" units="#/cm3"/>
+        <variable longname="NOAA SP2 Back Carbon Particle Concentration" name="BCPC" units="1/cm3"/>
         <variable longname="NOAA SP2 Sample P" name="SampleP" units="torr"/>
         <variable longname="NOAA SP2 Sample Flow" name="SampleFlow" units="vccs"/>
         <variable longname="SP2 YAG Power" name="YAGP" units="V"/>
@@ -1348,8 +1348,8 @@ LSRINT_VXL
         <variable longname="SP2 Sample Flow LFE" name="QS" units="vccm"/>
         <variable longname="SP2 Alicat FC Read" name="QD" units="vol"/>
         <variable longname="SP2 YAG Power" name="YAGP" units="V"/>
-        <variable longname="SP2 Scatter. Conc." name="SCAT" units="#/cc"/>
-        <variable longname="SP2 Incand. Conc." name="INC" units="#/cc"/>
+        <variable longname="SP2 Scatter. Conc." name="SCAT" units="1/cc"/>
+        <variable longname="SP2 Incand. Conc." name="INC" units="1/cc"/>
       </sample>
     </sensor>
     <serialSensor ID="HoneywellPPT" baud="19200" class="raf.PPT_Serial" databits="8" parity="none" stopbits="1">
@@ -1415,7 +1415,7 @@ LSRINT_VXL
         <variable longname="Picarro Carbon Dioxide Mixing Ratio (Corrected)" name="CO2C" units="ppmv"/>
         <variable longname="Picarro Methane Mixing Ratio (Raw)" name="CH4" units="ppm"/>
         <variable longname="Picarro Methane Mixing Ratio (Corrected)" name="CH4C" units="ppmv"/>
-        <variable longname="Picarro H2O Mixing Ratio" name="H2O" units="%"/>
+        <variable longname="Picarro H2O Mixing Ratio" name="H2O" units="percent"/>
       </sample>
       <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
@@ -1543,10 +1543,10 @@ LSRINT_VXL
     <sensor ID="CTRLRESRCH" class="UDPSocketSensor" devicename="usock::41005">
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1" scanfFormat="NOCAL,%*dT%*d,%d">
-        <variable longname="Do Not Calibrate" name="NOCAL" units="bool"/>
+        <variable longname="Do Not Calibrate" name="NOCAL" units="1"/>
       </sample>
       <sample id="2" rate="1" scanfFormat="NOREC,%*dT%*d,%d">
-        <variable longname="Do Not Record" name="NOREC" units="bool"/>
+        <variable longname="Do Not Record" name="NOREC" units="1"/>
       </sample>
     </sensor>
 

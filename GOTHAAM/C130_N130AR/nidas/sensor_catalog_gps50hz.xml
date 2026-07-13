@@ -6,8 +6,8 @@ must be imported into default.xml -->
     <sensor ID="IRIG" class="raf.IRIGSensor">
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1">
-        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="sec"/>
-        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units="bits"/>
+        <variable longname="IRIG-UNIX clock diff" name="IRIG_Tdiff" units="s"/>
+        <variable longname="IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC" name="IRIG_Status" units=""/>
       </sample>
     </sensor>
 
@@ -33,16 +33,16 @@ must be imported into default.xml -->
 
     <serialSensor ID="SerialAnalog" class="raf.A2D_Serial" baud="115200" databits="8" parity="none" stopbits="1">
       <sample id="1" rate="1" scanfFormat="H%d,%x,%x">
-        <variable longname="Time; Seconds Since Midnight" name="UTSEC_TEMPLATE" units="seconds"/>
-        <variable longname="A2DTemperature" name="A2DTEMP_TEMPLATE" units="cnts"/>
-        <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="STATUS_TEMPLATE" units="counter"/>
+        <variable longname="Time; Seconds Since Midnight" name="UTSEC_TEMPLATE" units="s"/>
+        <variable longname="ADC Board Temperature" name="A2DTEMP" units="degC"/>
+        <variable longname="Status: 0=NOPPS,1=PPSDET,2=PPSLOCK,3=PPSSET" name="A2DSTATUS" units=""/>
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
 
     <arincSensor ID="IRS-C130" class="raf.IRS_HW_HG2001GD">
       <sample id="0132" process="false" rate="25">
-        <variable longname="Hybrid True Heading - 132" name="THDGHYB" units="degree_T"/>
+        <variable longname="Hybrid True Heading - 132" name="THDGHYB" units="degree"/>
       </sample>
       <sample id="0135" process="false" rate="1.5625">
         <variable longname="Hybrid Vertical Figure of Merit - 135" name="HYBVFOM" units="feet"/>
@@ -137,16 +137,16 @@ must be imported into default.xml -->
         <variable longname="IRS Aircraft Ground Speed" name="GSPD" units="m/s"/>
       </sample>
       <sample id="0313" rate="25">
-        <variable longname="IRS Aircraft Track Angle" name="TKAT" units="degree_T"/>
+        <variable longname="IRS Aircraft Track Angle" name="TKAT" units="degree"/>
       </sample>
       <sample id="0314" rate="25">
-        <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree_T"/>
+        <variable longname="IRS Aircraft True Heading Angle" name="THDG" units="degree"/>
       </sample>
       <sample id="0315" rate="12.5">
         <variable longname="IRS Wind Speed" name="IWS" units="m/s"/>
       </sample>
       <sample id="0316" rate="12.5">
-        <variable longname="IRS Wind Direction" name="IWD" units="degree_T"/>
+        <variable longname="IRS Wind Direction" name="IWD" units="degree"/>
       </sample>
       <sample id="0317" process="false" rate="25">
         <variable longname="IRS Aircraft Magnetic Track Angle" name="TKAM" units="deg"/>
@@ -297,7 +297,7 @@ must be imported into default.xml -->
         <variable longname="ADC baro corrected alt #4" name="baro_corr_alt_4" units="m"/>
       </sample>
       <sample id="0270" rate="2">
-        <variable longname="ADC Weight On Wheels" name="WOW" units="bool"/>
+        <variable longname="ADC Weight On Wheels" name="WOW" units="1"/>
       </sample>
       <sample id="0271" process="false" rate="2">
         <variable longname="ADC discrete #2" name="DISCRETE2" units=""/>
@@ -370,7 +370,7 @@ must be imported into default.xml -->
         <variable longname="Vert Dilution of Precision" name="VDOP" units=""/>
       </sample>
       <sample id="0103" rate="10">
-        <variable longname="Avionics GPS Track Angle" name="TKAT" units="degree_T"/>
+        <variable longname="Avionics GPS Track Angle" name="TKAT" units="degree"/>
       </sample>
       <sample id="0110" rate="10">
         <variable longname="Avionics GPS Latitude" name="LAT" units="degree_N"/>
@@ -499,7 +499,7 @@ must be imported into default.xml -->
 <!-- BESTVEL record -->
       <sample id="5" rate="50">
         <variable longname="Reference GPS Ground Speed" name="GGSPD" units="m/s"/>
-        <variable longname="Reference GPS Track Angle" name="GGTRK" units="degree_T"/>
+        <variable longname="Reference GPS Track Angle" name="GGTRK" units="degree"/>
         <variable longname="Reference GPS Ground Speed Vector, East Component" name="GGVEW" units="m/s"/>
         <variable longname="Reference GPS Ground Speed Vector, North Component" name="GGVNS" units="m/s"/>
         <variable longname="Reference GPS Vertical Speed" name="GGVSPD" units="m/s"/>
@@ -564,15 +564,15 @@ must be imported into default.xml -->
     <sensor ID="ALTASTATUS" class="UDPSocketSensor" devicename="usock::30220">
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1" scanfFormat="STATUS,%d,%x,%*x,%d,%*d,%d,%d,%d,%x,%x,%x">
-        <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units="bits"/>
-        <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units="bits"/>
-        <variable longname="ENET IRIG Detect status: 0=NODETECT, 8=DETECT" name="IRIG_Status" units="bits"/>
-        <variable longname="ENET Number of Transactions" name="TCPTRANS" units="#"/>
-        <variable longname="ENET Number of Retries" name="TCPRTRY" units="#"/>
-        <variable longname="ENET Number of Failures" name="TCPFAILS" units="#"/>
-        <variable longname="ENET ROOT PE Control-Status Register" name="PECTRL" units="bits"/>
-        <variable longname="ENET ROOT PE Status Register" name="PESTS" units="bits"/>
-        <variable longname="ENET PE BIT Register" name="PEBIT" units="bits"/>
+        <variable longname="ENET Periodic BIT read status: 0=success" name="PBRDSTAT" units=""/>
+        <variable longname="ENET Periodic BIT test: 0=good" name="PBIT" units=""/>
+        <variable longname="ENET IRIG Detect status: 0=NODETECT, 8=DETECT" name="IRIG_Status" units=""/>
+        <variable longname="ENET Number of Transactions" name="TCPTRANS" units="1"/>
+        <variable longname="ENET Number of Retries" name="TCPRTRY" units="1"/>
+        <variable longname="ENET Number of Failures" name="TCPFAILS" units="1"/>
+        <variable longname="ENET ROOT PE Control-Status Register" name="PECTRL" units="1"/>
+        <variable longname="ENET ROOT PE Status Register" name="PESTS" units="1"/>
+        <variable longname="ENET PE BIT Register" name="PEBIT" units="1"/>
       </sample>
     </sensor>
 
@@ -855,7 +855,7 @@ must be imported into default.xml -->
         <variable longname="Platform Roll Encoder" name="RENC" units="cnts"/>
         <variable longname="Platform Roll Loop FB" name="RLFB" units="deg"/>
         <variable longname="Platform Roll Motor Current Monitor" name="ROVCR" units="cnts"/>
-        <variable longname="Platform Attitude Limited (=0:Norm,!=0:Limit)" name="LIMIT" units="bits"/>
+        <variable longname="Platform Attitude Limited (=0:Norm,!=0:Limit)" name="LIMIT" units=""/>
       </sample>
       <message length="0" position="end" separator="\n"/>
     </serialSensor>
@@ -890,11 +890,11 @@ must be imported into default.xml -->
         <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="V"/>
         <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="degC"/>
         <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
-        <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
-        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="unk"/>
+        <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="1"/>
+        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="1"/>
         <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
-        <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
-        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
+        <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="1"/>
+        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="1"/>
         <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
         <variable length="30" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
         <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
@@ -920,11 +920,11 @@ must be imported into default.xml -->
         <variable longname="CDP 5 Vdc Monitor" name="CDP5VMON" units="V"/>
         <variable longname="CDP Control Board Temperature" name="CDPCBTMP" units="degC"/>
         <variable longname="CDP Rejected Particle Count (Outside Depth-of-Field)" name="REJDOF" units="count"/>
-        <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="unk"/>
-        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="unk"/>
+        <variable longname="CDP Qualifier DT Bandwidth" name="CDPQBDW" units="1"/>
+        <variable longname="CDP Qualifier Dynamic Threshold" name="CDPQTHRSH" units="1"/>
         <variable longname="CDP Average Transit Time" name="AVGTRNS" units="microsecond"/>
-        <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="unk"/>
-        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="unk"/>
+        <variable longname="CDP Sizer DT Bandwidth" name="CDPSBDW" units="1"/>
+        <variable longname="CDP Sizer Dynamic Threshold" name="CDPSTHRSH" units="1"/>
         <variable longname="CDP AtoD Converter Overflow/Overrange" name="OVFLW" units="count"/>
         <variable length="30" longname="CDP Raw Accumulation (per cell)" name="ACDP" units="count"/>
         <variable longname="CDP Time between last sample and this sample" name="DELTAT" units="msec"/>
@@ -995,8 +995,8 @@ must be imported into default.xml -->
           </linear>
         </variable>
         <variable name="N7V" longname="2DS Negative seven volts DC" units="V"/>
-        <variable name="HMASK" longname="2DS Horizontal Mask" units="none"/>
-        <variable name="VMASK" longname="2DS Vertical Mask" units="none"/>
+        <variable name="HMASK" longname="2DS Horizontal Mask" units="1"/>
+        <variable name="VMASK" longname="2DS Vertical Mask" units="1"/>
         <variable name="HOPT" longname="2DS Horizontal Optics Temperature" units="degC"/>
         <variable name="VOPT" longname="2DS Vertical Optics Temperature" units="degC"/>
         <variable name="HARTT" longname="2DS Horizontal Array Top Temperature" units="degC"/>
@@ -1034,7 +1034,7 @@ must be imported into default.xml -->
         <variable name="DIOVV128" longname="HVPS Diode Voltage, Diode 128" units="V"/>
         <variable name="P7V" longname="HVPS Positive seven volts DC" units="V"/>
         <variable name="N7V" longname="HVPS Negative seven volts DC" units="V"/>
-        <variable name="VMASK" longname="HVPS Mask" units="none"/>
+        <variable name="VMASK" longname="HVPS Mask" units="1"/>
         <variable name="WINTXT" longname="HVPS Window Temperature" units="degC"/>
         <variable name="WINRXT" longname="HVPS Window Temperature" units="degC"/>
         <variable name="ARMTXT" longname="HVPS Arm Temperature" units="degC"/>
@@ -1189,7 +1189,7 @@ must be imported into default.xml -->
         <variable length="64" longname="Fast 2DC Raw Accumulation, entire-in (per cell)" name="A1DC" units="count"/>
         <variable longname="Fast 2DC Probe Dead Time" name="DT1DC" units="msec"/>
         <variable longname="Fast 2DC Records per Second" name="RPS" units="count"/>
-        <variable longname="Fast 2DC Total Area of Shadowed Pixels" name="AREA" units="mm2"/>
+        <variable longname="Fast 2DC Total Area of Shadowed Pixels" name="AREA" units="mm^2"/>
       </sample>
     </sensor>
 
@@ -1202,7 +1202,7 @@ must be imported into default.xml -->
             <variable longname="CFDC Pressure" name="P" units="hPa"/>
             <variable longname="CFDC Total Flow" name="TFLOW" units="L/min"/>
             <variable longname="CFDC Sheath Flow" name="SFLOW" units="L/min"/>
-            <variable longname="CFDC Filter (ON=1)" name="FILTER" units="bool"/>
+            <variable longname="CFDC Filter (ON=1)" name="FILTER" units="1"/>
         </sample>
     </sensor>
     <serialSensor ID="CCN" baud="57600" class="DSMSerialSensor" databits="8" parity="none" stopbits="1">
@@ -1275,14 +1275,14 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
 
 <!-- SWS    553 0    298.1 619.0 11701 11701   508 W 0.0221 2000 12   27 42 1  7.    21\r\n -->
        <sample id="1" rate="1" scanfFormat="SWS %f %f %f %f %f %c %f %*f %*f %f %f %f">
-         <variable longname="VCSEL Status Code" name="STATUS" units="none"/>
+         <variable longname="VCSEL Status Code" name="STATUS" units=""/>
          <variable longname="VCSEL Ambient Temperature" name="AT" units="K"/>
          <variable longname="VCSEL Ambient Pressure" name="PS" units="torr">
              <linear intercept="0.0" slope="1.333223" units="hPa"/>
          </variable>
          <variable longname="VCSEL Laser Temperature" name="LSRTMP" units="ohm"/>
          <variable longname="VCSEL Set Temperature" name="SETTMP" units="ohm"/>
-         <variable longname="VCSEL Mode" name="MODE" units="none"/>
+         <variable longname="VCSEL Mode" name="MODE" units="1"/>
          <variable longname="VCSEL Center Current" name="CNTRCUR" units="count"/>
          <variable longname="VCSEL Peak Position" name="PKPOS" units="count"/>
          <variable longname="VCSEL Pre Gain" name="PREGAIN" units="count"/>
@@ -1296,7 +1296,7 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
 
 <!-- nimbus chokes on < 1 sample rate <sample id="3" rate="0.0033" scanfFormat="SPEC %98f"> -->
         <sample id="3" rate="1" scanfFormat="SPEC %98f">
-          <variable length="98" longname="VCSEL Absorbption Spectrum" name="ABSPEC" units="count"/>
+          <variable length="98" longname="VCSEL Absorption Spectrum" name="ABSPEC" units="count"/>
         </sample>
         <message length="0" position="end" separator="\r\n"/>
     </serialSensor>
@@ -1317,12 +1317,12 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
         <sample id="1" rate="1" scanfFormat="%f,%f,%f,%f,%f,%f,%f,%f,%f">
            <variable longname="Cryogenic Hygrometer Mixing Ratio" name="MR" units="ppmv"/>
            <variable longname="Cryogenic Hygrometer Mirror Temperature" name="MIRRTMP" units="degC"/>
-           <variable longname="Cryogenic Hygrometer Status Flag (1 is good)" name="STATUS" units="none"/>
+           <variable longname="Cryogenic Hygrometer Status Flag (1 is good)" name="STATUS" units="1"/>
            <variable longname="Cryogenic Hygrometer Pressure" name="CAVP" units="hPa"/>
            <variable longname="Cryogenic Hygrometer Coldfinger Temperature" name="CFT" units="degC"/>
-           <variable longname="Cryogenic Hygrometer Balance" name="BAL" units="none"/>
-           <variable longname="Cryogenic Hygrometer PWM" name="PWM" units="none"/>
-           <variable longname="Cryogenic Hygrometer Mirror Needs Cleaning Flag" name="CLEAN" units="bool"/>
+           <variable longname="Cryogenic Hygrometer Balance" name="BAL" units="1"/>
+           <variable longname="Cryogenic Hygrometer PWM" name="PWM" units="1"/>
+           <variable longname="Cryogenic Hygrometer Mirror Needs Cleaning Flag" name="CLEAN" units="1"/>
            <variable longname="Cryogenic Hygrometer Board Temperature" name="BRDT" units="degC"/>
         </sample>
         <message length="0" position="end" separator="\r\n"/>
@@ -1343,10 +1343,10 @@ f,%*f,%*f,%f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%*f,%*f,%f,%f,%f,%f,%f,%f,%f,%f">
     <sensor ID="CTRLRESRCH" class="UDPSocketSensor" devicename="usock::41005">
       <parameter name="Category" type="string" value="Housekeeping"/>
       <sample id="1" rate="1" scanfFormat="NOCAL,%*dT%*d,%d">
-        <variable longname="Do Not Calibrate" name="NOCAL" units="bool"/>
+        <variable longname="Do Not Calibrate" name="NOCAL" units="1"/>
       </sample>
       <sample id="2" rate="1" scanfFormat="NOREC,%*dT%*d,%d">
-        <variable longname="Do Not Record" name="NOREC" units="bool"/>
+        <variable longname="Do Not Record" name="NOREC" units="1"/>
       </sample>
     </sensor>
 
