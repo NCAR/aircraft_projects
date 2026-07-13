@@ -65,13 +65,13 @@ Before running, confirm that `fieldProc_setup.py` exists at `$PROJ_DIR/$PROJECT/
 - `ftp_site` and `ftp_data_dir` — FTP server address and target directory (if FTP or syncthing is enabled).
 - `ICARTT`, `IWG1`, `HRT`, `SRT` - boolean flags for data formats to generate.
   - Survey the PI team to determine what they want generated.
+  - If generating ICARTT survey the team to find out what vars they want included. Then create nc2asc.bat in $PROJ_DIR/$PROJECT/$AIRCRAFT/scripts.
 - `threeVCPI`, `PMS2D`, `QATools` — boolean flags for data types included in the project.
 
 If `NAS` is set to true, files are sent to the NAS directories where they are subsequently sync'd to FTP space. If `FTP` is set to true, the files are ftp'd directly to the project FTP space.
 
 Also ensure that `$DATA_DIR/$PROJECT` and `$RAW_DATA_DIR/$PROJECT` exist. If not, create them.
 
-Go through the `data_flow/TEMPLATE Field Data Processing Checklist.md` to ensure you have everything set up correctly.
 
 ### Running push_data.py
 
