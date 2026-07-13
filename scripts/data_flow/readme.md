@@ -71,9 +71,14 @@ If `NAS` is set to true, files are sent to the NAS directories where they are su
 
 Also ensure that `$DATA_DIR/$PROJECT` and `$RAW_DATA_DIR/$PROJECT` exist. If not, create them.
 
+Go through the `data_flow/TEMPLATE Field Data Processing Checklist.md` to ensure you have everything set up correctly.
+
 ### Running push_data.py
 
-Run from the `data_flow/` directory after a flight to process and ship data. The raw .ads file should be [plugged in | copied to ...]. There will be a shortcut on the desktop of the groundstation (`eol-groundstation#`) to run directly:
+First confirm the .ads file has been copied to $RAW_DATA_DIR/$PROJECT. This is done post-flight using the `CopyData` shortcut in the groundstation desktop (which runs `copy_data_gs.sh`).
+
+Run from the `data_flow/` directory after a flight to process and ship data.
+There will be a shortcut on the desktop of the groundstation (`eol-groundstation#`) to run directly:
 
 ```bash
 python push_data.py
