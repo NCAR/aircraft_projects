@@ -9,10 +9,20 @@ GGLON	coordinate_system	WGS84
 LATC	coordinate_system	WGS84
 LONC	coordinate_system	WGS84
 #
-IRIG_Status valid_range		0,63
-IRIG_Status flag_masks		2,4,8,16,32
-IRIG_Status flag_meanings	nocode nopps nomajt noyear nosync
+IRIG_Status	valid_range	0,63
+IRIG_Status	flag_masks	2,4,8,16,32
+IRIG_Status	flag_meanings	nocode nopps nomajt noyear nosync
+Stratum		valid_range	1,16
 
+# A2D DAQ Cards
+STATUS_GPDACQ	valid_range	0,3
+STATUS_GPDACQ	flag_values	0,1,2,3
+STATUS_GPDACQ	flag_meanings	nopps ppsdet ppslock ppsset
+STATUS_TDACQ	valid_range	0,3
+STATUS_TDACQ	flag_values	0,1,2,3
+STATUS_TDACQ	flag_meanings	nopps ppsdet ppslock ppsset
+
+# Alta ARINC ENET
 IRIG_Status_AENT1 flag_values	0,8
 IRIG_Status_AENT1 flag_meanings	nodetect detect
 IRIG_Status_AENT2 flag_values	0,8
@@ -21,12 +31,12 @@ PBRDSTAT	flag_values	0,1
 PBRDSTAT	flag_meanings	success,failure
 
 # Novatel GPS
-GGQUAL	valid_range		0,9
-GGQUAL	flag_values		0,1,2,5,9
-GGQUAL	flag_meanings		invalid gps dgps ppp waas
-GGSTATUS valid_range		0,1
-GGSTATUS flag_values		0,1
-GGSTATUS flag_meanings		data_invalid data_valid
+GGQUAL		valid_range	0,9
+GGQUAL		flag_values	0,1,2,5,9
+GGQUAL		flag_meanings	invalid gps dgps ppp waas
+GGSTATUS	valid_range	0,1
+GGSTATUS 	flag_values	0,1
+GGSTATUS	flag_meanings	data_invalid data_valid
 #
 # ATTACKFLG and CBLFLG Added for GOTHAAM, may get used again.
 #
