@@ -1,31 +1,42 @@
 #!/bin/bash
-## This script will convert ICARTT files, merge the GOTHAAM coreChem data files and create a single netCDF file for each flight
-version=R0
+# This script will convert ICARTT files, merge the GOTHAAM coreChem data files
+# and create a single netCDF file for each flight
 
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250722_${version}.ict chem_GOTHAAMrf01.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250723_${version}.ict chem_GOTHAAMrf02.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250724_${version}.ict chem_GOTHAAMrf03.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250725_${version}.ict chem_GOTHAAMrf04.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250729_${version}.ict chem_GOTHAAMrf05.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250730_${version}.ict chem_GOTHAAMrf06.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250803_${version}.ict chem_GOTHAAMrf07.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250804_${version}.ict chem_GOTHAAMrf08.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250805_${version}.ict chem_GOTHAAMrf09.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250806_${version}.ict chem_GOTHAAMrf10.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250808_${version}.ict chem_GOTHAAMrf11.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250812_${version}.ict chem_GOTHAAMrf12.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250813_${version}.ict chem_GOTHAAMrf13.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250815_${version}.ict chem_GOTHAAMrf14.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250816_${version}.ict chem_GOTHAAMrf15.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250819_${version}.ict chem_GOTHAAMrf16.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250822_${version}.ict chem_GOTHAAMrf17.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250823_${version}.ict chem_GOTHAAMrf18.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250824_${version}.ict chem_GOTHAAMrf19.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250827_${version}.ict chem_GOTHAAMrf20.nc
-asc2cdf -i coreChem_ict/GOTHAAM-RAFCoreChemistry_C130_20250828_${version}.ict chem_GOTHAAMrf21.nc
+chem_version=R0
+nc_version=V1.1
 
-for file in GOTHAAMrf??.nc
+# Declare base dir where data lives
+basedir=/scr/raf/Prod_Data/GOTHAAM
+
+# date (YYYYMMDD) -> flight number
+declare -A flight=(
+  [20250722]=rf01 [20250723]=rf02 [20250724]=rf03 [20250725]=rf04
+  [20250729]=rf05 [20250730]=rf06 [20250803]=rf07 [20250804]=rf08
+  [20250805]=rf09 [20250806]=rf10 [20250808]=rf11 [20250812]=rf12
+  [20250813]=rf13 [20250815]=rf14 [20250816]=rf15 [20250819]=rf16
+  [20250822]=rf17 [20250823]=rf18 [20250824]=rf19 [20250827]=rf20
+  [20250828]=rf21
+)
+
+for file in ${basedir}/coreChem_ict/*_${chem_version}.ict
 do
-  echo merging $file
-  ncmerge $file coreChem_ict/nc/chem_${file}
+  # Pull the 8 digit date out of the filename
+  if [[ $(basename "$file") =~ _([0-9]{8})_ ]]; then
+    date=${BASH_REMATCH[1]}
+    rf=${flight[$date]}
+    if [[ -z $rf ]]; then
+      echo "WARNING: no flight mapping for date $date ($file) -- skipping" >&2
+      continue
+    fi
+    asc2cdf -i "$file" "chem_GOTHAAM${rf}.nc"
+  else
+    echo "WARNING: could not parse date from $file -- skipping" >&2
+  fi
+done
+
+for filepath in ${basedir}/LRT/${nc_version}/GOTHAAMrf??.nc
+do
+  echo merging $filepath
+  ncfile=$(basename "$filepath")
+  ncmerge $filepath ${basedir}/coreChem_ict/nc/chem_$ncfile
 done
