@@ -59,6 +59,8 @@ fi
 allcfgs=(`get_flights`) || exit 1
 
 tfs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^tf[0-9]{2}$"`) # test flights
+pps=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^pp[0-9]{2}$"`) # pilot pro flights
+mcs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^mc[0-9]{2}$"`) # mission coordinator test flights
 cfs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^cf[0-9]{2}$"`) # calibration flights
 ffs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^ff[0-9]{2}$"`) # ferry flights
 rfs=(`echo ${allcfgs[@]} | tr \  \\\n | egrep "^rf[0-9]{2}$"`) # research flights
@@ -83,6 +85,15 @@ lastflights=(${lastflights[@]} $lff)
 lrf=`get_last ${rfs[@]}`
 lastflights=(${lastflights[@]} $lrf)
 
+# last pilot pro flight
+lpp=`get_last ${pps[@]}`
+lastflights=(${lastflights[@]} $lpp)
+
+# last mission coordinator training flight
+lmc=`get_last ${mcs[@]}`
+lastflights=(${lastflights[@]} $lmc)
+
+
 # previous flight, either test,ferry or research or empty
 prevflight=`get_last ${afs[@]}`
 
@@ -91,7 +102,7 @@ prevhangar=`get_last ${hfs[@]}`
 # last config, could be empty
 lastconfig=`get_last ${allcfgs[@]}`
 
-# type of last flight, tf, ff, rf
+# type of last flight, tf, ff, rf, pp, mc
 prevtype=xx
 [ -n "$prevflight" ] && prevtype=`flight_type $prevflight`
 
@@ -102,6 +113,8 @@ echo "cfs=${cfs[@]}"
 echo "ffs=${ffs[@]}"
 echo "rfs=${rfs[@]}"
 echo "hfs=${hfs[@]}"
+echo "pps=${pps[@]}"
+echo "mcs=${mcs[@]}"
 echo "lastconfig=$lastconfig"
 fi
 
@@ -168,7 +181,23 @@ if [ $topchoice == newflight ]; then
     oo=${offon["$prevtype" == rf]}
     lst=("${lst[@]}" $nrf "research flight: $nrf" $oo)
 
-    # echo "lst=${lst[@]}"
+    if [ -n "$lpp" ]; then 
+        npp=`next_flight $lpp`
+    else
+        npp=pp01
+    fi
+    oo=${offon["$prevtype" == pp]}
+    lst=("${lst[@]}" $npp "pilot pro flight: $npp" $oo)
+
+    if [ -n "$lmc" ]; then 
+        nmc=`next_flight $lmc`
+    else
+        nmc=mc01
+    fi
+    oo=${offon["$prevtype" == mc]}
+    lst=("${lst[@]}" $nmc "mission coordinator flight: $nmc" $oo)
+
+     #echo "lst=${lst[@]}"
 
     fname=""
     while [ -z $fname ]; do
@@ -189,6 +218,12 @@ if [ $topchoice == newflight ]; then
     rf)
         prevflight=$lrf # empty string if no previous research flight
         ;;
+    pp)
+        prevflight=$lpp # empty string if no previous pilot pro flight
+        ;;
+    mc)
+        prevflight=$lmc # empty string if no previous mission coordinator flight
+        ;;
     esac
 elif [ $topchoice == newhang ]; then
     while true; do
@@ -200,7 +235,7 @@ elif [ $topchoice == newhang ]; then
         if [ `config_type $fname` == flight ]; then
             kdialog --title "Bad Hangar Config" \
                 --warningcontinuecancel \
-                "hangar period names should not start with tf, cf, ff, or rf.\n\
+                "hangar period names should not start with tf, cf, ff, rf, pp, or mc.\n\
                 Press continue to choose another name"
             # $?: continue=0, cancel=2
             stat=$?
