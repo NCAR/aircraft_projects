@@ -98,6 +98,12 @@ Over time RAF has operated multiple different camera types. The best way to dete
        ```
        > createMovies.sh [-p PROJECT] rf01 rf02
        ```
+     - The still images may arrive off the aircraft still packed in a
+       `flight_number_<flight>.tar` tarfile (see `scripts/copy_images.sh`). If no
+       image directions are found for a flight, `createMovies.sh` looks for that
+       tarfile next to the flight directories, extracts it in place, and checks
+       again. Flights with no image directions and no tarfile are skipped with a
+       message, and processing continues with the next flight on the command line.
    - Once the script starts, go into the movie dir `$RAW_DATA_DIR/<project>/Movies and then into the Annotated_images_## dir and look at an image using `xdg-open` or `display`:
      ```
      > display 00001.jpg
@@ -126,6 +132,16 @@ Over time RAF has operated multiple different camera types. The best way to dete
 
 1. If the SE's say that a camera has changed permanently, update the example files to reflect this for all future projects.
 1. Add the documentation file to the loaded dataset in the FDA. 
+
+## Tests
+Tests live in the `test` dir and are run directly, from anywhere:
+```
+> ./test/testCreateMovies.sh
+```
+`testCreateMovies.sh` covers the camera directory resolution in `createMovies.sh`
+(unpacked flight dirs, tarfile extraction, and flights with no images). It builds
+its own scratch fixture tree, so no project data is needed or touched, and it
+never runs `combineCameras.pl`. It exits 0 only if every check passes.
 
 ## Notes
 Optional - Convert Axis images to 640x480 for square pixels,

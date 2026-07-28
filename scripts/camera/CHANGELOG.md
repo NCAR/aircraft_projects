@@ -2,6 +2,24 @@
 
 Changelog for the camera scripts in `aircraft_projects/scripts/camera/`
 
+## [2.1] - 2026-07-28
+
+### Added
+- `createMovies.sh`: If no camera image directions are found for a flight, look for a
+  `flight_number_<flight>.tar` tarfile next to the flight directories, extract it in
+  place, and check for the directions again. Images often come off the aircraft still
+  packed by `scripts/copy_images.sh`.
+- `test/testCreateMovies.sh`: New tests for camera directory resolution - unpacked
+  flight dirs, tarfile extraction, a tarfile that won't extract, and flights with no
+  images. Builds its own scratch fixture tree, so no project data is needed.
+
+### Updated
+- `createMovies.sh`: Skip a flight that still has no image directions after the tarfile
+  check, instead of writing a param file and running `combineCameras.pl` with nothing to
+  process. Remaining flights on the command line are still processed.
+- Pulled the direction scan into a `scan_camera_dirs` function so it can be re-run after
+  extracting a tarfile.
+
 ## [2.0] - 2026-06-08
 
 ### Fixed
