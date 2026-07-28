@@ -399,19 +399,29 @@ When edits are made, you can run tests to ensure everything is still functioning
 
 ### Test environment
 
-To run the tests for push_data and sync_field_data, you must have a test environment running python 3.9 or greater. You can create one using the testenv.yml file by running the following commands from the dataflow subdirectory:
+To run the tests for push_data and sync_field_data, you must have a test environment running python 3.9 or greater. You can create one using the testenv.yml file by running the following commands from the data_flow subdirectory:
 
 `conda env create -f test/testenv.yml`
 
 You can install the packages in the yml file manually with pip, or set up your own conda environment. Below is an example of a conda environment setup:
  `conda create -n test_env python=3.9`
  `conda activate test_env`
- `conda install pytest, pytest-mock`
+ `conda install pytest pytest-mock`
  `pip install pyfakefs`
 
  Then make sure to activate your environment with `conda activate test_env` or `source activate test_env` before running the tests.
 
-The environment variables for `$PROJECT`, `$PROJ_DIR`, and `$AIRCRAFT` must be configured to an existing project with a folder within the aircraft_projects repository for tests to run.
+The following environment variables must all be set, pointing to an existing project with a `fieldProc_setup.py` file within the aircraft_projects repository, for the tests to run. The test modules read all five at import time, so a missing one causes an import error before any test runs (`run_tests.sh` checks for them and fails early with a helpful message):
+
+```bash
+export PROJECT=<project_name>       # e.g. INSPYRE
+export AIRCRAFT=<aircraft_name>     # GV_N677F or C130_N130AR
+export PROJ_DIR=<path>              # base path to the aircraft_projects repo
+export DATA_DIR=<path>              # base path for processed output data
+export RAW_DATA_DIR=<path>          # base path to raw data
+```
+
+`PROJECT`, `AIRCRAFT`, and `PROJ_DIR` are additionally validated by `check_env.check()`, which confirms that `$PROJ_DIR/$PROJECT/$AIRCRAFT` exists.
 
 ### Running tests
 
@@ -422,5 +432,5 @@ Run all tests in the aircraft_projects/scripts/data_flow/test/ directory by runn
  1. `test__setup.py` tests the instantiation of the setup class and make sure all of the constants passed to process are properly formatted.
  2. `test_push_data.py` sets up a testing environment using fixtures and mocks to ensure that the push_data module functions correctly under various conditions. It is structured to test the main functionality of the data pushing process, including reading flight and email information, handling environment variables, interacting with the filesystem, and sending emails.
  3. `test__zip.py` tests the SetupZip class and the zipping functiomality of the push_data script on a fake filesystem.
- 4. `test_sync_field_data.py` sets up a testing environment using fixtures and mocks to ensure the functionality of the sync_field_data.py script. It makes sure that based on different configurations the correct functions and commands are called to ensure the data is syncing to the correct directories.
+ 4. `test_sync_field_data.py` sets up a testing environment using fixtures and mocks to ensure the functionality of the sync_field_data.py script. It makes sure that based on different configurations the correct functions and commands are called to ensure the data is syncing to the correct directories. It also covers the autofs-race guard in `create_directory` (`_automount_root` and `_ensure_visible`): a directory on an automounted `/net/<host>` path whose mount has timed out is retried (with a mount nudge) rather than mistaken for missing, and a not-visible directory under an unwritable parent bails instead of creating a local stub that would shadow the real NFS export.
 

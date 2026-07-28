@@ -8,6 +8,39 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 Version numbers are coarse groupings of related work rather than tagged releases;
 each section also lists the date (range) of the changes it covers.
 
+## [3.7] - 2026-07-28
+
+### Fixed
+
+- `sync_field_data.py`: `create_directory` no longer fails on a transient autofs
+  race. When an automounted `/net/<host>` path's mount had timed out,
+  `os.path.isdir` returned `False` for a directory that really exists, so the
+  code tried to `makedirs` it and died with `Permission denied` on the unwritable
+  parent (e.g. `/net/ftp/pub`). It now retries with a mount nudge before
+  concluding a directory is missing, and refuses to create a directory when its
+  parent exists but is not writable — which would otherwise drop a local stub on
+  the dead automount point and shadow the real NFS export.
+
+### Added
+
+- `sync_field_data.py`: `_automount_root` (maps a `/net/<host>/...` path to its
+  autofs trigger point) and `_ensure_visible` (re-checks a path with a mount
+  nudge and retries) helpers backing the `create_directory` fix above.
+- `test/test_sync_field_data.py`: 16 tests covering `_automount_root`,
+  `_ensure_visible` (already-present, transient-race, genuinely-missing, and
+  non-`/net` cases), and the `create_directory` branches (visible no-op,
+  unwritable-parent bail, genuine create, `makedirs` failure, tuple case-select).
+
+### Changed
+
+- `run_tests.sh`: added a `#!/usr/bin/env bash` shebang and a preflight check that
+  the five required environment variables (`PROJECT`, `AIRCRAFT`, `PROJ_DIR`,
+  `DATA_DIR`, `RAW_DATA_DIR`) are set, failing early with a clear message instead
+  of a mid-import `KeyError`.
+- `readme.md`: documented all five test environment variables (previously only
+  three were listed) and noted the new autofs-guard test coverage; fixed a
+  `conda install` syntax typo and a `dataflow` → `data_flow` typo.
+
 ## [3.6] - 2026-06-01
 
 ### Fixed

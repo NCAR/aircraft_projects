@@ -191,5 +191,153 @@ def test_run_and_log(mock_logging_info, mock_os_system):
     mock_os_system.assert_called_once_with(command)
     mock_logging_info.assert_called_once_with(output)
 
+###############################################################################
+# Tests for the autofs-race guard added to create_directory:
+#   _automount_root, _ensure_visible, and the create_directory branches that
+#   depend on them. See sync_field_data.py for the rationale.
+###############################################################################
+
+from sync_field_data import _automount_root, _ensure_visible, create_directory
+
+
+@pytest.mark.parametrize("path,expected", [
+    ('/net/ftp/pub/data/incoming/inspyre/EOL_Data/RAF_Data', '/net/ftp'),
+    ('/net/jlocal/projects/scripts', '/net/jlocal'),
+    ('/net/ftp', '/net/ftp'),            # the mount root itself
+    ('/net/ftp/', '/net/ftp'),           # trailing slash
+    ('/home/ads/data', None),            # not under /net
+    ('/net', None),                      # no host component
+    ('/net/', None),                     # empty host component
+])
+def test_automount_root(path, expected):
+    assert _automount_root(path) == expected
+
+
+@patch('sync_field_data.time.sleep')
+@patch('os.listdir')
+@patch('os.path.isdir')
+def test_ensure_visible_already_present(mock_isdir, mock_listdir, mock_sleep):
+    # Visible on the first check: no automount nudge, no sleeping.
+    mock_isdir.return_value = True
+
+    assert _ensure_visible('/net/ftp/pub/EOL_Data/RAF_Data') is True
+    mock_isdir.assert_called_once_with('/net/ftp/pub/EOL_Data/RAF_Data')
+    mock_listdir.assert_not_called()
+    mock_sleep.assert_not_called()
+
+
+@patch('sync_field_data.time.sleep')
+@patch('os.listdir')
+@patch('os.path.isdir')
+def test_ensure_visible_transient_automount_race(mock_isdir, mock_listdir, mock_sleep):
+    # Not visible on the first check (mount timed out), visible after a nudge.
+    mock_isdir.side_effect = [False, True]
+
+    assert _ensure_visible('/net/ftp/pub/EOL_Data/RAF_Data') is True
+    # We nudged the correct automount root exactly once, then succeeded.
+    mock_listdir.assert_called_once_with('/net/ftp')
+    mock_sleep.assert_called_once()
+
+
+@patch('sync_field_data.time.sleep')
+@patch('os.listdir')
+@patch('os.path.isdir')
+def test_ensure_visible_genuinely_missing_under_net(mock_isdir, mock_listdir, mock_sleep):
+    # Never becomes visible: exhaust retries, nudging each time, then report False.
+    mock_isdir.return_value = False
+
+    assert _ensure_visible('/net/ftp/pub/EOL_Data/RAF_Data', retries=3) is False
+    assert mock_listdir.call_count == 3      # one nudge per retry
+    assert mock_sleep.call_count == 3
+
+
+@patch('sync_field_data.time.sleep')
+@patch('os.listdir')
+@patch('os.path.isdir')
+def test_ensure_visible_non_net_path_does_not_retry(mock_isdir, mock_listdir, mock_sleep):
+    # A missing non-/net path can't be an automount race: bail immediately,
+    # no nudging and no sleeping.
+    mock_isdir.return_value = False
+
+    assert _ensure_visible('/home/ads/missing', retries=5) is False
+    mock_listdir.assert_not_called()
+    mock_sleep.assert_not_called()
+
+
+@patch('sync_field_data.send_mail_and_die')
+@patch('os.makedirs')
+@patch('sync_field_data._ensure_visible', return_value=True)
+def test_create_directory_visible_is_a_noop(mock_ensure, mock_makedirs, mock_die):
+    # Directory is (or becomes) visible: never create, never bail.
+    create_directory('/net/ftp/pub/EOL_Data/RAF_Data')
+
+    mock_ensure.assert_called_once_with('/net/ftp/pub/EOL_Data/RAF_Data')
+    mock_makedirs.assert_not_called()
+    mock_die.assert_not_called()
+
+
+@patch('sync_field_data.send_mail_and_die')
+@patch('os.makedirs')
+@patch('os.access', return_value=False)
+@patch('os.path.isdir', return_value=True)
+@patch('sync_field_data._ensure_visible', return_value=False)
+def test_create_directory_bails_when_parent_unwritable(
+        mock_ensure, mock_parent_isdir, mock_access, mock_makedirs, mock_die):
+    # Not visible, parent exists but is not writable => mount/permission issue.
+    # Must NOT makedirs (would shadow the real NFS export); must bail instead.
+    create_directory('/net/ftp/pub/EOL_Data/RAF_Data')
+
+    mock_makedirs.assert_not_called()
+    mock_die.assert_called_once()
+
+
+@patch('sync_field_data.send_mail_and_die')
+@patch('os.makedirs')
+@patch('os.access', return_value=True)
+@patch('os.path.isdir', return_value=True)
+@patch('sync_field_data._ensure_visible', return_value=False)
+def test_create_directory_creates_when_genuinely_missing(
+        mock_ensure, mock_parent_isdir, mock_access, mock_makedirs, mock_die):
+    # Not visible, parent exists and IS writable => genuinely missing, so create.
+    create_directory('/tmp/data/INSPYRE/PMS2D')
+
+    mock_makedirs.assert_called_once_with('/tmp/data/INSPYRE/PMS2D', exist_ok=True)
+    mock_die.assert_not_called()
+
+
+@patch('sync_field_data.send_mail_and_die')
+@patch('os.makedirs', side_effect=OSError('boom'))
+@patch('os.access', return_value=True)
+@patch('os.path.isdir', return_value=True)
+@patch('sync_field_data._ensure_visible', return_value=False)
+def test_create_directory_bails_when_makedirs_fails(
+        mock_ensure, mock_parent_isdir, mock_access, mock_makedirs, mock_die):
+    # makedirs itself errors => bail with an email.
+    create_directory('/tmp/data/INSPYRE/PMS2D')
+
+    mock_makedirs.assert_called_once()
+    mock_die.assert_called_once()
+
+
+@patch('sync_field_data.send_mail_and_die')
+@patch('os.makedirs')
+@patch('sync_field_data._ensure_visible')
+@patch('os.path.isdir')
+def test_create_directory_tuple_uses_existing_case(
+        mock_isdir, mock_ensure, mock_makedirs, mock_die):
+    # Tuple form (upper/lower case candidates): the existing one is selected and
+    # assigned to the global dat_dir; no creation or bail. Here the second
+    # (lower case) candidate exists.
+    import sync_field_data
+    mock_isdir.side_effect = lambda p: p == '/tmp/data/inspyre'
+
+    create_directory(('/tmp/data/INSPYRE', '/tmp/data/inspyre'))
+
+    assert sync_field_data.dat_dir == '/tmp/data/inspyre'
+    mock_ensure.assert_not_called()
+    mock_makedirs.assert_not_called()
+    mock_die.assert_not_called()
+
+
 if __name__ == '__main__':
     unittest.main()

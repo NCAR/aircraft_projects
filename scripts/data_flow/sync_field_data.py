@@ -14,6 +14,7 @@ import logging.handlers
 import argparse
 import os
 import sys
+import time
 import smtplib
 from email.mime.text import MIMEText
 from check_env import check
@@ -43,6 +44,40 @@ def _run_and_log(command, message):
     os.system(command)
     logging.info(f'{message}: {command}')
 
+def _automount_root(dir_path):
+    """
+    Return the autofs trigger point for a /net/<host>/... path (e.g. /net/ftp),
+    or None if dir_path is not under an automounted /net/<host> tree.
+    """
+    parts = dir_path.split('/')  # e.g. ['', 'net', 'ftp', 'pub', ...]
+    if len(parts) >= 3 and parts[1] == 'net' and parts[2]:
+        return '/' + parts[1] + '/' + parts[2]
+    return None
+
+def _ensure_visible(dir_path, retries=5, delay=2):
+    """
+    Return True if dir_path is a directory, retrying to survive a transient
+    autofs race (the mount may have timed out and not yet re-established, in
+    which case os.path.isdir() returns False for a dir that really exists).
+
+    os.path.isdir() never raises: it returns False on ANY stat failure, so we
+    cannot distinguish "does not exist" from "not currently visible". If the
+    path lives under a /net/<host> automount, a lookup on that root triggers
+    the remount; we nudge it and re-check before concluding it is missing.
+    """
+    root = _automount_root(dir_path)
+    for _ in range(retries):
+        if os.path.isdir(dir_path):
+            return True
+        if root is None:
+            break  # not an automount path; no point retrying
+        try:
+            os.listdir(root)  # triggers/refreshes the autofs mount
+        except OSError:
+            pass
+        time.sleep(delay)
+    return os.path.isdir(dir_path)
+
 def create_directory(dir_path):
     """
     Helper function to create a directory and handle errors.
@@ -58,10 +93,28 @@ def create_directory(dir_path):
         else:
             dat_dir = dir_path[0]  # Neither exists; create first option
             dir_path = dat_dir
+
+    # Retry first: a False from isdir() may just be a timed-out automount, not
+    # a missing directory. Only create if it is genuinely absent.
+    if _ensure_visible(dir_path):
+        return
+
+    # If the directory is still not visible but its parent exists and we cannot
+    # write to it, this is a mount/permission problem, not a missing dir. Do NOT
+    # makedirs into it: creating a local dir on a dead autofs stub would shadow
+    # the real NFS export and block it from ever mounting there.
+    parent = os.path.dirname(dir_path.rstrip('/'))
+    if os.path.isdir(parent) and not os.access(parent, os.W_OK):
+        msg = (f'Directory {dir_path} is not visible and its parent {parent} is '
+               f'not writable. Likely a mount/permission issue rather than a '
+               f'missing directory; not creating. Bailing out')
+        logging.error(msg)
+        send_mail_and_die(msg)
+        return
+
     try:
-        if not os.path.isdir(dir_path):
-            logging.info(f'Directory {dir_path} does not exist. Creating...')
-            os.makedirs(dir_path, exist_ok=True)
+        logging.info(f'Directory {dir_path} does not exist. Creating...')
+        os.makedirs(dir_path, exist_ok=True)
     except Exception as e:
         logging.error(f'Could not make directory {dir_path}: {e} \nBailing out')
         send_mail_and_die(f'Could not make directory {dir_path}: {e}')
