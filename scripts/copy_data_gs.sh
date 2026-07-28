@@ -24,6 +24,9 @@ process_files() {
                 read -p "Copy satcom log file? (y/n): " copy_file < /dev/tty
                 if [[ "$copy_file" == "y" || "$copy_file" == "Y" ]]; then
                     echo "Copying: $file"
+                    if [[ ! -d "$copy_dir/satcom" ]]; then
+                        mkdir -p "$copy_dir/satcom"
+                    fi
                     cp -v "$source_dir/$file" "$copy_dir/satcom/"
                     echo "Copied successfully."
                 else
@@ -36,6 +39,9 @@ process_files() {
                         read -p "Copy camera images tar file? (y/n): " copy_file < /dev/tty
                         if [[ "$copy_file" == "y" || "$copy_file" == "Y" ]]; then
                             echo "Copying: $file"
+                            if [[ ! -d "$copy_dir/CAMERA" ]]; then
+                                mkdir -p "$copy_dir/CAMERA"
+                            fi
                             cp -v "$source_dir/$file" "$copy_dir/CAMERA/"
                             echo "Copied successfully."
                         else
