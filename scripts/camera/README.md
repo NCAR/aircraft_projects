@@ -31,8 +31,8 @@ Over time RAF has operated multiple different camera types. The best way to dete
      includeData = no          ----------> can be yes (to include data to the right) or no (to omit).
      netcdfFile = <DATA_DIR>/TI3GER-2/TI3GER-2####.nc  ----------> Not needed if includeData = no; may also exist in /scr/raf/Prod_Data/
      gravityD = East ----------> Optional, defaults to East
-     # Times will be determined from the images in imageDir1
-     # All other image dirs will try to match these times.
+     # A frame is created once a second from the earliest to the latest image
+     # time found in ANY of the image dirs, so no single dir sets the times.
      imageDir1 = <RAW_DATA_DIR>/<project>/camera/flight_number_####/forward
      #gravity1 = NorthWest
      gravity1 = North ---------------> North = Front facing; South = down.

@@ -1,8 +1,11 @@
 includeData = no
 netcdfFile = <DATA_DIR>/<PROJ>/<PROJ><flight>.nc
 
-# Times will be determined from the images in the imageDirectory
-# All other image dirs will try to match these times.
+# A frame is created once a second from the earliest to the latest image time
+# found in ANY of the image dirs below, so no single dir determines the times.
+# A camera with no image at a frame time reuses its previous image if that
+# image is recent enough; otherwise that part of the frame is left blank.
+# See FRAME_INTERVAL and TIME_TOLERANCE at the top of combineCameras.pl.
 imageDir1 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/forward
 gravity1 = NorthWest
 numCameras = 4
