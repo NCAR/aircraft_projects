@@ -38,21 +38,6 @@ PROJECT=$(echo "$PROJECT" | tr '[:lower:]' '[:upper:]')
 # Define array of image directions
 DIRECTIONS=("forward" "left" "right" "down")
 
-# Populate CAMERA_DIRS with the directions that have images for the current
-# flight. Uses PROJECT, CAMERA_DIR, and FLIGHT from the enclosing loop.
-scan_camera_dirs() {
-    CAMERA_DIRS=()
-    for DIR in "${DIRECTIONS[@]}"; do
-        IMG_DIR="${RAW_DATA_DIR}/$PROJECT/${CAMERA_DIR}/flight_number_$FLIGHT/$DIR/"
-        if [ ! -d "$IMG_DIR" ]; then
-            echo "Looking for camera images in ${IMG_DIR}"
-            echo "No camera images found for ${DIR} direction. Skipping."
-            continue
-        fi
-        CAMERA_DIRS+=("$DIR")
-    done
-}
-
 cam_path=${PROJ_DIR}/scripts/camera
 proj_path=${PROJ_DIR}/${PROJECT}/${AIRCRAFT}/scripts
 
@@ -73,31 +58,15 @@ for FLIGHT in "$@"; do
         continue
     fi
 
-    scan_camera_dirs
-
-    # Nothing found - the flight images may still be packed in a tarfile
-    # (flight_number_????.tar next to the flight directories). If so, extract
-    # it in place and look for the image directions again.
-    if [ ${#CAMERA_DIRS[@]} -eq 0 ]; then
-        cam_dir_path="${RAW_DATA_DIR}/$PROJECT/${CAMERA_DIR}"
-        tarball="${cam_dir_path}/flight_number_$FLIGHT.tar"
-        if [ -f "$tarball" ]; then
-            echo "Extracting $tarball ..."
-            if tar -xf "$tarball" -C "$cam_dir_path"; then
-                scan_camera_dirs
-            else
-                echo "Error: couldn't extract $tarball."
-            fi
-        else
-            echo "No tarfile $tarball found for flight $FLIGHT either."
+    CAMERA_DIRS=()
+    for DIR in "${DIRECTIONS[@]}"; do
+        IMG_DIR="${RAW_DATA_DIR}/$PROJECT/${CAMERA_DIR}/flight_number_$FLIGHT/$DIR/"
+        if [ ! -d "$IMG_DIR" ]; then
+            echo "No camera images found for ${DIR} direction. Skipping."
+            continue
         fi
-    fi
-
-    # Still nothing to work with, so there's no movie to make for this flight.
-    if [ ${#CAMERA_DIRS[@]} -eq 0 ]; then
-        echo "No camera images found for flight $FLIGHT. Skipping."
-        continue
-    fi
+        CAMERA_DIRS+=("$DIR")
+    done
 
     # Per-flight parameter file so the setup can differ per flight movie.
     param_file="${proj_path}/movieParamFile_$FLIGHT"
