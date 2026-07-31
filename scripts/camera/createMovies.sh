@@ -45,6 +45,7 @@ scan_camera_dirs() {
     for DIR in "${DIRECTIONS[@]}"; do
         IMG_DIR="${RAW_DATA_DIR}/$PROJECT/${CAMERA_DIR}/flight_number_$FLIGHT/$DIR/"
         if [ ! -d "$IMG_DIR" ]; then
+            echo "Looking for camera images in ${IMG_DIR}"
             echo "No camera images found for ${DIR} direction. Skipping."
             continue
         fi
