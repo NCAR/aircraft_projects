@@ -2,6 +2,29 @@
 
 Changelog for the camera scripts in `aircraft_projects/scripts/camera/`
 
+## [2.3] - 2026-08-06
+
+### Added
+- `movieParamFile_fwd.template`: Param file template for a forward camera only
+  (`numCameras = 1`), for the flights where that is all that was recorded.
+- `createMovies.sh`: Pick the param file template from the pointing directions that
+  actually have images - `movieParamFile.template` for all four, and
+  `movieParamFile_fwd.template` for forward only. Any other combination is reported
+  and the flight skipped, so write that param file by hand and rerun; an existing
+  param file is still used as-is whatever the directions are.
+- `test/testCreateMovies.sh`: Tests for template selection - all four directions,
+  a forward-only flight that is still tarred, a combination with no template, and an
+  existing param file taking precedence.
+
+### Fixed
+- `createMovies.sh`: The flight tarfile is extracted before the pointing direction
+  subdirectories are checked for. Those subdirectories don't exist until the tarfile
+  is unpacked, so imagery that was still packed had every direction reported missing.
+  This restores the extraction added in 2.1 and dropped in 2.2, and it now has to run
+  before the direction check rather than after it, since the directions decide which
+  template is used. `combineCameras.pl` still untars as well, for the projects that
+  call it directly rather than through `createMovies.sh`.
+
 ## [2.2] - 2026-07-30
 
 ### Updated
