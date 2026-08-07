@@ -146,8 +146,8 @@ for FLIGHT in "$@"; do
         *) echo "Skipping flight: $FLIGHT"; continue ;;
     esac
 
-    # Make sure the param file name ends with this flight designation.
-    if [[ "$param_file" != *"$FLIGHT" ]]; then
+    # Make sure the param file name contains this flight designation.
+    if [[ "$param_file" != *"$FLIGHT"* ]]; then
         echo "Error: param file $param_file does not match flight $FLIGHT. Skipping."
         continue
     fi
