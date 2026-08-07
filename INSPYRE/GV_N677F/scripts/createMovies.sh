@@ -3,12 +3,13 @@
 # PROJECT, AIRCRAFT, and RAW_DATA_DIR are read from the environment.
 # PROJECT may be overridden on the command line with -p.
 usage() {
-    echo "Usage: $0 [-p PROJECT] <flight> (e.g rf06 rf07 rf08) ..."
+    echo "Usage: $0 [-h] [-p PROJECT] <flight> (e.g rf06 rf07 rf08) ..."
 }
 
 while getopts ":p:h" opt; do
     case $opt in
         p) PROJECT="$OPTARG" ;;
+	h) HIRES=True ;;
         h) usage; exit 0 ;;
         \?) echo "Error: invalid option -$OPTARG"; usage; exit 1 ;;
         :)  echo "Error: option -$OPTARG requires an argument"; usage; exit 1 ;;
@@ -111,6 +112,10 @@ for FLIGHT in "$@"; do
 
     # Per-flight parameter file so the setup can differ per flight movie.
     param_file="${proj_path}/movieParamFile_$FLIGHT"
+    if [[ $HIRES == True ]]; then
+        param_file="${param_file}hires"
+    fi
+
 
     # Create the param file from template, unless one already exists (don't
     # overwrite a file the user may have customized).
