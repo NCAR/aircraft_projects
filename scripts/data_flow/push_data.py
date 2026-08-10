@@ -69,6 +69,13 @@ def main():
     # Call the report function from the setup class to append to the final message and send the status email
     setup.report(status, setup.PROJECT, setup.FLIGHT, setup.EMAIL, setup.FILE_EXT,final_message)
 
+    # Now that the processing has completed, attempt to run the movie-generation script
+    try:
+        script = "/home/local/aircraft_movies_animations/timeseries_animation.py"
+        subprocess.run([sys.executable, script, "-f", setup.FLIGHT], check=True)
+    except:
+        print("Movie generation failed")
+
 if __name__ == "__main__":
     main()
 
