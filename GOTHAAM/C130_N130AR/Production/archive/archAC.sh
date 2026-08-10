@@ -25,6 +25,8 @@ setenv platformlower "c130_n130ar"
 ### Preliminary LRT
 #$ARCHIVE_SCRIPT FIELD/LRT/v0_2 /scr/raf_data/$PROJECT/field_data/v0_2 nc /net/archive/data/ $EMAIL
 
+#$ARCHIVE_SCRIPT LRT/v0.9 /scr/raf_data/$PROJECT/LRT nc /net/archive/data/ $EMAIL
+
 ### Preliminary LRT ICT
 #$ARCHIVE_SCRIPT FIELD/ICARTT /scr/raf_data/$PROJECT/field_data ict $CS_LOCATION$YEAR/ $EMAIL
 
@@ -36,6 +38,8 @@ setenv platformlower "c130_n130ar"
 
 ### Preliminary HRT
 #$ARCHIVE_SCRIPT FIELD/HRT /scr/raf_data/$PROJECT/field_data/HRT nc $CS_LOCATION$YEAR/ $EMAIL
+
+#$ARCHIVE_SCRIPT HRT/v0.9 /scr/raf_data/$PROJECT h.nc $CS_LOCATION$YEAR/ $EMAIL
 
 ### Preliminary SRT
 #$ARCHIVE_SCRIPT FIELD/SRT /scr/raf_data/$PROJECT/field_data/SRT nc $CS_LOCATION$YEAR/ $EMAIL
@@ -65,6 +69,8 @@ setenv platformlower "c130_n130ar"
 ### LRT
 #$ARCHIVE_SCRIPT LRT/v1 /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/ $EMAIL
 
+$ARCHIVE_SCRIPT LRT/v1.1 /scr/raf/Prod_Data/$PROJECT/LRT/V1.1 nc /net/archive/data/ $EMAIL
+
 ### LRT ICT
 #$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict $CS_LOCATION$YEAR $EMAIL
 
@@ -75,7 +81,9 @@ setenv platformlower "c130_n130ar"
 #$ARCHIVE_SCRIPT KML /scr/raf/Prod_Data/$PROJECT/KML kml $CS_LOCATION$YEAR/ $EMAIL
 
 ### HRT
-$ARCHIVE_SCRIPT HRT /scr/raf/Prod_Data/$PROJECT/HRT nc $CS_LOCATION$YEAR/ $EMAIL
+#$ARCHIVE_SCRIPT HRT /scr/raf/Prod_Data/$PROJECT/HRT nc $CS_LOCATION$YEAR/ $EMAIL
+
+#$ARCHIVE_SCRIPT HRT/v1.1  /scr/raf/Prod_Data/$PROJECT/HRT/V1.1 nc $CS_LOCATION$YEAR/ $EMAIL
 
 ### HRT KML
 #$ARCHIVE_SCRIPT KMLh /scr/raf/Prod_Data/$PROJECT/HRT kml $CS_LOCATION$YEAR $EMAIL
