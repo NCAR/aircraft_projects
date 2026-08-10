@@ -14,7 +14,7 @@ dsm304; DSC_A2DSensor
 ```
 <!--
         Radiometer calibrations have been commented out just on the groundstation so that
-        realtime data in the netCDF files will be reported in volts. These changes should
+        preliminary data in the netCDF files will be reported in volts. These changes should
         NOT be checked in because we want the cals active on the GV during flights. After
         the project concludes, the radiometer team will provide post-INSPYRE cals and the
         final data will be calibrated using those to W/m-2. See google doc:
