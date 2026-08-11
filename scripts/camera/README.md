@@ -1,5 +1,7 @@
 # Create Digital Camera Movies from RAF still images
 
+NOTE: [aircraft_movie_animations](https://github.com/NCAR/aircraft_movies_animations)/timeseries_animation.py now calls this script if needed so you don't need to run this first if your final goal is to generate animations
+
 ## RAF Aircraft Camera Image processing notes
 Over time RAF has operated multiple different camera types. The best way to determine the type for a project is to ask the software engineers. For older projects, you can also check the camera and movie writeup in the aircraft project documentation off the [project pages](https://www.eol.ucar.edu/all-field-programs) or check the Digital Camera Imagery Notes associated with the camera and movie datasets in the [Field Data Archive](https://data.eol.ucar.edu).
 
