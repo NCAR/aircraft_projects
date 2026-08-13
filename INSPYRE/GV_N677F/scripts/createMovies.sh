@@ -104,6 +104,13 @@ for FLIGHT in "$@"; do
     if [ ${#CAMERA_DIRS[@]} -eq 4 ]; then
         # All 4 cameras are available.
         template_file="${cam_path}/movieParamFile.template"
+    elif [ ${#CAMERA_DIRS[@]} -eq 2 ]; then
+        # Two cameras are available.
+        if [ "${CAMERA_DIRS[0]}" = "forward" ]; then
+            if [ "${CAMERA_DIRS[1]}" = "right" ]; then
+                template_file="${cam_path}/movieParamFile_fr.template"
+	    fi
+	fi
     elif [ ${#CAMERA_DIRS[@]} -eq 1 ] && [ "${CAMERA_DIRS[0]}" = "forward" ]; then
         # We only have a forward camera.
         template_file="${cam_path}/movieParamFile_fwd.template"
