@@ -97,6 +97,8 @@ for FLIGHT in "$@"; do
     if [ ${#CAMERA_DIRS[@]} -eq 0 ]; then
         echo "No camera images found for flight $FLIGHT. Skipping."
         continue
+    else
+        echo "Found ${#CAMERA_DIRS[@]} cameras"
     fi
 
     # Select the param file template based on which camera directions we are
@@ -105,6 +107,15 @@ for FLIGHT in "$@"; do
     if [ ${#CAMERA_DIRS[@]} -eq 4 ]; then
         # All 4 cameras are available.
         template_file="${cam_path}/movieParamFile.template"
+    elif [ ${#CAMERA_DIRS[@]} -eq 3 ]; then
+        # Two cameras are available.
+        if [ "${CAMERA_DIRS[0]}" = "forward" ]; then
+            if [ "${CAMERA_DIRS[1]}" = "left" ]; then
+                if [ "${CAMERA_DIRS[2]}" = "right" ]; then
+                    template_file="${cam_path}/movieParamFile_flr.template"
+	        fi
+	    fi
+	fi
     elif [ ${#CAMERA_DIRS[@]} -eq 2 ]; then
         # Two cameras are available.
         if [ "${CAMERA_DIRS[0]}" = "forward" ]; then
