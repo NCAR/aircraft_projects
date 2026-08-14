@@ -3,12 +3,13 @@
 # PROJECT, AIRCRAFT, and RAW_DATA_DIR are read from the environment.
 # PROJECT may be overridden on the command line with -p.
 usage() {
-    echo "Usage: $0 [-p PROJECT] <flight> (e.g rf06 rf07 rf08) ..."
+    echo "Usage: $0 [-h] [-p PROJECT] <flight> (e.g rf06 rf07 rf08) ..."
 }
 
 while getopts ":p:h" opt; do
     case $opt in
         p) PROJECT="$OPTARG" ;;
+	h) HIRES=True ;;
         h) usage; exit 0 ;;
         \?) echo "Error: invalid option -$OPTARG"; usage; exit 1 ;;
         :)  echo "Error: option -$OPTARG requires an argument"; usage; exit 1 ;;
@@ -58,26 +59,99 @@ for FLIGHT in "$@"; do
         continue
     fi
 
-    CAMERA_DIRS=()
-    for DIR in "${DIRECTIONS[@]}"; do
-        IMG_DIR="${RAW_DATA_DIR}/$PROJECT/${CAMERA_DIR}/flight_number_$FLIGHT/$DIR/"
-        if [ ! -d "$IMG_DIR" ]; then
-            echo "No camera images found for ${DIR} direction. Skipping."
-            continue
+    # Images come off the aircraft still packed as flight_number_<flight>.tar
+    # The pointing direction subdirectories don't exist until that is unpacked,
+    # so extract it before scanning for them. combineCameras.pl untars too.
+    # This is for backward copatibility for the projects that call it directly
+    # rather than through this script. Extraction is skipped when the flight
+    # directory is already unpacked, so the tarfile is only ever extracted once.
+    cam_dir_path="${RAW_DATA_DIR}/$PROJECT/${CAMERA_DIR}"
+    flight_dir="${cam_dir_path}/flight_number_$FLIGHT"
+    tarball="${flight_dir}.tar"
+    if [ ! -d "$flight_dir" ]; then
+        if [ -f "$tarball" ]; then
+            echo "Extracting $tarball ..."
+            if ! tar -xf "$tarball" -C "$cam_dir_path"; then
+                echo "Error: couldn't extract $tarball."
+            fi
+        else
+            echo "No tarfile $tarball found for flight $FLIGHT."
         fi
-        CAMERA_DIRS+=("$DIR")
-    done
+    fi
+
+    # Record which directions have images. A direction that didn't fly, or a
+    # camera that failed, just isn't in the list.
+    CAMERA_DIRS=()
+    if [ -d "$flight_dir" ]; then
+        for DIR in "${DIRECTIONS[@]}"; do
+            IMG_DIR="${flight_dir}/$DIR/"
+            if [ ! -d "$IMG_DIR" ]; then
+                echo "No camera images found for ${DIR} direction. Skipping."
+                continue
+            fi
+            CAMERA_DIRS+=("$DIR")
+        done
+    fi
+
+    # Nothing to work with, so there's no movie to make for this flight.
+    if [ ${#CAMERA_DIRS[@]} -eq 0 ]; then
+        echo "No camera images found for flight $FLIGHT. Skipping."
+        continue
+    else
+        echo "Found ${#CAMERA_DIRS[@]} cameras"
+    fi
+
+    # Select the param file template based on which camera directions we are
+    # flying. Incomplete list - needs to be flushed out.
+    template_file=""
+    if [ ${#CAMERA_DIRS[@]} -eq 4 ]; then
+        # All 4 cameras are available.
+        template_file="${cam_path}/movieParamFile.template"
+    elif [ ${#CAMERA_DIRS[@]} -eq 3 ]; then
+        # Two cameras are available.
+        if [ "${CAMERA_DIRS[0]}" = "forward" ]; then
+            if [ "${CAMERA_DIRS[1]}" = "left" ]; then
+                if [ "${CAMERA_DIRS[2]}" = "right" ]; then
+                    template_file="${cam_path}/movieParamFile_flr.template"
+	        fi
+	    fi
+	fi
+    elif [ ${#CAMERA_DIRS[@]} -eq 2 ]; then
+        # Two cameras are available.
+        if [ "${CAMERA_DIRS[0]}" = "forward" ]; then
+            if [ "${CAMERA_DIRS[1]}" = "right" ]; then
+                template_file="${cam_path}/movieParamFile_fr.template"
+	    fi
+	fi
+    elif [ ${#CAMERA_DIRS[@]} -eq 1 ] && [ "${CAMERA_DIRS[0]}" = "forward" ]; then
+        # We only have a forward camera.
+        template_file="${cam_path}/movieParamFile_fwd.template"
+    fi
 
     # Per-flight parameter file so the setup can differ per flight movie.
     param_file="${proj_path}/movieParamFile_$FLIGHT"
+    if [[ $HIRES == True ]]; then
+        param_file="${param_file}hires"
+    fi
+
 
     # Create the param file from template, unless one already exists (don't
     # overwrite a file the user may have customized).
     if [ -f "$param_file" ]; then
         echo "Using existing $param_file (not overwriting)."
+    elif [ -z "$template_file" ]; then
+        # An unhandled combination of pointing directions. Write the param
+        # file by hand and rerun; the existing file will then be used as-is.
+        echo "No template for cameras: ${CAMERA_DIRS[*]}."
+        echo "Create $param_file by hand and rerun. Skipping flight $FLIGHT."
+        continue
+    elif [ ! -f "$template_file" ]; then
+        echo "Template $template_file not found. Skipping flight $FLIGHT."
+        continue
     else
+        echo "Using template $template_file for cameras: ${CAMERA_DIRS[*]}"
         # Replace <flight> with current flight
-        sed "s/<flight>/$FLIGHT/g" ${cam_path}/movieParamFile.template > "$param_file"
+        sed "s/<flight>/$FLIGHT/g" ${template_file} > "$param_file"
         # Replace <PROJ> with the actual project name
         sed -i.bak "s/<PROJ>/$PROJECT/g" "$param_file"
     fi
@@ -90,8 +164,8 @@ for FLIGHT in "$@"; do
         *) echo "Skipping flight: $FLIGHT"; continue ;;
     esac
 
-    # Make sure the param file name ends with this flight designation.
-    if [[ "$param_file" != *"$FLIGHT" ]]; then
+    # Make sure the param file name contains this flight designation.
+    if [[ "$param_file" != *"$FLIGHT"* ]]; then
         echo "Error: param file $param_file does not match flight $FLIGHT. Skipping."
         continue
     fi

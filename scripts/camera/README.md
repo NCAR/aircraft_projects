@@ -1,5 +1,7 @@
 # Create Digital Camera Movies from RAF still images
 
+NOTE: [aircraft_movie_animations](https://github.com/NCAR/aircraft_movies_animations)/timeseries_animation.py now calls this script if needed so you don't need to run this first if your final goal is to generate animations
+
 ## RAF Aircraft Camera Image processing notes
 Over time RAF has operated multiple different camera types. The best way to determine the type for a project is to ask the software engineers. For older projects, you can also check the camera and movie writeup in the aircraft project documentation off the [project pages](https://www.eol.ucar.edu/all-field-programs) or check the Digital Camera Imagery Notes associated with the camera and movie datasets in the [Field Data Archive](https://data.eol.ucar.edu).
 
@@ -26,13 +28,20 @@ Over time RAF has operated multiple different camera types. The best way to dete
 
 1. Generate preliminary movies if final netCDF data is not available yet and movies have been requested. Otherwise, generate final production movies:
    - Run `proj/<project>/<platform>/scripts/createMovies.sh` for one flight. This will auto-generate a project-specific movieParamFile and ask if you want to run the movies. Exit and update the movieParamFile` to adjust number of cameras if needed and make any changes to the params desired for the movies (including turning on includeData). Here is a sample file format:
+     The template is chosen from the camera pointing directions that have images for
+     that flight: `movieParamFile.template` when all four flew, and
+     `movieParamFile_fwd.template` when only the forward camera did. Any other
+     combination is reported and the flight skipped - write the movieParamFile by hand
+     and rerun, and it will be used as-is. If the imagery is still packed in a
+     `flight_number_<flight>.tar`, the script extracts it first, so the directions are
+     known before the template is picked.
      ```
      #includeData is required
      includeData = no          ----------> can be yes (to include data to the right) or no (to omit).
      netcdfFile = <DATA_DIR>/TI3GER-2/TI3GER-2####.nc  ----------> Not needed if includeData = no; may also exist in /scr/raf/Prod_Data/
      gravityD = East ----------> Optional, defaults to East
-     # Times will be determined from the images in imageDir1
-     # All other image dirs will try to match these times.
+     # A frame is created once a second from the earliest to the latest image
+     # time found in ANY of the image dirs, so no single dir sets the times.
      imageDir1 = <RAW_DATA_DIR>/<project>/camera/flight_number_####/forward
      #gravity1 = NorthWest
      gravity1 = North ---------------> North = Front facing; South = down.

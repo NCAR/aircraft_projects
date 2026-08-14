@@ -41,6 +41,31 @@ my $fontSize = "13";
 my $fontColor = "black";
 my $startNum = -1;
 
+# ---------------------------- Frame timing -------------------------------
+# Frames are generated on a fixed time grid running from the earliest to the
+# latest image time found in ANY of the image directories, so a camera that
+# was down for part of the flight no longer determines which frames exist.
+my $FRAME_INTERVAL = 1;		# seconds between output frames
+
+# Cameras don't all record at the frame interval (some record every few
+# seconds) and they drop images. When a camera has no image at a frame time,
+# its previous image is reused, but only if it is no more than this many
+# seconds old. Beyond that the camera is treated as missing and contributes a
+# blank tile rather than showing a stale image.
+my $TIME_TOLERANCE = 5;		# seconds an image may be carried forward
+
+# Image filenames end in YYMMDD-HHMMSS.jpg, which is how frame times are
+# determined. Files that don't match are ignored, so this needs to cover the
+# naming conventions in use:
+#   - '-' or '_' between the date and the time,
+#   - an optional pointing suffix after the time, e.g. 260729-120000_d.jpg.
+# Anything before the date (a camera name, say) is ignored, since each
+# directory is read on its own and filenames are used as found.
+my $IMAGE_NAME_PATTERN = qr/(\d{6})[-_](\d{6})([-_][A-Za-z0-9]+)?\.jpg$/i;
+
+# Canvas color used for a camera with no image at a frame time.
+my $MISSING_IMAGE_COLOR = "white";
+
 # List possible keywords for use in ParamFile
 my %possible_keywords = ( # value = description, default
     "includeData" => ("yes or no"),
@@ -224,29 +249,22 @@ if ($keywords->{includeData} eq "yes") {
 }
 
 # -------------------------------------------------------------------
-# ----------------------- Load image list ---------------------------
+# ----------------------- Build the frame list ----------------------
 # -------------------------------------------------------------------
 
-# Open the directory and read the list of JPEG files into @jpegFiles array.
-# Resolve camera/CAMERA first, then untar the flight level if it's packed.
-$keywords->{imageDir1} = &resolve_camera_dir($keywords->{imageDir1});
-$keywords->{imageDir1} = &untar_camera_level($keywords->{imageDir1});
-opendir(IMAGE_DIRECTORY, "$keywords->{imageDir1}")
-	|| die "Image directory $keywords->{imageDir1} not found";
-my @tempList = grep{/.jpg/} readdir IMAGE_DIRECTORY;
-closedir IMAGE_DIRECTORY;
+# Scan every camera directory for images, then lay out the frames to
+# generate on a fixed time grid spanning all of them.
+my $cameraImages = &scan_camera_images($keywords);
+my @frames = &build_frame_list($cameraImages,$keywords->{numCameras});
+my $numFrames = scalar(@frames);
+$numFrames > 0 or die "No images found in any of the image directories";
 
-# sort by filename which is the image time. 
-# Alternative would be to search the entire list for each second of data.
-# (Should see how much additional time that would add.)
-my @jpegFiles=sort @tempList;
-my $numFiles = scalar(@jpegFiles);
-print "Number of images to process = $numFiles\n";
-
-# If not including netCDF data then read flight number from image dir path.
+# If not including netCDF data then read flight number from image dir path
+# and take the movie start time from the first frame.
 if ($keywords->{includeData} ne "yes") {
     $flightNumber = $keywords->{imageDir1};
     $flightNumber =~ s/^.*flight_number_(....).*/$1/;
+    $outputFileTimes = strftime("%y%m%d.%H%M%S",gmtime($frames[0]->{time}));
 }
 
 # Set the output dir for annotated images and final movies
@@ -288,10 +306,10 @@ my $fileNum=0;
 my $haveData = 1;
 my $imageTime = 0;
 my $prevImageTime = 0;
-foreach my $fileName (@jpegFiles) {
+foreach my $frame (@frames) {
         # Code sometimes dies mid processing. If startNum given on command line
         # recover by starting there.
-	$fileNum++;		#track the number of image files processed
+	$fileNum++;		#track the number of frames processed
 
         if ($fileNum <= $startNum) {
             print "Skipping image $fileNum\n";
@@ -325,42 +343,36 @@ foreach my $fileName (@jpegFiles) {
 	    if ($keywords->{numCameras} == 4) {$gravity = 'North'};
 	}
 	
-	# Get image time so can later pull flight data for this time from data
-	# file.
-	# - The last 6 characters of the filename before the .jpg is the time of
-	# the camera or filesaving-computer (HHMMSS)
-	# - Ignore the date which preceeds the time since the ascii file 
-	# doesn't include it.
-	# - Since the date is in the filename, flights that roll over to 
-	# UTC 000000 are still sorted properly.
-        #Save previous image time to check for gaps in imagery
-	$prevImageTime = $imageTime; 
-	$imageTime=substr($fileName,-10,6);
-	my $imageTime_withColons=substr($imageTime,0,2).':'.
-		substr($imageTime,2,2).':'.substr($imageTime,4,2);
+	# The frame time is used to pull flight data for this frame from the
+	# data file. It comes from the image filenames (YYMMDD-HHMMSS.jpg),
+	# which carry the time of the camera or filesaving-computer.
+	# - The date is only used for the movie filename, since the ascii data
+	# file doesn't include it.
+	# - Frames are built from a time in seconds, so flights that roll over
+	# to UTC 000000 are still ordered properly.
+        #Save previous frame time to check for gaps in imagery
+	$prevImageTime = $imageTime;
+	$imageTime = strftime("%H%M%S",gmtime($frame->{time}));
+	my $imageDate = strftime("%y%m%d",gmtime($frame->{time}));
+	my $imageTime_withColons = strftime("%H:%M:%S",gmtime($frame->{time}));
 
-	# If not including netCDF data then determine image time from image 
-	# names.
-	# Determine start time here and end time at end of loop.
-	my $imageDate = substr($fileName,-17,6);
-	if ($keywords->{includeData} ne "yes" && $fileNum == 1) {
-	    $outputFileTimes = $imageDate.'.'.$imageTime;
-	}
-
-	print "image $fileNum/$numFiles: $fileName $imageTime\n";
+	print "frame $fileNum/$numFrames: $imageTime_withColons\n";
 
 	# Now process the cameras.
 	my $addtl_cameras = 1;
 	while ($addtl_cameras <= $keywords->{numCameras}) {
-            $keywords->{"imageDir$addtl_cameras"} =
-                &resolve_camera_dir($keywords->{"imageDir$addtl_cameras"});
             my $Directory = $keywords->{"imageDir$addtl_cameras"};
-	    $Image = &get_camera_image($Directory, $fileName);
+	    # Image for this camera at this frame time, or undef if it has
+	    # none within $TIME_TOLERANCE.
+	    my $fileName = $frame->{files}->{$addtl_cameras};
+	    $Image = &get_camera_image($Directory,$fileName,$keywords->{scale});
             &adjust_camera_image($keywords->{crop},$keywords->{scale},
 	        $keywords->{gamma},$keywords->{sharpen},$Image);
-	    $gravity = $keywords->{"gravity$addtl_cameras"}; 
-	        
-	    if ($keywords->{overlayImageTime} eq "yes") {
+	    $gravity = $keywords->{"gravity$addtl_cameras"};
+
+	    # Annotate with the time of the image itself, not the frame time,
+	    # so an image carried forward to fill a gap is apparent.
+	    if ($keywords->{overlayImageTime} eq "yes" && defined $fileName) {
 	        my $imageDateTime = $fileName;
 	        $imageDateTime =~ s/.jpg//;
 	        $Image->Annotate(gravity=>'SouthWest', font=>"Helvetica-Bold",
@@ -420,7 +432,7 @@ foreach my $fileName (@jpegFiles) {
 	        # pre-midnight time, but image is after midnight (i.e. data has
 	        # hour 23, image has hour 00, and dataTime < imageTime test fails
 	        # incorrectly. So test for this added Feb 2012.
-		((($imageTime - $prevImageTime) != 1) && ($prevImageTime > $imageTime)) 
+		((($imageTime - $prevImageTime) != $FRAME_INTERVAL) && ($prevImageTime > $imageTime))
 	        # If the first image in the file is after midnight, but the data
 	        # is before, we need to increment the data until it catches the 
 		# image.
@@ -571,62 +583,175 @@ sub untar_camera_level() {
 }
 
 # -------------------------------------------------------------------
+# -------------- Scan the camera dirs for images --------------------
+# -------------------------------------------------------------------
+# Read every image directory and record the time of each image found.
+# Camera/CAMERA is resolved and the flight level untarred first, and the
+# resolved path is stored back into the keywords so the annotation loop
+# doesn't have to resolve it again.
+# A camera whose directory is missing is skipped - it contributes blank
+# tiles rather than stopping the whole movie.
+# Returns a hashref: camera number => { image time in seconds => filename }.
+sub scan_camera_images() {
+    my ($keywords) = @_;
+
+    my %images;
+    my $camera = 1;
+    while ($camera <= $keywords->{numCameras}) {
+        my $dir = &resolve_camera_dir($keywords->{"imageDir$camera"});
+        $dir = &untar_camera_level($dir);
+        $keywords->{"imageDir$camera"} = $dir;
+
+        my $found = 0;
+        if (opendir(my $imageDirectory, $dir)) {
+            foreach my $fileName (readdir $imageDirectory) {
+                next unless $fileName =~ $IMAGE_NAME_PATTERN;
+                my $imageTime = &image_name2seconds($1,$2);
+                next unless defined $imageTime;
+                $images{$camera}->{$imageTime} = $fileName;
+                $found++;
+            }
+            closedir $imageDirectory;
+            print "Camera $camera ($dir): $found images\n";
+        } else {
+            print "Image directory $dir not found. ".
+                "Camera $camera will be blank.\n";
+        }
+
+        $camera += 1;
+    }
+
+    return (\%images);
+}
+
+# -------------------------------------------------------------------
+# ------------- Convert an image filename time to seconds -----------
+# -------------------------------------------------------------------
+# Takes the YYMMDD and HHMMSS parts of an image filename and returns the
+# time in seconds since the epoch, or undef if they aren't a real date
+# and time. Working in seconds keeps frames ordered across a midnight
+# rollover and makes the gap arithmetic straightforward.
+sub image_name2seconds() {
+    my ($date,$time) = @_;
+
+    my $seconds = eval {
+        timegm(substr($time,4,2),substr($time,2,2),substr($time,0,2),
+               substr($date,4,2),substr($date,2,2) - 1,
+               2000 + substr($date,0,2));
+    };
+
+    return ($seconds);
+}
+
+# -------------------------------------------------------------------
+# ---------------------- Build the frame list -----------------------
+# -------------------------------------------------------------------
+# Lay out the frames to generate: one every $FRAME_INTERVAL seconds from
+# the earliest to the latest image time in ANY camera directory, so a
+# camera that only worked part of the flight no longer decides which
+# frames get made.
+# For each frame, each camera contributes the image at that time, or its
+# most recent earlier image if that image is within $TIME_TOLERANCE (this
+# is what covers cameras recording every few seconds, and short dropouts).
+# Past the tolerance the camera is left out of the frame and gets a blank
+# tile instead of a stale image.
+# Returns a list of hashrefs: { time => seconds, files => {camera => file} }.
+sub build_frame_list() {
+    my ($images,$numCameras) = @_;
+
+    # Window to generate frames over: earliest to latest image, all cameras.
+    my ($firstTime,$lastTime);
+    foreach my $camera (keys %$images) {
+        foreach my $imageTime (keys %{$images->{$camera}}) {
+            $firstTime = $imageTime
+                if !defined $firstTime || $imageTime < $firstTime;
+            $lastTime = $imageTime
+                if !defined $lastTime || $imageTime > $lastTime;
+        }
+    }
+    return () unless defined $firstTime;
+
+    printf "Frames from %s to %s every %d second(s)\n",
+        strftime("%y%m%d %H:%M:%S",gmtime($firstTime)),
+        strftime("%y%m%d %H:%M:%S",gmtime($lastTime)),$FRAME_INTERVAL;
+
+    # Each camera's image times in order, walked in step with the frames
+    # below so the whole list isn't re-searched for every frame.
+    my (%imageTimes,%next,%latest);
+    foreach my $camera (keys %$images) {
+        $imageTimes{$camera} = [sort {$a <=> $b} keys %{$images->{$camera}}];
+        $next{$camera} = 0;	# Next image time not yet reached.
+    }
+
+    my @frames;
+    my $blankFrames = 0;
+    for (my $frameTime = $firstTime; $frameTime <= $lastTime;
+         $frameTime += $FRAME_INTERVAL) {
+        my %files;
+        my $camera = 1;
+        while ($camera <= $numCameras) {
+            my $times = $imageTimes{$camera};
+            if ($times) {
+                # Advance to the most recent image at or before this frame.
+                while ($next{$camera} < scalar(@$times)
+                       && $times->[$next{$camera}] <= $frameTime) {
+                    $latest{$camera} = $times->[$next{$camera}];
+                    $next{$camera} += 1;
+                }
+                # Use it if it is current enough to fill this frame.
+                if (defined $latest{$camera}
+                    && ($frameTime - $latest{$camera}) <= $TIME_TOLERANCE) {
+                    $files{$camera} = $images->{$camera}->{$latest{$camera}};
+                }
+            }
+            $camera += 1;
+        }
+
+        $blankFrames++ unless scalar(keys %files);
+        push(@frames,{time => $frameTime, files => \%files});
+    }
+
+    printf "Number of frames to process = %d\n",scalar(@frames);
+    if ($blankFrames) {
+        print "Warning: $blankFrames frame(s) have no image from any camera ".
+            "(all cameras down for more than $TIME_TOLERANCE seconds).\n";
+    }
+
+    return (@frames);
+}
+
+# -------------------------------------------------------------------
 # ---------------- Get Camera Image from jpg file -------------------
 # -------------------------------------------------------------------
+# Reads in a single image for one camera at one frame time. $fileName is
+# undef when the camera has no image close enough to the frame time, in
+# which case a blank tile is returned so the rest of the frame is still
+# built from the cameras that do have images.
 sub get_camera_image() {
-    my ($Directory, $fileName) = @_;
-    #
-    # This subroutine reads in a single image from a jpg file.
-    # assumes filenames with endings like *HHMMSS.jpg
-    #
-
+    my ($Directory,$fileName,$scale) = @_;
 
     # Initialize a new image to work with
-    my $Image = Image::Magick->new();	
+    my $Image = Image::Magick->new();
     @$Image = (); # clear the image
 
-    if ($fileName !~ /[0-9][0-9][0-9][0-9][0-9][0-9].jpg/) {
-	print "Filename $Directory/$fileName doesn't match ".
-	    "expected pattern: *HHMMSS.jpg\n";
- 	exit(1);
-    } else {
-
-	# If file doesn't exist:
-
-	# Try pulling off YYMMDD_HHMMSS.jpg from the end of the
-	# filename and matching that.
-	if (! -e "$Directory/$fileName") {
-	    $fileName=substr($fileName,-17,17);
-	}
-
-	# Try changing _ to - in filename and matching that.
-	if (! -e "$Directory/$fileName") {
-	    $fileName =~ s/_/-/;
-	}
-	
-	# Try adding _d to filename before .jpg and matching that.
-	if (! -e "$Directory/$fileName") {
-	    $fileName =~ s/.jpg/_?.jpg/;
-	}
-
-	#  If still doesn't exist, warn user and continue.
-	#if (! -e "$Directory/$fileName")
-	my @files = glob("$Directory/$fileName");
-	if (scalar(@files) == 0) {
-	    printf "$Directory/$fileName";
-	    print " not found!\n";
-	} else {
-	    $fileName  = $files[0];
-	    printf "$fileName";
-	    print "\n";
-	}
-
-	#Read in current image, or if none, set to white.
-        $Image->ReadImage("$fileName") 
-	    or $Image->ReadImage('xc:white');
-
-    	return ($Image);
+    if (defined $fileName) {
+        if (-e "$Directory/$fileName") {
+            print "$Directory/$fileName\n";
+            $Image->ReadImage("$Directory/$fileName");
+        } else {
+            print "$Directory/$fileName not found!\n";
+        }
     }
+
+    # No image, or one that couldn't be read, so use a blank canvas at the
+    # camera scale so it still lines up with the other cameras.
+    if (scalar(@$Image) == 0) {
+        (my $size = $scale) =~ s/[^0-9x]//g;	# scale may include a '!'.
+        $size and $Image->Set(size=>$size);
+        $Image->ReadImage("xc:$MISSING_IMAGE_COLOR");
+    }
+
+    return ($Image);
 }
 
 # -------------------------------------------------------------------

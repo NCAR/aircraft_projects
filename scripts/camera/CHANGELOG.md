@@ -2,6 +2,66 @@
 
 Changelog for the camera scripts in `aircraft_projects/scripts/camera/`
 
+## [2.3] - 2026-08-06
+
+### Added
+- `movieParamFile_fwd.template`: Param file template for a forward camera only
+  (`numCameras = 1`), for the flights where that is all that was recorded.
+- `createMovies.sh`: Pick the param file template from the pointing directions that
+  actually have images - `movieParamFile.template` for all four, and
+  `movieParamFile_fwd.template` for forward only. Any other combination is reported
+  and the flight skipped, so write that param file by hand and rerun; an existing
+  param file is still used as-is whatever the directions are.
+- `test/testCreateMovies.sh`: Tests for template selection - all four directions,
+  a forward-only flight that is still tarred, a combination with no template, and an
+  existing param file taking precedence.
+
+### Fixed
+- `createMovies.sh`: The flight tarfile is extracted before the pointing direction
+  subdirectories are checked for. Those subdirectories don't exist until the tarfile
+  is unpacked, so imagery that was still packed had every direction reported missing.
+  This restores the extraction added in 2.1 and dropped in 2.2, and it now has to run
+  before the direction check rather than after it, since the directions decide which
+  template is used. `combineCameras.pl` still untars as well, for the projects that
+  call it directly rather than through `createMovies.sh`.
+
+## [2.2] - 2026-07-30
+
+### Updated
+- `combineCameras.pl`: Frames are no longer driven by the images in `imageDir1`. All
+  image directories are scanned, and a frame is created every `$FRAME_INTERVAL` (1)
+  second from the earliest to the latest image time found in ANY of them. Previously a
+  second with no `imageDir1` image produced no frame at all, even when the other
+  cameras had images - with cameras working intermittently, that dropped most of the
+  flight.
+- `combineCameras.pl`: A camera with no image at a frame time reuses its previous
+  image, as long as that image is no more than `$TIME_TOLERANCE` (5) seconds old. This
+  covers cameras recording every few seconds and short dropouts. Past the tolerance the
+  camera contributes a blank tile rather than a stale image. The time overlay shows the
+  time of the image itself, so a carried-forward image is apparent.
+- `combineCameras.pl`: Frame times are handled in seconds rather than as `HHMMSS`
+  strings, so a flight crossing UTC midnight stays in order.
+- `combineCameras.pl`: `camera`/`CAMERA` resolution and untarring now run once per
+  directory, for all directories, instead of once per directory per image and only for
+  `imageDir1`. A camera directory that doesn't exist is reported and left blank rather
+  than killing the run.
+- `combineCameras.pl`: All frame-timing constants (`$FRAME_INTERVAL`,
+  `$TIME_TOLERANCE`, `$IMAGE_NAME_PATTERN`, `$MISSING_IMAGE_COLOR`) are together in the
+  hardcoded values section at the top of the script.
+- `README.md`, `movieParamFile.template`: Note that frame times come from all image
+  dirs, not `imageDir1`.
+
+### Fixed
+- `combineCameras.pl`: An image filename that didn't match the expected
+  `*YYMMDD-HHMMSS.jpg` pattern used to exit the whole script; such files are now
+  ignored. The pattern accepts `-` or `_` between date and time and an optional
+  pointing suffix (`260729-120000_d.jpg`), replacing the sequence of filename guesses
+  that used to be made per image.
+- `combineCameras.pl`: The blank tile used for a missing image is now sized to the
+  camera `scale` instead of relying on the forced scale to resize a default canvas.
+- `combineCameras.pl`: The movie start time in the output filename is taken from the
+  first frame, so it is still correct when restarting mid-flight with `startnum`.
+
 ## [2.1] - 2026-07-28
 
 ### Added

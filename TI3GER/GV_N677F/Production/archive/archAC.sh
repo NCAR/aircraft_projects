@@ -34,6 +34,9 @@ setenv platformlower "gv_n677f"
 ### Preliminary KML
 #$ARCHIVE_SCRIPT field_phase/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml $CS_LOCATION$YEAR $EMAIL
 
+###Preliminary F2DS
+$ARCHIVE_SCRIPT 2DS -t /scr/raf_Raw_Data/$PROJECT/2DS F2DS $CS_LOCATION$YEAR/ $EMAIL
+
 ### Preliminary CO ICT
 #ARCHIVE_SCRIPT field_phase/CO /scr/raf/Raw_Data/$PROJECT/field_phase/CO ict $CS_LOCATION$YEAR $EMAIL
 
@@ -61,7 +64,7 @@ setenv platformlower "gv_n677f"
 #$ARCHIVE_SCRIPT LRT/version1_0 /scr/raf/Prod_Data/$PROJECT/LRT/version1_0 nc /net/archive/data/ $EMAIL
 
 ### LRT ICT
-$ARCHIVE_SCRIPT LRT/ICARTT/R1 /scr/raf/Prod_Data/$PROJECT/LRT/ICARTT/R1 ict $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT LRT/ICARTT/R1 /scr/raf/Prod_Data/$PROJECT/LRT/ICARTT/R1 ict $CS_LOCATION$YEAR $EMAIL
 
 ### PMS2D
 #$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR $EMAIL

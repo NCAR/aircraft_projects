@@ -67,8 +67,8 @@ rclone_staging_dir = ''
 ### Define which files should be generated
 #############################################################################
 ICARTT = True # Generate ICARTT
-IWG1 = False # Generate IWG1 packet
-HRT = False # Generate HRT .nc file
+IWG1 = True # Generate IWG1 packet
+HRT = True # Generate HRT .nc file
 SRT = False # Generate SRT .nc file
 sendzipped = False # Zips all files before btsync to Boulder
 zip_ADS = False # Bzips the ads file independently of processed files

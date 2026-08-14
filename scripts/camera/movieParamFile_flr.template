@@ -1,22 +1,18 @@
+# PARAM FILE FOR FORWARD/LEFT/RIGHT #
 includeData = no
 netcdfFile = <DATA_DIR>/<PROJ>/<PROJ><flight>.nc
 
-# A frame is created once a second from the earliest to the latest image time
-# found in ANY of the image dirs below, so no single dir determines the times.
-# A camera with no image at a frame time reuses its previous image if that
-# image is recent enough; otherwise that part of the frame is left blank.
-# See FRAME_INTERVAL and TIME_TOLERANCE at the top of combineCameras.pl.
+# Times will be determined from the images in the imageDirectory
+# All other image dirs will try to match these times.
 imageDir1 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/forward
-gravity1 = NorthWest
-numCameras = 4
+gravity1 = North
+numCameras = 3
 
 # If numCameras > 1, add additional dirs and cameras here:
-imageDir2 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/down
-gravity2 = NorthEast
-imageDir3 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/right
-gravity3 = SouthEast
-imageDir4 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/left
-gravity4 = SouthWest
+imageDir2 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/right
+gravity2 = SouthEast
+imageDir3 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/left
+gravity3 = SouthWest
 
 # For the moment, assume all cameras are the same type.
 cameraName = Flea

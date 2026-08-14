@@ -70,11 +70,21 @@ param_dir="${PROJ_DIR}/${PROJECT}/${AIRCRAFT}/scripts"
 mkdir -p "$cam_data" "$param_dir" "${PROJ_DIR}/scripts"
 ln -s "$cam_src" "${PROJ_DIR}/scripts/camera"
 
-# make_flight_dirs <flight> - unpacked flight dir with one image per direction.
+# The script builds its template paths from PROJ_DIR, so it reports them
+# through the symlink above rather than as the real scripts/camera path.
+tmpl_path="${PROJ_DIR}/scripts/camera"
+
+# make_flight_dirs <flight> [direction ...] - unpacked flight dir with one
+# image per direction. Defaults to all four directions.
 make_flight_dirs() {
     local flight=$1
+    shift
+    local dirs=("$@")
+    if [ ${#dirs[@]} -eq 0 ]; then
+        dirs=(forward left right down)
+    fi
     local dir
-    for dir in forward left right down; do
+    for dir in "${dirs[@]}"; do
         mkdir -p "${cam_data}/flight_number_${flight}/${dir}"
         : > "${cam_data}/flight_number_${flight}/${dir}/20260728_120000.jpg"
     done
@@ -92,6 +102,15 @@ rm -rf "${cam_data}/flight_number_rf02"
 
 # rf04: a file named like a tarfile but not actually one, so tar fails.
 echo "this is not a tarfile" > "${cam_data}/flight_number_rf04.tar"
+
+# rf05: forward camera only, and still tarred - the case the forward-only
+# template exists for, with the directions only knowable after extraction.
+make_flight_dirs rf05 forward
+tar -cf "${cam_data}/flight_number_rf05.tar" -C "$cam_data" flight_number_rf05/
+rm -rf "${cam_data}/flight_number_rf05"
+
+# rf06: forward and down only - a combination with no template.
+make_flight_dirs rf06 forward down
 
 # run_flight <flight> - answer "n" at the prompt so combineCameras.pl is
 # never invoked. Returns combined stdout/stderr.
@@ -150,6 +169,44 @@ assert_contains "skips the flight with no images" "$out" \
     "No camera images found for flight rf03. Skipping."
 assert_contains "still processes the following flight" "$out" \
     "Skipping flight: rf01"
+
+echo "Test 6: all four directions use the four camera template"
+# Test 1 already generated this one, and an existing param file is never
+# regenerated, so clear it to exercise template selection.
+rm -f "${param_dir}/movieParamFile_rf01" "${param_dir}/movieParamFile_rf01.bak"
+out=$(run_flight rf01)
+assert_contains "picks movieParamFile.template" "$out" \
+    "Using template ${tmpl_path}/movieParamFile.template for cameras: forward left right down"
+assert_contains "param file has four cameras" \
+    "$(cat "${param_dir}/movieParamFile_rf01")" "numCameras = 4"
+
+echo "Test 7: a forward-only tarred flight uses the forward-only template"
+out=$(run_flight rf05)
+assert_contains "extracts before deciding on a template" "$out" \
+    "Extracting ${cam_data}/flight_number_rf05.tar"
+assert_contains "picks movieParamFile_fwd.template" "$out" \
+    "Using template ${tmpl_path}/movieParamFile_fwd.template for cameras: forward"
+assert_contains "param file has one camera" \
+    "$(cat "${param_dir}/movieParamFile_rf05")" "numCameras = 1"
+assert_contains "param file points at the forward dir" \
+    "$(cat "${param_dir}/movieParamFile_rf05")" "flight_number_rf05/forward"
+assert_contains "reached the combineCameras.pl prompt" "$out" \
+    "Skipping flight: rf05"
+
+echo "Test 8: a direction combination with no template skips the flight"
+out=$(run_flight rf06)
+assert_contains "reports the unhandled combination" "$out" \
+    "No template for cameras: forward down"
+assert_not_contains "never reaches the prompt" "$out" "Skipping flight: rf06"
+assert_no_file "no param file created" "${param_dir}/movieParamFile_rf06"
+
+echo "Test 9: an existing param file is used whatever the directions are"
+: > "${param_dir}/movieParamFile_rf06"
+out=$(run_flight rf06)
+assert_contains "uses the existing param file" "$out" \
+    "Using existing ${param_dir}/movieParamFile_rf06"
+assert_contains "reached the combineCameras.pl prompt" "$out" \
+    "Skipping flight: rf06"
 
 echo
 echo "Passed: $PASS  Failed: $FAIL"

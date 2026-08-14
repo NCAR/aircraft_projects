@@ -1,26 +1,23 @@
 includeData = no
-netcdfFile = <DATA_DIR>/<PROJ>/<PROJ><flight>.nc
+netcdfFile = <DATA_DIR>/TI3GER-2/TI3GER-2ff01.nc
 
-# A frame is created once a second from the earliest to the latest image time
-# found in ANY of the image dirs below, so no single dir determines the times.
-# A camera with no image at a frame time reuses its previous image if that
-# image is recent enough; otherwise that part of the frame is left blank.
-# See FRAME_INTERVAL and TIME_TOLERANCE at the top of combineCameras.pl.
-imageDir1 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/forward
+# Times will be determined from the images in the imageDirectory
+# All other image dirs will try to match these times.
+imageDir1 = <RAW_DATA_DIR>/TI3GER-2/camera/flight_number_ff01/forward
 gravity1 = NorthWest
 numCameras = 4
 
 # If numCameras > 1, add additional dirs and cameras here:
-imageDir2 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/down
+imageDir2 = <RAW_DATA_DIR>/TI3GER-2/camera/flight_number_ff01/down
 gravity2 = NorthEast
-imageDir3 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/right
+imageDir3 = <RAW_DATA_DIR>/TI3GER-2/camera/flight_number_ff01/right
 gravity3 = SouthEast
-imageDir4 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/left
+imageDir4 = <RAW_DATA_DIR>/TI3GER-2/camera/flight_number_ff01/left
 gravity4 = SouthWest
 
 # For the moment, assume all cameras are the same type.
 cameraName = Flea
-movieDirectory = <RAW_DATA_DIR>/<PROJ>/Movies
+movieDirectory = <RAW_DATA_DIR>/TI3GER-2/Movies
 overlayImageTime = yes
 overlayImagePointing = yes
 
