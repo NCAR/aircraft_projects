@@ -70,7 +70,7 @@ def main():
     setup.report(status, setup.PROJECT, setup.FLIGHT, setup.EMAIL, setup.FILE_EXT,final_message)
 
     # Now that the processing has completed, attempt to run the movie-generation script
-    if setup.FLIGHT.startswith(('RF', 'TF', 'FF')):
+    if setup.FLIGHT.upper().startswith(('RF', 'TF', 'FF')):
       try:
         script = "/home/local/aircraft_movies_animations/timeseries_animation.py"
         subprocess.run([sys.executable, script, "-f", setup.FLIGHT], check=True)
