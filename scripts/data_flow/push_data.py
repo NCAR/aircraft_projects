@@ -2,6 +2,7 @@ from check_env import check
 check()
 from _setup import Setup #setup, myLogger
 import sys, os,glob
+import subprocess
 import  _GDrive, _process,_NAS,_FTP,_zip,_syncThing
  ##Check that the environment variables are set correctly    
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
@@ -74,8 +75,8 @@ def main():
       try:
         script = "/home/local/aircraft_movies_animations/timeseries_animation.py"
         subprocess.run([sys.executable, script, "-f", setup.FLIGHT], check=True)
-      except:
-        print("Movie generation failed")
+      except subprocess.CalledProcessError as e:
+        print(f"Movie generation failed: {e.stderr}")
     else:
         print("Not an RF/TF/FF flight. Movie generation skipped.")
 
