@@ -77,7 +77,7 @@ def main():
       except:
         print("Movie generation failed")
     else:
-        print("Not an RF/TF/FF flight. Movie generation skipped."
+        print("Not an RF/TF/FF flight. Movie generation skipped.")
 
 if __name__ == "__main__":
     main()
