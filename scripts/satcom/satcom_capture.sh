@@ -20,7 +20,7 @@
 interface="enp0s31f6"  # steam
 
 logfile="satcom_capture.log"
-output_dir="/var/r1/${PROJECT}/satcom-capture/"
+output_dir="/var/log/ads/satcom/"
 
 # Create logfile dir if needed
 if [ ! -d "$output_dir" ]; then
