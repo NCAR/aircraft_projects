@@ -10,6 +10,7 @@
 if [ $# -ne 1 ]; then
     {
         echo "Usage: $(basename "$0") YYYYMMDD_HHMMSS"
+        echo "To analyze files without a date, pass in an empty string"
         echo "Available captures:"
         ls /var/log/satcom-capture/ 2>/dev/null
     } >&2
