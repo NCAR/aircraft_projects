@@ -1,0 +1,40 @@
+#!/bin/bash
+
+/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac -nolisten tcp :2 &
+xvpid=$!
+trap "kill $xvpid; exit 1" SIGINT SIGTERM
+sleep 2
+
+DISPLAY=:2.1
+
+source ./set_env
+source ${PROJ_DIR}/scripts/production_fns.sh
+initialize_processing
+
+./run_nimbus
+./run_nimbus_hrt
+#source ${PROJ_DIR}/scripts/reorder_all $PROJ
+#./run_proc2d
+
+# BEFORE UNCOMMENTING THIS, MANUALLY UPDATE
+# - aircraft_nc_utils/nc2asc/src/bin/nc2asc
+# - aircraft_nc_utils/nc2asc/src/lib/nc2asc/header2.txt
+# and increase the version and notes as appropriate. Be sure to update line
+# counts as well. Note that as of INSPYRE, the output filename is hardcoded
+# in nc2asc.
+# Then copy to /opt/local/bin
+#./run_icartt
+
+./run_iwg
+
+#source ${PROJ_DIR}/scripts/AddHtTerrain $PROJ
+
+if [ `whoami` == nimbus ]; then
+#  run_kalmanFilter
+  true
+fi
+
+cleanup_processing
+
+kill $xvpid
+exit 0

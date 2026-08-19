@@ -1,0 +1,14 @@
+#!/bin/bash
+
+source ./set_env
+
+# Remove existing files.  Helps to avoid residual data if nc2asc fails
+/bin/rm ${DAT}/${PROJ}?f??.iwg
+
+for file in ${DAT}/${PROJ}?f??.nc
+do
+  base=${file%.nc}
+  flight=${base: -4}
+  echo ${flight}
+  nc2iwg1 $file -o ${DAT}/${PROJ}${flight}.iwg
+done
