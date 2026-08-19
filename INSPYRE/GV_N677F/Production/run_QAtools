@@ -1,0 +1,11 @@
+#!/bin/bash
+
+source ./set_env
+
+cd /home/local/aircraft_QAtools_notebook
+for file in ${DAT}/${PROJ}?f??.nc
+do
+  base=${file%.nc}
+  flight=${base: -4}
+  ./auto_export.py --project ${PROJ} --flight ${flight}
+done
