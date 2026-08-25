@@ -24,6 +24,11 @@ dsm304; DSC_A2DSensor
         commented out:
 -->
 <!--
+            <poly units="W m-2">
+              <calfile file="VIST.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
+            </poly>
+-->
+<!--
             <poly units="degC">
               <calfile file="IRTHT.dat" path="${TMP_PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F:${PROJ_DIR}/Configuration/cal_files/Engineering/GV_N677F"/>
             </poly>
