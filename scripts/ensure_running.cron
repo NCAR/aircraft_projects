@@ -30,6 +30,13 @@ ps ax | grep "acTrack2kml -p N806NA -o" | grep -qv grep
 if [ $? -eq 1 ]; then
   nohup /opt/local/bin/acTrack2kml -p N806NA -o > /tmp/acTrack2kml-N806NA.log &
 fi
+# SP2 INSPYRE
+# SP2 couldn't get a second packet to send to ads so this script grabs the RIC
+# packet, parses it and rebroadcasts it so nidas can pick it up.
+ps ax | grep NASA_to_ground | grep -qv grep
+if [ $? -eq 1 ]; then
+  nohup /home/ads/ric/src/configurations/eol-ric/bin/NASA_to_groundvars --instrument SP2_FULL --port 30105
+fi
 
 # from DC3 project
 #ps ax | grep "acTrack2kml -p DC8 -o" | grep -qv grep
