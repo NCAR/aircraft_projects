@@ -1,7 +1,7 @@
 hd=ICARTT
 dt=NoDate
 tm=SecOfDay
-version=RB
+version=R0
 Vars=Time
 
 REM Pos/vel
