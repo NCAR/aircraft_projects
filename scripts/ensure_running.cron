@@ -25,17 +25,41 @@ if [ $? -eq 1 ]; then
   nohup /opt/local/bin/acTrack2kml -o -v > /tmp/acTrack2kml.log 2>&1
 fi
 
+# Start the Remote Instrument Control aircraft switch
+# It will read its configuration from ~/.config/NCAR/Switch.ini
+#
+# Commented out for projects that aren't using ric.
+
+ps ax | grep ric_switch | grep -qv grep
+if [ $? -eq 1 ]; then
+  /home/local/ric/src/switch/ric_switch -v > /tmp/ric_switch.log &
+fi
+
 # for INSPYRE project (2026)
 ps ax | grep "acTrack2kml -p N806NA -o" | grep -qv grep
 if [ $? -eq 1 ]; then
-  nohup /opt/local/bin/acTrack2kml -p N806NA -o > /tmp/acTrack2kml-N806NA.log &
+  nohup /opt/local/bin/acTrack2kml -p N806NA -o -v > /tmp/acTrack2kml-N806NA.log &
 fi
 # SP2 INSPYRE
 # SP2 couldn't get a second packet to send to ads so this script grabs the RIC
 # packet, parses it and rebroadcasts it so nidas can pick it up.
-ps ax | grep NASA_to_ground | grep -qv grep
+ps -eo cmd | grep NASA_to_ground | grep -qv grep
 if [ $? -eq 1 ]; then
-  nohup /home/ads/ric/src/configurations/eol-ric/bin/NASA_to_groundvars --instrument SP2_FULL --port 30105
+  /home/ads/.ric/NASA_to_groundvars --instrument SP2_FULL --port 30105 >> /var/tmp/nasa_to_ground.log 2>&1 &
+fi
+
+# If RIC has been restarted more recently than the forwarder, restart the forwarder
+FWD_PID=$(pgrep -f "NASA_to_groundvars" | head -1)
+RIC_PID=$(pgrep -f "ric_switch" | head -1)
+
+FWD_ETIME=$(ps -o etimes= -p "$FWD_PID")
+RIC_ETIME=$(ps -o etimes= -p "$RIC_PID")
+
+if [ "${FWD_ETIME:-0}" -gt "${RIC_ETIME:-0}" ]; then
+  kill "$FWD_PID"
+  sleep 2
+  /home/ads/.ric/NASA_to_groundvars --instrument SP2_FULL --port 30105 >> /var/tmp/nasa_to_ground.log 2>&1 &
+
 fi
 
 # from DC3 project
@@ -54,15 +78,15 @@ if [ $AIRCRAFT == "C130_N130AR" ]; then
 
 fi
 
-#if [ $AIRCRAFT == "GV_N677F" ]; then
+if [ $AIRCRAFT == "GV_N677F" ]; then
   
   # Start udp2sql to receive database update messages from the ground
   # Engaged for SPICULE, normally commented out.  --cjw
-#  ps ax | grep udp2sql | grep -qv grep
-#  if [ $? -eq 1 ]; then
-#    /home/local/udp2sql/udp2sql > /tmp/udp2sql.log &
-#  fi
-#fi
+  ps ax | grep udp2sql | grep -qv grep
+  if [ $? -eq 1 ]; then
+    /opt/local/bin/udp2sql > /tmp/udp2sql.log &
+  fi
+fi
 
 ps ax | grep camera_symlink.py | grep -qv grep
 if [ $? -eq 1 ]; then
@@ -81,18 +105,6 @@ fi
 #  /home/local/raf/nagios-qc/qc_check.sh 30 > /tmp/qc_check.log &
 #fi
 
-
-# Start the Remote Instrument Control aircraft switch
-# It will read its configuration from ~/.config/NCAR/Switch.ini
-#
-# Commented out for projects that aren't using ric.
-
-ps ax | grep ric_switch | grep -qv grep
-if [ $? -eq 1 ]; then
-  /home/local/ric/src/switch/ric_switch > /tmp/ric_switch.log &
-fi
-
-
 # Check for arincenet 1
 #ps ax | grep arinc_enet | grep 192.168.84.17 |grep -qv grep
 #if [ $? -eq 1 ]; then
@@ -105,3 +117,8 @@ fi
 #  arinc_ctrl -i 192.168.84.16 -p 56769 -s 4,0 -s 6,1 -s 7,0 -u 30220 &
 #fi
 
+# Velocimeter data for CAESAR - talk to Josh Carnes for details
+#ps ax | grep process_ads_data_veloc | grep -qv grep
+#if [ $? -eq 1 ]; then
+#  data_dump -i 19,160  |  /home/local/projects/CAESAR/C130_N130AR/scripts/process_ads_data_veloc.py -u -a 192.168.84.2 -p 56780
+#fi
