@@ -2,7 +2,7 @@
 
 The EOL data policy states "At the conclusion of each field campaign, EOL will provide access to the initial set of preliminary EOL data via a centralized, password protected location.", so before the field data storage is taken down, the data need to be loaded into the FDA, password protected, and made available to the team.
 
-The first, time-critical step is to make sure you obtain a copy of all the necessary data before the field phase ends. After that, archiving EOL data requires two additional steps. The first, setting up the archive environment, need only be done once. The second, loading a dataset, needs to be done for each dataset that is being archived.
+The first, **time-critical step** is to **make sure you obtain a copy of all the necessary data before the field phase ends**. After that, archiving EOL data requires two additional steps. The first, setting up the archive environment, need only be done once. The second, loading a dataset, needs to be done for each dataset that is being archived.
 
 ## 1. Make sure you have access to all the data
 
@@ -33,7 +33,7 @@ The first, time-critical step is to make sure you obtain a copy of all the neces
 
 ## 3. Archive a dataset
 
-For each field project in which RAF is involved, the following data is generally created during the field phase: ADS files, camera images, preliminary LRT data, preliminary KML data, PMS2D data. Optionally, HRT and SRT data are also created. Any data that is archived as preliminary should have a final version created, so ensure that data will be quality controlled before archiving. If a preliminary dataset is archived and later a final version is not created, that dataset can be hidden after the project data becomes public.
+For each field project in which RAF is involved, the following data is generally created during the field phase: ADS files, camera images, preliminary LRT data, preliminary KML data, PMS2D data. Optionally, HRT and SRT data are also created. **Any data that is archived as preliminary should have a final version created, so ensure that data will be quality controlled before archiving**. If a preliminary dataset is archived and later a final version is not created, that dataset can be hidden after the project data becomes public.
 
 > A note on authorship: Individuals can be authors where appropriate, such as Julie for the MTP. When a group of individuals are involved, then a team can be a dataset author, such as the Digital Camera Imagery team. The publisher should always be EOL and the primary point of contact should always be EOL Data Support.
 
@@ -57,15 +57,31 @@ Versioning should be handled as follows:
 
 2. Copy the data to Campaign Storage or local archive location, depending on data type.
    - All data that is not netCDF data needs to be loaded to Campaign Storage as user `eoldata` / group `eoldmg`.
+
    - netCDF data should be archived to `/net/archive/data`, so that the files can be made available via OPeNDAP. This is done by checking the Dodsable box in the FDA (which is configured to happen automatically when using the scripts below). Preliminary files are not to be made available via OPeNDAP, but it is cleaner to keep all versions of a dataset in the same archive location (DOES NOT CURRENTLY WORK, but still archive netcdf here)
 
-3. Change directories to `/net/jlocal/projects/<project>/<aircraft>/Production`. Confirm that the archive dir exists. If not, copy it from a recent project. `cd` to the archive dir.
+  2.1 Change directories to `/net/jlocal/projects/<project>/<aircraft>/Production`. Confirm that the archive dir exists. If not, copy it from a recent project. `cd` to the archive dir.
+  ```
+  ssh eol-saturn.eol.ucar.edu (or mercury)
+  cd /net/jlocal/projects/<project>/<aircraft>/Production
+  ```
 
-4. Edit `archAC.sh` and set `PROJECT`, `YEAR`, `PLATFORM`, and `EMAIL` near the top of the file. Uncomment the line for the data you are working with, and make sure all other lines are commented out, except the variable assignments. Save your changes.
+  2.2 Edit `archAC.sh` and set `PROJECT`, `YEAR`, `PLATFORM`, and `EMAIL` near the top of the file. Uncomment the line for the data you are working with, and make sure all other lines are commented out, except the variable assignments. Save your changes.  If you need to figure out the archive path, you can login:
+   ```
+   sudo /bin/su eoldata
+   ssh data-access.ucar.edu
+   cd /glade/campaign/eol/archive/... (as appropriate)
+   ```
 
-5. Run `./archAC.sh`. The script calls `archAC.py` which automatically computes sha256 checksums for each file before transfer, rsyncs the files to the archive, then verifies the checksums on the archive server and reports a match or mismatch per file. Results are written to `checksums.txt` in the archive location. If a mismatch is reported, re-copy the affected files and re-run.
+  2.3 Run `./archAC.sh` as user eoldata.  The script calls `archAC.py` which automatically computes sha256 checksums for each file before transfer, rsyncs the files to the archive, then verifies the checksums on the archive server and reports a match or mismatch per file. Results are written to `checksums.txt` in the archive location. If a mismatch is reported, re-copy the affected files and re-run.
+  ```
+  sudo /bin/su eoldata
+  ./archAC.sh
+  ```
 
-6. Generate the dataset YAML config files and load to the FDA and the DTS
+**If this is a new version, jump to adding files to an existing dataset below**
+
+3. Generate the dataset YAML config files and load to the FDA and the DTS
    - See [readme.md](readme.md) for setup requirements. **Don't skip this step! The code will fail if your environment is not configured correctly**
    - Copy `project_template.yml` from `$PROJ_DIR/Configuration/scripts/project_template.yml` to `$PROJ_DIR/<PROJECT>/<aircraft>/scripts/project_template.yml`.
    - Edit `project_template.yml`. There are blocks separated by comment lines.
@@ -81,15 +97,15 @@ Versioning should be handled as follows:
    - From the `scripts/data_loading/` directory, run `python3 replace_yaml.py <PROJECT>`. This script reads the `project_template.yml` for the project and all base config templates, automatically substitutes all variables (e.g. `<PROJECT>`, `<year>`, archive IDs), and saves the generated YAML files to `$CFG_FILES_DIR/<PROJECT>*/` (default: `/net/work/cfg-files/<PROJECT>*/`).
    - Now `cd /net/work/bin/scripts/insert/loaddata` and run `./load_a_dataset.pl`, giving the full path to each yml file generated above. This script will create an FDA dataset, create a DTS entry, and add all the data files to the new dataset. Hit return when prompted. When the script completes, it will prompt you to perform additional tasks by hand. (These would all be great areas to automate in the future.)
 
-7. Run `/net/work/bin/emdac/lsdsfiles -lv <archive_ident>` on datasets with files archived locally to `/net/archive` (`lsdsfiles` does not work with files on campaign storage)
+4. Run `/net/work/bin/emdac/lsdsfiles -lv <archive_ident>` on datasets with files archived locally to `/net/archive` (`lsdsfiles` does not work with files on campaign storage)
    - `lsdsfiles` is a script that performs a set of sanity checks on a dataset and can help identify common errors.
    - To see the usage statement, run `perldoc lsdsfiles`
 
-8. Check and test order the dataset by hand.
+5. Check and test order the dataset by hand.
 
-9. For all data except ADS files, make it visible in the FDA, then add it to the Master List.
+6. For all data except ADS files, make it visible in the FDA, then add it to the Master List.
 
-10. Currently, the scripts are not able to add all the required metadata. That functionality will be added as we can, but in the meantime the following items need to be added by hand through the GUI.
+7. Currently, the scripts are not able to add all the required metadata. That functionality will be added as we can, but in the meantime the following items need to be added by hand through the GUI.
     - Add an FDA user and a EULA file for these preliminary (restricted) datasets. Do not assign a DOI for preliminary datasets.
     - Add links to documentation as xlinks — be sure to add the EOL Project Homepage and aircraft Documentation Summary page to the dataset. You can also add a link to the missions table in the field catalog.
     - When you receive the Project Managers Data Quality Report, add it as a related `link:info`
@@ -101,11 +117,11 @@ Versioning should be handled as follows:
     - For oap data add links to the appropriate xpms2d pages.
     - *(As other datasets with specific links come to light, add them here. We can use this as a reference for updating the script to do this automatically.)*
 
-11. Update DTS to inform Janine that the new version is ready to be checked. It is a best practice to have a second set of eyes take a look at anything that "goes out the door" (is available to the public), so please have someone familiar with data loading take a look at every dataset.
+8. Update DTS to inform Janine that the new version is ready to be checked. It is a best practice to have a second set of eyes take a look at anything that "goes out the door" (is available to the public), so please have someone familiar with data loading take a look at every dataset.
 
-12. Once checked, update the DTS (<http://dmg.eol.ucar.edu/dts/dln/>) for your dataset and mark it done.
+9. Once checked, update the DTS (<http://dmg.eol.ucar.edu/dts/dln/>) for your dataset and mark it done.
 
-13. Return to step 1 for the next dataset.
+10. Return to step 1 for the next dataset.
 
 ---
 
@@ -117,26 +133,34 @@ Versioning should be handled as follows:
 
 1. Update DTS and assign yourself the dataset to change. Assign Janine as the checker.
 
-2. Copy the files from the ingest location to the archive location.
+2. Copy the files from the ingest location to the archive location (see above for more details)
 
-3. `cd /net/jlocal/projects/<PROJECT>/<AIRCRAFT>/Production/archive`
+  2.1 `cd /net/jlocal/projects/<PROJECT>/<AIRCRAFT>/Production/archive`
    Note the aircraft that flew for this project. You will need that info in the next step.
 
-4. Edit `archAC.sh`
+  2.2 Edit `archAC.sh`
    - Comment out all existing uncommented lines.
    - Create a new line for the data you want to load.
    - Log in as user `eoldata`
    - Run `./archAC.sh`
 
-5. Go to the dataset in the FDA and hide all the files in the existing version.
-   - If you are loading final data, uncheck "Eula Reqd" on the main "Edit Dataset" page for the dataset.
-   - Click on Version on the left, then do a bulk update to hide the files. Also hide the EULA, if it exists, so that it will stay with the preliminary data.
+3. Go to the dataset in the FDA and hide all the files in the existing version. Hide the EULA, if it exists, so that it will stay with the preliminary data.
+   ```
+   https://data.eol.ucar.edu/zinc
+   - Login
+   - Start the editor (upper left of left nav)
+   - Navigate to your dataset
+   - Select `Versions` from left nav and `Bulk file update` from the tabs below the table
+   - Select data and Eula (if it exists); Visibility All; Operation Hide; Confirm
+   - Select `Data Files` and visually confirm it worked
+   ```
+   - If you are loading final data, uncheck "Eula Reqd" on the main "Edit Dataset" page for the dataset and select `Update`.
 
-6. Create a new version with the version number you want. **See the note on versioning above.** Be careful not to add the just-hidden files to the new version. Keep this window open so you can refer to it in step 4.
+4. Create a new version with the version number you want. **See the note on versioning above.** Be careful not to add the just-hidden files to the new version. Keep this window open so you can refer to it in step 6.
 
-7. If you are moving from a preliminary to final version of the data, update the description in the FDA to match your new `.yml` file. The version number change handled by `update_version.py` in the next step will automatically set the quality from preliminary to final.
+5. If you are moving from a preliminary to final version of the data, update the description in the FDA to match your new `.yml` file. The version number change handled by `update_version.py` in the next step will automatically set the quality from preliminary to final.
 
-8. Update the dataset YAML config manually or with `update_version.py` and add new files to the FDA using `insert_multiple_files`.
+6. Update the dataset YAML config manually or with `update_version.py` and add new files to the FDA using `insert_multiple_files`.
    - `cd /net/work/cfg-files/<PROJECT>`
    - Update the version (and optionally ingest location or filename pattern) in the existing `.yml` file by running `update_version.py` from the `scripts/data_loading/` directory:
      `python3 update_version.py <PROJECT> <DATASET> --version 1.0 [--ingest /new/path] [--pattern new_pattern]`
@@ -146,9 +170,24 @@ Versioning should be handled as follows:
    - Run `/net/work/bin/emdac/lsdsfiles -lv ###.###` to check dataset if data files are archived locally to `/net/archive` (does not work with campaign storage)
    - Test order dataset
 
-9. Go back to the FDA, under the version tab and confirm the new files are under the new version.
+7. Go back to the FDA, under the version tab and confirm the new files are under the new version.
 
-10. Update DTS to inform Janine (for now) that the new version is ready to be checked.
+. Index the newly loaded data files. When metadata is updated via the Zinc interface that indexing happens automatically. However, when metadata is updated via an external script such as the insert_multiple_files script, the file metadata needs to be index using the `index files` button in zinc.
+   ```
+   - Select `Data files` in zinc
+   - Select `Index files` from the upper right
+   ```
+You will see "File indexing started"
+
+8. Perform a test order
+
+9. Update DTS to inform Janine (for now) that the new version is ready to be checked.
+
+10. Mint a DOI or update the DOI if this is FINAL data
+   ```
+   - Select `DOIs` in zinc
+   - Either select "Create new DOI" (if there isn't one and this is FINAL data)  or "Update"
+   ```
 
 11. Go to the Master List Editor and edit the listing for the file — update as required, check "updated", and save to get an updated date. (deprecated -- no more master list after CAESAR, 2024)
 
