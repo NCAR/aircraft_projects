@@ -60,24 +60,24 @@ Versioning should be handled as follows:
 
    - netCDF data should be archived to `/net/archive/data`, so that the files can be made available via OPeNDAP. This is done by checking the Dodsable box in the FDA (which is configured to happen automatically when using the scripts below). Preliminary files are not to be made available via OPeNDAP, but it is cleaner to keep all versions of a dataset in the same archive location (DOES NOT CURRENTLY WORK, but still archive netcdf here)
 
-  2.1 Change directories to `/net/jlocal/projects/<project>/<aircraft>/Production`. Confirm that the archive dir exists. If not, copy it from a recent project. `cd` to the archive dir.
-  ```
-  ssh eol-saturn.eol.ucar.edu (or mercury)
-  cd /net/jlocal/projects/<project>/<aircraft>/Production
-  ```
+   2.1 Change directories to `/net/jlocal/projects/<project>/<aircraft>/Production`. Confirm that the archive dir exists. If not, copy it from a recent project. `cd` to the archive dir.
+   ```
+   ssh eol-saturn.eol.ucar.edu (or mercury)
+   cd /net/jlocal/projects/<project>/<aircraft>/Production
+   ```
 
-  2.2 Edit `archAC.sh` and set `PROJECT`, `YEAR`, `PLATFORM`, and `EMAIL` near the top of the file. Uncomment the line for the data you are working with, and make sure all other lines are commented out, except the variable assignments. Save your changes.  If you need to figure out the archive path, you can login:
+   2.2 Edit `archAC.sh` and set `PROJECT`, `YEAR`, `PLATFORM`, and `EMAIL` near the top of the file. Uncomment the line for the data you are working with, and make sure all other lines are commented out, except the variable assignments. Save your changes.  If you need to figure out the archive path, you can login:
    ```
    sudo /bin/su eoldata
    ssh data-access.ucar.edu
    cd /glade/campaign/eol/archive/... (as appropriate)
    ```
 
-  2.3 Run `./archAC.sh` as user eoldata.  The script calls `archAC.py` which automatically computes sha256 checksums for each file before transfer, rsyncs the files to the archive, then verifies the checksums on the archive server and reports a match or mismatch per file. Results are written to `checksums.txt` in the archive location. If a mismatch is reported, re-copy the affected files and re-run.
-  ```
-  sudo /bin/su eoldata
-  ./archAC.sh
-  ```
+   2.3 Run `./archAC.sh` as user eoldata.  The script calls `archAC.py` which automatically computes sha256 checksums for each file before transfer, rsyncs the files to the archive, then verifies the checksums on the archive server and reports a match or mismatch per file. Results are written to `checksums.txt` in the archive location. If a mismatch is reported, re-copy the affected files and re-run.
+   ```
+   sudo /bin/su eoldata
+   ./archAC.sh
+   ```
 
 **If this is a new version, jump to adding files to an existing dataset below**
 
@@ -116,12 +116,19 @@ Versioning should be handled as follows:
     - For netCDF files, add a link to the aircraft_nc_utils repo and the NCAR-RAF netCDF conventions webpage
     - For oap data add links to the appropriate xpms2d pages.
     - *(As other datasets with specific links come to light, add them here. We can use this as a reference for updating the script to do this automatically.)*
+  
+8. Index the newly loaded data files. When metadata is updated via the Zinc interface that indexing happens automatically. However, when metadata is updated via an external script such as the insert_multiple_files script, the file metadata needs to be index using the `index files` button in zinc.
+   ```
+   - Select `Data files` in zinc
+   - Select `Index files` from the upper right
+   ```
+You will see "File indexing started"
 
-8. Update DTS to inform Janine that the new version is ready to be checked. It is a best practice to have a second set of eyes take a look at anything that "goes out the door" (is available to the public), so please have someone familiar with data loading take a look at every dataset.
+9. Update DTS to inform Janine that the new version is ready to be checked. It is a best practice to have a second set of eyes take a look at anything that "goes out the door" (is available to the public), so please have someone familiar with data loading take a look at every dataset.
 
-9. Once checked, update the DTS (<http://dmg.eol.ucar.edu/dts/dln/>) for your dataset and mark it done.
+10. Once checked, update the DTS (<http://dmg.eol.ucar.edu/dts/dln/>) for your dataset and mark it done.
 
-10. Return to step 1 for the next dataset.
+11. Return to step 1 for the next dataset.
 
 ---
 
@@ -135,10 +142,10 @@ Versioning should be handled as follows:
 
 2. Copy the files from the ingest location to the archive location (see above for more details)
 
-  2.1 `cd /net/jlocal/projects/<PROJECT>/<AIRCRAFT>/Production/archive`
+   2.1 `cd /net/jlocal/projects/<PROJECT>/<AIRCRAFT>/Production/archive`
    Note the aircraft that flew for this project. You will need that info in the next step.
 
-  2.2 Edit `archAC.sh`
+   2.2 Edit `archAC.sh`
    - Comment out all existing uncommented lines.
    - Create a new line for the data you want to load.
    - Log in as user `eoldata`
@@ -172,28 +179,28 @@ Versioning should be handled as follows:
 
 7. Go back to the FDA, under the version tab and confirm the new files are under the new version.
 
-. Index the newly loaded data files. When metadata is updated via the Zinc interface that indexing happens automatically. However, when metadata is updated via an external script such as the insert_multiple_files script, the file metadata needs to be index using the `index files` button in zinc.
+8. Index the newly loaded data files. When metadata is updated via the Zinc interface that indexing happens automatically. However, when metadata is updated via an external script such as the insert_multiple_files script, the file metadata needs to be index using the `index files` button in zinc.
    ```
    - Select `Data files` in zinc
    - Select `Index files` from the upper right
    ```
 You will see "File indexing started"
 
-8. Perform a test order
+9. Perform a test order
 
-9. Update DTS to inform Janine (for now) that the new version is ready to be checked.
+10. Update DTS to inform Janine (for now) that the new version is ready to be checked.
 
-10. Mint a DOI or update the DOI if this is FINAL data
+11. Mint a DOI or update the DOI if this is FINAL data
    ```
    - Select `DOIs` in zinc
    - Either select "Create new DOI" (if there isn't one and this is FINAL data)  or "Update"
    ```
 
-11. Go to the Master List Editor and edit the listing for the file — update as required, check "updated", and save to get an updated date. (deprecated -- no more master list after CAESAR, 2024)
+12. Go to the Master List Editor and edit the listing for the file — update as required, check "updated", and save to get an updated date. (deprecated -- no more master list after CAESAR, 2024)
 
-12. Once checked, update the DTS (<http://dmg.eol.ucar.edu/dts/dln/>) for your dataset and mark it done.
+13. Once checked, update the DTS (<http://dmg.eol.ucar.edu/dts/dln/>) for your dataset and mark it done.
 
-13. Run `whods <archive_ident>` (e.g. `whods 87.050`) to get a list of email addresses of people who have ordered the data and the date they ordered it. Send an email to all these folks letting them know the data have been updated, the changes that were made, and where they can download the updated data. Alternatively, look at 'Stats' on the FDA.
+14. Run `whods <archive_ident>` (e.g. `whods 87.050`) to get a list of email addresses of people who have ordered the data and the date they ordered it. Send an email to all these folks letting them know the data have been updated, the changes that were made, and where they can download the updated data. Alternatively, look at 'Stats' on the FDA.
 
 ---
 
