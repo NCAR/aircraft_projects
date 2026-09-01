@@ -1,0 +1,370 @@
+July 25th 2026
+MC Flight 1
+Tech: Gunlock
+
+1750 Started preflight
+1815 disconnected POE for all 3 cameras for suspected overheating on ground, will plug them back in after takeoff
+1835 SEs had to restart nimbus for troubleshooting
+1900 APU start
+1920 removed and reinstalled L5 himil to verify installation
+1949 engine start
+2005 taxi/takeoff
+~2015 DSM server quit
+2022 after several data acquisition and nimbus cycles it seems to be back on
+2040 stopped and restarted camera script. it seems the cameras are frozen on a single image
+2053 tried restarting the cameras with the terminal prompt, they're working now
+2110 full restart of acserver required
+right camera is not starting, forward camera froze over
+unplugged/replugged the cameras and then stop and restarted them to fix the left and the right
+2341 landed, started shut down procedures
+
+July 25th 2026
+PP02
+Tech: R Freeman
+
+PreFlight:
+- Research, Right Bus, B1 (Master Converter) Fault Indicator, tripped on power up. Applying power on Left Bus cleared the Fault.
+* Did not wait for INS alignment for ADS startup due to pilot pro flight window. Novatel GPS values missing for flight.
+
+Flight:
+
+~0250 - Started Holodec, 2DS, HVPS, CDP, and Nevzorov Anti-Ice
+      * Holodec Camera and Laser Controller Temps climbed quickly to ~40C after takeoff. Disabled Camera Power and Zone Heater to lower to within target OP values.
+~0320 - Turned off Holodec, Nevzorov, and Wing Inst. Anti-Ice for landings.
+
+      
+July 27th 2026
+TF01
+Tech: R Freeman
+
+Taxi: 17:30
+Takeoff: 1747
+Landing: 2155
+
+Pre-Flight:
+* Holodec removed from Left Wing Pylon before flight for troubleshooting of zone heaters.
+* HVPS UDP variables are NAN in areos.
+1715 - Started N2 Purge of Camera Viewport. (Cylinder Start Pressure: ~1750)
+
+Flight:
+~1803 -  DSM_Server/Data Aquisition crashed Data shortly after takeoff. 
+1806 - Full Reboot of DSM's and AC Server. Aeros variables show no value at ADS or any other display. Confirmed with Catherine that data is still recording so proceeding with speed runs..
+1847 - Restart of Cameras. FWD camera imagery stuck on first frame.
+1857 - Reset Nimbus (~20 second gap) to fix aeros variables issue.
+2004 - L5 Dry Ice Leak Check Test performed.
+2008 - Right Dew Point (DPR) went into unbalanced state (BALNC_DPR went -6000). Did not attempt to reset or re-balance due to cold soaking.
+2010 - Restarted Camera Process with left camera POE unplugged. Resulted in Fwd Camera updating correctly with Left/Right frozen.
+2149 - Put right dew point into balance mode.
+2155 - Right Dew Point Service Mirror light blinking after landing. Will need cleaning before next flight.
+
+
+
+JULY 29_26
+RF01
+Tech Wassim
+
+Taxi:19:54
+Take off:20:00
+FWD CAMERA STOPPED WORKING BEFOR TAXI
+tried to reset FWD camera didnt work
+Landed 3:
+
+
+
+
+
+
+August 3, 2026
+RF02
+Tech: Richard Freeman
+
+Taxi: 1612
+Takeoff: 1627
+Landing:
+
+Pre-Flight:
+* Left and Right Cameras left unplugged to prioritze Forward Camera stability.
+* Using default-spec-udp.xml for dsm_server.
+1530 - Started N2 View Port purge. (1550 PSI)
+
+Flight:
+* Wing probe power applied after takeoff.
+1640 - Power-cycled Holodec due to initializition issue.
+1644 - Re-started fwd camera (disconnected POE cable for >90sec before starting)
+1658 - Power-cycled VCSEL due to drop out.
+1725 - Kinefinity Camera started.
+1726 - Power-cycled VCSEL.
+
+
+
+
+August 6, 2026
+RF03
+Tech - D. Allbee
+
+Taxi - 1651
+Takeoff - 1712
+Landed - 2131
+
+default-udp-spec.xml
+
+No VCSEL on today's flight.
+No in-flight leak test ocurring.
+Instructed to not operate smoke detectors for this flight.
+
+1713 Fwd camera script started. Images stopped updating after a few seconds.
+1718 HOLODEC powered on.
+1729 Images recaptured. Lasted only a few seconds before dying again.
+1736 Restarted fwd camera.
+2115 Lost camera again. Didn't notice it this time.
+
+Keyboard at R-5 rack acting wonky. Reseated USB cable at BRIX computer which fixed it temporarily. May be a problem with the USB connection.
+Post-flight NO pressure = 1200psi
+
+
+August 6, 2026
+RF04
+Tech - Wassim
+
+Taxi - 23:08
+Take off - 23:16
+During start up, Right hand inverter B1 faulted.
+Checked voltage and frequency at Right outlet. was normal
+Fwd camera normal until 02:36
+restarted three times, didnt start
+unplugged fwd camera for 2 minutes the restarted
+right hand inverter B1 fault stated on
+Landed - 03:37
+
+RF05
+7Aug2026
+Tech: Gunlock
+
+Power up: ~1830
+Taxi: 1956
+Takeoff: 2015
+Landing: 0022
+
+Preflight nitrogen tank ~1050 psi
+No groundbot on hexchat on startup
+SEs fixed groundbot issue
+
+camera didn't initialize on first start up, stopped camera script and going to retry in 90 seconds
+had to stop, unplug, plug in, and restart cameras a few times before recovering
+
+landing nitrogen tank ~900
+
+
+
+
+RF06
+August 26, 2026
+Tech: Richard Freeman
+
+KBJC-Taxi: 1849
+KBJC-Takeoff: 1856
+KMWH-Landing: 2100
+-Refuel-
+KMWH-Taxi: 2244
+KMWH-Takeoff: 2253
+KBJC-Landing: 0445
+
+Pre-Flight (KBJC->KMWH):
+- VCSEL still removed for repair.
+- Holodec is inop. Running Zone Heaters for flight.
+
+Flight (KBJC->KMWH):
+1902 - All Wing Probes Powered On.
+1902 - Start Cameras. *FWD camera imagery froze on first frame. Took several resets to get a stable connection ~1910.
+2107 - Parked for refuel. Stopped Cameras. Wing probes powered off.
+
+Pre-Flight (KMWH->BC):
+- Right Dew Point not balancing. Turned off from 2148-2200 the put into balance mode 2205-2210 without result.
+
+Flight (KMWH->BC):
+2317 - Reset Cameras
+0004 - Reset Cameras
+0330 - Stop Cameras (Nightfall)
+*N2 Bottle Pressure at 500 after flight. 
+
+
+08/12/26
+RF07
+
+Tech: Wassim
+
+Taxi:16:47
+Take off:16:58 
+Right dew pointer didnt balance after take off, turned off then on again.
+Landed casper wy 18:43
+Taxi:casper wy 19:48
+Take off:casper wy 19:53
+fwd camera wouldnt start on take off.
+Cameras were fine afterwards.
+FWD Camera outer glass iced up for over an hour.
+landed: 02:23
+*N2 Bottle Pressure at 300 after flight.
+
+
+RF08
+17Aug26
+Tech: Gunlock
+
+Preflight N2 bottle: ~1800 psi
+Postflight N2 bottle: ~
+
+Engine Start: 1939
+Taxi: 1946
+Takeoff: 2002
+Landing: 0315
+
+forward camera froze around 2030, did full reset
+left camera froze around 2036, did full reset
+forward camera froze around 2233, did full reset
+spent a couple of hours working with SEs trying to troubleshoot the forward camera issue, no luck
+
+
+RF09
+20Aug26
+Tech: Ed K
+
+Preflight: N2 1500 psi and R-5 missing headset
+Postflight: N2 1300 psi
+
+Taxi: 2149
+Takeoff: 2158
+Landing: 0427
+
+2220 fwd inop - unplug fwd camera for 15s
+2223 SP2 leak test started
+2231 SP2 leak test completed (no leaks)
+2232 all 3 ncar cameras look good in camera viewer
+2258 DPR-36C, DPL-66C,40Kft, T-60C
+0035 L-5 PTT inop - hot mic works, spare PTT works
+0051 fwd inop - unplug fwd camera for 20s
+0055 lost all cameras, stop cameras for 2 min, restart
+0058 all back except fwd
+0236 lost data acq, aeros, maps, chat (we did not lose satcom)
+0250 reboot acserver twice, acserver ok, dsm server not active, nimbus doesn't start
+
+
+
+
+
+RF10
+8/22/2026
+Tech - D. Allbee
+
+Taxi - 1943
+Takeoff - 1949
+Landed - 0154
+
+Fwd Camera in-op.
+
+2004 - 2011 QCR event. Needs investigation by RSIG.
+2027 - Performed leak check on SP2. Leak found at valve near HIMIL.
+	Tightened fittings at valve and the leak went away.
+2108 - 2114 QCR event. Needs investigation by RSIG.
+Nevzorov sensor head possibly bad. Will change to new sensor head prior to next flight.
+	Control box displayed a visual alarm and was warmer than usual.
+2DS vertical channel compromised. Will swap to S/N 019 on next Mx Day.
+2227 - Nevzorov powered off.
+2300 - Nevzorov powered back on for functional test. In-op.
+2307 - Nevzorov powered off.
+
+Post-flight N2 pressure - 1200 psi
+
+
+
+
+
+RF11
+25Aug26
+Tech: Ed K
+
+Taxi: 1955 
+Takeoff: 2014
+Landed: 2040
+
+Preflight: Janine's new default_RF11.xml, N2 1200 psi 
+
+2025 two software restarts with a 20s fwd camera unplug after 2nd restart, refresh maps & viewer pages
+2027 all 3 cameras working in camera viewer and fwd on maps
+2038 sp2 leak test (no leaks)
+2020 R-5 PTT inop, spare works
+2200 L-2 PTT inop, spare works - no more spares onboard
+0106 sp2 leak test (no leaks)
+
+Postflight: N2 1000 psi
+
+
+
+
+
+
+
+RF12
+8/26/2026
+Tech - D. Allbee
+
+Taxi - 2039
+Takeoff - 2049
+Landed - 0355
+
+
+default_rf11.xml
+
+Fwd camera did not initialize until 20 minutes after takeoff. Tried stop/start camera process, unplug/plug in fwd camera cable (60 sec wait), and web page refresh.
+
+2DS RH = 13%
+
+0056 - Nevzorov event. Powered off.
+	Control box is quite warm.
+0134 - Holodec event. Powered off.
+0153 - Sarah able to reactivate Holodec.
+
+Post-flight N2 pressure: 800 psi
+
+
+
+
+
+
+
+
+
+RF13
+27Aug26
+Tech: Ed K
+
+Taxi 1845
+Takeoff 1854
+Landed 2359
+
+Preflight: Nevzorov inop for flight, N2 800 psi
+
+1856 start cam's, unplug fwd 20s, inop, stop/restart
+1900 all 3 cameras operating on plane 6 mins after TO
+1928 sp2 leak test (no leaks)
+2010 note: dpx=dpr
+
+Postflight: N2 700 psi 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

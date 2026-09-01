@@ -40,7 +40,7 @@ fi
   { echo "$interface is down" >> "$output_dir/$logfile" 2>&1; exit 1; }
 
 
-tcpdump 'not (src net 192.168.84.0/24 and dst net 192.168.84.0/24)' \
+tcpdump 'not (src net 192.168.84.0/24 and dst net 192.168.84.0/24) and not (src net 192.168.1.0/24 and dst net 192.168.1.0/24) and not (src net 224.0.0.0/4 or dst net 224.0.0.0/4)' \
     -i ${interface} \
     -w /var/log/satcom-capture/traffic${date}.pcap \
     -C 100 \
