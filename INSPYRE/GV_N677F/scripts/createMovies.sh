@@ -123,6 +123,11 @@ for FLIGHT in "$@"; do
                 template_file="${cam_path}/movieParamFile_fr.template"
 	    fi
 	fi
+        if [ "${CAMERA_DIRS[0]}" = "left" ]; then
+            if [ "${CAMERA_DIRS[1]}" = "right" ]; then
+                template_file="${cam_path}/movieParamFile_lr.template"
+	    fi
+	fi
     elif [ ${#CAMERA_DIRS[@]} -eq 1 ] && [ "${CAMERA_DIRS[0]}" = "forward" ]; then
         # We only have a forward camera.
         template_file="${cam_path}/movieParamFile_fwd.template"
