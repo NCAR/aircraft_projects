@@ -11,7 +11,7 @@ setenv YEAR 2025
 setenv PLATFORM "C130"
 setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
 setenv CS_LOCATION "/glade/campaign/eol/archive/"
-setenv EMAIL "srunkel@ucar.edu"
+setenv EMAIL "janine@ucar.edu"
 setenv projectlower "gothaam"
 setenv platformlower "c130_n130ar"
 ########################## Raw Data Files ##############################
@@ -69,10 +69,10 @@ setenv platformlower "c130_n130ar"
 ### LRT
 #$ARCHIVE_SCRIPT LRT/v1 /scr/raf/Prod_Data/$PROJECT nc /net/archive/data/ $EMAIL
 
-$ARCHIVE_SCRIPT LRT/v1.1 /scr/raf/Prod_Data/$PROJECT/LRT/V1.1 nc /net/archive/data/ $EMAIL
+#$ARCHIVE_SCRIPT LRT/v1.1 /scr/raf/Prod_Data/$PROJECT/LRT/V1.1 nc /net/archive/data/ $EMAIL
 
 ### LRT ICT
-#$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict $CS_LOCATION$YEAR $EMAIL
+$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/LRT/V1.1/ICARTT ict $CS_LOCATION$YEAR $EMAIL
 
 ### PMS2D
 #$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR $EMAIL
