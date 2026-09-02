@@ -1,42 +1,56 @@
 #!/bin/bash
 
 logger "start_cameras shell script called"
+#sudo mount -a
+
+
+#logger "start_cameras shell script called"
 
 # Reset symlink script so it gets new flight number.
 # Let ensure_running start it back up.
 pkill camera_symlink
 
-/etc/init.d/capture.sh stop
+ssh camera start_cameras &
+
+
+#/etc/init.d/capture.sh stop
 #/bin/capture stop
-pkill VimbaC
+#pkill VimbaC
 # Vimba related tool
-pkill exiftool
+#pkill exiftool
 
 
-#restart ethernet camera before getting to firewire drivers
+# start ethernet camera
 cam_path=`get_ac_config.py cameras.path`
-#mkdir -p  $cam_path/down
-#cd $cam_path/down
-#rm /tmp/VimbaCam.log
-#if ! ps h -C Vimba | grep -v "[Vimba]" > /dev/null
-#then
+#flight_num=`psql -t -A -c "SELECT value from global_attributes WHERE key='FlightNumber'"`
+
+# c program handles this now.
+#mkdir -p  $cam_path/$flight_num/dashcam
+#mkdir -p  $cam_path/$flight_num/forward
+#mkdir -p  $cam_path/$flight_num/left
+#mkdir -p  $cam_path/$flight_num/right
+
+
+if ! ps h -C vimbax_capture | grep -v "[vimba_capture]" > /dev/null
+then
 #    /opt/local/Vimba_5_1/VimbaC/Examples/SynchronousGrab/Build/Make/binary/x86_64bit/SynchronousGrab >/tmp/VimbaCam.log &
-#else
-#    echo "Vimba already running, not restarting"
-#fi
+    vimbax_capture -c /home/local/camera/GigE/VimbaXCapture/conf/capture.conf -f $cam_path -l /tmp/vmb_$flight_num.log
+    echo $cam_path $flight_num
+else
+    echo "Vimba already running, not restarting"
+fi
 
 # [Re]load firewire drivers.
-sudo modprobe -r firewire_ohci
-sudo modprobe firewire_ohci
+#sudo modprobe -r firewire_ohci
+#sudo modprobe firewire_ohci
 
 # (Re)set camera images symlink for camera web page display
 touch /var/www/html/camera
 cd /var/www/html/camera
 rm camera_images
-cam_path=`get_ac_config.py cameras.path`
 ln -s `dirname ${cam_path}`
 
-sleep 2
+#sleep 2
 
-/etc/init.d/capture.sh start
+#/etc/init.d/capture.sh start
 

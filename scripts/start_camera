@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Start the VimbaX camera capture systemd --user service.
+#
+# Replaces the legacy ssh-fanout start_cameras + pkill camera_symlink. The C
+# program now builds the DB-derived output path and owns the /var/www web
+# symlink, so this is a thin wrapper around systemctl.
+# the deploy/install.sh should install the user level unit file and run reload
+# env variables are stored in an env file the install.sh creates. 
+# env variables have to be correct, on the system, before running the install.sh
+set -euo pipefail
+
+UNIT=vimbax-capture.service
+
+notify() {
+    command -v notify-send >/dev/null 2>&1 && notify-send "VimbaX Cameras" "$1" || true
+    echo "$1"
+}
+
+systemctl --user start "$UNIT"
+notify "Cameras starting."
+
+# Short status so the operator sees it came up (Terminal=true button).
+systemctl --user --no-pager --lines=0 status "$UNIT" || true
+
+# Live log on screen for whoever's watching. Use stop_camera to actually stop
+# capture.
+echo
+tail -f /tmp/vmb_.log

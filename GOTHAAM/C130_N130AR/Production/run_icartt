@@ -18,7 +18,7 @@ for file in /scr/raf/Prod_Data/GOTHAAM/LRT/V1.1/${PROJ}?f??.nc
 do
   takeoff=`flt_time ${file} | sed -n 's/^Takeoff: //p'`
   ymd=`date -d "$takeoff" +%Y%m%d`
-  outfile="${DAT}/${PROJ}-CORE_${ac}_${ymd}_R${version}.ict"
+  outfile="${DAT}/${PROJ}-CORE_${ac}_${ymd}_R${version}"
   echo $outfile
   if [[ -f "$outfile" ]]; then
     # If recreating an existing file, assume have two legs.
@@ -31,7 +31,7 @@ do
     newoutfile=${base}_L2.ict
     mv $outfile $newoutfile
   else
-    echo "nc2asc -i $file -o $outfile -b ../scripts/nc2asc.bat"
-    nc2asc -i $file -o $outfile -b ../scripts/nc2asc.bat
+    echo "nc2asc -i $file -o $outfile.ict -b ../scripts/nc2asc.bat"
+    nc2asc -i $file -o $outfile.ict -b ../scripts/nc2asc.bat
   fi
 done

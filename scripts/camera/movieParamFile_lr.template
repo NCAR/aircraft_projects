@@ -1,0 +1,47 @@
+includeData = no
+netcdfFile = <DATA_DIR>/<PROJ>/<PROJ><flight>.nc
+
+# A frame is created once a second from the earliest to the latest image time
+# found in ANY of the image dirs below, so no single dir determines the times.
+# A camera with no image at a frame time reuses its previous image if that
+# image is recent enough; otherwise that part of the frame is left blank.
+# See FRAME_INTERVAL and TIME_TOLERANCE at the top of combineCameras.pl.
+imageDir1 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/left
+gravity1 = West
+numCameras = 2
+
+# If numCameras > 1, add additional dirs and cameras here:
+imageDir2 = <RAW_DATA_DIR>/<PROJ>/camera/flight_number_<flight>/right
+gravity2 = East
+
+# For the moment, assume all cameras are the same type.
+cameraName = Flea
+movieDirectory = <RAW_DATA_DIR>/<PROJ>/Movies
+overlayImageTime = yes
+overlayImagePointing = yes
+
+# The outputResolution should be proportional to the scale:
+# For one image per frame, leave the ht and add 200 to the width
+# For two images, double the ht and add 50 or so padding, 
+#   and add 200 to the width
+# For three images, double the ht and width (plus padding).
+scale = 512x384!
+outputResolution=1024x384
+outputResolutionD=1024x384
+outputFrameRate = 15
+mp4BitRate = 1500000
+endParameters
+
+GGALT
+GGLAT
+GGLON
+ATX
+PSXC
+RHUM
+TASX
+THDG
+PITCH
+WSC
+WDC
+WIC
+endVariablesLT

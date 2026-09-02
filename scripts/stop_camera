@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Stop the VimbaX camera capture systemd --user service.
+#
+# MUST use `systemctl --user stop`, never pkill: with Restart=always a killed
+# process is immediately restarted by systemd, so pkill would not actually stop
+# capture. `stop` is the only thing that keeps it stopped (until Start).
+set -euo pipefail
+
+UNIT=vimbax-capture.service
+
+notify() {
+    command -v notify-send >/dev/null 2>&1 && notify-send "VimbaX Cameras" "$1" || true
+    echo "$1"
+}
+
+systemctl --user stop "$UNIT"
+notify "Cameras stopped."

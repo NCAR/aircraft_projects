@@ -13,8 +13,8 @@ for file in ${DAT}/${PROJ}?f??.nc
 do
   takeoff=`flt_time ${file} | sed -n 's/^Takeoff: //p'`
   ymd=`date -d "$takeoff" +%Y%m%d`
-  outfile="${DAT}/${PROJ}-CORE_GV_${ymd}_R${version}.ict"
-  if [[ -f "$outfile" ]]; then
+  outfile="${DAT}/${PROJ}-CORE_GV_${ymd}_R${version}"
+  if [[ -f "$outfile.ict" ]]; then
     # If recreating an existing file, assume have two legs.
     # Code does NOT handle more than two legs ATM.
     base=${outfile%.ict}
@@ -26,5 +26,6 @@ do
     mv $outfile $newoutfile
   else
     nc2asc -i $file -o $outfile.ict -b ../scripts/nc2asc.bat
+    exit
   fi
 done
