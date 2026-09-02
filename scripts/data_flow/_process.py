@@ -85,17 +85,19 @@ class Process:
             for key in file_ext:
                 if key in ('LRT', 'HRT', 'SRT'):
                     myLogger.log_and_print(f"Processing {key} data")
-                    self.process_core_data(key,filename, proj_dir, flight, project, rate, config_ext)
+                    self.process_core_data(key, filename, proj_dir, flight, project, rate, config_ext)
                 if (key == "threeVCPI"):
                     self.process_threeVCPI(aircraft, project, flight, inst_dir["twods"], inst_dir["oap"])
                 if key in ("ICARTT","IWG1"):
-                    self.generate_derived_files(data_dir,filename, project, flight, key, file_ext)
+                    self.extract_takeoff_lrt(filename, raw_dir) # ICARTT output file needs date
+                    self.generate_derived_files(data_dir, filename, project, flight, aircraft, key, file_ext)
             # Process PMS2D Files
                 if key == "PMS2D":
                     self.process_pms2d_files(inst_dir, raw_dir, filename)
 
-        # Extract takeoff LRT after finding generating ICARTT files or deciding to ship
+        # Extract takeoff LRT after generating files or deciding to ship
         self.extract_takeoff_lrt(filename, raw_dir)
+
         for key in file_ext:
             if (key == "LRT") or (key == "ADS"):
                 next
@@ -111,6 +113,7 @@ class Process:
                                 project, file_type[key],
                                 file_ext[key], process, process,
                                 self.date)
+
         # QA Notebook Generation
         if process and QA_notebook:
             self.generate_qa_notebook(project, flight)
@@ -333,7 +336,7 @@ class Process:
             myLogger.log_and_print(f"Error extracting date from LRT file: {e}", log_level='error')
             self.date = self._extract_date_from_ads_filename(filename['ADS'], raw_dir)
 
-    def generate_derived_files(self, data_dir, filename, project, flight, key,file_ext):
+    def generate_derived_files(self, data_dir, filename, project, flight, aircraft, key, file_ext):
         if key == "IWG1":
             # Generate IWG1 file from LRT
             output_file = data_dir + project + flight + '.' + file_ext["IWG1"]
@@ -345,8 +348,11 @@ class Process:
                 myLogger.log_and_print(f"Unknown derived file type: {key}", log_level='warning')
         elif key == "ICARTT":
             # Generate ICARTT file from LRT
-            command = f"nc2asc -i {filename['LRT']} -o {data_dir}tempfile.ict -b {self.nc2ascBatch}"
+            command = f"nc2asc -i {filename['LRT']} -b {self.nc2ascBatch}"
             message = f"Generating ICARTT file: {command}"
+            platform = aircraft.split('_')[0]
+            command = f"mv {project}-CORE_{platform}_{self.date}_*.ict {data_dir}"
+            message += f"\n{command}"
             if myLogger.run_and_log(command, message):
                 self.stat[key]["proc"] = 'Yes'
             else:
