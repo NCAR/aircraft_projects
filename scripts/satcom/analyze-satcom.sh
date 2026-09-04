@@ -47,9 +47,28 @@ DIG="${DIG:-dig}"
 die() { echo "$(basename "$0"): $*" >&2; exit 1; }
 usage() { sed -n '3,/^##$/p' "$0" | sed 's/^#\{1,2\} \{0,1\}//'; }
 
-for tool in "$TSHARK" "$MERGECAP"; do
-    command -v "$tool" >/dev/null 2>&1 || die "$tool not found (brew install wireshark)"
-done
+##
+# How to install tshark and mergecap on this machine.
+#
+# Both come from one package, but its name differs by platform, and a hint
+# naming the wrong package manager is worse than no hint. Probe for the package
+# manager that is actually here rather than guessing from the distribution.
+##
+install_hint() {
+    case "$(uname -s)" in
+        Darwin) echo "brew install wireshark" ;;
+        Linux)
+            if   command -v dnf     >/dev/null 2>&1; then echo "sudo dnf install wireshark-cli"
+            elif command -v apt-get >/dev/null 2>&1; then echo "sudo apt-get install tshark"
+            elif command -v yum     >/dev/null 2>&1; then echo "sudo yum install wireshark"
+            elif command -v zypper  >/dev/null 2>&1; then echo "sudo zypper install wireshark"
+            elif command -v pacman  >/dev/null 2>&1; then echo "sudo pacman -S wireshark-cli"
+            else echo "install the wireshark command-line tools"
+            fi
+            ;;
+        *) echo "install the wireshark command-line tools" ;;
+    esac
+}
 
 TARGETS=()
 while [ $# -gt 0 ]; do
@@ -63,6 +82,12 @@ while [ $# -gt 0 ]; do
         *)               TARGETS+=("$1") ;;
     esac
     shift
+done
+
+# Checked after the options are parsed, so that --help still works on a machine
+# where wireshark has not been installed yet.
+for tool in "$TSHARK" "$MERGECAP"; do
+    command -v "$tool" >/dev/null 2>&1 || die "$tool not found - try: $(install_hint)"
 done
 
 [ -d "$SATCOM_ROOT" ] || die "capture root not found: $SATCOM_ROOT"

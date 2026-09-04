@@ -557,6 +557,37 @@ else
     assert_not_contains "and is not left unknown" "$(collected "$sum")" "unknown"
 fi
 
+echo "Test 15: a missing tshark names the install command for this platform"
+# uname and the package managers are all PATH lookups, so the platform dispatch
+# can be exercised without the script knowing it is under test.
+hintdir="${tmp_dir}/hint"
+mkdir -p "$hintdir"
+hint_for() {                    # hint_for <uname output> [package manager...]
+    local os="$1" pm
+    shift
+    rm -f "$hintdir"/*
+    printf '#!/bin/sh\necho %s\n' "$os" > "$hintdir/uname"
+    for pm in "$@"; do printf '#!/bin/sh\nexit 0\n' > "$hintdir/$pm"; done
+    chmod +x "$hintdir"/*
+    PATH="$hintdir:$PATH" TSHARK=/nonexistent/tshark "$script" 2>&1 | sed -n 's/.*try: //p'
+}
+assert_eq "macOS is pointed at brew" "$(hint_for Darwin)" "brew install wireshark"
+assert_eq "a dnf machine is pointed at wireshark-cli" \
+    "$(hint_for Linux dnf)" "sudo dnf install wireshark-cli"
+assert_eq "an unrecognized OS gets a generic hint" \
+    "$(hint_for Plan9)" "install the wireshark command-line tools"
+assert_contains "and the message says which tool is missing" \
+    "$(PATH="$hintdir:$PATH" TSHARK=/nonexistent/tshark "$script" 2>&1)" \
+    "/nonexistent/tshark not found"
+
+echo "Test 16: --help works before wireshark is installed"
+# Someone setting up a new machine reads --help before they have tshark.
+out=$(TSHARK=/nonexistent/tshark MERGECAP=/nonexistent/mergecap "$script" --help 2>&1)
+assert_contains "the usage is printed" "$out" "Summarize satcom traffic"
+assert_not_contains "and no missing-tool error is raised" "$out" "not found"
+assert_eq "exiting successfully" \
+    "$(TSHARK=/nonexistent/tshark "$script" --help >/dev/null 2>&1; echo $?)" "0"
+
 echo
 echo "Passed: $PASS  Failed: $FAIL"
 [ "$FAIL" -eq 0 ]
