@@ -146,9 +146,9 @@ fi
 
 log "capturing on $interface to $capture_dir/traffic${date}.pcap"
 
-tcpdump 'not (src net 192.168.84.0/24 and dst net 192.168.84.0/24) and not (src net 192.168.1.0/24 and dst net 192.168.1.0/24) and not (src net 224.0.0.0/4 or dst net 224.0.0.0/4)' \
+tcpdump 'not (src net 192.168.84.0/24 and dst net 192.168.84.0/24 and not host 192.168.84.1) and not (src net 192.168.1.0/24 and dst net 192.168.1.0/24) and not (src net 224.0.0.0/4 or dst net 224.0.0.0/4)' \
     -i ${interface} \
     -w "$capture_dir/traffic${date}.pcap" \
     -C 100 \
     -W 10 \
-    -s 96 >> "$output_dir/$logfile" 2>&1
+    -s 200 >> "$output_dir/$logfile" 2>&1
