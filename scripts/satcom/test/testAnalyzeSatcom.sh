@@ -158,14 +158,14 @@ host_row() {
 echo "Test 1: only traffic that left the aircraft is counted"
 root="${tmp_dir}/t1"
 make_capture "${root}/rf01_20260101/traffic20260101_120000_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8         1048576
-8.8.8.8         192.168.84.7     524288
-192.168.84.2    239.0.0.10      2097152
-192.168.84.2    224.0.0.251      104857
-192.168.84.7    192.168.84.2    1048576
-10.0.0.5        192.168.84.7    1048576
-192.168.84.7    255.255.255.255  524288
-0.0.0.0         255.255.255.255   10485
+192.168.84.7    8.8.8.8         1000000
+8.8.8.8         192.168.84.7     500000
+192.168.84.2    239.0.0.10      2000000
+192.168.84.2    224.0.0.251      100000
+192.168.84.7    192.168.84.2    1000000
+10.0.0.5        192.168.84.7    1000000
+192.168.84.7    255.255.255.255  500000
+0.0.0.0         255.255.255.255   10000
 -               -                 60000
 ROWS
 out=$(run_stubbed --root "$root" rf01_20260101)
@@ -184,15 +184,15 @@ assert_not_contains "rows with no IPv4 layer are dropped" "$(cat "$sum")" "  600
 echo "Test 2: classification looks at the first octet only, and at the right boundaries"
 root="${tmp_dir}/t2"
 make_capture "${root}/rf02_20260102/traffic20260102_120000_brix01.pcap0" <<'ROWS'
-192.168.84.7    128.117.43.224  1048576
-192.168.84.7    223.255.255.255  524288
-192.168.84.7    224.0.0.0        524288
-192.168.84.7    239.255.255.255  524288
-192.168.84.7    240.0.0.1        524288
-192.168.84.7    172.15.0.1       524288
-192.168.84.7    172.16.0.1       524288
-192.168.84.7    172.31.255.255   524288
-192.168.84.7    172.32.0.1       524288
+192.168.84.7    128.117.43.224  1000000
+192.168.84.7    223.255.255.255  500000
+192.168.84.7    224.0.0.0        500000
+192.168.84.7    239.255.255.255  500000
+192.168.84.7    240.0.0.1        500000
+192.168.84.7    172.15.0.1       500000
+192.168.84.7    172.16.0.1       500000
+192.168.84.7    172.31.255.255   500000
+192.168.84.7    172.32.0.1       500000
 ROWS
 out=$(run_stubbed --root "$root" rf02_20260102)
 sum="${root}/rf02_20260102/satcom-summary_rf02_20260102.txt"
@@ -216,7 +216,7 @@ echo "Test 3: a packet carrying two IP headers is counted by its outer one"
 # failed; the first value is the header that was actually on the wire.
 root="${tmp_dir}/t3"
 make_capture "${root}/rf03_20260103/traffic20260103_120000_brix01.pcap0" <<'ROWS'
-192.168.84.7,1.2.3.4    1.2.3.4,192.168.84.7    1048576
+192.168.84.7,1.2.3.4    1.2.3.4,192.168.84.7    1000000
 ROWS
 out=$(run_stubbed --root "$root" rf03_20260103)
 sum="${root}/rf03_20260103/satcom-summary_rf03_20260103.txt"
@@ -227,11 +227,11 @@ assert_not_contains "the comma-joined pair is not reported verbatim" \
 echo "Test 4: hostnames come from the capture filenames, both conventions"
 root="${tmp_dir}/t4"
 make_capture "${root}/rf04_20260104/traffic20260104_120000_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    1048576
+192.168.84.7    8.8.8.8    1000000
 ROWS
 # The Windows captures under applanix/ have no host token in the name.
 make_capture "${root}/rf04_20260104/applanix/satcom_20260104_130000.pcap" <<'ROWS'
-192.168.84.183  8.8.8.8     524288
+192.168.84.183  8.8.8.8     500000
 ROWS
 out=$(run_stubbed --root "$root" rf04_20260104)
 sum="${root}/rf04_20260104/satcom-summary_rf04_20260104.txt"
@@ -252,13 +252,13 @@ root="${tmp_dir}/t5"
 # share the one filename stamp; the later part's packets are an hour after it,
 # so the session's collection time has to span both files.
 make_capture "${root}/rf05_20260105/traffic20260817_205320_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    524288    1787000000
+192.168.84.7    8.8.8.8    500000    1787000000
 ROWS
 make_capture "${root}/rf05_20260105/traffic20260817_205320_brix01.pcap1" <<'ROWS'
-192.168.84.7    8.8.8.8    524288    1787003600
+192.168.84.7    8.8.8.8    500000    1787003600
 ROWS
 make_capture "${root}/rf05_20260105/traffic20260817_212320_brix05.pcap0" <<'ROWS'
-192.168.84.164  8.8.8.8    1048576   1787001800
+192.168.84.164  8.8.8.8    1000000   1787001800
 ROWS
 out=$(run_stubbed --root "$root" rf05_20260105)
 sum="${root}/rf05_20260105/satcom-summary_rf05_20260105.txt"
@@ -279,8 +279,8 @@ root="${tmp_dir}/t5b"
 # The link was silent for the first hour: tcpdump started at 20:53:20 but the
 # first off-plane packet is not until 21:53:20. The filename must win.
 make_capture "${root}/rf05_20260105/traffic20260817_205320_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    524288    1787003600
-192.168.84.7    8.8.8.8    524288    1787007200
+192.168.84.7    8.8.8.8    500000    1787003600
+192.168.84.7    8.8.8.8    500000    1787007200
 ROWS
 out=$(run_stubbed --root "$root" rf05_20260105)
 sum="${root}/rf05_20260105/satcom-summary_rf05_20260105.txt"
@@ -295,8 +295,8 @@ echo "Test 5c: a first packet earlier than the filename stamp still wins"
 root="${tmp_dir}/t5c"
 # Clock skew: never claim a start after traffic was already flowing.
 make_capture "${root}/rf05_20260105/traffic20260817_205320_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    524288    1786996400
-192.168.84.7    8.8.8.8    524288    1787000000
+192.168.84.7    8.8.8.8    500000    1786996400
+192.168.84.7    8.8.8.8    500000    1787000000
 ROWS
 out=$(run_stubbed --root "$root" rf05_20260105)
 sum="${root}/rf05_20260105/satcom-summary_rf05_20260105.txt"
@@ -305,12 +305,12 @@ assert_contains "the earlier packet time is used as the start" \
 
 echo "Test 6: megabytes are rounded once at the end, not per capture"
 root="${tmp_dir}/t6"
-# 5000 bytes rounds to 0.00 MB on its own; the two together are 0.01 MB.
+# 4000 bytes rounds to 0.00 MB on its own; the two together are 0.01 MB.
 make_capture "${root}/rf06_20260106/traffic20260106_120000_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    5000
+192.168.84.7    8.8.8.8    4000
 ROWS
 make_capture "${root}/rf06_20260106/traffic20260106_140000_brix05.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    5000
+192.168.84.7    8.8.8.8    4000
 ROWS
 out=$(run_stubbed --root "$root" rf06_20260106)
 sum="${root}/rf06_20260106/satcom-summary_rf06_20260106.txt"
@@ -324,7 +324,7 @@ root="${tmp_dir}/t7"
 cache="${tmp_dir}/empty-cache.tsv"
 : > "$cache"					# exists, zero length
 make_capture "${root}/rf07_20260107/traffic20260107_120000_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    1048576
+192.168.84.7    8.8.8.8    1000000
 ROWS
 out=$(run_stubbed --root "$root" rf07_20260107)
 sum="${root}/rf07_20260107/satcom-summary_rf07_20260107.txt"
@@ -345,7 +345,7 @@ root="${tmp_dir}/t9"
 cache="${tmp_dir}/nodns-cache.tsv"
 : > "$DIG_LOG"
 make_capture "${root}/rf09_20260109/traffic20260109_120000_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    1048576
+192.168.84.7    8.8.8.8    1000000
 ROWS
 out=$(run_stubbed --root "$root" rf09_20260109 --no-dns)
 sum="${root}/rf09_20260109/satcom-summary_rf09_20260109.txt"
@@ -359,7 +359,7 @@ root="${tmp_dir}/t9b"
 cache="${tmp_dir}/t9b-cache.tsv"
 : > "$DIG_LOG"
 make_capture "${root}/rf09_20260109/traffic20260817_205320_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    1048576
+192.168.84.7    8.8.8.8    1000000
 ROWS
 # DIG points at something that does not exist, as on a host without bind-utils.
 out=$(MERGECAP="${stub_bin}/mergecap" TSHARK="${stub_bin}/tshark" \
@@ -379,7 +379,7 @@ echo "Test 9c: --no-dns says so too, and a working resolver says nothing"
 root="${tmp_dir}/t9c"
 cache="${tmp_dir}/t9c-cache.tsv"
 make_capture "${root}/rf09_20260109/traffic20260817_205320_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    1048576
+192.168.84.7    8.8.8.8    1000000
 ROWS
 out=$(run_stubbed --root "$root" rf09_20260109 --no-dns)
 sum="${root}/rf09_20260109/satcom-summary_rf09_20260109.txt"
@@ -393,7 +393,7 @@ echo "Test 10: an address with no PTR record is reported, not hidden"
 root="${tmp_dir}/t10"
 cache="${tmp_dir}/noptr-cache.tsv"
 make_capture "${root}/rf10_20260110/traffic20260110_120000_brix01.pcap0" <<'ROWS'
-192.168.84.7    151.101.17.91    1048576
+192.168.84.7    151.101.17.91    1000000
 ROWS
 out=$(run_stubbed --root "$root" rf10_20260110)
 sum="${root}/rf10_20260110/satcom-summary_rf10_20260110.txt"
@@ -405,11 +405,11 @@ root="${tmp_dir}/t11"
 cache="${tmp_dir}/t11-cache.tsv"
 # adslap6 saw only multicast, over the two hours before brix01's traffic.
 make_capture "${root}/rf11_20260111/traffic20260817_205320_adslap6.pcap0" <<'ROWS'
-192.168.84.160  239.0.0.10    2097152   1787000000
-192.168.84.160  239.0.0.10    2097152   1787007200
+192.168.84.160  239.0.0.10    2000000   1787000000
+192.168.84.160  239.0.0.10    2000000   1787007200
 ROWS
 make_capture "${root}/rf11_20260111/traffic20260817_231320_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8       1048576   1787010800
+192.168.84.7    8.8.8.8       1000000   1787010800
 ROWS
 out=$(run_stubbed --root "$root" rf11_20260111)
 sum="${root}/rf11_20260111/satcom-summary_rf11_20260111.txt"
@@ -442,14 +442,14 @@ echo "Test 12: scopes - all flights, one flight, one file, one date stamp"
 root="${tmp_dir}/t12"
 cache="${tmp_dir}/t12-cache.tsv"
 make_capture "${root}/rf12_20260112/traffic20260112_120000_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    1048576
+192.168.84.7    8.8.8.8    1000000
 ROWS
 make_capture "${root}/rf13_20260113/traffic20260113_120000_brix05.pcap0" <<'ROWS'
-192.168.84.164  8.8.8.8    524288
+192.168.84.164  8.8.8.8    500000
 ROWS
 # Maintenance captures must never be swept up by the rf* default.
 make_capture "${root}/maint_days/traffic20260114_120000_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    1048576
+192.168.84.7    8.8.8.8    1000000
 ROWS
 out=$(run_stubbed --root "$root")
 assert_file "every rf* flight is summarized" \
@@ -482,7 +482,7 @@ echo "Test 13: --skip-existing leaves analysis files alone but still summarizes"
 root="${tmp_dir}/t13"
 cache="${tmp_dir}/t13-cache.tsv"
 make_capture "${root}/rf14_20260115/traffic20260115_120000_brix01.pcap0" <<'ROWS'
-192.168.84.7    8.8.8.8    1048576
+192.168.84.7    8.8.8.8    1000000
 ROWS
 analysis="${root}/rf14_20260115/satcom-analysis_20260115_120000_brix01.txt"
 echo "PLACEHOLDER FROM AN EARLIER RUN" > "$analysis"
@@ -495,35 +495,50 @@ assert_eq "and is built from the capture, not the stale file" \
     "$(total_mb "${root}/rf14_20260115/satcom-summary_rf14_20260115.txt")" "1.00"
 
 echo "Test 14: end to end over a real pcap, with the real mergecap and tshark"
-if ! command -v text2pcap >/dev/null 2>&1 || ! command -v tshark >/dev/null 2>&1; then
-    echo "  SKIP: text2pcap/tshark not installed"
+if ! command -v text2pcap >/dev/null 2>&1 || ! command -v tshark >/dev/null 2>&1 \
+   || ! command -v editcap >/dev/null 2>&1; then
+    echo "  SKIP: text2pcap/tshark/editcap not installed"
 else
     root="${tmp_dir}/t14"
     cache="${tmp_dir}/t14-cache.tsv"
     mkdir -p "${root}/rf15_20260116"
 
-    # One 20-byte IPv4 header per packet, raw-IP encapsulation. Each claims a
-    # total length of 1024 bytes while only the header is captured, which is
-    # the same truncation the real -s 96 captures have: tshark reads ip.len
-    # from the header field rather than from the bytes on disk.
+    # Full 1000-byte raw-IP packets, truncated afterwards with editcap -s 96
+    # the way the real captures are. A pcap record carries both the captured
+    # length and the original length on the wire; tcpdump -s 96 stores only 96
+    # bytes but still records the true length, and that is what frame.len
+    # reports. A short packet merely claiming a large ip.len would not model
+    # this -- its recorded wire length would be short too, and frame.len would
+    # read that short value.
+    zero16="00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+    e2e_mid=$(off=32
+              while [ "$off" -lt 992 ]; do
+                  printf '%06x  %s\n' "$off" "$zero16"
+                  off=$((off + 16))
+              done)
     emit_packets() {			# emit_packets <count> <src hex> <dst hex>
         local n=$1 s=$2 d=$3 i=0
         while [ "$i" -lt "$n" ]; do
-            printf '000000  45 00 04 00 00 00 00 00 40 11 00 00 %s %s\n' "$s" "$d"
+            printf '000000  45 00 03 e8 00 00 00 00 40 11 00 00 %s\n' "$s"
+            printf '000010  %s 00 00 00 00 00 00 00 00 00 00 00 00\n' "$d"
+            printf '%s\n' "$e2e_mid"
+            printf '0003e0  00 00 00 00 00 00 00 00\n'
             i=$((i + 1))
         done
     }
     {
-        emit_packets 1024 "c0 a8 54 07" "80 75 2b 80"   # brix01 -> eol-hurricane, 1.00 MB
-        emit_packets  512 "80 75 2b 80" "c0 a8 54 07"   # eol-hurricane -> brix01, 0.50 MB
-        emit_packets 2048 "c0 a8 54 02" "ef 00 00 0a"   # NIDAS multicast,        2.00 MB
-        emit_packets 1024 "c0 a8 54 02" "c0 a8 54 07"   # onboard to onboard,     1.00 MB
-        emit_packets  512 "c0 a8 54 07" "ff ff ff ff"   # broadcast,              0.50 MB
+        emit_packets 1000 "c0 a8 54 07" "80 75 2b 80"   # brix01 -> eol-hurricane, 1.00 MB
+        emit_packets  500 "80 75 2b 80" "c0 a8 54 07"   # eol-hurricane -> brix01, 0.50 MB
+        emit_packets 2000 "c0 a8 54 02" "ef 00 00 0a"   # NIDAS multicast,        2.00 MB
+        emit_packets 1000 "c0 a8 54 02" "c0 a8 54 07"   # onboard to onboard,     1.00 MB
+        emit_packets  500 "c0 a8 54 07" "ff ff ff ff"   # broadcast,              0.50 MB
     } > "${tmp_dir}/fixture.hex"
     # text2pcap stamps the packets with the time of conversion, so name the
     # capture for now as well to keep filename and packets consistent.
     e2e_stamp=$(date -u '+%Y%m%d_%H%M%S')
     text2pcap -q -l 101 "${tmp_dir}/fixture.hex" \
+        "${tmp_dir}/fixture-full.pcap" 2>/dev/null
+    editcap -s 96 "${tmp_dir}/fixture-full.pcap" \
         "${root}/rf15_20260116/traffic${e2e_stamp}_brix01.pcap0" 2>/dev/null
 
     # Real mergecap and tshark; only the resolver stays stubbed.

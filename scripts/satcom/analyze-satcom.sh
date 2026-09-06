@@ -235,7 +235,7 @@ aggregate() {
 
 # Analysis files keep the original "src => dst: N MB" shape. Reads stdin.
 write_analysis() {
-    awk -F'\t' '{ printf "%s => %s: %.2f MB\n", $2, $3, $1 / 1048576 }'
+    awk -F'\t' '{ printf "%s => %s: %.2f MB\n", $2, $3, $1 / 1000000 }'
 }
 
 ##
@@ -293,7 +293,7 @@ write_summary() {
     echo "Excluded:  multicast (224.0.0.0/4), broadcast, and onboard-only traffic"
     [ -n "$DNS_NOTE" ] && echo "Hostnames: $DNS_NOTE"
     echo
-    awk -F'\t' '{ t += $1 } END { printf "Total off-plane: %.2f MB\n", t / 1048576 }' "$flows"
+    awk -F'\t' '{ t += $1 } END { printf "Total off-plane: %.2f MB\n", t / 1000000 }' "$flows"
 
     echo
     echo "Onboard hosts"
@@ -308,7 +308,7 @@ write_summary() {
             for (ip in seen)
                 printf "%d\t%s (%s)\t%.2f\t%.2f\n", sent[ip] + recv[ip],
                        ip, (ip in name ? name[ip] : "unknown"),
-                       sent[ip] / 1048576, recv[ip] / 1048576
+                       sent[ip] / 1000000, recv[ip] / 1000000
         }' "$namemap" "$flows" \
         | sort -k1,1rn \
         | awk -F'\t' '{ printf "  %-34s %10s %10s\n", $2, $3, $4 }'
@@ -319,7 +319,7 @@ write_summary() {
     awk -F'\t' -v map="$namemap" '
         function label(ip) { return ip " (" (ip in name ? name[ip] : "unknown") ")" }
         FILENAME == map { if ($2 != "") name[$1] = $2; next }
-        { printf "  %10.2f  %-48s %s\n", $1 / 1048576, label($2), label($3) }' \
+        { printf "  %10.2f  %-48s %s\n", $1 / 1000000, label($2), label($3) }' \
         "$namemap" "$flows"
 
     awk -F'\t' -v map="$namemap" '
