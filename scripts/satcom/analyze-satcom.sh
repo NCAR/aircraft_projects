@@ -161,12 +161,23 @@ host_of() {
 # tshark comma-joins a field when a packet carries two IP headers (ICMP errors
 # quote the packet that failed), so keep the first value -- that is the header
 # that was actually on the wire.
+#
+# Use frame.len, not ip.len. frame.len still excludes the 7-byte preamble, 1-byte
+# start frame delimiter (SFD), 4-byte Ethernet FCS, and 12 -byte inter-frame gap.
+#  ← not captured →                                                  ← not captured →
+#┌──────────┬─────┐┌───────────────────────────────────────────────┐┌─────┬─────────┐
+#│ Preamble │ SFD ││  Dst MAC │ Src MAC │ Type │   IP packet   │pad ││ FCS │   IFG   │
+#│    7     │  1  ││    6     │    6    │  2   │               │    ││  4  │   12    │
+#└──────────┴─────┘└───────────────────────────────────────────────┘└─────┴─────────┘
+#                   └────── 14 bytes ──────────┘└─── ip.len ───┘
+#                  └───────────────── frame.len ──────────────────┘
 ##
+
 extract_flows() {
     : > "$TMP/session-span"
     "$MERGECAP" -w - "$@" 2>/dev/null | \
     "$TSHARK" -r - --disable-protocol drbd -T fields \
-        -e ip.src -e ip.dst -e ip.len -e frame.time_epoch 2>/dev/null | \
+        -e ip.src -e ip.dst -e frame.len -e frame.time_epoch 2>/dev/null | \
     awk -F'\t' -v spanfile="$TMP/session-span" "$PRIV_FN"'
         function mcast(ip) { split(ip, o, "."); return (o[1] + 0 >= 224 && o[1] + 0 <= 239) }
         function bcast(ip) { return (ip == "255.255.255.255" || ip == "0.0.0.0") }
