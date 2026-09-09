@@ -2,6 +2,53 @@
 
 Changelog for the camera scripts in `aircraft_projects/scripts/camera/`
 
+## [2.4] - 2026-09-08
+
+### Added
+- `analyze_frames.py`: New script. Reports, per camera, how many of the expected
+  one-per-second frames a flight actually recorded and where the gaps are: the count
+  and percentage missing, gap length statistics, a histogram of gap lengths, and the
+  longest gaps with their times. Answers how much imagery a flight is actually
+  missing, which the movie scripts cannot say because they fill or blank a missing
+  frame rather than counting it.
+- `analyze_frames.py`: The flight window comes either from `flt_time` on stdin or from
+  a start and end time on the command line. Command line times are used exactly as
+  given, for the flights `flt_time` does not describe correctly - one with a refueling
+  landing, say, where it reports the wrong landing time.
+- `analyze_frames.py`: The window is trimmed at both ends so that frames nobody
+  expected are not counted as missing. It ends at local sunset (Mountain Time, via
+  `astral`) when sunset falls before landing, because recording is stopped by hand at
+  about sunset. It starts at the first frame any camera recorded, since the three
+  cameras are started together some minutes after takeoff; a camera that starts later
+  than the other two is still counted as missing those frames, because the others were
+  recording. `--no-trim-start` counts from takeoff instead. Sunset is calculated for
+  RMMA at 10,000 ft, which is an approximation - aircraft position would be better.
+- `analyze_frames.sh`: Runs `analyze_frames.py` over the INSPYRE research flights and
+  writes `frame_analysis_results.txt`. The flights with a refueling stop are passed
+  their times explicitly. Specific to INSPYRE and hardcoded to the flights flown, so
+  adding a flight means editing the script.
+- `requirements.txt`: The two packages `analyze_frames.py` needs that are not in the
+  standard library - `astral` for sunset and `pytz` for the UTC/Mountain conversion.
+
+### Updated
+- `INSTALL.md`: Says which code each prerequisite is for, rather than listing packages
+  alone - `ImageMagick-perl` for the `Image::Magick` module in `combineCameras.pl` and
+  the `identify` command in `Image_Filter.pl`, `ffmpeg` for the two-pass encode in
+  `combineCameras.pl`, and `epel-release` and the rpmfusion release RPM as
+  repositories that carry no tooling themselves. `screen` is noted as not called by
+  anything, for keeping a long movie run alive over ssh.
+- `INSTALL.md`: New Python packages section pointing at `requirements.txt`, and a Mac
+  section for testing there: Homebrew marks its pythons externally managed (PEP 668),
+  so installing into one fails and a virtual environment is needed. Also notes that a
+  bare `pip` and `python3` are often different installs when both Homebrew and
+  miniconda are present, which puts packages where the running interpreter cannot see
+  them.
+
+### Fixed
+- `INSTALL.md`: A stray line continuation joined the two `dnf install` commands into
+  one, so the block as written installed packages named `dnf` and `install` and never
+  added the rpmfusion repository that `ffmpeg` comes from.
+
 ## [2.3] - 2026-08-06
 
 ### Added
