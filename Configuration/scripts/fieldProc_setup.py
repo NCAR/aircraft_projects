@@ -109,3 +109,10 @@ translate2ds = '/opt/local/bin/translate2ds '
 # section of push_data and set command as you want.
 #############################################################################
 datadump = False
+
+#############################################################################
+# Camera processing
+# To start generation of the movie animation, after processing has completed
+# set this to True
+#############################################################################
+animation = True

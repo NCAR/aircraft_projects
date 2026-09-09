@@ -6,7 +6,7 @@ import subprocess
 import  _GDrive, _process,_NAS,_FTP,_zip,_syncThing
  ##Check that the environment variables are set correctly    
 sys.path.insert(0, os.environ['PROJ_DIR'] + '/' + os.environ['PROJECT'] + '/' + os.environ['AIRCRAFT'] + '/scripts')
-from fieldProc_setup import NAS, FTP,  GDRIVE, SYNCTHING,sendzipped
+from fieldProc_setup import NAS, FTP,  GDRIVE, SYNCTHING,sendzipped, animation
 
 
 def main():
@@ -70,15 +70,17 @@ def main():
     # Call the report function from the setup class to append to the final message and send the status email
     setup.report(status, setup.PROJECT, setup.FLIGHT, setup.EMAIL, setup.FILE_EXT,final_message)
 
-    # Now that the processing has completed, attempt to run the movie-generation script
-    if setup.FLIGHT.upper().startswith(('RF', 'TF', 'FF')):
-      try:
-        script = "/home/local/aircraft_movies_animations/timeseries_animation.py"
-        subprocess.run([sys.executable, script, "-f", setup.FLIGHT], check=True)
-      except subprocess.CalledProcessError as e:
-        print(f"Movie generation failed: {e.stderr}")
-    else:
-        print("Not an RF/TF/FF flight. Movie generation skipped.")
+    # Now that the processing has completed, attempt to run the movie-generation
+    # script, if requested
+    if animation:
+      if setup.FLIGHT.upper().startswith(('RF', 'TF', 'FF')):
+        try:
+          script = "/home/local/aircraft_movies_animations/timeseries_animation.py"
+          subprocess.run([sys.executable, script, "-f", setup.FLIGHT], check=True)
+        except subprocess.CalledProcessError as e:
+          print(f"Movie generation failed: {e.stderr}")
+      else:
+          print("Not an RF/TF/FF flight. Movie generation skipped.")
 
 if __name__ == "__main__":
     main()
