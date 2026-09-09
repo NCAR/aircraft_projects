@@ -350,13 +350,18 @@ class Process:
             # Generate ICARTT file from LRT
             command = f"nc2asc -i {filename['LRT']} -b {self.nc2ascBatch}"
             message = f"Generating ICARTT file: {command}"
-            platform = aircraft.split('_')[0]
-            command = f"mv {project}-CORE_{platform}_{self.date}_*.ict {data_dir}"
-            message += f"\n{command}"
             if myLogger.run_and_log(command, message):
-                self.stat[key]["proc"] = 'Yes'
+                directory = os.path.split(filename['LRT'])[0]
+                platform = aircraft.split('_')[0]
+                command = f"mv directory/{project}-CORE_{platform}_{self.date}_*.ict {data_dir}"
+                message += f"\n{command}"
+                if myLogger.run_and_log(command, message):
+                    self.stat[key]["proc"] = 'Yes'
+                else:
+                    myLogger.log_and_print(f"Could not move file of type: {key}", log_level='warning')
             else:
                 myLogger.log_and_print(f"Unknown derived file type: {key}", log_level='warning')
+
 
     def process_pms2d_files(self, inst_dir, raw_dir, filename):
         """
