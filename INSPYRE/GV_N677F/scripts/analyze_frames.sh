@@ -56,7 +56,7 @@ ${PROJ_DIR}/scripts/camera/analyze_frames.py \
      260821-023620 | tee ${RAW_DATA_DIR}${PROJECT}/CAMERA/frame_analysis_results.txt
 
 # Continue on with files that don't have mid-flight landings
-for num in {10..13}; do
+for num in {10..17}; do
   printf "\n====================== Flight rf%02d ======================\n" $num
   flt_time /home/data/INSPYRE/INSPYRErf$(printf '%02d' $num).nc | \
       ${PROJ_DIR}/scripts/camera/analyze_frames.py \
