@@ -47,9 +47,28 @@ DIG="${DIG:-dig}"
 die() { echo "$(basename "$0"): $*" >&2; exit 1; }
 usage() { sed -n '3,/^##$/p' "$0" | sed 's/^#\{1,2\} \{0,1\}//'; }
 
-for tool in "$TSHARK" "$MERGECAP"; do
-    command -v "$tool" >/dev/null 2>&1 || die "$tool not found (brew install wireshark)"
-done
+##
+# How to install tshark and mergecap on this machine.
+#
+# Both come from one package, but its name differs by platform, and a hint
+# naming the wrong package manager is worse than no hint. Probe for the package
+# manager that is actually here rather than guessing from the distribution.
+##
+install_hint() {
+    case "$(uname -s)" in
+        Darwin) echo "brew install wireshark" ;;
+        Linux)
+            if   command -v dnf     >/dev/null 2>&1; then echo "sudo dnf install wireshark-cli"
+            elif command -v apt-get >/dev/null 2>&1; then echo "sudo apt-get install tshark"
+            elif command -v yum     >/dev/null 2>&1; then echo "sudo yum install wireshark"
+            elif command -v zypper  >/dev/null 2>&1; then echo "sudo zypper install wireshark"
+            elif command -v pacman  >/dev/null 2>&1; then echo "sudo pacman -S wireshark-cli"
+            else echo "install the wireshark command-line tools"
+            fi
+            ;;
+        *) echo "install the wireshark command-line tools" ;;
+    esac
+}
 
 TARGETS=()
 while [ $# -gt 0 ]; do
@@ -63,6 +82,12 @@ while [ $# -gt 0 ]; do
         *)               TARGETS+=("$1") ;;
     esac
     shift
+done
+
+# Checked after the options are parsed, so that --help still works on a machine
+# where wireshark has not been installed yet.
+for tool in "$TSHARK" "$MERGECAP"; do
+    command -v "$tool" >/dev/null 2>&1 || die "$tool not found - try: $(install_hint)"
 done
 
 [ -d "$SATCOM_ROOT" ] || die "capture root not found: $SATCOM_ROOT"
@@ -136,12 +161,23 @@ host_of() {
 # tshark comma-joins a field when a packet carries two IP headers (ICMP errors
 # quote the packet that failed), so keep the first value -- that is the header
 # that was actually on the wire.
+#
+# Use frame.len, not ip.len. frame.len still excludes the 7-byte preamble, 1-byte
+# start frame delimiter (SFD), 4-byte Ethernet FCS, and 12 -byte inter-frame gap.
+#  ← not captured →                                                  ← not captured →
+#┌──────────┬─────┐┌───────────────────────────────────────────────┐┌─────┬─────────┐
+#│ Preamble │ SFD ││  Dst MAC │ Src MAC │ Type │   IP packet   │pad ││ FCS │   IFG   │
+#│    7     │  1  ││    6     │    6    │  2   │               │    ││  4  │   12    │
+#└──────────┴─────┘└───────────────────────────────────────────────┘└─────┴─────────┘
+#                   └────── 14 bytes ──────────┘└─── ip.len ───┘
+#                  └───────────────── frame.len ──────────────────┘
 ##
+
 extract_flows() {
     : > "$TMP/session-span"
     "$MERGECAP" -w - "$@" 2>/dev/null | \
     "$TSHARK" -r - --disable-protocol drbd -T fields \
-        -e ip.src -e ip.dst -e ip.len -e frame.time_epoch 2>/dev/null | \
+        -e ip.src -e ip.dst -e frame.len -e frame.time_epoch 2>/dev/null | \
     awk -F'\t' -v spanfile="$TMP/session-span" "$PRIV_FN"'
         function mcast(ip) { split(ip, o, "."); return (o[1] + 0 >= 224 && o[1] + 0 <= 239) }
         function bcast(ip) { return (ip == "255.255.255.255" || ip == "0.0.0.0") }
@@ -199,7 +235,7 @@ aggregate() {
 
 # Analysis files keep the original "src => dst: N MB" shape. Reads stdin.
 write_analysis() {
-    awk -F'\t' '{ printf "%s => %s: %.2f MB\n", $2, $3, $1 / 1048576 }'
+    awk -F'\t' '{ printf "%s => %s: %.2f MB\n", $2, $3, $1 / 1000000 }'
 }
 
 ##
@@ -257,7 +293,7 @@ write_summary() {
     echo "Excluded:  multicast (224.0.0.0/4), broadcast, and onboard-only traffic"
     [ -n "$DNS_NOTE" ] && echo "Hostnames: $DNS_NOTE"
     echo
-    awk -F'\t' '{ t += $1 } END { printf "Total off-plane: %.2f MB\n", t / 1048576 }' "$flows"
+    awk -F'\t' '{ t += $1 } END { printf "Total off-plane: %.2f MB\n", t / 1000000 }' "$flows"
 
     echo
     echo "Onboard hosts"
@@ -272,7 +308,7 @@ write_summary() {
             for (ip in seen)
                 printf "%d\t%s (%s)\t%.2f\t%.2f\n", sent[ip] + recv[ip],
                        ip, (ip in name ? name[ip] : "unknown"),
-                       sent[ip] / 1048576, recv[ip] / 1048576
+                       sent[ip] / 1000000, recv[ip] / 1000000
         }' "$namemap" "$flows" \
         | sort -k1,1rn \
         | awk -F'\t' '{ printf "  %-34s %10s %10s\n", $2, $3, $4 }'
@@ -283,7 +319,7 @@ write_summary() {
     awk -F'\t' -v map="$namemap" '
         function label(ip) { return ip " (" (ip in name ? name[ip] : "unknown") ")" }
         FILENAME == map { if ($2 != "") name[$1] = $2; next }
-        { printf "  %10.2f  %-48s %s\n", $1 / 1048576, label($2), label($3) }' \
+        { printf "  %10.2f  %-48s %s\n", $1 / 1000000, label($2), label($3) }' \
         "$namemap" "$flows"
 
     awk -F'\t' -v map="$namemap" '

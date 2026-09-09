@@ -158,9 +158,10 @@ cached, and installing `dig` alone will not clear them.
 
 ## Requirements
 
-- **wireshark** — `analyze-satcom.sh` needs `tshark` and `mergecap`
-  (`brew install wireshark`, or `dnf install wireshark-cli`). It says so and
-  stops if they are missing. `satcom-overview.sh` needs neither.
+- **wireshark** — `analyze-satcom.sh` needs `tshark` and `mergecap`. It stops
+  if they are missing, and names the install command for the machine it is on
+  (`sudo dnf install wireshark-cli` on the aircraft servers,
+  `brew install wireshark` on a Mac). `satcom-overview.sh` needs neither.
 - **`dig`** — optional, for hostnames. On a minimal Linux install it comes from
   `bind-utils`. Without it the analysis still runs and the summary says why the
   names are missing.
