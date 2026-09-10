@@ -10,6 +10,8 @@ than on the aircraft — see [README.md](README.md).
 
 For the Windows machines, see [INSTALL_WINDOWS.md](INSTALL_WINDOWS.md).
 
+NOTE: User ads does not have sudo for these commands so you will have to `su root` instead.
+
 ## Step 1: Install tcpdump
 
 The capture needs `tcpdump`, and nothing else:
@@ -144,3 +146,10 @@ Environment=INTERFACE=eth0
 Collect the captures from each machine into one directory per flight, renaming
 them to carry the machine name — `traffic<stamp>_<host>.pcap0` — and run the
 analysis on the ground. [README.md](README.md) covers that.
+
+## Disable and stop
+After the project completes, or when satcom analysis is not desired, disable and stop the service
+```bash
+sudo systemctl stop satcom-capture.service
+sudo systemctl disable satcom-capture.service
+```
