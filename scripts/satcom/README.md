@@ -51,8 +51,9 @@ user, so a root-owned directory there will not work.** If the chown could not be
 done the script logs a warning, and the fix is:
 
 ```sh
-sudo mkdir -p /var/log/satcom-capture
-sudo chown tcpdump:tcpdump /var/log/satcom-capture
+su root
+mkdir -p /var/log/satcom-capture
+chown tcpdump:tcpdump /var/log/satcom-capture
 ```
 
 Captures are named `traffic<YYYYMMDD_HHMMSS>.pcap0`, `.pcap1`, … — one session,
