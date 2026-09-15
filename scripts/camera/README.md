@@ -142,6 +142,45 @@ Over time RAF has operated multiple different camera types. The best way to dete
 1. If the SE's say that a camera has changed permanently, update the example files to reflect this for all future projects.
 1. Add the documentation file to the loaded dataset in the FDA. 
 
+## Checking for missing frames
+
+`analyze_frames.py` reports how many of the expected one-per-second images are
+missing from each camera dir, and how those missing seconds are grouped into
+gaps (a gap is one run of consecutive missing seconds).
+
+1. Generate the report for every flight. Edit `analyze_frames.sh` in the
+project scripts dir. It hardcodes the flight number range, the flight
+designation (rf, tf, ff) and whether a flight can use flt_time to determine
+times or whether the times need to be passed in on the command line to exclude
+certain times. Then run the script
+   ```
+   > ./analyze_frames.sh
+   ```
+   This writes `frame_analysis_results.txt`.
+
+1. For a single flight, the analysis can be run directly:
+   ```
+   > flt_time /home/data/<PROJECT>/<PROJECT>rf01.nc | ${PROJ_DIR}/scripts/camera/analyze_frames.py flight_number_rf01/
+   ```
+   `analyze_frames.py` needs the `astral` and `pytz` python libraries, which it
+    uses to work out sunset and so the camera night cutoff:
+   ```
+   > pip install astral pytz
+   ```
+
+The cameras are started together, usually some minutes after takeoff, so the
+analysis window opens at the first frame *any* camera recorded rather than at
+takeoff, and that wait is not counted as missing. A camera that starts later than
+the others is a different case and is still counted - the others were recording,
+so those frames really are missing. The report says which it did:
+```
+Analysis starts at: 2026-08-12 17:15:40 UTC (first frame on any camera, 16 m 49 s after takeoff)
+```
+Pass `--no-trim-start` to count from takeoff instead:
+```
+> flt_time <flight.nc> | analyze_frames.py --no-trim-start flight_number_rf01/
+```
+
 ## Tests
 Tests live in the `test` dir and are run directly, from anywhere:
 ```
