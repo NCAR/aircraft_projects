@@ -1,25 +1,36 @@
 #! /usr/bin/env python3
 
 #######################################################################
-# Configuration for timeseries_animation.py 
+# Configuration for timeseries_animation.py
 #######################################################################
 
 import os
 
-# Provide project, flight
-project = "TI3GER-2"
-## flights must be a list even if only processing one flight
-flights = ["ff01", "ff02", "pp01", "rf01", "rf02", "rf03", "rf04", "rf05", "rf06"]
+### Configuration is for project TI3GER-2 ###
 
-# Plots: values in parens () are plotted against each other on the same plot
+# Provide flight: flights must be a list even if only processing one flight
+# During a deployment this can be left as "rfxx": push_data.py calls
+# timeseries_animation.py --flight <flight>, and that argument supersedes this
+# list. Only edit this list to process several flights in bulk (e.g.
+# post-deployment), which is not the usual deployment case.
+flights = ["rfxx"]
+
+# Plots are generated one plot per value in varlist
+# Variables within parenthesis are plotted on a single plots
+# - Var1 without parens will plot Var1 vs time
+# - (Var1, Var2) will plot Var1 on X-axis, Var2 on left Y-axis
+# - (Var1, Var2, Var3) will plot Var1 on X-axis, Var2 on left Y-axis and
+#    Var3 on right Y-axis
+#
+# Add/edit as requested for the project
 Var1 = "GGALT"
 Var2 = "DPXC"
 Var3 = "PSX"
 Var4 = "WIC"
 Var5 = "ATX"
 Var6 = "CONCD_RWO"
-Var7 = "ATX"
-VARLIST = [Var1,Var2,Var3,Var4,Var5,Var6,(Var1,Var7), ('GGLON', 'GGLAT')]
+Var7 = "CO_QCL"
+VARLIST = [Var1,Var2,Var3,Var4,Var5,Var6,Var7,(Var1,Var5), ('GGLON', 'GGLAT')]
 
 # Plot formatting options
 dpi = 400 # Lower res will animate faster
