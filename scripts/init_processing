@@ -26,7 +26,8 @@ endif
 if ($#argv == 0) then
   echo "Usage:\n init_processing proj_name\n"
 
-  echo 'Prerequisites: ads files have been copied into RAW_DATA_DIR/proj_name and extract2d has been run (i.e. all .2d files exist in $RAW_DATA_DIR/$proj/PMS2D/)'
+  echo 'Prerequisites: ads files have been copied into RAW_DATA_DIR/proj_name and'
+  echo 'extract2d has been run (i.e. all .2d files exist in $RAW_DATA_DIR/$proj/PMS2D/)'
   exit
 endif
 
@@ -70,15 +71,32 @@ source ${PROJ_DIR}/scripts/production_fns.sh
 initialize_processing
 
 ./run_nimbus
-source ${PROJ_DIR}/scripts/reorder_all $PROJ
-./run_proc2d
+#./run_nimbus_hrt
+#./run_nimbus_srt
 
-source ${PROJ_DIR}/scripts/AddHtTerrain $PROJ
+# reorder_all changes the current working dir. Save it so can
+# come back
+CWD=$PWD
+source ${PROJ_DIR}/scripts/reorder_all $PROJ
+cd $CWD
+
+#./run_proc2d
+
+#./run_iwg
+
+# Before uncommenting run_icartt, be sure nc2asc.bat is updated with the
+# latest revision info
+#./run_icartt
+
+#source ${PROJ_DIR}/scripts/AddHtTerrain $PROJ
 
 if [ `whoami` == nimbus ]; then
 #  run_kalmanFilter
   true
 fi
+
+# Recreate QAtools output
+#./run_QAtools
 
 cleanup_processing
 
@@ -119,9 +137,90 @@ foreach file (${RAW_DATA_DIR}/$proj/*[rft]f*.ads)
   echo 'of=${DATA_DIR}/'${proj}'/'${proj}${flight}.nc >> setup_$flight
 end
 
+# ---------------------------------------------------------
+# run_nimbus_hrt script. Modifies run_nimbus, which must
+# exist
+#
+set file = run_nimbus
+if ( -f ${file} ) then
+    set newfile = "${file}_hrt"
+    cp -- "$file" "$newfile"
+    sed -i.bak \
+        -e 's/?f??/&h/' \
+        "$newfile"
+    rm -- "${newfile}.bak"
+else
+    echo "${file} doesn't exist. ${file}_hrt not created"
+endif
 
 # ---------------------------------------------------------
-# Fast 2D processing script.
+# nimbus setup_*h files. Create a script that can be run to
+# generate them by modifying LRT setup files. Doesn't create
+# them by default
+#
+cat > run_setup_hrt << "EOFSH"
+#!/bin/bash
+
+# If setup_* matches nothing, don't run with literal setup_*
+shopt -s nullglob
+
+# Loop through lrt files
+for file in setup_*[0-9]; do
+    [[ -f $file ]] || continue
+
+    newfile="${file%}h"
+    cp -- "$file" "$newfile"
+    sed -i.bak \
+        -e 's/^pr=1$/pr=25/' \
+        -e 's/\.nc$/h.nc/' \
+        "$newfile"
+    rm -- "$newfile.bak"
+done
+"EOFSH"
+
+# ---------------------------------------------------------
+# run_nimbus_srt script. Modifies run_nimbus, which must
+# exist
+#
+set file = run_nimbus
+if ( -f ${file} ) then
+    set newfile = "${file}_srt"
+    cp -- "$file" "$newfile"
+    sed -i.bak \
+        -e 's/?f??/&s/' \
+        "$newfile"
+    rm -- "${newfile}.bak"
+else
+    echo "${file} doesn't exist. ${file}_srt not created"
+endif
+
+# ---------------------------------------------------------
+# nimbus setup_*s files. Create a script that can be run to
+# generate them by modifying LRT setup files. Doesn't create
+# them by default
+#
+cat > run_setup_srt << "EOFSS"
+#!/bin/bash
+
+# If setup_* matches nothing, don't run with literal setup_*
+shopt -s nullglob
+
+# Loop through lrt files
+for file in setup_*[0-9]; do
+    [[ -f $file ]] || continue
+
+    newfile="${file%}s"
+    cp -- "$file" "$newfile"
+    sed -i.bak \
+        -e 's/^pr=1$/pr=0/' \
+        -e 's/\.nc$/s.nc/' \
+        "$newfile"
+    rm -- "$newfile.bak"
+done
+"EOFSS"
+
+# ---------------------------------------------------------
+# Fast 2D processing script
 #
 cat > run_proc2d << "EOF2D"
 #!/bin/bash
@@ -157,9 +256,142 @@ if [ -d ${RAW_DATA_DIR}/${PROJ}/HVPS/oap ]; then
     process2d ${RAW_DATA_DIR}/${PROJ}/HVPS/oap/${bfname} -o ${DAT}/${PROJ}${flight}.nc
   done
 fi
-
 "EOF2D"
 
+# ---------------------------------------------------------
+# ICARTT processing script
+#
+cat > run_icartt << "EOFICT"
+#!/bin/bash
 
-chmod +x set_env run_all run_nimbus run_proc2d
-chmod g+w set_env run_all run_nimbus run_proc2d setup_*
+source ./set_env
+AC="${AIRCRAFT%%_*}"
+
+# BEFORE RUNNING THIS SCRIPT, update ../scripts/nc2asc.bat
+# for the new version and set version indicator letter here:
+version="A"
+
+# Remove existing files.  Helps to avoid residual data if nc2asc fails
+/bin/rm ${DAT}/${PROJ}-CORE_${AC}_????????_R${version}*.ict
+
+for file in ${DAT}/${PROJ}?f??.nc
+do
+  takeoff=`flt_time ${file} | sed -n 's/^Takeoff: //p'`
+  ymd=`date -d "$takeoff" +%Y%m%d`
+  outfile="${DAT}/${PROJ}-CORE_${AC}_${ymd}_R${version}"
+  if [[ -f "$outfile.ict" ]]; then
+    # If recreating an existing file, assume have two legs.
+    # Code does NOT handle more than two legs ATM.
+    base=${outfile%.ict}
+    newoutfile=${base}_L1.ict
+    mv $outfile $newoutfile
+    nc2asc -i $file -o $outfile -b ../scripts/nc2asc.bat
+    base=${outfile%.ict}
+    newoutfile=${base}_L2.ict
+    mv $outfile $newoutfile
+  else
+    nc2asc -i $file -o $outfile.ict -b ../scripts/nc2asc.bat
+    exit
+  fi
+done
+"EOFICT"
+
+# ---------------------------------------------------------
+# nc2asc.bat script
+#
+cat > ../scripts/nc2asc.bat << "EOFBAT"
+hd=ICARTT
+avg=
+dt=NoDate
+tm=SecOfDay
+version=RA
+rev=RA: Field Data
+sp=comma
+fv=-32767
+ti=X,X
+
+Vars=Time
+Vars=GGLAT
+Vars=GGLON
+Vars=GGALT
+Vars=NAVAIL
+Vars=PALTF
+Vars=HGM232
+Vars=GSPD
+Vars=TASX
+Vars=IAS
+Vars=MACH_A
+Vars=VSPD
+Vars=THDG
+Vars=TKAT
+Vars=DRFTA
+Vars=PITCH
+Vars=ROLL
+Vars=SSLIP
+Vars=ATTACK
+Vars=ATX
+Vars=DPXC
+Vars=RTX
+Vars=PSXC
+Vars=QCXC
+Vars=PCAB
+Vars=WSC
+Vars=WDC
+Vars=WIC
+Vars=SOLZE
+Vars=SOLELAC
+Vars=SOLAZ
+Vars=SOLAZAC
+"EOFBAT"
+
+# ---------------------------------------------------------
+# IWG processing script
+#
+cat > run_iwg << "EOFIWG"
+#!/bin/bash
+
+source ./set_env
+
+# Remove existing files.  Helps to avoid residual data if nc2iwg1 fails
+/bin/rm ${DAT}/${PROJ}?f??.iwg
+
+for file in ${DAT}/${PROJ}?f??.nc
+do
+  base=${file%.nc}
+  flight=${base: -4}
+  echo ${flight}
+  nc2iwg1 $file -o ${DAT}/${PROJ}${flight}.iwg
+done
+"EOFIWG"
+
+# ---------------------------------------------------------
+# QAtools script
+#
+cat > run_QAtools << "EOFQA"
+#!/bin/bash
+
+source ./set_env
+
+# This script only works if aircraft_QAtools_notebook
+# is checked out. On the ground station, that is done
+# in /home/local. Update the line below as needed.
+DIR=/home/local/aircraft_QAtools_notebook
+cd "$DIR" 2>/dev/null || {
+    echo "Error: cannot cd to $DIR. Update script to point to code" >&2
+    exit 1
+}
+
+for file in ${DAT}/${PROJ}?f??.nc
+do
+  base=${file%.nc}
+  flight=${base: -4}
+  ./auto_export.py --project ${PROJ} --flight ${flight}
+done
+"EOFQA"
+
+
+chmod +x set_env run_all run_nimbus* run_setup*
+chmod +x run_proc2d run_icartt run_iwg run_QAtools
+chmod g+w set_env run_all run_nimbus* run_setup* setup_*
+chmod g+w run_proc2d run_icartt run_iwg run_QAtools
+chmod g+w ../scripts/nc2asc.bat
