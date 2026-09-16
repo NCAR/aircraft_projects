@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source ./set_env
+
+# Remove existing files.  Helps to avoid if a residual data if nimbus fails.
+/bin/rm ${DAT}/${PROJ}?f??s.nc
+
+if command -v parallel > /dev/null 2>&1; then
+  parallel -j 3 "nimbus -b {}" ::: setup_?f??s
+else
+  for setup_file in setup_?f??s
+  do
+    nimbus -b $setup_file
+  done
+fi
