@@ -8,10 +8,18 @@
 # the captures themselves change.
 #
 # Columns:
-#   OFF-PLANE DESTINATION   the far end of the traffic, named where possible
-#   MB                      sent plus received
-#   COLLECTION (HR)         hours of capture in the flights where it appeared
-#   MB/HR                   MB divided by those hours
+#   OFF-PLANE PEER   the far end of the traffic, named where possible
+#   SENT MB          onboard to peer
+#   RECV MB          peer to onboard
+#   TOTAL MB         the two added
+#   HOURS            hours of capture in the flights where it appeared
+#   MB/HR            total MB divided by those hours
+#
+# The two directions are kept apart because they carry different weight. RECV
+# bytes are proof: they reached an onboard host, so they crossed the air link.
+# SENT bytes only prove the host put them on the LAN -- they reached the peer
+# if, and only if, something came back. A peer with one column at zero is
+# therefore worth looking at, and is counted in a note under the table.
 #
 # Every 128.117.* address (UCAR/NCAR) gets its own row. Everything else is
 # grouped: by the registrable domain of its reverse-DNS name, or -- when an
@@ -184,13 +192,17 @@ FNR == 1 {
 
 inflow && $1 ~ /^[0-9]+\.[0-9]+$/ {
     val = $1 + 0
-    if (!priv($2))      { ip = $2; nm = $3 }
-    else if (!priv($4)) { ip = $4; nm = $5 }
+    # Which side is public also says which way the bytes went: a public source
+    # is traffic that arrived, a public destination is traffic that left.
+    if (!priv($2))      { ip = $2; nm = $3; dir = "r" }
+    else if (!priv($4)) { ip = $4; nm = $5; dir = "s" }
     else next
     gsub(/[()]/, "", nm)
 
     # Hold the rows; grouping needs the whole picture (see END).
     r++; r_ip[r] = ip; r_nm[r] = nm; r_mb[r] = val; r_fl[r] = flight
+    r_dir[r] = dir
+    if (dir == "s") total_s += val; else total_r += val
     if (nm != "unknown")
         block_vote[slash16(ip) "\t" vendor(nm)] += val    # what this /16 mostly is
     total_mb += val
@@ -214,6 +226,7 @@ END {
         else                           key = "unresolved " b ".x.x"
 
         mb[key] += r_mb[i]
+        if (r_dir[i] == "s") mb_s[key] += r_mb[i]; else mb_r[key] += r_mb[i]
         seen[key "\t" r_fl[i]] = 1
         addrs[key "\t" ip] = 1
     }
@@ -227,7 +240,12 @@ END {
     for (k in mb) {
         if (mb[k] + 0 < min_mb + 0) { hidden++; hidden_mb += mb[k]; continue }
         label = (naddr[k] > 1) ? k " (" naddr[k] " addrs)" : k
-        printf "%.6f\t%s\t%.2f\t%.2f\t%.3f\n", mb[k], label, mb[k],
+        # A peer with nothing in one direction is worth noticing: a real
+        # conversation has both. It means either genuinely one-way traffic or
+        # a capture that is only seeing one side.
+        if (mb_s[k] + 0 == 0 || mb_r[k] + 0 == 0) { oneway++; oneway_mb += mb[k] }
+        printf "%.6f\t%s\t%.2f\t%.2f\t%.2f\t%.2f\t%.3f\n", mb[k], label,
+               mb_s[k] + 0, mb_r[k] + 0, mb[k],
                dest_h[k], (dest_h[k] > 0 ? mb[k] / dest_h[k] : 0)
         ndest++
     }
@@ -236,9 +254,10 @@ END {
     # over flights -- never the sum of the column above, whose rows overlap.
     for (f in flights) { fl = fl (fl ? ", " : "") f; th += hours[f] }
     for (n in dns_reason) reasons = reasons (reasons ? "; " : "") n
-    printf "@@\t%d\t%.2f\t%.2f\t%d\t%.2f\t%d\t%d\t%s\t%d\t%s\n",
+    printf "@@\t%d\t%.2f\t%.2f\t%d\t%.2f\t%d\t%d\t%s\t%d\t%s\t%.2f\t%.2f\t%d\t%.2f\n",
            nflights, th, total_mb, hidden + 0, hidden_mb + 0, ndest + 0,
-           undated + 0, fl, dns_flights + 0, reasons
+           undated + 0, fl, dns_flights + 0, reasons,
+           total_s + 0, total_r + 0, oneway + 0, oneway_mb + 0
 }' "${summaries[@]}" | sort -t"$(printf '\t')" -k1,1rn > "$TMP/rows"
 
 trailer="$(grep '^@@' "$TMP/rows")"
@@ -253,6 +272,10 @@ undated=$(printf '%s' "$trailer"   | cut -f8)
 flight_list=$(printf '%s' "$trailer" | cut -f9)
 dns_flights=$(printf '%s' "$trailer" | cut -f10)
 dns_reasons=$(printf '%s' "$trailer" | cut -f11)
+total_sent=$(printf '%s' "$trailer"  | cut -f12)
+total_recv=$(printf '%s' "$trailer"  | cut -f13)
+oneway=$(printf '%s' "$trailer"      | cut -f14)
+oneway_mb=$(printf '%s' "$trailer"   | cut -f15)
 
 overall_rate=$(awk -v m="$total_mb" -v h="$total_h" \
     'BEGIN { printf "%.3f", (h > 0 ? m / h : 0) }')
@@ -276,16 +299,18 @@ fi
         printf '            show as "unresolved <block>.x.x" -- %s\n' "$dns_reasons"
     fi
     echo
-    printf "  %-44s %10s %15s %10s\n" "OFF-PLANE DESTINATION" "MB" "COLLECTION (HR)" "MB/HR"
+    printf "  %-40s %9s %9s %10s %8s %9s\n" \
+        "OFF-PLANE PEER" "SENT MB" "RECV MB" "TOTAL MB" "HOURS" "MB/HR"
     grep -v '^@@' "$TMP/rows" \
-        | awk -F'\t' '{ printf "  %-44s %10s %15s %10s\n", $2, $3, $4, $5 }'
-    printf "  %-44s %10s %15s %10s\n" \
-        "$(printf '%.44s' '--------------------------------------------------')" \
-        "----------" "---------------" "----------"
+        | awk -F'\t' '{ printf "  %-40s %9s %9s %10s %8s %9s\n",
+                        $2, $3, $4, $5, $6, $7 }'
+    printf "  %-40s %9s %9s %10s %8s %9s\n" \
+        "$(printf '%.40s' '--------------------------------------------------')" \
+        "---------" "---------" "----------" "--------" "---------"
     # The total row's hours are the whole collection window, not a column sum:
     # destinations overlap in time, so adding their hours would be meaningless.
-    printf "  %-44s %10s %15s %10s\n" "TOTAL (all destinations)" \
-        "$total_mb" "$total_h" "$overall_rate"
+    printf "  %-40s %9s %9s %10s %8s %9s\n" "TOTAL (all peers)" \
+        "$total_sent" "$total_recv" "$total_mb" "$total_h" "$overall_rate"
 
     if [ "${hidden:-0}" -gt 0 ]; then
         printf "\n  %s of %s destinations shown; %s below %s MB omitted, %s MB between them.\n" \
@@ -294,9 +319,18 @@ fi
     if [ "${undated:-0}" -gt 0 ]; then
         printf "  %s flight(s) had no packet timestamps, so contribute 0 hr.\n" "$undated"
     fi
+    if [ "${oneway:-0}" -gt 0 ]; then
+        printf "\n  %s peer(s), %s MB, show traffic in one direction only.\n" \
+            "$oneway" "$oneway_mb"
+        printf "  A conversation has both, so a one-way row means either genuinely\n"
+        printf "  one-way traffic or a capture that is only seeing one side of it.\n"
+    fi
     echo
-    echo "  MB comes from the per-flow figures in the summary files, which are"
-    echo "  rounded to 0.01 MB each; the flight summaries hold the exact totals."
+    echo "  SENT is onboard to peer, RECV is peer to onboard. RECV bytes are proof"
+    echo "  of what arrived; SENT bytes left the host, and reached the peer only if"
+    echo "  something came back. MB comes from the per-flow figures in the summary"
+    echo "  files, rounded to 0.01 MB each; the flight summaries hold the exact"
+    echo "  totals."
 } > "$out"
 
 cat "$out"

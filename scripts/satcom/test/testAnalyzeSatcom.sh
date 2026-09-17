@@ -144,6 +144,24 @@ flow_mb() {
 # total_mb <summary> - the reported off-plane total.
 total_mb() { awk '/^Total off-plane/ { print $3 }' "$1"; }
 
+# The count column of a labelled line, e.g. count_col "$sum" responses.
+count_col() { grep -E "^  $2 " "$1" | grep -oE '[0-9]+' | head -1; }
+
+# How many queries the DNS section attributes to one name.
+dns_name_count() { awk -v n="$2" '$2 == n { print $1 }' "$1"; }
+
+# gateway_mb <summary> <src> <dst> - the Gateway row for one pair, or "none".
+# Pass "total" as <src> for the section total. Scoped to the section, so a
+# pair that also appears under Flows cannot be mistaken for a gateway row.
+gateway_mb() {
+    awk -v s="$2" -v d="$3" '
+        /^Gateway \(/                            { g = 1; next }
+        /^DNS$/ || /^Router syslog$/ || /^Flows$/ { g = 0 }
+        g && s == "total" && $2 == "total" { print $1; found = 1; next }
+        g && s != "total" && $2 == s && $3 == d { print $1; found = 1 }
+        END { if (!found) print "none" }' "$1"
+}
+
 # host_row <summary> <ip> - the Onboard hosts row for one address, or "none".
 host_row() {
     awk -v ip="$2" '
@@ -602,6 +620,245 @@ assert_contains "the usage is printed" "$out" "Summarize satcom traffic"
 assert_not_contains "and no missing-tool error is raised" "$out" "not found"
 assert_eq "exiting successfully" \
     "$(TSHARK=/nonexistent/tshark "$script" --help >/dev/null 2>&1; echo $?)" "0"
+
+echo "Test 17: onboard DNS is reported without disturbing the off-plane totals"
+if ! command -v text2pcap >/dev/null 2>&1 || ! command -v tshark >/dev/null 2>&1; then
+    echo "  SKIP: text2pcap/tshark not installed"
+else
+    root="${tmp_dir}/t17"
+    mkdir -p "${root}/rf17_20260117"
+
+    # Real UDP/53 packets carrying a DNS message for "a.b", so tshark dissects
+    # them and fills dns.flags.response -- the field the summary counts on.
+    # Three queries and two answers: the third is unanswered, which is the
+    # case worth reporting, since a timeout costs the lookup again on retry.
+    dns_query() {
+        printf '000000  45 00 00 31 00 00 00 00 40 11 00 00 c0 a8 54 02\n'
+        printf '000010  c0 a8 54 01 c3 50 00 35 00 1d 00 00 12 34 01 00\n'
+        printf '000020  00 01 00 00 00 00 00 00 01 61 01 62 00 00 01 00\n'
+        printf '000030  01\n'
+    }
+    dns_reply() {
+        printf '000000  45 00 00 41 00 00 00 00 40 11 00 00 c0 a8 54 01\n'
+        printf '000010  c0 a8 54 02 00 35 c3 50 00 2d 00 00 12 34 81 80\n'
+        printf '000020  00 01 00 01 00 00 00 00 01 61 01 62 00 00 01 00\n'
+        printf '000030  01 c0 0c 00 01 00 01 00 00 00 3c 00 04 01 02 03\n'
+        printf '000040  04\n'
+    }
+    {
+        dns_query; dns_reply
+        dns_query; dns_reply
+        dns_query                       # no answer for this one
+        # one off-plane packet, so the flow section has something of its own
+        printf '000000  45 00 00 20 00 00 00 00 40 11 00 00 c0 a8 54 02\n'
+        printf '000010  80 75 2b 80 13 88 0f a0 00 0c 00 00 00 00 00 00\n'
+    } > "${tmp_dir}/t17.hex"
+    t17_stamp=$(date -u '+%Y%m%d_%H%M%S')
+    text2pcap -q -l 101 "${tmp_dir}/t17.hex" \
+        "${root}/rf17_20260117/traffic${t17_stamp}_acserver.pcap0" 2>/dev/null
+
+    out=$("$script" --no-dns --root "$root" rf17_20260117 2>&1)
+    sum="${root}/rf17_20260117/satcom-summary_rf17_20260117.txt"
+
+    assert_eq "queries to the onboard resolver are counted" \
+        "$(count_col "$sum" "queries to resolver")" "3"
+    assert_eq "responses are counted separately" \
+        "$(count_col "$sum" "responses")" "2"
+    assert_eq "the query that got no answer is reported" \
+        "$(count_col "$sum" "unanswered")" "1"
+    assert_eq "a name is counted once per query, not once per packet" \
+        "$(dns_name_count "$sum" a.b)" "3"
+    assert_eq "onboard DNS stays out of the off-plane flows" \
+        "$(flow_mb "$sum" 192.168.84.2 192.168.84.1)" "none"
+    assert_contains "the off-plane flow is still reported" \
+        "$(cat "$sum")" "128.117.43.128"
+fi
+
+echo "Test 17b: a capture with no DNS omits the section entirely"
+root="${tmp_dir}/t17b"
+make_capture "${root}/rf18_20260118/traffic20260118_120000_brix01.pcap0" <<'ROWS'
+192.168.84.7    8.8.8.8    1000000
+ROWS
+out=$(run_stubbed --root "$root" rf18_20260118)
+sum="${root}/rf18_20260118/satcom-summary_rf18_20260118.txt"
+assert_not_contains "no DNS heading when nothing was captured" "$(cat "$sum")" "queries to resolver"
+assert_eq "and the flow totals are unaffected" "$(total_mb "$sum")" "1.00"
+
+echo "Test 18: the router's syslog is kept verbatim and summarized"
+if ! command -v text2pcap >/dev/null 2>&1 || ! command -v tshark >/dev/null 2>&1; then
+    echo "  SKIP: text2pcap/tshark not installed"
+else
+    root="${tmp_dir}/t18"
+    mkdir -p "${root}/rf19_20260119"
+
+    # A real datagram from the router: UDP/514 carrying
+    #   <134>Jan  1 00:00:00 rafgv k: DENY SRC=192.168.84.36
+    # so tshark dissects it as syslog and fills syslog.msg with the body.
+    # Nothing asserts on the message text beyond it surviving intact -- the
+    # format belongs to the router, and the script deliberately does not parse it.
+    syslog_packet() {
+        printf '000000  45 00 00 50 00 00 00 00 40 11 00 00 c0 a8 54 01\n'
+        printf '000010  c0 a8 54 02 02 02 02 02 00 3c 00 00 3c 31 33 34\n'
+        printf '000020  3e 4a 61 6e 20 20 31 20 30 30 3a 30 30 3a 30 30\n'
+        printf '000030  20 72 61 66 67 76 20 6b 3a 20 44 45 4e 59 20 53\n'
+        printf '000040  52 43 3d 31 39 32 2e 31 36 38 2e 38 34 2e 33 36\n'
+    }
+    {
+        syslog_packet
+        syslog_packet
+        printf '000000  45 00 00 20 00 00 00 00 40 11 00 00 c0 a8 54 02\n'
+        printf '000010  80 75 2b 80 13 88 0f a0 00 0c 00 00 00 00 00 00\n'
+    } > "${tmp_dir}/t18.hex"
+    t18_stamp=$(date -u '+%Y%m%d_%H%M%S')
+    text2pcap -q -l 101 "${tmp_dir}/t18.hex" \
+        "${root}/rf19_20260119/traffic${t18_stamp}_acserver.pcap0" 2>/dev/null
+
+    out=$("$script" --no-dns --root "$root" rf19_20260119 2>&1)
+    sum="${root}/rf19_20260119/satcom-summary_rf19_20260119.txt"
+    slog="${root}/rf19_20260119/satcom-syslog_rf19_20260119.txt"
+
+    assert_file "the messages are written beside the summary" "$slog"
+    assert_contains "verbatim, so the format can be read later" \
+        "$(cat "$slog")" "DENY SRC=192.168.84.36"
+    assert_eq "the summary counts them" "$(count_col "$sum" messages)" "2"
+    assert_contains "and reports the onboard address mentioned" \
+        "$(cat "$sum")" "2  192.168.84.36"
+    assert_eq "syslog stays out of the off-plane flows" \
+        "$(flow_mb "$sum" 192.168.84.1 192.168.84.2)" "none"
+    assert_contains "the companion file is named on the console" "$out" "syslog:"
+fi
+
+echo "Test 18b: a capture with no syslog omits the section and writes no file"
+root="${tmp_dir}/t18b"
+make_capture "${root}/rf21_20260121/traffic20260121_120000_brix01.pcap0" <<'ROWS'
+192.168.84.7    8.8.8.8    1000000
+ROWS
+out=$(run_stubbed --root "$root" rf21_20260121)
+sum="${root}/rf21_20260121/satcom-summary_rf21_20260121.txt"
+assert_not_contains "no syslog heading" "$(cat "$sum")" "Router syslog"
+assert_no_file "and no empty companion file" \
+    "${root}/rf21_20260121/satcom-syslog_rf21_20260121.txt"
+
+echo "Test 19: gateway traffic is reported on its own, outside the flow totals"
+root="${tmp_dir}/t19"
+make_capture "${root}/rf22_20260122/traffic20260122_120000_acserver.pcap0" <<'ROWS'
+192.168.84.1    192.168.84.2      100000
+192.168.84.2    192.168.84.1       50000
+192.168.84.2    192.168.84.7      100000
+192.168.84.2    128.117.43.124    200000
+ROWS
+run_stubbed --root "$root" rf22_20260122 >/dev/null
+sum="${root}/rf22_20260122/satcom-summary_rf22_20260122.txt"
+
+assert_eq "traffic from the gateway is reported" \
+    "$(gateway_mb "$sum" 192.168.84.1 192.168.84.2)" "0.10"
+assert_eq "and traffic to it" \
+    "$(gateway_mb "$sum" 192.168.84.2 192.168.84.1)" "0.05"
+assert_eq "the section totals both directions" \
+    "$(gateway_mb "$sum" total)" "0.15"
+assert_eq "onboard traffic that misses the gateway is not in the section" \
+    "$(gateway_mb "$sum" 192.168.84.2 192.168.84.7)" "none"
+assert_eq "the gateway stays out of the off-plane flows" \
+    "$(flow_mb "$sum" 192.168.84.1 192.168.84.2)" "none"
+assert_eq "so the off-plane total counts only what crossed satcom" \
+    "$(total_mb "$sum")" "0.20"
+
+echo "Test 19b: a capture with no gateway traffic omits the section"
+root="${tmp_dir}/t19b"
+make_capture "${root}/rf23_20260123/traffic20260123_000000_brix01.pcap0" <<'ROWS'
+192.168.84.7    128.117.43.124    5000000
+ROWS
+run_stubbed --root "$root" rf23_20260123 >/dev/null
+sum="${root}/rf23_20260123/satcom-summary_rf23_20260123.txt"
+assert_not_contains "no Gateway heading" "$(cat "$sum")" "Gateway ("
+assert_eq "and the flow totals are unaffected" "$(total_mb "$sum")" "5.00"
+
+echo "Test 19c: the gateway address is configurable"
+root="${tmp_dir}/t19c"
+make_capture "${root}/rf25_20260125/traffic20260125_120000_acserver.pcap0" <<'ROWS'
+10.1.1.1    10.1.1.50    400000
+ROWS
+SATCOM_GATEWAY=10.1.1.1 run_stubbed --root "$root" rf25_20260125 >/dev/null
+sum="${root}/rf25_20260125/satcom-summary_rf25_20260125.txt"
+assert_eq "a gateway given in the environment is the one reported" \
+    "$(gateway_mb "$sum" 10.1.1.1 10.1.1.50)" "0.40"
+
+echo "Test 20: a syslog message quoted back in an ICMP error is counted once"
+if ! command -v text2pcap >/dev/null 2>&1 || ! command -v tshark >/dev/null 2>&1; then
+    echo "  SKIP: text2pcap/tshark not installed"
+else
+    root="${tmp_dir}/t20"
+    mkdir -p "${root}/rf24_20260124"
+
+    # The real datagram, then the port unreachable acserver sends back because
+    # nothing listens on 514. The error quotes the datagram whole, so tshark
+    # dissects the same message twice and the count doubles unless the ICMP
+    # copy is skipped. This is what RF17 looked like: 372 reported, 186 real.
+    {
+        printf '000000  45 00 00 50 00 00 00 00 40 11 00 00 c0 a8 54 01\n'
+        printf '000010  c0 a8 54 02 02 02 02 02 00 3c 00 00 3c 31 33 34\n'
+        printf '000020  3e 4a 61 6e 20 20 31 20 30 30 3a 30 30 3a 30 30\n'
+        printf '000030  20 72 61 66 67 76 20 6b 3a 20 44 45 4e 59 20 53\n'
+        printf '000040  52 43 3d 31 39 32 2e 31 36 38 2e 38 34 2e 33 36\n'
+
+        printf '000000  45 00 00 6c 00 00 00 00 40 01 00 00 c0 a8 54 02\n'
+        printf '000010  c0 a8 54 01 03 03 00 00 00 00 00 00 45 00 00 50\n'
+        printf '000020  00 00 00 00 40 11 00 00 c0 a8 54 01 c0 a8 54 02\n'
+        printf '000030  02 02 02 02 00 3c 00 00 3c 31 33 34 3e 4a 61 6e\n'
+        printf '000040  20 20 31 20 30 30 3a 30 30 3a 30 30 20 72 61 66\n'
+        printf '000050  67 76 20 6b 3a 20 44 45 4e 59 20 53 52 43 3d 31\n'
+        printf '000060  39 32 2e 31 36 38 2e 38 34 2e 33 36\n'
+    } > "${tmp_dir}/t20.hex"
+    t20_stamp=$(date -u '+%Y%m%d_%H%M%S')
+    text2pcap -q -l 101 "${tmp_dir}/t20.hex" \
+        "${root}/rf24_20260124/traffic${t20_stamp}_acserver.pcap0" 2>/dev/null
+
+    "$script" --no-dns --root "$root" rf24_20260124 >/dev/null 2>&1
+    sum="${root}/rf24_20260124/satcom-summary_rf24_20260124.txt"
+    slog="${root}/rf24_20260124/satcom-syslog_rf24_20260124.txt"
+
+    assert_eq "the message is counted once, not once per dissection" \
+        "$(count_col "$sum" messages)" "1"
+    assert_eq "and written once to the companion file" \
+        "$(wc -l < "$slog" | tr -d ' ')" "1"
+    assert_contains "the message itself is unchanged" \
+        "$(cat "$slog")" "DENY SRC=192.168.84.36"
+fi
+
+echo "Test 21: an allowlist keeps router-blocked traffic out of the total"
+root="${tmp_dir}/t21"
+make_capture "${root}/rf26_20260126/traffic20260126_120000_acserver.pcap0" <<'ROWS'
+192.168.84.2      128.117.43.124    3000000
+192.168.84.7      128.117.43.124    1000000
+192.168.84.164    151.101.1.1        500000
+ROWS
+SATCOM_ALLOWED=192.168.84.2,192.168.84.7 \
+    run_stubbed --root "$root" rf26_20260126 >/dev/null
+sum="${root}/rf26_20260126/satcom-summary_rf26_20260126.txt"
+
+assert_eq "the total counts only what the router lets out" \
+    "$(total_mb "$sum")" "4.00"
+assert_contains "the blocked bytes are stated, not discarded" \
+    "$(cat "$sum")" "Blocked at router: 0.50 MB"
+assert_contains "and attributed to the host that sent them" \
+    "$(cat "$sum")" "0.50  192.168.84.164"
+assert_eq "a blocked host is not in the off-plane flows" \
+    "$(flow_mb "$sum" 192.168.84.164 151.101.1.1)" "none"
+assert_eq "an allowed host still is" \
+    "$(flow_mb "$sum" 192.168.84.2 128.117.43.124)" "3.00"
+
+echo "Test 21b: with no allowlist the totals are unchanged"
+root="${tmp_dir}/t21b"
+make_capture "${root}/rf27_20260127/traffic20260127_120000_acserver.pcap0" <<'ROWS'
+192.168.84.2      128.117.43.124    3000000
+192.168.84.164    151.101.1.1        500000
+ROWS
+run_stubbed --root "$root" rf27_20260127 >/dev/null
+sum="${root}/rf27_20260127/satcom-summary_rf27_20260127.txt"
+assert_eq "every onboard host counts toward the total" \
+    "$(total_mb "$sum")" "3.50"
+assert_not_contains "and nothing is reported as blocked" \
+    "$(cat "$sum")" "Blocked at router"
 
 echo
 echo "Passed: $PASS  Failed: $FAIL"

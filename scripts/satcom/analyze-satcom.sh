@@ -24,6 +24,12 @@
 #                    or $SATCOM_ROOT if set)
 #   --cache FILE     reverse DNS cache (default: $SATCOM_PTR_CACHE, else
 #                    ${XDG_CACHE_HOME:-$HOME/.cache}/satcom-ptr.tsv)
+#   --allowed LIST   onboard addresses the router permits off the aircraft,
+#                    comma separated (default: $SATCOM_ALLOWED, else empty).
+#                    Everyone else is addressed off-plane but dropped at the
+#                    router, so their bytes never reach WAN2: with this set
+#                    they are reported separately instead of inflating the
+#                    total that is reconciled against the WAN2 counters.
 #   --skip-existing  leave analysis files that are already present
 #   --no-dns         skip reverse DNS; public IPs are reported as unknown
 #   -h, --help       this message
@@ -35,6 +41,18 @@
 set -uo pipefail
 
 SATCOM_ROOT="${SATCOM_ROOT:-$PWD}"
+# The onboard gateway. Traffic to and from it is onboard-to-onboard and so is
+# excluded from the off-plane flow totals, but it is reported on its own -- the
+# router is the one host whose LAN conversations say something about the link.
+GATEWAY="${SATCOM_GATEWAY:-192.168.84.1}"
+# Onboard hosts the router permits off the aircraft, comma separated. Traffic
+# from anyone else is addressed off-plane but dropped at the router, so it never
+# reaches WAN2 and costs nothing on satcom -- counting it inflates the total
+# that gets reconciled against the WAN2 counters and the carrier's bill. Left
+# empty the totals include everyone, which is the old behaviour: the policy
+# lives in the router, not here, and guessing it would be worse than not
+# applying it.
+ALLOWED="${SATCOM_ALLOWED:-}"
 PTR_CACHE="${SATCOM_PTR_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/satcom-ptr.tsv}"
 SKIP_EXISTING=0
 USE_DNS=1
@@ -75,6 +93,7 @@ while [ $# -gt 0 ]; do
     case "$1" in
         --root)          shift; SATCOM_ROOT="${1:-}"; [ -n "$SATCOM_ROOT" ] || die "--root needs a directory" ;;
         --cache)         shift; PTR_CACHE="${1:-}"; [ -n "$PTR_CACHE" ] || die "--cache needs a file" ;;
+        --allowed)       shift; ALLOWED="${1:-}"; [ -n "$ALLOWED" ] || die "--allowed needs a list of onboard addresses" ;;
         --skip-existing) SKIP_EXISTING=1 ;;
         --no-dns)        USE_DNS=0 ;;
         -h|--help)       usage; exit 0 ;;
@@ -171,14 +190,25 @@ host_of() {
 #└──────────┴─────┘└───────────────────────────────────────────────┘└─────┴─────────┘
 #                   └────── 14 bytes ──────────┘└─── ip.len ───┘
 #                  └───────────────── frame.len ──────────────────┘
+#
+# DNS also goes to $TMP/session-dns, as bucket<TAB>response<TAB>bytes<TAB>name,
+# out of this same pass rather than a second read of the pcap. Lookups sent to
+# an onboard resolver never left the aircraft, so they stay out of the flow
+# totals -- but each one the resolver cannot answer from cache costs a satcom
+# round trip that no onboard capture can see. Captures taken before the filter
+# kept host-to-resolver traffic yield nothing here and the section is omitted.
 ##
 
 extract_flows() {
-    : > "$TMP/session-span"
+    : > "$TMP/session-span"; : > "$TMP/session-dns"; : > "$TMP/session-syslog"
+    : > "$TMP/session-gw"
     "$MERGECAP" -w - "$@" 2>/dev/null | \
     "$TSHARK" -r - --disable-protocol drbd -T fields \
-        -e ip.src -e ip.dst -e frame.len -e frame.time_epoch 2>/dev/null | \
-    awk -F'\t' -v spanfile="$TMP/session-span" "$PRIV_FN"'
+        -e ip.src -e ip.dst -e frame.len -e frame.time_epoch \
+        -e dns.flags.response -e dns.qry.name -e syslog.msg -e icmp.type 2>/dev/null | \
+    awk -F'\t' -v spanfile="$TMP/session-span" -v dnsfile="$TMP/session-dns" \
+        -v syslogfile="$TMP/session-syslog" -v gwfile="$TMP/session-gw" \
+        -v gw="$GATEWAY" "$PRIV_FN"'
         function mcast(ip) { split(ip, o, "."); return (o[1] + 0 >= 224 && o[1] + 0 <= 239) }
         function bcast(ip) { return (ip == "255.255.255.255" || ip == "0.0.0.0") }
         {
@@ -193,11 +223,39 @@ extract_flows() {
             if (s == "" || d == "") next          # no IPv4 layer (ARP, IPv6)
             if (mcast(s) || mcast(d)) next        # never left the plane
             if (bcast(s) || bcast(d)) next
-            if (priv(s) && priv(d)) next          # onboard to onboard
+
+            # mDNS and LLMNR are multicast and already gone by here, so what is
+            # left is unicast resolver traffic. Recorded before the onboard-to-
+            # onboard filter drops it, since that is exactly the case of interest.
+            if ($5 != "") {
+                # tshark renders booleans as True/False from 4.x and as 1/0
+                # before that, so normalize to 1/0 here and let the summary
+                # read one shape whatever version the capture host runs.
+                split($5, r, ","); split($6, q, ",")
+                printf "%s\t%d\t%s\t%s\n",
+                       (priv(s) && priv(d) ? "lan" : "off"),
+                       (r[1] == "True" || r[1] == "1"), $3, q[1] > dnsfile
+            }
+
+            # The router logs to syslog here. tshark strips the priority,
+            # timestamp and tag, leaving the message body.
+            #
+            # Take the message only when the frame is not ICMP. When nothing is
+            # listening on 514 the destination answers with a port unreachable,
+            # and that error quotes the datagram that caused it, so tshark
+            # dissects the very same message a second time. Counting both
+            # doubles every message and invents a second sender.
+            if ($7 != "" && $8 == "") print $7 > syslogfile
+
+            if (priv(s) && priv(d)) {             # onboard to onboard
+                if (s == gw || d == gw) gwbytes[s "\t" d] += $3
+                next
+            }
             bytes[s "\t" d] += $3
         }
         END {
             for (f in bytes) printf "%d\t%s\n", bytes[f], f
+            for (f in gwbytes) printf "%d\t%s\n", gwbytes[f], f > gwfile
             if (last > 0) printf "%.6f\t%.6f\n", first, last > spanfile
         }'
 }
@@ -276,6 +334,126 @@ resolve_public() {
 }
 
 ##
+# The DNS section, from bucket<TAB>response<TAB>bytes<TAB>name records.
+#
+# Queries counted alone, not queries plus responses: a response echoes the
+# question it answers, so counting both double-counts every name.
+#
+# Unanswered queries are worth watching. A resolver timeout costs the lookup
+# again on retry, and with a search domain configured glibc then tries the name
+# with that domain appended, so one failure can become three lookups.
+##
+write_dns_summary() {
+    local dnsfile="$1"
+    [ -s "$dnsfile" ] || return 0
+
+    echo
+    echo "DNS"
+    awk -F'\t' '
+        $1 == "lan" { n[$2]++; b[$2] += $3 }
+        $1 == "off" { offn++; offb += $3 }
+        END {
+            printf "  %-24s %8d   avg %6.1f B\n", "queries to resolver",
+                   n["0"], (n["0"] ? b["0"] / n["0"] : 0)
+            printf "  %-24s %8d   avg %6.1f B\n", "responses",
+                   n["1"], (n["1"] ? b["1"] / n["1"] : 0)
+            miss = n["0"] - n["1"]
+            if (miss < 0) miss = 0
+            printf "  %-24s %8d   %s\n", "unanswered", miss,
+                   (n["0"] ? sprintf("(%.1f%%)", miss * 100 / n["0"]) : "")
+            printf "  %-24s %8.2f MB\n", "onboard DNS traffic",
+                   (b["0"] + b["1"]) / 1000000
+            if (offn)
+                printf "  %-24s %8d   %.2f MB\n", "DNS sent off-plane", offn, offb / 1000000
+        }' "$dnsfile"
+
+    echo
+    printf "  %10s  %s\n" "QUERIES" "NAME"
+    awk -F'\t' '$1 == "lan" && $2 == "0" && $4 != "" { c[$4]++ }
+                END { for (q in c) printf "  %10d  %s\n", c[q], q }' "$dnsfile" \
+        | sort -k1,1rn | head -20
+}
+
+##
+# Traffic from onboard hosts the router does not let out, as bytes<TAB>src<TAB>dst.
+#
+# It was addressed off-plane, so the capture sees it and the old totals counted
+# it, but the router drops it and it never reaches WAN2. Reporting it here
+# rather than silently discarding it keeps both facts available: how much a
+# blocked host is still trying to send, and the fact that none of it was paid
+# for. A host appearing here with a large figure is worth chasing at the host,
+# since it is retrying something that cannot succeed.
+##
+write_blocked_summary() {
+    local blockedfile="$1" namemap="$2"
+    [ -s "$blockedfile" ] || return 0
+
+    echo
+    echo "Blocked at the router (never reached WAN2, not in the total)"
+    printf "  %10s  %s\n" "MB" "ONBOARD HOST"
+    awk -F'\t' -v map="$namemap" "$PRIV_FN"'
+        FILENAME == map { if ($2 != "") name[$1] = $2; next }
+        { host = priv($2) ? $2 : $3; b[host] += $1 }
+        END { for (h in b)
+                  printf "%.2f\t%s (%s)\n", b[h] / 1000000, h,
+                         (h in name ? name[h] : "unknown") }' "$namemap" "$blockedfile" \
+        | sort -k1,1rn \
+        | awk -F'\t' '{ printf "  %10s  %s\n", $1, $2 }'
+}
+
+##
+# Traffic to and from the gateway, as bytes<TAB>src<TAB>dst.
+#
+# None of this crosses satcom -- it is onboard-to-onboard and is deliberately
+# absent from the Flows totals, which exist to be reconciled against the WAN2
+# port counters. It is reported separately because the router is where the link
+# is managed: its DNS service, its syslog, its DHCP and any ICMP it returns all
+# show up here, and a capture that keeps `host <gateway>` is the only view of
+# them there is. Folding these bytes into Flows would corrupt the one number
+# the summary exists to produce.
+##
+write_gateway_summary() {
+    local gwfile="$1"
+    [ -s "$gwfile" ] || return 0
+
+    echo
+    echo "Gateway ($GATEWAY, onboard only -- not counted in Flows)"
+    printf "  %10s  %-24s %s\n" "MB" "SOURCE" "DESTINATION"
+    awk -F'\t' '{ b[$2 "\t" $3] += $1 }
+        END { for (f in b) { split(f, p, "\t")
+                   printf "%.2f\t%s\t%s\n", b[f] / 1000000, p[1], p[2] } }' "$gwfile" \
+        | sort -k1,1rn \
+        | awk -F'\t' '{ printf "  %10s  %-24s %s\n", $1, $2, $3 }'
+    awk -F'\t' '{ t += $1 }
+        END { printf "  %10.2f  %s\n", t / 1000000, "total" }' "$gwfile"
+}
+
+##
+# The router's own syslog, present once the capture keeps traffic to and from
+# the gateway. Nothing here parses the message text: the format is the router's,
+# and a parser written against a guess would report confident nonsense. Only the
+# count and the onboard addresses mentioned are summarized -- the messages go to
+# a companion file to be read directly, and parsing can follow once the real
+# format is in hand.
+##
+write_syslog_summary() {
+    local sysfile="$1"
+    [ -s "$sysfile" ] || return 0
+
+    echo
+    echo "Router syslog"
+    printf "  %-24s %8d\n" "messages" "$(wc -l < "$sysfile" | tr -d ' ')"
+
+    local hosts
+    hosts="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' "$sysfile" 2>/dev/null \
+             | awk "$PRIV_FN"'priv($0)' | sort | uniq -c | sort -k1,1rn | head -20)"
+    [ -n "$hosts" ] || return 0
+    echo
+    printf "  %10s  %s\n" "MENTIONS" "ONBOARD ADDRESS"
+    echo "$hosts" | awk '{ printf "  %10d  %s\n", $1, $2 }'
+}
+
+##
 # Build the summary on stdout.
 #
 # Onboard names come from the capture filenames: a capture taken on a machine's
@@ -285,6 +463,7 @@ resolve_public() {
 ##
 write_summary() {
     local flows="$1" namemap="$2" scope="$3" captures="$4" collected="$5"
+    local dnsfile="${6:-}" sysfile="${7:-}" gwfile="${8:-}" blockedfile="${9:-}"
 
     echo "Satcom off-plane traffic summary: $scope"
     echo "Generated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
@@ -294,6 +473,11 @@ write_summary() {
     [ -n "$DNS_NOTE" ] && echo "Hostnames: $DNS_NOTE"
     echo
     awk -F'\t' '{ t += $1 } END { printf "Total off-plane: %.2f MB\n", t / 1000000 }' "$flows"
+    if [ -n "$blockedfile" ] && [ -s "$blockedfile" ]; then
+        awk -F'\t' '{ t += $1 }
+            END { printf "Blocked at router: %.2f MB (addressed off-plane, dropped before WAN2, not counted above)\n",
+                         t / 1000000 }' "$blockedfile"
+    fi
 
     echo
     echo "Onboard hosts"
@@ -312,6 +496,37 @@ write_summary() {
         }' "$namemap" "$flows" \
         | sort -k1,1rn \
         | awk -F'\t' '{ printf "  %-34s %10s %10s\n", $2, $3, $4 }'
+
+    # A host that sent off-plane traffic and received none did not have a quiet
+    # flight. TCP and QUIC both answer, so either nothing came back or the
+    # capture is not seeing its own inbound traffic. The two are told apart by
+    # the sender's own packets: a capture that is merely half-blind still shows
+    # the host's ACKs and data once a connection is up, so outbound consisting
+    # of nothing but bare SYNs means the connections never formed at all.
+    #
+    # The usual reason is the firewall: only some onboard hosts are permitted
+    # past the router, and a blocked host's SYNs are dropped there. Those bytes
+    # are counted above as off-plane because that is where they were addressed,
+    # but they never reached WAN2 and cost nothing on satcom. The total is
+    # overstated by exactly that much, which is why this says so here.
+    awk -F'\t' -v map="$namemap" "$PRIV_FN"'
+        FILENAME == map { if ($2 != "") name[$1] = $2; next }
+        {
+            if (priv($2)) { sent[$2] += $1; seen[$2] }
+            if (priv($3)) { recv[$3] += $1; seen[$3] }
+        }
+        END {
+            for (ip in seen)
+                if (sent[ip] > 0 && recv[ip] + 0 == 0)
+                    printf "  %s (%s) sent %.2f MB and received nothing. If its outbound is\n  all SYNs the router blocked it, so those MB never crossed satcom and the\n  total above is overstated by them; otherwise its capture is missing inbound.\n",
+                           ip, (ip in name ? name[ip] : "unknown"),
+                           sent[ip] / 1000000
+        }' "$namemap" "$flows"
+
+    [ -n "$blockedfile" ] && write_blocked_summary "$blockedfile" "$namemap"
+    [ -n "$gwfile" ] && write_gateway_summary "$gwfile"
+    [ -n "$dnsfile" ] && write_dns_summary "$dnsfile"
+    [ -n "$sysfile" ] && write_syslog_summary "$sysfile"
 
     echo
     echo "Flows"
@@ -344,8 +559,9 @@ write_summary() {
 ##
 process_scope() {
     local scope_dir="$1" scope_name="$2" only_stem="${3:-}"
-    local flows="$TMP/flows" namemap="$TMP/namemap"
-    : > "$flows"; : > "$namemap"; : > "$TMP/spans"
+    local flows="$TMP/flows" namemap="$TMP/namemap" dns="$TMP/dns" sys="$TMP/syslog"
+    local gw="$TMP/gw"
+    : > "$flows"; : > "$namemap"; : > "$TMP/spans"; : > "$dns"; : > "$sys"; : > "$gw"
 
     local stems
     stems="$(find "$scope_dir" -name '*.pcap*' -type f 2>/dev/null \
@@ -383,6 +599,9 @@ process_scope() {
             }' "$TMP/session" >> "$namemap"
 
         cat "$TMP/session" >> "$flows"
+        [ -s "$TMP/session-dns" ] && cat "$TMP/session-dns" >> "$dns"
+        [ -s "$TMP/session-syslog" ] && cat "$TMP/session-syslog" >> "$sys"
+        [ -s "$TMP/session-gw" ] && cat "$TMP/session-gw" >> "$gw"
 
         # Start from the filename, which is when tcpdump started. The end can
         # only be the last packet, a lower bound on when it stopped. A capture
@@ -413,8 +632,25 @@ process_scope() {
 
     [ "$count" -gt 0 ] || { echo "nothing to do in $scope_dir" >&2; return 1; }
 
-    aggregate "$flows" > "$TMP/agg"
+    # With an allowlist, the flows split in two before anything is totalled:
+    # what the router let out, and what it dropped. Both are real observations
+    # and both are reported -- only the first is satcom traffic.
+    : > "$TMP/blocked-agg"
+    if [ -n "$ALLOWED" ]; then
+        : > "$TMP/flows-allowed"; : > "$TMP/flows-blocked"
+        awk -F'\t' -v list="$ALLOWED" -v af="$TMP/flows-allowed" \
+            -v bf="$TMP/flows-blocked" "$PRIV_FN"'
+            BEGIN { n = split(list, a, /[, ]+/)
+                    for (i = 1; i <= n; i++) if (a[i] != "") ok[a[i]] = 1 }
+            { host = priv($2) ? $2 : $3
+              print > (host in ok ? af : bf) }' "$flows"
+        aggregate "$TMP/flows-allowed" > "$TMP/agg"
+        aggregate "$TMP/flows-blocked" > "$TMP/blocked-agg"
+    else
+        aggregate "$flows" > "$TMP/agg"
+    fi
     resolve_public "$TMP/agg" "$namemap"
+    [ -s "$TMP/blocked-agg" ] && resolve_public "$TMP/blocked-agg" "$namemap"
 
     # Collection window: earliest start to latest packet across the scope.
     # Captures within a flight are staggered, so this is the union of their
@@ -442,8 +678,16 @@ process_scope() {
         summary_file="$scope_dir/satcom-summary_${scope_name}.txt"
     fi
     write_summary "$TMP/agg" "$namemap" "$scope_name" \
-        "$count session(s) from ${names//,/, }" "$collected" > "$summary_file"
+        "$count session(s) from ${names//,/, }" "$collected" "$dns" "$sys" "$gw" \
+        "$TMP/blocked-agg" > "$summary_file"
     echo "  summary: $summary_file"
+
+    # The router's log is kept verbatim beside the summary, not folded into it.
+    if [ -s "$sys" ]; then
+        local syslog_file="${summary_file%/*}/satcom-syslog_${scope_name}.txt"
+        cp "$sys" "$syslog_file"
+        echo "  syslog:  $syslog_file"
+    fi
 }
 
 ##

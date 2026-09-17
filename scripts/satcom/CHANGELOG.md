@@ -5,9 +5,75 @@ Changelog for the satcom traffic scripts in `aircraft_projects/scripts/satcom/` 
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 Version numbers are coarse groupings of related work rather than tagged releases;
-each section also lists the date of the changes it covers. This is the first
-changelog for these scripts, so 2.0 covers the rewrite described below and the
-original single-capture `analyze-satcom.sh` is treated as 1.0.
+each section also lists the date of the changes it covers. This changelog starts
+at 2.0, which covers the rewrite described below; the original single-capture
+`analyze-satcom.sh` is treated as 1.0.
+
+## [2.1] - 2026-09-17
+
+2.0 answered how much each flight sent and where it went. Reading those answers
+against the router's own WAN2 counters showed the totals were being asked to
+mean something they did not: they counted every byte a machine *addressed* off
+the aircraft, including bytes the router dropped and never carried. This release
+separates what crossed satcom from what only tried to, and adds the sections
+needed to see why the router behaves as it does.
+
+### Added
+
+- `analyze-satcom.sh`: A **Blocked at the router** section, and `--allowed` (or
+  `$SATCOM_ALLOWED`) to name the onboard machines the router permits off the
+  aircraft. A blocked machine does not know it is blocked: it keeps addressing
+  traffic outward, its own capture records it, and until now the analysis counted
+  it as off-plane. On RF16 that was 6.60 MB of the 358.77 MB reported — applanix
+  6.22 and brix05 0.38 — so the real figure was 352.17 MB. The blocked traffic is
+  reported under its own heading rather than discarded, because how much a
+  blocked machine is still attempting is worth knowing. There is no default: the
+  policy lives in the router, and a guess baked in here would be wrong the first
+  time the rules change. Unset, the totals behave exactly as they did before.
+
+- `analyze-satcom.sh`: A warning for any onboard host that sent off-plane traffic
+  and received nothing back. TCP and QUIC both answer, so this is either a
+  blocked host or a capture that is not seeing its own inbound traffic, and the
+  two look identical in the totals. The note says how to tell them apart —
+  outbound consisting of nothing but bare SYNs means no connection ever formed,
+  because a half-blind capture would still show the host's own ACKs and data.
+
+- `analyze-satcom.sh`: A **Gateway** section, reporting traffic to and from the
+  router now that the capture filter keeps `host 192.168.84.1`. These bytes are
+  onboard-to-onboard and stay out of the flow totals, which exist to be
+  reconciled against the WAN2 counters; folding them in would corrupt the one
+  number the summary exists to produce. `$SATCOM_GATEWAY` moves the address.
+
+- `analyze-satcom.sh`: A **DNS** section and a **Router syslog** section, plus a
+  verbatim `satcom-syslog_<scope>.txt` beside the summary. Both come out of the
+  pass the script already makes over each capture rather than a second read. The
+  syslog text is deliberately not parsed: the format belongs to the router and a
+  parser written against a guess would report confident nonsense. On RF17 this
+  is how the router's conntrack table was found to be full and dropping packets.
+
+- `satcom-overview.sh`: **SENT MB** and **RECV MB** columns beside the total. The
+  two directions carry different weight — received bytes reached an onboard host,
+  so they crossed the air link, while sent bytes only prove the host put them on
+  the LAN. A peer with one column at zero is counted in a note under the table.
+  Across the nine flights so far this reads 500.12 MB sent against 4143.29 MB
+  received, and it is what makes a working conversation like Fastly (22.74 up,
+  70.30 down) obviously different from a one-sided one.
+
+### Fixed
+
+- `analyze-satcom.sh`: Syslog messages were counted twice. When nothing is
+  listening on port 514 the destination returns an ICMP port unreachable that
+  quotes the datagram, and tshark dissects the quoted copy as a second message.
+  RF17 reported 372 where 186 had been sent. Any syslog count in a summary
+  generated before this release is doubled.
+
+### Changed
+
+- `satcom-overview.sh`: The destination column is now headed `OFF-PLANE PEER`
+  rather than `OFF-PLANE DESTINATION`, since it names both ends of a
+  conversation; `COLLECTION (HR)` is shortened to `HOURS` to make room for the
+  new columns, and the total row reads `TOTAL (all peers)`. Anything parsing the
+  old headings needs updating.
 
 ## [2.0] - 2026-09-04
 

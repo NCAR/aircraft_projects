@@ -92,23 +92,32 @@ make_summary() {
 }
 
 ##
-# dest_cols <overview file> <destination label> -> "MB HOURS MB/HR", or "none"
+# dest_cols <overview file> <peer label> -> "TOTAL HOURS MB/HR", or "none"
+# dest_dirs <overview file> <peer label> -> "SENT RECV", or "none"
 #
-# A label can contain spaces, so the numbers are taken as the last three
-# fields and whatever precedes them is the label.
+# A label can contain spaces, so the five numbers are taken from the end and
+# whatever precedes them is the label. Written out rather than using an
+# interval expression, which not every awk honours.
 ##
-dest_cols() {
-    awk -v want="$2" '
+_dest_fields() {
+    awk -v want="$2" -v pick="$3" '
         /^  [^ ]/ {
-            if (NF < 4) next
+            if (NF < 6) next
+            sent = $(NF - 4); recv = $(NF - 3)
             mb = $(NF - 2); h = $(NF - 1); rate = $NF
             label = $0
-            sub(/[ \t]+[^ \t]+[ \t]+[^ \t]+[ \t]+[^ \t]+[ \t]*$/, "", label)
+            sub(/[ \t]+[^ \t]+[ \t]+[^ \t]+[ \t]+[^ \t]+[ \t]+[^ \t]+[ \t]+[^ \t]+[ \t]*$/, "", label)
             sub(/^[ \t]+/, "", label)
-            if (label == want) { print mb, h, rate; found = 1; exit }
+            if (label == want) {
+                print (pick == "dirs" ? sent " " recv : mb " " h " " rate)
+                found = 1; exit
+            }
         }
         END { if (!found) print "none" }' "$1"
 }
+
+dest_cols() { _dest_fields "$1" "$2" cols; }
+dest_dirs() { _dest_fields "$1" "$2" dirs; }
 
 hdr() { awk -F': +' -v k="$2" '$1 == k { print $2; exit }' "$1"; }
 
@@ -183,6 +192,26 @@ out=$("$script" --root "$root")
 ov="${root}/satcom-overview.txt"
 assert_eq "both directions land on one row" \
     "$(dest_cols "$ov" "dns.google")" "4.00 2.00 2.000"
+assert_eq "and are also reported apart, sent then received" \
+    "$(dest_dirs "$ov" "dns.google")" "1.00 3.00"
+
+echo "Test 4b: a peer with traffic in one direction only is called out"
+root="${tmp_dir}/t4b"
+make_summary "${root}/rf20_20260120/satcom-summary_rf20_20260120.txt" 2.00 <<'ROWS'
+6.00  192.168.84.7 brix01     151.101.1.1  unknown
+2.00  192.168.84.7 brix01     8.8.8.8      dns.google
+5.00  8.8.8.8      dns.google 192.168.84.7 brix01
+ROWS
+out=$("$script" --root "$root")
+ov="${root}/satcom-overview.txt"
+assert_eq "the one-way peer reports nothing received" \
+    "$(dest_dirs "$ov" "Fastly CDN")" "6.00 0.00"
+assert_eq "the two-way peer is unaffected" \
+    "$(dest_dirs "$ov" "dns.google")" "2.00 5.00"
+assert_contains "and the one-way peer is counted under the table" \
+    "$(cat "$ov")" "1 peer(s), 6.00 MB, show traffic in one direction only"
+assert_eq "the totals still add both directions" \
+    "$(dest_cols "$ov" "TOTAL (all peers)")" "13.00 2.00 6.500"
 
 echo "Test 5: hours count only the flights a destination appeared in"
 root="${tmp_dir}/t5"
@@ -212,7 +241,7 @@ assert_eq "the overall rate is off-plane over collection" \
     "$(hdr "$ov" Overall)" "1.600 MB/HR   (off-plane / collection)"
 # The total row's hours must be the collection window, not 2+5+3 from the column.
 assert_eq "the total row uses the collection window, not a column sum" \
-    "$(dest_cols "$ov" "TOTAL (all destinations)")" "8.00 5.00 1.600"
+    "$(dest_cols "$ov" "TOTAL (all peers)")" "8.00 5.00 1.600"
 
 echo "Test 7: --min hides small rows but never loses them from the total"
 root="${tmp_dir}/t7"
@@ -227,7 +256,7 @@ assert_eq "the small row is hidden by default" \
 assert_contains "and the omission is reported" "$(cat "$ov")" \
     "1 of 2 destinations shown; 1 below 0.1 MB omitted, 0.05 MB between them."
 assert_eq "the total still includes it" \
-    "$(dest_cols "$ov" "TOTAL (all destinations)")" "5.05 2.00 2.525"
+    "$(dest_cols "$ov" "TOTAL (all peers)")" "5.05 2.00 2.525"
 out=$("$script" --root "$root" --min 0)
 assert_eq "--min 0 shows it" "$(dest_cols "$ov" tiny.example)" "0.05 2.00 0.025"
 assert_not_contains "and reports no omissions" "$(cat "$ov")" "omitted"
@@ -367,7 +396,7 @@ make_summary "${root}/rf16_20260116/satcom-summary_rf16_20260116.txt" 2.00 <<'RO
 ROWS
 out=$("$script" --root "$root")
 ov="${root}/satcom-overview.txt"
-assert_contains "the hours column says HR" "$(cat "$ov")" "COLLECTION (HR)"
+assert_contains "the hours column is labelled" "$(cat "$ov")" "HOURS"
 assert_contains "the rate column says MB/HR" "$(cat "$ov")" "MB/HR"
 assert_not_contains "no stray (H) unit is left" "$(cat "$ov")" "(H)"
 mkdir -p "${tmp_dir}/empty-root"
@@ -377,7 +406,7 @@ assert_contains "a missing root is a different error" \
     "$("$script" --root "${tmp_dir}/no-such-root" 2>&1)" "capture root not found"
 assert_contains "an unknown target is an error" \
     "$("$script" --root "$root" nosuchflight 2>&1)" "no such flight or summary file"
-assert_contains "--help works" "$("$script" --help)" "OFF-PLANE DESTINATION"
+assert_contains "--help works" "$("$script" --help)" "OFF-PLANE PEER"
 
 echo
 echo "Passed: $PASS  Failed: $FAIL"
