@@ -1,0 +1,27 @@
+#!/bin/bash
+
+/usr/bin/Xvfb -screen 1 1280x1024x16 -pn -ac -nolisten tcp :7 &
+xvpid=$!
+trap "kill $xvpid; exit 1" SIGINT SIGTERM
+sleep 2
+
+DISPLAY=:7.1
+
+source ./set_env
+source ${PROJ_DIR}/scripts/production_fns.sh
+initialize_processing
+
+nimbus -b setup_rf01
+#nimbus -b setup_ff02h
+#reorder_all $PROJ
+
+
+if [ `whoami` == nimbus ]; then
+#  run_kalmanFilter
+  true
+fi
+
+cleanup_processing
+
+kill $xvpid
+exit 0
