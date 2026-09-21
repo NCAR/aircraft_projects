@@ -29,10 +29,16 @@ do
       continue
     fi
     asc2cdf -i "$file" "chem_GOTHAAM${rf}.nc"
+
+    # The variables called CO2_PIC and CH4_PIC need to be renamed to 
+    # corrected (CO2C_PIC, CH4C_PIC)
+    ncrename -v CO2_PIC,CO2C_PIC "chem_GOTHAAM${rf}.nc"
+    ncrename -v CH4_PIC,CH4C_PIC "chem_GOTHAAM${rf}.nc"
   else
     echo "WARNING: could not parse date from $file -- skipping" >&2
   fi
 done
+
 
 for filepath in ${basedir}/LRT/${nc_version}/GOTHAAMrf??.nc
 do
