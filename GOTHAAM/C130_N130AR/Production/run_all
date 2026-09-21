@@ -18,20 +18,27 @@ source ${PROJ_DIR}/scripts/production_fns.sh
 initialize_processing
 
 ./run_nimbus
+# reorder_all changes the current working dir. Save it so can
+# come back
+CWD=$PWD
 reorder_all $PROJ
+cd $CWD
 ./run_proc2d
 
 AddHtTerrain $PROJ
 
 
 if [ `whoami` == nimbus ]; then
-#  run_kalmanFilter
+
+./run_kalmanFilter $PROJ
+# Kalman Filtering changes the current working dir. Come back
+cd $CWD
 
 # Merge cloud flags from Sarah Woods
-#./merge_cloud_flags.py -o LRT/V1.1
+./merge_cloud_flags.py -o /scr/raf/local_productiondata
 
 # Merge Teresa's update chemistry data
-#./merge_chem.sh
+./merge_chem.sh
 
   true
 fi
