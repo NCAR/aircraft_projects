@@ -44,7 +44,7 @@ Overrides, for a machine that does not fit the above:
 | `WAIT_SECS=<n>` | seconds to wait at boot for a default route (default 60) |
 
 Captures go to `/var/log/satcom-capture/`, up to ten 100 MB files, with only the
-first 96 bytes of each packet recorded and traffic that is not leaving the
+first 200 bytes of each packet recorded and traffic that is not leaving the
 aircraft filtered out. The script creates that directory if it is missing and
 chowns it to `tcpdump:tcpdump` — **`tcpdump` drops privileges to the `tcpdump`
 user, so a root-owned directory there will not work.** If the chown could not be

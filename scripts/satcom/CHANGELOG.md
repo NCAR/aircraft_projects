@@ -11,6 +11,11 @@ at 2.0, which covers the rewrite described below; the original single-capture
 
 ## [2.2] - unreleased
 
+### Added
+- `satcom_capture.ps1`: Add 192.168.84.1 gateway exception and raise snaplen
+  from 96 to 200. Now matches logic in `satcom_capture.sh` so both Windows
+  and Linux capture the same thing.
+
 ### Changed
 
 - `analyze-satcom.sh`, `satcom-overview.sh`: The output files now state that
