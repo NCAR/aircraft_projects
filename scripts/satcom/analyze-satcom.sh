@@ -470,6 +470,9 @@ write_summary() {
     echo "Captures:  $captures"
     echo "Collected: $collected"
     echo "Excluded:  multicast (224.0.0.0/4), broadcast, and onboard-only traffic"
+    echo "Protocols: all of them. Traffic is selected by address, never by protocol,"
+    echo "           so TCP, UDP (DNS, NTP, QUIC, DTLS), ICMP and the rest are all"
+    echo "           counted here. Nothing is filtered by port or protocol anywhere."
     [ -n "$DNS_NOTE" ] && echo "Hostnames: $DNS_NOTE"
     echo
     awk -F'\t' '{ t += $1 } END { printf "Total off-plane: %.2f MB\n", t / 1000000 }' "$flows"

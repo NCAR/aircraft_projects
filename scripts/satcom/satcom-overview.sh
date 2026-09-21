@@ -326,6 +326,10 @@ fi
         printf "  one-way traffic or a capture that is only seeing one side of it.\n"
     fi
     echo
+    echo "  Every protocol is included. Traffic is selected by address, never by"
+    echo "  protocol, so TCP, UDP (DNS, NTP, QUIC, DTLS), ICMP and the rest all"
+    echo "  count toward these figures. Nothing is filtered by port or protocol."
+    echo
     echo "  SENT is onboard to peer, RECV is peer to onboard. RECV bytes are proof"
     echo "  of what arrived; SENT bytes left the host, and reached the peer only if"
     echo "  something came back. MB comes from the per-flow figures in the summary"

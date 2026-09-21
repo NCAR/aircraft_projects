@@ -9,6 +9,17 @@ each section also lists the date of the changes it covers. This changelog starts
 at 2.0, which covers the rewrite described below; the original single-capture
 `analyze-satcom.sh` is treated as 1.0.
 
+## [2.2] - unreleased
+
+### Changed
+
+- `analyze-satcom.sh`, `satcom-overview.sh`: The output files now state that
+  every protocol is included. Traffic is selected by address and never by
+  protocol or port, so TCP, UDP — DNS, NTP, QUIC, DTLS — ICMP and everything
+  else are counted alike. This was already true and had never been written
+  down, which left a reader with no way to tell whether a small UDP figure
+  meant little UDP traffic or a filter that had quietly excluded it.
+
 ## [2.1] - 2026-09-17
 
 2.0 answered how much each flight sent and where it went. Reading those answers
