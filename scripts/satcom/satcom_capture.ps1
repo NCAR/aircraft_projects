@@ -19,7 +19,7 @@
         onboard network. A capture of the hangar link looks perfectly valid
         afterwards and answers nothing.
       - Waits for a default route at startup rather than dying on the race.
-      - Same capture filter, and the same 96-byte snaplen.
+      - Same capture filter, and the same 200-byte snaplen.
       - Stamps file names in UTC, so they line up with the Linux captures and
         with what the analysis expects.
 
@@ -59,13 +59,18 @@ $LogFile = Join-Path $BaseDir 'satcom_capture.log'
 
 # Same filter as the Linux script, and it must stay that way. Excludes traffic
 # that is not leaving the aircraft:
-#   - onboard to onboard on 192.168.84.0/24
+#   - onboard to onboard on 192.168.84.0/24, except to or from the gateway
+#     192.168.84.1. That traffic never crosses satcom and the analysis keeps it
+#     out of the off-plane totals, but it is captured because the router is the
+#     only place the state of the link itself is visible: its syslog, its DNS
+#     service and the ICMP it returns appear in that conversation and nowhere
+#     else.
 #   - onboard to onboard on 192.168.1.0/24
 #   - all multicast, 224.0.0.0/4, in either direction (the NIDAS data streams,
 #     mDNS, IGMP, SSDP)
 # Broadcast is not excluded here, so it is still in the captures; the analysis
 # drops it, along with anything else local that gets through.
-$CaptureFilter = 'not (src net 192.168.84.0/24 and dst net 192.168.84.0/24) and not (src net 192.168.1.0/24 and dst net 192.168.1.0/24) and not (src net 224.0.0.0/4 or dst net 224.0.0.0/4)'
+$CaptureFilter = 'not (src net 192.168.84.0/24 and dst net 192.168.84.0/24 and not host 192.168.84.1) and not (src net 192.168.1.0/24 and dst net 192.168.1.0/24) and not (src net 224.0.0.0/4 or dst net 224.0.0.0/4)'
 
 New-Item -ItemType Directory -Force -Path $BaseDir, $LogDir | Out-Null
 
@@ -150,7 +155,7 @@ while ($true) {
     $file  = Join-Path $LogDir "satcom_$stamp.pcap"
     $began = Get-Date
 
-    & $TsharkPath -i $device -w $file -a "duration:$FileSeconds" -s 96 -f $CaptureFilter 2>&1 |
+    & $TsharkPath -i $device -w $file -a "duration:$FileSeconds" -s 200 -f $CaptureFilter 2>&1 |
         ForEach-Object { Write-Log "tshark: $_" }
 
     $ranFor = ((Get-Date) - $began).TotalSeconds

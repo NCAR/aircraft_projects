@@ -44,7 +44,7 @@ Overrides, for a machine that does not fit the above:
 | `WAIT_SECS=<n>` | seconds to wait at boot for a default route (default 60) |
 
 Captures go to `/var/log/satcom-capture/`, up to ten 100 MB files, with only the
-first 96 bytes of each packet recorded and traffic that is not leaving the
+first 200 bytes of each packet recorded and traffic that is not leaving the
 aircraft filtered out. The script creates that directory if it is missing and
 chowns it to `tcpdump:tcpdump` — **`tcpdump` drops privileges to the `tcpdump`
 user, so a root-owned directory there will not work.** If the chown could not be
@@ -103,11 +103,62 @@ directory holding them:
 
 ```sh
 cd <root>
+export SATCOM_ALLOWED=192.168.84.2,192.168.84.7   # see "Pass --allowed" below
 ./analyze-satcom.sh                       # every rf* flight
 ./analyze-satcom.sh rf14_20260901         # one flight
 ./analyze-satcom.sh rf14_20260901/applanix
 ./analyze-satcom.sh <path>/traffic20260901_180236_brix01.pcap0
 ./analyze-satcom.sh 20260901_180236       # one capture, by date stamp
+```
+
+### Pass `--allowed`, or the totals come out too high
+
+The router only lets some onboard machines off the aircraft — at the time of
+writing `192.168.84.2` (acserver) and `192.168.84.7` (brix01). Everything else
+is blocked by firewall rule 3.
+
+A blocked machine does not know that. It keeps addressing traffic to the
+internet, the capture on that machine records it, and the analysis counts it as
+off-plane — but the router drops it and **none of it ever reaches the satellite
+link**. On RF16 that was 6.60 MB of the 358.77 MB reported, from applanix and
+brix05, both of which sent steadily and received nothing back.
+
+So tell the analysis who is allowed out:
+
+```sh
+./analyze-satcom.sh --allowed 192.168.84.2,192.168.84.7 rf16_20260907
+# or set SATCOM_ALLOWED once, as above
+```
+
+The total then counts only what crossed satcom, and the rest is reported under
+its own heading rather than thrown away:
+
+```
+Total off-plane: 352.17 MB
+Blocked at router: 6.60 MB (addressed off-plane, dropped before WAN2, not counted above)
+
+Blocked at the router (never reached WAN2, not in the total)
+          MB  ONBOARD HOST
+        6.22  192.168.84.183 (applanix)
+        0.38  192.168.84.164 (brix05)
+```
+
+This matters whenever a total is compared against anything: the WAN2 port
+counters, the carrier's invoice, or a previous flight. Without it the figure is
+inflated by however much the blocked machines happened to attempt.
+
+There is no default, on purpose. The policy lives in the router, and a guess
+baked in here would be wrong the first time the rules change. Leave it unset
+and the totals behave exactly as they always did.
+
+A large figure under that heading is worth chasing at the machine — it is
+retrying something that cannot succeed. To tell a blocked host from one whose
+capture is simply missing its inbound traffic, look at the TCP flags: nothing
+but bare SYNs means no connection ever formed.
+
+```sh
+tshark -r <pcap> -Y "ip.src==<host> && tcp" -T fields -e tcp.flags \
+    | sort | uniq -c
 ```
 
 `rf*` is deliberate — maintenance days are skipped unless you name them.
@@ -119,10 +170,12 @@ It writes two kinds of file, next to the captures:
   for): totals, how long the flight was collected for, each onboard machine with
   what it sent and received, and every flow with hostnames alongside addresses.
 
-Options: `--root DIR` if you would rather not `cd`, `--skip-existing` to leave
-analysis files already present, `--no-dns` to skip hostname lookups,
-`--cache FILE` to move the hostname cache, `--help`. `$SATCOM_ROOT` and
-`$SATCOM_PTR_CACHE` set the first and fourth.
+Options: `--root DIR` if you would rather not `cd`, `--allowed LIST` for the
+machines the router lets out (see above), `--skip-existing` to leave analysis
+files already present, `--no-dns` to skip hostname lookups, `--cache FILE` to
+move the hostname cache, `--help`. `$SATCOM_ROOT`, `$SATCOM_ALLOWED` and
+`$SATCOM_PTR_CACHE` set the first, second and fifth. `$SATCOM_GATEWAY` moves
+the gateway address off its `192.168.84.1` default.
 
 Then, for the cross-flight picture:
 
@@ -199,3 +252,11 @@ BSD and GNU command-line tools would show up.
 - **Overview megabytes are approximate.** They come from the per-flow figures in
   the summary files, rounded to 0.01 MB each. The flight summaries hold the exact
   totals.
+
+## Other useful things to know
+To check for syslog on a non-standard port, look for what the dissector didn't claim:
+```
+tshark -r <pcap> -Y "ip.addr==192.168.84.1 && udp && !syslog && !bootp && !dns" \
+       -T fields -e udp.dstport | sort | uniq -c | sort -rn
+
+```

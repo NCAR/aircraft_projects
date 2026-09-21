@@ -17,7 +17,12 @@
 #
 # tcpdump options:
 #  - Excludes traffic that is not leaving the aircraft:
-#      - onboard to onboard on 192.168.84.0/24
+#      - onboard to onboard on 192.168.84.0/24, except to or from the gateway
+#        192.168.84.1. That traffic never crosses satcom and the analysis keeps
+#        it out of the off-plane totals, but it is captured because the router
+#        is the only place the state of the link itself is visible: its syslog,
+#        its DNS service and the ICMP it returns appear in that conversation
+#        and nowhere else.
 #      - onboard to onboard on 192.168.1.0/24
 #      - all multicast, 224.0.0.0/4, in either direction (the NIDAS data
 #        streams, mDNS, IGMP, SSDP)
@@ -25,7 +30,7 @@
 #    analysis drops it, along with anything else local that gets through.
 #  -i Interface
 #  -C, -W  Creates up to 10 100MB log files. Rotates logs
-#  -s Only snapshots 96 bytes of data, rather than the default 262144,
+#  -s Only snapshots 200 bytes of data, rather than the default 262144,
 #     to decrease logsize.
 #
 # Overrides, for testing on a machine that does not fit the above:
