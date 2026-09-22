@@ -2,7 +2,15 @@
 
 source ./set_env
 
-cd /home/local/aircraft_QAtools_notebook
+# This script only works if aircraft_QAtools_notebook
+# is checked out. On the ground station, that is done
+# in /home/local. Update the line below as needed.
+DIR=/home/local/aircraft_QAtools_notebook
+cd "$DIR" 2>/dev/null || {
+    echo "Error: cannot cd to $DIR. Update script to point to code" >&2
+    exit 1
+}
+
 for file in ${DAT}/${PROJ}?f??.nc
 do
   base=${file%.nc}
