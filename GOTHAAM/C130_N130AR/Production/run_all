@@ -30,9 +30,7 @@ AddHtTerrain $PROJ
 
 if [ `whoami` == nimbus ]; then
 
-./run_kalmanFilter $PROJ
-# Kalman Filtering changes the current working dir. Come back
-cd $CWD
+run_kalmanFilter
 
 # Merge cloud flags from Sarah Woods
 ./merge_cloud_flags.py -o /scr/raf/local_productiondata
