@@ -53,6 +53,10 @@ GATEWAY="${SATCOM_GATEWAY:-192.168.84.1}"
 # lives in the router, not here, and guessing it would be worse than not
 # applying it.
 ALLOWED="${SATCOM_ALLOWED:-}"
+# Set per scope, and read by the hourly section to mark the partial hours at
+# each end of the capture window.
+SPAN_FIRST=0
+SPAN_LAST=0
 PTR_CACHE="${SATCOM_PTR_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/satcom-ptr.tsv}"
 SKIP_EXISTING=0
 USE_DNS=1
@@ -201,13 +205,14 @@ host_of() {
 
 extract_flows() {
     : > "$TMP/session-span"; : > "$TMP/session-dns"; : > "$TMP/session-syslog"
-    : > "$TMP/session-gw"
+    : > "$TMP/session-gw"; : > "$TMP/session-hourly"
     "$MERGECAP" -w - "$@" 2>/dev/null | \
     "$TSHARK" -r - --disable-protocol drbd -T fields \
         -e ip.src -e ip.dst -e frame.len -e frame.time_epoch \
         -e dns.flags.response -e dns.qry.name -e syslog.msg -e icmp.type 2>/dev/null | \
     awk -F'\t' -v spanfile="$TMP/session-span" -v dnsfile="$TMP/session-dns" \
         -v syslogfile="$TMP/session-syslog" -v gwfile="$TMP/session-gw" \
+        -v hourlyfile="$TMP/session-hourly" \
         -v gw="$GATEWAY" "$PRIV_FN"'
         function mcast(ip) { split(ip, o, "."); return (o[1] + 0 >= 224 && o[1] + 0 <= 239) }
         function bcast(ip) { return (ip == "255.255.255.255" || ip == "0.0.0.0") }
@@ -252,10 +257,23 @@ extract_flows() {
                 next
             }
             bytes[s "\t" d] += $3
+
+            # The same bytes again, bucketed into the UTC hour they crossed in,
+            # so a flight can be laid beside the carrier'"'"'s hourly figures and
+            # read for where the two start to disagree rather than only by how
+            # much. The onboard host is kept in the key so the allowlist can be
+            # applied later: comparing a carrier bill against a total that
+            # includes traffic the router dropped would compare nothing.
+            if (ts > 0) {
+                hour = int(ts / 3600) * 3600
+                if (priv(s)) hourly[hour "\t" s "\ts"] += $3
+                else         hourly[hour "\t" d "\tr"] += $3
+            }
         }
         END {
             for (f in bytes) printf "%d\t%s\n", bytes[f], f
             for (f in gwbytes) printf "%d\t%s\n", gwbytes[f], f > gwfile
+            for (f in hourly) printf "%s\t%d\n", f, hourly[f] > hourlyfile
             if (last > 0) printf "%.6f\t%.6f\n", first, last > spanfile
         }'
 }
@@ -375,6 +393,76 @@ write_dns_summary() {
 }
 
 ##
+# Off-plane traffic by UTC hour, from hour<TAB>host<TAB>dir<TAB>bytes records.
+#
+# The carrier reports hourly, and a whole-flight total can only say whether the
+# two figures differ. By hour they can be read for *when* they start to differ,
+# which is a far stronger test: a fault that begins partway through a flight --
+# the router'"'"'s conntrack table filling, say -- shows as two columns that track
+# each other and then separate at a particular hour. A discrepancy present from
+# the first hour is a different fault entirely.
+#
+# Honours the allowlist, for the same reason the total does. Hours are UTC and
+# aligned to the wall clock; whether the carrier aligns theirs the same way is
+# worth confirming before reading much into a one-hour offset.
+#
+# The first and last hours are marked when the capture window starts or ends
+# inside them. The mark says only that: the capture covered part of the clock
+# hour. It does not mean the figure is low.
+#
+# The carrier bills what crossed the link, and nothing else is on the link, so
+# their hour covers the same traffic ours does however much of the clock hour
+# that took. A marked hour is therefore still directly comparable. What the
+# mark is really for is the one case where the two genuinely differ: the
+# satellite terminal comes up with aircraft power, while a capture cannot start
+# until its machine has booted, so the first hour can miss traffic that was
+# already flowing. The mark says "check when this capture started" -- not
+# "discount this row".
+##
+write_hourly_summary() {
+    local hourlyfile="$1"
+    [ -s "$hourlyfile" ] || return 0
+
+    echo
+    echo "By hour (UTC)"
+    printf "  %-17s %9s %9s %10s %12s\n" \
+        "HOUR" "SENT MB" "RECV MB" "TOTAL MB" "CUMULATIVE"
+    # awk sorts and totals; the shell formats the timestamps, because strftime
+    # is a gawk extension and the awk on a Mac does not have it.
+    awk -F'\t' -v list="$ALLOWED" '
+        BEGIN {
+            n = split(list, a, /[, ]+/)
+            for (i = 1; i <= n; i++) if (a[i] != "") ok[a[i]] = 1
+            any = (list != "")
+        }
+        { if (any && !($2 in ok)) next
+          if ($3 == "s") sent[$1] += $4; else recv[$1] += $4
+          seen[$1] = 1 }
+        END { for (h in seen)
+                  printf "%d\t%d\t%d\n", h, sent[h] + 0, recv[h] + 0 }' \
+        "$hourlyfile" \
+        | sort -k1,1n \
+        | awk -F'\t' '{ cum += $2 + $3
+              printf "%d\t%.2f\t%.2f\t%.2f\t%.2f\n", $1,
+                     $2 / 1000000, $3 / 1000000,
+                     ($2 + $3) / 1000000, cum / 1000000 }' \
+        | while IFS=$'\t' read -r hour sent recv total cum; do
+              mark=""
+              if [ "${SPAN_FIRST:-0}" != "0" ] && \
+                 awk -v a="$SPAN_FIRST" -v h="$hour" 'BEGIN { exit !(a > h) }'; then
+                  mark="   (partial)"
+              elif [ "${SPAN_LAST:-0}" != "0" ] && \
+                   awk -v b="$SPAN_LAST" -v h="$hour" \
+                       'BEGIN { exit !(b < h + 3600) }'; then
+                  mark="   (partial)"
+              fi
+              printf "  %-17s %9s %9s %10s %12s%s\n" \
+                  "$(fmt_epoch "$hour" | cut -c1-16)" \
+                  "$sent" "$recv" "$total" "$cum" "$mark"
+          done
+}
+
+##
 # Traffic from onboard hosts the router does not let out, as bytes<TAB>src<TAB>dst.
 #
 # It was addressed off-plane, so the capture sees it and the old totals counted
@@ -464,6 +552,7 @@ write_syslog_summary() {
 write_summary() {
     local flows="$1" namemap="$2" scope="$3" captures="$4" collected="$5"
     local dnsfile="${6:-}" sysfile="${7:-}" gwfile="${8:-}" blockedfile="${9:-}"
+    local hourlyfile="${10:-}"
 
     echo "Satcom off-plane traffic summary: $scope"
     echo "Generated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
@@ -528,6 +617,7 @@ write_summary() {
 
     [ -n "$blockedfile" ] && write_blocked_summary "$blockedfile" "$namemap"
     [ -n "$gwfile" ] && write_gateway_summary "$gwfile"
+    [ -n "$hourlyfile" ] && write_hourly_summary "$hourlyfile"
     [ -n "$dnsfile" ] && write_dns_summary "$dnsfile"
     [ -n "$sysfile" ] && write_syslog_summary "$sysfile"
 
@@ -563,8 +653,12 @@ write_summary() {
 process_scope() {
     local scope_dir="$1" scope_name="$2" only_stem="${3:-}"
     local flows="$TMP/flows" namemap="$TMP/namemap" dns="$TMP/dns" sys="$TMP/syslog"
-    local gw="$TMP/gw"
-    : > "$flows"; : > "$namemap"; : > "$TMP/spans"; : > "$dns"; : > "$sys"; : > "$gw"
+    local gw="$TMP/gw" hourly="$TMP/hourly"
+    # Every one of these accumulates across the captures in a scope, so every
+    # one has to be emptied when a new scope starts -- a run over several
+    # flights reuses the same $TMP.
+    : > "$flows"; : > "$namemap"; : > "$TMP/spans"; : > "$dns"; : > "$sys"
+    : > "$gw"; : > "$hourly"
 
     local stems
     stems="$(find "$scope_dir" -name '*.pcap*' -type f 2>/dev/null \
@@ -605,6 +699,7 @@ process_scope() {
         [ -s "$TMP/session-dns" ] && cat "$TMP/session-dns" >> "$dns"
         [ -s "$TMP/session-syslog" ] && cat "$TMP/session-syslog" >> "$sys"
         [ -s "$TMP/session-gw" ] && cat "$TMP/session-gw" >> "$gw"
+        [ -s "$TMP/session-hourly" ] && cat "$TMP/session-hourly" >> "$hourly"
 
         # Start from the filename, which is when tcpdump started. The end can
         # only be the last packet, a lower bound on when it stopped. A capture
@@ -664,6 +759,8 @@ process_scope() {
         local span_first span_last span_hours
         span_first="$(awk -F'\t' 'NR == 1 || $1 < m { m = $1 } END { printf "%.6f", m }' "$TMP/spans")"
         span_last="$(awk -F'\t' '$2 > m { m = $2 } END { printf "%.6f", m + 0 }' "$TMP/spans")"
+        # The hourly section needs these to mark the partial hours at each end.
+        SPAN_FIRST="$span_first"; SPAN_LAST="$span_last"
         if awk -v l="$span_last" 'BEGIN { exit !(l > 0) }'; then
             span_hours="$(awk -v a="$span_first" -v b="$span_last" \
                 'BEGIN { printf "%.2f", (b - a) / 3600 }')"
@@ -682,7 +779,7 @@ process_scope() {
     fi
     write_summary "$TMP/agg" "$namemap" "$scope_name" \
         "$count session(s) from ${names//,/, }" "$collected" "$dns" "$sys" "$gw" \
-        "$TMP/blocked-agg" > "$summary_file"
+        "$TMP/blocked-agg" "$hourly" > "$summary_file"
     echo "  summary: $summary_file"
 
     # The router's log is kept verbatim beside the summary, not folded into it.

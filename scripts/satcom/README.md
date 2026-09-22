@@ -168,7 +168,45 @@ It writes two kinds of file, next to the captures:
 - `satcom-analysis_<stamp>[_<host>].txt` — one per capture: `src => dst: N MB`.
 - `satcom-summary_<scope>.txt` — one per flight (or whatever scope was asked
   for): totals, how long the flight was collected for, each onboard machine with
-  what it sent and received, and every flow with hostnames alongside addresses.
+  what it sent and received, an hour-by-hour breakdown, and every flow with
+  hostnames alongside addresses.
+
+### Comparing a flight against the carrier's hourly figures
+
+Satcom Direct has the option to report by the hour, so the summary does too:
+
+```
+By hour (UTC)
+  HOUR                SENT MB   RECV MB   TOTAL MB   CUMULATIVE
+  2026-09-08 20:00       2.98     15.62      18.60        18.60   (partial)
+  2026-09-08 21:00       4.38     53.67      58.05        76.65
+  2026-09-08 22:00       6.50     55.44      61.94       138.59
+  ...
+```
+
+A whole-flight total can only tell you *whether* your figure and theirs differ.
+By hour you can see *when* they start to, which says far more about why. A fault
+that begins partway through a flight shows as two columns that track each other
+and then separate at a particular hour; a discrepancy present from the first
+hour is something else entirely.
+
+Two things to check before reading much into a difference:
+
+- **Hour alignment.** These are UTC hours on wall-clock boundaries. If the
+  carrier aligns theirs differently the columns will be offset by up to an hour,
+  and the point of divergence will look wrong.
+- **Partial hours.** The first and last hours are marked when the capture window
+  starts or ends inside them. The mark does **not** mean the figure is low.
+  Nothing else is on the link, so the carrier's hour covers the same traffic
+  ours does, however much of the clock hour that took — a marked hour is still
+  directly comparable. The mark is there for the one case where they genuinely
+  differ: the satellite terminal comes up with aircraft power, but a capture
+  cannot start until its machine has booted, so the first hour can miss traffic
+  that was already flowing. Read it as "check when this capture started", not
+  "discount this row".
+
+Pass `--allowed` for this, as for any comparison — the hourly figures honour it,
+and the cumulative column ends exactly at the off-plane total.
 
 Options: `--root DIR` if you would rather not `cd`, `--allowed LIST` for the
 machines the router lets out (see above), `--skip-existing` to leave analysis

@@ -162,6 +162,25 @@ gateway_mb() {
         END { if (!found) print "none" }' "$1"
 }
 
+# hour_row <summary> "<YYYY-MM-DD HH:00>" -> "SENT RECV TOTAL CUM", or "none".
+hour_row() {
+    awk -v want="$2" '
+        /^By hour/ { h = 1; next }
+        /^$/       { if (h) h = 0 }
+        h && $1 " " $2 == want { print $3, $4, $5, $6; found = 1; exit }
+        END { if (!found) print "none" }' "$1"
+}
+
+# hour_mark <summary> "<YYYY-MM-DD HH:00>" -> "partial", "full", or "none".
+hour_mark() {
+    awk -v want="$2" '
+        /^By hour/ { h = 1; next }
+        /^$/       { if (h) h = 0 }
+        h && $1 " " $2 == want {
+            print ($0 ~ /partial/ ? "partial" : "full"); found = 1; exit }
+        END { if (!found) print "none" }' "$1"
+}
+
 # host_row <summary> <ip> - the Onboard hosts row for one address, or "none".
 host_row() {
     awk -v ip="$2" '
@@ -859,6 +878,83 @@ assert_eq "every onboard host counts toward the total" \
     "$(total_mb "$sum")" "3.50"
 assert_not_contains "and nothing is reported as blocked" \
     "$(cat "$sum")" "Blocked at router"
+
+echo "Test 22: off-plane traffic is bucketed into the UTC hour it crossed in"
+# 1767227400 is 2026-01-01 00:30:00 UTC, 1767229200 is 01:00:00, and
+# 1767233400 is 02:10:00 -- chosen so the buckets are unambiguous.
+root="${tmp_dir}/t22"
+make_capture "${root}/rf28_20260128/traffic20260128_000000_acserver.pcap0" <<'ROWS'
+192.168.84.2      128.117.43.124    1000000    1767227400
+128.117.43.124    192.168.84.2      3000000    1767227400
+192.168.84.2      128.117.43.124    2000000    1767229200
+128.117.43.124    192.168.84.2      4000000    1767233400
+ROWS
+run_stubbed --root "$root" rf28_20260128 >/dev/null
+sum="${root}/rf28_20260128/satcom-summary_rf28_20260128.txt"
+
+assert_eq "the first hour splits sent from received" \
+    "$(hour_row "$sum" "2026-01-01 00:00")" "1.00 3.00 4.00 4.00"
+assert_eq "the second carries only what moved in it, and accumulates" \
+    "$(hour_row "$sum" "2026-01-01 01:00")" "2.00 0.00 2.00 6.00"
+assert_eq "and the third likewise" \
+    "$(hour_row "$sum" "2026-01-01 02:00")" "0.00 4.00 4.00 10.00"
+assert_eq "the running total ends at the off-plane total" \
+    "$(total_mb "$sum")" "10.00"
+
+echo "Test 22b: the hourly figures honour the allowlist"
+root="${tmp_dir}/t22b"
+make_capture "${root}/rf29_20260129/traffic20260129_000000_acserver.pcap0" <<'ROWS'
+192.168.84.2      128.117.43.124    1000000    1767227400
+192.168.84.164    151.101.1.1        500000    1767227400
+ROWS
+SATCOM_ALLOWED=192.168.84.2 run_stubbed --root "$root" rf29_20260129 >/dev/null
+sum="${root}/rf29_20260129/satcom-summary_rf29_20260129.txt"
+assert_eq "a blocked host's bytes are not in the hour" \
+    "$(hour_row "$sum" "2026-01-01 00:00")" "1.00 0.00 1.00 1.00"
+assert_eq "matching the total, so the two can be compared" \
+    "$(total_mb "$sum")" "1.00"
+
+echo "Test 22c: the partial hours at each end are marked, the rest are not"
+# Packets at 00:30, 01:30 and 02:30, so the capture window starts and ends
+# inside an hour at each end but covers the middle one completely.
+root="${tmp_dir}/t22c"
+make_capture "${root}/rf30_20260130/traffic20260130_000000_acserver.pcap0" <<'ROWS'
+192.168.84.2      128.117.43.124    1000000    1767227400
+192.168.84.2      128.117.43.124    1000000    1767231000
+192.168.84.2      128.117.43.124    1000000    1767234600
+ROWS
+run_stubbed --root "$root" rf30_20260130 >/dev/null
+sum="${root}/rf30_20260130/satcom-summary_rf30_20260130.txt"
+assert_eq "the first hour is partial, the capture having started inside it" \
+    "$(hour_mark "$sum" "2026-01-01 00:00")" "partial"
+assert_eq "the middle hour is whole" \
+    "$(hour_mark "$sum" "2026-01-01 01:00")" "full"
+assert_eq "and the last is partial too" \
+    "$(hour_mark "$sum" "2026-01-01 02:00")" "partial"
+
+echo "Test 22d: one flight's hours never leak into another's summary"
+# Everything a scope accumulates lives in one shared $TMP, so a run covering
+# several flights has to empty it between them. Missing one file is invisible
+# in a single-flight run and silently sums every flight in a multi-flight one.
+root="${tmp_dir}/t22d"
+make_capture "${root}/rf31_20260131/traffic20260131_000000_acserver.pcap0" <<'ROWS'
+192.168.84.2      128.117.43.124    1000000    1767227400
+ROWS
+make_capture "${root}/rf32_20260201/traffic20260201_000000_acserver.pcap0" <<'ROWS'
+192.168.84.2      128.117.43.124    5000000    1769905800
+ROWS
+run_stubbed --root "$root" >/dev/null       # no target: both flights, one run
+sum1="${root}/rf31_20260131/satcom-summary_rf31_20260131.txt"
+sum2="${root}/rf32_20260201/satcom-summary_rf32_20260201.txt"
+
+assert_eq "the first flight reports its own hour" \
+    "$(hour_row "$sum1" "2026-01-01 00:00")" "1.00 0.00 1.00 1.00"
+assert_eq "the second reports its own" \
+    "$(hour_row "$sum2" "2026-02-01 00:00")" "5.00 0.00 5.00 5.00"
+assert_eq "and not the first flight's hour as well" \
+    "$(hour_row "$sum2" "2026-01-01 00:00")" "none"
+assert_eq "so the cumulative still lands on that flight's total" \
+    "$(total_mb "$sum2")" "5.00"
 
 echo
 echo "Passed: $PASS  Failed: $FAIL"

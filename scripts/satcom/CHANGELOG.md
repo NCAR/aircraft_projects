@@ -12,6 +12,28 @@ at 2.0, which covers the rewrite described below; the original single-capture
 ## [2.2] - unreleased
 
 ### Added
+
+- `analyze-satcom.sh`: A **By hour (UTC)** section, giving sent, received,
+  total and cumulative MB for each hour of a flight. The carrier reports
+  hourly, and a whole-flight total can only say *whether* the two figures
+  disagree; the hourly columns show *when* the disagreement starts, which is a
+  far stronger test. A fault that starts partway through a flight shows as two
+  columns that track each other and then separate at a particular hour; a
+  discrepancy present from the first hour is something else entirely. That
+  distinction did real work immediately: the router's conntrack table filling
+  had been the leading explanation for the shortfall, and the hourly columns
+  ruled it out, because on both flights that carry router logs the two figures
+  agree *better* after the table fills than before. It honours `--allowed`, for the
+  same reason the total does, and the cumulative column ends at the off-plane
+  total. Hours are UTC and aligned to the wall clock. The first and last hours
+  of a capture are marked when the capture window starts or ends inside them —
+  a note that the capture covered part of the clock hour, not that the figure
+  is low, since nothing else is on the link and the carrier's hour covers the
+  same traffic. It matters for the one case where the two genuinely differ: the
+  terminal comes up with aircraft power while a capture waits for its machine
+  to boot, so the first hour can miss traffic already flowing. Costs no extra
+  work: the packet timestamps were already being read for the collection window.
+
 - `satcom_capture.ps1`: Add 192.168.84.1 gateway exception and raise snaplen
   from 96 to 200. Now matches logic in `satcom_capture.sh` so both Windows
   and Linux capture the same thing.
