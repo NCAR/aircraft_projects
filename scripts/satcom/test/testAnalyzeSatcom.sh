@@ -132,6 +132,10 @@ make_capture() {
 # collected <summary> - the Collected: header line.
 collected() { awk -F': ' '/^Collected/ { print $2 }' "$1"; }
 
+# off_plane <summary> - the Off-plane: header line, or "" when there is none.
+# The field separator is colon-space, so the times keep their own colons.
+off_plane() { awk -F': ' '/^Off-plane/ { print $2 }' "$1"; }
+
 # flow_mb <summary> <src> <dst> - MB reported for one flow, or "none".
 flow_mb() {
     awk -v s="$2" -v d="$3" '
@@ -955,6 +959,85 @@ assert_eq "and not the first flight's hour as well" \
     "$(hour_row "$sum2" "2026-01-01 00:00")" "none"
 assert_eq "so the cumulative still lands on that flight's total" \
     "$(total_mb "$sum2")" "5.00"
+
+echo "Test 23: the off-plane window is the first and last packet on the link"
+# Onboard-to-onboard traffic at 00:00 and 02:30 brackets off-plane traffic at
+# 00:30 and 01:30. Collected has to cover all four, since it dates the capture;
+# Off-plane covers only the middle two, since only those crossed the link.
+root="${tmp_dir}/t23"
+make_capture "${root}/rf33_20260101/traffic20260101_000000_acserver.pcap0" <<'ROWS'
+192.168.84.2      192.168.84.7      1000000    1767225600
+192.168.84.2      128.117.43.124    1000000    1767227400
+128.117.43.124    192.168.84.2      1000000    1767231000
+192.168.84.2      192.168.84.7      1000000    1767234600
+ROWS
+run_stubbed --root "$root" rf33_20260101 >/dev/null
+sum="${root}/rf33_20260101/satcom-summary_rf33_20260101.txt"
+
+assert_eq "it runs from the first off-plane packet to the last" \
+    "$(off_plane "$sum")" \
+    "2026-01-01 00:30:00 to 2026-01-01 01:30:00 UTC (1.00 h)"
+assert_eq "while Collected still spans every frame, off-plane or not" \
+    "$(collected "$sum")" \
+    "2026-01-01 00:00:00 to 2026-01-01 02:30:00 UTC (>= 2.50 h)"
+
+echo "Test 23b: the off-plane window honours the allowlist"
+# A blocked host's packets are addressed off-plane but never reach WAN2, so
+# they must not stretch the window at either end.
+root="${tmp_dir}/t23b"
+make_capture "${root}/rf34_20260101/traffic20260101_000000_acserver.pcap0" <<'ROWS'
+192.168.84.164    128.117.43.124    1000000    1767225600
+192.168.84.2      128.117.43.124    1000000    1767227400
+128.117.43.124    192.168.84.2      1000000    1767231000
+192.168.84.164    128.117.43.124    1000000    1767234600
+ROWS
+SATCOM_ALLOWED=192.168.84.2 \
+    run_stubbed --root "$root" rf34_20260101 >/dev/null
+assert_eq "a blocked host's packets do not widen it" \
+    "$(off_plane "${root}/rf34_20260101/satcom-summary_rf34_20260101.txt")" \
+    "2026-01-01 00:30:00 to 2026-01-01 01:30:00 UTC (1.00 h)"
+
+root="${tmp_dir}/t23b2"
+make_capture "${root}/rf35_20260101/traffic20260101_000000_acserver.pcap0" <<'ROWS'
+192.168.84.164    128.117.43.124    1000000    1767225600
+192.168.84.2      128.117.43.124    1000000    1767227400
+128.117.43.124    192.168.84.2      1000000    1767231000
+192.168.84.164    128.117.43.124    1000000    1767234600
+ROWS
+run_stubbed --root "$root" rf35_20260101 >/dev/null
+assert_eq "and without an allowlist every host counts, as for the totals" \
+    "$(off_plane "${root}/rf35_20260101/satcom-summary_rf35_20260101.txt")" \
+    "2026-01-01 00:00:00 to 2026-01-01 02:30:00 UTC (2.50 h)"
+
+echo "Test 23c: one flight's off-plane window never leaks into another's"
+# OFF_FIRST and OFF_LAST are globals and $TMP/offspan accumulates, so both have
+# to be cleared when a new scope starts -- the same trap as the hourly buckets.
+# A second flight that is quiet on the link is the case that exposes it: with
+# nothing cleared it would inherit the first flight's window outright.
+root="${tmp_dir}/t23c"
+make_capture "${root}/rf36_20260101/traffic20260101_000000_acserver.pcap0" <<'ROWS'
+192.168.84.2      128.117.43.124    1000000    1767227400
+128.117.43.124    192.168.84.2      1000000    1767231000
+ROWS
+make_capture "${root}/rf37_20260201/traffic20260201_000000_acserver.pcap0" <<'ROWS'
+192.168.84.2      128.117.43.124    5000000    1769905800
+ROWS
+make_capture "${root}/rf38_20260301/traffic20260301_000000_acserver.pcap0" <<'ROWS'
+192.168.84.2      192.168.84.7      1000000    1772325000
+ROWS
+run_stubbed --root "$root" >/dev/null       # no target: all three, one run
+
+assert_eq "the first flight reports its own window" \
+    "$(off_plane "${root}/rf36_20260101/satcom-summary_rf36_20260101.txt")" \
+    "2026-01-01 00:30:00 to 2026-01-01 01:30:00 UTC (1.00 h)"
+assert_eq "the second starts and ends on its own single packet" \
+    "$(off_plane "${root}/rf37_20260201/satcom-summary_rf37_20260201.txt")" \
+    "2026-02-01 00:30:00 to 2026-02-01 00:30:00 UTC (0.00 h)"
+assert_eq "and a flight with nothing on the link reports no window at all" \
+    "$(off_plane "${root}/rf38_20260301/satcom-summary_rf38_20260301.txt")" ""
+assert_contains "though it is still dated, so a quiet flight stays legible" \
+    "$(cat "${root}/rf38_20260301/satcom-summary_rf38_20260301.txt")" \
+    "Collected: 2026-03-01"
 
 echo
 echo "Passed: $PASS  Failed: $FAIL"

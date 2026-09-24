@@ -57,6 +57,11 @@ ALLOWED="${SATCOM_ALLOWED:-}"
 # each end of the capture window.
 SPAN_FIRST=0
 SPAN_LAST=0
+# Also set per scope, and read by the summary header: the first and last packet
+# that actually crossed the satellite link, which is a narrower window than the
+# captures ran for. Empty when a scope saw no off-plane traffic at all.
+OFF_FIRST=""
+OFF_LAST=""
 PTR_CACHE="${SATCOM_PTR_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/satcom-ptr.tsv}"
 SKIP_EXISTING=0
 USE_DNS=1
@@ -206,6 +211,7 @@ host_of() {
 extract_flows() {
     : > "$TMP/session-span"; : > "$TMP/session-dns"; : > "$TMP/session-syslog"
     : > "$TMP/session-gw"; : > "$TMP/session-hourly"
+    : > "$TMP/session-offspan"
     "$MERGECAP" -w - "$@" 2>/dev/null | \
     "$TSHARK" -r - --disable-protocol drbd -T fields \
         -e ip.src -e ip.dst -e frame.len -e frame.time_epoch \
@@ -213,6 +219,7 @@ extract_flows() {
     awk -F'\t' -v spanfile="$TMP/session-span" -v dnsfile="$TMP/session-dns" \
         -v syslogfile="$TMP/session-syslog" -v gwfile="$TMP/session-gw" \
         -v hourlyfile="$TMP/session-hourly" \
+        -v offspanfile="$TMP/session-offspan" \
         -v gw="$GATEWAY" "$PRIV_FN"'
         function mcast(ip) { split(ip, o, "."); return (o[1] + 0 >= 224 && o[1] + 0 <= 239) }
         function bcast(ip) { return (ip == "255.255.255.255" || ip == "0.0.0.0") }
@@ -268,12 +275,22 @@ extract_flows() {
                 hour = int(ts / 3600) * 3600
                 if (priv(s)) hourly[hour "\t" s "\ts"] += $3
                 else         hourly[hour "\t" d "\tr"] += $3
+
+                # When this onboard host first and last had a packet on the
+                # link. Kept per host because the allowlist is applied further
+                # down: a host the router blocked put nothing on satcom, so
+                # its packets must not be allowed to widen the window.
+                host = priv(s) ? s : d
+                if (!(host in ofirst) || ts < ofirst[host]) ofirst[host] = ts
+                if (ts > olast[host]) olast[host] = ts
             }
         }
         END {
             for (f in bytes) printf "%d\t%s\n", bytes[f], f
             for (f in gwbytes) printf "%d\t%s\n", gwbytes[f], f > gwfile
             for (f in hourly) printf "%s\t%d\n", f, hourly[f] > hourlyfile
+            for (h in ofirst)
+                printf "%s\t%.6f\t%.6f\n", h, ofirst[h], olast[h] > offspanfile
             if (last > 0) printf "%.6f\t%.6f\n", first, last > spanfile
         }'
 }
@@ -558,6 +575,17 @@ write_summary() {
     echo "Generated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
     echo "Captures:  $captures"
     echo "Collected: $collected"
+    # Read from the globals rather than an eleventh positional argument.
+    if [ -n "$OFF_FIRST" ]; then
+        printf 'Off-plane: %s to %s UTC (%.2f h)\n' \
+            "$(fmt_epoch "$OFF_FIRST")" "$(fmt_epoch "$OFF_LAST")" \
+            "$(awk -v a="$OFF_FIRST" -v b="$OFF_LAST" \
+                   'BEGIN { print (b - a) / 3600 }')"
+        echo "           first to last packet that crossed the satellite link."
+        echo "           Collected above is wider: it opens when the earliest"
+        echo "           tcpdump started and closes on the last frame of any"
+        echo "           kind, onboard-only traffic included."
+    fi
     echo "Excluded:  multicast (224.0.0.0/4), broadcast, and onboard-only traffic"
     echo "Protocols: all of them. Traffic is selected by address, never by protocol,"
     echo "           so TCP, UDP (DNS, NTP, QUIC, DTLS), ICMP and the rest are all"
@@ -658,7 +686,7 @@ process_scope() {
     # one has to be emptied when a new scope starts -- a run over several
     # flights reuses the same $TMP.
     : > "$flows"; : > "$namemap"; : > "$TMP/spans"; : > "$dns"; : > "$sys"
-    : > "$gw"; : > "$hourly"
+    : > "$gw"; : > "$hourly"; : > "$TMP/offspan"
 
     local stems
     stems="$(find "$scope_dir" -name '*.pcap*' -type f 2>/dev/null \
@@ -700,6 +728,8 @@ process_scope() {
         [ -s "$TMP/session-syslog" ] && cat "$TMP/session-syslog" >> "$sys"
         [ -s "$TMP/session-gw" ] && cat "$TMP/session-gw" >> "$gw"
         [ -s "$TMP/session-hourly" ] && cat "$TMP/session-hourly" >> "$hourly"
+        [ -s "$TMP/session-offspan" ] &&
+            cat "$TMP/session-offspan" >> "$TMP/offspan"
 
         # Start from the filename, which is when tcpdump started. The end can
         # only be the last packet, a lower bound on when it stopped. A capture
@@ -769,6 +799,36 @@ process_scope() {
             collected="from $(fmt_epoch "$span_first") UTC (no packets captured; end unknown)"
         fi
         [ "$count" -gt 1 ] && collected="$collected spanning $count captures"
+    fi
+
+    # The window in which traffic was actually on the satellite link. It is
+    # narrower than the collection window above at both ends, for different
+    # reasons. At the start, a capture cannot see traffic that flowed before
+    # tcpdump was running, so this is an upper bound on when the link came up
+    # -- it is not power-on. At the end it is a real observation: collection
+    # runs on to the last frame of any kind, onboard-only chatter included,
+    # which can be a long time after the link goes quiet. So unlike the
+    # collection window, whose end is only a lower bound, both ends here are
+    # observed packets and the duration is exact.
+    #
+    # Hosts the router blocked are left out, since their packets never reached
+    # WAN2, so this honours --allowed exactly as the totals do.
+    OFF_FIRST=""; OFF_LAST=""
+    if [ -s "$TMP/offspan" ]; then
+        awk -F'\t' -v list="$ALLOWED" '
+            BEGIN { nok = 0; n = split(list, a, /[, ]+/)
+                    for (i = 1; i <= n; i++)
+                        if (a[i] != "") { ok[a[i]] = 1; nok++ } }
+            nok == 0 || ($1 in ok) {
+                if (f == "" || $2 < f) f = $2
+                if ($3 > l) l = $3
+            }
+            END { if (f != "") printf "%.6f\t%.6f\n", f, l }' \
+            "$TMP/offspan" > "$TMP/offwin"
+        if [ -s "$TMP/offwin" ]; then
+            OFF_FIRST="$(cut -f1 "$TMP/offwin")"
+            OFF_LAST="$(cut -f2 "$TMP/offwin")"
+        fi
     fi
 
     local summary_file

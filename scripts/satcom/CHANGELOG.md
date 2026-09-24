@@ -34,6 +34,21 @@ at 2.0, which covers the rewrite described below; the original single-capture
   to boot, so the first hour can miss traffic already flowing. Costs no extra
   work: the packet timestamps were already being read for the collection window.
 
+- `analyze-satcom.sh`: An **Off-plane:** line in the summary header, giving the
+  first and last packet that crossed the satellite link. The `Collected:` line
+  above it dates the *captures*, onboard-only included, not the traffic, so it
+  can run well past the point where anything was still going over satcom — on
+  INSPYRE RF09 by 43 minutes.  The new line is narrower at both ends. The end
+  is a real observation: it is when traffic stopped crossing the link, as
+  distinct from when the capture host was merely still running. The start is
+  not power-on, and must not be read as such — a capture cannot see traffic
+  that flowed before tcpdump was running, so it is only an upper bound on when
+  the link came up.  It honours `--allowed`, since a host the router
+  blocked put nothing on the link and must not widen the window, and it is
+  omitted altogether for a scope with nothing off-plane rather than reported as
+  an empty span. Costs no extra work: the packet timestamps were already being
+  read for the hourly buckets.
+
 - `satcom_capture.ps1`: Add 192.168.84.1 gateway exception and raise snaplen
   from 96 to 200. Now matches logic in `satcom_capture.sh` so both Windows
   and Linux capture the same thing.
