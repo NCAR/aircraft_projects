@@ -45,7 +45,7 @@ For more information on the load data scripts located in `/net/work/bin/scripts/
 
 For each of these datasets, perform the following steps to add the data to the archive. Unless otherwise noted, run them as yourself:
 
-1. If not there already, copy the ads, camera, PMS2D and other raw data files to `/scr/raf/Raw_Data/<project>`. Copy all data that receives processing (LRT, HRT, SRT, KML, etc) to `/scr/raf/Prod_data/<project>`. The files in `/scr/raf_data`, `/scr/raf/local_productiondata` and individual PMs ftp areas are subject to being overwritten. By copying the files here, it is possible to cleanly keep track of file versions. Files should be put into subdirectories by version number.
+1. If not there already, copy the ads, camera, PMS2D and other raw data files to `/scr/raf/Raw_Data/<project>`. Copy all data that receives processing (LRT, HRT, SRT, KML, etc) to `/scr/raf_data/<project>/field_data` for preliminary or `/scr/raf/Prod_data/<project>` for final. The files in `/scr/raf_data/<project>`, `/scr/raf/local_productiondata` and individual PMs ftp areas are subject to being overwritten. By copying the files here, it is possible to cleanly keep track of file versions. Files should be put into subdirectories by version number.
 
 **A note on versioning:**
 Versioning should be handled as follows:
@@ -55,12 +55,12 @@ Versioning should be handled as follows:
 | 0.9 | Last in-house version (contains all variables) from /scr/raf_data dir. Files will be owned by an individual employee |
 | 1.0, 1.1, etc | Final data run as user nimbus from /scr/raf/local_productiondata |
 
-2. Copy the data to Campaign Storage or local archive location, depending on data type.
-   - All data that is not netCDF data needs to be loaded to Campaign Storage as user `eoldata` / group `eoldmg`.
+2. The data will be copied to Campaign Storage or local archive location, depending on data type.
+   - All data that is not LRT netCDF data and movies needs to be loaded to Campaign Storage under `/glade/campaign/eol/archive/<year>/<project>` as user `eoldata` / group `eoldmg`.
 
-   - netCDF data should be archived to `/net/archive/data`, so that the files can be made available via OPeNDAP. This is done by checking the Dodsable box in the FDA (which is configured to happen automatically when using the scripts below). Preliminary files are not to be made available via OPeNDAP, but it is cleaner to keep all versions of a dataset in the same archive location (DOES NOT CURRENTLY WORK, but still archive netcdf here)
+   - LRT netCDF data should be archived to `/net/archive/data/<project>`, so that the files can be made available via OPeNDAP. This is done by checking the Dodsable box in the FDA (which is configured to happen automatically when using the scripts below). Preliminary files are not to be made available via OPeNDAP, but it is cleaner to keep all versions of a dataset in the same archive location (DOES NOT CURRENTLY WORK, but still archive LRT netcdf here)
 
-   2.1 Change directories to `/net/jlocal/projects/<project>/<aircraft>/Production`. Confirm that the archive dir exists. If not, copy it from a recent project. `cd` to the archive dir.
+   2.1 Change directories to `/net/jlocal/projects/<project>/<aircraft>/Production`. Confirm that the `archive` dir exists. If not, copy it from a recent project. `cd` to the `archive` dir.
    ```
    ssh eol-saturn.eol.ucar.edu (or mercury)
    cd /net/jlocal/projects/<project>/<aircraft>/Production
@@ -94,20 +94,20 @@ Versioning should be handled as follows:
        - Add the dataset id and version number for each dataset for which you want to create a YAML file
      - Update the internal_contact_id_dts, load_contact_id_dts, and author_id_dts to be your DTS id. You can find your contactID by logging in to the DTS and looking at the URL for your entry on the Add/Edit Users page
      - Update the internal_contact_id_codiac to be your CODIAC id. To find your internal contact ID, login to data.eol.ucar.edu, switch to editor mode, go to Contact List, search for your name and find your id in the URL of your entry.
-   - From the `scripts/data_loading/` directory, run `python3 replace_yaml.py <PROJECT>`. This script reads the `project_template.yml` for the project and all base config templates, automatically substitutes all variables (e.g. `<PROJECT>`, `<year>`, archive IDs), and saves the generated YAML files to `$CFG_FILES_DIR/<PROJECT>*/` (default: `/net/work/cfg-files/<PROJECT>*/`).
-   - Now `cd /net/work/bin/scripts/insert/loaddata` and run `./load_a_dataset.pl`, giving the full path to each yml file generated above. This script will create an FDA dataset, create a DTS entry, and add all the data files to the new dataset. Hit return when prompted. When the script completes, it will prompt you to perform additional tasks by hand. (These would all be great areas to automate in the future.)
+   - From the `/net/jlocal/projects/scripts/data_loading` directory, run `python3 replace_yaml.py <PROJECT>`. This script reads the `project_template.yml` for the project and all base config templates, automatically substitutes all variables (e.g. `<PROJECT>`, `<year>`, archive IDs), and saves the generated YAML files to `$CFG_FILES_DIR/<PROJECT>*/` (default: `/net/work/cfg-files/<PROJECT>*/`).
+   - Now `cd /net/work/bin/scripts/insert` and run `./load_a_dataset.pl /net/work/cfg-files/<PROJECT>/</dataset>.yml`, giving the full path to each yml file generated above. This script will create an FDA dataset, create a DTS entry, and add all the data files to the new dataset. Hit return when prompted. When the script completes, it will prompt you to perform additional tasks by hand. (These would all be great areas to automate in the future. Add all the data files to the new dataset is not yet automated use command `/net/work/bin/scripts/insert/insert_multiple_files -u user /net/work/cfg-files/<PROJECT>/</dataset>.yml` to add the files)
 
-4. Run `/net/work/bin/emdac/lsdsfiles -lv <archive_ident>` on datasets with files archived locally to `/net/archive` (`lsdsfiles` does not work with files on campaign storage)
+4. Run `/net/work/bin/emdac/lsdsfiles -lv <archive_ident>` on datasets with files archived locally to `/net/archive/data` (`lsdsfiles` does not work with files on campaign storage)
    - `lsdsfiles` is a script that performs a set of sanity checks on a dataset and can help identify common errors.
    - To see the usage statement, run `perldoc lsdsfiles`
 
 5. Check and test order the dataset by hand.
 
-6. For all data except ADS files, make it visible in the FDA, then add it to the Master List.
+6. For all data except ADS files, make it visible in the FDA.
 
 7. Currently, the scripts are not able to add all the required metadata. That functionality will be added as we can, but in the meantime the following items need to be added by hand through the GUI.
-    - Add an FDA user and a EULA file for these preliminary (restricted) datasets. Do not assign a DOI for preliminary datasets.
-    - Add links to documentation as xlinks — be sure to add the EOL Project Homepage and aircraft Documentation Summary page to the dataset. You can also add a link to the missions table in the field catalog.
+    - Add an FDA user password and the EULA.html file from `/net/archive/data` for these preliminary (restricted) datasets. Do not assign a DOI for preliminary datasets.
+    - Add links to documentation as xlinks — be sure to add the EOL Project Homepage to the dataset. You can also add a link to the missions table in the field catalog.
     - When you receive the Project Managers Data Quality Report, add it as a related `link:info`
     - If loading browseable files, such as camera movies, hand add browse_extract program (sti).
     - For camera movies, set FDA Plot Type as `static_image` to avoid default playback image.
