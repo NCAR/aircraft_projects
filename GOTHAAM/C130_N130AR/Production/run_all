@@ -25,18 +25,20 @@ reorder_all $PROJ
 cd $CWD
 ./run_proc2d
 
-AddHtTerrain $PROJ
-
-
-if [ `whoami` == nimbus ]; then
-
-run_kalmanFilter
+#AddHtTerrain $PROJ
 
 # Merge cloud flags from Sarah Woods
 ./merge_cloud_flags.py -o /scr/raf/local_productiondata
 
 # Merge Teresa's update chemistry data
 ./merge_chem.sh
+
+# Recreate the ICARTT file
+./run_icartt
+
+if [ `whoami` == nimbus ]; then
+
+  #run_kalmanFilter
 
   true
 fi

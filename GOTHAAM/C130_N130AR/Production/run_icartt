@@ -5,20 +5,20 @@ source ./set_env
 # Get brief aircraft identifier for use in ICARTT filename (part before _)
 ac="${AIRCRAFT%%_*}"
 
-# BEFORE RUNNING THIS SCRIPT, MANUALLY UPDATE /opt/local/bin/nc2asc as
+# BEFORE RUNNING THIS SCRIPT, be sure to update ../scripts/nc2asc.bat
 # appropriate for new version and set version indicator letter here:
-version="0"
+Iversion="0"
+RAFversion="1.1"
 
 # Remove existing files.  Helps to avoid residual data if nc2asc fails
-/bin/rm ${DAT}/${PROJ}-CORE_C130_????????_R${version}*.ict
+/bin/rm /scr/raf/Prod_Data/GOTHAAM/LRT/V${RAFversion}/ICARTT/${PROJ}-CORE_C130_????????_R${Iversion}*.ict
 
 # WARNING: generating from Prod_Data so if rerun LRT, change this!
-#for file in ${DAT}/LRT/${PROJ}?f??.nc
-for file in /scr/raf/Prod_Data/GOTHAAM/LRT/V1.1/${PROJ}?f??.nc
+for file in /scr/raf/Prod_Data/GOTHAAM/LRT/V${RAFversion}/${PROJ}?f??.nc
 do
   takeoff=`flt_time ${file} | sed -n 's/^Takeoff: //p'`
   ymd=`date -d "$takeoff" +%Y%m%d`
-  outfile="${DAT}/${PROJ}-CORE_${ac}_${ymd}_R${version}"
+  outfile="${DAT}/${PROJ}-CORE_${ac}_${ymd}_R${Iversion}"
   echo $outfile
   if [[ -f "$outfile" ]]; then
     # If recreating an existing file, assume have two legs.
@@ -26,6 +26,7 @@ do
     base=${outfile%.ict}
     newoutfile=${base}_L1.ict
     mv $outfile $newoutfile
+    echo "nc2asc -i $file -o $outfile -b ../scripts/nc2asc.bat"
     nc2asc -i $file -o $outfile -b ../scripts/nc2asc.bat
     base=${outfile%.ict}
     newoutfile=${base}_L2.ict
