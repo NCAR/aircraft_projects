@@ -90,7 +90,7 @@ Versioning should be handled as follows:
        - Add the aircraft and year. The year must be in single quotes, eg '2026'.
      - In the fields block:
        - Update the project dates and add the lat/lon in single quotes
-       - If not provided the lat/lon for a project can be found using command `flt_area /scr/raf_data/INSPYRE/field_data/LRT/<PROJECT>rf*.nc`.
+       - If not provided the lat/lon for a project can be found using command `flt_area /scr/raf_data/<PROJECT>/field_data/LRT/<PROJECT>rf*.nc`.
      - In the archive_ids block:
        - Add the dataset id and version number for each dataset for which you want to create a YAML file
      - Update the internal_contact_id_dts, load_contact_id_dts, and author_id_dts to be your DTS id. You can find your contactID by logging in to the DTS and looking at the URL for your entry on the Add/Edit Users page
