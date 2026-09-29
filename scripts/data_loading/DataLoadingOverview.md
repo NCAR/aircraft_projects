@@ -90,11 +90,16 @@ Versioning should be handled as follows:
        - Add the aircraft and year. The year must be in single quotes, eg '2026'.
      - In the fields block:
        - Update the project dates and add the lat/lon in single quotes
+       - If not provided the lat/lon for a project can be found using command `flt_area /scr/raf_data/INSPYRE/field_data/LRT/<PROJECT>rf*.nc`.
      - In the archive_ids block:
        - Add the dataset id and version number for each dataset for which you want to create a YAML file
      - Update the internal_contact_id_dts, load_contact_id_dts, and author_id_dts to be your DTS id. You can find your contactID by logging in to the DTS and looking at the URL for your entry on the Add/Edit Users page
      - Update the internal_contact_id_codiac to be your CODIAC id. To find your internal contact ID, login to data.eol.ucar.edu, switch to editor mode, go to Contact List, search for your name and find your id in the URL of your entry.
    - From the `/net/jlocal/projects/scripts/data_loading` directory, run `python3 replace_yaml.py <PROJECT>`. This script reads the `project_template.yml` for the project and all base config templates, automatically substitutes all variables (e.g. `<PROJECT>`, `<year>`, archive IDs), and saves the generated YAML files to `$CFG_FILES_DIR/<PROJECT>*/` (default: `/net/work/cfg-files/<PROJECT>*/`).
+   - Required edits to YAML files generated in `/net/work/cfg-files/<PROJECT>*/` 
+     - Update ingest_location, archive_location, and filename_pattern as needed.
+     - Version note description should be updated to 'This version contains field-phase data.' for preliminary datasets. 
+     - Filelength is set at 6 hours for ADS and ICARTT datasets for ease of loading doesn't need to be changed.
    - Now `cd /net/work/bin/scripts/insert` and run `./load_a_dataset.pl /net/work/cfg-files/<PROJECT>/</dataset>.yml`, giving the full path to each yml file generated above. This script will create an FDA dataset, create a DTS entry, and add all the data files to the new dataset. Hit return when prompted. When the script completes, it will prompt you to perform additional tasks by hand. (These would all be great areas to automate in the future. Adding all the data files to the new dataset is not yet automated use command `/net/work/bin/scripts/insert/insert_multiple_files -u user /net/work/cfg-files/<PROJECT>/</dataset>.yml` to add the files)
 
 4. Run `/net/work/bin/emdac/lsdsfiles -lv <archive_ident>` on datasets with files archived locally to `/net/archive/data` (`lsdsfiles` does not work with files on campaign storage)
