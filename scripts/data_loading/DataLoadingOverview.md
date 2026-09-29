@@ -42,6 +42,7 @@ For more information on the load data scripts located in `/net/work/bin/scripts/
 **Dataset-specific notes:**
 
 - For the ADS data, archive the RF, FF, TF, and CF files. Hangar flights, other than the CF files, do NOT need to be archived unless requested.
+- Before archiving the camera images, run filterImages.sh from the <project>/<platform>/scripts dir. This will remove ground images and dark images and put them in a subdirectory so archAC won't include them in the hourly tar files. At the moment, the script asks the user to repeatedly press enter. If this has not been updated before the next field project, reach out to an SE to have this done. (No need to watch it and hit enter repeatedly - this can be fixed.)
 
 For each of these datasets, perform the following steps to add the data to the archive. Unless otherwise noted, run them as yourself:
 
