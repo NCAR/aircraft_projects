@@ -242,7 +242,7 @@ if ($checkGnd) {
 	    close(DATA);
 	    print "Use data file ".$netCDF."\n";
 	}
-	
+
 	if (-e $netCDF) { #if the netCDF file is found
 		#the flt_time script is kinda basic.. it will not specify whether it found
 		#an increase or decrase in speed that breached its threshold.  Also it will
@@ -251,6 +251,7 @@ if ($checkGnd) {
 		while ($#date+1 != 2 && $speed <= $speedstop ) { 
 			@date = ();
 			#run flt_time scrpt and pipe the output into perl
+			print "flt_time -t $speed $netCDF";
 			open(DATA, "flt_time -t $speed $netCDF|");	
 			#get takeoff and landing time from flt_time output
 			$count = 0;
