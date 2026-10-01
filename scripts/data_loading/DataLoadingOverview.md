@@ -146,7 +146,7 @@ You will see "File indexing started"
 
 1. Update DTS and assign yourself the dataset to change. Assign Janine as the checker.
 
-2. Copy the files from the ingest location to the archive location (see above for more details)
+2. The files will be copied from the ingest location to the archive location (see step 2 above for more details)
 
    2.1 `cd /net/jlocal/projects/<PROJECT>/<AIRCRAFT>/Production/archive`
    Note the aircraft that flew for this project. You will need that info in the next step.
@@ -175,12 +175,12 @@ You will see "File indexing started"
 
 6. Update the dataset YAML config manually or with `update_version.py` and add new files to the FDA using `insert_multiple_files`.
    - `cd /net/work/cfg-files/<PROJECT>`
-   - Update the version (and optionally ingest location or filename pattern) in the existing `.yml` file by running `update_version.py` from the `scripts/data_loading/` directory:
+   - Update the version (and optionally ingest location or filename pattern) in the existing `.yml` file by running `update_version.py` from the `/net/jlocal/projects/scripts/data_loading/` directory:
      `python3 update_version.py <PROJECT> <DATASET> --version 1.0 [--ingest /new/path] [--pattern new_pattern]`
-   - If there is no existing `.yml` file, generate one by running `python3 replace_yaml.py <PROJECT>` from `scripts/data_loading/` as described in step 7 above.
+   - If there is no existing `.yml` file, generate one by running `python3 replace_yaml.py <PROJECT>` from `/net/jlocal/projects/scripts/data_loading/` as described in step 3 above.
    - Log in as user `eoldata`
    - Run `./insert_multiple_files -u <YOUR_USERNAME> XXX.yml` (from `/net/work/bin/scripts/insert/`)
-   - Run `/net/work/bin/emdac/lsdsfiles -lv ###.###` to check dataset if data files are archived locally to `/net/archive` (does not work with campaign storage)
+   - Run `/net/work/bin/emdac/lsdsfiles -lv ###.###` to check dataset if data files are archived locally to `/net/archive/data/<project>` (does not work with campaign storage)
    - Test order dataset
 
 7. Go back to the FDA, under the version tab and confirm the new files are under the new version.
@@ -202,11 +202,9 @@ You will see "File indexing started"
    - Either select "Create new DOI" (if there isn't one and this is FINAL data)  or "Update"
    ```
 
-12. Go to the Master List Editor and edit the listing for the file — update as required, check "updated", and save to get an updated date. (deprecated -- no more master list after CAESAR, 2024)
+12. Once checked, update the DTS (<http://dmg.eol.ucar.edu/dts/dln/>) for your dataset and mark it done.
 
-13. Once checked, update the DTS (<http://dmg.eol.ucar.edu/dts/dln/>) for your dataset and mark it done.
-
-14. Run `whods <archive_ident>` (e.g. `whods 87.050`) to get a list of email addresses of people who have ordered the data and the date they ordered it. Send an email to all these folks letting them know the data have been updated, the changes that were made, and where they can download the updated data. Alternatively, look at 'Stats' on the FDA.
+13. Run `whods <archive_ident>` (e.g. `whods 87.050`) to get a list of email addresses of people who have ordered the data and the date they ordered it. Send an email to all these folks letting them know the data have been updated, the changes that were made, and where they can download the updated data. Alternatively, look at 'Stats' on the FDA.
 
 ---
 
