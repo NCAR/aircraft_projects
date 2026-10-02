@@ -13,8 +13,8 @@ EOL/RAF maintains a set of environment variables and aliases to streamline workf
 
 Once configured, both of these directories can be reached by simply typing the alias `proj` on the command line. This is achieved by adding `alias proj='cd $PROJ_DIR'` to your `.my_defaults` file in your linux home dir and sourcing Jeffco_only and .my_defaults from your shell config file (`.bashrc` or `.cshrc`, etc)
 
-[!TIP]
-See https://github.com/NCAR/RAFSE/blob/main/onboarding/README.md for instructions on how to configure your environment.
+> [!TIP]
+> See https://github.com/NCAR/RAFSE/blob/main/onboarding/README.md for instructions on how to configure your environment.
 
 Common environment variables used in the instructions below:
 - `$PROJ_DIR`: Location of `aircraft_projects` repository checkout
