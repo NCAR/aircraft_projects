@@ -4,6 +4,26 @@ The EOL data policy states "At the conclusion of each field campaign, EOL will p
 
 The first, **time-critical step** is to **make sure you obtain a copy of all the necessary data before the field phase ends**. After that, archiving EOL data requires two additional steps. The first, setting up the archive environment, need only be done once. The second, loading a dataset, needs to be done for each dataset that is being archived.
 
+## A note on configuring your work environment
+EOL/RAF maintains a set of environment variables and aliases to streamline workflows. As root directory paths vary between systems, this set of easy-to-remember commands simplifies and standardizes navigation. For example, the [aircraft_projects](https://github.com/NCAR/aircraft_projects) repository is checked out at:
+| machine(s) | path |
+| --- | --- |
+| ground servers (eol-saturn, mercury) | /net/jlocal/projects |
+| aircraft servers (acserver, steam), groundstations (eol-groundstation3) | /home/local/projects |
+
+Once configured, both of these directories can be reached by simply typing the alias `proj` on the command line. This is achieved by adding `alias proj='cd $PROJ_DIR'` to your `.my_defaults` file in your linux home dir and sourcing Jeffco_only and .my_defaults from your shell config file (`.bashrc` or `.cshrc`, etc)
+
+[!TIP]
+See https://github.com/NCAR/RAFSE/blob/main/onboarding/README.md for instructions on how to configure your environment.
+
+Common environment variables used in the instructions below:
+- `$PROJ_DIR`: Location of `aircraft_projects` repository checkout
+- `$RAW_DATA_DIR`: Location where ads files and camera images are stored
+- `$DATA_DIR`: Location where field data and other intermediate data files are stored
+- `$PROD_DATA`: Location where production (nimbus) runs are written. Not to be confused with the Prod_Data dir.
+- `/scr/raf/Prod_Data` on the ground servers: local copy of final, archival data
+
+
 ## 1. Make sure you have access to all the data
 
 - If Google Drive, ftp, or syncthing were used for field data storage, turn off syncing between the staging directory and local disk
@@ -42,29 +62,29 @@ For more information on the load data scripts located in `/net/work/bin/scripts/
 **Dataset-specific notes:**
 
 - For the ADS data, archive the RF, FF, TF, and CF files. Hangar flights, other than the CF files, do NOT need to be archived unless requested.
-- Before archiving the camera images, run filterImages.sh from the <project>/<platform>/scripts dir. This will remove ground images and dark images and put them in a subdirectory so archAC won't include them in the hourly tar files. At the moment, the script asks the user to repeatedly press enter. If this has not been updated before the next field project, reach out to an SE to have this done. (No need to watch it and hit enter repeatedly - this can be fixed.)
+- Before archiving the camera images, run filterImages.sh from the `$PROJ_DIR/<project>/<platform>/scripts` dir. This will remove ground images and dark images and put them in a subdirectory so archAC won't include them in the hourly tar files. At the moment, the script asks the user to repeatedly press enter. If this has not been updated before the next field project, reach out to an SE to have this done. (No need to watch it and hit enter repeatedly - this can be fixed.)
 
 For each of these datasets, perform the following steps to add the data to the archive. Unless otherwise noted, run them as yourself:
 
-1. If not there already, copy the ads, camera, PMS2D and other raw data files to `/scr/raf/Raw_Data/<project>`. Copy all data that receives processing (LRT, HRT, SRT, KML, etc) to `/scr/raf_data/<project>/field_data` for preliminary or `/scr/raf/Prod_data/<project>` for final. The files in `/scr/raf_data/<project>`, `/scr/raf/local_productiondata` and individual PMs ftp areas are subject to being overwritten. By copying the files here, it is possible to cleanly keep track of file versions. Files should be put into subdirectories by version number.
+1. If not there already, copy the ads, camera, PMS2D and other raw data files to `$RAW_DATA_DIR/<project>`. Copy all data that receives processing (LRT, HRT, SRT, KML, etc) to `$DATA_DIR/<project>/field_data` for preliminary or `/scr/raf/Prod_Data/<project>` for final. The files in `$DATA_DIR/<project>`, `$PROD_DATA` and individual PMs ftp areas are subject to being overwritten. By copying the files here, it is possible to cleanly keep track of file versions. Files should be put into subdirectories by version number.
 
 **A note on versioning:**
 Versioning should be handled as follows:
 | Data phase | Version number |
 | --- | --- |
 | 0.1, 0.2, ... | Field phase data |
-| 0.9 | Last in-house version (contains all variables) from /scr/raf_data dir. Files will be owned by an individual employee |
-| 1.0, 1.1, etc | Final data run as user nimbus from /scr/raf/local_productiondata |
+| 0.9 | Last in-house version (contains all variables) from $DATA_DIR. Files will be owned by an individual employee |
+| 1.0, 1.1, etc | Final data run as user nimbus from $PROD_DATA
 
 2. The data will be copied to Campaign Storage or local archive location, depending on data type.
    - All data that is not LRT netCDF data and movies needs to be loaded to Campaign Storage under `/glade/campaign/eol/archive/<year>/<project>` as user `eoldata` / group `eoldmg`.
 
    - LRT netCDF data should be archived to `/net/archive/data/<project>`, so that the files can be made available via OPeNDAP. This is done by checking the Dodsable box in the FDA (which is configured to happen automatically when using the scripts below). Preliminary files are not to be made available via OPeNDAP, but it is cleaner to keep all versions of a dataset in the same archive location (DOES NOT CURRENTLY WORK, but still archive LRT netcdf here)
 
-   2.1 Change directories to `/net/jlocal/projects/<project>/<aircraft>/Production`. Confirm that the `archive` dir exists. If not, copy it from a recent project. `cd` to the `archive` dir.
+   2.1 Change directories to `$PROJ_DIR/<project>/<aircraft>/Production`. Confirm that the `archive` dir exists. If not, copy it from a recent project. `cd` to the `archive` dir.
    ```
    ssh eol-saturn.eol.ucar.edu (or mercury)
-   cd /net/jlocal/projects/<project>/<aircraft>/Production
+   cd $PROJ_DIR/<project>/<aircraft>/Production
    ```
 
    2.2 Edit `archAC.sh` and set `PROJECT`, `YEAR`, `PLATFORM`, and `EMAIL` near the top of the file. Uncomment the line for the data you are working with, and make sure all other lines are commented out, except the variable assignments. Save your changes.  If you need to figure out the archive path, you can login:
@@ -91,12 +111,12 @@ Versioning should be handled as follows:
        - Add the aircraft and year. The year must be in single quotes, eg '2026'.
      - In the fields block:
        - Update the project dates and add the lat/lon in single quotes
-       - If not provided the lat/lon for a project can be found using command `flt_area /scr/raf_data/<PROJECT>/field_data/LRT/<PROJECT>rf*.nc`.
+       - If not provided the lat/lon for a project can be found using command `flt_area $DATA_DIR/<PROJECT>/field_data/LRT/<PROJECT>rf*.nc`.
      - In the archive_ids block:
        - Add the dataset id and version number for each dataset for which you want to create a YAML file
      - Update the internal_contact_id_dts, load_contact_id_dts, and author_id_dts to be your DTS id. You can find your contactID by logging in to the DTS and looking at the URL for your entry on the Add/Edit Users page
      - Update the internal_contact_id_codiac to be your CODIAC id. To find your internal contact ID, login to data.eol.ucar.edu, switch to editor mode, go to Contact List, search for your name and find your id in the URL of your entry.
-   - From the `/net/jlocal/projects/scripts/data_loading` directory, run `python3 replace_yaml.py <PROJECT>`. This script reads the `project_template.yml` for the project and all base config templates, automatically substitutes all variables (e.g. `<PROJECT>`, `<year>`, archive IDs), and saves the generated YAML files to `$CFG_FILES_DIR/<PROJECT>*/` (default: `/net/work/cfg-files/<PROJECT>*/`).
+   - From the `$PROJ_DIR/scripts/data_loading` directory, run `python3 replace_yaml.py <PROJECT>`. This script reads the `project_template.yml` for the project and all base config templates, automatically substitutes all variables (e.g. `<PROJECT>`, `<year>`, archive IDs), and saves the generated YAML files to `$CFG_FILES_DIR/<PROJECT>*/` (default: `/net/work/cfg-files/<PROJECT>*/`).
    - Required edits to YAML files generated in `/net/work/cfg-files/<PROJECT>*/` 
      - Update ingest_location, archive_location, and filename_pattern as needed.
      - Version note description should be updated to 'This version contains field-phase data.' for preliminary datasets. 
@@ -148,7 +168,7 @@ You will see "File indexing started"
 
 2. The files will be copied from the ingest location to the archive location (see step 2 above for more details)
 
-   2.1 `cd /net/jlocal/projects/<PROJECT>/<AIRCRAFT>/Production/archive`
+   2.1 `cd $PROJ_DIR/<PROJECT>/<AIRCRAFT>/Production/archive`
    Note the aircraft that flew for this project. You will need that info in the next step.
 
    2.2 Edit `archAC.sh`
@@ -175,9 +195,9 @@ You will see "File indexing started"
 
 6. Update the dataset YAML config manually or with `update_version.py` and add new files to the FDA using `insert_multiple_files`.
    - `cd /net/work/cfg-files/<PROJECT>`
-   - Update the version (and optionally ingest location or filename pattern) in the existing `.yml` file by running `update_version.py` from the `/net/jlocal/projects/scripts/data_loading/` directory:
+   - Update the version (and optionally ingest location or filename pattern) in the existing `.yml` file by running `update_version.py` from the `$PROJ_DIR/scripts/data_loading/` directory:
      `python3 update_version.py <PROJECT> <DATASET> --version 1.0 [--ingest /new/path] [--pattern new_pattern]`
-   - If there is no existing `.yml` file, generate one by running `python3 replace_yaml.py <PROJECT>` from `/net/jlocal/projects/scripts/data_loading/` as described in step 3 above.
+   - If there is no existing `.yml` file, generate one by running `python3 replace_yaml.py <PROJECT>` from `$PROJ_DIR/scripts/data_loading/` as described in step 3 above.
    - Log in as user `eoldata`
    - Run `./insert_multiple_files -u <YOUR_USERNAME> XXX.yml` (from `/net/work/bin/scripts/insert/`)
    - Run `/net/work/bin/emdac/lsdsfiles -lv ###.###` to check dataset if data files are archived locally to `/net/archive/data/<project>` (does not work with campaign storage)
