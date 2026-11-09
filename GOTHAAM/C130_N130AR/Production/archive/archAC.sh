@@ -63,7 +63,7 @@ setenv platformlower "c130_n130ar"
 #$ARCHIVE_SCRIPT field_phase/HARP /scr/raf/Raw_Data/$PROJECT/field_phase/HARP_Jvalues ict $CS_LOCATION$YEAR $EMAIL
 
 ### Preliminary ARNOLD ICT
-#ARCHIVE_SCRIPT field_phase/ARNOLD /scr/raf/Raw_Data/$PROJECT/field_phase/ARNOLD ict $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT field_phase/ARNOLD /scr/raf/Raw_Data/$PROJECT/field_phase/ARNOLD ict $CS_LOCATION$YEAR $EMAIL
 
 ########################## Production Data Files ##########################
 ### LRT
@@ -71,8 +71,10 @@ setenv platformlower "c130_n130ar"
 
 #$ARCHIVE_SCRIPT LRT/v1.1 /scr/raf/Prod_Data/$PROJECT/LRT/V1.1 nc /net/archive/data/ $EMAIL
 
+#$ARCHIVE_SCRIPT LRT/v1.2 /scr/raf/Prod_Data/$PROJECT/LRT/V1.2 nc /net/archive/data/ $EMAIL
+
 ### LRT ICT
-$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/LRT/V1.1/ICARTT ict $CS_LOCATION$YEAR $EMAIL
+#$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/LRT/V1.1/ICARTT ict $CS_LOCATION$YEAR $EMAIL
 
 ### PMS2D
 #$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR $EMAIL
