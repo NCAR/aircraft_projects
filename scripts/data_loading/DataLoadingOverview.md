@@ -175,9 +175,12 @@ You will see "File indexing started"
    - Comment out all existing uncommented lines.
    - Create a new line for the data you want to load.
    - Log in as user `eoldata`
+   - ssh data-access.ucar.edu
+   - Create a subdir for the new version
+   - exit data-access so you are back on the EOL server
    - Run `./archAC.sh`
 
-3. Go to the dataset in the FDA and hide all the files in the existing version. Hide the EULA, if it exists, so that it will stay with the preliminary data.
+4. Go to the dataset in the FDA and hide all the files in the existing version. Hide the EULA, if it exists, so that it will stay with the preliminary data.
    ```
    https://data.eol.ucar.edu/zinc
    - Login
@@ -189,11 +192,11 @@ You will see "File indexing started"
    ```
    - If you are loading final data, uncheck "Eula Reqd" on the main "Edit Dataset" page for the dataset and select `Update`.
 
-4. Create a new version with the version number you want. **See the note on versioning above.** Be careful not to add the just-hidden files to the new version. Keep this window open so you can refer to it in step 6.
+5. Create a new version with the version number you want. **See the note on versioning above.** Be careful not to add the just-hidden files to the new version. Keep this window open so you can refer to it in step 6.
 
-5. If you are moving from a preliminary to final version of the data, update the description in the FDA to match your new `.yml` file. The version number change handled by `update_version.py` in the next step will automatically set the quality from preliminary to final.
+6. If you are moving from a preliminary to final version of the data, update the description in the FDA to match your new `.yml` file. The version number change handled by `update_version.py` in the next step will automatically set the quality from preliminary to final.
 
-6. Update the dataset YAML config manually or with `update_version.py` and add new files to the FDA using `insert_multiple_files`.
+7. Update the dataset YAML config manually or with `update_version.py` and add new files to the FDA using `insert_multiple_files`.
    - `cd /net/work/cfg-files/<PROJECT>`
    - Update the version (and optionally ingest location or filename pattern) in the existing `.yml` file by running `update_version.py` from the `$PROJ_DIR/scripts/data_loading/` directory:
      `python3 update_version.py <PROJECT> <DATASET> --version 1.0 [--ingest /new/path] [--pattern new_pattern]`
@@ -203,9 +206,9 @@ You will see "File indexing started"
    - Run `/net/work/bin/emdac/lsdsfiles -lv ###.###` to check dataset if data files are archived locally to `/net/archive/data/<project>` (does not work with campaign storage)
    - Test order dataset
 
-7. Go back to the FDA, under the version tab and confirm the new files are under the new version.
+8. Go back to the FDA, under the version tab and confirm the new files are under the new version.
 
-8. Index the newly loaded data files. When metadata is updated via the Zinc interface that indexing happens automatically. However, when metadata is updated via an external script such as the insert_multiple_files script, the file metadata needs to be index using the `index files` button in zinc.
+9. Index the newly loaded data files. When metadata is updated via the Zinc interface that indexing happens automatically. However, when metadata is updated via an external script such as the insert_multiple_files script, the file metadata needs to be index using the `index files` button in zinc.
    ```
    - Select `Data files` in zinc
    - Select `Index files` from the upper right
