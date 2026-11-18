@@ -87,6 +87,8 @@ setenv platformlower "c130_n130ar"
 
 #$ARCHIVE_SCRIPT HRT/v1.1  /scr/raf/Prod_Data/$PROJECT/HRT/V1.1 nc $CS_LOCATION$YEAR/ $EMAIL
 
+#$ARCHIVE_SCRIPT HRT/v1.2  /scr/raf/Prod_Data/$PROJECT/HRT/V1.2 nc $CS_LOCATION$YEAR/ $EMAIL
+
 ### HRT KML
 #$ARCHIVE_SCRIPT KMLh /scr/raf/Prod_Data/$PROJECT/HRT kml $CS_LOCATION$YEAR $EMAIL
 
