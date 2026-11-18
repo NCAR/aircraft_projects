@@ -6,33 +6,36 @@
 ###############
 #   Project   #
 ###############
-setenv PROJECT "XXXPROJECTXXX"
-setenv YEAR 20XX
-setenv PLATFORM "XXXAIRCRAFTXXX"
+setenv PROJECT "INSPYRE"
+setenv YEAR 2026
+setenv PLATFORM "GV_N677F"
 setenv ARCHIVE_SCRIPT "/net/jlocal/projects/Configuration/scripts/archAC.py"
 setenv CS_LOCATION "/glade/campaign/eol/archive/"
-setenv EMAIL "name@ucar.edu"
-setenv projectlower "xxxprojectxxx"
-setenv platformlower "xxxaircraftxxx"
+setenv EMAIL "jenframe@ucar.edu"
+setenv projectlower "inspyre"
+setenv platformlower "gv_n677f"
 ########################## Raw Data Files ##############################
-### ADS 
-#$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT ads $CS_LOCATION$YEAR/ $EMAIL
+:### ADS
+#$ARCHIVE_SCRIPT ADS /scr/raf/Raw_Data/$PROJECT/ADS ads $CS_LOCATION$YEAR/ $EMAIL
 
 ### CAMERA
 #$ARCHIVE_SCRIPT CAMERA -r /scr/raf/Raw_Data/$PROJECT/camera_images jpg $CS_LOCATION$YEAR/ $EMAIL
 
 ########################## Preliminary Data Files #############################
 ### Preliminary LRT
-#$ARCHIVE_SCRIPT field_phase/LRT /scr/raf/Raw_Data/$PROJECT/field_phase/LRT nc /net/archive/data/$projectlower/aircraft/$platform_lower/field_phase/LRT $EMAIL
+#$ARCHIVE_SCRIPT FIELD/LRT /scr/raf_data/$PROJECT/field_data/LRT nc /net/archive/data/ $EMAIL
+
+### Preliminary HRT
+#$ARCHIVE_SCRIPT FIELD/HRT /scr/raf_data/$PROJECT/field_data/HRT nc $CS_LOCATION$YEAR/ $EMAIL
 
 ### Preliminary LRT ICT
-#$ARCHIVE_SCRIPT field_phase/ICARTT /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/ICARTT ict $CS_LOCATION$YEAR/ $EMAIL
+#$ARCHIVE_SCRIPT FIELD/ICARTT /scr/raf_data/$PROJECT/field_data/ICARTT ict $CS_LOCATION$YEAR/ $EMAIL
 
 ### Preliminary LRT IWG1
 #$ARCHIVE_SCRIPT field_phase/IWG1 /scr/raf/Raw_Data/$PROJECT/field_phase/C130nc/IWG1 iwg1 $CS_LOCATION$YEAR/ $EMAIL
 
 ### Preliminary KML
-#$ARCHIVE_SCRIPT field_phase/KML /scr/raf/Raw_Data/$PROJECT/field_phase/KML kml $CS_LOCATION$YEAR/ $EMAIL
+#$ARCHIVE_SCRIPT FIELD/KML /scr/raf_data/$PROJECT/field_data/KML kml $CS_LOCATION$YEAR/ $EMAIL
 
 ### Preliminary CO ICT
 #ARCHIVE_SCRIPT field_phase/CO /scr/raf/Raw_Data/$PROJECT/field_phase/CO ict $CS_LOCATION$YEAR/ $EMAIL
@@ -62,7 +65,7 @@ setenv platformlower "xxxaircraftxxx"
 ### LRT ICT
 #$ARCHIVE_SCRIPT ICARTT /scr/raf/Prod_Data/$PROJECT/ICARTT_format ict $CS_LOCATION$YEAR/ $EMAIL
 
-### PMS2D
+### PMS2D
 #$ARCHIVE_SCRIPT PMS2D /scr/raf/Raw_Data/$PROJECT/PMS2D 2d $CS_LOCATION$YEAR/ $EMAIL
 
 ### KML
