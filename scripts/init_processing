@@ -237,25 +237,29 @@ if [ -d ${RAW_DATA_DIR}/${PROJ}/PMS2D ]; then
   done
 fi
 
-if [ -d ${RAW_DATA_DIR}/${PROJ}/F2DS/oap ]; then
+# Do not merge the F2DS data into the .nc files. Sarah runs F2DS data through
+# her own processing and archives those nc files and imagery separately.
+# This is going to be standard for final F2DS/HVPS data moving forward, at least
+# for now. - Commenting out instead of deleting until we are sure.
+#if [ -d ${RAW_DATA_DIR}/${PROJ}/F2DS/oap ]; then
+#
+#  for file in ${RAW_DATA_DIR}/${PROJ}/F2DS/oap/*2d
+#  do
+#    bfname=`basename $file`
+#    flight=`echo $bfname | cut -b 17-20`
+#    process2d ${RAW_DATA_DIR}/${PROJ}/F2DS/oap/${bfname} -o ${DAT}/${PROJ}${flight}.nc
+#  done
+#fi
 
-  for file in ${RAW_DATA_DIR}/${PROJ}/F2DS/oap/*2d
-  do
-    bfname=`basename $file`
-    flight=`echo $bfname | cut -b 17-20`
-    process2d ${RAW_DATA_DIR}/${PROJ}/F2DS/oap/${bfname} -o ${DAT}/${PROJ}${flight}.nc
-  done
-fi
-
-if [ -d ${RAW_DATA_DIR}/${PROJ}/HVPS/oap ]; then
-
-  for file in ${RAW_DATA_DIR}/${PROJ}/HVPS/oap/*2d
-  do
-    bfname=`basename $file`
-    flight=`echo $bfname | cut -b 17-20`
-    process2d ${RAW_DATA_DIR}/${PROJ}/HVPS/oap/${bfname} -o ${DAT}/${PROJ}${flight}.nc
-  done
-fi
+#if [ -d ${RAW_DATA_DIR}/${PROJ}/HVPS/oap ]; then
+#
+#  for file in ${RAW_DATA_DIR}/${PROJ}/HVPS/oap/*2d
+#  do
+#    bfname=`basename $file`
+#    flight=`echo $bfname | cut -b 17-20`
+#    process2d ${RAW_DATA_DIR}/${PROJ}/HVPS/oap/${bfname} -o ${DAT}/${PROJ}${flight}.nc
+#  done
+#fi
 "EOF2D"
 
 # ---------------------------------------------------------

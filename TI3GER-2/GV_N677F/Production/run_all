@@ -20,7 +20,11 @@ CWD=$PWD
 source ${PROJ_DIR}/scripts/reorder_all $PROJ
 cd $CWD
 
-./run_proc2d
+# Do not merge the F2DS data into the .nc files. Sarah runs F2DS data through
+# her own processing and archives those nc files and imagery separately.
+# This is going to be standard for final F2DS/HVPS data moving forward, at least
+# for now.
+#./run_proc2d
 
 source ${PROJ_DIR}/scripts/AddHtTerrain $PROJ
 
