@@ -13,7 +13,13 @@ initialize_processing
 
 ./run_nimbus
 ./run_nimbus_hrt
+
+# reorder_all changes the current working dir. Save it so can
+# come back
+CWD=$PWD
 source ${PROJ_DIR}/scripts/reorder_all $PROJ
+cd $CWD
+
 ./run_proc2d
 
 source ${PROJ_DIR}/scripts/AddHtTerrain $PROJ
