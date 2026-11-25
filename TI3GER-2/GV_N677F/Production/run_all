@@ -13,6 +13,7 @@ initialize_processing
 
 ./run_nimbus
 ./run_nimbus_hrt
+./run_nimbus_srt
 
 # reorder_all changes the current working dir. Save it so can
 # come back
@@ -29,9 +30,14 @@ cd $CWD
 source ${PROJ_DIR}/scripts/AddHtTerrain $PROJ
 
 if [ `whoami` == nimbus ]; then
-#  run_kalmanFilter
+# This should now work, but waiting for Chris Kruse to decide if it is worth
+# running
+# run_kalmanFilter
   true
 fi
+
+# Merge cloud flags
+./merge_cloud_flags.py -p $PROJ -a $AIRCRAFT -o $DAT
 
 cleanup_processing
 
